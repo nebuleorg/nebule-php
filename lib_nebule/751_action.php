@@ -569,7 +569,7 @@ abstract class Actions
                 $instance = $this->flatLinkExtractAsInstance_disabled($arg);
                 if ($instance->getValid()
                     && $instance->getSigned()
-                    && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
+                    && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthoritiesEID()
                         || $permitNotCodeMaster
                     )
                 )
@@ -2571,7 +2571,7 @@ abstract class Actions
         $this->_metrologyInstance->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG);
 
         if ($link->getSigned()
-            && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
+            && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthoritiesEID()
                     && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 )
                 || $this->_getOptionAsBoolean('permitPublicUploadLink')
@@ -3112,7 +3112,7 @@ abstract class Actions
                 $instance = $this->_nebuleInstance->newBlockLink($line);
                 if ($instance->getValid()) {
                     if ($instance->getSigned()
-                        && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthorities()
+                        && (($instance->getSigners() == $this->_nebuleInstance->getCodeAuthoritiesEID()
                                 && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                             )
                             || $this->_getOptionAsBoolean('permitPublicUploadLink')

@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020240824';
+const BOOTSTRAP_VERSION = '020240825';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5844,20 +5844,20 @@ function bootstrap_breakDisplay41LibraryEntities()
     $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
     bootstrap_breakDisplay411DisplayEntity('puppetmaster',
-        array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmaster()),
-        array($nebuleInstance->getPuppetmaster() => $nebuleInstance->getPuppetmasterInstance()),
+        array($nebuleInstance->getPuppetmasterEID() => $nebuleInstance->getPuppetmasterEID()),
+        array($nebuleInstance->getPuppetmasterEID() => $nebuleInstance->getPuppetmasterInstance()),
         $nebuleInstanceCheck > 10);
 
-    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getSecurityAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getSecurityAuthoritiesEID(),
         $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
 
-    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getCodeAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getCodeAuthoritiesEID(),
         $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
 
-    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthoritiesEID(),
         $nebuleInstance->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
 
-    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getTimeAuthorities(),
+    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getTimeAuthoritiesEID(),
         $nebuleInstance->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay411DisplayEntity('server entity',

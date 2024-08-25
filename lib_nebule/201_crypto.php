@@ -28,46 +28,23 @@ class Crypto implements CryptoInterface
     /**
      * @var ?CryptoInterface
      */
-    private $_defaultInstance = null;
-    private $_ready = false;
-    private $_listClasses = array();
-    private $_listInstances = array();
-    private $_listTypes = array();
+    private ?CryptoInterface $_defaultInstance = null;
+    private bool $_ready = false;
+    private array $_listClasses = array();
+    private array $_listInstances = array();
+    private array $_listTypes = array();
 
-    /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configuration;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Cache $_cacheInstance = null;
 
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
 
         $this->_initialisation($nebuleInstance);
     }
@@ -77,12 +54,6 @@ class Crypto implements CryptoInterface
         return self::TYPE;
     }
 
-    /**
-     * Load all classes on theme.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
     protected function _initialisation(nebule $nebuleInstance): void
     {
         $myClass = get_class($this);
@@ -96,13 +67,6 @@ class Crypto implements CryptoInterface
         $this->_initDefault('cryptoLibrary');
     }
 
-    /**
-     * Init instance for a module class.
-     *
-     * @param string $class
-     * @param nebule $nebuleInstance
-     * @return void
-     */
     protected function _initSubClass(string $class, nebule $nebuleInstance): void
     {
         $instance = new $class($nebuleInstance);
@@ -113,15 +77,9 @@ class Crypto implements CryptoInterface
         $this->_listInstances[$type] = $instance;
     }
 
-    /**
-     * Select default instance and set ready.
-     *
-     * @param string $name
-     * @return void
-     */
     protected function _initDefault(string $name): void
     {
-        $option = $this->_configuration->getOptionAsString($name);
+        $option = $this->_configurationInstance->getOptionAsString($name);
         if (isset($this->_listClasses[get_class($this) . $option]))
         {
             $this->_defaultInstance = $this->_listInstances[$option];

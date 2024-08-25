@@ -144,10 +144,6 @@ class nebule
     const REFERENCE_NEBULE_WARNING = 'nebule/warning';
     const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
 
-    const ACTIVE_APPLICATIONS_WHITELIST = array(
-        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.non.296',
-    );
-
     /**
      * Liste des objets à usage réservé.
      */
@@ -2169,27 +2165,16 @@ class nebule
         }
     }
 
-    /**
-     * Donne l'ID du maître du tout.
-     *
-     * @return string
-     */
-    public function getPuppetmaster(): string
+    public function getPuppetmasterEID(): string
     {
         return $this->_puppetmaster;
     }
-
-    /**
-     * Donne l'instance du maître du tout.
-     *
-     * @return Entity
-     */
     public function getPuppetmasterInstance(): ?Entity
     {
         return $this->_puppetmasterInstance;
     }
 
-    public function getSecurityAuthorities(): array
+    public function getSecurityAuthoritiesEID(): array
     {
         return $this->_securityAuthorities;
     }
@@ -2204,7 +2189,7 @@ class nebule
         return $this->_securitySignersInstance;
     }
 
-    public function getCodeAuthorities(): array
+    public function getCodeAuthoritiesEID(): array
     {
         return $this->_codeAuthorities;
     }
@@ -2219,7 +2204,7 @@ class nebule
         return $this->_codeSignersInstance;
     }
 
-    public function getDirectoryAuthorities(): array
+    public function getDirectoryAuthoritiesEID(): array
     {
         return $this->_directoryAuthorities;
     }
@@ -2234,7 +2219,7 @@ class nebule
         return $this->_directorySignersInstance;
     }
 
-    public function getTimeAuthorities(): array
+    public function getTimeAuthoritiesEID(): array
     {
         return $this->_timeAuthorities;
     }
@@ -2251,66 +2236,16 @@ class nebule
 
 
 
-    /**
-     * Liste des ID des autorités.
-     * @var array
-     */
-    private $_authorities = array();
-
-    /**
-     * Liste des instances des autorités.
-     * @var array
-     */
-    private $_authoritiesInstances = array();
-
-    /**
-     * Liste des ID des autorités locales.
-     * @var array:string
-     */
-    private $_localAuthorities = array();
-
-    /**
-     * Liste des instance des autorités locales.
-     * @var array:Entity
-     */
-    private $_localAuthoritiesInstances = array();
-
-    /**
-     * Liste des ID des autorités locales primaires.
-     * @var array:string
-     */
-    private $_localPrimaryAuthorities = array();
-
-    /**
-     * Liste des instances des autorités locales primaires.
-     * @var array:Entity
-     */
-    private $_localPrimaryAuthoritiesInstances = array();
-
-    /**
-     * Liste des entités signataires des autorités locales.
-     * @var array:string
-     */
-    private $_localAuthoritiesSigners = array();
-
-    /**
-     * Liste des ID des entités avec des rôles.
-     * @var array
-     */
-    private $_specialEntities = array();
-
-
-    /**
-     * L'entité locale du serveur est-elle autorité locale ?
-     * @var boolean
-     */
-    private $_permitInstanceEntityAsAuthority = false;
-
-    /**
-     * L'entité locale par défaut est-elle autorité locale ?
-     * @var boolean
-     */
-    private $_permitDefaultEntityAsAuthority = false;
+    private array $_authorities = array();
+    private array $_authoritiesInstances = array();
+    private array $_localAuthorities = array();
+    private array $_localAuthoritiesInstances = array();
+    private array $_localPrimaryAuthorities = array();
+    private array $_localPrimaryAuthoritiesInstances = array();
+    private array $_localAuthoritiesSigners = array();
+    private array $_specialEntities = array();
+    private bool $_permitInstanceEntityAsAuthority = false;
+    private bool $_permitDefaultEntityAsAuthority = false;
 
     /**
      * Ajoute les autorités locales par défaut.

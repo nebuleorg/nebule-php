@@ -486,19 +486,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         global $applicationName;
 
-        // If we don't use modules, list of modes must not be empty.
         if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
-            $this->_metrologyInstance->addLog('Search view, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '82b83c17');
+            $this->_metrologyInstance->addLog('Search view, no module and no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82b83c17');
             return;
         }
 
-        // Vérifie la liste des modules si activée.
         if ($this->_applicationInstance::USE_MODULES && sizeof($this->_applicationInstance->getModulesListInstances()) == 0) {
-            $this->_metrologyInstance->addLog('Search view, module but no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '21dc60cc');
+            $this->_metrologyInstance->addLog('Search view, module but no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '21dc60cc');
             return;
         }
 
-        // Lit et nettoye le contenu de la variable GET.
+        // Lit et nettoie le contenu de la variable GET.
         $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
 
         $list_views_names = array();
@@ -616,7 +614,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ?>
 
         <div class="inlinecontent" id="<?php echo $id; ?>">
-            <p class="inlinecontentwait"><?php $this->echoTraduction('::progress'); ?></p>
+            <p class="inlinecontentwait"><?php echo $this->_traductionInstance->getTranslate('::progress'); ?></p>
         </div>
         <?php
         return true;
@@ -1791,42 +1789,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
 
-    // Emulation des fonctions de traduction.
-    public function getLanguageList(): array
-    {
-        return array('none');
-    }
-
-    public function getLanguageInstanceList(): array
-    {
-        return array(null);
-    }
-
-    public function getCurrentLanguage(): array
-    {
-        return array('none');
-    }
-
-    public function getCurrentLanguageInstance()
-    {
-        return null;
-    }
-
-    public function getDefaultLanguage(): array
-    {
-        return array('none');
-    }
-
-    public function getDefaultLanguageInstance()
-    {
-        return null;
-    }
-
-    public function getTraduction(string $text): string
-    {
-        return $this->_traductionInstance->getTranslate($text);
-    }
-
     public function setUrlLinkObjectPrefix(string $htlink): void
     {
         $this->_urlLinkObjectPrefix = $htlink;
@@ -1872,15 +1834,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_urlLinkWalletPrefix = $htlink;
     }
 
-    public function echoTraduction(string $text, string $color = '', string $arg1 = '', string $arg2 = '',
-                                   string $arg3 = '', string $arg4 = '', string $arg5 = '', string $arg6 = '',
-                                   string $arg7 = '', string $arg8 = '', string $arg9 = ''): void
-    {
-        if ($color != '') echo "<font color=\"$color\">";
-        echo sprintf(($this->getTraduction($text)), $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
-        if ($color != '') echo '</font>';
-    }
-
 
 
 
@@ -1905,7 +1858,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
-        $instance->setType(DisplayNotify::TYPE_INFORMATION);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
         $instance->display();
     }
 
@@ -1921,7 +1874,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
-        $instance->setType(DisplayNotify::TYPE_OK);
+        $instance->setType(DisplayItemIconMessage::TYPE_OK);
         $instance->display();
     }
 
@@ -1937,7 +1890,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
-        $instance->setType(DisplayNotify::TYPE_WARN);
+        $instance->setType(DisplayItemIconMessage::TYPE_WARN);
         $instance->display();
     }
 
@@ -1953,7 +1906,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
-        $instance->setType(DisplayNotify::TYPE_ERROR);
+        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
         $instance->display();
     }
 
@@ -2263,8 +2216,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_ENTITY :
                 case nebule::REFERENCE_OBJECT_HTML :
                 case nebule::REFERENCE_OBJECT_CSS :
-                case nebule::REFERENCE_OBJECT_APP_PHP :
-                case nebule::REFERENCE_OBJECT_PHP :
+                case References::REFERENCE_OBJECT_APP_PHP :
+                case References::REFERENCE_OBJECT_PHP :
                     $content = htmlspecialchars($object->getContent(0));
                     if ($content != null)
                         $result = $result . $divOpen . '<pre>' . $content . '</pre>' . $divClose;
@@ -2548,7 +2501,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($uid->getID() == $oid->getID())
             $newObjectInstance = $oid;
         else
-            $newObjectInstance = $this->_nebuleInstance->newObject($uid);
+            $newObjectInstance = $this->_nebuleInstance->newObject($uid->getID());
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -4012,11 +3965,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             foreach ($appHookList as $appHook) {
                 if ($appHook['name'] != '') {
                     $dispHookList[$i]['moduleName'] = '&nbsp;';
-                    $dispHookList[$i]['name'] = $this->getTraduction($appHook['name']);
+                    $dispHookList[$i]['name'] = $this->_traductionInstance->getTranslate($appHook['name']);
                     $dispHookList[$i]['icon'] = $appHook['icon'];
                     if ($dispHookList[$i]['icon'] == '')
                         $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                    $dispHookList[$i]['desc'] = $this->getTraduction($appHook['desc']);
+                    $dispHookList[$i]['desc'] = $this->_traductionInstance->getTranslate($appHook['desc']);
                     $dispHookList[$i]['link'] = $appHook['link'];
                     if (isset($appHook['css'])
                         && $appHook['css'] != ''
@@ -4079,12 +4032,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
                         if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $module->getTraduction($module->getName());
-                            $dispHookList[$i]['name'] = $this->getTraduction($appHook['name']);
+                            $dispHookList[$i]['moduleName'] = $this->_traductionInstance->getTranslate($module->getName());
+                            $dispHookList[$i]['name'] = $this->_traductionInstance->getTranslate($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
                             if ($dispHookList[$i]['icon'] == '')
                                 $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            $dispHookList[$i]['desc'] = $this->getTraduction($appHook['desc']);
+                            $dispHookList[$i]['desc'] = $this->_traductionInstance->getTranslate($appHook['desc']);
                             $dispHookList[$i]['link'] = $appHook['link'];
                             if (isset($appHook['css'])
                                 && $appHook['css'] != ''
@@ -4490,8 +4443,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_ENTITY :
                 case nebule::REFERENCE_OBJECT_HTML :
                 case nebule::REFERENCE_OBJECT_CSS :
-                case nebule::REFERENCE_OBJECT_APP_PHP :
-                case nebule::REFERENCE_OBJECT_PHP :
+                case References::REFERENCE_OBJECT_APP_PHP :
+                case References::REFERENCE_OBJECT_PHP :
                 case nebule::REFERENCE_NEBULE_OBJET_MONNAIE :
                 case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC :
                 case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON :

@@ -76,7 +76,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      *
      * @var Cache
      */
-    protected $_cache;
+    protected ?Cache $_cacheInstance;
 
     protected function _initialisation(nebule $nebuleInstance): void
     {
@@ -213,7 +213,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $hash = $this->hash(self::TEST_HASH_ALGORITHM['value'], $algo);
         if (self::TEST_HASH_ALGORITHM[$algo] == $hash)
             return true;
-        $this->_metrology->addLog('Error check hash ' . $algo . ' return ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f462ce6c');
+        $this->_metrologyInstance->addLog('Error check hash ' . $algo . ' return ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f462ce6c');
         return false;
     }
 
@@ -221,7 +221,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     {
         if (isset(self::TRANSLATE_HASH_ALGORITHM[$algo]))
             return true;
-        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '965d71cf');
+        $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '965d71cf');
         return false;
     }
 
@@ -229,7 +229,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     {
         if (isset(self::TRANSLATE_HASH_ALGORITHM[$name]))
             return self::TRANSLATE_HASH_ALGORITHM[$name];
-        $this->_metrology->addLog('Invalid hash algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
+        $this->_metrologyInstance->addLog('Invalid hash algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
         return '';
     }
 
@@ -281,14 +281,14 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $code = $this->encrypt($data, $algo, $hexKey, $hexIV);
         if ($code == '')
         {
-            $this->_metrology->addLog('Error check symmetric ' . $algo . ' can not encode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
+            $this->_metrologyInstance->addLog('Error check symmetric ' . $algo . ' can not encode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
             return false;
         }
 
         $decode = $this->decrypt($code, $algo, $hexKey, $hexIV);
         if ($decode == '')
         {
-            $this->_metrology->addLog('Error check symmetric ' . $algo . ' can not decode ' . $code, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a6da5e1');
+            $this->_metrologyInstance->addLog('Error check symmetric ' . $algo . ' can not decode ' . $code, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a6da5e1');
             return false;
         }
 
@@ -299,7 +299,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     {
         if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$algo]))
             return true;
-        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13fab565');
+        $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13fab565');
         return false;
     }
 
@@ -307,7 +307,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     {
         if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$name]))
             return self::TRANSLATE_SYMMETRIC_ALGORITHM[$name];
-        $this->_metrology->addLog('Invalid symmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5f83d258');
+        $this->_metrologyInstance->addLog('Invalid symmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5f83d258');
         return '';
     }
 
@@ -362,7 +362,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $dataBin = pack('H*', $data);
         if (openssl_private_encrypt($dataBin, $signatureBin, $ressource, OPENSSL_PKCS1_PADDING))
             return bin2hex($signatureBin);
-        $this->_metrology->addLog('ERROR crypto sign', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3c5e617d'); // Log
+        $this->_metrologyInstance->addLog('ERROR crypto sign', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3c5e617d'); // Log
         return '';
     }
 
@@ -425,13 +425,13 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      */
     public function newAsymmetricKeys(string $password = ''): array
     {
-        $algo = $this->_configuration->getOptionAsString('cryptoAsymmetricAlgorithm');
+        $algo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
         if (!$this->_checkAsymmetricAlgorithm($algo))
             return array();
 
         // Prepare configuration for OpenSSL.
         $config = array(
-            'digest_alg' => $this->_translateHashAlgorithm($this->_configuration->getOptionAsString('cryptoHashAlgorithm')),
+            'digest_alg' => $this->_translateHashAlgorithm($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm')),
             'private_key_bits' => $this->_getAlgorithmSize($algo),
         );
         switch ($this->_getAlgorithmName($algo)) {
@@ -544,7 +544,7 @@ EOD;
         $signed = $this->sign($hashData, $private_pem, $private_pass);
         if ($this->verify($hashData, $signed, $public_pem))
             return true;
-        $this->_metrology->addLog('Error check asymmetric ' . $hashData . ' can not verify ' . $signed, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
+        $this->_metrologyInstance->addLog('Error check asymmetric ' . $hashData . ' can not verify ' . $signed, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
         return false;
     }
 
@@ -552,7 +552,7 @@ EOD;
     {
         if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$algo]))
             return true;
-        $this->_metrology->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a04d29d');
+        $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a04d29d');
         return false;
     }
 

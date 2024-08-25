@@ -228,7 +228,7 @@ class ApplicationModules
                 && $updateModule != '0'
             ) {
                 $instanceModule = $this->_nebuleInstance->newObject($updateModule);
-                if ($instanceModule->getType('authority') == 'application/x-php'
+                if ($instanceModule->getType('authority') == References::REFERENCE_OBJECT_APP_PHP
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
                     $this->_metrologyInstance->addLog('Find module update ' . $updateModule, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cabf8ebd');

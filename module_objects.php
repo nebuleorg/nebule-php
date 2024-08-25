@@ -1196,7 +1196,7 @@ class ModuleObjects extends Modules
             // Ajoute des entités et groupes à ne pas afficher.
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkEntities[$this->_nebuleInstance->getInstanceEntity()] = true;
-            $listOkEntities[$this->_nebuleInstance->getPuppetmaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_nebuleInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;
@@ -1204,7 +1204,7 @@ class ModuleObjects extends Modules
             $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
             $listOkGroups[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_nebuleInstance->getInstanceEntity()] = true;
-            $listOkGroups[$this->_nebuleInstance->getPuppetmaster()] = true;
+            $listOkGroups[$this->_nebuleInstance->getPuppetmasterEID()] = true;
             $listOkGroups[$this->_nebuleInstance->getSecurityMaster()] = true;
             $listOkGroups[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkGroups[$this->_nebuleInstance->getDirectoryMaster()] = true;

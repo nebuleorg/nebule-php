@@ -3139,7 +3139,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             // Ajoute des entités à ne pas afficher.
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkEntities[$this->_nebuleInstance->getInstanceEntity()] = true;
-            $listOkEntities[$this->_nebuleInstance->getPuppetmaster()] = true;
+            $listOkEntities[$this->_nebuleInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_nebuleInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;

@@ -18,7 +18,7 @@ class ModuleTranslateESCO extends ModuleTranslates
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    const MODULE_VERSION = '020240721';
+    const MODULE_VERSION = '020240825';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -83,6 +83,7 @@ class ModuleTranslateESCO extends ModuleTranslates
             'application/x-bzip2' => 'Archivo BZIP2',
             'text/html' => 'Página HTML',
             'application/x-php' => 'Código PHP',
+            'application/x-httpd-php' => 'Código PHP',
             'text/x-php' => 'Código PHP',
             'text/css' => 'Hojas de estilo en cascada CSS',
             'audio/mpeg' => 'Audio MP3',

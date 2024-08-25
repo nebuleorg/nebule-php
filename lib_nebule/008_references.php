@@ -38,7 +38,7 @@ class References
     const REFERENCE_OBJECT_HTML = 'text/html';
     const REFERENCE_OBJECT_CSS = 'text/css';
     const REFERENCE_OBJECT_PHP = 'text/x-php';
-    const REFERENCE_OBJECT_APP_PHP = 'application/x-php';
+    const REFERENCE_OBJECT_APP_PHP = 'application/x-httpd-php';
     const REFERENCE_OBJECT_PNG = 'image/png';
     const REFERENCE_OBJECT_JPEG = 'image/jpeg';
     const REFERENCE_OBJECT_MP3 = 'audio/mpeg';
@@ -131,6 +131,10 @@ class References
     const REFERENCE_NEBULE_DANGER = 'nebule/danger';
     const REFERENCE_NEBULE_WARNING = 'nebule/warning';
     const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
+
+    const ACTIVE_APPLICATIONS_WHITELIST = array(
+        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.non.296',
+    );
 
     const OBJ_IMG = array(
         'addent' => 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEWElEQVR42u2bT2gaWRzHn1EDHpSGMUXaCM5lD6UI6SGgZaQMQQh

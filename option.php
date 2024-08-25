@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
-use Nebule\Library\DisplayColor;
+use Nebule\Library\Crypto;use Nebule\Library\DisplayColor;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayItemIconMessage;
@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240824';
+    const APPLICATION_VERSION = '020240825';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -194,7 +194,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
             $this->_displayActions();
 
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK view=' . $this->getCurrentDisplayView(), Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '00000000');
             switch ($this->getCurrentDisplayView()) {
                 case self::VIEW_GLOBAL_AUTHORITIES:
                     $this->_displayGlobalAuthorities();
@@ -792,7 +791,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      */
     private function _displayLocalAuthorities(): void
     {
-        $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
 
         // Primary local authorities
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
@@ -802,13 +801,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instanceTitle->display();
 
         $listOkEntities = array(
-            $this->_nebuleInstance->getPuppetmaster() => true,
+            $this->_nebuleInstance->getPuppetmasterEID() => true,
         );
         foreach (array_merge(
-                $this->_nebuleInstance->getSecurityAuthorities(),
-                $this->_nebuleInstance->getCodeAuthorities(),
-                $this->_nebuleInstance->getDirectoryAuthorities(),
-                $this->_nebuleInstance->getTimeAuthorities()) as $id)
+                $this->_nebuleInstance->getSecurityAuthoritiesEID(),
+                $this->_nebuleInstance->getCodeAuthoritiesEID(),
+                $this->_nebuleInstance->getDirectoryAuthoritiesEID(),
+                $this->_nebuleInstance->getTimeAuthoritiesEID()) as $id)
             $listOkEntities[$id] = true;
 
         $instanceList = new DisplayList($this->_applicationInstance);
@@ -1171,23 +1170,41 @@ Primary authorities can't be removed, they are forced by two options on the envi
 
         <div id="apps">
             <?php
-            // Extraire la liste des applications disponibles.
-            $refAppsID = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS);
+            $refAppsID = \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS;
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . $refAppsID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $refPHP = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_OBJECT_APP_PHP, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $refPHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $instanceAppsID = $this->_nebuleInstance->newObject($refAppsID);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceAppsID->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $i = 0;
             $applicationsList = array();
             $signersList = array();
 
-            // Liste les applications reconnues par les maîtres du code.
-            $listCodeAuthorities = $this->_nebuleInstance->getCodeAuthorities();
+            $instanceList = new DisplayList($this->_applicationInstance);
+
             $linksList = array();
-            foreach ($listCodeAuthorities as $instance) {
-                $linksList = $instanceAppsID->getLinksOnFields($instance, '', 'f', $refAppsID, '', $refAppsID);
+            foreach ($this->_nebuleInstance->getCodeAuthoritiesEID() as $instance) {
+                $linksList = $instanceAppsID->getLinksOnFields($instance, '', 'f', $refAppsID, '', $refPHP);
+                //$linksList = $instanceAppsID->getLinksOnFields('', '', 'f', $refAppsID, '', '');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK5 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     $applicationsList[$hashTarget] = $hashTarget;
                     $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+
+                    $instanceApplication = new DisplayObject($this->_applicationInstance);
+                    $instanceApplication->setNID($hashTargetInstance);
+                    $instanceApplication->setEnableNID(false);
+                    $instanceApplication->setEnableName(true);
+                    //$instanceApplication->setName($optionName);
+                    $instanceApplication->setEnableColor(true);
+                    $instanceApplication->setEnableIcon(false);
+                    $instanceApplication->setEnableLink(false);
+                    $instanceApplication->setEnableJS(false);
+                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceList->addItem($instanceApplication);
                 }
             }
 
@@ -1195,11 +1212,26 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 && !$this->_nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getInstanceEntity(), '', 'f', $refAppsID, '', $refPHP);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     $applicationsList[$hashTarget] = $hashTarget;
                     $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
+
+                    $instanceApplication = new DisplayObject($this->_applicationInstance);
+                    $instanceApplication->setNID($hashTargetInstance);
+                    $instanceApplication->setEnableNID(false);
+                    $instanceApplication->setEnableName(true);
+                    //$instanceApplication->setName($optionName);
+                    $instanceApplication->setEnableColor(true);
+                    $instanceApplication->setEnableIcon(false);
+                    $instanceApplication->setEnableLink(false);
+                    $instanceApplication->setEnableJS(false);
+                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceList->addItem($instanceApplication);
                 }
             }
 
@@ -1207,14 +1239,38 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 && !$this->_nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refAppsID);
+                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getDefaultEntity(), '', 'f', $refAppsID, '', $refPHP);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     $applicationsList[$hashTarget] = $hashTarget;
                     $signersList[$hashTarget] = $link->getParsed()['bs/rs1/eid'];
+
+                    $instanceApplication = new DisplayObject($this->_applicationInstance);
+                    $instanceApplication->setNID($hashTargetInstance);
+                    $instanceApplication->setEnableNID(false);
+                    $instanceApplication->setEnableName(true);
+                    //$instanceApplication->setName($optionName);
+                    $instanceApplication->setEnableColor(true);
+                    $instanceApplication->setEnableIcon(false);
+                    $instanceApplication->setEnableLink(false);
+                    $instanceApplication->setEnableJS(false);
+                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceList->addItem($instanceApplication);
                 }
             }
             unset($linksList);
+
+            $instanceList->setSize(DisplayItem::SIZE_SMALL);
+            $instanceList->display();
+
+
+
+
+            $applicationsList = array(); // FIXME debug...
+
 
             // Lister les applications.
             $application = '';
@@ -1230,8 +1286,9 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
 
                 // Recherche si l'application ne doit pas être pré-chargée.
                 $noPreloadSigner = '';
-                $refNoPreload = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT);
+                $refNoPreload = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
 //                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $refNoPreload, $application); // FIXME error !!!
+                $linksList = array();
                 $filter = array(
                     'bl/rl/req' => 'f',
                     'bl/rl/nid1' => $application,
@@ -1260,7 +1317,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 // Ou si c'est l'application par défaut.
                 $activable = true;
                 $activated = false;
-                foreach (nebule::ACTIVE_APPLICATIONS_WHITELIST as $item) {
+                foreach (References::ACTIVE_APPLICATIONS_WHITELIST as $item) {
                     if ($application == $item) {
                         $activated = true;
                         $activable = false;
@@ -1269,7 +1326,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication'))
                     $activated = true;
                 if (!$activated) {
-                    $refActivated = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE);
+                    $refActivated = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
 //                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
                     $filter = array(
                         'bs/rs1/eid' => $this->_nebuleInstance->getInstanceEntity(),
@@ -1286,10 +1343,10 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 // Recherche de la dernière mise à jour.
                 $updater = $signersList[$application];
                 $linksResult = array();
-                foreach ($listCodeAuthorities as $instance) {
+                foreach ($this->_nebuleInstance->getCodeAuthoritiesInstance() as $instance) {
 //                    $linksResult = $instance->readLinksFilterFull($this->_nebuleInstance->getCodeMaster(), '', 'f', $application, '', $refAppsID);
                     $filter = array(
-                        'bs/rs1/eid' => $instance,
+                        'bs/rs1/eid' => $instance->getID(),
                         'bl/rl/req' => 'f',
                         'bl/rl/nid1' => $application,
                         'bl/rl/nid2' => '',
@@ -1301,14 +1358,14 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                     && !$this->_nebuleInstance->getModeRescue()
                 ) {
-                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
+//                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getInstanceEntity(), '', 'f', $application, '', $refAppsID);
                     foreach ($linksList as $link)
                         $linksResult[] = $link;
                 }
                 if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                     && !$this->_nebuleInstance->getModeRescue()
                 ) {
-                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
+//                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $refAppsID);
                     foreach ($linksList as $link)
                         $linksResult[] = $link;
                 }
@@ -1493,7 +1550,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             $listOkEntities[$eid] = true;
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
-            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
 
             $instanceList = new DisplayList($this->_applicationInstance);
             foreach ($this->_nebuleInstance->getRecoveryEntitiesInstance() as $instance) {
@@ -1548,7 +1605,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
 
             // Affiche les entités.
-            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
             $list = array();
             $i = 0;
 
