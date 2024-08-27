@@ -179,9 +179,9 @@ abstract class Applications implements applicationInterface
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
             } else
             {
-                $this->_currentEntityOID = $this->_nebuleInstance->getCurrentEntity();
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntity());
-                $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $this->_nebuleInstance->getCurrentEntity());
+                $this->_currentEntityOID = $this->_nebuleInstance->getCurrentEntityID();
+                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntityID());
+                $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $this->_nebuleInstance->getCurrentEntityID());
             }
             unset($cache);
         }

@@ -26,14 +26,9 @@ use Nebule\Library\Entity;
  */
 class Wallet extends Entity implements nodeInterface
 {
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cachePropertyLink',
         '_cachePropertiesLinks',
         '_cachePropertyID',
@@ -59,10 +54,6 @@ class Wallet extends Entity implements nodeInterface
         '_isWallet',
     );
 
-    /**
-     * Specific part of constructor for a wallet.
-     * @return void
-     */
     protected function _localConstruct(): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency'))
@@ -71,7 +62,7 @@ class Wallet extends Entity implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_isNew)
             $this->_createNewWallet();
@@ -97,7 +88,7 @@ class Wallet extends Entity implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
+            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère la nouveau sac de jetons.
             $this->_id = $this->_createWallet($param, $protected, $obfuscated);

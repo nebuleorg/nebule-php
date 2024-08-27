@@ -69,7 +69,7 @@ abstract class Modules implements moduleInterface
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
     }
 
 

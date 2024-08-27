@@ -882,7 +882,7 @@ class ModuleObjects extends Modules
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
-                    && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
+                    && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntityID()
                 ) {
                     // Ajout du message d'avertissement.
                     if ($object->getIsEntity('all')) {
@@ -943,7 +943,7 @@ class ModuleObjects extends Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntity()
+                && $this->_applicationInstance->getCurrentObjectID() != $this->_nebuleInstance->getCurrentEntityID()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
                 $list[2]['param']['selfHookList'][0]['icon'] = $this->MODULE_REGISTERED_ICONS[3];
@@ -1079,7 +1079,7 @@ class ModuleObjects extends Modules
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
-                        if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
+                        if ($entity == $this->_nebuleInstance->getCurrentEntityID()) {
                             // Déprotéger l'objet.
                             $list[$i]['param']['selfHookList'][0]['name'] = '::UnprotectObject';
                             $list[$i]['param']['selfHookList'][0]['icon'] = $this->MODULE_REGISTERED_ICONS[3];
@@ -1201,7 +1201,7 @@ class ModuleObjects extends Modules
             $listOkEntities[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getTimeMaster()] = true;
-            $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
+            $listOkEntities[$this->_nebuleInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_applicationInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_nebuleInstance->getInstanceEntity()] = true;
             $listOkGroups[$this->_nebuleInstance->getPuppetmasterEID()] = true;
@@ -1209,7 +1209,7 @@ class ModuleObjects extends Modules
             $listOkGroups[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkGroups[$this->_nebuleInstance->getDirectoryMaster()] = true;
             $listOkGroups[$this->_nebuleInstance->getTimeMaster()] = true;
-            $listOkGroups[$this->_nebuleInstance->getCurrentEntity()] = true;
+            $listOkGroups[$this->_nebuleInstance->getCurrentEntityID()] = true;
 
             // Ajout du message de protection.
             $list[0]['information'] = '::WarningSharedProtection';
@@ -1227,7 +1227,7 @@ class ModuleObjects extends Modules
             }
 
             // Liste et ajoute tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntityID(), '');
             $typeGroup = false;
             $group = null;
             foreach ($listGroups as $group) {

@@ -586,7 +586,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
 
         $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
@@ -635,7 +635,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     public function refreshUnlocked()
     {
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
     }
 
 
@@ -1267,7 +1267,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
             <?php
             // Si l'entité n'est en cours n'est pas l'entité par défaut.
-            if ($this->_nebuleInstance->getCurrentEntity() != $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity')) {
+            if ($this->_nebuleInstance->getCurrentEntityID() != $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity')) {
                 // Affiche l'entité et son image.
                 $param = array(
                     'enableDisplayColor' => true,
@@ -1296,7 +1296,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         . '&' . References::COMMAND_FLUSH;
                 } else {
                     $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID();
                 }
                 echo $this->getDisplayObject_DEPRECATED($this->_nebuleInstance->getCurrentEntityInstance(), $param);
             } else {
@@ -1355,7 +1355,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity());
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1443,10 +1443,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                         self::DEFAULT_ICON_ENTITY_LOCK);
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID(),
                         self::DEFAULT_OBJECT_ADD_COMMAND,
                         self::DEFAULT_ENTITY_LIST_COMMAND,
-                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID(),
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
@@ -1471,7 +1471,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                     );
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID(),
                         self::DEFAULT_ENTITY_LIST_COMMAND,
                         self::DEFAULT_ENTITY_SYNC_COMMAND,
                         self::DEFAULT_ENTITY_ADD_COMMAND,
@@ -1879,7 +1879,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
 
         // Liste des entités à ne pas afficher.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
+        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
         if ($this->_unlocked) {
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
         }
@@ -2213,7 +2213,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
         if ($isEntity) {
             // Se connecter avec l'entité.
-            if (!$this->_unlocked || $id != $this->_nebuleInstance->getCurrentEntity()) {
+            if (!$this->_unlocked || $id != $this->_nebuleInstance->getCurrentEntityID()) {
                 $actionList[1]['name'] = '::ConnectWith';
                 $actionList[1]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[1]['desc'] = '';
@@ -2235,7 +2235,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
 
-            if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($this->_unlocked && $id == $this->_nebuleInstance->getCurrentEntityID()) {
                 // Verrouiller l'entité.
                 $actionList[3]['name'] = '::::lock';
                 $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
@@ -3006,7 +3006,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                         ) {
-                            if ($entity == $this->_nebuleInstance->getCurrentEntity()) {
+                            if ($entity == $this->_nebuleInstance->getCurrentEntityID()) {
                                 // Déprotéger l'objet.
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
@@ -3084,7 +3084,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
         ) {
             // Liste tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntity(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_nebuleInstance->getCurrentEntityID(), '');
 
             //Prépare l'affichage des groupes.
             $list = array();
@@ -3144,7 +3144,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $listOkEntities[$this->_nebuleInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_nebuleInstance->getTimeMaster()] = true;
-            $listOkEntities[$this->_nebuleInstance->getCurrentEntity()] = true;
+            $listOkEntities[$this->_nebuleInstance->getCurrentEntityID()] = true;
 
             // Liste toutes les autres entités.
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
@@ -3223,7 +3223,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '</div>' . "\n";
 
         if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
-            || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntity()
+            || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
         ) {
@@ -3284,7 +3284,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
             if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
-                || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntity()
+                || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -3342,7 +3342,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             if ($this->_applicationInstance->getCurrentEntityInstance()->issetPrivateKeyPassword()
-                || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntity()
+                || ($this->_applicationInstance->getCurrentEntityID() == $this->_nebuleInstance->getCurrentEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -4680,7 +4680,7 @@ class Action extends Actions
 
             // Définition de la date et le signataire.
             $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntity();
+            $signer = $this->_nebuleInstance->getCurrentEntityID();
 
             // Création du type mime.
             if ($this->_actionUploadFileType != '') {

@@ -168,7 +168,7 @@ class ApplicationModules
         foreach ($links as $link) {
             $ok = false;
             $module = $link->getParsed()['bl/rl/nid2'];
-            foreach ($this->_nebuleInstance->getLocalAuthorities() as $authority) {
+            foreach ($this->_nebuleInstance->getLocalAuthoritiesID() as $authority) {
                 if (isset($link->getParsed()['bs/rs1/eid'])
                     && $link->getParsed()['bs/rs1/eid'] == $authority
                     && $module != '0'

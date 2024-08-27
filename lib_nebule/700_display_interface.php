@@ -46,7 +46,7 @@ abstract class DisplayItem implements DisplayInterface
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
         $this->_init();
     }
     protected function _init(): void { $this->setSocial(''); } // Should be overridden by children classes.

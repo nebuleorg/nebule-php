@@ -315,13 +315,6 @@ class Cache
         return false;
     }
 
-    /**
-     * Nouvelle instance d'un objet.
-     *
-     * @param string $nid
-     * @param string $type
-     * @return node
-     */
     public function newNode(string $nid, string $type = Cache::TYPE_NODE): node
     {
         if ($nid == '')
@@ -372,6 +365,30 @@ class Cache
             ) {
                 $this->_cache[$type][$nid] = $instance;
                 $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+    public function newEntity(string $nid): Entity
+    {
+        if ($nid == '')
+            $nid = '0';
+
+        if (!$this->_flushCache
+            && isset($this->_cache[Cache::TYPE_ENTITY][$nid])
+        ) {
+            $this->_cacheDateInsertion[Cache::TYPE_ENTITY][$nid] = microtime(true);
+            $instance = $this->_cache[Cache::TYPE_ENTITY][$nid];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new Entity($this->_nebuleInstance, $nid);
+
+            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+                && $instance->getID() != '0'
+            ) {
+                $this->_cache[Cache::TYPE_ENTITY][$nid] = $instance;
+                $this->_cacheDateInsertion[Cache::TYPE_ENTITY][$nid] = microtime(true);
             }
         }
         return $instance;

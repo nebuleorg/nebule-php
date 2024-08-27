@@ -31,14 +31,9 @@ class Conversation extends Group implements nodeInterface
 {
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272';
 
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cacheProperty',
         '_cacheProperties',
         '_cacheMarkProtected',
@@ -60,10 +55,6 @@ class Conversation extends Group implements nodeInterface
         '_referenceObjectObfuscated',
     );
 
-    /**
-     * Specific part of constructor for a group.
-     * @return void
-     */
     protected function _localConstruct(): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency') )
@@ -72,7 +63,7 @@ class Conversation extends Group implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
 
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
@@ -100,7 +91,7 @@ class Conversation extends Group implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
+            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère un contenu aléatoire.
             $data = $this->_cryptoInstance->getRandom(32, Crypto::RANDOM_PSEUDO);
@@ -117,7 +108,7 @@ class Conversation extends Group implements nodeInterface
                 $this->_haveData = true;
                 $data = null;
 
-                $signer = $this->_nebuleInstance->getCurrentEntity();
+                $signer = $this->_nebuleInstance->getCurrentEntityID();
                 $date = date(DATE_ATOM);
                 $hashconversation = $this->getReferenceObject();
 
@@ -367,7 +358,7 @@ class Conversation extends Group implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -386,7 +377,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $id;
@@ -421,7 +412,7 @@ class Conversation extends Group implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -440,7 +431,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $id;

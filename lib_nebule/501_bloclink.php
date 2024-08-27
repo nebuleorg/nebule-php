@@ -917,9 +917,9 @@ class blocLink implements blocLinkInterface
 
         if ($this->_validStructure) {
             if ($publicKey == '0') {
-                $publicKeyID = $this->_nebuleInstance->getCurrentEntity();
+                $publicKeyID = $this->_nebuleInstance->getCurrentEntityID();
                 $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
-            } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntity()) {
+            } elseif ($publicKey == $this->_nebuleInstance->getCurrentEntityID()) {
                 $publicKeyInstance = $this->_nebuleInstance->getCurrentEntityInstance();
                 $publicKeyID = $publicKey;
             } else {

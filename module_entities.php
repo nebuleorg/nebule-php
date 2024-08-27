@@ -107,7 +107,7 @@ class ModuleEntities extends Modules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
         $this->_findDisplayEntity();
         $this->_initTable_DEPRECATED();
         $this->_hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
@@ -194,7 +194,7 @@ class ModuleEntities extends Modules
                     $hookArray[6]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
                     $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID();
                 }
 
                 // Vérifie que la synchronisation soit authorisée.
@@ -211,7 +211,7 @@ class ModuleEntities extends Modules
                     $hookArray[7]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
                     $hookArray[7]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[4]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity();
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID();
                 }
                 break;
 
@@ -237,7 +237,7 @@ class ModuleEntities extends Modules
                 break;
 
             case 'selfMenuEntity':
-                if ($object != $this->_nebuleInstance->getCurrentEntity()) {
+                if ($object != $this->_nebuleInstance->getCurrentEntityID()) {
                     // Basculer et se connecter avec cette entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
                     $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[11];
@@ -308,7 +308,7 @@ class ModuleEntities extends Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 break;
 
@@ -321,7 +321,7 @@ class ModuleEntities extends Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID()
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 break;
         }
@@ -882,7 +882,7 @@ class ModuleEntities extends Modules
         echo '</div>' . "\n";
 
         if ($this->_displayEntityInstance->issetPrivateKeyPassword()
-            || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntity()
+            || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
         ) {
@@ -939,7 +939,7 @@ class ModuleEntities extends Modules
 
         // Affiche le champ de mot de passe.
         if ($this->_displayEntityInstance->issetPrivateKeyPassword()
-            || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntity()
+            || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
         ) {
@@ -1017,7 +1017,7 @@ class ModuleEntities extends Modules
     private function _displayEntityLogs(): void
     {
         // Entité en cours.
-        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
+        if ($this->_nebuleInstance->getCurrentEntityID() != $this->_applicationInstance->getCurrentEntityID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -1033,7 +1033,7 @@ class ModuleEntities extends Modules
         <div class="sylabeModuleEntityActionText">
             <p>
                 <?php
-                if ($entity == $this->_nebuleInstance->getCurrentEntity() && $this->_unlocked) {
+                if ($entity == $this->_nebuleInstance->getCurrentEntityID() && $this->_unlocked) {
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
@@ -1225,7 +1225,7 @@ class ModuleEntities extends Modules
     private function _displayEntityActs(): void
     {
         // Entité en cours.
-        if ($this->_nebuleInstance->getCurrentEntity() != $this->_applicationInstance->getCurrentEntityID()) {
+        if ($this->_nebuleInstance->getCurrentEntityID() != $this->_applicationInstance->getCurrentEntityID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -1254,7 +1254,7 @@ class ModuleEntities extends Modules
                 } // Sinon, affiche les messages de l'entité courante.
                 else {
                     $entity = $this->_nebuleInstance->getCurrentEntityInstance();
-                    $id = $this->_nebuleInstance->getCurrentEntity();
+                    $id = $this->_nebuleInstance->getCurrentEntityID();
                     $owned = true;
                     if ($this->_unlocked) {
                         echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
@@ -1408,7 +1408,7 @@ class ModuleEntities extends Modules
     private function _display_InlineKnownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
+        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();
@@ -1474,7 +1474,7 @@ class ModuleEntities extends Modules
     private function _display_InlineKnownByEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
+        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();
@@ -1543,7 +1543,7 @@ class ModuleEntities extends Modules
     private function _display_InlineUnknownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntities();
+        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();
@@ -1824,7 +1824,7 @@ class ModuleEntities extends Modules
                           action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
                               . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-                              . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntity()
+                              . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityID()
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateNames">
                             <div class="sylabeModuleEntityCreateHeader">
@@ -2019,7 +2019,7 @@ class ModuleEntities extends Modules
                     <input type="hidden" name="obj"
                            value="<?php echo $this->_applicationInstance->getCurrentObjectID(); ?>">
                     <input type="hidden" name="ent"
-                           value="<?php echo $this->_nebuleInstance->getCurrentEntity(); ?>">
+                           value="<?php echo $this->_nebuleInstance->getCurrentEntityID(); ?>">
                     <table border="0" padding="2px">
                         <tr>
                             <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:URL') ?>

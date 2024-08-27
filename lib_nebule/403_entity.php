@@ -31,14 +31,9 @@ class Entity extends Node implements nodeInterface
     const ENTITY_PRIVATE_HEADER = '-----BEGIN ENCRYPTED PRIVATE KEY-----';
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272';
 
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cacheProperty',
         '_cacheProperties',
         '_cacheMarkProtected',
@@ -60,14 +55,14 @@ class Entity extends Node implements nodeInterface
         '_faceCache',
     );
 
-    private $_publicKey = '';
-    private $_privateKeyID = '0';
-    private $_privateKey = '';
-    private $_newPrivateKey = false;
-    private $_privateKeyPassword = '';
-    private $_privateKeyPasswordSalt = '';
-    private $_issetPrivateKeyPassword = false;
-    private $_faceCache = array();
+    private string $_publicKey = '';
+    private string $_privateKeyID = '0';
+    private string $_privateKey = '';
+    private bool $_newPrivateKey = false;
+    private string $_privateKeyPassword = '';
+    private string $_privateKeyPasswordSalt = '';
+    private bool $_issetPrivateKeyPassword = false;
+    private array $_faceCache = array();
 
     /**
      * Specific part of constructor for an entity.
@@ -76,7 +71,7 @@ class Entity extends Node implements nodeInterface
     protected function _localConstruct(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
         if ($this->_isNew)
             $this->_createNewEntity();
         elseif ($this->_id != '0')
@@ -120,7 +115,7 @@ class Entity extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
-            && ($this->_nebuleInstance->getCurrentEntityUnlocked()
+            && ($this->_nebuleInstance->getCurrentEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {

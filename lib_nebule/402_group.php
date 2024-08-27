@@ -28,18 +28,12 @@ use Nebule\Library\Node;
  */
 class Group extends Node implements nodeInterface
 {
-    // Suffixe d'identifiant de nouveaux groupes.
     const DEFAULT_SUFFIX_NEW_GROUP = '006e6562756c652f6f626a65742f67726f757065';
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272';
 
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cacheProperty',
         '_cacheProperties',
         '_cacheMarkProtected',
@@ -61,13 +55,9 @@ class Group extends Node implements nodeInterface
         '_referenceObjectObfuscated',
     );
 
-    /**
-     * Specific part of constructor for a group.
-     * @return void
-     */
     protected function _localConstruct(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
         $this->getReferenceObjectProtected();
@@ -92,7 +82,7 @@ class Group extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
+            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             // calcul l'ID.
             $this->_id = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO)) . self::DEFAULT_SUFFIX_NEW_GROUP;
@@ -104,7 +94,7 @@ class Group extends Node implements nodeInterface
             $this->_data = null;
             $this->_haveData = false;
 
-            $signer = $this->_nebuleInstance->getCurrentEntity();
+            $signer = $this->_nebuleInstance->getCurrentEntityID();
             $date = date(DATE_ATOM);
             $hashGroup = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
 
@@ -302,7 +292,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -313,7 +303,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de suppression de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -349,7 +339,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Liste tous mes liens de définition de groupe fermé.
@@ -366,7 +356,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+        if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
             if (sizeof($links) != 0) {
                 $this->_isMarkClosed = true;
             } else {
@@ -396,7 +386,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -410,7 +400,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -419,7 +409,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création du lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -436,7 +426,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkClosed = true;
             }
             return true;
@@ -458,7 +448,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -467,7 +457,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -476,7 +466,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de suppression de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -486,7 +476,7 @@ class Group extends Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkClosed = false;
             }
             return true;
@@ -514,7 +504,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Liste tous mes liens de définition de groupe protégé.
@@ -531,7 +521,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+        if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
             if (sizeof($links) != 0) {
                 $this->_isMarkProtected = true;
             } else {
@@ -561,7 +551,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -575,7 +565,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -584,7 +574,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création du lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -601,7 +591,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkProtected = true;
             }
             return true;
@@ -623,7 +613,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -632,7 +622,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -641,7 +631,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de suppression de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -651,7 +641,7 @@ class Group extends Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkProtected = false;
             }
             return true;
@@ -684,7 +674,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Liste tous mes liens de définition de groupe dissimulé.
@@ -701,7 +691,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+        if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
             if (sizeof($links) != 0) {
                 $this->_isMarkObfuscated = true;
             } else {
@@ -736,7 +726,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -750,7 +740,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -759,7 +749,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création du lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -776,7 +766,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkObfuscated = true;
             }
             return true;
@@ -803,7 +793,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -812,7 +802,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '') {
-            $id = $this->_nebuleInstance->getCurrentEntity();
+            $id = $this->_nebuleInstance->getCurrentEntityID();
         }
 
         // Si déjà marqué, donne le résultat tout de suite.
@@ -821,7 +811,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de suppression de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -831,7 +821,7 @@ class Group extends Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_nebuleInstance->getCurrentEntity()) {
+            if ($id == $this->_nebuleInstance->getCurrentEntityID()) {
                 $this->_isMarkObfuscated = false;
             }
             return true;
@@ -890,7 +880,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -909,7 +899,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -944,7 +934,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -963,7 +953,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -1099,7 +1089,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -1118,7 +1108,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $id;
@@ -1153,7 +1143,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_nebuleInstance->getCurrentEntityUnlocked()
+            || !$this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             return false;
         }
@@ -1172,7 +1162,7 @@ class Group extends Node implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $id;

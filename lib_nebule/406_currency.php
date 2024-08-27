@@ -25,14 +25,9 @@ use Nebule\Library\Node;
  */
 class Currency extends Node implements nodeInterface
 {
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cachePropertyLink',
         '_cachePropertiesLinks',
         '_cachePropertyID',
@@ -65,23 +60,9 @@ class Currency extends Node implements nodeInterface
         '_inheritedPID',
     );
 
-    /**
-     * Tableau des propriétés de la monnaie.
-     * @var array
-     */
-    protected $_properties = array();
-
-    /**
-     * Tableau des propriétés héritées.
-     * @var array
-     */
-    protected $_propertiesInherited = array();
-
-    /**
-     * Tableau des propriétés forcées.
-     * @var array
-     */
-    protected $_propertiesForced = array();
+    protected array $_properties = array();
+    protected array $_propertiesInherited = array();
+    protected array $_propertiesForced = array();
 
     /**
      * Tableau des noms des propriétés disponibles.
@@ -106,7 +87,7 @@ class Currency extends Node implements nodeInterface
      *
      * @var array
      */
-    protected $_propertiesList = array(
+    protected array $_propertiesList = array(
         'currency' => array(
             'CurrencyHaveContent' => array('key' => 'HCT', 'shortname' => 'chct', 'type' => 'boolean', 'info' => 'omcphct', 'force' => 'true',),
             'CurrencyType' => array('key' => 'TYP', 'shortname' => 'ctyp', 'type' => 'string', 'info' => 'omcptyp', 'limit' => '32', 'display' => '16', 'force' => 'cryptocurrency',),
@@ -173,40 +154,11 @@ class Currency extends Node implements nodeInterface
         ),
     );
 
-    /**
-     * Compteur interne de génération de l'aléa.
-     *
-     * @var string
-     */
-    protected $_seed = '';
+    protected string $_seed = '';
+    protected ?Currency $_inheritedCID = null;
+    protected ?TokenPool $_inheritedPID = null;
+    protected array $_CAParray = array();
 
-    /**
-     * Instance de la monnaie dont dépend l'instance.
-     * N'est pas utilisé pour une monnaie.
-     *
-     * @var Currency
-     */
-    protected $_inheritedCID = null;
-
-    /**
-     * Instance de la monnaie dont dépend l'instance.
-     * N'est pas utilisé pour une monnaie.
-     *
-     * @var TokenPool
-     */
-    protected $_inheritedPID = null;
-
-    /**
-     * Tableau des capacités reconnues de la monnaie.
-     *
-     * @var array:string
-     */
-    protected $_CAParray = array();
-
-    /**
-     * Specific part of constructor for a currency.
-     * @return void
-     */
     protected function _localConstruct(): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency'))
@@ -215,7 +167,7 @@ class Currency extends Node implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_id != '0')
             $this->_loadCurrency($this->_id);
@@ -297,7 +249,7 @@ class Currency extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_nebuleInstance->getCurrentEntityUnlocked()
+            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère la nouvelle monnaie.
             $this->_id = $this->_createCurrency($param, $protected, $obfuscated);
@@ -627,7 +579,7 @@ class Currency extends Node implements nodeInterface
         $param['ForceCurrencySerialID'] = true;
 
         // Force le paramètre AID avec l'entité en cours.
-        $param['CurrencyAutorityID'] = $this->_nebuleInstance->getCurrentEntity();
+        $param['CurrencyAutorityID'] = $this->_nebuleInstance->getCurrentEntityID();
         $param['ForceCurrencyAutorityID'] = true;
         $this->_properties['AID'] = $param['CurrencyAutorityID'];
 
@@ -664,8 +616,8 @@ class Currency extends Node implements nodeInterface
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'] . "\n";
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            $content .= 'AID:' . $this->_nebuleInstance->getCurrentEntity() . "\n";
-            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_nebuleInstance->getCurrentEntity(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $content .= 'AID:' . $this->_nebuleInstance->getCurrentEntityID() . "\n";
+            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_nebuleInstance->getCurrentEntityID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -730,7 +682,7 @@ class Currency extends Node implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

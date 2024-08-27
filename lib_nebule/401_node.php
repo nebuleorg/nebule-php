@@ -28,14 +28,9 @@ class Node implements nodeInterface
     const CRYPTO_SESSION_KEY_SIZE = 117; // FIXME utilisé par setProtected(), à refaire pour le cas général.
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
 
-    /**
-     * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
-     *
-     * @var array:string
-     */
     const SESSION_SAVED_VARS = array(
         '_id',
-        '_fullname',
+        '_fullName',
         '_cachePropertyLink',
         '_cachePropertiesLinks',
         '_cachePropertyID',
@@ -105,10 +100,8 @@ class Node implements nodeInterface
      */
     public function __construct(nebule $nebuleInstance, string $nid)
     {
-        // Common initialisation.
         $this->_initialisation($nebuleInstance);
 
-        // ID processing.
         $id = trim(strtolower($nid));
         if (self::checkNID($id, false, false)
         ) {
@@ -120,35 +113,19 @@ class Node implements nodeInterface
             $this->_isNew = true;
         }
 
-        // Load specific code for node derivative.
         $this->_localConstruct();
     }
 
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->_id;
     }
 
-    /**
-     * Retourne les variables à sauvegarder dans la session php lors d'une mise en sommeil de l'instance.
-     *
-     * @return array:string
-     */
     public function __sleep(): array
     {
         return self::SESSION_SAVED_VARS;
     }
 
-    /**
-     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
-     *
-     * @return void
-     */
     public function __wakeup()
     {
         global $nebuleInstance;
@@ -161,12 +138,7 @@ class Node implements nodeInterface
         $this->_cacheUpdate = '';
     }
 
-    /**
-     * Common initialisation of a node or derivative.
-     * @param $nebuleInstance
-     * @return void
-     */
-    protected function _initialisation($nebuleInstance)
+    protected function _initialisation(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
@@ -178,13 +150,9 @@ class Node implements nodeInterface
         $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
     }
 
-    /**
-     * Specific part of constructor for a node.
-     * @return void
-     */
     protected function _localConstruct(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
     }
 
     /**
@@ -763,7 +731,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
-        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity());
+        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntityID());
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
@@ -3466,7 +3434,7 @@ class Node implements nodeInterface
         // Lit les liens.
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_nebuleInstance->getCurrentEntity();
+        $entity = $this->_nebuleInstance->getCurrentEntityID();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3495,7 +3463,7 @@ class Node implements nodeInterface
             // Lit les liens.
             $links = array();
             $this->getLinks($links, array(), false);
-            $entity = $this->_nebuleInstance->getCurrentEntity();
+            $entity = $this->_nebuleInstance->getCurrentEntityID();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
                 if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3532,7 +3500,7 @@ class Node implements nodeInterface
 
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_nebuleInstance->getCurrentEntity();
+        $entity = $this->_nebuleInstance->getCurrentEntityID();
         foreach ($links as $link) {
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 unset($links, $entity, $link);
@@ -3657,7 +3625,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $rl, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
-        return $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntity(), $date);
+        return $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntityID(), $date);
     }
 
 

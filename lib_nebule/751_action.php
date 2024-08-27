@@ -119,7 +119,7 @@ abstract class Actions
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_metrologyInstance = $this->_applicationInstance->getMetrologyInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
@@ -2583,7 +2583,7 @@ abstract class Actions
         } elseif ($this->_unlocked) {
             $link = $this->_nebuleInstance->newBlockLink(
                 '0_'
-                . $this->_nebuleInstance->getCurrentEntity() . '_'
+                . $this->_nebuleInstance->getCurrentEntityID() . '_'
                 . $link->getDate() . '_'
                 . $link->getParsed()['bl/rl/req'] . '_'
                 . $link->getParsed()['bl/rl/nid1'] . '_'
@@ -2993,7 +2993,7 @@ abstract class Actions
 
         // Définition de la date et le signataire.
         $date = date(DATE_ATOM);
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
 
         // Création du type mime.
         $instance->setType($this->_actionUploadFileType);
@@ -3125,7 +3125,7 @@ abstract class Actions
                     } elseif ($this->_unlocked) {
                         $instance = $this->_nebuleInstance->newBlockLink(
                             '0_'
-                            . $this->_nebuleInstance->getCurrentEntity() . '_'
+                            . $this->_nebuleInstance->getCurrentEntityID() . '_'
                             . $instance->getDate() . '_'
                             . $instance->getParsed()['bl/rl/req'] . '_'
                             . $instance->getParsed()['bl/rl/nid1'] . '_'
@@ -3650,7 +3650,7 @@ abstract class Actions
 
         // Création du lien.
         $date = date(DATE_ATOM);
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $action = 'l';
         $source = $objectID;
         $target = $valueID;

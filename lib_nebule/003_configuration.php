@@ -1229,7 +1229,7 @@ class Configuration
         if ($entity = ''
             || $entity == '0'
         )
-            $entity = $this->_nebuleInstance->getCurrentEntity();
+            $entity = $this->_nebuleInstance->getCurrentEntityID();
 
         $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3ae7eea2');
 
@@ -1249,7 +1249,7 @@ class Configuration
         }
         $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
 
-        $signer = $this->_nebuleInstance->getCurrentEntity();
+        $signer = $this->_nebuleInstance->getCurrentEntityID();
         $source = $entity;
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
@@ -1360,7 +1360,7 @@ class Configuration
     {
         foreach ($list as $name)
         {
-            if (($name == 'unlocked' && !$this->_nebuleInstance->getCurrentEntityUnlocked())
+            if (($name == 'unlocked' && !$this->_nebuleInstance->getCurrentEntityIsUnlocked())
                 || !isset(self::OPTIONS_TYPE[$name])
                 || self::OPTIONS_TYPE[$name] != 'boolean'
                 || !$this->getOptionAsBoolean($name)
