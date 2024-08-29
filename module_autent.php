@@ -29,7 +29,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'desc';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020240813';
+    protected string $MODULE_VERSION = '020240829';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -172,7 +172,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
             $this->_displayAddButtonQuery($instanceList,
                 '::::Password',
                 DisplayQuery::QUERY_PASSWORD,
-                References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()

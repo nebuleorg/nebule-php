@@ -881,7 +881,7 @@ class ModuleEntities extends Modules
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
-        if ($this->_displayEntityInstance->issetPrivateKeyPassword()
+        if ($this->_displayEntityInstance->isSetPrivateKeyPassword()
             || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
@@ -938,7 +938,7 @@ class ModuleEntities extends Modules
         }
 
         // Affiche le champ de mot de passe.
-        if ($this->_displayEntityInstance->issetPrivateKeyPassword()
+        if ($this->_displayEntityInstance->isSetPrivateKeyPassword()
             || ($this->_displayEntity == $this->_nebuleInstance->getCurrentEntityID()
                 && $this->_unlocked
             )

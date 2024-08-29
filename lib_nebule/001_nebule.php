@@ -1048,7 +1048,7 @@ class nebule
             && $this->_ioInstance->checkObjectPresent($arg_ent)
             && $this->_ioInstance->checkLinkPresent($arg_ent)
         )
-            $itc_ent = $this->newObject($arg_ent);
+            $itc_ent = $this->_cacheInstance->newEntity($arg_ent);
 
         if ($arg_switch
             && is_a($itc_ent, 'Nebule\Library\Node')
@@ -1088,9 +1088,9 @@ class nebule
                 if (Node::checkNID($ext_ent, false, false)
                     && $this->_ioInstance->checkObjectPresent($ext_ent)
                     && $this->_ioInstance->checkLinkPresent($ext_ent)) {
-                    $itc_ent = $this->newObject($ext_ent);
+                    $itc_ent = $this->_cacheInstance->newEntity($ext_ent);
                 }
-                if (is_a($itc_ent, 'Node') && $itc_ent->getType('all') == Entity::ENTITY_TYPE) {
+                if (is_a($itc_ent, 'Nebule\Library\Entity') && $itc_ent->getType('all') == Entity::ENTITY_TYPE) {
                     // Ecrit l'entité dans la session et dans la variable globale.
                     $this->_currentEntityID = $ext_ent;
                     $this->_currentEntityInstance = new Entity($this->_nebuleInstance, $ext_ent);
@@ -1164,7 +1164,7 @@ class nebule
             return;
         }
 
-        if ($this->_currentEntityInstance->issetPrivateKeyPassword())
+        if ($this->_currentEntityInstance->isSetPrivateKeyPassword())
             return;
 
         $arg_get_pwd = filter_input(INPUT_GET, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
@@ -1221,7 +1221,7 @@ class nebule
         $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
         $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
         $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->issetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -1252,7 +1252,7 @@ class nebule
         $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
         $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
         $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->issetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -1283,7 +1283,7 @@ class nebule
         $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
         $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
         $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->issetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
 
         session_write_close();
         return true;

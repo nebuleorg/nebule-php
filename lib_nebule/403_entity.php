@@ -51,7 +51,7 @@ class Entity extends Node implements nodeInterface
         '_newPrivateKey',
         '_privateKeyPassword',
         '_privateKeyPasswordSalt',
-        '_issetPrivateKeyPassword',
+        '_isSetPrivateKeyPassword',
         '_faceCache',
     );
 
@@ -61,7 +61,7 @@ class Entity extends Node implements nodeInterface
     private bool $_newPrivateKey = false;
     private string $_privateKeyPassword = '';
     private string $_privateKeyPasswordSalt = '';
-    private bool $_issetPrivateKeyPassword = false;
+    private bool $_isSetPrivateKeyPassword = false;
     private array $_faceCache = array();
 
     /**
@@ -132,7 +132,7 @@ class Entity extends Node implements nodeInterface
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
                 $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($this->_privateKey);
-                $this->_issetPrivateKeyPassword = true;
+                $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
                 // Écriture de la clé publique.
@@ -349,17 +349,11 @@ class Entity extends Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie la présence d'une clé privée.
-        if (isset($this->_privateKey)
-            && $this->_privateKey != ''
-        ) {
+        if (isset($this->_privateKey) && $this->_privateKey != '')
             return true;
-        }
         // Vérifie la présence d'un ID de clé privée. La recherche au besoin.
-        if (!isset($this->_privateKeyID)
-            || !$this->_privateKeyID != '0'
-        ) {
+        if (!isset($this->_privateKeyID) || !$this->_privateKeyID != '0')
             $this->_findPrivateKeyID();
-        }
         // Extrait le contenu de l'objet.
         $this->_privateKey = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
         return true;
@@ -371,14 +365,12 @@ class Entity extends Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_findPrivateKey();
-        if (is_string($this->_privateKey)
-            && !$this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd)
-        )
+        if (!$this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd))
             return false;
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // TODO le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $passwd;
-        $this->_issetPrivateKeyPassword = true;
+        $this->_isSetPrivateKeyPassword = true;
         $this->_nebuleInstance->addListEntitiesUnlocked($this);
         return true;
     }
@@ -398,14 +390,14 @@ class Entity extends Node implements nodeInterface
         $this->_privateKeyPassword = $this->_privateKeyPasswordSalt;
         $this->_privateKeyPassword = '';
         $this->_privateKeyPasswordSalt = '';
-        $this->_issetPrivateKeyPassword = false;
+        $this->_isSetPrivateKeyPassword = false;
         $this->_nebuleInstance->removeListEntitiesUnlocked($this);
         return true;
     }
 
-    public function issetPrivateKeyPassword(): bool
+    public function isSetPrivateKeyPassword(): bool
     {
-        return $this->_issetPrivateKeyPassword;
+        return $this->_isSetPrivateKeyPassword;
     }
 
     public function changePrivateKeyPassword(string $newPasswd): bool
@@ -414,7 +406,7 @@ class Entity extends Node implements nodeInterface
         if ($this->_id == '0')
             return false;
         // Vérifie que le mot de passe actuel est présent.
-        if (!$this->_issetPrivateKeyPassword)
+        if (!$this->_isSetPrivateKeyPassword)
             return false;
 
         $this->_metrologyInstance->addLog('Change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -432,7 +424,7 @@ class Entity extends Node implements nodeInterface
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;
         $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($newKey);
-        $this->_issetPrivateKeyPassword = true;
+        $this->_isSetPrivateKeyPassword = true;
         $this->_metrologyInstance->addLog('Change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
         unset($newKey);

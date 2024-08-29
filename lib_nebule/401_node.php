@@ -123,7 +123,7 @@ class Node implements nodeInterface
 
     public function __sleep(): array
     {
-        return self::SESSION_SAVED_VARS;
+        return $this::SESSION_SAVED_VARS;
     }
 
     public function __wakeup()
