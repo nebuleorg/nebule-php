@@ -12,29 +12,13 @@ namespace Nebule\Library;
  */
 class Documentation
 {
-	/**
-	 * Instance de la librairie en cours.
-	 *
-	 * @var nebule
-	 */
-	protected $_nebuleInstance;
+	protected ?nebule $_nebuleInstance = null;
 
-	/**
-	 * Constructeur.
-	 * Toujours transmettre l'instance de la librairie nebule.
-	 *
-	 * @param nebule $nebuleInstance
-	 */
 	public function __construct(nebule $nebuleInstance)
 	{
 		$this->_nebuleInstance = $nebuleInstance;
 	}
 
-	/**
-	 * Affiche le contenu de la documentation technique de la bibliothèque nebule.
-	 *
-	 * @return void
-	 */
 	public function display_content()
 	{
 ?>
@@ -95,11 +79,6 @@ class Documentation
         Social::echoDocumentationCore();
     }
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationTitles()
     {
         ?>
@@ -109,11 +88,6 @@ class Documentation
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationCore()
     {
         ?>
