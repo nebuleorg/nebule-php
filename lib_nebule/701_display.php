@@ -55,6 +55,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_DISPLAY_COMMAND_VIEW = 'view';
     const DEFAULT_NEXT_COMMAND = 'next';
     const DEFAULT_INLINE_COMMAND = 'i';
+    const DEFAULT_CSS_COMMAND = 'css';
     const DEFAULT_INLINE_CONTENT_COMMAND = 'incontent';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
@@ -1671,7 +1672,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affichage des scripts JS.
+     * Display JS scripts.
      */
     protected function _displayScripts(): void
     {
@@ -1691,12 +1692,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function display(): void
     {
-        // Preload code from apps.
         $this->_preDisplay();
 
-        // Read GET param if existed.
         if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
             $this->_displayInline();
+        //elseif (filter_has_var(INPUT_GET, self::DEFAULT_CSS_COMMAND))
+        //    $this->commonCSS(); TODO
         else
             $this->_displayFull();
     }
@@ -1709,7 +1710,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationVersion, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
         ?>
         <!DOCTYPE html>
-        <html>
+        <html lang="">
         <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
             <title><?php echo $applicationName; ?></title>
@@ -5464,6 +5465,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function displayInlineLastAction(): void
     {
         $array = $this->_metrologyInstance->getLastAction();
+        if (sizeof($array) == 0)
+            return;
         switch ($array['type']) {
             case 'addlnk' :
                 $this->displayInlineIconFace('DEFAULT_ICON_ADDLNK');
@@ -5505,7 +5508,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function displayInlineAllActions(): void
     {
         $count = 0;
-        while ($array = $this->_metrologyInstance->getFirstAction()) {
+        while (true) {
+            $array = $this->_metrologyInstance->getFirstAction();
+            if (sizeof($array) == 0 || $count > Metrology::DEFAULT_ACTION_STATE_SIZE)
+                break;
             if ($count > 0)
                 echo "- \n";
             switch ($array['type']) {
@@ -5551,7 +5557,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo "&nbsp;";
         }
         unset($array);
-        // Flush la sortie vers le navigateur.
         flush();
     }
 

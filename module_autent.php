@@ -132,13 +132,15 @@ class ModuleAutent extends \Nebule\Library\Modules {
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2];
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2]
+                . '&' . References::COMMAND_SWITCH_TO_ENTITY;
             $title = ':::logout';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1];
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1]
+                . '&' . References::COMMAND_SWITCH_TO_ENTITY;
             $title = ':::login';
             $type = DisplayItemIconMessage::TYPE_PLAY;
         }

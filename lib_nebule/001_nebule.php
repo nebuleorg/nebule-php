@@ -1035,22 +1035,15 @@ class nebule
     private ?Node $_currentEntityPrivateKeyInstance = null;
     private bool $_currentEntityIsUnlocked = false;
 
-    private function _getCurrentEntity()
+    private function _getCurrentEntity() // FIXME WTF!
     {
         $itc_ent = null;
 
-        $arg_switch = (filter_has_var(INPUT_GET, self::COMMAND_SWITCH_TO_ENTITY)
-            || filter_has_var(INPUT_POST, self::COMMAND_SWITCH_TO_ENTITY));
-        $arg_ent = filter_input(INPUT_GET, self::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-
-        if ($arg_switch
-            && Node::checkNID($arg_ent, false, false)
-            && $this->_ioInstance->checkObjectPresent($arg_ent)
-            && $this->_ioInstance->checkLinkPresent($arg_ent)
-        )
+        $arg_ent = $this->_getCurrentEntityFromArg();
+        if ($arg_ent != '')
             $itc_ent = $this->_cacheInstance->newEntity($arg_ent);
 
-        if ($arg_switch
+        if ($arg_ent != ''
             && is_a($itc_ent, 'Nebule\Library\Node')
             && $itc_ent->getType('all') == Entity::ENTITY_TYPE
         ) {
@@ -1117,12 +1110,40 @@ class nebule
         }
     }
 
+    private function _getCurrentEntityFromArg(): ?string
+    {
+        // Extract anf filter
+        if (filter_has_var(INPUT_GET, self::COMMAND_SWITCH_TO_ENTITY)
+            && filter_has_var(INPUT_GET, self::COMMAND_SELECT_ENTITY)
+        )
+            $arg = filter_input(INPUT_GET,
+                self::COMMAND_SELECT_ENTITY,
+                FILTER_SANITIZE_STRING,
+                FILTER_FLAG_ENCODE_LOW);
+        elseif (filter_has_var(INPUT_POST, self::COMMAND_SWITCH_TO_ENTITY)
+            && filter_has_var(INPUT_POST, self::COMMAND_SELECT_ENTITY)
+        )
+            $arg = filter_input(INPUT_POST,
+                self::COMMAND_SELECT_ENTITY,
+                FILTER_SANITIZE_STRING,
+                FILTER_FLAG_ENCODE_LOW);
+        else
+            $arg = '';
+
+        // Verify node
+        if (!Node::checkNID($arg, false, false)
+            || !$this->_ioInstance->checkObjectPresent($arg)
+            || !$this->_ioInstance->checkLinkPresent($arg)
+        )
+            $arg = '';
+
+        return $arg;
+    }
+
     private function _getCurrentEntityPrivateKey()
     {
         $privateKey = $this->getSessionStore('nebulePrivateEntity');
 
-
-        // S'il existe une variable de session pour l'entite, la lit
         if ($privateKey !== false
             && $privateKey != ''
             && $privateKey != '0'
@@ -1136,11 +1157,9 @@ class nebule
                 $this->_currentEntityPrivateKey = $this->_currentEntityInstance->getPrivateKeyID();
                 if ($this->_currentEntityPrivateKey != '') {
                     $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
-                    // Log
                     $this->_metrologyInstance->addLog('Find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6be388ca');
                 } else {
                     $this->_currentEntityPrivateKeyInstance = null;
-                    // Log
                     $this->_metrologyInstance->addLog('Cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1e5bed72');
                 }
                 $this->setSessionStore('nebulePrivateEntity', $this->_currentEntityPrivateKey);
