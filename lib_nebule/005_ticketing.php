@@ -14,43 +14,16 @@ class Ticketing
 {
     const TICKET_SIZE = 256; // Octet
 
-    /**
-     * Instance de la librairie en cours.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
+    protected ?nebule $_nebuleInstance = null;
+    private ?Metrology $_metrologyInstance = null;
+    protected ?Cache $_cacheInstance = null;
+    private bool $_validTicket = false;
 
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    private $_metrology;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
-
-    /**
-     * Contient l'état de validité du ticket des actions.
-     * @var boolean
-     */
-    private $_validTicket = false;
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
         $this->_findActionTicket();
     }
 
@@ -93,14 +66,14 @@ class Ticketing
         if ($ticket == '0') {
             // Le ticket est null, aucun ticket trouvé en argument.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd396f0a9'); // Log
+            $this->_metrologyInstance->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'd396f0a9'); // Log
             $this->_validTicket = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
             && $_SESSION['Tickets'][$ticket] !== true
         ) {
             // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'd516f0d4'); // Log
+            $this->_metrologyInstance->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'd516f0d4'); // Log
             $this->_validTicket = false;
             $_SESSION['Ticket'][$ticket] = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
@@ -109,14 +82,14 @@ class Ticketing
             // Le ticket est connu et n'est pas utilisé, c'est bon.
             // Il est marqué maintenant comme utilisé.
             // Les actions peuvent être réalisées.
-            $this->_metrology->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7083b07d'); // Log
+            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '7083b07d'); // Log
             $this->_validTicket = true;
             $_SESSION['Tickets'][$ticket] = false;
         } else {
             // Le ticket est inconnu.
             // Pas de mémorisation.
             // Aucune action ne doit être réalisée.
-            $this->_metrology->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'b221e760'); // Log
+            $this->_metrologyInstance->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'b221e760'); // Log
             $this->_validTicket = false;
         }
         session_write_close();

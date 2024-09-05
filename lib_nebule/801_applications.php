@@ -38,6 +38,10 @@ abstract class Applications implements applicationInterface
     protected ?nebule $_nebuleInstance = null;
     protected ?Configuration $_configurationInstance = null;
     protected ?Metrology $_metrologyInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Actions $_actionInstance = null;
     protected ?Translates $_translateInstance = null;
@@ -60,6 +64,10 @@ abstract class Applications implements applicationInterface
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_findEnvironment();
 
         if ($this->_findAskDownload())
@@ -171,17 +179,17 @@ abstract class Applications implements applicationInterface
         ) {
             $this->_currentEntityOID = $arg_ent;
             $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($arg_ent);
-            $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
+            $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
-            $cache = $this->_nebuleInstance->getSessionStore('sylabeSelectedEntity');
+            $cache = $this->_sessionInstance->getSessionStore('sylabeSelectedEntity');
             if ($cache !== false && $cache != '') {
                 $this->_currentEntityOID = $cache;
                 $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
             } else
             {
-                $this->_currentEntityOID = $this->_nebuleInstance->getCurrentEntityID();
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_nebuleInstance->getCurrentEntityID());
-                $this->_nebuleInstance->setSessionStore('sylabeSelectedEntity', $this->_nebuleInstance->getCurrentEntityID());
+                $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
+                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_entitiesInstance->getCurrentEntityID());
+                $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $this->_entitiesInstance->getCurrentEntityID());
             }
             unset($cache);
         }
@@ -1021,11 +1029,11 @@ abstract class Applications implements applicationInterface
      */
     public function setMarkObject(string $object): void
     {
-        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
         if ($list === false)
             $list = array();
         $list[$object] = true;
-        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
         unset($list);
     }
 
@@ -1037,11 +1045,11 @@ abstract class Applications implements applicationInterface
      */
     public function setUnmarkObject(string $object): void
     {
-        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
         if ($list === false)
             return;
         unset($list[$object]);
-        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
         unset($list);
     }
 
@@ -1053,7 +1061,7 @@ abstract class Applications implements applicationInterface
     public function setUnmarkAllObjects(): void
     {
         $list = array();
-        $this->_nebuleInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
         unset($list);
     }
 
@@ -1065,7 +1073,7 @@ abstract class Applications implements applicationInterface
      */
     public function getMarkObject(string $object): bool
     {
-        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
         if ($list === false)
             return false;
         if (isset($list[$object]))
@@ -1079,7 +1087,7 @@ abstract class Applications implements applicationInterface
      */
     public function getMarkObjectList(): array
     {
-        $list = $this->_nebuleInstance->getSessionStore('objectsMarkList');
+        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
         if ($list === false)
             $list = array();
         return $list;

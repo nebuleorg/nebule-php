@@ -62,7 +62,7 @@ class Wallet extends Entity implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_isNew)
             $this->_createNewWallet();
@@ -88,7 +88,7 @@ class Wallet extends Entity implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
-            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère la nouveau sac de jetons.
             $this->_id = $this->_createWallet($param, $protected, $obfuscated);

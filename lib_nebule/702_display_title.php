@@ -64,7 +64,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 
     private function _getEntityHTML(&$result)
     {
-        if ($this->_applicationInstance->getCurrentEntityID() != $this->_nebuleInstance->getCurrentEntityID()
+        if ($this->_applicationInstance->getCurrentEntityID() != $this->_entitiesInstance->getCurrentEntityID()
             || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
             || $this->_displayEntity
         ) {

@@ -567,7 +567,7 @@ class ioDisk extends io implements ioInterface
      */
     private function _getTranlateID(string $id): string
     {
-        return $this->_nebuleInstance->getCryptoInstance()->hash($id . $this->_nebuleInstance->getCurrentEntityID() . $this->_filesTranscodeKey);
+        return $this->_nebuleInstance->getCryptoInstance()->hash($id . $this->_entitiesInstance->getCurrentEntityID() . $this->_filesTranscodeKey);
     }
 
     /**

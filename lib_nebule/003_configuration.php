@@ -1168,9 +1168,9 @@ class Configuration
 
         // Si aucune valeur trouvée de l'entité de subordination, lit l'option pour l'entité en cours.
         if ($value == ''
-            && is_a($this->_nebuleInstance->getCurrentEntityInstance(), 'Entity')
+            && is_a($this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance(), 'Entity')
         )
-            $value = trim($this->_nebuleInstance->getCurrentEntityInstance()->getProperty($rid));
+            $value = trim($this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance()->getProperty($rid));
 
         $this->_optionsByLinksIsInUse = false;
 
@@ -1229,7 +1229,7 @@ class Configuration
         if ($entity = ''
             || $entity == '0'
         )
-            $entity = $this->_nebuleInstance->getCurrentEntityID();
+            $entity = $this->_entitiesInstance->getCurrentEntityID();
 
         $this->_metrologyInstance->addLog('Set option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3ae7eea2');
 
@@ -1249,7 +1249,7 @@ class Configuration
         }
         $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
 
-        $signer = $this->_nebuleInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getCurrentEntityID();
         $source = $entity;
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
@@ -1360,7 +1360,7 @@ class Configuration
     {
         foreach ($list as $name)
         {
-            if (($name == 'unlocked' && !$this->_nebuleInstance->getCurrentEntityIsUnlocked())
+            if (($name == 'unlocked' && !$this->_entitiesInstance->getCurrentEntityIsUnlocked())
                 || !isset(self::OPTIONS_TYPE[$name])
                 || self::OPTIONS_TYPE[$name] != 'boolean'
                 || !$this->getOptionAsBoolean($name)

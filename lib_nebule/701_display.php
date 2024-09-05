@@ -207,6 +207,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected ?IO $_ioInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Actions $_actionInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected bool $_unlocked = false;
     protected string $_urlLinkObjectPrefix = '';
     protected string $_urlLinkGroupPrefix = '';
@@ -238,9 +242,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
@@ -416,14 +424,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($okModeARG)
             $this->_currentDisplayMode = $modeARG;
         else {
-            $cache = $this->_nebuleInstance->getSessionStore($applicationName . 'DisplayMode');
+            $cache = $this->_sessionInstance->getSessionStore($applicationName . 'DisplayMode');
             if ($cache !== false
                 && $cache != '')
                 $this->_currentDisplayMode = $cache;
             else
                 $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
         }
-        $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayMode', $this->_currentDisplayMode);
+        $this->_sessionInstance->setSessionStore($applicationName . 'DisplayMode', $this->_currentDisplayMode);
         $this->_metrologyInstance->addLog('Current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bda64a7b');
     }
 
@@ -529,9 +537,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Ecrit la vue dans la variable.
             $this->_currentDisplayView = $arg_view;
             // Ecrit la vue dans la session.
-            $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayView', $arg_view);
+            $this->_sessionInstance->setSessionStore($applicationName . 'DisplayView', $arg_view);
         } else {
-            $cache = $this->_nebuleInstance->getSessionStore($applicationName . 'DisplayView');
+            $cache = $this->_sessionInstance->getSessionStore($applicationName . 'DisplayView');
             // S'il existe une variable de session pour la vue, la lit.
             if ($cache !== false
                 && $cache != ''
@@ -545,7 +553,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;
                 // Ecrit dans le cache.
-                $this->_nebuleInstance->setSessionStore($applicationName . 'DisplayView', $this->_currentDisplayView);
+                $this->_sessionInstance->setSessionStore($applicationName . 'DisplayView', $this->_currentDisplayView);
             }
             unset($cache);
         }
@@ -1927,7 +1935,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertObjectContentSized(Node $object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
-        $unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         if ($size != 'full'
             && $size != 'half'
             && $size != 'small'
@@ -2107,7 +2115,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertAsObjectContentSized(Node $object, string $size = 'half', bool $permitWarnProtected = true): string
     {
         $result = '';
-        $unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         if ($size != 'full'
             && $size != 'half'
             && $size != 'small'
@@ -3462,7 +3470,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Préparation du lien.
             $source = $object->getID();
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
-            $meta = $this->_nebuleInstance->getCurrentEntityID();
+            $meta = $this->_entitiesInstance->getCurrentEntityID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
@@ -5632,7 +5640,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Préparation du lien.
             $source = $object->getID();
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
-            $meta = $this->_nebuleInstance->getCurrentEntityID();
+            $meta = $this->_entitiesInstance->getCurrentEntityID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
@@ -6001,7 +6009,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::warn_ServNotPermitWrite', $param);
             $error = 'wr';
         }
-        if ($this->_nebuleInstance->getFlushCache()) {
+        if ($this->_nebuleInstance->getCacheInstance()->getFlushCache()) {
             $param['informationType'] = 'warn';
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::warn_flushSessionAndCache', $param);
             $error = 'wr';

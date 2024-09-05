@@ -1071,7 +1071,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             // Préparation du lien.
             $source = $object->getID();
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
-            $meta = $this->_nebuleInstance->getCurrentEntityID();
+            $meta = $this->_entitiesInstance->getCurrentEntityID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {

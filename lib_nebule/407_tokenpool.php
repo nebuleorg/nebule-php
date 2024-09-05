@@ -68,7 +68,7 @@ class TokenPool extends Currency implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_id != '0')
             $this->_loadTokenPool($this->_id);
@@ -144,7 +144,7 @@ class TokenPool extends Currency implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère la nouveau sac de jetons.
             $this->_id = $this->_createTokenPool($param, $protected, $obfuscated);
@@ -227,8 +227,8 @@ class TokenPool extends Currency implements nodeInterface
         }
 
         // Détermine le forgeur.
-        $this->_propertiesList['tokenpool']['PoolForgeID']['force'] = $this->_nebuleInstance->getCurrentEntityID();
-        $param['PoolForgeID'] = $this->_nebuleInstance->getCurrentEntityID();
+        $this->_propertiesList['tokenpool']['PoolForgeID']['force'] = $this->_entitiesInstance->getCurrentEntityID();
+        $param['PoolForgeID'] = $this->_entitiesInstance->getCurrentEntityID();
 
 
         // Détermine si le jeton doit avoir un contenu.
@@ -304,7 +304,7 @@ class TokenPool extends Currency implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_nebuleInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

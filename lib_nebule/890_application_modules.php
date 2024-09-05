@@ -22,6 +22,10 @@ class ApplicationModules
     protected ?Actions $_actionInstance = null;
     protected ?Translates $_translateInstance = null;
     protected ?Cache $_cacheInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected string $_applicationNamespace = '';
     protected array $_listModulesName = array();
     protected array $_listModulesInstance = array();
@@ -47,6 +51,10 @@ class ApplicationModules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
 
         $this->_initInternalModules();
         $this->_initExternalModules();

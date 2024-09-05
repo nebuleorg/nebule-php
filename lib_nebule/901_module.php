@@ -42,6 +42,10 @@ abstract class Modules implements moduleInterface
     protected ?Translates $_translateInstance = null;
     protected ?Metrology $_metrologyInstance = null;
     protected ?Cache $_cacheInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected bool $_unlocked = false;
 
 
@@ -69,7 +73,11 @@ abstract class Modules implements moduleInterface
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
 

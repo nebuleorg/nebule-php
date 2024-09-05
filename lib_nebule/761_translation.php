@@ -220,9 +220,10 @@ abstract class Translates
 
     protected bool $_useModules = false;
     protected ?nebule $_nebuleInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Session $_sessionInstance = null;
     protected ?Applications $_applicationInstance = null;
     protected ?ApplicationModules $_applicationModulesInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
     protected string $_currentLanguage = '';
     protected string $_currentLanguageIcon = '';
     protected string $_defaultLanguage = '';
@@ -247,6 +248,7 @@ abstract class Translates
     public function initialisation(): void {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
         $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
         $this->_applicationModulesInstance = $this->_applicationInstance->getApplicationModulesInstance();
 
@@ -319,9 +321,9 @@ abstract class Translates
         if ($ok_lang) {
             $this->_currentLanguage = $arg_lang;
             $this->_currentLanguageInstance = $lang_instance;
-            $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
+            $this->_sessionInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
         } else {
-            $cache = $this->_nebuleInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
+            $cache = $this->_sessionInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
             if ($cache !== false
                 && $cache != ''
             ) {
@@ -330,7 +332,7 @@ abstract class Translates
             } else {
                 $this->_currentLanguage = $this->_defaultLanguage;
                 $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListInstances()[$this->_defaultLanguage];
-                $this->_nebuleInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
+                $this->_sessionInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
             }
             unset($cache);
         }

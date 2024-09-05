@@ -63,6 +63,10 @@ class Node implements nodeInterface
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected bool $_permitBuffer = false;
     protected string $_id = '0';
     protected string $_fullName = '';
@@ -147,12 +151,16 @@ class Node implements nodeInterface
         $this->_ioInstance = $nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
         $this->_socialInstance = $nebuleInstance->getSocialInstance();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
     }
 
     protected function _localConstruct(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
     /**
@@ -731,7 +739,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
-        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntityID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
@@ -1811,7 +1819,7 @@ class Node implements nodeInterface
                 return false;
 
             // Chiffrement (asymétrique) de la clé de chiffrement du contenu.
-            $codeKey = $this->_crypto->encryptTo($key, $this->_nebuleInstance->getCurrentEntityInstance()->getPublicKey());
+            $codeKey = $this->_crypto->encryptTo($key, $this->_entitiesInstance->getCurrentEntityInstance()->getPublicKey());
 
             // Vérification de bon chiffrement.
             if ($codeKey === false)
@@ -2039,7 +2047,7 @@ class Node implements nodeInterface
         }
 
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
-        $key = $this->_nebuleInstance->getCurrentEntityInstance()->decrypt($codeKey);
+        $key = $this->_entitiesInstance->getCurrentEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
@@ -2744,7 +2752,7 @@ class Node implements nodeInterface
         }
 
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
-        $key = $this->_nebuleInstance->getCurrentEntityInstance()->decrypt($codeKey);
+        $key = $this->_entitiesInstance->getCurrentEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
@@ -3434,7 +3442,7 @@ class Node implements nodeInterface
         // Lit les liens.
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_nebuleInstance->getCurrentEntityID();
+        $entity = $this->_entitiesInstance->getCurrentEntityID();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3463,7 +3471,7 @@ class Node implements nodeInterface
             // Lit les liens.
             $links = array();
             $this->getLinks($links, array(), false);
-            $entity = $this->_nebuleInstance->getCurrentEntityID();
+            $entity = $this->_entitiesInstance->getCurrentEntityID();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
                 if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3500,7 +3508,7 @@ class Node implements nodeInterface
 
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_nebuleInstance->getCurrentEntityID();
+        $entity = $this->_entitiesInstance->getCurrentEntityID();
         foreach ($links as $link) {
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 unset($links, $entity, $link);
@@ -3625,7 +3633,7 @@ class Node implements nodeInterface
         $newLink = new Link($this->_nebuleInstance, $rl, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
-        return $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntityID(), $date);
+        return $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID(), $date);
     }
 
 

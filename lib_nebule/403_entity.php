@@ -71,7 +71,7 @@ class Entity extends Node implements nodeInterface
     protected function _localConstruct(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         if ($this->_isNew)
             $this->_createNewEntity();
         elseif ($this->_id != '0')
@@ -115,7 +115,7 @@ class Entity extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
-            && ($this->_nebuleInstance->getCurrentEntityIsUnlocked()
+            && ($this->_entitiesInstance->getCurrentEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {

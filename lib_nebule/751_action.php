@@ -101,6 +101,10 @@ abstract class Actions
     protected ?Applications $_applicationInstance = null;
     protected ?metrology $_metrologyInstance = null;
     protected ?IO $_ioInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
@@ -119,7 +123,11 @@ abstract class Actions
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_metrologyInstance = $this->_applicationInstance->getMetrologyInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
@@ -2583,7 +2591,7 @@ abstract class Actions
         } elseif ($this->_unlocked) {
             $link = $this->_nebuleInstance->newBlockLink(
                 '0_'
-                . $this->_nebuleInstance->getCurrentEntityID() . '_'
+                . $this->_entitiesInstance->getCurrentEntityID() . '_'
                 . $link->getDate() . '_'
                 . $link->getParsed()['bl/rl/req'] . '_'
                 . $link->getParsed()['bl/rl/nid1'] . '_'
@@ -2993,7 +3001,7 @@ abstract class Actions
 
         // Définition de la date et le signataire.
         $date = date(DATE_ATOM);
-        $signer = $this->_nebuleInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getCurrentEntityID();
 
         // Création du type mime.
         $instance->setType($this->_actionUploadFileType);
@@ -3125,7 +3133,7 @@ abstract class Actions
                     } elseif ($this->_unlocked) {
                         $instance = $this->_nebuleInstance->newBlockLink(
                             '0_'
-                            . $this->_nebuleInstance->getCurrentEntityID() . '_'
+                            . $this->_entitiesInstance->getCurrentEntityID() . '_'
                             . $instance->getDate() . '_'
                             . $instance->getParsed()['bl/rl/req'] . '_'
                             . $instance->getParsed()['bl/rl/nid1'] . '_'
@@ -3176,8 +3184,8 @@ abstract class Actions
             $this->_displayInstance->displayInlineAllActions();
 
             // Bascule temporairement sur la nouvelle entité.
-            $this->_nebuleInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);
-            $this->_nebuleInstance->getCurrentEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
+            $this->_entitiesInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);
+            $this->_entitiesInstance->getCurrentEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             // Définition de la date et du signataire.
             $date = date(DATE_ATOM);
@@ -3270,10 +3278,10 @@ abstract class Actions
             unset($date, $source, $target, $meta, $link, $newLink, $textID);
 
             // Restaure l'entité d'origine.
-            $this->_nebuleInstance->unsetTempCurrentEntity();
+            $this->_entitiesInstance->unsetTempCurrentEntity();
 
             // Efface le cache pour recharger l'entité.
-            $this->_nebuleInstance->unsetCacheEntity($this->_actionCreateEntityID);
+            $this->_nebuleInstance->getCacheInstance()->unsetCacheEntity($this->_actionCreateEntityID);
 
             // Recrée l'instance de l'objet.
             $this->_actionCreateEntityInstance = $this->_nebuleInstance->newEntity($this->_actionCreateEntityID);
@@ -3650,7 +3658,7 @@ abstract class Actions
 
         // Création du lien.
         $date = date(DATE_ATOM);
-        $signer = $this->_nebuleInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getCurrentEntityID();
         $action = 'l';
         $source = $objectID;
         $target = $valueID;

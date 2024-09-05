@@ -140,7 +140,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
         }
 
         $instance->setMessage('::::warn_flushSessionAndCache');
-        if ($this->_nebuleInstance->getFlushCache()) {
+        if ($this->_nebuleInstance->getCacheInstance()->getFlushCache()) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $error = 'wr';
             $result .= $instance->getHTML();

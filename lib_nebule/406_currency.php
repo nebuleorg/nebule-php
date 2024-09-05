@@ -167,7 +167,7 @@ class Currency extends Node implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_id != '0')
             $this->_loadCurrency($this->_id);
@@ -249,7 +249,7 @@ class Currency extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
         ) {
             // Génère la nouvelle monnaie.
             $this->_id = $this->_createCurrency($param, $protected, $obfuscated);
@@ -579,7 +579,7 @@ class Currency extends Node implements nodeInterface
         $param['ForceCurrencySerialID'] = true;
 
         // Force le paramètre AID avec l'entité en cours.
-        $param['CurrencyAutorityID'] = $this->_nebuleInstance->getCurrentEntityID();
+        $param['CurrencyAutorityID'] = $this->_entitiesInstance->getCurrentEntityID();
         $param['ForceCurrencyAutorityID'] = true;
         $this->_properties['AID'] = $param['CurrencyAutorityID'];
 
@@ -616,8 +616,8 @@ class Currency extends Node implements nodeInterface
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'] . "\n";
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            $content .= 'AID:' . $this->_nebuleInstance->getCurrentEntityID() . "\n";
-            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_nebuleInstance->getCurrentEntityID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $content .= 'AID:' . $this->_entitiesInstance->getCurrentEntityID() . "\n";
+            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_entitiesInstance->getCurrentEntityID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -682,7 +682,7 @@ class Currency extends Node implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_nebuleInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getCurrentEntityID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

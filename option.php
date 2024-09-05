@@ -129,8 +129,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         // Récupère l'entité déverrouillée ou l'entité instance du serveur.
         if ($this->_unlocked) {
-            $username = $this->_nebuleInstance->getCurrentEntityInstance()->getFullName();
-            $userID = $this->_nebuleInstance->getCurrentEntityID();
+            $username = $this->_entitiesInstance->getCurrentEntityInstance()->getFullName();
+            $userID = $this->_entitiesInstance->getCurrentEntityID();
         } else {
             $username = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
             $userID = $this->_nebuleInstance->getInstanceEntity();
@@ -151,7 +151,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_nebuleInstance->getCurrentEntityID() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
+            if ($this->_entitiesInstance->getCurrentEntityID() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
         } ?>">
             <div class="header-left">
                 <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
@@ -172,7 +172,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         </div>
         <div class="layout-footer footer<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_nebuleInstance->getCurrentEntityID() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
+            if ($this->_entitiesInstance->getCurrentEntityID() != $this->_nebuleInstance->getInstanceEntity()) echo 'other';
         } ?>">
             <div class="footer-center">
                 <p>
@@ -771,9 +771,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
     private function _getIsInstanceOrDefault(Entity $eid): string {
         $message = '';
-        if ($eid->getID() == $this->_nebuleInstance->getInstanceEntity())
+        if ($eid->getID() == $this->_entitiesInstance->getInstanceEntity())
             $message = 'Instance entity';
-        if ($eid->getID() == $this->_nebuleInstance->getDefaultEntityID()) {
+        if ($eid->getID() == $this->_entitiesInstance->getDefaultEntityID()) {
             if ($message != '')
                 $message .= ', ';
             $message .= 'Default entity';
@@ -844,7 +844,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_nebuleInstance->getCurrentEntityID()
+                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -876,7 +876,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_permitAction($this->_nebuleInstance->getCurrentEntityInstance())
+        if ($this->_permitAction($this->_entitiesInstance->getCurrentEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
         ) {
 
@@ -978,11 +978,11 @@ Primary authorities can't be removed, they are forced by two options on the envi
     private function _permitAction(Entity $eid): bool {
         if ($this->_unlocked
             && (
-                ($eid->getID() == $this->_nebuleInstance->getInstanceEntity()
+                ($eid->getID() == $this->_entitiesInstance->getInstanceEntity()
                     && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
                 )
                 ||
-                ($eid->getID() == $this->_nebuleInstance->getDefaultEntityID()
+                ($eid->getID() == $this->_entitiesInstance->getDefaultEntityID()
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
@@ -1070,7 +1070,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
                         $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
                         $instanceQuery->setMessage('Forced on config file');
                     } elseif ($this->_unlocked
-                        && $this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity() // FIXME doit être dans la liste des entités autorisées
+                        && $this->_entitiesInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity() // FIXME doit être dans la liste des entités autorisées
                     ) {
                         $instanceQuery = new DisplayQuery($this->_applicationInstance);
                         $instanceQuery->setType(DisplayQuery::QUERY_STRING);
@@ -1282,7 +1282,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
             if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 && !$this->_nebuleInstance->getModeRescue()
             ) {
-                $linksList = $instanceAppsID->getLinksOnFields($this->_nebuleInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
+                $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 foreach ($linksList as $link) {
                     $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1306,7 +1306,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
 
                     $instanceList->addItem($this->_addInfoShort(
                         DisplayItemIconMessage::TYPE_MESSAGE,
-                        $this->_nebuleInstance->getDefaultEntityID(),
+                        $this->_entitiesInstance->getDefaultEntityID(),
                         DisplayItem::RATIO_SHORT,
                         'Signer EID'));
                     $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
@@ -1457,8 +1457,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
 
                             if ($activable
                                 && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
-                                && $this->_nebuleInstance->getCurrentEntityIsUnlocked()
-                                && $this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity()
+                                && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+                                && $this->_entitiesInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity()
                             ) {
                                 if ($activated) {
                                     $this->displayHypertextLink(
@@ -1479,7 +1479,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                             if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
                                         'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
                                         'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                                    || $this->_nebuleInstance->getCurrentEntityIsUnlocked()
+                                    || $this->_entitiesInstance->getCurrentEntityIsUnlocked()
                             ) {
                                 $this->displayHypertextLink(
                                     $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
@@ -1534,7 +1534,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
                         'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
                         'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                    || $this->_nebuleInstance->getCurrentEntityIsUnlocked()
+                    || $this->_entitiesInstance->getCurrentEntityIsUnlocked()
             ) {
                 ?>
 
@@ -1616,7 +1616,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_nebuleInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_nebuleInstance->getCurrentEntityID()
+                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -1647,7 +1647,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_permitAction($this->_nebuleInstance->getCurrentEntityInstance())
+        if ($this->_permitAction($this->_entitiesInstance->getCurrentEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
             // Titre
@@ -1774,7 +1774,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
             if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite'))
                 $this->displayMessageWarning_DEPRECATED('::::warn_ServNotPermitWrite');
-            if ($this->_nebuleInstance->getFlushCache())
+            if ($this->_nebuleInstance->getCacheInstance()->getFlushCache())
                 $this->displayMessageWarning_DEPRECATED('::::warn_flushSessionAndCache');
             ?>
 
@@ -1813,7 +1813,7 @@ class Action extends Actions
         $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
         if ($this->_unlocked
-            && $this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity()
+            && $this->_entitiesInstance->getCurrentEntityID() == $this->_nebuleInstance->getInstanceEntity()
             && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
         ) {

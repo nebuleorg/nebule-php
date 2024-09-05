@@ -32,7 +32,7 @@ class Localisation extends Node implements nodeInterface
      */
     protected function _localConstruct(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_id != '0')
         {

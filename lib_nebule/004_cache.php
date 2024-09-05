@@ -40,49 +40,13 @@ class Cache
         self::TYPE_TRANSACTION,
     );
 
-    /**
-     * Instance de la librairie en cours.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance de la métrologie.
-     *
-     * @var Metrology
-     */
-    private $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    private $_configuration;
-
-    /**
-     * Le tableau de mise en cache des noeuds.
-     *
-     * @var array
-     */
-    private $_cache = array();
-
-    /**
-     * Le tableau de mémorisation de la date de mise en cache des objets/entités/groupes/conversations/liens.
-     *
-     * @var array
-     */
-    private $_cacheDateInsertion = array();
-
-    /**
-     * Taille du cache.
-     *
-     * @var int
-     */
-    private $_sessionBufferLimit;
-
-    private $_flushCache;
+    private ?nebule $_nebuleInstance = null;
+    private ?Metrology $_metrologyInstance = null;
+    private ?Configuration $_configurationInstance = null;
+    private array $_cache = array();
+    private array $_cacheDateInsertion = array();
+    private int $_sessionBufferLimit;
+    private bool $_flushCache;
 
     /**
      * Constructeur.
@@ -92,20 +56,35 @@ class Cache
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_sessionBufferLimit = $this->_configuration->getOptionUntyped('sessionBufferSize');
-        $this->_flushCache = $this->_nebuleInstance->getFlushCache();
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
+        $this->_findFlushCache();
     }
 
     public function __wakeup()
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_sessionBufferLimit = $this->_configuration->getOptionUntyped('sessionBufferSize');
-        $this->_flushCache = $this->_nebuleInstance->getFlushCache();
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
+        $this->_findFlushCache();
+    }
+
+    private function _findFlushCache()
+    {
+        global $bootstrap_flush; // FIXME recalculate without bootstrap
+
+        if ($bootstrap_flush) {
+            $this->_metrologyInstance->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
+            $this->_flushCache = true;
+        }
+    }
+
+    public function getFlushCache(): bool
+    {
+        return $this->_flushCache;
     }
 
     /**
@@ -116,7 +95,7 @@ class Cache
     public function readCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
-            || !$this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
         )
             return;
 
@@ -153,7 +132,7 @@ class Cache
     public function saveCacheOnSessionBuffer(): void
     {
         if ($this->_flushCache
-            || !$this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
         )
             return;
 
@@ -180,7 +159,7 @@ class Cache
      */
     public function flushBufferStore(): bool
     {
-        $this->_metrology->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         session_start();
         unset($_SESSION['Buffer']);
         $_SESSION['Buffer'] = array();
@@ -196,14 +175,14 @@ class Cache
      */
     private function _cleanCacheOverflow(int $c = 0): void
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
             || !is_numeric($c)
             || $c <= 0
         )
             return;
 
         if ($c > 100)
-            $this->_metrology->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5bdb6961'); // Log
+            $this->_metrologyInstance->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5bdb6961'); // Log
 
         for ($i = 0; $i < $c; $i++)
         {
@@ -250,7 +229,7 @@ class Cache
      */
     private function _getCacheNeedOnePlace(): void
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             return;
 
         $size = $this->_getAllCachesSize();
@@ -268,7 +247,7 @@ class Cache
      */
     private function _getCacheNeedCleaning(): void
     {
-        if (!$this->_configuration->getOptionAsBoolean('permitSessionBuffer'))
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
             return;
 
         $size = $this->_getAllCachesSize();
@@ -360,7 +339,7 @@ class Cache
                     $instance = new Node($this->_nebuleInstance, $nid);
             }
 
-            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
                 && $instance->getID() != '0'
             ) {
                 $this->_cache[$type][$nid] = $instance;
@@ -384,7 +363,7 @@ class Cache
 
             $instance = new Entity($this->_nebuleInstance, $nid);
 
-            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
                 && $instance->getID() != '0'
             ) {
                 $this->_cache[Cache::TYPE_ENTITY][$nid] = $instance;
@@ -645,7 +624,7 @@ class Cache
 
             $instance = new blocLink($this->_nebuleInstance, $link, $type);
 
-            if ($this->_configuration->getOptionAsBoolean('permitSessionBuffer')) {
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
                 $this->_cache[$type][$link] = $instance;
                 $this->_cacheDateInsertion[$type][$link] = microtime(true);
             }

@@ -71,7 +71,7 @@ class ModuleManage extends Modules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_nebuleInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
     }
 
@@ -371,7 +371,7 @@ class ModuleManage extends Modules
 
             // Crée le lien de hash.
             $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntityID();
+            $signer = $this->_entitiesInstance->getCurrentEntityID();
             $action = 'l';
             $source = $this->_actionAddModuleRID;
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
@@ -408,7 +408,7 @@ class ModuleManage extends Modules
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntityID();
+            $signer = $this->_entitiesInstance->getCurrentEntityID();
             $action = 'f';
             $source = $this->_actionAddModuleRID;
             $target = $this->_actionAddModuleID;
@@ -416,7 +416,7 @@ class ModuleManage extends Modules
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
             // Flush le cache de l'objet du module pour que les changements soient pris en compte tout de suite.
-            $this->_nebuleInstance->unsetObjectCache($this->_actionAddModuleRID); // @todo ne marche pas...
+            $this->_cacheInstance->unsetObjectCache($this->_actionAddModuleRID); // @todo ne marche pas...
         }
     }
 
@@ -799,10 +799,10 @@ class ModuleManage extends Modules
                 if ($this->_unlocked
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && ($this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getCodeMaster()
-                        || ($this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getDefaultEntityID()
+                    && ($this->_entitiesInstance->getCurrentEntityID() == $this->_authoritiesInstance->getCodeMaster()
+                        || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getDefaultEntityID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority') )
-                        || ($this->_nebuleInstance->getCurrentEntityID() == $this->_nebuleInstance->getDefaultEntityID()
+                        || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getDefaultEntityID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'

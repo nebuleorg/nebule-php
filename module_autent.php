@@ -168,7 +168,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        $this->_displayAddEID($instanceList, $this->_nebuleInstance->getCurrentEntityPrivateKeyInstance(), true);
+        $this->_displayAddEID($instanceList, $this->_entitiesInstance->getCurrentEntityPrivateKeyInstance(), true);
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
             $this->_displayAddButtonQuery($instanceList,

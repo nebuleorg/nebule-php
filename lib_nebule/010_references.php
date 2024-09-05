@@ -15,6 +15,7 @@ class References
     // Les commandes.
     const COMMAND_SWITCH_APPLICATION = 'a';
     const COMMAND_APPLICATION_BACK = 'c';
+    const COMMAND_LOCAL_ENTITY_FILE = 'e'; // Into folder /
     const COMMAND_FLUSH = 'f';
     const COMMAND_RESCUE = 'r';
     const COMMAND_AUTH_ENTITY_LOGIN = 'login';
@@ -3508,7 +3509,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
             if (self::REF_IMG[$name] != '') {
                 $nebuleInstance->getMetrologyInstance()->addLog('sign ref icon ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '08d23b22');
 
-                // Use credentials on the first run with local entity. FIXME peut être refait avec Nebule::setTempCurrentEntity()
+                // Use credentials on the first run with local entity. FIXME peut être refait avec Entities::setTempCurrentEntity()
                 $newLink = \Nebule\Bootstrap\blk_generateSign('',
                     'f',
                     self::REF_IMG[$name],

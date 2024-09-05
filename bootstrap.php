@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020240904';
+const BOOTSTRAP_VERSION = '020240905';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5844,35 +5844,35 @@ function bootstrap_breakDisplay41LibraryEntities()
     $nebuleInstanceCheck = $nebuleInstance->checkInstance();
 
     bootstrap_breakDisplay411DisplayEntity('puppetmaster',
-        array($nebuleInstance->getPuppetmasterEID() => $nebuleInstance->getPuppetmasterEID()),
-        array($nebuleInstance->getPuppetmasterEID() => $nebuleInstance->getPuppetmasterInstance()),
+        array($nebuleInstance->getAuthoritiesInstance()->getPuppetmasterEID() => $nebuleInstance->getAuthoritiesInstance()->getPuppetmasterEID()),
+        array($nebuleInstance->getAuthoritiesInstance()->getPuppetmasterEID() => $nebuleInstance->getAuthoritiesInstance()->getPuppetmasterInstance()),
         $nebuleInstanceCheck > 10);
 
-    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getSecurityAuthoritiesEID(),
-        $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
+    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
 
-    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getCodeAuthoritiesEID(),
-        $nebuleInstance->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
+    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getAuthoritiesInstance()->getCodeAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
 
-    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getDirectoryAuthoritiesEID(),
-        $nebuleInstance->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
+    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
 
-    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getTimeAuthoritiesEID(),
-        $nebuleInstance->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
+    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay411DisplayEntity('server entity',
-        array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntity()),
-        array($nebuleInstance->getInstanceEntity() => $nebuleInstance->getInstanceEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getInstanceEntity() => $nebuleInstance->getEntitiesInstance()->getInstanceEntity()),
+        array($nebuleInstance->getEntitiesInstance()->getInstanceEntity() => $nebuleInstance->getEntitiesInstance()->getInstanceEntityInstance()),
         $nebuleInstanceCheck > 60);
 
     bootstrap_breakDisplay411DisplayEntity('default entity',
-        array($nebuleInstance->getDefaultEntityID() => $nebuleInstance->getDefaultEntityID()),
-        array($nebuleInstance->getDefaultEntityID() => $nebuleInstance->getDefaultEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityID()),
+        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityInstance()),
         $nebuleInstanceCheck > 70);
 
     bootstrap_breakDisplay411DisplayEntity('current entity',
-        array($nebuleInstance->getCurrentEntityID() => $nebuleInstance->getCurrentEntityID()),
-        array($nebuleInstance->getCurrentEntityID() => $nebuleInstance->getCurrentEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityID()),
+        array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance()),
         $nebuleInstanceCheck > 70);
 
     $entity = lib_getOption('subordinationEntity');
@@ -7067,7 +7067,7 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
             // Load entity on library.
             $instance = $nebuleInstance->getCacheInstance()->newNode('0',Cache::TYPE_ENTITY);
             $instance->setContent($nebulePrivateEntity);
-            $nebuleInstance->setCurrentEntity($instance);
+            $nebuleInstance->getEntitiesInstance()->setCurrentEntity($instance);
 
             // Write references links
             \Nebule\Library\References::signReferences($nebuleInstance);

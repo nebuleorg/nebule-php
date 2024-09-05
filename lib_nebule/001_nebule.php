@@ -229,12 +229,15 @@ class nebule
     private nebule $_nebuleInstance;
     private ?Metrology $_metrologyInstance = null;
     private ?Configuration $_configurationInstance = null;
+    private ?Session $_sessionInstance = null;
     private ?Cache $_cacheInstance = null;
     private ?Ticketing $_ticketingInstance = null;
     private ?ioInterface $_ioInstance = null;
     private ?CryptoInterface $_cryptoInstance = null;
     private ?SocialInterface $_socialInstance = null;
-    private bool $_flushCache = false;
+    private ?Entities $_entitiesInstance = null;
+    private ?Authorities $_authoritiesInstance = null;
+    private ?Recovery $_recoveryInstance = null;
 
 
 
@@ -256,7 +259,6 @@ class nebule
 
     public function __destruct()
     {
-        $this->_saveCurrentsObjectsOnSessionBuffer();
         $this->_cacheInstance->saveCacheOnSessionBuffer();
         return true;
     }
@@ -266,39 +268,36 @@ class nebule
         return self::NEBULE_LICENCE_NAME;
     }
 
-    public function __sleep()
-    {
-        return array(
-            '_flushCache',
-        );
-    }
-
     private function _initialisation()
     {
         global $nebuleInstance;
 
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
-        $this->_metrologyInstance = new Metrology($this->_nebuleInstance);
-        $this->_configurationInstance = new Configuration($this->_nebuleInstance);
-        $this->_cacheInstance = new Cache($this->_nebuleInstance);
-        $this->_ticketingInstance = new Ticketing($this->_nebuleInstance);
+        $this->_metrologyInstance = new Metrology($this);
+        $this->_configurationInstance = new Configuration($this);
+        $this->_sessionInstance = new Session($this);
+        $this->_cacheInstance = new Cache($this);
+        $this->_ticketingInstance = new Ticketing($this);
 
         $this->_findModeRescue();
 
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
 
-        $this->_ioInstance = new io($this->_nebuleInstance);
-        $this->_cryptoInstance = new Crypto($this->_nebuleInstance);
-        $this->_socialInstance = new Social($this->_nebuleInstance);
+        $this->_ioInstance = new io($this);
+        $this->_cryptoInstance = new Crypto($this);
+        $this->_socialInstance = new Social($this);
+        $this->_authoritiesInstance = new Authorities($this);
+        $this->_recoveryInstance = new Recovery($this);
+        $this->_entitiesInstance = new Entities($this);
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
 
         $this->_configurationInstance->setPermitOptionsByLinks(true);
         $this->_configurationInstance->flushCache();
 
-        $this->_findFlushCache();
+        //$this->_findFlushCache();
 
         $this->_getSubordinationEntity();
         $this->_cacheInstance->readCacheOnSessionBuffer();
@@ -309,18 +308,18 @@ class nebule
         $this->_findGlobalAuthorities();
         $this->_findLocalAuthorities();
         $this->_findInstanceEntity();
-        $this->_findDefaultEntity();
-        $this->_addInstanceEntityAsAuthorities();
-        $this->_addDefaultEntityAsAuthorities();
-        $this->_getCurrentEntity();
-        $this->_addLocalAuthorities();
-        $this->_findRecoveryEntities();
-        $this->_addInstanceEntityAsRecovery();
-        $this->_addDefaultEntityAsRecovery();
+        //$this->_findDefaultEntity();
+        //$this->_addInstanceEntityAsAuthorities();
+        //$this->_addDefaultEntityAsAuthorities();
+        //$this->_getCurrentEntity();
+        //$this->_addLocalAuthorities();
+        //$this->_findRecoveryEntities();
+        //$this->_addInstanceEntityAsRecovery();
+        //$this->_addDefaultEntityAsRecovery();
 
         $this->_findCurrentObjet();
-        $this->_getCurrentEntityPrivateKey();
-        $this->_getCurrentEntityPassword();
+        //$this->_getCurrentEntityPrivateKey();
+        //$this->_getCurrentEntityPassword();
         $this->_findCurrentGroup();
         $this->_findCurrentConversation();
         $this->_findCurrentCurrency();
@@ -332,74 +331,59 @@ class nebule
 
 
 
-    /**
-     * Export l'objet de la métrologie.
-     *
-     * @return ?Metrology
-     */
     public function getMetrologyInstance(): ?Metrology
     {
         return $this->_metrologyInstance;
     }
 
-    /**
-     * Export l'objet de la configuration.
-     *
-     * @return ?Configuration
-     */
     public function getConfigurationInstance(): ?Configuration
     {
         return $this->_configurationInstance;
     }
 
-    /**
-     * Export l'objet de la métrologie.
-     *
-     * @return ?Cache
-     */
     public function getCacheInstance(): ?Cache
     {
         return $this->_cacheInstance;
     }
 
-    /**
-     * Export l'objet de la gestion des tickets.
-     *
-     * @return ?Ticketing
-     */
     public function getTicketingInstance(): ?Ticketing
     {
         return $this->_ticketingInstance;
     }
 
-    /**
-     * Export l'objet des entrées/sorties.
-     *
-     * @return ?io
-     */
     public function getIoInstance(): ?ioInterface
     {
         return $this->_ioInstance;
     }
 
-    /**
-     * Export l'objet de la crypto.
-     *
-     * @return ?CryptoInterface
-     */
     public function getCryptoInstance(): ?CryptoInterface
     {
         return $this->_cryptoInstance;
     }
 
-    /**
-     * Export l'objet du calcul social.
-     *
-     * @return ?SocialInterface
-     */
     public function getSocialInstance(): ?SocialInterface
     {
         return $this->_socialInstance;
+    }
+
+    public function getSessionInstance(): ?Session
+    {
+        return $this->_sessionInstance;
+    }
+
+    public function getEntitiesInstance(): ?Entities
+    {
+        return $this->_entitiesInstance;
+    }
+
+    public function getAuthoritiesInstance(): ?Authorities
+    {
+        return $this->_authoritiesInstance;
+    }
+
+    public function getRecoveryInstance(): ?Recovery
+    {
+        return $this->_recoveryInstance;
     }
 
 
@@ -410,7 +394,7 @@ class nebule
      *
      * @var node|null
      */
-    private $_subordinationEntity = null;
+    private ?node $_subordinationEntity = null;
 
     /**
      * Extrait l'entité de subordination des options si présente.
@@ -462,156 +446,6 @@ class nebule
             $this->_metrologyInstance->addLog('objects ro not rw', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '865076e1');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWriteLink'))
             $this->_metrologyInstance->addLog('links ro not rw', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f2e738b1');
-    }
-
-
-
-    /*
-	 * --------------------------------------------------------------------------------
-	 * Gestion du stockage des options et du buffer dans la session php.
-	 * --------------------------------------------------------------------------------
-	 */
-    /**
-     * Lit la valeur d'une option dans la session php.
-     * Si l'option n'est pas renseignée, retourne false.
-     *
-     * @param string $name
-     * @return int|string|bool|null|array
-     */
-    public function getSessionStore(string $name)
-    {
-        session_start();
-
-        if ($name == ''
-            || $this->_flushCache
-            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
-            || !isset($_SESSION['Option'][$name])
-        ) {
-            session_write_close();
-            return false;
-        }
-        $val = $_SESSION['Option'][$name];
-
-        session_write_close();
-
-        return $val;
-    }
-
-    /**
-     * Ecrit la valeur d'une option dans la session php.
-     *
-     * @param string $name
-     * @param int|string|bool|null|array $content
-     * @return boolean
-     */
-    public function setSessionStore(string $name, $content): bool
-    {
-        if ($name == ''
-            || $this->_flushCache
-            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
-        )
-            return false;
-
-        session_start();
-        $_SESSION['Option'][$name] = $content;
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Vide les options dans la session php.
-     *
-     * @return boolean
-     */
-    private function _flushSessionStore(): bool
-    {
-        $this->_metrologyInstance->addLog('Flush session store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1b83a0d1');
-        session_start();
-        unset($_SESSION['Option']);
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Lit la valeur d'un contenu mémorisé dans la session php.
-     * Si le contenu mémorisé n'est pas renseigné, retourne false.
-     *
-     * @param string $name
-     * @return int|string|bool|null
-     */
-    private function _getSessionBuffer(string $name)
-    {
-        session_start();
-
-        if ($name == ''
-            || $this->_flushCache
-            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-            || !isset($_SESSION['Buffer'][$name])
-        ) {
-            session_write_close();
-            return false;
-        }
-
-        $val = unserialize($_SESSION['Buffer'][$name]);
-        session_write_close();
-        return $val;
-    }
-
-    /**
-     * Ecrit la valeur d'un contenu mémorisé dans la session php.
-     * Le nombre de contenus mémorisés n'est pas comptabilisé par cette fonction.
-     *
-     * @param string $name
-     * @param int|string|bool|null $content
-     * @return boolean
-     */
-    private function _setSessionBuffer(string $name, $content): bool
-    {
-        if ($name == ''
-            || $this->_flushCache
-            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-        )
-            return false;
-
-        session_start();
-        $_SESSION['Buffer'][$name] = serialize($content);
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Re-sauvegarde les instances des certains objets avant la sauvegarde du cache vers le buffer de session.
-     * Ces objets sont potentiellement modifiés depuis leur première instanciation.
-     *
-     * @return void
-     */
-    private function _saveCurrentsObjectsOnSessionBuffer(): void
-    {
-        $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-    }
-
-    /**
-     * Supprime un contenu mémorisé dans la session php.
-     *
-     * Fonction désactivée !
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function unsetSessionBuffer(string $name): bool
-    {
-/*        if ($name == ''
-            || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
-        )
-            return false;
-
-        session_start();
-        if (isset($_SESSION['Buffer'][$name]))
-            unset($_SESSION['Buffer'][$name]);
-        session_write_close();*/
-        return true;
     }
 
 
@@ -771,27 +605,9 @@ class nebule
 
 
 
-    // Gestion de l'objet en cours.
+    private string $_currentObject = '';
+    private ?Node $_currentObjectInstance = null;
 
-    /**
-     * ID de l'objet en cours.
-     *
-     * @var string
-     */
-    private $_currentObject = '';
-
-    /**
-     * Instance de l'objet en cours.
-     *
-     * @var Node|null
-     */
-    private $_currentObjectInstance = null;
-
-    /**
-     * Recherche l'objet en cours d'utilisation.
-     *
-     * @return void
-     */
     private function _findCurrentObjet()
     {
         // Lit et nettoye le contenu de la variable GET.
@@ -807,19 +623,19 @@ class nebule
             $this->_currentObject = $arg_obj;
             $this->_currentObjectInstance = $this->newObject($arg_obj);
             // Ecrit l'objet dans la session.
-            $this->setSessionStore('nebuleSelectedObject', $arg_obj);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedObject', $arg_obj);
         } else {
             // Sinon vérifie si une valeur n'est pas mémorisée dans la session.
-            $cache = $this->getSessionStore('nebuleSelectedObject');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedObject');
             // Si il existe une variable de session pour l'objet en cours, la lit.
             if ($cache !== false && $cache != '') {
                 $this->_currentObject = $cache;
                 $this->_currentObjectInstance = $this->newObject($cache);
             } else // Sinon selectionne l'entite courante par défaut.
             {
-                $this->_currentObject = $this->getCurrentEntityID();
-                $this->_currentObjectInstance = $this->newObject($this->getCurrentEntityID());
-                $this->setSessionStore('nebuleSelectedObject', $this->getCurrentEntityID());
+                $this->_currentObject = $this->_entitiesInstance->getCurrentEntityID();
+                $this->_currentObjectInstance = $this->newObject($this->_entitiesInstance->getCurrentEntityID());
+                $this->_sessionInstance->setSessionStore('nebuleSelectedObject', $this->_entitiesInstance->getCurrentEntityID());
             }
             unset($cache);
         }
@@ -829,21 +645,11 @@ class nebule
         $this->_currentObjectInstance->getMarkProtected();
     }
 
-    /**
-     * Donne l'ID de l'objet en cours.
-     *
-     * @return string
-     */
     public function getCurrentObject(): string
     {
         return $this->_currentObject;
     }
 
-    /**
-     * Donne l'instance de l'objet en cours.
-     *
-     * @return Node|null
-     */
     public function getCurrentObjectInstance(): ?Node
     {
         return $this->_currentObjectInstance;
@@ -851,39 +657,20 @@ class nebule
 
 
 
-    /*
-	 * Gestion de l'entité de l'instance du serveur et donc de l'application.
-	 */
-    /**
-     * Clé publique de l'entité hôte de l'instance du serveur.
-     *
-     * @var string
-     */
-    private $_instanceEntity = '';
+    private string $_instanceEntity = '';
+    private ?Entity $_instanceEntityInstance = null;
 
-    /**
-     * Instance de l'entité hôte de l'instance du serveur.
-     *
-     * @var Entity|null
-     */
-    private $_instanceEntityInstance = null;
-
-    /**
-     * Recherche l'entité hôte sur le serveur.
-     *
-     * @return void
-     */
-    private function _findInstanceEntity()
+    private function _findInstanceEntity() // TODO migrate to 008_entities.php
     {
         $instance = null;
         // Vérifie si une valeur n'est pas mémorisée dans la session.
-        $id = $this->getSessionStore('nebuleHostEntity');
+        $id = $this->_sessionInstance->getSessionStore('nebuleHostEntity');
 
         // Si il existe une variable de session pour l'hôte en cours, la lit.
         if ($id !== false
             && $id != ''
         ) {
-            $instance = unserialize($this->getSessionStore('nebuleHostEntityInstance'));
+            $instance = unserialize($this->_sessionInstance->getSessionStore('nebuleHostEntityInstance'));
         }
 
         if ($id !== false
@@ -908,7 +695,7 @@ class nebule
                 && $this->_ioInstance->checkLinkPresent($id)
             ) {
                 $this->_instanceEntity = $id;
-                $this->_instanceEntityInstance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
+                $this->_instanceEntityInstance = $this->_cacheInstance->newEntity($id);
             } else {
                 // Sinon utilise l'instance du maître du code.
                 $this->_instanceEntity = $this->_puppetmasterID;
@@ -919,27 +706,17 @@ class nebule
             $this->_metrologyInstance->addLog('Find server entity ' . $this->_instanceEntity, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5347c940');
 
             // Mémorisation.
-            $this->setSessionStore('nebuleHostEntity', $this->_instanceEntity);
-            $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
+            $this->_sessionInstance->setSessionStore('nebuleHostEntity', $this->_instanceEntity);
+            $this->_sessionInstance->setSessionStore('nebuleHostEntityInstance', serialize($this->_instanceEntityInstance));
         }
         unset($id, $instance);
     }
 
-    /**
-     * Donne l'ID de l'entité de l'instance de serveur.
-     *
-     * @return string
-     */
     public function getInstanceEntity(): string
     {
         return $this->_instanceEntity;
     }
 
-    /**
-     * Donne l'instance de l'entité de l'instance de serveur.
-     *
-     * @return Entity|null
-     */
     public function getInstanceEntityInstance(): ?Entity
     {
         return $this->_instanceEntityInstance;
@@ -947,85 +724,8 @@ class nebule
 
 
 
-    /*
-	 * Gestion de l'entité par défaut.
-	 */
-    /**
-     * Clé publique de l'entité par défaut.
-     *
-     * @var string $_defaultEntity
-     */
-    private $_defaultEntity = '';
-
-    /**
-     * Instance de l'entité par défaut.
-     *
-     * @var Entity|null $_defaultEntityInstance
-     */
-    private $_defaultEntityInstance = null;
-
-    /**
-     * Recherche l'entité par défaut.
-     *
-     * @return void
-     */
-    private function _findDefaultEntity()
-    {
-        $instance = null;
-        // Vérifie si une valeur n'est pas mémorisée dans la session.
-        $id = $this->getSessionStore('nebuleDefaultEntity');
-
-        // Si il existe une variable de session pour l'hôte en cours, la lit.
-        if ($id !== false
-            && $id != ''
-        ) {
-            $instance = unserialize($this->getSessionStore('nebuleDefaultEntityInstance'));
-        }
-
-        if ($id !== false
-            && $id != ''
-            && $instance !== false
-            && $instance !== ''
-            && is_a($instance, 'Nebule\Library\Entity')
-        ) {
-            $this->_defaultEntity = $id;
-            $this->_defaultEntityInstance = $instance;
-        } else {
-            // Sinon recherche une entité par défaut.
-            // C'est définit comme une option.
-            $id = $this->_configurationInstance->getOptionAsString('defaultCurrentEntity');
-
-            if (Node::checkNID($id, false, false)
-                && $this->_ioInstance->checkObjectPresent($id)
-                && $this->_ioInstance->checkLinkPresent($id)
-            ) {
-                $this->_defaultEntity = $id;
-                $this->_defaultEntityInstance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
-            } else {
-                // Sinon utilise l'instance du serveur hôte.
-                $this->_defaultEntity = $this->_instanceEntity;
-                $this->_defaultEntityInstance = $this->_instanceEntityInstance;
-            }
-
-            // Log
-            $this->_metrologyInstance->addLog('Find default entity ' . $this->_defaultEntity, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '17bc6adc');
-
-            // Mémorisation.
-            $this->setSessionStore('nebuleDefaultEntity', $this->_defaultEntity);
-            $this->setSessionStore('nebuleDefaultEntityInstance', serialize($this->_defaultEntityInstance));
-        }
-        unset($id, $instance);
-    }
-
-    public function getDefaultEntityID(): string
-    {
-        return $this->_defaultEntity;
-    }
-
-    public function getDefaultEntityInstance(): ?Entity
-    {
-        return $this->_defaultEntityInstance;
-    }
+    private string $_defaultEntity_DEPRECATED = '';
+    private ?Entity $_defaultEntityInstance_DEPRECATED = null;
 
 
 
@@ -1035,278 +735,6 @@ class nebule
     private ?Node $_currentEntityPrivateKeyInstance = null;
     private bool $_currentEntityIsUnlocked = false;
 
-    private function _getCurrentEntity() // FIXME WTF!
-    {
-        $itc_ent = null;
-
-        $arg_ent = $this->_getCurrentEntityFromArg();
-        if ($arg_ent != '')
-            $itc_ent = $this->_cacheInstance->newEntity($arg_ent);
-
-        if ($arg_ent != ''
-            && is_a($itc_ent, 'Nebule\Library\Node')
-            && $itc_ent->getType('all') == Entity::ENTITY_TYPE
-        ) {
-            // Vide le mot de passe de l'entité en cours.
-            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
-                $this->_currentEntityInstance->unsetPrivateKeyPassword();
-                $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-            }
-            $this->_currentEntityID = $arg_ent;
-            $this->_currentEntityInstance = new Entity($this->_nebuleInstance, $arg_ent);
-            $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-            $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-            $this->_currentEntityPrivateKey = '';
-            $this->_currentEntityPrivateKeyInstance = null;
-            $this->setSessionStore('nebulePrivateEntity', '');
-            $this->_metrologyInstance->addLog('New current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7252b306');
-        } else {
-            $tID = $this->getSessionStore('nebulePublicEntity');
-            $sInstance = $this->getSessionStore('nebulePublicEntityInstance');
-            $tInstance = false;
-            if ($sInstance !== false)
-                $tInstance = unserialize($sInstance);
-            if ($tID !== false
-                && $tID != ''
-                && $tInstance !== false
-                && is_a($tInstance, 'Nebule\Library\Entity')
-            ) {
-                $this->_currentEntityID = $tID;
-                $this->_currentEntityInstance = $tInstance;
-                $this->_metrologyInstance->addLog('Reuse current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a16292e8');
-            } else // Sinon essaie de la trouver ailleurs.
-            {
-                $itc_ent = '';
-                $ext_ent = $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity');
-                if (Node::checkNID($ext_ent, false, false)
-                    && $this->_ioInstance->checkObjectPresent($ext_ent)
-                    && $this->_ioInstance->checkLinkPresent($ext_ent)) {
-                    $itc_ent = $this->_cacheInstance->newEntity($ext_ent);
-                }
-                if (is_a($itc_ent, 'Nebule\Library\Entity') && $itc_ent->getType('all') == Entity::ENTITY_TYPE) {
-                    // Ecrit l'entité dans la session et dans la variable globale.
-                    $this->_currentEntityID = $ext_ent;
-                    $this->_currentEntityInstance = new Entity($this->_nebuleInstance, $ext_ent);
-                    $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-                    $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-                    // Vide la clé privée connue.
-                    $this->_currentEntityPrivateKey = '';
-                    $this->_currentEntityPrivateKeyInstance = null;
-                    $this->setSessionStore('nebulePrivateEntity', '');
-                    $this->_metrologyInstance->addLog('Find default current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9035e635');
-                } // Sinon utilise l'entité de l'instance.
-                else {
-                    $this->_currentEntityID = $this->_instanceEntity;
-                    $this->_currentEntityInstance = $this->_instanceEntityInstance;
-                    $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-                    $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-                    // Vide la clé privée connue.
-                    $this->_currentEntityPrivateKey = '';
-                    $this->_currentEntityPrivateKeyInstance = null;
-                    $this->setSessionStore('nebulePrivateEntity', '');
-                    $this->_metrologyInstance->addLog('Find current (instance) entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1cee288b');
-                }
-            }
-        }
-    }
-
-    private function _getCurrentEntityFromArg(): ?string
-    {
-        // Extract anf filter
-        if (filter_has_var(INPUT_GET, self::COMMAND_SWITCH_TO_ENTITY)
-            && filter_has_var(INPUT_GET, self::COMMAND_SELECT_ENTITY)
-        )
-            $arg = filter_input(INPUT_GET,
-                self::COMMAND_SELECT_ENTITY,
-                FILTER_SANITIZE_STRING,
-                FILTER_FLAG_ENCODE_LOW);
-        elseif (filter_has_var(INPUT_POST, self::COMMAND_SWITCH_TO_ENTITY)
-            && filter_has_var(INPUT_POST, self::COMMAND_SELECT_ENTITY)
-        )
-            $arg = filter_input(INPUT_POST,
-                self::COMMAND_SELECT_ENTITY,
-                FILTER_SANITIZE_STRING,
-                FILTER_FLAG_ENCODE_LOW);
-        else
-            $arg = '';
-
-        // Verify node
-        if (!Node::checkNID($arg, false, false)
-            || !$this->_ioInstance->checkObjectPresent($arg)
-            || !$this->_ioInstance->checkLinkPresent($arg)
-        )
-            $arg = '';
-
-        return $arg;
-    }
-
-    private function _getCurrentEntityPrivateKey()
-    {
-        $privateKey = $this->getSessionStore('nebulePrivateEntity');
-
-        if ($privateKey !== false
-            && $privateKey != ''
-            && $privateKey != '0'
-        ) {
-            $this->_currentEntityPrivateKey = $privateKey;
-            $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
-            $this->_metrologyInstance->addLog('Reuse current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '75e1c757');
-        }
-        else {
-            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
-                $this->_currentEntityPrivateKey = $this->_currentEntityInstance->getPrivateKeyID();
-                if ($this->_currentEntityPrivateKey != '') {
-                    $this->_currentEntityPrivateKeyInstance = $this->newObject($this->_currentEntityPrivateKey);
-                    $this->_metrologyInstance->addLog('Find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6be388ca');
-                } else {
-                    $this->_currentEntityPrivateKeyInstance = null;
-                    $this->_metrologyInstance->addLog('Cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1e5bed72');
-                }
-                $this->setSessionStore('nebulePrivateEntity', $this->_currentEntityPrivateKey);
-            } else {
-                $this->_currentEntityPrivateKey = '';
-                $this->_currentEntityPrivateKeyInstance = null;
-            }
-        }
-    }
-
-    private function _getCurrentEntityPassword()
-    {
-        if (filter_has_var(INPUT_GET, self::COMMAND_AUTH_ENTITY_LOGOUT)
-            || filter_has_var(INPUT_POST, self::COMMAND_AUTH_ENTITY_LOGOUT))
-        {
-            if (is_a($this->_currentEntityInstance, 'Nebule\Library\Entity')) {
-                $this->_metrologyInstance->addLog('Logout ' . $this->_currentEntityID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4efbc71f');
-                $this->_currentEntityInstance->unsetPrivateKeyPassword();
-                $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-            }
-            return;
-        }
-
-        if ($this->_currentEntityInstance->isSetPrivateKeyPassword())
-            return;
-
-        $arg_get_pwd = filter_input(INPUT_GET, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
-        $arg_post_pwd = filter_input(INPUT_POST, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
-
-        if ($arg_post_pwd != '')
-            $arg_pwd = $arg_post_pwd;
-        elseif ($arg_get_pwd != '')
-            $arg_pwd = $arg_get_pwd;
-        else
-            return;
-
-        if ($this->_currentEntityInstance->setPrivateKeyPassword($arg_pwd))
-        {
-            $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
-            $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-        } else
-            $this->_metrologyInstance->addLog('Login password ' . $this->_currentEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
-    }
-
-    public function getCurrentEntityID(): string
-    {
-        return $this->_currentEntityID;
-    }
-
-    public function getCurrentEntityInstance(): ?Entity
-    {
-        return $this->_currentEntityInstance;
-    }
-
-    public function getCurrentEntityPrivateKey(): string
-    {
-        return $this->_currentEntityPrivateKey;
-    }
-
-    public function getCurrentEntityPrivateKeyInstance(): ?Node
-    {
-        return $this->_currentEntityPrivateKeyInstance;
-    }
-
-    public function getCurrentEntityIsUnlocked(): bool
-    {
-        return $this->_currentEntityIsUnlocked;
-    }
-
-    public function setCurrentEntity(Entity $entity): bool
-    {
-        session_start();
-
-        $this->_cacheInstance->flushBufferStore();
-
-        $this->_currentEntityInstance = $entity;
-        $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-        $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
-
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Change l'entité courante de façon temporaire. Les caches sont effacés.
-     * Penser à lui pousser son mot de passe pour qu'elle soit déverrouillée.
-     *
-     * L'ancienne entité est mémorisée pour être restaurée en fin de période temporaire.
-     *
-     * La fonction est utilisée par la génération d'une nouvelle entité
-     *   afin de faire signer les liens par la nouvelle entité.
-     *
-     * @param Entity $entity
-     * @return boolean
-     */
-    public function setTempCurrentEntity(Entity $entity): bool
-    {
-        session_start();
-
-        $this->_cacheInstance->flushBufferStore();
-
-        $this->setSessionStore('nebuleTempPublicEntityInstance', serialize($this->_currentEntityInstance));
-
-        $this->_currentEntityInstance = $entity;
-        $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-        $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
-
-        session_write_close();
-        return true;
-    }
-
-    /**
-     * Annule le changement temporaire de l'entité. Les caches sont effacés.
-     * Elle contient déjà son mot de passe si elle était déverrouillée.
-     *
-     * L'ancienne entité est restaurée. L'entité actuelle est retirée.
-     *
-     * @return boolean
-     */
-    public function unsetTempCurrentEntity(): bool
-    {
-        session_start();
-
-        $entity = $this->getSessionStore('nebuleTempPublicEntityInstance');
-        if ($entity === false) {
-            session_write_close();
-            return false;
-        }
-
-        $this->_cacheInstance->flushBufferStore();
-
-        $this->_currentEntityInstance = unserialize($entity);
-        $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->setSessionStore('nebulePublicEntity', $this->_currentEntityID);
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_currentEntityInstance));
-        $this->_getCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
-
-        session_write_close();
-        return true;
-    }
 
 
     private array $_listEntitiesUnlocked = array();
@@ -1363,9 +791,9 @@ class nebule
         ) {
             $this->_currentGroupID = $arg_grp;
             $this->_currentGroupInstance = $this->newGroup($arg_grp);
-            $this->setSessionStore('nebuleSelectedGroup', $arg_grp);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedGroup', $arg_grp);
         } else {
-            $cache = $this->getSessionStore('nebuleSelectedGroup');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedGroup');
             if ($cache !== false && $cache != '') {
                 $this->_currentGroupID = $cache;
                 $this->_currentGroupInstance = $this->newGroup($cache);
@@ -1373,7 +801,7 @@ class nebule
             {
                 $this->_currentGroupID = '0';
                 $this->_currentGroupInstance = $this->newGroup('0');
-                $this->setSessionStore('nebuleSelectedGroup', $this->_currentGroupID);
+                $this->_sessionInstance->setSessionStore('nebuleSelectedGroup', $this->_currentGroupID);
             }
             unset($cache);
         }
@@ -1412,16 +840,16 @@ class nebule
         ) {
             $this->_currentConversationID = $arg_cvt;
             $this->_currentConversationInstance = $this->newConversation($arg_cvt);
-            $this->setSessionStore('nebuleSelectedConversation', $arg_cvt);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedConversation', $arg_cvt);
         } else {
-            $cache = $this->getSessionStore('nebuleSelectedConversation');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedConversation');
             if ($cache !== false && $cache != '') {
                 $this->_currentConversationID = $cache;
                 $this->_currentConversationInstance = $this->newConversation($cache);
             } else {
                 $this->_currentConversationID = '0';
                 $this->_currentConversationInstance = $this->newConversation('0');
-                $this->setSessionStore('nebuleSelectedConversation', $this->_currentConversationID);
+                $this->_sessionInstance->setSessionStore('nebuleSelectedConversation', $this->_currentConversationID);
             }
             unset($cache);
         }
@@ -1450,7 +878,7 @@ class nebule
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrencyID = '0';
             $this->_currentCurrencyInstance = $this->newCurrency('0');
-            $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
             return;
         }
 
@@ -1467,16 +895,16 @@ class nebule
         ) {
             $this->_currentCurrencyID = $arg;
             $this->_currentCurrencyInstance = $this->newCurrency($arg);
-            $this->setSessionStore('nebuleSelectedCurrency', $arg);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $arg);
         } else {
-            $cache = $this->getSessionStore('nebuleSelectedCurrency');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedCurrency');
             if ($cache !== false && $cache != '') {
                 $this->_currentCurrencyID = $cache;
                 $this->_currentCurrencyInstance = $this->newCurrency($cache);
             } else {
                 $this->_currentCurrencyID = '0';
                 $this->_currentCurrencyInstance = $this->newCurrency('0');
-                $this->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
+                $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
             }
             unset($cache);
         }
@@ -1505,7 +933,7 @@ class nebule
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->newTokenPool('0');
-            $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             return;
         }
 
@@ -1522,16 +950,16 @@ class nebule
         ) {
             $this->_currentTokenPool = $arg;
             $this->_currentTokenPoolInstance = $this->newTokenPool($arg);
-            $this->setSessionStore('nebuleSelectedTokenPool', $arg);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $arg);
         } else {
-            $cache = $this->getSessionStore('nebuleSelectedTokenPool');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedTokenPool');
             if ($cache !== false && $cache != '') {
                 $this->_currentTokenPool = $cache;
                 $this->_currentTokenPoolInstance = $this->newTokenPool($cache);
             } else {
                 $this->_currentTokenPool = '0';
                 $this->_currentTokenPoolInstance = $this->newTokenPool('0');
-                $this->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
+                $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             }
             unset($cache);
         }
@@ -1560,7 +988,7 @@ class nebule
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenID = '0';
             $this->_currentTokenInstance = $this->newToken('0');
-            $this->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
             return;
         }
 
@@ -1577,16 +1005,16 @@ class nebule
         ) {
             $this->_currentTokenID = $arg;
             $this->_currentTokenInstance = $this->newToken($arg);
-            $this->setSessionStore('nebuleSelectedToken', $arg);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $arg);
         } else {
-            $cache = $this->getSessionStore('nebuleSelectedToken');
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedToken');
             if ($cache !== false  && $cache != '') {
                 $this->_currentTokenID = $cache;
                 $this->_currentTokenInstance = $this->newToken($cache);
             } else {
                 $this->_currentTokenID = '0';
                 $this->_currentTokenInstance = $this->newToken('0');
-                $this->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
+                $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
             }
             unset($cache);
         }
@@ -1650,8 +1078,8 @@ class nebule
         if ($this->_instanceEntityInstance->getID() == '0') return 52;
 
         // Vérifie qu'une entité courante existe et est une entité.
-        if (!$this->_currentEntityInstance instanceof Entity) return 61;
-        if ($this->_currentEntityInstance->getID() == '0') return 62;
+        if (!$this->_entitiesInstance->getCurrentEntityInstance() instanceof Entity) return 61;
+        if ($this->_entitiesInstance->getCurrentEntityInstance()->getID() == '0') return 62;
 
         // Tout est bon et l'instance est utilisée.
         return 128;
@@ -1676,6 +1104,7 @@ class nebule
 
     /**
      * Récupération du maître.
+     *  TODO move to 007_authorities.php
      *
      * Définit par une option ou en dur dans une constante.
      *
@@ -1692,6 +1121,7 @@ class nebule
 
     /**
      * Find all global authorities entities after the puppetmaster.
+     *  TODO move to 007_authorities.php
      *
      * @return void
      */
@@ -1721,6 +1151,7 @@ class nebule
 
     /**
      * Find authorities by their roles.
+     *  TODO move to 007_authorities.php
      *
      * @param string $rid
      * @param array  $listEID
@@ -1918,14 +1349,14 @@ class nebule
             $this->_permitDefaultEntityAsAuthority = false;
 
         if ($this->_permitDefaultEntityAsAuthority) {
-            $this->_authoritiesID[$this->_defaultEntity] = $this->_defaultEntity;
-            $this->_authoritiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
-            $this->_specialEntitiesID[$this->_defaultEntity] = $this->_defaultEntity;
-            $this->_localAuthoritiesID[$this->_defaultEntity] = $this->_defaultEntity;
-            $this->_localAuthoritiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
-            $this->_localAuthoritiesSigners[$this->_defaultEntity] = '0';
-            $this->_localPrimaryAuthoritiesID[$this->_defaultEntity] = $this->_defaultEntity;
-            $this->_localPrimaryAuthoritiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
+            $this->_authoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
+            $this->_authoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
+            $this->_specialEntitiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
+            $this->_localAuthoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
+            $this->_localAuthoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
+            $this->_localAuthoritiesSigners[$this->_defaultEntity_DEPRECATED] = '0';
+            $this->_localPrimaryAuthoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
+            $this->_localPrimaryAuthoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
 
             $this->_metrologyInstance->addLog('Add default entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '95cc6196');
         }
@@ -1967,7 +1398,7 @@ class nebule
                 'bl/rl/nid2' => $this->_instanceEntity,
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $this->_defaultEntity,
+                'bs/rs1/eid' => $this->_defaultEntity_DEPRECATED,
             );
             $this->_instanceEntityInstance->getLinks($list, $filter, false);
         }
@@ -2001,7 +1432,7 @@ class nebule
      *
      * @return array:Entity
      */
-    public function getAuthoritiesInstance(): array
+    public function getAuthoritiesInstance_DEPRECATED(): array
     {
         return $this->_authoritiesInstances;
     }
@@ -2063,6 +1494,7 @@ class nebule
 
     /**
      * Lit la liste des ID des entités avec des rôles.
+     *  TODO move to 007_authorities.php
      *
      * @return array:string
      */
@@ -2073,6 +1505,7 @@ class nebule
 
     /**
      * Retourne si l'entité est autorité locale.
+     *  TODO move to 007_authorities.php
      *
      * @param Entity|string $entity
      * @return boolean
@@ -2092,38 +1525,15 @@ class nebule
     }
 
 
-    /**
-     * Liste des entités de recouvrement.
-     * @var array:string
-     */
-    private $_recoveryEntities = array();
-
-    /**
-     * Liste des instances des entités de recouvrement.
-     * @var array:Entity
-     */
-    private $_recoveryEntitiesInstances = array();
-
-    /**
-     * Liste des autorités locales déclarants les entités de recouvrement.
-     * @var array:string
-     */
-    private $_recoveryEntitiesSigners = array();
-
-    /**
-     * L'entité locale du serveur est-elle entité de recouvrement locale ?
-     * @var boolean
-     */
-    private $_permitInstanceEntityAsRecovery = false;
-
-    /**
-     * L'entité locale par défaut est-elle entité de recouvrement locale ?
-     * @var boolean
-     */
-    private $_permitDefaultEntityAsRecovery = false;
+    private array $_recoveryEntities = array();
+    private array $_recoveryEntitiesInstances = array();
+    private array $_recoveryEntitiesSigners = array();
+    private bool $_permitInstanceEntityAsRecovery = false;
+    private bool $_permitDefaultEntityAsRecovery = false;
 
     /**
      * Ajoute si autorisé l'entité instance du serveur comme entité de recouvrement locale.
+     *  TODO move to 009_recovery.php
      *
      * @return void
      */
@@ -2146,6 +1556,7 @@ class nebule
 
     /**
      * Ajoute si autorisé l'entité par défaut comme entité de recouvrement locale.
+     *  TODO move to 009_recovery.php
      *
      * @return void
      */
@@ -2158,9 +1569,9 @@ class nebule
         $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery');
 
         if ($this->_permitDefaultEntityAsRecovery) {
-            $this->_recoveryEntities[$this->_defaultEntity] = $this->_defaultEntity;
-            $this->_recoveryEntitiesInstances[$this->_defaultEntity] = $this->_defaultEntityInstance;
-            $this->_recoveryEntitiesSigners[$this->_defaultEntity] = '0';
+            $this->_recoveryEntities[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
+            $this->_recoveryEntitiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
+            $this->_recoveryEntitiesSigners[$this->_defaultEntity_DEPRECATED] = '0';
 
             $this->_metrologyInstance->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa22c32d');
         }
@@ -2168,6 +1579,7 @@ class nebule
 
     /**
      * Recherche les entités de recouvrement valables.
+     *  TODO move to 009_recovery.php
      *
      * @return void
      */
@@ -2207,7 +1619,7 @@ class nebule
         $list = array();
         if ($this->_permitDefaultEntityAsAuthority) {
             $list = $this->_instanceEntityInstance->getLinksOnFields(
-                $this->_defaultEntity,
+                $this->_defaultEntity_DEPRECATED,
                 '',
                 'f',
                 $this->_instanceEntity,
@@ -2228,6 +1640,7 @@ class nebule
 
     /**
      * Lit la liste des ID des entités de recouvrement.
+     *  TODO move to 009_recovery.php
      *
      * @return array:string
      */
@@ -2238,6 +1651,7 @@ class nebule
 
     /**
      * Lit la liste des instance des entités de recouvrement.
+     *  TODO move to 009_recovery.php
      *
      * @return array:Entity
      */
@@ -2248,6 +1662,7 @@ class nebule
 
     /**
      * Lit la liste des autorités locales déclarants les entités de recouvrement.
+     *  TODO move to 009_recovery.php
      *
      * @return array:string
      */
@@ -2258,6 +1673,7 @@ class nebule
 
     /**
      * Retourne si l'entité est entité de recouvrement.
+     *  TODO move to 009_recovery.php
      *
      * @param Entity|string $entity
      * @return boolean
@@ -2335,7 +1751,7 @@ class nebule
      *
      * @var boolean
      */
-    private $_modeRescue = false;
+    private bool $_modeRescue = false;
 
     /**
      * Extrait si on est en mode de récupération.
@@ -2419,31 +1835,6 @@ class nebule
     }
 
 
-    /**
-     * Détermine si on doit vider le cache des objets et effacer la session utilisateur.
-     *
-     * @return void
-     */
-    private function _findFlushCache()
-    {
-        global $bootstrap_flush;
-
-        if ($bootstrap_flush) {
-            $this->_metrologyInstance->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
-            $this->_flushCache = true;
-        }
-    }
-
-    /**
-     * Retourne si le cache des objets et la session utilisateur ont été effacés.
-     *
-     * @return boolean
-     */
-    public function getFlushCache(): bool
-    {
-        return $this->_flushCache;
-    }
-
 
     /**
      * Crée et écrit un objet avec du texte.
@@ -2471,7 +1862,7 @@ class nebule
         $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscate && !$newLink->setObfuscate())
             return '';
-        $newBlockLink->signwrite($this->_nebuleInstance->getCurrentEntityID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());
 
         return $textOID;
     }
