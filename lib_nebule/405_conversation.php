@@ -122,7 +122,7 @@ class Conversation extends Group implements nodeInterface
                 $target = $this->_cryptoInstance->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
                 $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_nebuleInstance->newBlockLink($link);
+                $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->signWrite();
 
                 // Création lien de conversation.
@@ -131,7 +131,7 @@ class Conversation extends Group implements nodeInterface
                 $target = $hashconversation;
                 $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_nebuleInstance->newBlockLink($link);
+                $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->sign();
                 if ($obfuscated) {
                     $newLink->setObfuscate();
@@ -146,7 +146,7 @@ class Conversation extends Group implements nodeInterface
                     $target = $signer;
                     $meta = $this->getReferenceObjectClosed();
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_nebuleInstance->newBlockLink($link);
+                    $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
                     if ($obfuscated) {
                         $newLink->setObfuscate();
@@ -162,7 +162,7 @@ class Conversation extends Group implements nodeInterface
                     $target = $signer;
                     $meta = $this->getReferenceObjectProtected();
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_nebuleInstance->newBlockLink($link);
+                    $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
                     if ($obfuscated) {
                         $newLink->setObfuscate();
@@ -178,7 +178,7 @@ class Conversation extends Group implements nodeInterface
                     $target = $signer;
                     $meta = $this->getReferenceObjectObfuscated();
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_nebuleInstance->newBlockLink($link);
+                    $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
                     $newLink->setObfuscate();
                     $newLink->write();
@@ -190,7 +190,7 @@ class Conversation extends Group implements nodeInterface
                 $target = $this->_id;
                 $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_nebuleInstance->newBlockLink($link);
+                $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->sign();
                 if ($obfuscated) {
                     $newLink->setObfuscate();

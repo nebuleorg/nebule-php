@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020240905';
+const BOOTSTRAP_VERSION = '020240906';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6219,7 +6219,7 @@ function bootstrap_displayPreloadApplication()
     $nb = 0;
     foreach ($items as $item) {
         if (!$nebuleInstance->getIoInstance()->checkObjectPresent($item)) {
-            $instance = $nebuleInstance->newObject($item);
+            $instance = $nebuleInstance->getCacheInstance()->newNode($item);
             $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
             echo "\n";
             $instance->syncObject(false);

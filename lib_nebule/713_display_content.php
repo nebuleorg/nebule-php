@@ -64,7 +64,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
                     if (sizeof($localisations) > 0) {
                         $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                         foreach ($localisations as $localisation) {
-                            $locObject = $this->_nebuleInstance->newObject($localisation);
+                            $locObject = $this->_cacheInstance->newNode($localisation);
                             $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
                                 . $this->convertHypertextLink(
                                     $locObject->readOneLineAsText(),

@@ -68,14 +68,14 @@ class ModuleObjects extends Modules
             case 'selfMenu':
             case 'selfMenuObject':
                 //$instance = $this->_applicationInstance->getCurrentObjectInstance();
-                $instance = $this->_nebuleInstance->newObject($object);
+                $instance = $this->_cacheInstance->newNode($object);
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
                 $protected = $instance->getMarkProtected();
                 if ($protected) {
                     $id = $instance->getUnprotectedID();
-                    $instance = $this->_nebuleInstance->newObject($id);
+                    $instance = $this->_cacheInstance->newNode($id);
                 }
 
                 // Recherche une mise à jour.
@@ -284,7 +284,7 @@ class ModuleObjects extends Modules
                 // Recherche si l'objet est protégé.
                 if ($instance->getMarkProtected()) {
                     $id = $instance->getUnprotectedID();
-                    $instance = $this->_nebuleInstance->newObject($id);
+                    $instance = $this->_cacheInstance->newNode($id);
                 }
 
                 // Recherche si l'objet est marqué.
@@ -596,7 +596,7 @@ class ModuleObjects extends Modules
                             && $hashValue != '0'
                             && $hashValue != ''
                         ) {
-                            $attribInstance = $this->_nebuleInstance->newObject($hashAttrib);
+                            $attribInstance = $this->_cacheInstance->newNode($hashAttrib);
                             $attribName = $attribInstance->readOneLineAsText();
                             unset($attribInstance);
                             // Vérifie le nom.
@@ -633,7 +633,7 @@ class ModuleObjects extends Modules
                     if ($showAttrib
                         && $attribName != ''
                     ) {
-                        $valueInstance = $this->_nebuleInstance->newObject($hashValue);
+                        $valueInstance = $this->_cacheInstance->newNode($hashValue);
                         $value = $valueInstance->readOneLineAsText();
                         unset($valueInstance);
                         // Vérifie la valeur.
@@ -1042,7 +1042,7 @@ class ModuleObjects extends Modules
             $instance = null;
             $typeEntity = false;
             foreach ($shareTo as $entity) {
-                $instance = $this->_nebuleInstance->newEntity($entity);
+                $instance = $this->_cacheInstance->newEntity($entity);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$entity])
                     && $typeEntity
@@ -1161,7 +1161,7 @@ class ModuleObjects extends Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
                 // Affiche le titre.
-                $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+                $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
                 echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:objects:ShareObjectProtection', $icon, false);
 
                 // Affiche en ligne les entités pour qui c'est partagé.
@@ -1233,7 +1233,7 @@ class ModuleObjects extends Modules
             foreach ($listGroups as $group) {
                 // @todo vérifier que le groupe ne contient pas juste des entités pour lesquelles le partage est effectif.
 
-                $instance = $this->_nebuleInstance->newGroup($group);
+                $instance = $this->_cacheInstance->newGroup($group);
                 $typeGroup = $instance->getIsEntity('all');
                 if (!isset($listOkGroups[$group])
                     && $typeGroup
@@ -1299,13 +1299,13 @@ class ModuleObjects extends Modules
             // Liste toutes les autres entités.
             $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
-            $hashEntityObject = $this->_nebuleInstance->newObject($hashEntity);
+            $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;
             foreach ($links as $link) {
-                $instance = $this->_nebuleInstance->newEntity($link->getParsed()['bl/rl/nid1']);
+                $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid1']);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']])
                     && $typeEntity

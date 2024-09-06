@@ -12,7 +12,7 @@ namespace Nebule\Library;
  *  $instance->setMessage('Message to user', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
  *  $instance->setType(DisplayInformation::TYPE_MESSAGE);
  *  $instance->setIconText('Alternative text on icon');
- *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+ *  $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
  *  $instance->setLink('https://nebule.org');
  *  $instance->display();

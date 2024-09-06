@@ -140,7 +140,7 @@ class Group extends Node implements nodeInterface
                 $id = '';
             } else {
                 $id = $entity;
-                $entityInstance = $this->_nebuleInstance->newEntity($id);
+                $entityInstance = $this->_cacheInstance->newEntity($id);
             }
         } elseif (is_a($entity, 'Node')) {
             $id = $entity->getID();

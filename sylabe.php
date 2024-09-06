@@ -567,7 +567,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -1240,7 +1240,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1253,7 +1253,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1266,7 +1266,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID),
+                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                             . '&' . References::COMMAND_SWITCH_TO_ENTITY);
@@ -1275,7 +1275,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID),
+                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_FLUSH);
@@ -1659,13 +1659,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_nebuleInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newEntity($object->getID());
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_nebuleInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newGroup($object->getID());
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_nebuleInstance->newConversation($object->getID());
+            $object = $this->_cacheInstance->newConversation($object->getID());
         }
 
         $name = $object->getFullName('all');
@@ -2078,7 +2078,7 @@ class ModuleHelp extends Modules
             <?php
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_nebuleInstance->newObject(Display::DEFAULT_ICON_LSTENT),
+                    $this->_cacheInstance->newNode(Display::DEFAULT_ICON_LSTENT),
                     $this->_translateInstance->getTranslate('Entités')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=list'); ?>
@@ -2088,7 +2088,7 @@ class ModuleHelp extends Modules
             <?php
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_nebuleInstance->newObject($this->MODULE_LOGO),
+                    $this->_cacheInstance->newNode($this->MODULE_LOGO),
                     $this->_translateInstance->getTranslate('::sylabe:module:help:AideGenerale')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=hlp'); ?>
@@ -2098,7 +2098,7 @@ class ModuleHelp extends Modules
             <?php
             $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
                 $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]),
+                    $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]),
                     $this->_translateInstance->getTranslate('::sylabe:module:help:ChangerLangue')),
                 '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=lang'); ?>
@@ -2133,7 +2133,7 @@ class ModuleHelp extends Modules
         echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module->getName()), $param);
 
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $icon, false);
 
         // Affiche la liste des langues.

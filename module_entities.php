@@ -112,7 +112,7 @@ class ModuleEntities extends Modules
         $this->_initTable_DEPRECATED();
         $this->_hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
         $this->_hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
-        $this->_hashEntityObject = $this->_nebuleInstance->newObject($this->_hashEntity);
+        $this->_hashEntityObject = $this->_cacheInstance->newNode($this->_hashEntity);
     }
 
 
@@ -221,7 +221,7 @@ class ModuleEntities extends Modules
                 $protected = $instance->getMarkProtected();
                 if ($protected) {
                     $id = $instance->getUnprotectedID();
-                    $instance = $this->_nebuleInstance->newObject($id);
+                    $instance = $this->_cacheInstance->newNode($id);
                 }
 
                 // Si l'objet est une entité.
@@ -886,10 +886,10 @@ class ModuleEntities extends Modules
                 && $this->_unlocked
             )
         ) {
-            $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[9]);
+            $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[9]);
             echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:unlocked', $icon, false);
         } else {
-            $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[11]);
+            $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[11]);
             echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:locked', $icon, false);
         }
 
@@ -1022,7 +1022,7 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[7]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[7]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle1', $icon, true);
 
         // Extrait des propriétés de l'objet.
@@ -1230,7 +1230,7 @@ class ModuleEntities extends Modules
         }
 
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[8]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[8]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle2', $icon, true);
 
         // Extrait des propriétés de l'objet.
@@ -1246,7 +1246,7 @@ class ModuleEntities extends Modules
                 $dispWarn = false;
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
-                    $entity = $this->_nebuleInstance->newEntity($id);
+                    $entity = $this->_cacheInstance->newEntity($id);
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
@@ -1291,7 +1291,7 @@ class ModuleEntities extends Modules
                 $source = $link->getParsed()['bl/rl/nid1'];
                 $date = $link->getDate();
                 $object = $link->getParsed()['bl/rl/nid2'];
-                $objectInstance = $this->_nebuleInstance->newObject($object);
+                $objectInstance = $this->_cacheInstance->newNode($object);
 
                 ?>
 
@@ -1336,7 +1336,7 @@ class ModuleEntities extends Modules
      */
     private function _displayMyEntitiesList(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:MyEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('myentities');
@@ -1399,7 +1399,7 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownEntitiesList(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
@@ -1422,7 +1422,7 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1465,7 +1465,7 @@ class ModuleEntities extends Modules
      */
     private function _displayKnownByEntitiesList(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownByEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('knownentities');
@@ -1488,7 +1488,7 @@ class ModuleEntities extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1534,7 +1534,7 @@ class ModuleEntities extends Modules
      */
     private function _displayUnknownEntitiesList(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:UnknownEntities', $icon, true);
 
         $this->_displayInstance->registerInlineContentID('unknownentities');
@@ -1588,7 +1588,7 @@ class ModuleEntities extends Modules
             $i = 0;
             foreach ($links as $link) {
                 $id = $link->getParsed()['bl/rl/nid1'];
-                $instance = $this->_nebuleInstance->newEntity($id);
+                $instance = $this->_cacheInstance->newEntity($id);
                 if (!isset($listOkEntities[$id])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
@@ -1640,7 +1640,7 @@ class ModuleEntities extends Modules
      */
     private function _displaySpecialEntitiesList(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:SpecialEntities', $icon, false);
 
         $this->_displayInstance->registerInlineContentID('specialentities');
@@ -1652,34 +1652,34 @@ class ModuleEntities extends Modules
         $entities = array();
         $masters = array();
         $signers = array();
-        $entities[] = $this->_nebuleInstance->getPuppetmasterInstance();
+        $entities[] = $this->_authoritiesInstance->getPuppetmasterInstance();
         $masters[] = '';
         $signers[] = array();
-        foreach ($this->_nebuleInstance->getSecurityAuthoritiesInstance() as $instance)
+        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
             $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
-            $signers[] = $this->_nebuleInstance->getSecuritySignersInstance()[$instance->getID()];
+            $signers[] = $this->_authoritiesInstance->getSecuritySignersInstance()[$instance->getID()];
         }
-        foreach ($this->_nebuleInstance->getCodeAuthoritiesInstance() as $instance)
+        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
             $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
-            $signers[] = $this->_nebuleInstance->getCodeSignersInstance()[$instance->getID()];
+            $signers[] = $this->_authoritiesInstance->getCodeSignersInstance()[$instance->getID()];
         }
-        foreach ($this->_nebuleInstance->getDirectoryAuthoritiesInstance() as $instance)
+        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
             $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
-            $signers[] = $this->_nebuleInstance->getDirectorySignersInstance()[$instance->getID()];
+            $signers[] = $this->_authoritiesInstance->getDirectorySignersInstance()[$instance->getID()];
         }
-        foreach ($this->_nebuleInstance->getTimeAuthoritiesInstance() as $instance)
+        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
             $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
-            $signers[] = $this->_nebuleInstance->getTimeSignersInstance()[$instance->getID()];
+            $signers[] = $this->_authoritiesInstance->getTimeSignersInstance()[$instance->getID()];
         }
-        $entities[] = $this->_nebuleInstance->getInstanceEntityInstance();
+        $entities[] = $this->_entitiesInstance->getInstanceEntityInstance();
         $masters[] = 'Hôte';
         $signers[] = array();
 
@@ -1767,7 +1767,7 @@ class ModuleEntities extends Modules
                 );
 
                 // Ajoute l'ID privé de l'entité.
-                $privInstance = $this->_nebuleInstance->newObject($this->_createEntityInstance->getPrivateKeyID());
+                $privInstance = $this->_cacheInstance->newNode($this->_createEntityInstance->getPrivateKeyID());
                 $list[2]['object'] = $privInstance;
                 $list[2]['param'] = array(
                     'enableDisplayColor' => true,
@@ -1804,7 +1804,7 @@ class ModuleEntities extends Modules
         }
 
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[5]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[5]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:CreateEntity', $icon, false);
 
         // Vérifie que la création soit authorisée.
@@ -2074,7 +2074,7 @@ class ModuleEntities extends Modules
      */
     private function _displayEntityProp(): void
     {
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:Desc:AttribsTitle', $icon, false);
 
         // Affiche les propriétés.
@@ -2176,7 +2176,7 @@ class ModuleEntities extends Modules
                             && $hashValue != '0'
                             && $hashValue != ''
                         ) {
-                            $attribInstance = $this->_nebuleInstance->newObject($hashAttrib);
+                            $attribInstance = $this->_cacheInstance->newNode($hashAttrib);
                             $attribName = $attribInstance->readOneLineAsText();
                             unset($attribInstance);
                         }
@@ -2207,7 +2207,7 @@ class ModuleEntities extends Modules
                     if ($showAttrib
                         && $attribName != ''
                     ) {
-                        $valueInstance = $this->_nebuleInstance->newObject($hashValue);
+                        $valueInstance = $this->_cacheInstance->newNode($hashValue);
                         $attribValue = $valueInstance->readOneLineAsText();
                         unset($valueInstance);
                         // Vérifie la valeur.

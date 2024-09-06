@@ -400,7 +400,7 @@ class TokenPool extends Currency implements nodeInterface
         $total = 0;
 
         foreach ($items as $item) {
-            $instance = $this->_nebuleInstance->newToken($item);
+            $instance = $this->_cacheInstance->newToken($item);
             if ($instance->getID() != '0') {
                 $total += $instance->getRelativeValue($date);
             }

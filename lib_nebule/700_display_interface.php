@@ -192,8 +192,8 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
-            $oid = $this->_displayInstance->getImageByReference($this->_nebuleInstance->newObject(Node::DEFAULT_ICON_RID))->getID();
-        return $this->_nebuleInstance->newObject($oid);
+            $oid = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Node::DEFAULT_ICON_RID))->getID();
+        return $this->_cacheInstance->newNode($oid);
     }
 
     protected function _getIconUpdate(?Node $nid): string
@@ -321,7 +321,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                 $icon = self::ICON_INFORMATION_RID;
                 break;
         }
-        $rid = $this->_nebuleInstance->newObject($icon);
+        $rid = $this->_cacheInstance->newNode($icon);
         $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
     }
 }

@@ -348,16 +348,19 @@ class Cache
         }
         return $instance;
     }
+
     public function newEntity(string $nid): Entity
     {
         if ($nid == '')
             $nid = '0';
 
+        $type = Cache::TYPE_ENTITY;
+
         if (!$this->_flushCache
-            && isset($this->_cache[Cache::TYPE_ENTITY][$nid])
+            && isset($this->_cache[$type][$nid])
         ) {
-            $this->_cacheDateInsertion[Cache::TYPE_ENTITY][$nid] = microtime(true);
-            $instance = $this->_cache[Cache::TYPE_ENTITY][$nid];
+            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            $instance = $this->_cache[$type][$nid];
         } else {
             $this->_getCacheNeedOnePlace();
 
@@ -366,8 +369,89 @@ class Cache
             if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
                 && $instance->getID() != '0'
             ) {
-                $this->_cache[Cache::TYPE_ENTITY][$nid] = $instance;
-                $this->_cacheDateInsertion[Cache::TYPE_ENTITY][$nid] = microtime(true);
+                $this->_cache[$type][$nid] = $instance;
+                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+
+    public function newGroup(string $nid): Group
+    {
+        if ($nid == '')
+            $nid = '0';
+
+        $type = Cache::TYPE_GROUP;
+
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$nid])
+        ) {
+            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            $instance = $this->_cache[$type][$nid];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new Group($this->_nebuleInstance, $nid);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+                && $instance->getID() != '0'
+            ) {
+                $this->_cache[$type][$nid] = $instance;
+                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+
+    public function newConversation(string $nid): Conversation
+    {
+        if ($nid == '')
+            $nid = '0';
+
+        $type = Cache::TYPE_CONVERSATION;
+
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$nid])
+        ) {
+            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            $instance = $this->_cache[$type][$nid];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new Conversation($this->_nebuleInstance, $nid);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+                && $instance->getID() != '0'
+            ) {
+                $this->_cache[$type][$nid] = $instance;
+                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+
+    public function newCurrency(string $nid): Currency
+    {
+        if ($nid == '')
+            $nid = '0';
+
+        $type = Cache::TYPE_CURRENCY;
+
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$nid])
+        ) {
+            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+            $instance = $this->_cache[$type][$nid];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new Currency($this->_nebuleInstance, $nid);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+                && $instance->getID() != '0'
+            ) {
+                $this->_cache[$type][$nid] = $instance;
+                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
             }
         }
         return $instance;
@@ -623,6 +707,56 @@ class Cache
             $this->_getCacheNeedOnePlace();
 
             $instance = new blocLink($this->_nebuleInstance, $link, $type);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
+                $this->_cache[$type][$link] = $instance;
+                $this->_cacheDateInsertion[$type][$link] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+
+    public function newTokenPool(string $link): TokenPool
+    {
+        if ($link == '')
+            $link = 'invalid';
+
+        $type = Cache::TYPE_TOKENPOOL;
+
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$link])
+        ) {
+            $this->_cacheDateInsertion[$type][$link] = microtime(true);
+            $instance = $this->_cache[$type][$link];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new TokenPool($this->_nebuleInstance, $link, $type);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
+                $this->_cache[$type][$link] = $instance;
+                $this->_cacheDateInsertion[$type][$link] = microtime(true);
+            }
+        }
+        return $instance;
+    }
+
+    public function newToken(string $link): Token
+    {
+        if ($link == '')
+            $link = 'invalid';
+
+        $type = Cache::TYPE_TOKEN;
+
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$link])
+        ) {
+            $this->_cacheDateInsertion[$type][$link] = microtime(true);
+            $instance = $this->_cache[$type][$link];
+        } else {
+            $this->_getCacheNeedOnePlace();
+
+            $instance = new Token($this->_nebuleInstance, $link, $type);
 
             if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
                 $this->_cache[$type][$link] = $instance;

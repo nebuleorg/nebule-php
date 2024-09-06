@@ -199,12 +199,12 @@ class Display extends Displays
             <div class="header-center">
                 <p>
                     <?php
-                    $name = $this->_nebuleInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_nebuleInstance->getInstanceEntity())
+                    $name = $this->_entitiesInstance->getInstanceEntityInstance()->getFullName();
+                    if ($name != $this->_entitiesInstance->getInstanceEntity())
                         echo $name;
                     else
                         echo '/';
-                    echo '<br />' . $this->_nebuleInstance->getInstanceEntity();
+                    echo '<br />' . $this->_entitiesInstance->getInstanceEntity();
                     ?>
                 </p>
             </div>

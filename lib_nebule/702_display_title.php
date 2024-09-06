@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * Example:
  *  $instance = new DisplayTitle($this->_applicationInstance);
  *  $instance->setTitle('Title', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
- *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+ *  $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
  *  $instance->setEnableEntity(false);
  *  $instance->display();

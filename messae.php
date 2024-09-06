@@ -432,7 +432,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -1105,7 +1105,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1118,7 +1118,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1131,7 +1131,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID),
+                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                             . '&' . References::COMMAND_SWITCH_TO_ENTITY);
@@ -1140,7 +1140,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID),
+                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_FLUSH);
@@ -1555,13 +1555,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_nebuleInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newEntity($object->getID());
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_nebuleInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newGroup($object->getID());
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_nebuleInstance->newConversation($object->getID());
+            $object = $this->_cacheInstance->newConversation($object->getID());
         }
 
         $name = $object->getFullName('all');
@@ -2003,7 +2003,7 @@ class ModuleHelp extends Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_nebuleInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()

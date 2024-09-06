@@ -352,7 +352,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_nebuleInstance->newObject(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -1025,7 +1025,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1038,7 +1038,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1051,7 +1051,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_nebuleInstance->newObject(DisplayInformation::ICON_WARN_RID),
+                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                             . '&' . References::COMMAND_SWITCH_TO_ENTITY);
@@ -1060,7 +1060,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_nebuleInstance->newObject(DisplayInformation::ICON_ERROR_RID),
+                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_FLUSH);
@@ -1426,13 +1426,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_nebuleInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newEntity($object->getID());
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_nebuleInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newGroup($object->getID());
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_nebuleInstance->newConversation($object->getID());
+            $object = $this->_cacheInstance->newConversation($object->getID());
         }
 
         $name = $object->getFullName('all');

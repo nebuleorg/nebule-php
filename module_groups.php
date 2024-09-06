@@ -59,9 +59,9 @@ class ModuleGroups extends Modules
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         $this->_initTable_DEPRECATED();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
-        $this->_hashGroupObject = $this->_nebuleInstance->newObject($this->_hashGroup);
+        $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
         $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
-        $this->_hashGroupClosedObject = $this->_nebuleInstance->newObject($this->_hashGroupClosed);
+        $this->_hashGroupClosedObject = $this->_cacheInstance->newNode($this->_hashGroupClosed);
     }
 
 
@@ -342,7 +342,7 @@ class ModuleGroups extends Modules
             if (!$createGroupError
                 && is_a($createGroupInstance, 'Group')
             ) {
-                $instance = $this->_nebuleInstance->newObject($createGroupID);
+                $instance = $this->_cacheInstance->newNode($createGroupID);
 
                 $list = array();
 
@@ -398,7 +398,7 @@ class ModuleGroups extends Modules
         }
 
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_LOGO);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:MyGroups', $icon, false);
 
         // Affiche le contenu.
@@ -420,7 +420,7 @@ class ModuleGroups extends Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_nebuleInstance->newGroup($group);
+            $instance = $this->_cacheInstance->newGroup($group);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -469,7 +469,7 @@ class ModuleGroups extends Modules
     private function _displayAllGroups(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_LOGO);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_LOGO);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:otherGroups', $icon, false);
 
         // Affiche le contenu.
@@ -493,7 +493,7 @@ class ModuleGroups extends Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_nebuleInstance->newGroup($group);
+            $instance = $this->_cacheInstance->newGroup($group);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -546,7 +546,7 @@ class ModuleGroups extends Modules
 			{
 				if ( $link->getParsed()['bs/rs1/eid'] != $this->_nebuleInstance->getCurrentEntity() )
 				{
-					$instance = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);   erreur de fonction !!!
+					$instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);   erreur de fonction !!!
 					$instanceEntity = $this->_nebuleInstance->newEntity($link->getParsed()['bs/rs1/eid']);
 					$closed = '::GroupeOuvert';
 					if ( $instance->getMarkClosed() )
@@ -663,7 +663,7 @@ class ModuleGroups extends Modules
     private function _displayCreateGroup(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:createGroup', $icon, false);
 
         // Si autorisé à créer un groupe.
@@ -843,7 +843,7 @@ class ModuleGroups extends Modules
                             && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntityID()
                         ) {
                             $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
-                            $instanceSigner = $this->_nebuleInstance->newEntity($item->getParsed()['bs/rs1/eid']);
+                            $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
                             $closed = '::GroupeOuvert';
                             if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                                 $closed = '::GroupeFerme';
@@ -907,7 +907,7 @@ class ModuleGroups extends Modules
                     // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                     if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])) {
                         $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
-                        $instanceSigner = $this->_nebuleInstance->newEntity($item->getParsed()['bs/rs1/eid']);
+                        $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
                         $closed = '::GroupeOuvert';
                         if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                             $closed = '::GroupeFerme';

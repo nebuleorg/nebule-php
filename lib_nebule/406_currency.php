@@ -826,7 +826,7 @@ class Currency extends Node implements nodeInterface
 
         // Filtrage type recherché. @todo faire filtrage sur MID.
         foreach ($links1 as $i => $link) {
-            $instance = $this->_nebuleInstance->newObject($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);
             $links2 = $instance->getLinksOnFields(
                 $link->getParsed()['bs/rs1/eid'],
                 '',
@@ -1117,7 +1117,7 @@ class Currency extends Node implements nodeInterface
         $this->_metrologyInstance->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - meta:' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
         if ($id != '') {
-            $instance = $this->_nebuleInstance->newObject($id);
+            $instance = $this->_cacheInstance->newNode($id);
         }
 
         if (is_a($instance, 'Node')
@@ -1498,7 +1498,7 @@ class Currency extends Node implements nodeInterface
         $total = 0;
 
         foreach ($items as $item) {
-            $instance = $this->_nebuleInstance->newTokenPool($item);
+            $instance = $this->_cacheInstance->newTokenPool($item);
             if ($instance->getID() != '0') {
                 $total += $instance->getRelativeValue($date);
             }

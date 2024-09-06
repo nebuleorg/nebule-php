@@ -183,7 +183,7 @@ class ModuleNeblog extends Modules
     private function _displayBlog(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:blog:dispblog', $icon, false);
 
         // Affichage le blog.
@@ -224,7 +224,7 @@ class ModuleNeblog extends Modules
     private function _displayList(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:list:listblog', $icon, false);
 
         $param = array(
@@ -264,7 +264,7 @@ class ModuleNeblog extends Modules
     private function _displayNew(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[2]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:newblog', $icon, false);
 
         ?>
@@ -298,7 +298,7 @@ class ModuleNeblog extends Modules
     private function _displayModify(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:modify:modblog', $icon, false);
 
         // TODO
@@ -318,7 +318,7 @@ class ModuleNeblog extends Modules
     private function _displayDelete(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:delete:delblog', $icon, false);
 
         // TODO
@@ -338,7 +338,7 @@ class ModuleNeblog extends Modules
     private function _displayAbout(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:about:title', $icon, false);
 
         echo '<div>';

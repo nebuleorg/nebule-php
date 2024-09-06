@@ -66,7 +66,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuBlog':
-                $instance = $this->_nebuleInstance->newObject($object);
+                $instance = $this->_cacheInstance->newNode($object);
                 $id = $instance->getID();
 
                 break;
@@ -177,7 +177,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getInstanceEntity()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getInstanceEntity()
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
         else
             $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
@@ -258,7 +258,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instancePassword->setType($type);
         $instancePassword->setLink($link);
         $instancePassword->setHiddenName('id');
-        $instancePassword->setHiddenValue($this->_nebuleInstance->getInstanceEntity());
+        $instancePassword->setHiddenValue($this->_entitiesInstance->getInstanceEntity());
         $instanceList->addItem($instancePassword);
     }
 

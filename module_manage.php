@@ -429,7 +429,7 @@ class ModuleManage extends Modules
     private function _displayModules(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Modules', $icon, false);
 
         // Affichage la liste des modules.
@@ -551,7 +551,7 @@ class ModuleManage extends Modules
                             $param['flagActivated'] = false;
                             $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
                         }
-                        $instance = $this->_nebuleInstance->newObject('0'); // FIXME
+                        $instance = $this->_cacheInstance->newNode('0'); // FIXME
                         echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
 
                         // Marque comme vu.
@@ -575,7 +575,7 @@ class ModuleManage extends Modules
     private function _displayModule(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Module', $icon, false);
 
         // Affichage du module avec transmission de la variable d'affichage.
@@ -707,7 +707,7 @@ class ModuleManage extends Modules
 
                 // Affiche l'application (RID).
                 if ($rid != '0') {
-                    $object = $this->_nebuleInstance->newObject($rid);
+                    $object = $this->_cacheInstance->newNode($rid);
                     $param = array(
                         'enableDisplayColor' => true,
                         'enableDisplayIcon' => true,
@@ -756,7 +756,7 @@ class ModuleManage extends Modules
 
                 // ID
                 if ($id != '0') {
-                    $object = $this->_nebuleInstance->newObject($id);
+                    $object = $this->_cacheInstance->newNode($id);
                     $param['objectName'] = '';
                     $param['status'] = '';
                     $param['link2Object'] = '';
@@ -933,7 +933,7 @@ class ModuleManage extends Modules
     private function _displayCreateModule(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:createModule', $icon, false);
 
         // Si autorisé à créer des liens.
@@ -984,7 +984,7 @@ class ModuleManage extends Modules
     private function _displayChangeCode(): void
     {
         // Titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:addModuleCode', $icon, false);
 
         // Extrait le RID si nouveau module créé.
@@ -1009,7 +1009,7 @@ class ModuleManage extends Modules
                 )
             ) {
                 // Affichage du module concerné.
-                $ridInstance = $this->_nebuleInstance->newObject($rid);
+                $ridInstance = $this->_cacheInstance->newNode($rid);
                 $param = array(
                     'enableDisplayColor' => false,
                     'enableDisplayIcon' => false,

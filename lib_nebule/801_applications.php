@@ -178,17 +178,17 @@ abstract class Applications implements applicationInterface
             )
         ) {
             $this->_currentEntityOID = $arg_ent;
-            $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($arg_ent);
+            $this->_currentEntityInstance = $this->_cacheInstance->newEntity($arg_ent);
             $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('sylabeSelectedEntity');
             if ($cache !== false && $cache != '') {
                 $this->_currentEntityOID = $cache;
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($cache);
+                $this->_currentEntityInstance = $this->_cacheInstance->newEntity($cache);
             } else
             {
                 $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
-                $this->_currentEntityInstance = $this->_nebuleInstance->newEntity($this->_entitiesInstance->getCurrentEntityID());
+                $this->_currentEntityInstance = $this->_cacheInstance->newEntity($this->_entitiesInstance->getCurrentEntityID());
                 $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $this->_entitiesInstance->getCurrentEntityID());
             }
             unset($cache);
@@ -290,7 +290,7 @@ abstract class Applications implements applicationInterface
             }
         } else // Sinon c'est un objet à télécharger.
         {
-            $instance = $this->_nebuleInstance->newObject($this->_askDownloadObject);
+            $instance = $this->_cacheInstance->newNode($this->_askDownloadObject);
             $data = $instance->getContent(0);
             if ($data != null) {
                 $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '18852ac4');
@@ -439,7 +439,7 @@ abstract class Applications implements applicationInterface
 
         $this->getMetrologyInstance()->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
 
-        $object = $this->_nebuleInstance->newObject($bootstrapApplicationIID);
+        $object = $this->_cacheInstance->newNode($bootstrapApplicationIID);
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
 
@@ -493,7 +493,7 @@ abstract class Applications implements applicationInterface
                 }
             }
 
-            $instanceModule = $this->_nebuleInstance->newObject($moduleID);
+            $instanceModule = $this->_cacheInstance->newNode($moduleID);
             $listed[$moduleID] = $moduleID;
 
             // Cherche une mise à jour.
@@ -505,7 +505,7 @@ abstract class Applications implements applicationInterface
             if ($updateModule != $moduleID
                 && $updateModule != '0'
             ) {
-                $instanceModule = $this->_nebuleInstance->newObject($updateModule);
+                $instanceModule = $this->_cacheInstance->newNode($updateModule);
                 if ($instanceModule->getType('authority') == References::REFERENCE_OBJECT_APP_PHP
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
@@ -847,7 +847,7 @@ abstract class Applications implements applicationInterface
 
         // Recherche les liens de validation.
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
-        $object = $this->_nebuleInstance->newObject($hashRef);
+        $object = $this->_cacheInstance->newNode($hashRef);
         $links = $object->getLinksOnFields('', '', 'f', $hashRef, $hash, $hashRef);
 
         // Trie sur les autorités locales.

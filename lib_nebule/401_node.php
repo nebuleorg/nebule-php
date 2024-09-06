@@ -1121,7 +1121,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -1157,7 +1157,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newGroup($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsGroup('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -1219,7 +1219,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
         }
@@ -1256,7 +1256,7 @@ class Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_nebuleInstance->newConversation($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsConversation('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -1648,7 +1648,7 @@ class Node implements nodeInterface
                     && $linkSym->getParsed()['bl/rl/nid2'] == $this->_idProtected
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
+                    $instanceSym = $this->_cacheInstance->newNode($linkSym->getParsed()['bl/rl/nid3']);
                     $linksAsym = array();
                     $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
@@ -1686,7 +1686,7 @@ class Node implements nodeInterface
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetS)
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                    $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
+                    $instanceSym = $this->_cacheInstance->newNode($linkSym->getParsed()['bl/rl/nid3']);
                     $linksAsym = array();
                     $this->getLinks($linksAsym, array(), false);
                     unset($instanceSym);
@@ -2180,7 +2180,7 @@ class Node implements nodeInterface
                 $newLink->write();
 
                 // Suppression de la clé de chiffrement protégée.
-                $object = $this->_nebuleInstance->newObject($idProtectedKey);
+                $object = $this->_cacheInstance->newNode($idProtectedKey);
                 //$object->deleteObject();
                 $signerLinks = array();
                 $this->getLinks($signerLinks, array(), false);
@@ -2493,7 +2493,7 @@ class Node implements nodeInterface
             // Si lien de chiffrement.
             if ($linkSym->getParsed()['bl/rl/nid3'] != '0') {
                 // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                $instanceSym = $this->_nebuleInstance->newObject($linkSym->getParsed()['bl/rl/nid3']);
+                $instanceSym = $this->_cacheInstance->newNode($linkSym->getParsed()['bl/rl/nid3']);
                 $linksAsym = array();
                 $filter = array(
                     'bl/rl/req' => 'k',
@@ -2814,7 +2814,7 @@ class Node implements nodeInterface
         )
             return '';
 
-        $instance = $this->_nebuleInstance->newObject($id);
+        $instance = $this->_cacheInstance->newNode($id);
         $text = substr(trim(strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
@@ -3409,7 +3409,7 @@ class Node implements nodeInterface
             $this->_metrologyInstance->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             foreach ($links as $link) {
-                $linkInstance = $this->_nebuleInstance->newBlockLink($link);
+                $linkInstance = $this->_cacheInstance->newBlockLink($link);
                 $linkInstance->write();
             }
         }

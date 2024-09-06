@@ -15,7 +15,7 @@ namespace Nebule\Library;
  *  $instance->setIconText('Alternative text on icon');
  *  $instance->setSize(self::SIZE_MEDIUM);
  *  $instance->setRatio(self::RATIO_SHORT);
- *  $icon = $this->_nebuleInstance->newObject(Displays::DEFAULT_ICON_IOK);
+ *  $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_IOK);
  *  $instance->setIcon($icon);
  *  $instance->setLink('https://nebule.org');
  *  $instance->display();

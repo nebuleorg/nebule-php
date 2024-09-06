@@ -215,7 +215,7 @@ class ModuleAdmin extends Modules
     private function _displayAppOptions(): void
     {
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:AppOptions', $icon, false);
 
         if ($this->_unlocked) {
@@ -274,7 +274,7 @@ class ModuleAdmin extends Modules
     private function _displayNebOptions(): void
     {
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:NebOptions', $icon, false);
 
         if ($this->_unlocked) {
@@ -341,7 +341,7 @@ class ModuleAdmin extends Modules
     private function _displayAdmins(): void
     {
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeAdmins', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
@@ -411,7 +411,7 @@ class ModuleAdmin extends Modules
     private function _displayRecoveryEntities(): void
     {
         // Affiche le titre.
-        $icon = $this->_nebuleInstance->newObject($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeRecovery', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');

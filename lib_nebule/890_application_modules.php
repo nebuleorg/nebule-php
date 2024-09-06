@@ -169,7 +169,7 @@ class ApplicationModules
 
         $this->_metrologyInstance->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
 
-        $object = $this->_nebuleInstance->newObject($bootstrapApplicationIID);
+        $object = $this->_cacheInstance->newNode($bootstrapApplicationIID);
         $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
 
@@ -223,7 +223,7 @@ class ApplicationModules
                 }
             }
 
-            $instanceModule = $this->_nebuleInstance->newObject($moduleID);
+            $instanceModule = $this->_cacheInstance->newNode($moduleID);
             $listed[$moduleID] = $moduleID;
 
             // Cherche une mise à jour.
@@ -235,7 +235,7 @@ class ApplicationModules
             if ($updateModule != $moduleID
                 && $updateModule != '0'
             ) {
-                $instanceModule = $this->_nebuleInstance->newObject($updateModule);
+                $instanceModule = $this->_cacheInstance->newNode($updateModule);
                 if ($instanceModule->getType('authority') == References::REFERENCE_OBJECT_APP_PHP
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {
