@@ -2,21 +2,21 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
-/**
- * Configuration class for the nebule library.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
+    /**
+     * Configuration class for the nebule library.
+     *
+     * @author Projet nebule
+     * @license GNU GPLv3
+     * @copyright Projet nebule
+     * @link www.nebule.org
+     */
 class Ticketing
 {
     const TICKET_SIZE = 256; // Octet
 
-    protected ?nebule $_nebuleInstance = null;
+    private ?nebule $_nebuleInstance = null;
     private ?Metrology $_metrologyInstance = null;
-    protected ?Cache $_cacheInstance = null;
+    private ?Cache $_cacheInstance = null;
     private bool $_validTicket = false;
 
     public function __construct(nebule $nebuleInstance)

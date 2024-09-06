@@ -1880,7 +1880,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
         // Liste des entités à ne pas afficher.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
+        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         if ($this->_unlocked) {
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
         }
@@ -3015,7 +3015,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
-                            } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
+                            } elseif (!$this->_recoveryInstance->getIsRecoveryEntity($entity)
                                 || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                             ) {
                                 // Annuler le partage de protection. Non fiable...
@@ -3509,8 +3509,8 @@ private function _displayContentAbout()
     private function _displayInlineContentAbout()
     {
         // Lit les entités de recouvrement.
-        $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
-        $listSigners = $this->_nebuleInstance->getRecoveryEntitiesSigners();
+        $listEntities = $this->_recoveryInstance->getRecoveryEntitiesInstance();
+        $listSigners = $this->_recoveryInstance->getRecoveryEntitiesSigners();
 
         $list = array();
         $i = 0;

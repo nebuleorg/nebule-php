@@ -47,7 +47,11 @@ class Authorities
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_cacheInstance = $nebuleInstance->getCacheInstance();
+        $this->_getPermitInstanceAsAuthority();
+        $this->_getPermitDefaultAsAuthority();
         $this->_findPuppetmaster();
+        //$this->_findGlobalAuthorities();
+        //$this->_findLocalAuthorities();
     }
 
     /**
@@ -206,6 +210,31 @@ class Authorities
         return $this->_timeSignersInstance;
     }
 
+    private function _getPermitInstanceAsAuthority(): void
+    {
+        if ($this->_nebuleInstance->getModeRescue())
+            $this->_permitInstanceEntityAsAuthority = false;
+        else
+        $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
+    }
+
+    public function getPermitInstanceAsAuthority(): bool
+    {
+        return $this->_permitInstanceEntityAsAuthority;
+    }
+
+    private function _getPermitDefaultAsAuthority(): void
+    {
+        if ($this->_nebuleInstance->getModeRescue())
+            $this->_permitDefaultEntityAsAuthority = false;
+        else
+        $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');
+    }
+
+    public function getPermitDefaultAsAuthority(): bool
+    {
+        return $this->_permitDefaultEntityAsAuthority;
+    }
 
 
 
@@ -242,11 +271,6 @@ class Authorities
 
     public function setInstanceEntityAsAuthorities(Entity $instance): void
     {
-        if ($this->_nebuleInstance->getModeRescue())
-            $this->_permitInstanceEntityAsAuthority = false;
-        else
-        $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
-
         $eid = $instance->getID();
         if ($this->_permitInstanceEntityAsAuthority) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -256,11 +280,6 @@ class Authorities
 
     public function setDefaultEntityAsAuthorities(Entity $instance): void
     {
-        if ($this->_nebuleInstance->getModeRescue())
-            $this->_permitDefaultEntityAsAuthority = false;
-        else
-            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');
-
         $eid = $instance->getID();
         if ($this->_permitDefaultEntityAsAuthority) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -424,5 +443,4 @@ class Authorities
         }
         return false;
     }
-
 }

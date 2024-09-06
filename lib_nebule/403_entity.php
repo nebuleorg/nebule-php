@@ -825,7 +825,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getIsLocalAuthority(): bool
     {
-        return $this->_nebuleInstance->getIsLocalAuthority($this->_id);
+        return $this->_authoritiesInstance->getIsLocalAuthority($this->_id);
     }
 
 

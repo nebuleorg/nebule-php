@@ -364,7 +364,7 @@ class Entities
         return $this->_currentEntityPrivateKeyInstance;
     }
 
-    public function getCurrentEntityIsUnlocked2(): bool
+    public function getCurrentEntityIsUnlocked(): bool
     {
         return $this->_currentEntityIsUnlocked;
     }

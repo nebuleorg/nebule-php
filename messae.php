@@ -1988,7 +1988,7 @@ class ModuleHelp extends Modules
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
+        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
 
         // Liste les entités marquées comme connu.
         $links = $this->_applicationInstance->getCurrentEntityInstance()->getLinksOnFields(

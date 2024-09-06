@@ -107,6 +107,7 @@ abstract class Actions
     protected ?Recovery $_recoveryInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Displays $_displayInstance = null;
+    protected ?Tokenizing $_tokenizingInstance = null;
     protected bool $_unlocked = false;
 
     public function __construct(Applications $applicationInstance)
@@ -127,6 +128,7 @@ abstract class Actions
         $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
         $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
+        $this->_tokenizingInstance = $this->_nebuleInstance->getTokenizingInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
@@ -577,7 +579,7 @@ abstract class Actions
                 $instance = $this->flatLinkExtractAsInstance_disabled($arg);
                 if ($instance->getValid()
                     && $instance->getSigned()
-                    && ($instance->getSigners() == $this->_nebuleInstance->getCodeAuthoritiesEID()
+                    && ($instance->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
                         || $permitNotCodeMaster
                     )
                 )
@@ -2458,7 +2460,7 @@ abstract class Actions
 
         if ($this->_actionCreateTokens) {
             // Récupère la liste des propriétés.
-            $instance = $this->_nebuleInstance->getCurrentTokenInstance();
+            $instance = $this->_tokenizingInstance->getCurrentTokenInstance();
             $propertiesList = $instance->getPropertiesList();
             unset($instance);
 
@@ -2579,7 +2581,7 @@ abstract class Actions
         $this->_metrologyInstance->addLog('Action upload link', Metrology::LOG_LEVEL_DEBUG);
 
         if ($link->getSigned()
-            && (($link->getSigners() == $this->_nebuleInstance->getCodeAuthoritiesEID()
+            && (($link->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
                     && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 )
                 || $this->_getOptionAsBoolean('permitPublicUploadLink')
@@ -3747,7 +3749,7 @@ abstract class Actions
     {
         $this->_metrologyInstance->addLog('Action create tokens', Metrology::LOG_LEVEL_DEBUG);
 
-        $instance = $this->_nebuleInstance->getCurrentTokenInstance();
+        $instance = $this->_tokenizingInstance->getCurrentTokenInstance();
         for ($i = 0; $i < $this->_actionCreateTokensCount; $i++) {
             // Si pas le premier jeton, supprime le SID demandé de façon à ce qu'il soit généré aléatoirement.
             if ($i > 0) {

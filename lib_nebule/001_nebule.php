@@ -238,6 +238,7 @@ class nebule
     private ?Entities $_entitiesInstance = null;
     private ?Authorities $_authoritiesInstance = null;
     private ?Recovery $_recoveryInstance = null;
+    private ?Tokenizing $_tokenizingInstance = null;
 
 
 
@@ -291,6 +292,7 @@ class nebule
         $this->_authoritiesInstance = new Authorities($this);
         $this->_recoveryInstance = new Recovery($this);
         $this->_entitiesInstance = new Entities($this);
+        $this->_tokenizingInstance = new Tokenizing($this);
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
 
@@ -304,9 +306,9 @@ class nebule
 
         $this->_checkWriteableIO();
 
-        $this->_findPuppetmaster();
-        $this->_findGlobalAuthorities();
-        $this->_findLocalAuthorities();
+        //$this->_findPuppetmaster();
+        //$this->_findGlobalAuthorities();
+        //$this->_findLocalAuthorities();
         //$this->_findInstanceEntity();
         //$this->_findDefaultEntity();
         //$this->_addInstanceEntityAsAuthorities();
@@ -384,6 +386,11 @@ class nebule
     public function getRecoveryInstance(): ?Recovery
     {
         return $this->_recoveryInstance;
+    }
+
+    public function getTokenizingInstance(): ?Tokenizing
+    {
+        return $this->_tokenizingInstance;
     }
 
 
@@ -822,60 +829,6 @@ class nebule
 
 
 
-    private string $_currentTokenID = '';
-    private ?Token $_currentTokenInstance = null;
-
-    private function _findCurrentToken()
-    {
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
-            $this->_currentTokenID = '0';
-            $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
-            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
-            return;
-        }
-
-        if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_TOKEN))
-            $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $arg = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        if (Node::checkNID($arg, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg)
-                || $this->getIoInstance()->checkLinkPresent($arg)
-                || $arg == '0'
-            )
-        ) {
-            $this->_currentTokenID = $arg;
-            $this->_currentTokenInstance = $this->_cacheInstance->newToken($arg);
-            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $arg);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedToken');
-            if ($cache !== false  && $cache != '') {
-                $this->_currentTokenID = $cache;
-                $this->_currentTokenInstance = $this->_cacheInstance->newToken($cache);
-            } else {
-                $this->_currentTokenID = '0';
-                $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
-                $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
-            }
-            unset($cache);
-        }
-        unset($arg);
-
-        $this->_metrologyInstance->addLog('Find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
-    }
-
-    public function getCurrentTokenID(): string
-    {
-        return $this->_currentTokenID;
-    }
-
-    public function getCurrentTokenInstance(): ?Token
-    {
-        return $this->_currentTokenInstance;
-    }
-
-
     /**
      * Calculate the level of usability of entities.
      *
@@ -883,33 +836,33 @@ class nebule
      */
     public function checkInstance(): int
     {
-        if (!$this->_puppetmasterInstance instanceof Entity) return 1;
-        if ($this->_puppetmasterInstance->getID() == '0') return 2;
-        if ($this->_puppetmasterInstance->getID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
-        // Vérifie que le maître de la sécurité est une entité et a été trouvé.
-        if (!is_array($this->_securityAuthoritiesInstance)) return 11;
-        foreach ($this->_securityAuthoritiesInstance as $instance)
+        if (!$this->_authoritiesInstance->getPuppetmasterInstance() instanceof Entity) return 1;
+        if ($this->_authoritiesInstance->getPuppetmasterEID() == '0') return 2;
+        if ($this->_authoritiesInstance->getPuppetmasterEID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
+
+        if (sizeof($this->_authoritiesInstance->getSecurityAuthoritiesInstance()) == 0) return 11;
+        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
         {
             if (!$instance instanceof Entity) return 12;
             if ($instance->getID() == '0') return 13;
         }
-        // Vérifie que le maître du code est une entité et a été trouvé.
-        if (!is_array($this->_codeAuthoritiesInstance)) return 21;
-        foreach ($this->_codeAuthoritiesInstance as $instance)
+
+        if (sizeof($this->_authoritiesInstance->getCodeAuthoritiesInstance()) == 0) return 21;
+        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)
         {
             if (!$instance instanceof Entity) return 22;
             if ($instance->getID() == '0') return 23;
         }
-        // Vérifie que le maître de l'annuaire est une entité et a été trouvé.
-        if (!is_array($this->_directoryAuthoritiesInstance)) return 31;
-        foreach ($this->_directoryAuthoritiesInstance as $instance)
+
+        if (sizeof($this->_authoritiesInstance->getDirectoryAuthoritiesInstance()) == 0) return 31;
+        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)
         {
             if (!$instance instanceof Entity) return 32;
             if ($instance->getID() == '0') return 33;
         }
-        // Vérifie que le maître du temps est une entité et a été trouvé.
-        if (!is_array($this->_timeAuthoritiesInstance)) return 41;
-        foreach ($this->_timeAuthoritiesInstance as $instance)
+
+        if (sizeof($this->_authoritiesInstance->getTimeAuthoritiesInstance()) == 0) return 41;
+        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)
         {
             if (!$instance instanceof Entity) return 42;
             if ($instance->getID() == '0') return 43;
@@ -925,613 +878,6 @@ class nebule
 
         // Tout est bon et l'instance est utilisée.
         return 128;
-    }
-
-
-
-    private string $_puppetmasterID = '';
-    private ?Entity $_puppetmasterInstance = null;
-    private array $_securityAuthoritiesID = array();
-    private array $_securityAuthoritiesInstance = array();
-    private array $_securitySignersInstance = array();
-    private array $_codeAuthoritiesID = array();
-    private array $_codeAuthoritiesInstance = array();
-    private array $_codeSignersInstance = array();
-    private array $_directoryAuthoritiesID = array();
-    private array $_directoryAuthoritiesInstance = array();
-    private array $_directorySignersInstance = array();
-    private array $_timeAuthoritiesID = array();
-    private array $_timeAuthoritiesInstance = array();
-    private array $_timeSignersInstance = array();
-
-    /**
-     * Récupération du maître.
-     *  TODO move to 007_authorities.php
-     *
-     * Définit par une option ou en dur dans une constante.
-     *
-     * @return void
-     */
-    private function _findPuppetmaster()
-    {
-        $this->_puppetmasterID = $this->_configurationInstance->getOptionUntyped('puppetmaster');
-        $this->_puppetmasterInstance = $this->_cacheInstance->newEntity($this->_puppetmasterID);
-        $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmasterID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88848d09');
-    }
-
-
-
-    /**
-     * Find all global authorities entities after the puppetmaster.
-     *  TODO move to 007_authorities.php
-     *
-     * @return void
-     */
-    private function _findGlobalAuthorities()
-    {
-        $this->_findEntityByType(self::LIB_RID_SECURITY_AUTHORITY,
-            $this->_securityAuthoritiesID,
-            $this->_securityAuthoritiesInstance,
-            $this->_securitySignersInstance,
-            'security');
-        $this->_findEntityByType(self::LIB_RID_CODE_AUTHORITY,
-            $this->_codeAuthoritiesID,
-            $this->_codeAuthoritiesInstance,
-            $this->_codeSignersInstance,
-            'code');
-        $this->_findEntityByType(self::LIB_RID_DIRECTORY_AUTHORITY,
-            $this->_directoryAuthoritiesID,
-            $this->_directoryAuthoritiesInstance,
-            $this->_directorySignersInstance,
-            'directory');
-        $this->_findEntityByType(self::LIB_RID_TIME_AUTHORITY,
-            $this->_timeAuthoritiesID,
-            $this->_timeAuthoritiesInstance,
-            $this->_timeSignersInstance,
-            'time');
-    }
-
-    /**
-     * Find authorities by their roles.
-     *  TODO move to 007_authorities.php
-     *
-     * @param string $rid
-     * @param array  $listEID
-     * @param array  $listInstances
-     * @param array  $signersInstances
-     * @param string $name
-     * @return void
-     */
-    private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, array &$signersInstances, string $name): void
-    {
-        $instance = $this->getCacheInstance()->newNode($rid, Cache::TYPE_NODE);
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => $rid,
-            'bl/rl/nid3' => $rid,
-            //'bl/rl/nid4' => '',
-            //'bs/rs1/eid' => $this->_puppetmaster,
-            );
-        $instance->getLinks($links, $filter, false);
-
-        if (sizeof($links) == 0)
-        {
-            $listEID[$this->_puppetmasterID] = $this->_puppetmasterID;
-            $listInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
-            $signersInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
-            return;
-        }
-
-        foreach ($links as $link)
-        {
-            $eid = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->getCacheInstance()->newEntity($eid);
-            $listEID[$eid] = $eid;
-            $listInstances[$eid] = $instance;
-            $signersInstances[$eid] = $link->getSigners();
-            $this->_metrologyInstance->addLog('Find ' . $name . ' authority ' . $eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e6f75b5e');
-        }
-    }
-
-    public function getPuppetmasterEID(): string
-    {
-        return $this->_puppetmasterID;
-    }
-    public function getPuppetmasterInstance(): ?Entity
-    {
-        return $this->_puppetmasterInstance;
-    }
-
-    public function getSecurityAuthoritiesEID(): array
-    {
-        return $this->_securityAuthoritiesID;
-    }
-
-    public function getSecurityAuthoritiesInstance(): array
-    {
-        return $this->_securityAuthoritiesInstance;
-    }
-
-    public function getSecuritySignersInstance(): array
-    {
-        return $this->_securitySignersInstance;
-    }
-
-    public function getCodeAuthoritiesEID(): array
-    {
-        return $this->_codeAuthoritiesID;
-    }
-
-    public function getCodeAuthoritiesInstance(): array
-    {
-        return $this->_codeAuthoritiesInstance;
-    }
-
-    public function getCodeSignersInstance(): array
-    {
-        return $this->_codeSignersInstance;
-    }
-
-    public function getDirectoryAuthoritiesEID(): array
-    {
-        return $this->_directoryAuthoritiesID;
-    }
-
-    public function getDirectoryAuthoritiesInstance(): array
-    {
-        return $this->_directoryAuthoritiesInstance;
-    }
-
-    public function getDirectorySignersInstance(): array
-    {
-        return $this->_directorySignersInstance;
-    }
-
-    public function getTimeAuthoritiesEID(): array
-    {
-        return $this->_timeAuthoritiesID;
-    }
-
-    public function getTimeAuthoritiesInstance(): array
-    {
-        return $this->_timeAuthoritiesInstance;
-    }
-
-    public function getTimeSignersInstance(): array
-    {
-        return $this->_timeSignersInstance;
-    }
-
-
-
-    private array $_authoritiesID = array();
-    private array $_authoritiesInstances = array();
-    private array $_localAuthoritiesID = array();
-    private array $_localAuthoritiesInstances = array();
-    private array $_localPrimaryAuthoritiesID = array();
-    private array $_localPrimaryAuthoritiesInstances = array();
-    private array $_localAuthoritiesSigners = array();
-    private array $_specialEntitiesID = array();
-    private bool $_permitInstanceEntityAsAuthority = false;
-    private bool $_permitDefaultEntityAsAuthority = false;
-
-    /**
-     * Ajoute les autorités locales par défaut.
-     * TODO move to 007_authorities.php
-     *
-     * @return void
-     */
-    private function _findLocalAuthorities()
-    {
-        $this->_authoritiesID[$this->_puppetmasterID] = $this->_puppetmasterID;
-        $this->_authoritiesInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
-        $this->_specialEntitiesID[$this->_puppetmasterID] = $this->_puppetmasterID;
-        foreach ($this->_securityAuthoritiesID as $item)
-        {
-            $this->_authoritiesID[$item] = $item;
-            $this->_authoritiesInstances[$item] = $this->_securityAuthoritiesInstance[$item];
-            $this->_specialEntitiesID[$item] = $item;
-        }
-        foreach ($this->_codeAuthoritiesID as $item)
-        {
-            $this->_authoritiesID[$item] = $item;
-            $this->_authoritiesInstances[$item] = $this->_codeAuthoritiesInstance[$item];
-            $this->_specialEntitiesID[$item] = $item;
-            $this->_localAuthoritiesID[$item] = $item;
-            $this->_localAuthoritiesInstances[$item] =$this->_codeAuthoritiesInstance[$item];
-            $this->_localAuthoritiesSigners[$item] = $this->_puppetmasterID;
-        }
-        foreach ($this->_directoryAuthoritiesID as $item)
-            $this->_specialEntitiesID[$item] = $item;
-        foreach ($this->_timeAuthoritiesID as $item)
-            $this->_specialEntitiesID[$item] = $item;
-    }
-
-    /**
-     * Ajoute si autorisé l'entité instance du serveur comme autorité locale.
-     * Désactivé automatiquement en mode récupération.
-     * TODO move to 007_authorities.php
-     *
-     * @return void
-     */
-    private function _addInstanceEntityAsAuthorities()
-    {
-        if (!$this->_modeRescue)
-            $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
-        else
-            $this->_permitInstanceEntityAsAuthority = false;
-
-        if ($this->_permitInstanceEntityAsAuthority) {
-            $this->_authoritiesID[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntity_DEPRECATED;
-            $this->_authoritiesInstances[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntityInstance_DEPRECATED;
-            $this->_specialEntitiesID[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntity_DEPRECATED;
-            $this->_localAuthoritiesID[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntity_DEPRECATED;
-            $this->_localAuthoritiesInstances[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntityInstance_DEPRECATED;
-            $this->_localAuthoritiesSigners[$this->_instanceEntity_DEPRECATED] = '0';
-            $this->_localPrimaryAuthoritiesID[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntity_DEPRECATED;
-            $this->_localPrimaryAuthoritiesInstances[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntityInstance_DEPRECATED;
-
-            $this->_metrologyInstance->addLog('Add instance entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
-        }
-    }
-
-    /**
-     * Ajoute si autorisé l'entité par défaut comme autorité locale.
-     * Désactivé automatiquement en mode récupération.
-     * TODO move to 007_authorities.php
-     *
-     * @return void
-     */
-    private function _addDefaultEntityAsAuthorities()
-    {
-        if (!$this->_modeRescue)
-            $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');
-        else
-            $this->_permitDefaultEntityAsAuthority = false;
-
-        if ($this->_permitDefaultEntityAsAuthority) {
-            $this->_authoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
-            $this->_authoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
-            $this->_specialEntitiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
-            $this->_localAuthoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
-            $this->_localAuthoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
-            $this->_localAuthoritiesSigners[$this->_defaultEntity_DEPRECATED] = '0';
-            $this->_localPrimaryAuthoritiesID[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
-            $this->_localPrimaryAuthoritiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
-
-            $this->_metrologyInstance->addLog('Add default entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '95cc6196');
-        }
-    }
-
-    /**
-     * Ajoute des autres entités marquées comme autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return void
-     */
-    private function _addLocalAuthorities()
-    {
-        // Vérifie si les entités autorités locales sont autorisées.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
-            return;
-
-        $refAuthority = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
-
-        // Liste les liens de l'entité instance du serveur.
-        $list = array();
-        if ($this->_permitInstanceEntityAsAuthority) {
-            $filter = array(
-                'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $this->_instanceEntity_DEPRECATED,
-                'bl/rl/nid3' => '',
-                'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $this->_instanceEntity_DEPRECATED,
-            );
-            $this->_instanceEntityInstance_DEPRECATED->getLinks($list, $filter, false);
-        }
-
-        // Liste les liens de l'entité par défaut.
-        if ($this->_permitDefaultEntityAsAuthority) {
-            $filter = array(
-                'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $this->_instanceEntity_DEPRECATED,
-                'bl/rl/nid3' => '',
-                'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $this->_defaultEntity_DEPRECATED,
-            );
-            $this->_instanceEntityInstance_DEPRECATED->getLinks($list, $filter, false);
-        }
-
-        foreach ($list as $link) {
-            $nid = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
-            $this->_localAuthoritiesID[$nid] = $nid;
-            $this->_localAuthoritiesInstances[$nid] = $instance;
-            $this->_specialEntitiesID[$nid] = $nid;
-            $this->_localAuthoritiesSigners[$nid] = $link->getParsed()['bs/rs1/eid'];
-            $this->_authoritiesID[$nid] = $nid;
-            $this->_authoritiesInstances[$nid] = $instance;
-        }
-    }
-
-    /**
-     * Lit la liste des ID des autorités.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:string
-     */
-    public function getAuthoritiesID(): array
-    {
-        return $this->_authoritiesID;
-    }
-
-    /**
-     * Lit la liste des instances des autorités.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:Entity
-     */
-    public function getAuthoritiesInstance_DEPRECATED(): array
-    {
-        return $this->_authoritiesInstances;
-    }
-
-    /**
-     * Lit la liste des ID des autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:string
-     */
-    public function getLocalAuthoritiesID(): array
-    {
-        return $this->_localAuthoritiesID;
-    }
-
-    /**
-     * Lit la liste des instances des autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:Entity
-     */
-    public function getLocalAuthoritiesInstance(): array
-    {
-        return $this->_localAuthoritiesInstances;
-    }
-
-    /**
-     * Lit la liste des autorités locales déclarants des autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:string
-     */
-    public function getLocalAuthoritiesSigners(): array
-    {
-        return $this->_localAuthoritiesSigners;
-    }
-
-    /**
-     * Lit la liste des ID des autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:string
-     */
-    public function getLocalPrimaryAuthoritiesID(): array
-    {
-        return $this->_localPrimaryAuthoritiesID;
-    }
-
-    /**
-     * Lit la liste des instances des autorités locales.
-     * TODO move to 007_authorities.php
-     *
-     * @return array:Entity
-     */
-    public function getLocalPrimaryAuthoritiesInstance(): array
-    {
-        return $this->_localPrimaryAuthoritiesInstances;
-    }
-
-    /**
-     * Lit la liste des ID des entités avec des rôles.
-     *  TODO move to 007_authorities.php
-     *
-     * @return array:string
-     */
-    public function getSpecialEntitiesID(): array
-    {
-        return $this->_specialEntitiesID;
-    }
-
-    /**
-     * Retourne si l'entité est autorité locale.
-     *  TODO move to 007_authorities.php
-     *
-     * @param Entity|string $entity
-     * @return boolean
-     */
-    public function getIsLocalAuthority($entity): bool
-    {
-        if (is_a($entity, 'Node'))
-            $entity = $entity->getID();
-        if ($entity == '0')
-            return false;
-
-        foreach ($this->_localAuthoritiesID as $authority) {
-            if ($entity == $authority)
-                return true;
-        }
-        return false;
-    }
-
-
-    private array $_recoveryEntities = array();
-    private array $_recoveryEntitiesInstances = array();
-    private array $_recoveryEntitiesSigners = array();
-    private bool $_permitInstanceEntityAsRecovery = false;
-    private bool $_permitDefaultEntityAsRecovery = false;
-
-    /**
-     * Ajoute si autorisé l'entité instance du serveur comme entité de recouvrement locale.
-     *  TODO move to 009_recovery.php
-     *
-     * @return void
-     */
-    private function _addInstanceEntityAsRecovery()
-    {
-        // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
-            return;
-
-        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery');
-
-        if ($this->_permitInstanceEntityAsRecovery) {
-            $this->_recoveryEntities[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntity_DEPRECATED;
-            $this->_recoveryEntitiesInstances[$this->_instanceEntity_DEPRECATED] = $this->_instanceEntityInstance_DEPRECATED;
-            $this->_recoveryEntitiesSigners[$this->_instanceEntity_DEPRECATED] = '0';
-
-            $this->_metrologyInstance->addLog('Add instance entity as recovery', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa22c32d');
-        }
-    }
-
-    /**
-     * Ajoute si autorisé l'entité par défaut comme entité de recouvrement locale.
-     *  TODO move to 009_recovery.php
-     *
-     * @return void
-     */
-    private function _addDefaultEntityAsRecovery()
-    {
-        // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
-            return;
-
-        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery');
-
-        if ($this->_permitDefaultEntityAsRecovery) {
-            $this->_recoveryEntities[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntity_DEPRECATED;
-            $this->_recoveryEntitiesInstances[$this->_defaultEntity_DEPRECATED] = $this->_defaultEntityInstance_DEPRECATED;
-            $this->_recoveryEntitiesSigners[$this->_defaultEntity_DEPRECATED] = '0';
-
-            $this->_metrologyInstance->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa22c32d');
-        }
-    }
-
-    /**
-     * Recherche les entités de recouvrement valables.
-     *  TODO move to 009_recovery.php
-     *
-     * @return void
-     */
-    private function _findRecoveryEntities(): void
-    {
-        $this->_recoveryEntities = array();
-        $this->_recoveryEntitiesInstances = array();
-
-        // Vérifie si les entités de recouvrement sont autorisées.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
-            return;
-
-        $refRecovery = $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
-
-        // Liste les liens de l'entité instance du serveur..
-        $list = array();
-        if ($this->_permitInstanceEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance_DEPRECATED->getLinksOnFields(
-                $this->_instanceEntity_DEPRECATED,
-                '',
-                'f',
-                $this->_instanceEntity_DEPRECATED,
-                '',
-                $refRecovery
-            );
-        }
-
-        foreach ($list as $link) {
-            $target = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->_cacheInstance->newNode($target, Cache::TYPE_ENTITY);
-            $this->_recoveryEntities[$target] = $target;
-            $this->_recoveryEntitiesInstances[$target] = $instance;
-            $this->_recoveryEntitiesSigners[$target] = $link->getParsed()['bs/rs1/eid'];
-        }
-
-        // Liste les liens de l'entité instance du serveur..
-        $list = array();
-        if ($this->_permitDefaultEntityAsAuthority) {
-            $list = $this->_instanceEntityInstance_DEPRECATED->getLinksOnFields(
-                $this->_defaultEntity_DEPRECATED,
-                '',
-                'f',
-                $this->_instanceEntity_DEPRECATED,
-                '',
-                $refRecovery
-            );
-        }
-
-        foreach ($list as $link) {
-            $target = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->_cacheInstance->newNode($target, Cache::TYPE_ENTITY);
-            $this->_recoveryEntities[$target] = $target;
-            $this->_recoveryEntitiesInstances[$target] = $instance;
-            $this->_recoveryEntitiesSigners[$target] = $link->getParsed()['bs/rs1/eid'];
-        }
-        unset($list);
-    }
-
-    /**
-     * Lit la liste des ID des entités de recouvrement.
-     *  TODO move to 009_recovery.php
-     *
-     * @return array:string
-     */
-    public function getRecoveryEntities(): array
-    {
-        return $this->_recoveryEntities;
-    }
-
-    /**
-     * Lit la liste des instance des entités de recouvrement.
-     *  TODO move to 009_recovery.php
-     *
-     * @return array:Entity
-     */
-    public function getRecoveryEntitiesInstance(): array
-    {
-        return $this->_recoveryEntitiesInstances;
-    }
-
-    /**
-     * Lit la liste des autorités locales déclarants les entités de recouvrement.
-     *  TODO move to 009_recovery.php
-     *
-     * @return array:string
-     */
-    public function getRecoveryEntitiesSigners(): array
-    {
-        return $this->_recoveryEntitiesSigners;
-    }
-
-    /**
-     * Retourne si l'entité est entité de recouvrement.
-     *  TODO move to 009_recovery.php
-     *
-     * @param Entity|string $entity
-     * @return boolean
-     */
-    public function getIsRecoveryEntity($entity): bool
-    {
-        if (is_a($entity, 'Node'))
-            $entity = $entity->getID();
-        if ($entity == '0')
-            return false;
-
-        foreach ($this->_recoveryEntities as $recovery) {
-            if ($entity == $recovery)
-                return true;
-        }
-        return false;
     }
 
 

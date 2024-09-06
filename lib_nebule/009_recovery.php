@@ -28,7 +28,7 @@ class Recovery
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_cacheInstance = $nebuleInstance->getCacheInstance();
-        $this->_findRecoveryEntities();
+        //$this->_findRecoveryEntities();
     }
 
 

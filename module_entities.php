@@ -1408,7 +1408,7 @@ class ModuleEntities extends Modules
     private function _display_InlineKnownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
+        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();
@@ -1474,7 +1474,7 @@ class ModuleEntities extends Modules
     private function _display_InlineKnownByEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
+        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();
@@ -1543,7 +1543,7 @@ class ModuleEntities extends Modules
     private function _display_InlineUnknownEntitiesList(): void
     {
         // Liste des entités déjà affichées.
-        $listOkEntities = $this->_nebuleInstance->getSpecialEntitiesID();
+        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
 
         // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
         $links = array();

@@ -722,16 +722,16 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceEntity = new DisplayObject($this->_applicationInstance);
-        $this->_setCommonEntityFlags($instanceEntity, $this->_nebuleInstance->getPuppetmasterInstance());
+        $this->_setCommonEntityFlags($instanceEntity, $this->_authoritiesInstance->getPuppetmasterInstance());
         $instanceEntity->setFlagProtection(true);
         $instanceEntity->setEnableRefs(false);
         $instanceList->addItem($instanceEntity);
-        foreach (array_merge($this->_nebuleInstance->getSecurityAuthoritiesInstance(), $this->_nebuleInstance->getCodeAuthoritiesInstance()) as $instance)
+        foreach (array_merge($this->_authoritiesInstance->getSecurityAuthoritiesInstance(), $this->_authoritiesInstance->getCodeAuthoritiesInstance()) as $instance)
         {
             $instanceEntity = new DisplayObject($this->_applicationInstance);
             $this->_setCommonEntityFlags($instanceEntity, $instance);
             $instanceEntity->setEnableRefs(true);
-            $instanceEntity->setRefs(array('0' => $this->_nebuleInstance->getPuppetmasterInstance(),));
+            $instanceEntity->setRefs(array('0' => $this->_authoritiesInstance->getPuppetmasterInstance(),));
             $instanceList->addItem($instanceEntity);
         }
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -801,17 +801,17 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instanceTitle->display();
 
         $listOkEntities = array(
-            $this->_nebuleInstance->getPuppetmasterEID() => true,
+            $this->_authoritiesInstance->getPuppetmasterEID() => true,
         );
         foreach (array_merge(
-                $this->_nebuleInstance->getSecurityAuthoritiesEID(),
-                $this->_nebuleInstance->getCodeAuthoritiesEID(),
-                $this->_nebuleInstance->getDirectoryAuthoritiesEID(),
-                $this->_nebuleInstance->getTimeAuthoritiesEID()) as $id)
+                $this->_authoritiesInstance->getSecurityAuthoritiesEID(),
+                $this->_authoritiesInstance->getCodeAuthoritiesEID(),
+                $this->_authoritiesInstance->getDirectoryAuthoritiesEID(),
+                $this->_authoritiesInstance->getTimeAuthoritiesEID()) as $id)
             $listOkEntities[$id] = true;
 
         $instanceList = new DisplayList($this->_applicationInstance);
-        foreach ($this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
+        foreach ($this->_authoritiesInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
             if (!isset($listOkEntities[$instance->getID()])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -833,7 +833,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
             $instanceList = new DisplayList($this->_applicationInstance);
-            foreach ($this->_nebuleInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
+            foreach ($this->_authoritiesInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
                 if (!isset($listOkEntities[$instance->getID()])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
@@ -842,9 +842,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $this->_setCommonEntityFlags($instanceEntity, $instance);
                     $instanceEntity->setFlagProtection(true);
                     $instanceEntity->setEnableRefs(true);
-                    $instanceEntity->setRefs($this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
+                    $instanceEntity->setRefs($this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -885,7 +885,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
             // Lister les entités.
             $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
-            $listAuthorities = $this->_nebuleInstance->getAuthoritiesID();
+            $listAuthorities = $this->_authoritiesInstance->getAuthoritiesID();
 
             // Affiche les entités à ajouter.
             $list = array();
@@ -1176,7 +1176,7 @@ Primary authorities can't be removed, they are forced by two options on the envi
         $instance->getLinks($linksList, $filter);
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
-            if (in_array($signer, $this->_nebuleInstance->getLocalAuthoritiesID()))
+            if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
                 return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, '::::NoPreload', DisplayItem::RATIO_SHORT, 'Preload');
         }
         return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, '::::OkPreload', DisplayItem::RATIO_SHORT, 'Preload');
@@ -1211,7 +1211,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceA
 
             $appListed = array();
             $linksList = array();
-            foreach ($this->_nebuleInstance->getCodeAuthoritiesEID() as $eid) {
+            foreach ($this->_authoritiesInstance->getCodeAuthoritiesEID() as $eid) {
                 $linksList = $instanceAppsID->getLinksOnFields($eid, '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK5 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 foreach ($linksList as $link) {
@@ -1353,7 +1353,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                     $authority = '';
                     foreach ($linksList as $link) {
                         $signer = $link->getParsed()['bs/rs1/eid'];
-                        foreach ($this->_nebuleInstance->getLocalAuthoritiesID() as $authority) {
+                        foreach ($this->_authoritiesInstance->getLocalAuthoritiesID() as $authority) {
                             if ($signer == $authority) {
                                 // Si le lien est valide, active le chargement direct de l'application.
                                 $noPreloadSigner = $signer;
@@ -1395,7 +1395,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 // Recherche de la dernière mise à jour.
                 $updater = $signersList[$application];
                 $linksResult = array();
-                foreach ($this->_nebuleInstance->getCodeAuthoritiesInstance() as $instance) {
+                foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance) {
 //                    $linksResult = $instance->readLinksFilterFull($this->_nebuleInstance->getCodeMaster(), '', 'f', $application, '', $this->_referenceAppID);
                     $filter = array(
                         'bs/rs1/eid' => $instance->getID(),
@@ -1596,7 +1596,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         $instanceTitle->setEnableEntity(true);
         $instanceTitle->display();
 
-        $listAuthorities = $this->_nebuleInstance->getAuthoritiesID();
+        $listAuthorities = $this->_authoritiesInstance->getAuthoritiesID();
         $listOkEntities = array();
         foreach ($listAuthorities as $eid)
             $listOkEntities[$eid] = true;
@@ -1605,7 +1605,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
 
             $instanceList = new DisplayList($this->_applicationInstance);
-            foreach ($this->_nebuleInstance->getRecoveryEntitiesInstance() as $instance) {
+            foreach ($this->_recoveryInstance->getRecoveryEntitiesInstance() as $instance) {
                 if (!isset($listOkEntities[$instance->getID()])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
@@ -1614,9 +1614,9 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                     $this->_setCommonEntityFlags($instanceEntity, $instance);
                     $instanceEntity->setFlagProtection(true);
                     $instanceEntity->setEnableRefs(true);
-                    $instanceEntity->setRefs($this->_nebuleInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
+                    $instanceEntity->setRefs($this->_recoveryInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_nebuleInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;

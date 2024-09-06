@@ -176,7 +176,7 @@ class ApplicationModules
         foreach ($links as $link) {
             $ok = false;
             $module = $link->getParsed()['bl/rl/nid2'];
-            foreach ($this->_nebuleInstance->getLocalAuthoritiesID() as $authority) {
+            foreach ($this->_authoritiesInstance->getLocalAuthoritiesID() as $authority) {
                 if (isset($link->getParsed()['bs/rs1/eid'])
                     && $link->getParsed()['bs/rs1/eid'] == $authority
                     && $module != '0'
@@ -383,7 +383,7 @@ class ApplicationModules
         $link = null;
         foreach ($linksList as $link) {
             // Vérifie que le signataire est une entité locale.
-            if ($this->_nebuleInstance->getIsLocalAuthority($link->getParsed()['bs/rs1/eid'])) {
+            if ($this->_authoritiesInstance->getIsLocalAuthority($link->getParsed()['bs/rs1/eid'])) {
                 return true;
             }
         }

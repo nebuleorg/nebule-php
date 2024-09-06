@@ -1088,7 +1088,7 @@ class ModuleObjects extends Modules
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
-                        } elseif (!$this->_nebuleInstance->getIsRecoveryEntity($entity)
+                        } elseif (!$this->_recoveryInstance->getIsRecoveryEntity($entity)
                             || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                         ) {
                             // Annuler le partage de protection. Non fiable...

@@ -356,8 +356,8 @@ class ModuleAdmin extends Modules
     {
         if ($this->_unlocked) {
             // Liste les entités que j'ai marqué comme connues.
-            $listEntities = $this->_nebuleInstance->getLocalAuthoritiesInstance();
-            $listSigners = $this->_nebuleInstance->getLocalAuthoritiesSigners();
+            $listEntities = $this->_authoritiesInstance->getLocalAuthoritiesInstance();
+            $listSigners = $this->_authoritiesInstance->getLocalAuthoritiesSigners();
 
             // Prépare l'affichage.
             $list = array();
@@ -426,8 +426,8 @@ class ModuleAdmin extends Modules
     {
         if ($this->_unlocked) {
             // Liste les entités marquées comme entités de recouvrement.
-            $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
-            $listSigners = $this->_nebuleInstance->getRecoveryEntitiesSigners();
+            $listEntities = $this->_recoveryInstance->getRecoveryEntitiesInstance();
+            $listSigners = $this->_recoveryInstance->getRecoveryEntitiesSigners();
 
             // Prépare l'affichage.
             $list = array();

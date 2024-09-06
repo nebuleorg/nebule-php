@@ -5912,7 +5912,7 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
             bootstrap_echoLinkNID($eid, $name);
             //echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
             echo ' OK';
-            if ($nebuleInstance->getIsLocalAuthority($listInstance[$eid]))
+            if ($nebuleInstance->getAuthoritiesInstance()->getIsLocalAuthority($listInstance[$eid]))
                 echo ' (local authority)';
         } else
             echo '<span class="error">ERROR!</span>';
