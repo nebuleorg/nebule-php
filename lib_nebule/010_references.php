@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class References
+class References //extends Functions
 {
     // Les commandes.
     const COMMAND_SWITCH_APPLICATION = 'a';

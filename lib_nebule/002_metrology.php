@@ -11,7 +11,7 @@ use Nebule\Library\nebule;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Metrology
+class Metrology extends Functions
 {
     const DEFAULT_ACTION_STATE_SIZE = 64;
     const LOG_LEVEL_NORMAL = 0;
@@ -23,7 +23,6 @@ class Metrology
     const DEFAULT_LOG_LEVEL = 1;
     const DEFAULT_DEBUG_FILE = 'debug';
 
-    protected ?nebule $_nebuleInstance = null;
     private int $_countLinkRead = 0;
     private int $_countLinkVerify = 0;
     private int $_countObjectRead = 0;
@@ -35,10 +34,9 @@ class Metrology
     private int $_actionCount = 0;
     private array $_actionArray = array();
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
         $this->_setTimeStart();
-        $this->_nebuleInstance = $nebuleInstance;
         $this->_setDefaultLogsLevel();
     }
 

@@ -10,25 +10,13 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Tokenizing
+class Tokenizing extends Functions
 {
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
-    private ?Cache $_cacheInstance = null;
-    private ?ioInterface $_ioInstance = null;
-    private ?Session $_sessionInstance = null;
     private string $_currentTokenID = '';
-    private ?Tokenizing $_currentTokenInstance = null;
+    private ?Token $_currentTokenInstance = null;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
-        $this->_ioInstance = $nebuleInstance->getIoInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
         $this->_findCurrentToken();
     }
 
@@ -79,7 +67,7 @@ class Tokenizing
         return $this->_currentTokenID;
     }
 
-    public function getCurrentTokenInstance(): ?Tokenizing
+    public function getCurrentTokenInstance(): ?Token
     {
         return $this->_currentTokenInstance;
     }

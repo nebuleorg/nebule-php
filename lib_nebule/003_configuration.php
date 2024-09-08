@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Configuration
+class Configuration extends Functions
 {
     /**
      * Liste des noms des options.
@@ -718,20 +718,12 @@ class Configuration
         'subordinationEntity' => 'Define the external entity which can modify writeable options on this server instance.',
     );
 
-    protected ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
     private bool $_overwriteOptionCacheLock = false;
     private bool $_optionsByLinksIsInUse = false;
     private array $_optionCache = array();
     private bool $_permitOptionsByLinks = false;
 
 
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-    }
 
     public static function getListOptionsName(): array
     {

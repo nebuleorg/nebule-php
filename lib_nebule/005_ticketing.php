@@ -10,20 +10,14 @@ namespace Nebule\Library;
      * @copyright Projet nebule
      * @link www.nebule.org
      */
-class Ticketing
+class Ticketing extends Functions
 {
     const TICKET_SIZE = 256; // Octet
 
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Cache $_cacheInstance = null;
     private bool $_validTicket = false;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
         $this->_findActionTicket();
     }
 

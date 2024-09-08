@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Cache
+class Cache extends Functions
 {
     const TYPE_NODE = 'node';
     const TYPE_GROUP = 'group';
@@ -40,24 +40,13 @@ class Cache
         self::TYPE_TRANSACTION,
     );
 
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
     private array $_cache = array();
     private array $_cacheDateInsertion = array();
     private int $_sessionBufferLimit;
     private bool $_flushCache;
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         $this->_findFlushCache();
     }

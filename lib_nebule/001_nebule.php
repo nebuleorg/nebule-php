@@ -1329,3 +1329,52 @@ class nebule
         return $instance;
     }
 }
+
+/**
+ * Functions for nebule library and more.
+ *
+ * @author Projet nebule
+ * @license GNU GPLv3
+ * @copyright Projet nebule
+ * @link www.nebule.org
+ */
+class Functions
+{
+    protected ?nebule $_nebuleInstance = null;
+    protected ?Metrology $_metrologyInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Cache $_cacheInstance = null;
+    protected ?ioInterface $_ioInstance = null;
+    protected ?CryptoInterface $_cryptoInstance = null;
+    protected ?SocialInterface $_socialInstance = null;
+    protected ?Session $_sessionInstance = null;
+    protected ?Authorities $_authoritiesInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Recovery $_recoveryInstance = null;
+
+    public function __construct(nebule $nebuleInstance)
+    {
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->setEnvironment();
+        $this->_initialisation();
+    }
+
+    public function setEnvironment()
+    {
+        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
+        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
+        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
+        $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
+        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
+        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
+        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
+    }
+
+    protected function _initialisation()
+    {
+        // Replace on children classes.
+    }
+}

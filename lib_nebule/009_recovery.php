@@ -10,24 +10,16 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Recovery
+class Recovery extends Functions
 {
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
-    private ?Cache $_cacheInstance = null;
     private array $_recoveryEntities = array();
     private array $_recoveryEntitiesInstances = array();
     private array $_recoveryEntitiesSigners = array();
     private bool $_permitInstanceEntityAsRecovery = false;
     private bool $_permitDefaultEntityAsRecovery = false;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
         //$this->_findRecoveryEntities();
     }
 

@@ -10,18 +10,13 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Session
+class Session extends Functions
 {
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
     private bool $_flushCache = false;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+
     }
 
     /**

@@ -10,13 +10,11 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Documentation
+class Documentation extends Functions
 {
-	protected ?nebule $_nebuleInstance = null;
-
-	public function __construct(nebule $nebuleInstance)
+	protected function _initialisation()
 	{
-		$this->_nebuleInstance = $nebuleInstance;
+		// Nothing
 	}
 
 	public function display_content()

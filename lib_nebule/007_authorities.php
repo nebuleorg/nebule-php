@@ -10,12 +10,8 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Authorities
+class Authorities extends Functions
 {
-    private ?nebule $_nebuleInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
-    private ?Cache $_cacheInstance = null;
     private string $_puppetmasterID = '';
     private ?Entity $_puppetmasterInstance = null;
     private array $_securityAuthoritiesID = array();
@@ -41,12 +37,8 @@ class Authorities
     private bool $_permitInstanceEntityAsAuthority = false;
     private bool $_permitDefaultEntityAsAuthority = false;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
         $this->_getPermitInstanceAsAuthority();
         $this->_getPermitDefaultAsAuthority();
         $this->_findPuppetmaster();

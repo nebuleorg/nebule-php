@@ -10,16 +10,8 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Entities
+class Entities extends Functions
 {
-    private ?nebule $_nebuleInstance = null;
-    private ?IO $_ioInstance = null;
-    private ?Metrology $_metrologyInstance = null;
-    private ?Configuration $_configurationInstance = null;
-    private ?Cache $_cacheInstance = null;
-    private ?Session $_sessionInstance = null;
-    private ?Authorities $_authoritiesInstance = null;
-    private ?Recovery $_recoveryInstance = null;
     private string $_instanceEntity = '';
     private ?Entity $_instanceEntityInstance = null;
     private string $_defaultEntity = '';
@@ -30,15 +22,8 @@ class Entities
     private ?Node $_currentEntityPrivateKeyInstance = null;
     private bool $_currentEntityIsUnlocked = false;
 
-    public function __construct(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
-        $this->_sessionInstance = $nebuleInstance->getSessionInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_findInstanceEntity();
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_instanceEntityInstance);
         $this->_recoveryInstance->setInstanceEntityAsRecovery($this->_instanceEntityInstance);
