@@ -15,6 +15,7 @@ namespace Nebule\Library;
 class ApplicationModules
 {
     protected ?nebule $_nebuleInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Applications $_applicationInstance = null;
     protected ?Configuration $_configurationInstance = null;
     protected ?Metrology $_metrologyInstance = null;
@@ -47,6 +48,7 @@ class ApplicationModules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_applicationNamespace = $applicationInstance->getNamespace();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();

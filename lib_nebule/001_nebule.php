@@ -226,19 +226,19 @@ class nebule
         'nebule/reference',
     );
 
-    private nebule $_nebuleInstance;
+    private ?nebule $_nebuleInstance = null;
     private ?Metrology $_metrologyInstance = null;
     private ?Configuration $_configurationInstance = null;
-    private ?Session $_sessionInstance = null;
+    private ?Rescue $_rescueInstance = null;
+    private ?Authorities $_authoritiesInstance = null;
+    private ?Entities $_entitiesInstance = null;
+    private ?Recovery $_recoveryInstance = null;
     private ?Cache $_cacheInstance = null;
+    private ?Session $_sessionInstance = null;
     private ?Ticketing $_ticketingInstance = null;
     private ?ioInterface $_ioInstance = null;
     private ?CryptoInterface $_cryptoInstance = null;
     private ?SocialInterface $_socialInstance = null;
-    private ?Entities $_entitiesInstance = null;
-    private ?Authorities $_authoritiesInstance = null;
-    private ?Recovery $_recoveryInstance = null;
-    private ?Tokenizing $_tokenizingInstance = null;
 
 
 
@@ -277,24 +277,36 @@ class nebule
         $nebuleInstance = $this;
         $this->_metrologyInstance = new Metrology($this);
         $this->_configurationInstance = new Configuration($this);
+        $this->_rescueInstance = new Rescue($this);
         $this->_sessionInstance = new Session($this);
         $this->_cacheInstance = new Cache($this);
-        $this->_ticketingInstance = new Ticketing($this);
-
-        $this->_findModeRescue();
 
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
 
-        $this->_ioInstance = new io($this);
-        $this->_cryptoInstance = new Crypto($this);
-        $this->_socialInstance = new Social($this);
         $this->_authoritiesInstance = new Authorities($this);
         $this->_recoveryInstance = new Recovery($this);
         $this->_entitiesInstance = new Entities($this);
-        $this->_tokenizingInstance = new Tokenizing($this);
+        $this->_ticketingInstance = new Ticketing($this);
+        $this->_ioInstance = new io($this);
+        $this->_cryptoInstance = new Crypto($this);
+        $this->_socialInstance = new Social($this);
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
+
+        // Reload all instances in all library components.
+        $this->_metrologyInstance->setEnvironment();
+        $this->_configurationInstance->setEnvironment();
+        $this->_rescueInstance->setEnvironment();
+        $this->_authoritiesInstance->setEnvironment();
+        $this->_entitiesInstance->setEnvironment();
+        $this->_recoveryInstance->setEnvironment();
+        $this->_cacheInstance->setEnvironment();
+        $this->_sessionInstance->setEnvironment();
+        $this->_ticketingInstance->setEnvironment();
+        //$this->_ioInstance->setEnvironment(); TODO
+        //$this->_cryptoInstance->setEnvironment(); TODO
+        //$this->_socialInstance->setEnvironment(); TODO
 
         $this->_configurationInstance->setPermitOptionsByLinks(true);
         $this->_configurationInstance->flushCache();
@@ -306,7 +318,7 @@ class nebule
 
         $this->_checkWriteableIO();
 
-        //$this->_findPuppetmaster();
+        //$this->_findPuppetmaster(); TODO cleaning...
         //$this->_findGlobalAuthorities();
         //$this->_findLocalAuthorities();
         //$this->_findInstanceEntity();
@@ -343,9 +355,34 @@ class nebule
         return $this->_configurationInstance;
     }
 
+    public function getRescueInstance(): ?Rescue
+    {
+        return $this->_rescueInstance;
+    }
+
+    public function getAuthoritiesInstance(): ?Authorities
+    {
+        return $this->_authoritiesInstance;
+    }
+
+    public function getEntitiesInstance(): ?Entities
+    {
+        return $this->_entitiesInstance;
+    }
+
+    public function getRecoveryInstance(): ?Recovery
+    {
+        return $this->_recoveryInstance;
+    }
+
     public function getCacheInstance(): ?Cache
     {
         return $this->_cacheInstance;
+    }
+
+    public function getSessionInstance(): ?Session
+    {
+        return $this->_sessionInstance;
     }
 
     public function getTicketingInstance(): ?Ticketing
@@ -366,31 +403,6 @@ class nebule
     public function getSocialInstance(): ?SocialInterface
     {
         return $this->_socialInstance;
-    }
-
-    public function getSessionInstance(): ?Session
-    {
-        return $this->_sessionInstance;
-    }
-
-    public function getEntitiesInstance(): ?Entities
-    {
-        return $this->_entitiesInstance;
-    }
-
-    public function getAuthoritiesInstance(): ?Authorities
-    {
-        return $this->_authoritiesInstance;
-    }
-
-    public function getRecoveryInstance(): ?Recovery
-    {
-        return $this->_recoveryInstance;
-    }
-
-    public function getTokenizingInstance(): ?Tokenizing
-    {
-        return $this->_tokenizingInstance;
     }
 
 
@@ -829,6 +841,61 @@ class nebule
 
 
 
+    private string $_currentTokenID = '';
+    private ?Token $_currentTokenInstance = null;
+
+    private function _findCurrentToken()
+    {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
+            $this->_currentTokenID = '0';
+            $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
+            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
+            return;
+        }
+
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKEN))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg, false, true)
+            && ($this->_ioInstance->checkObjectPresent($arg)
+                || $this->_ioInstance->checkLinkPresent($arg)
+                || $arg == '0'
+            )
+        ) {
+            $this->_currentTokenID = $arg;
+            $this->_currentTokenInstance = $this->_cacheInstance->newToken($arg);
+            $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $arg);
+        } else {
+            $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedToken');
+            if ($cache !== false  && $cache != '') {
+                $this->_currentTokenID = $cache;
+                $this->_currentTokenInstance = $this->_cacheInstance->newToken($cache);
+            } else {
+                $this->_currentTokenID = '0';
+                $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
+                $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
+            }
+            unset($cache);
+        }
+        unset($arg);
+
+        $this->_metrologyInstance->addLog('Find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
+    }
+
+    public function getCurrentTokenID(): string
+    {
+        return $this->_currentTokenID;
+    }
+
+    public function getCurrentTokenInstance(): ?Token
+    {
+        return $this->_currentTokenInstance;
+    }
+
+
+
     /**
      * Calculate the level of usability of entities.
      *
@@ -931,40 +998,6 @@ class nebule
 
         unset($list, $instance);
         return $result;
-    }
-
-
-    /**
-     * Variable de mode de récupération.
-     *
-     * @var boolean
-     */
-    private bool $_modeRescue = false;
-
-    /**
-     * Extrait si on est en mode de récupération.
-     *
-     * @return void
-     */
-    private function _findModeRescue(): void
-    {
-        if ($this->_configurationInstance->getOptionUntyped('modeRescue')
-            || ($this->_configurationInstance->getOptionAsBoolean('permitOnlineRescue')
-                && (filter_has_var(INPUT_GET, References::COMMAND_RESCUE)
-                    || filter_has_var(INPUT_POST, References::COMMAND_RESCUE)
-                )
-            )
-        )
-            $this->_modeRescue = true;
-    }
-
-    /**
-     * Retourne si le mode de récupération est activé.
-     * @return boolean
-     */
-    public function getModeRescue(): bool
-    {
-        return $this->_modeRescue;
     }
 
 
@@ -1327,54 +1360,5 @@ class nebule
         }
 
         return $instance;
-    }
-}
-
-/**
- * Functions for nebule library and more.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Functions
-{
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Cache $_cacheInstance = null;
-    protected ?ioInterface $_ioInstance = null;
-    protected ?CryptoInterface $_cryptoInstance = null;
-    protected ?SocialInterface $_socialInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->setEnvironment();
-        $this->_initialisation();
-    }
-
-    public function setEnvironment()
-    {
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
-        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
-    }
-
-    protected function _initialisation()
-    {
-        // Replace on children classes.
     }
 }

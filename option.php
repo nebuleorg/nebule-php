@@ -189,7 +189,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <?php
         // Vérifie les tests de sécurité. Pas d'affichage des options si problème.
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
-            if ($this->_nebuleInstance->getModeRescue())
+            if ($this->_rescueInstance->getModeRescue())
                 $this->displayMessageWarning_DEPRECATED('::::RESCUE');
 
             $this->_displayActions();
@@ -1245,7 +1245,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
 
             // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
             if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                && !$this->_nebuleInstance->getModeRescue()
+                && !$this->_rescueInstance->getModeRescue()
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getInstanceEntity(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -1280,7 +1280,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
 
             // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
             if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                && !$this->_nebuleInstance->getModeRescue()
+                && !$this->_rescueInstance->getModeRescue()
             ) {
                 $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -1408,14 +1408,14 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 }
                 $linksList = array();
                 if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                    && !$this->_nebuleInstance->getModeRescue()
+                    && !$this->_rescueInstance->getModeRescue()
                 ) {
 //                    $linksList = $instance->readLinksFilterFull($this->_entitiesInstance->getInstanceEntity(), '', 'f', $application, '', $this->_referenceAppID);
                     foreach ($linksList as $link)
                         $linksResult[] = $link;
                 }
                 if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                    && !$this->_nebuleInstance->getModeRescue()
+                    && !$this->_rescueInstance->getModeRescue()
                 ) {
 //                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $this->_referenceAppID);
                     foreach ($linksList as $link)

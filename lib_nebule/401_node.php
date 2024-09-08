@@ -59,6 +59,7 @@ class Node implements nodeInterface
     protected ?nebule $_nebuleInstance = null;
     protected ?Metrology $_metrologyInstance = null;
     protected ?Configuration $_configurationInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Cache $_cacheInstance = null;
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
@@ -147,6 +148,7 @@ class Node implements nodeInterface
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_cacheInstance = $nebuleInstance->getCacheInstance();
         $this->_ioInstance = $nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();

@@ -7070,7 +7070,7 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
             $nebuleInstance->getEntitiesInstance()->setCurrentEntity($instance);
 
             // Write references links
-            \Nebule\Library\References::signReferences($nebuleInstance);
+            \Nebule\Library\Functions::signReferences($nebuleInstance);
 
             bootstrap_echoLineTitle('public ID');
             echo $nebulePublicEntity . '<br/>' . "\n";

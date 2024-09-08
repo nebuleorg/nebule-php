@@ -204,7 +204,7 @@ class Authorities extends Functions
 
     private function _getPermitInstanceAsAuthority(): void
     {
-        if ($this->_nebuleInstance->getModeRescue())
+        if ($this->_rescueInstance->getModeRescue())
             $this->_permitInstanceEntityAsAuthority = false;
         else
         $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
@@ -217,7 +217,7 @@ class Authorities extends Functions
 
     private function _getPermitDefaultAsAuthority(): void
     {
-        if ($this->_nebuleInstance->getModeRescue())
+        if ($this->_rescueInstance->getModeRescue())
             $this->_permitDefaultEntityAsAuthority = false;
         else
         $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');

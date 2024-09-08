@@ -1334,7 +1334,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 } // Si un test est en warning maximum.
                 elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
                     // Si mode rescue et en warning.
-                    if ($this->_nebuleInstance->getModeRescue()) {
+                    if ($this->_rescueInstance->getModeRescue()) {
                         // Si l'entité est déverrouillées.
                         if ($this->_unlocked) {
                             // Affiche le lien de verrouillage sans les effets.
@@ -1520,7 +1520,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     private function _displayChecks()
     {
-        if ($this->_nebuleInstance->getModeRescue()) {
+        if ($this->_rescueInstance->getModeRescue()) {
             $this->displayMessageWarning_DEPRECATED('::::RESCUE');
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {

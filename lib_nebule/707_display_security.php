@@ -38,7 +38,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
         $instance->setRatio($this->_ratioCSS);
         $instance->setSize($this->_sizeCSS);
 
-        if ($this->_nebuleInstance->getModeRescue()) {
+        if ($this->_rescueInstance->getModeRescue()) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $instance->setMessage('::::RESCUE');
             $error = 'wr';

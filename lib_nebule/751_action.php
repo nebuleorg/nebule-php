@@ -98,6 +98,7 @@ abstract class Actions
 
     protected ?nebule $_nebuleInstance = null;
     protected ?Configuration $_configurationInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Applications $_applicationInstance = null;
     protected ?metrology $_metrologyInstance = null;
     protected ?IO $_ioInstance = null;
@@ -107,7 +108,6 @@ abstract class Actions
     protected ?Recovery $_recoveryInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Displays $_displayInstance = null;
-    protected ?Tokenizing $_tokenizingInstance = null;
     protected bool $_unlocked = false;
 
     public function __construct(Applications $applicationInstance)
@@ -119,6 +119,7 @@ abstract class Actions
     public function initialisation()
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
@@ -128,7 +129,6 @@ abstract class Actions
         $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
         $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
-        $this->_tokenizingInstance = $this->_nebuleInstance->getTokenizingInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.

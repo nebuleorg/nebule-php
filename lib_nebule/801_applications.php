@@ -36,8 +36,9 @@ abstract class Applications implements applicationInterface
 
     protected ?Applications $_applicationInstance = null;
     protected ?nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
     protected ?Metrology $_metrologyInstance = null;
+    protected ?Configuration $_configurationInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Session $_sessionInstance = null;
     protected ?Authorities $_authoritiesInstance = null;
     protected ?Entities $_entitiesInstance = null;
@@ -52,6 +53,7 @@ abstract class Applications implements applicationInterface
     public function __construct(nebule $nebuleInstance)
     {
         $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
     }
@@ -63,7 +65,7 @@ abstract class Applications implements applicationInterface
         $this->_applicationInstance = $this;
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
         $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();

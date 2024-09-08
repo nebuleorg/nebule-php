@@ -1019,7 +1019,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 } // Si un test est en warning maximum.
                 elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
                     // Si mode rescue et en warning.
-                    if ($this->_nebuleInstance->getModeRescue()) {
+                    if ($this->_rescueInstance->getModeRescue()) {
                         // Si l'entité est déverrouillées.
                         if ($this->_unlocked) {
                             // Affiche le lien de verrouillage sans les effets.

@@ -202,6 +202,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 */
     protected ?nebule $_nebuleInstance = null;
     protected ?Configuration $_configurationInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Applications $_applicationInstance = null;
     protected ?Metrology $_metrologyInstance = null;
     protected ?Cache $_cacheInstance = null;
@@ -243,7 +244,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
+        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
         $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
         $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
@@ -5946,7 +5948,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             'displayRatio' => 'short',
             'displaySize' => $size,
         );
-        if ($this->_nebuleInstance->getModeRescue()) {
+        if ($this->_rescueInstance->getModeRescue()) {
             $param['informationType'] = 'warn';
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::RESCUE', $param);
             $error = 'wr';
