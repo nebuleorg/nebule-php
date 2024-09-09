@@ -51,7 +51,7 @@ class ModuleGroups extends Modules
      *
      * @return void
      */
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
@@ -793,7 +793,7 @@ class ModuleGroups extends Modules
                 $i = 0;
                 foreach ($groupListID as $item) {
                     if (!isset($listOkItems[$item])) {
-                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item);
+                        $instance = $this->_applicationInstance->getTypedInstanceFromNID($item);
 
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
@@ -842,7 +842,7 @@ class ModuleGroups extends Modules
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
                             && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntityID()
                         ) {
-                            $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
+                            $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
                             $closed = '::GroupeOuvert';
                             if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
@@ -906,7 +906,7 @@ class ModuleGroups extends Modules
                 foreach ($groupListLinks as $item) {
                     // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                     if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])) {
-                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item->getParsed()['bl/rl/nid1']);
+                        $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                         $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
                         $closed = '::GroupeOuvert';
                         if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)

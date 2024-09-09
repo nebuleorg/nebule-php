@@ -1536,7 +1536,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 	 * -------------------------------------------------------------------------------- */
     public function displayObjectDivHeaderH1($object, $help = '', $desc = ''): void
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
         $typemime = $object->getType('all');
         if ($desc == '') {
@@ -1862,7 +1862,7 @@ class ModuleHelp extends Modules
     /**
      * Configuration spécifique au module.
      */
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();

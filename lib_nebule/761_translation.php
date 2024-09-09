@@ -231,11 +231,12 @@ abstract class Translates
     protected ?Translates $_currentLanguageInstance = null;
     protected ?Translates $_defaultLanguageInstance = null;
 
-    public function __construct(Applications $applicationInstance) { $this->_applicationInstance = $applicationInstance; }
-    public function __destruct() { return true; }
+    public function __construct(Applications $applicationInstance) {
+        $this->_applicationInstance = $applicationInstance;
+    }
     public function __toString() { return 'Traduction'; }
-    public function __sleep() { return array(); }
-    public function __wakeup() {
+    public function __sleep() { return array(); } // TODO do not cache
+    public function __wakeup() { // TODO do not cache
         global $applicationInstance;
         $this->_applicationInstance = $applicationInstance;
     }

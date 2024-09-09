@@ -88,4 +88,124 @@ class Functions
         }
         return $ok;
     }
+
+    public function getTypedInstanceFromNID(string $nid): Node
+    {
+        $social = 'all';
+
+        if ($nid == '0'
+            || $nid == ''
+        )
+            $instance = $this->_cacheInstance->newNode('0');
+        else {
+            $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_NODE);
+            if ($instance->getIsEntity($social))
+                $instance = $this->_cacheInstance->newEntity($nid);
+            elseif ($instance->getIsWallet($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
+            elseif ($instance->getIsToken($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
+            elseif ($instance->getIsTokenPool($social))
+                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
+            elseif ($instance->getIsCurrency($social))
+                $instance = $this->_cacheInstance->newCurrency($nid);
+            elseif ($instance->getIsConversation($social))
+                $instance = $this->_cacheInstance->newConversation($nid);
+            elseif ($instance->getIsGroup($social))
+                $instance = $this->_cacheInstance->newGroup($nid);
+            else {
+                $protected = $instance->getMarkProtected();
+                if ($protected)
+                    $instance = $this->_cacheInstance->newNode($instance->getID(), Cache::TYPE_NODE);
+                if ($instance->getType('all') == References::REFERENCE_OBJECT_ENTITY)
+                    $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
+            }
+        }
+
+        return $instance;
+    }
+
+    public function dateCompare($date1, $date2)
+    {
+        if ($date1 == '') return false;
+        if ($date2 == '') return false;
+        // Extrait les éléments d'une date.
+        $d1 = date_parse($date1);
+        if ($d1 === false) return 0;
+        $d2 = date_parse($date2);
+        if ($d2 === false) return 0;
+        // Année
+        if ($d1['year'] > $d2['year']) return 1;
+        if ($d1['year'] < $d2['year']) return -1;
+        // Mois
+        if ($d1['month'] === false) return 0;
+        if ($d2['month'] === false) return 0;
+        if ($d1['month'] > $d2['month']) return 1;
+        if ($d1['month'] < $d2['month']) return -1;
+        // Jour
+        if ($d1['day'] === false) return 0;
+        if ($d2['day'] === false) return 0;
+        if ($d1['day'] > $d2['day']) return 1;
+        if ($d1['day'] < $d2['day']) return -1;
+        // Heure
+        if ($d1['hour'] === false) return 0;
+        if ($d2['hour'] === false) return 0;
+        if ($d1['hour'] > $d2['hour']) return 1;
+        if ($d1['hour'] < $d2['hour']) return -1;
+        // Minute
+        if ($d1['minute'] === false) return 0;
+        if ($d2['minute'] === false) return 0;
+        if ($d1['minute'] > $d2['minute']) return 1;
+        if ($d1['minute'] < $d2['minute']) return -1;
+        // Seconde
+        if ($d1['second'] === false) return 0;
+        if ($d2['second'] === false) return 0;
+        if ($d1['second'] > $d2['second']) return 1;
+        if ($d1['second'] < $d2['second']) return -1;
+        // Fraction de seconde
+        if ($d1['fraction'] === false) return 0;
+        if ($d2['fraction'] === false) return 0;
+        if ($d1['fraction'] > $d2['fraction']) return 1;
+        if ($d1['fraction'] < $d2['fraction']) return -1;
+        return 0;
+        // A faire... comparateur universel sur multiples formats de dates...
+    }
+
+    /**
+     * Create and write object from text.
+     * TODO protection
+     *
+     * @param string  $text
+     * @param boolean $protect
+     * @param bool    $obfuscate
+     * @return string
+     */
+    public function createTextAsObject(string &$text, bool $protect = false, bool $obfuscate = false): string
+    {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))
+            || strlen($text) == 0
+            || $protect // TODO
+        )
+            return '';
+
+        $textOID = $this->getNIDfromData($text);
+        $this->_ioInstance->setObject($textOID, $text);
+        $propertyOID = $this->_nebuleInstance->getNIDfromData('text/plain');
+        $propertyRID = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $link = 'l>' . $textOID . '>' . $propertyOID . '>' . $propertyRID;
+        $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
+        $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
+        if ($obfuscate && !$newLink->setObfuscate())
+            return '';
+        $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());
+
+        return $textOID;
+    }
+
+    public function getNIDfromData(string $data, string $algo = ''): string
+    {
+        if ($algo == '')
+            $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
+        return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
+    }
 }

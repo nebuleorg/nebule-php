@@ -16,7 +16,6 @@ interface moduleInterface
     public function __construct(Applications $applicationInstance);
     public function __toString(): string;
 
-    public function initialisation(): void;
     public function getClassName(): string;
     public function getType(): string;
     public function getName(): string;

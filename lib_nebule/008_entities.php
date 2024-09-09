@@ -468,4 +468,45 @@ class Entities extends Functions
         $this->_listEntitiesUnlocked = array();
         $this->_listEntitiesUnlockedInstances = array();
     }
+
+    public function getListEntitiesInstances(): array
+    {
+        $hashType = $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->getNIDfromData('application/x-pem-file');
+        $hashEntityObject =$this->_cacheInstance->newNode($hashEntity);
+
+        // Liste les liens.
+        $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
+        unset($hashType, $hashEntity, $hashEntityObject);
+
+        // Filtre les entités sur le contenu de l'objet de la clé publique. @todo
+        $result = array();
+        $id = '';
+        $instance = null;
+        foreach ($links as $link) {
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $instance = $this->_cacheInstance->newNode($id, Cache::TYPE_ENTITY);
+            if ($instance->getIsPublicKey())
+                $result[$id] = $instance;
+        }
+
+        unset($links, $link, $id, $instance);
+        return $result;
+    }
+
+    public function getListEntitiesID(): array
+    {
+        // Liste les instances.
+        $list = $this->getListEntitiesInstances();
+        $result = array();
+
+        // Filtre les entités sur le contenu de l'objet de la clé publique. @todo
+        foreach ($list as $instance) {
+            $id = $instance->getID();
+            $result[$id] = $id;
+        }
+
+        unset($list, $instance);
+        return $result;
+    }
 }

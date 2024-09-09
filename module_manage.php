@@ -54,11 +54,7 @@ class ModuleManage extends Modules
     const DEFAULT_COMMAND_ACTION_ID = 'actaddid';
 
 
-    /**
-     * Le hash de la référence des modules.
-     * @var string
-     */
-    private $_hashModule = null;
+    private ?string $_hashModule = null;
 
 
     /**
@@ -66,7 +62,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();

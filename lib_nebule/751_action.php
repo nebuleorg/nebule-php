@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Actions
+abstract class Actions extends Functions
 {
     const DEFAULT_COMMAND_APPLICATION = 'a';
     const DEFAULT_COMMAND_NEBULE_BOOTSTRAP = 'a=1';
@@ -96,16 +96,7 @@ abstract class Actions
     const DEFAULT_COMMAND_ACTION_CREATE_TOKENS = 'creactk';
     const DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT = 'creactkcnt';
 
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Rescue $_rescueInstance = null;
     protected ?Applications $_applicationInstance = null;
-    protected ?metrology $_metrologyInstance = null;
-    protected ?IO $_ioInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
@@ -113,22 +104,16 @@ abstract class Actions
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
+        $this->setEnvironment();
+        $this->initialisation();
     }
 
     public function initialisation()
     {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_metrologyInstance = $this->_applicationInstance->getMetrologyInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
@@ -145,17 +130,19 @@ abstract class Actions
         return 'Action';
     }
 
-    public function __sleep()
+    public function __sleep() // TODO do not cache
     {
         return array();
     }
 
-    public function __wakeup()
+    public function __wakeup() // TODO do not cache
     {
         global $applicationInstance;
 
         $this->_applicationInstance = $applicationInstance;
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
+        $this->setEnvironment();
+        $this->initialisation();
     }
 
 
@@ -3202,7 +3189,7 @@ abstract class Actions
             // Nomme l'entité.
             if ($this->_actionCreateEntityName != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityName); // Est fait avec l'entité courante, pas la nouvelle !!!
+                $textID = $this->createTextAsObject($this->_actionCreateEntityName); // Est fait avec l'entité courante, pas la nouvelle !!!
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3214,7 +3201,7 @@ abstract class Actions
             }
             if ($this->_actionCreateEntityFirstname != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityFirstname);
+                $textID = $this->createTextAsObject($this->_actionCreateEntityFirstname);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3226,7 +3213,7 @@ abstract class Actions
             }
             if ($this->_actionCreateEntityNikename != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityNikename);
+                $textID = $this->createTextAsObject($this->_actionCreateEntityNikename);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3242,7 +3229,7 @@ abstract class Actions
 
             if ($this->_actionCreateEntityPrefix != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityPrefix);
+                $textID = $this->createTextAsObject($this->_actionCreateEntityPrefix);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3254,7 +3241,7 @@ abstract class Actions
             }
             if ($this->_actionCreateEntitySuffix != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntitySuffix);
+                $textID = $this->createTextAsObject($this->_actionCreateEntitySuffix);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3266,7 +3253,7 @@ abstract class Actions
             }
             if ($this->_actionCreateEntityType != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionCreateEntityType);
+                $textID = $this->createTextAsObject($this->_actionCreateEntityType);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -3652,10 +3639,10 @@ abstract class Actions
 
         // Création des objets si besoin.
         if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
-            $this->_nebuleInstance->createTextAsObject($prop);
+            $this->createTextAsObject($prop);
         }
         if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($valueID)) {
-            $this->_nebuleInstance->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
+            $this->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
         }
 
         // Création du lien.

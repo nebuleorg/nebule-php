@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Modules implements moduleInterface
+abstract class Modules extends Functions implements moduleInterface
 {
     protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
 
@@ -36,16 +36,8 @@ abstract class Modules implements moduleInterface
     const DEFAULT_COMMAND_ACTION_DISPLAY_MODULE = 'name';
 
     protected ?Applications $_applicationInstance = null;
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Cache $_cacheInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
     protected bool $_unlocked = false;
 
 
@@ -58,7 +50,9 @@ abstract class Modules implements moduleInterface
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
+        $this->setEnvironment();
+        $this->_initialisation();
     }
 
     /**
@@ -66,17 +60,8 @@ abstract class Modules implements moduleInterface
      *
      * @return void
      */
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 

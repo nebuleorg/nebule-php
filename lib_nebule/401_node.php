@@ -23,7 +23,7 @@ namespace Nebule\Library;
  *          Don't forget to call write() if you want a persistant object on database /o.
  * ------------------------------------------------------------------------------------------
  */
-class Node implements nodeInterface
+class Node extends Functions implements nodeInterface
 {
     const CRYPTO_SESSION_KEY_SIZE = 117; // FIXME utilisé par setProtected(), à refaire pour le cas général.
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
@@ -56,18 +56,6 @@ class Node implements nodeInterface
         '_isWallet',
     );
 
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Rescue $_rescueInstance = null;
-    protected ?Cache $_cacheInstance = null;
-    protected ?ioInterface $_ioInstance = null;
-    protected ?CryptoInterface $_cryptoInstance = null;
-    protected ?SocialInterface $_socialInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
     protected bool $_permitBuffer = false;
     protected string $_id = '0';
     protected string $_fullName = '';
@@ -105,7 +93,9 @@ class Node implements nodeInterface
      */
     public function __construct(nebule $nebuleInstance, string $nid)
     {
-        $this->_initialisation($nebuleInstance);
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->setEnvironment();
+        $this->_initialisation();
 
         $id = trim(strtolower($nid));
         if (self::checkNID($id, false, false)
@@ -133,8 +123,9 @@ class Node implements nodeInterface
 
     public function __wakeup()
     {
-        global $nebuleInstance;
-        $this->_initialisation($nebuleInstance);
+        global $nebuleInstance; // FIXME
+        $this->setEnvironment();
+        $this->_initialisation();
 
         $this->_cacheMarkDanger = false;
         $this->_cacheMarkWarning = false;
@@ -143,20 +134,8 @@ class Node implements nodeInterface
         $this->_cacheUpdate = '';
     }
 
-    protected function _initialisation(nebule $nebuleInstance)
+    protected function _initialisation()
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
-        $this->_ioInstance = $nebuleInstance->getIoInstance();
-        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
-        $this->_socialInstance = $nebuleInstance->getSocialInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
     }
 
@@ -3211,7 +3190,7 @@ class Node implements nodeInterface
      */
     public function getReferencedObjectInstance(string $reference = '', string $socialClass = ''): Node
     {
-        return $this->_nebuleInstance->convertIdToTypedObjectInstance($this->getReferencedOrSelfNID($reference, $socialClass));
+        return $this->getTypedInstanceFromNID($this->getReferencedOrSelfNID($reference, $socialClass));
     }
 
     /**

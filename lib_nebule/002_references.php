@@ -21,6 +21,8 @@ class References //extends Functions
     const COMMAND_AUTH_ENTITY_LOGIN = 'login';
     const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     const COMMAND_SWITCH_TO_ENTITY = 'switch';
+    const COMMAND_AUTH_ENTITY_MOD = 'auth';
+    const COMMAND_AUTH_ENTITY_INFO = 'info';
     const COMMAND_SELECT_OBJECT = 'obj';
     const COMMAND_SELECT_LINK = 'lnk';
     const COMMAND_SELECT_ENTITY = 'ent';
@@ -3486,38 +3488,6 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
             } else {
                 echo 'E';
                 $ok = false;
-            }
-        }
-        return $ok;
-    }
-
-    static public function signReferences($nebuleInstance): bool
-    {
-        $ok = true;
-
-        // Load entity before sign.
-        // TODO
-
-        // Generate links for icons.
-        foreach ( self::OBJ_IMG as $name => $content) {
-            $instance = new Node($nebuleInstance, '0');
-            $decoded = (string)base64_decode($content, false);
-            if (!$instance->setContent($decoded))
-                $ok = false; // FIXME
-
-            $reference = $nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
-            if (self::REF_IMG[$name] != '') {
-                $nebuleInstance->getMetrologyInstance()->addLog('sign ref icon ' . 'f>' . self::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '08d23b22');
-
-                // Use credentials on the first run with local entity. FIXME peut être refait avec Entities::setTempCurrentEntity()
-                $newLink = \Nebule\Bootstrap\blk_generateSign('',
-                    'f',
-                    self::REF_IMG[$name],
-                    $instance->getID(),
-                    $reference
-                );
-                if (!\Nebule\Bootstrap\blk_write($newLink))
-                    $ok = false;
             }
         }
         return $ok;

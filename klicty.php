@@ -1111,7 +1111,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affichage des scripts JS.
      */
-    protected function _displayScripts()
+    protected function _displayScripts(): void
     {
         $this->commonScripts();
         /* ?>
@@ -2134,7 +2134,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '<div class="layoutObjectsList">' . "\n";
         echo '<div class="objectsListContent">' . "\n";
 
-        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObjectID());
+        $instance = $this->_applicationInstance->getTypedInstanceFromNID($this->_applicationInstance->getCurrentObjectID());
         $param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -2159,10 +2159,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         return;
 
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObjectInstance());
+        //$object = $this->_applicationInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObjectInstance()->getID());
 
         // Affichage de l'entête.
-        $this->displayObjectDivHeaderH1($object);
+        $this->displayObjectDivHeaderH1($this->_applicationInstance->getCurrentObjectInstance()->getID());
 
         // Affiche les émotions.
         $this->displayInlineEmotions($this->_applicationInstance->getCurrentObjectID());
@@ -2173,7 +2173,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayInlineContentObject()
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($this->_applicationInstance->getCurrentObjectID());
+        $object = $this->_applicationInstance->getTypedInstanceFromNID($this->_applicationInstance->getCurrentObjectID());
 
         $isGroup = $object->getIsGroup('myself');
 
@@ -2427,7 +2427,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $i = 0;
                 foreach ($groupListID as $item) {
                     if (!isset($listOkItems[$item])) {
-                        $instance = $this->_nebuleInstance->convertIdToTypedObjectInstance($item);
+                        $instance = $this->_applicationInstance->getTypedInstanceFromNID($item);
 
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
@@ -2914,7 +2914,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $protect = $object->getMarkProtected();
 
         // Affichage de l'entête.
-        $this->displayObjectDivHeaderH1($object);
+        $this->displayObjectDivHeaderH1($object->getID());
 
         // Si l'objet est présent.
         if ($object->checkPresent()) {
@@ -3570,13 +3570,13 @@ private function _displayContentAbout()
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
+                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -3628,9 +3628,9 @@ private function _displayContentAbout()
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1($object, $help = '', $desc = '')
+    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = '')
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
         $typemime = $object->getType('all');
         if ($desc == '')
@@ -4686,7 +4686,7 @@ class Action extends Actions
             // Création du type mime.
             if ($this->_actionUploadFileType != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileType);
+                $textID = $this->createTextAsObject($this->_actionUploadFileType);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -4700,7 +4700,7 @@ class Action extends Actions
             // Crée l'objet du nom.
             if ($this->_actionUploadFileName != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileName);
+                $textID = $this->createTextAsObject($this->_actionUploadFileName);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -4714,7 +4714,7 @@ class Action extends Actions
             // Crée l'objet de l'extension.
             if ($this->_actionUploadFileExtension != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileExtension);
+                $textID = $this->createTextAsObject($this->_actionUploadFileExtension);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -4729,7 +4729,7 @@ class Action extends Actions
             // Crée l'objet du temps de vie.
             if ($this->_actionUploadFileLifeTime != '') {
                 // Crée l'objet avec le texte.
-                $textID = $this->_nebuleInstance->createTextAsObject($this->_actionUploadFileLifeTime);
+                $textID = $this->createTextAsObject($this->_actionUploadFileLifeTime);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';
@@ -4743,7 +4743,7 @@ class Action extends Actions
             if ($this->_actionUploadFileShowTime != 0) {
                 // Crée l'objet avec le texte.
                 $text = (string)$this->_actionUploadFileShowTime;
-                $textID = $this->_nebuleInstance->createTextAsObject($text);
+                $textID = $this->createTextAsObject($text);
                 if ($textID !== false) {
                     // Crée le lien.
                     $action = 'l';

@@ -66,35 +66,35 @@ class ModuleEntities extends Modules
      *
      * @var string
      */
-    private $_displayEntity;
+    private string $_displayEntity;
 
     /**
      * L'instance de l'entité en cours d'affichage.
      *
      * @var Entity
      */
-    private $_displayEntityInstance;
+    private Entity $_displayEntityInstance;
 
     /**
      * L'ID de l'objet de référence des entités.
      *
      * @var string
      */
-    private $_hashEntity;
+    private string $_hashEntity;
 
     /**
      * L'instance de l'objet de référence des entités.
      *
      * @var Node
      */
-    private $_hashEntityObject;
+    private Node $_hashEntityObject;
 
     /**
      * L'ID de l'objet de référence pour le type d'entité.
      *
      * @var string
      */
-    private $_hashType;
+    private string $_hashType;
 
 
     /**
@@ -102,7 +102,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();

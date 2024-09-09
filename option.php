@@ -884,7 +884,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             echo $this->getDisplayTitle_DEPRECATED('Add entities as local authority', null, false);
 
             // Lister les entités.
-            $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
+            $listEntities = $this->_entitiesInstance->getListEntitiesInstances();
             $listAuthorities = $this->_authoritiesInstance->getAuthoritiesID();
 
             // Affiche les entités à ajouter.
@@ -1654,7 +1654,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             echo $this->getDisplayTitle_DEPRECATED('Add entities as recovery', null, false);
 
             // Lister les entités.
-            $listEntities = $this->_nebuleInstance->getListEntitiesInstances();
+            $listEntities = $this->_entitiesInstance->getListEntitiesInstances();
 
             // Affiche les entités.
             $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;

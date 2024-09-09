@@ -963,7 +963,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $count = 0;
 
         foreach ($list as $object) {
-            $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+            $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
             $htLink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_displayInstance->prepareObjectColor($object);
             $icon = '';

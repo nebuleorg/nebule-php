@@ -18,7 +18,7 @@ use const Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Applications implements applicationInterface
+abstract class Applications extends Functions implements applicationInterface
 {
     const APPLICATION_NAME = 'undef';
     const APPLICATION_SURNAME = 'undef';
@@ -35,28 +35,11 @@ abstract class Applications implements applicationInterface
     const LIST_MODULES_EXTERNAL = array();
 
     protected ?Applications $_applicationInstance = null;
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Rescue $_rescueInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Actions $_actionInstance = null;
     protected ?Translates $_translateInstance = null;
     protected ?ApplicationModules $_applicationModulesInstance = null;
     protected string $_applicationNamespace = '';
-
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
-    }
 
     public function initialisation(): void
     {
@@ -65,11 +48,6 @@ abstract class Applications implements applicationInterface
         $this->_applicationInstance = $this;
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
-        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_findEnvironment();
 
         if ($this->_findAskDownload())

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Application\Klicty\Translate;
 use Nebule\Library\nebule;
 
 /**
@@ -11,7 +12,7 @@ use Nebule\Library\nebule;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Displays
+abstract class Displays extends Functions
 {
     /* ---------- ---------- ---------- ---------- ----------
 	 * Constantes.
@@ -194,25 +195,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     );
 
 
-    /* ---------- ---------- ---------- ---------- ----------
-	 * Variables.
-	 *
-	 * Les valeurs par défaut sont indicatives. Ne pas les replacer.
-	 * Les variables sont systématiquement recalculées.
-	 */
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Rescue $_rescueInstance = null;
     protected ?Applications $_applicationInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Cache $_cacheInstance = null;
-    protected ?IO $_ioInstance = null;
     protected ?Translates $_traductionInstance = null;
     protected ?Actions $_actionInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Authorities $_authoritiesInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Recovery $_recoveryInstance = null;
     protected bool $_unlocked = false;
     protected string $_urlLinkObjectPrefix = '';
     protected string $_urlLinkGroupPrefix = '';
@@ -224,7 +209,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected string $_urlLinkTransactionPrefix = '';
     protected string $_urlLinkWalletPrefix = '';
     protected string $_currentDisplayLanguage;
-    protected string $_currentDisplayLanguageInstance;
+    protected Translate $_currentDisplayLanguageInstance;
     protected array $_displayLanguageList = array();
     protected array $_displayLanguageInstanceList = array();
 
@@ -233,23 +218,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
+        $this->setEnvironment();
+        $this->initialisation();
     }
 
     public function initialisation(): void
     {
         global $applicationName;
 
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
-        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
-        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_authoritiesInstance = $this->_nebuleInstance->getAuthoritiesInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
@@ -324,7 +302,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return array:string
      */
-    public function __sleep()
+    public function __sleep() // TODO do not cache
     {
         return array();
     }
@@ -336,12 +314,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    public function __wakeup(): void
+    public function __wakeup(): void // TODO do not cache
     {
         global $applicationInstance;
 
         $this->_applicationInstance = $applicationInstance;
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
+        $this->setEnvironment();
+        $this->initialisation();
     }
 
     /**
@@ -3366,7 +3346,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $count = 0;
 
         foreach ($list as $object) {
-            $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+            $object = $this->getTypedInstanceFromNID($object);
             $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_prepareObjectColor_DEPRECATED($object);
             $icon = '';
@@ -3533,8 +3513,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result = '';
 
         // Prépare l'objet.
-        $messageInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getParsed()['bl/rl/nid2']);
-        $signerInstance = $this->_nebuleInstance->convertIdToTypedObjectInstance($link->getSigners()[0]); // FIXME [0] correction sauvage !
+        $messageInstance = $this->getTypedInstanceFromNID($link->getParsed()['bl/rl/nid2']);
+        $signerInstance = $this->getTypedInstanceFromNID($link->getSigners()[0]); // FIXME [0] correction sauvage !
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -5061,7 +5041,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertObjectColor(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $image = $this->_prepareObjectColor_DEPRECATED($object, 'iconNormalDisplay');
         return $this->convertHypertextLink($image, $htlink);
@@ -5086,7 +5066,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorNolink(Node $object): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         return $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
     }
 
@@ -5113,7 +5093,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertObjectIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         if ($icon != '')
             $icon = $this->_prepareObjectIcon_DEPRECATED($object, $icon, 'iconNormalDisplay');
@@ -5145,7 +5125,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertObjectColorIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconNormalDisplay');
         if ($icon != '')
@@ -5164,7 +5144,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function prepareInlineObjectColor(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color, $htlink);
@@ -5191,7 +5171,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColor(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color, $htlink);
@@ -5220,7 +5200,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorText(Node $object, string $text = '', string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         if ($text == '')
             $text = $object->getFullName('all');
         $text = $this->_truncateName($text, 0);
@@ -5250,7 +5230,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorName(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $name = $this->_truncateName($object->getFullName('all'), 0);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
@@ -5276,7 +5256,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorIcon(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         $icon = $this->_prepareObjectFace($object, 'iconInlineDisplay');
@@ -5302,7 +5282,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorIconName(Node $object, string $htlink = ''): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
         $name = $this->_truncateName($object->getFullName('all'), 0);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
@@ -5329,7 +5309,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function convertInlineObjectColorIconNameNolink(Node $object): string
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object->getID());
         $name = $this->_truncateName($object->getFullName('all'), 0);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         $icon = $this->_prepareObjectFace($object, 'iconInlineDisplay');
@@ -5596,7 +5576,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
             return '';
 
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->getTypedInstanceFromNID($object);
 
         // Ouverture de la DIV.
         $result = "\n<div class=\"inlineemotions\">\n\t<p>\n\t\t";

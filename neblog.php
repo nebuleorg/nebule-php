@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Application\Neblog;
 use Nebule\Library\applicationInterface;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -1407,7 +1408,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 	 * -------------------------------------------------------------------------------- */
     public function displayObjectDivHeaderH1($object, $help = '', $desc = '')
     {
-        $object = $this->_nebuleInstance->convertIdToTypedObjectInstance($object);
+        $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
         $typemime = $object->getType('all');
         if ($desc == '') {
@@ -1416,7 +1417,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Détermine si c'est une entité.
         $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');
