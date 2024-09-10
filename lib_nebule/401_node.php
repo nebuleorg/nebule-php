@@ -74,7 +74,7 @@ class Node extends Functions implements nodeInterface
     protected string $_idProtectedKey = '0';
     protected string $_idUnprotectedKey = '0';
     protected bool $_markProtectedChecked = false;
-    protected ?bool $_cacheCurrentEntityUnlocked = null;
+    protected bool $_cacheCurrentEntityUnlocked = false;
     protected ?string $_data = null;
     protected bool $_haveData = false;
     protected string $_code = '';
@@ -101,11 +101,12 @@ class Node extends Functions implements nodeInterface
         if (self::checkNID($id, false, false)
         ) {
             $this->_id = $id;
-            $this->_metrologyInstance->addLog('New instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
+            $this->_metrologyInstance->addLog('new instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
         } elseif ($id == '0')
         {
             $this->_id = '0';
             $this->_isNew = true;
+            $this->_metrologyInstance->addLog('instance for new ' . get_class($this), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a16c2373');
         }
 
         $this->_localConstruct();
@@ -141,7 +142,8 @@ class Node extends Functions implements nodeInterface
 
     protected function _localConstruct(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
     /**

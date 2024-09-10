@@ -277,36 +277,33 @@ class nebule
         $nebuleInstance = $this;
         $this->_metrologyInstance = new Metrology($this);
         $this->_configurationInstance = new Configuration($this);
+        $this->_setEnvironmentInstances();
         $this->_rescueInstance = new Rescue($this);
+        $this->_setEnvironmentInstances();
         $this->_sessionInstance = new Session($this);
+        $this->_setEnvironmentInstances();
         $this->_cacheInstance = new Cache($this);
+        $this->_setEnvironmentInstances();
 
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
 
         $this->_authoritiesInstance = new Authorities($this);
+        $this->_setEnvironmentInstances();
         $this->_recoveryInstance = new Recovery($this);
+        $this->_setEnvironmentInstances();
         $this->_entitiesInstance = new Entities($this);
+        $this->_setEnvironmentInstances();
         $this->_ticketingInstance = new Ticketing($this);
+        $this->_setEnvironmentInstances();
         $this->_ioInstance = new io($this);
+        $this->_setEnvironmentInstances();
         $this->_cryptoInstance = new Crypto($this);
+        $this->_setEnvironmentInstances();
         $this->_socialInstance = new Social($this);
+        $this->_setEnvironmentInstances();
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
-
-        // Reload all instances in all library components.
-        $this->_metrologyInstance->setEnvironment();
-        $this->_configurationInstance->setEnvironment();
-        $this->_rescueInstance->setEnvironment();
-        $this->_authoritiesInstance->setEnvironment();
-        $this->_entitiesInstance->setEnvironment();
-        $this->_recoveryInstance->setEnvironment();
-        $this->_cacheInstance->setEnvironment();
-        $this->_sessionInstance->setEnvironment();
-        $this->_ticketingInstance->setEnvironment();
-        //$this->_ioInstance->setEnvironment(); TODO
-        //$this->_cryptoInstance->setEnvironment(); TODO
-        //$this->_socialInstance->setEnvironment(); TODO
 
         $this->_configurationInstance->setPermitOptionsByLinks(true);
         $this->_configurationInstance->flushCache();
@@ -341,6 +338,25 @@ class nebule
         $this->_findCurrentToken();
 
         $this->_metrologyInstance->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '474676ed');
+    }
+
+    /**
+     * Reload all instances in all library components.
+     */
+    private function _setEnvironmentInstances(): void
+    {
+        $this->_metrologyInstance->setEnvironment();
+        $this->_configurationInstance->setEnvironment();
+        $this->_rescueInstance->setEnvironment();
+        $this->_authoritiesInstance->setEnvironment();
+        $this->_entitiesInstance->setEnvironment();
+        $this->_recoveryInstance->setEnvironment();
+        $this->_cacheInstance->setEnvironment();
+        $this->_sessionInstance->setEnvironment();
+        $this->_ticketingInstance->setEnvironment();
+        //$this->_ioInstance->setEnvironment(); TODO
+        //$this->_cryptoInstance->setEnvironment(); TODO
+        //$this->_socialInstance->setEnvironment(); TODO
     }
 
 
@@ -988,20 +1004,8 @@ class nebule
      */
     public function getListLinksByType($type, $entity = '', string $socialClass = ''): array
     {
-        /**
-         * Résultat de la recherche de liens à retourner.
-         * @var array:Link $result
-         */
         $result = array();
-
-        /**
-         * Empreinte du type d'objet à rechercher.
-         */
         $hashType = '';
-
-        /**
-         * Empreinte de l'entité pour la recherche.
-         */
         $hashEntity = '';
 
         // Si le type est une instance, récupère l'ID de l'instance de l'objet du type.
