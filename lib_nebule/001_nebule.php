@@ -284,6 +284,10 @@ class nebule
         $this->_setEnvironmentInstances();
         $this->_cacheInstance = new Cache($this);
         $this->_setEnvironmentInstances();
+        $this->_ioInstance = new io($this);
+        $this->_setEnvironmentInstances();
+        $this->_cryptoInstance = new Crypto($this);
+        $this->_setEnvironmentInstances();
 
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
@@ -296,10 +300,10 @@ class nebule
         $this->_setEnvironmentInstances();
         $this->_ticketingInstance = new Ticketing($this);
         $this->_setEnvironmentInstances();
-        $this->_ioInstance = new io($this);
-        $this->_setEnvironmentInstances();
-        $this->_cryptoInstance = new Crypto($this);
-        $this->_setEnvironmentInstances();
+        //$this->_ioInstance = new io($this);
+        //$this->_setEnvironmentInstances();
+        //$this->_cryptoInstance = new Crypto($this);
+        //$this->_setEnvironmentInstances();
         $this->_socialInstance = new Social($this);
         $this->_setEnvironmentInstances();
 
@@ -347,16 +351,26 @@ class nebule
     {
         $this->_metrologyInstance->setEnvironment();
         $this->_configurationInstance->setEnvironment();
-        $this->_rescueInstance->setEnvironment();
-        $this->_authoritiesInstance->setEnvironment();
-        $this->_entitiesInstance->setEnvironment();
-        $this->_recoveryInstance->setEnvironment();
-        $this->_cacheInstance->setEnvironment();
-        $this->_sessionInstance->setEnvironment();
-        $this->_ticketingInstance->setEnvironment();
-        //$this->_ioInstance->setEnvironment(); TODO
-        //$this->_cryptoInstance->setEnvironment(); TODO
-        //$this->_socialInstance->setEnvironment(); TODO
+        if ($this->_rescueInstance !== null)
+            $this->_rescueInstance->setEnvironment();
+        if ($this->_authoritiesInstance !== null)
+            $this->_authoritiesInstance->setEnvironment();
+        if ($this->_entitiesInstance !== null)
+            $this->_entitiesInstance->setEnvironment();
+        if ($this->_recoveryInstance !== null)
+            $this->_recoveryInstance->setEnvironment();
+        if ($this->_cacheInstance !== null)
+            $this->_cacheInstance->setEnvironment();
+        if ($this->_sessionInstance !== null)
+            $this->_sessionInstance->setEnvironment();
+        if ($this->_ticketingInstance !== null)
+            $this->_ticketingInstance->setEnvironment();
+        if ($this->_ioInstance !== null)
+            $this->_ioInstance->setEnvironment();
+        if ($this->_cryptoInstance !== null)
+            $this->_cryptoInstance->setEnvironment();
+        if ($this->_socialInstance !== null)
+            $this->_socialInstance->setEnvironment();
     }
 
 

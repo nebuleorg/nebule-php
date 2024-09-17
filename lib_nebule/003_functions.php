@@ -53,6 +53,7 @@ class Functions
     protected function _initialisation()
     {
         // Replace on children classes.
+        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __FUNCTION__, '165707c8');
     }
 
 

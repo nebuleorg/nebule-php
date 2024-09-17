@@ -13,21 +13,11 @@ namespace Nebule\Library;
  */
 class CryptoSoftware extends Crypto implements CryptoInterface
 {
-    /**
-     * Crypto library type supported.
-     *
-     * @var string
-     */
     const TYPE = 'Software';
 
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
     protected ?Cache $_cacheInstance;
 
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         // Nothing to do.
     }

@@ -10,11 +10,6 @@ namespace Nebule\Library;
  */
 class CryptoOpenssl extends Crypto implements CryptoInterface
 {
-    /**
-     * Crypto library type supported.
-     *
-     * @var string
-     */
     const TYPE = 'Openssl';
 
     const HASH_ALGORITHM = array(
@@ -71,14 +66,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         '' => '',
     );
 
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected ?Cache $_cacheInstance;
-
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         // Nothing to do.
     }

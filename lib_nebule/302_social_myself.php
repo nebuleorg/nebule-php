@@ -17,7 +17,7 @@ class SocialMySelf extends Social implements SocialInterface
 {
     const TYPE='myself';
 
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         // Nothing to do.
     }

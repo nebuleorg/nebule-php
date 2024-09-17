@@ -10,91 +10,34 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Social implements SocialInterface
+class Social extends Functions implements SocialInterface
 {
     const DEFAULT_CLASS = 'authority';
-
-    /**
-     * Social type supported.
-     *
-     * @var string
-     */
     const TYPE = '';
 
-    /**
-     * @var ?SocialInterface
-     */
-    private $_defaultInstance = null;
-    private $_ready = false;
-    private $_listClasses = array();
-    private $_listInstances = array();
-    private $_listTypes = array();
-
-    /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configuration;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-
-        $this->_initialisation($nebuleInstance);
-    }
+    private ?SocialInterface $_defaultInstance = null;
+    private bool $_ready = false;
+    private array $_listClasses = array();
+    private array $_listInstances = array();
+    private array $_listTypes = array();
 
     public function __toString(): string
     {
         return self::TYPE;
     }
 
-    /**
-     * Load all classes on theme.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass)
-                $this->_initSubClass($class, $nebuleInstance);
+                $this->_initSubClass($class, $this->_nebuleInstance);
         }
 
         $this->_initDefault('socialLibrary');
+        $this->_metrologyInstance->addLog('instancing class Social', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '3f6d9bf1');
     }
 
     /**
@@ -122,7 +65,7 @@ class Social implements SocialInterface
      */
     protected function _initDefault(string $name): void
     {
-        $option = $this->_configuration->getOptionAsString($name);
+        $option = $this->_configurationInstance->getOptionAsString($name);
         if (isset($this->_listInstances[$option]))
         {
             $this->_defaultInstance = $this->_listInstances[$option];

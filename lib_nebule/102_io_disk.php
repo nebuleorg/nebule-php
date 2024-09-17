@@ -13,65 +13,25 @@ use Nebule\Library\nebule;
  */
 class ioDisk extends io implements ioInterface
 {
-    /**
-     * I/O type supported.
-     *
-     * @var string
-     */
     const TYPE = 'Disk';
-
-    /**
-     * I/O filter supported.
-     *
-     * @var string
-     */
     const FILTER = '/^\//';
-
-    /**
-     * Default localisation for this I/O module.
-     *
-     * @var string
-     */
     const LOCALISATION = 'file://';
 
-    /**
-     * Nombre maximum de liens à lire.
-     *
-     * @var number
-     */
-    private $_maxLink;
+    private int $_maxLink = 0;
+    private int $_maxData = 0;
+    private string $_mode = '';
+    private string $_filesTranscodeKey = '';
 
-    /**
-     * Quantité maximum de données à lire dans un objet.
-     *
-     * @var number
-     */
-    private $_maxData;
-
-    /**
-     * Le mode d'accès reconnu.
-     * Doit être RO ou RW, ou vide au début.
-     *
-     * @var string
-     */
-    private $_mode = '';
-
-    /**
-     * Valeur de la clé de transcodage des noms des fichiers de liens dissimulés.
-     *
-     * @var string
-     */
-    private $_filesTranscodeKey = '';
-
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER))
             mkdir(nebule::NEBULE_LOCAL_LINKS_FOLDER);
         if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER))
             mkdir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER);
 
-        $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
-        $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
+        $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
+        $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
+        $this->_metrologyInstance->addLog('instancing class ioDisk', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e4958dd2');
     }
 
     public function __sleep()
@@ -171,7 +131,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkLinksRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
+        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -215,7 +175,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkObjectsRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
+        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -421,8 +381,8 @@ class ioDisk extends io implements ioInterface
         if (!Node::checkNID($oid, false)
             || $link == ''
             || !$this->_checkFileLink($oid, $link)
-            || !$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
         )
@@ -458,8 +418,8 @@ class ioDisk extends io implements ioInterface
     public function setObject(string $oid, string &$data, string $url = ''): bool
     {
         if (!Node::checkNID($oid, false)
-            || !$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
         )
             return false;
@@ -480,8 +440,8 @@ class ioDisk extends io implements ioInterface
     public function unsetObject(string $oid, string $url = ''): bool
     {
         if (!Node::checkNID($oid, false)
-            || !$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteObject')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
         )
@@ -509,8 +469,8 @@ class ioDisk extends io implements ioInterface
         if (!Node::checkNID($oid, false)
             || !$this->_checkFileLink($oid, $link)
             || $link == ''
-            || !$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
         )
@@ -532,8 +492,8 @@ class ioDisk extends io implements ioInterface
     public function flushLinks(string $oid, string $url = ''): bool
     {
         if (!Node::checkNID($oid, false)
-            || !$this->_configuration->getOptionAsBoolean('permitWrite')
-            || !$this->_configuration->getOptionAsBoolean('permitWriteLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
             || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
         )

@@ -38,6 +38,7 @@ class Metrology extends Functions
     {
         $this->_setTimeStart();
         $this->_setDefaultLogsLevel();
+        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __FUNCTION__, '6315c8af');
     }
 
     public function __toString(): string
