@@ -15,6 +15,7 @@ class Rescue extends Functions
     protected function _initialisation()
     {
         $this->_findModeRescue();
+        $this->_metrologyInstance->addLog('instancing class Rescue', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'de62afce');
     }
 
     /**

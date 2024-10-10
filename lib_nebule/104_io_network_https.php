@@ -13,61 +13,21 @@ use Nebule\Library\nebule;
  */
 class ioNetworkHTTPS extends io implements ioInterface
 {
-    /**
-     * I/O type supported.
-     *
-     * @var string
-     */
     const TYPE = 'HTTPS';
-
-    /**
-     * I/O filter supported.
-     *
-     * @var string
-     */
     const FILTER = '/^https:/i';
-
-    /**
-     * Default localisation for this I/O module.
-     *
-     * @var string
-     */
     const LOCALISATION = 'https://localhost';
 
-    /**
-     * Nombre maximum de liens à lire.
-     *
-     * @var number
-     */
-    private $_maxLink;
+    private int $_maxLink = 0;
+    private int $_maxData = 0;
+    private string $_defaultLocalisation = '';
+    private string $_filesTrancodeKey = '0';
 
-    /**
-     * Quantité maximum de données à lire dans un objet.
-     *
-     * @var number
-     */
-    private $_maxData;
-
-    /**
-     * Localisation par défaut à utiliser.
-     *
-     * @var string
-     */
-    private $_defaultLocalisation;
-
-    /**
-     * Valeur de la clé de transcodage des noms des fichiers de liens dissimulés.
-     *
-     * @var number
-     */
-    private $_filesTrancodeKey = '0';
-
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         global $nebuleLibVersion;
 
-        $this->_maxLink = $this->_configuration->getOptionUntyped('ioReadMaxLinks');
-        $this->_maxData = $this->_configuration->getOptionUntyped('ioReadMaxData');
+        $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
+        $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         // Détermination de l'URL par défaut.
         //$this->_defaultLocalisation = self::LOCALISATION;
         $this->_defaultLocalisation = 'https://' . $_SERVER['SERVER_NAME'];
@@ -75,7 +35,8 @@ class ioNetworkHTTPS extends io implements ioInterface
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
-        ini_set('default_socket_timeout', $this->_configuration->getOptionAsString('ioTimeout'));
+        ini_set('default_socket_timeout', $this->_configurationInstance->getOptionAsString('ioTimeout'));
+        $this->_metrologyInstance->addLog('instancing class ioNetworkHTTPS', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '884a3959');
     }
 
     public function __sleep()
@@ -170,7 +131,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
+        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -191,7 +152,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configuration->getOptionAsString('puppetmaster');
+        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -241,7 +202,7 @@ class ioNetworkHTTPS extends io implements ioInterface
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false)
-            || !$this->_configuration->getOptionAsBoolean('permitSynchronizeLink')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
         )
             return array();
         $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
@@ -286,7 +247,7 @@ class ioNetworkHTTPS extends io implements ioInterface
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false)
-            || !$this->_configuration->getOptionAsBoolean('permitSynchronizeObject')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
         )
             return false;
         $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;

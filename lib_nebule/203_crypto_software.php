@@ -17,7 +17,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     protected ?Cache $_cacheInstance;
 
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         // Nothing to do.
     }

@@ -16,7 +16,7 @@ class Session extends Functions
 
     protected function _initialisation()
     {
-
+        $this->_metrologyInstance->addLog('instancing class Session', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '5a444198');
     }
 
     /**

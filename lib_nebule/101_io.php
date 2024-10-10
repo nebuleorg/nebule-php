@@ -16,110 +16,39 @@ use Nebule\Library\nebule;
  * Elle est ensuite utilisée comme routeur pour recevoir les requêtes et les rediriger vers
  *   les bonnes classes par rapport aux protocoles utilisés dans les requêtes...
  */
-class io implements ioInterface
+class io extends Functions implements ioInterface
 {
     const DEFAULT_CLASS = 'Disk';
-
-    /**
-     * I/O type supported.
-     *
-     * @var string
-     */
     private const TYPE = '';
-
-    /**
-     * I/O filter supported.
-     *
-     * @var string
-     */
     private const FILTER = '';
-
-    /**
-     * Default localisation for this I/O module.
-     *
-     * @var string
-     */
     private const LOCALISATION = '';
 
-    /**
-     * @var ?ioInterface
-     */
-    private $_defaultInstance = null;
-    private $_ready = false;
-    private $_listClasses = array();
-    private $_listInstances = array();
-    private $_listTypes = array();
-    private $_listLocalisations = array();
-    private $_listFilterStrings = array();
-    private $_listModes = array();
-
-    /**
-     * Instance de la bibliothèque nebule.
-     *
-     * @var nebule
-     */
-    protected $_nebuleInstance;
-
-    /**
-     * Instance métrologie en cours.
-     *
-     * @var Metrology
-     */
-    protected $_metrology;
-
-    /**
-     * Instance de gestion de la configuration et des options.
-     *
-     * @var Configuration
-     */
-    protected $_configuration;
-
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
-    protected $_cache;
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrology = $nebuleInstance->getMetrologyInstance();
-        $this->_configuration = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-
-//$this->_metrology->addLog('MARK1 class=' . get_class($this), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
-
-        $this->_initialisation($nebuleInstance);
-    }
+    private ?ioInterface $_defaultInstance = null;
+    private bool $_ready = false;
+    private array $_listClasses = array();
+    private array $_listInstances = array();
+    private array $_listTypes = array();
+    private array $_listLocalisations = array();
+    private array $_listFilterStrings = array();
+    private array $_listModes = array();
 
     public function __toString(): string
     {
         return self::TYPE;
     }
 
-    /**
-     * Load all classes on theme.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass)
-                $this->_initSubClass($class, $nebuleInstance);
+                $this->_initSubClass($class, $this->_nebuleInstance);
         }
 
         $this->_initDefault('ioLibrary');
+        $this->_metrologyInstance->addLog('instancing class io', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f5d7dc7f');
     }
 
     /**
@@ -153,7 +82,7 @@ class io implements ioInterface
      */
     protected function _initDefault(string $name): void
     {
-        $option = $this->_configuration->getOptionAsString($name);
+        $option = $this->_configurationInstance->getOptionAsString($name);
         if (isset($this->_listClasses[get_class($this) . $option]))
         {
             $this->_defaultInstance = $this->_listInstances[$option];

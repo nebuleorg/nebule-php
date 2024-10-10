@@ -725,6 +725,11 @@ class Configuration extends Functions
 
 
 
+    protected function _initialisation()
+    {
+        $this->_metrologyInstance->addLog('instancing class Configuration', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'fbaec5ee');
+    }
+
     public static function getListOptionsName(): array
     {
         return self::OPTIONS_LIST;

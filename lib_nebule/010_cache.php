@@ -42,13 +42,14 @@ class Cache extends Functions
 
     private array $_cache = array();
     private array $_cacheDateInsertion = array();
-    private int $_sessionBufferLimit;
-    private bool $_flushCache;
+    private int $_sessionBufferLimit = 0;
+    private bool $_flushCache = false;
 
     protected function _initialisation()
     {
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         $this->_findFlushCache();
+        $this->_metrologyInstance->addLog('instancing class Cache', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'b7e8c992');
     }
 
     public function __wakeup()

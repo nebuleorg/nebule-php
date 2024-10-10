@@ -44,6 +44,7 @@ class Authorities extends Functions
         $this->_findPuppetmaster();
         //$this->_findGlobalAuthorities();
         //$this->_findLocalAuthorities();
+        $this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '16aa56f1');
     }
 
     /**

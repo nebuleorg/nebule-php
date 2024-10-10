@@ -62,7 +62,8 @@ class Wallet extends Entity implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if ($this->_isNew)
             $this->_createNewWallet();

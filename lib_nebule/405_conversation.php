@@ -63,7 +63,8 @@ class Conversation extends Group implements nodeInterface
             $this->_isNew = false;
             return;
         }
-        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();

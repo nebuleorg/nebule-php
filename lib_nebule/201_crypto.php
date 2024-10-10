@@ -8,15 +8,10 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Crypto implements CryptoInterface
+class Crypto extends Functions implements CryptoInterface
 {
     const DEFAULT_CLASS = 'Openssl';
 
-    /**
-     * Crypto library type supported.
-     *
-     * @var string
-     */
     const TYPE = '';
 
     const RANDOM_PSEUDO = 1;
@@ -25,46 +20,29 @@ class Crypto implements CryptoInterface
     const TYPE_SYMMETRIC = 2;
     const TYPE_ASYMMETRIC = 3;
 
-    /**
-     * @var ?CryptoInterface
-     */
     private ?CryptoInterface $_defaultInstance = null;
     private bool $_ready = false;
     private array $_listClasses = array();
     private array $_listInstances = array();
     private array $_listTypes = array();
 
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Cache $_cacheInstance = null;
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cacheInstance = $nebuleInstance->getCacheInstance();
-
-        $this->_initialisation($nebuleInstance);
-    }
-
     public function __toString(): string
     {
         return self::TYPE;
     }
 
-    protected function _initialisation(nebule $nebuleInstance): void
+    protected function _initialisation(): void
     {
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass)
-                $this->_initSubClass($class, $nebuleInstance);
+                $this->_initSubClass($class, $this->_nebuleInstance);
         }
 
         $this->_initDefault('cryptoLibrary');
+        $this->_metrologyInstance->addLog('instancing class Crypto', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e8315139');
     }
 
     protected function _initSubClass(string $class, nebule $nebuleInstance): void

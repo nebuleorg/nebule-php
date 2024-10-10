@@ -21,6 +21,7 @@ class Recovery extends Functions
     protected function _initialisation()
     {
         //$this->_findRecoveryEntities();
+        $this->_metrologyInstance->addLog('instancing class Recovery', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '496c1d98');
     }
 
 

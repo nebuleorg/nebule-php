@@ -35,6 +35,7 @@ class Entities extends Functions
         $this->_getCurrentEntity();
         $this->_getCurrentEntityPrivateKey();
         $this->_getCurrentEntityPassword();
+        $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'ad5a5b0c');
     }
 
     private function _findInstanceEntity()
