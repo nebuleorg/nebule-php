@@ -5,7 +5,9 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020240814
+# Version 020241010
+
+echo ' > start'
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
@@ -39,15 +41,16 @@ export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58
 export INIT_DATE='020230714'
 
 # Prepare all links specifically for develop and tests.
-puppetmaster_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 4096 2>&1 | grep -A100 'BEGIN RSA PRIVATE KEY')
+echo " > prep authorities"
+puppetmaster_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 4096 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export puppetmaster_develop_key
-security_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN RSA PRIVATE KEY')
+security_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export security_authority_develop_key
-code_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN RSA PRIVATE KEY')
+code_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export code_authority_develop_key
-time_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN RSA PRIVATE KEY')
+time_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export time_authority_develop_key
-directory_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN RSA PRIVATE KEY')
+directory_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export directory_authority_develop_key
 
 function work_full_reinit()
@@ -60,7 +63,7 @@ function work_full_reinit()
   [ -f e ] && sudo rm -f e
   [ -f c ] && sudo rm -f c
 
-  sudo chown 1000.33 l o
+  sudo chown 1000:33 l o
   sudo chmod 775 l o
 
   cat "${WORKSPACE}/nebule.env" > c
@@ -174,9 +177,9 @@ function work_full_reinit()
     sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256
   done
 
-  sudo chown 1000.33 l/*
+  sudo chown 1000:33 l/*
   sudo chmod 644 l/*
-  sudo chown 1000.33 o/*
+  sudo chown 1000:33 o/*
   sudo chmod 644 o/*
 }
 
@@ -420,9 +423,9 @@ EOF
   echo -n "upload" > "o/${uploadNameOID}"
   echo -n "Up" > "o/${uploadSurnameOID}"
 
-  sudo chown 1000.33 l/*
+  sudo chown 1000:33 l/*
   sudo chmod 664 l/*
-  sudo chown 1000.33 o/*
+  sudo chown 1000:33 o/*
   sudo chmod 664 o/*
 }
 
@@ -457,6 +460,7 @@ function sign_write_link()
 #echo ''
 
 # Extrait les clés publiques.
+echo " > extract pub keys"
 puppetmaster_develop_pem=$(       echo -n "${puppetmaster_develop_key}"        | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export puppetmaster_develop_pem
 security_authority_develop_pem=$( echo -n "${security_authority_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
@@ -529,7 +533,7 @@ function mode_once
 
 function main
 {
-  echo ' > start'
+  echo ' > main'
 
   echo "   - puppetmaster        : ${puppetmaster_develop_pem_hash}"
   echo "     - key               : ${puppetmaster_develop_key_hash}"

@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020240910';
+const BOOTSTRAP_VERSION = '020241010';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -54,7 +54,7 @@ const BOOTSTRAP_FUNCTION_VERSION = '020240225';
 
 
 
-const PHP_VERSION_MINIMUM = '7.4.0';
+const PHP_VERSION_MINIMUM = '8.0.0';
 if (version_compare(phpversion(),PHP_VERSION_MINIMUM, '<'))
     exit('Found PHP version ' . phpversion() . ', need >= ' . PHP_VERSION_MINIMUM);
 

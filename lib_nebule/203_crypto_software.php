@@ -13,18 +13,8 @@ namespace Nebule\Library;
  */
 class CryptoSoftware extends Crypto implements CryptoInterface
 {
-    /**
-     * Crypto library type supported.
-     *
-     * @var string
-     */
     const TYPE = 'Software';
 
-    /**
-     * Instance de gestion du cache.
-     *
-     * @var Cache
-     */
     protected ?Cache $_cacheInstance;
 
     protected function _initialisation(nebule $nebuleInstance): void
@@ -557,17 +547,17 @@ class SHA256 extends hash
         {
             //      initialize the registers
             for($j = 0; $j < 8; $j++)
-                ${$vars{$j}} = $hashData->hash[$j];
+                ${$vars[$j]} = $hashData->hash[$j];
 
             //      the SHA-256 compression function
             for($j = 0; $j < 64; $j++)
             {
                 if($j < 16)
                 {
-                    $T1  = ord($hashData->chunks[$i]{$j*4  }) & 0xFF; $T1 <<= 8;
-                    $T1 |= ord($hashData->chunks[$i]{$j*4+1}) & 0xFF; $T1 <<= 8;
-                    $T1 |= ord($hashData->chunks[$i]{$j*4+2}) & 0xFF; $T1 <<= 8;
-                    $T1 |= ord($hashData->chunks[$i]{$j*4+3}) & 0xFF;
+                    $T1  = ord($hashData->chunks[$i][$j*4]) & 0xFF; $T1 <<= 8;
+                    $T1 |= ord($hashData->chunks[$i][$j*4+1]) & 0xFF; $T1 <<= 8;
+                    $T1 |= ord($hashData->chunks[$i][$j*4+2]) & 0xFF; $T1 <<= 8;
+                    $T1 |= ord($hashData->chunks[$i][$j*4+3]) & 0xFF;
                     $W[$j] = $T1;
                 }
                 else
@@ -589,7 +579,7 @@ class SHA256 extends hash
 
             //      compute the next hash set
             for($j = 0; $j < 8; $j++)
-                $hashData->hash[$j] = SHA256::sum(${$vars{$j}}, $hashData->hash[$j]);
+                $hashData->hash[$j] = SHA256::sum(${$vars[$j]}, $hashData->hash[$j]);
         }
     }
 
