@@ -784,7 +784,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int
      */
-    public function getOptionUntyped(string $name): bool|int|string
+    public function getOptionUntyped(string $name): bool|int|string // TODO suppress untyped vars on all the class Configuration.
     {
         return self::_changeTypeValueFromString($name, $this->_getOption($name));
     }
@@ -1056,10 +1056,10 @@ class Configuration extends Functions
      * Transcode option's value to a string.
      *
      * @param string          $name
-     * @param string|bool|int $value
+     * @param bool|int|string $value
      * @return string
      */
-    private function _changeTypeValueToString(string $name, $value): string
+    private function _changeTypeValueToString(string $name, bool|int|string $value): string
     {
         if (!isset(self::OPTIONS_TYPE[$name]) )
             return '';
@@ -1179,17 +1179,16 @@ class Configuration extends Functions
 
     /**
      * Ecrit une option en cache.
-     *
      * L'écriture en cache n'est possible que si cette possibilité n'est pas verrouillée.
      * Le bootstrap verrouille automatiquement en fin de chargement la possibilité
      *   de modification des options directement en cache.
      * Le verrouillage n'est pas annulable.
      *
-     * @param string $name
-     * @param string|bool|int $value
+     * @param string          $name
+     * @param bool|int|string $value
      * @return boolean
      */
-    public function setOptionCache(string $name, $value): bool
+    public function setOptionCache(string $name, bool|int|string $value): bool
     {
         if ($name == ''
             || !isset(self::OPTIONS_TYPE[$name])
@@ -1207,12 +1206,12 @@ class Configuration extends Functions
     /**
      * Write an option as link for an entity if this option is not protected.
      *
-     * @param string $name
-     * @param string|bool|int $value
-     * @param string $entity
+     * @param string          $name
+     * @param bool|int|string $value
+     * @param string          $entity
      * @return boolean
      */
-    public function setOptionEnvironment(string $name, $value, string $entity = ''): bool
+    public function setOptionEnvironment(string $name, bool|int|string $value, string $entity = ''): bool
     {
         // Vérifie le nom.
         if ($name == ''
