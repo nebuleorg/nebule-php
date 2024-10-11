@@ -16,7 +16,7 @@ class Ticketing extends Functions
 
     private bool $_validTicket = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_findActionTicket();
         $this->_metrologyInstance->addLog('instancing class Ticketing', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e1e0a7f3');

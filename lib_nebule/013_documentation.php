@@ -12,13 +12,13 @@ namespace Nebule\Library;
  */
 class Documentation extends Functions
 {
-	protected function _initialisation()
-	{
+	protected function _initialisation(): void
+    {
 		// Nothing
 	}
 
-	public function display_content()
-	{
+	public function display_content(): void
+    {
 ?>
 
 <h1>Table des matières</h1>
@@ -77,7 +77,7 @@ class Documentation extends Functions
         Social::echoDocumentationCore();
     }
 
-    static public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -86,7 +86,7 @@ class Documentation extends Functions
         <?php
     }
 
-    static public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

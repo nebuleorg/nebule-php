@@ -22,7 +22,7 @@ class Entities extends Functions
     private ?Node $_currentEntityPrivateKeyInstance = null;
     private bool $_currentEntityIsUnlocked = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_findInstanceEntity();
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_instanceEntityInstance);
@@ -38,7 +38,7 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'ad5a5b0c');
     }
 
-    private function _findInstanceEntity()
+    private function _findInstanceEntity(): void
     {
         $instance = null;
         // Vérifie si une valeur n'est pas mémorisée dans la session.
@@ -102,7 +102,7 @@ class Entities extends Functions
 
 
 
-    private function _findDefaultEntity()
+    private function _findDefaultEntity(): void
     {
         $instance = null;
         // Vérifie si une valeur n'est pas mémorisée dans la session.
@@ -161,7 +161,7 @@ class Entities extends Functions
     }
 
 
-    private function _getCurrentEntity() // FIXME WTF!
+    private function _getCurrentEntity(): void // FIXME WTF!
     {
         $itc_ent = null;
 
@@ -266,7 +266,7 @@ class Entities extends Functions
         return $arg;
     }
 
-    private function _getCurrentEntityPrivateKey()
+    private function _getCurrentEntityPrivateKey(): void
     {
         $privateKey = $this->_sessionInstance->getSessionStore('nebulePrivateEntity');
 
@@ -296,7 +296,7 @@ class Entities extends Functions
         }
     }
 
-    private function _getCurrentEntityPassword()
+    private function _getCurrentEntityPassword(): void
     {
         if (filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT)
             || filter_has_var(INPUT_POST, References::COMMAND_AUTH_ENTITY_LOGOUT))
@@ -458,13 +458,13 @@ class Entities extends Functions
         $this->_listEntitiesUnlockedInstances[$eid] = $entity;
     }
 
-    public function removeListEntitiesUnlocked(Entity $entity)
+    public function removeListEntitiesUnlocked(Entity $entity): void
     {
         unset($this->_listEntitiesUnlocked[$entity->getID()]);
         unset($this->_listEntitiesUnlockedInstances[$entity->getID()]);
     }
 
-    public function flushListEntitiesUnlocked()
+    public function flushListEntitiesUnlocked(): void
     {
         $this->_listEntitiesUnlocked = array();
         $this->_listEntitiesUnlockedInstances = array();
@@ -472,8 +472,8 @@ class Entities extends Functions
 
     public function getListEntitiesInstances(): array
     {
-        $hashType = $this->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
-        $hashEntity = $this->getNIDfromData('application/x-pem-file');
+        $hashType = $this->getNidFromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->getNidFromData('application/x-pem-file');
         $hashEntityObject =$this->_cacheInstance->newNode($hashEntity);
 
         // Liste les liens.

@@ -18,14 +18,14 @@ class Recovery extends Functions
     private bool $_permitInstanceEntityAsRecovery = false;
     private bool $_permitDefaultEntityAsRecovery = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         //$this->_findRecoveryEntities();
         $this->_metrologyInstance->addLog('instancing class Recovery', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '496c1d98');
     }
 
 
-    public function setInstanceEntityAsRecovery(Entity $instance)
+    public function setInstanceEntityAsRecovery(Entity $instance): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
@@ -39,7 +39,7 @@ class Recovery extends Functions
         }
     }
 
-    public function setDefaultEntityAsRecovery(Entity $instance)
+    public function setDefaultEntityAsRecovery(Entity $instance): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;

@@ -725,7 +725,7 @@ class Configuration extends Functions
 
 
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_metrologyInstance->addLog('instancing class Configuration', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'fbaec5ee');
     }
@@ -784,7 +784,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int
      */
-    public function getOptionUntyped(string $name)
+    public function getOptionUntyped(string $name): bool|int|string
     {
         return self::_changeTypeValueFromString($name, $this->_getOption($name));
     }
@@ -912,7 +912,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int|null
      */
-    public static function getOptionDefaultValue(string $name)
+    public static function getOptionDefaultValue(string $name): bool|int|string|null
     {
         return self::_changeTypeValueFromString($name, self::OPTIONS_DEFAULT_VALUE[$name]);
     }
@@ -921,7 +921,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int|null
      */
-    static public function getOptionFromEnvironmentUntypedStatic(string $name)
+    static public function getOptionFromEnvironmentUntypedStatic(string $name): bool|int|string|null
     {
         return self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
     }
@@ -930,7 +930,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromEnvironmentUntyped(string $name)
+    public function getOptionFromEnvironmentUntyped(string $name): bool|int|string|null
     {
         $result = self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
 
@@ -1031,7 +1031,7 @@ class Configuration extends Functions
      * @param string $value
      * @return string|bool|int
      */
-    static private function _changeTypeValueFromString(string $name, string $value = '')
+    static private function _changeTypeValueFromString(string $name, string $value = ''): bool|int|string
     {
         if (!isset(self::OPTIONS_TYPE[$name]))
             return $value;
@@ -1088,7 +1088,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string|bool|int|null
      */
-    public function getOptionFromLinksUntyped(string $name)
+    public function getOptionFromLinksUntyped(string $name): bool|int|string|null
     {
         return $this->_changeTypeValueFromString($name, $this->_getOptionFromLinks($name));
     }
@@ -1326,7 +1326,7 @@ class Configuration extends Functions
      * If not default value, add a log with the value.
      * @return void
      */
-    public function checkReadOnlyOptions()
+    public function checkReadOnlyOptions(): void
     {
         $this->_metrologyInstance->addLog('Check options', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'aa19c70a');
 

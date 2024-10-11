@@ -12,7 +12,7 @@ namespace Nebule\Library;
  */
 class Rescue extends Functions
 {
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_findModeRescue();
         $this->_metrologyInstance->addLog('instancing class Rescue', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'de62afce');

@@ -14,7 +14,7 @@ class Session extends Functions
 {
     private bool $_flushCache = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_metrologyInstance->addLog('instancing class Session', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '5a444198');
     }
@@ -26,7 +26,7 @@ class Session extends Functions
      * @param string $name
      * @return int|string|bool|null|array
      */
-    public function getSessionStore(string $name)
+    public function getSessionStore(string $name): array|bool|int|string|null
     {
         session_start();
 
@@ -48,11 +48,11 @@ class Session extends Functions
     /**
      * Ecrit la valeur d'une option dans la session php.
      *
-     * @param string $name
-     * @param int|string|bool|null|array $content
+     * @param string                     $name
+     * @param int|bool|array|string|null $content
      * @return boolean
      */
-    public function setSessionStore(string $name, $content): bool
+    public function setSessionStore(string $name, int|bool|array|string|null $content): bool
     {
         if ($name == ''
             || $this->_flushCache
@@ -89,7 +89,7 @@ class Session extends Functions
      * @param string $name
      * @return int|string|bool|null
      */
-    private function _getSessionBuffer(string $name)
+    private function _getSessionBuffer(string $name): bool|int|string|null
     {
         session_start();
 
@@ -112,11 +112,11 @@ class Session extends Functions
      * Le nombre de contenus mémorisés n'est pas comptabilisé par cette fonction.
      * FIXME
      *
-     * @param string $name
-     * @param int|string|bool|null $content
+     * @param string               $name
+     * @param bool|int|string|null $content
      * @return boolean
      */
-    private function _setSessionBuffer(string $name, $content): bool
+    private function _setSessionBuffer(string $name, bool|int|string|null $content): bool
     {
         if ($name == ''
             || $this->_flushCache

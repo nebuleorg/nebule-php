@@ -269,7 +269,7 @@ class nebule
         return self::NEBULE_LICENCE_NAME;
     }
 
-    private function _initialisation()
+    private function _initialisation(): void
     {
         global $nebuleInstance;
 
@@ -351,26 +351,16 @@ class nebule
     {
         $this->_metrologyInstance->setEnvironment();
         $this->_configurationInstance->setEnvironment();
-        if ($this->_rescueInstance !== null)
-            $this->_rescueInstance->setEnvironment();
-        if ($this->_authoritiesInstance !== null)
-            $this->_authoritiesInstance->setEnvironment();
-        if ($this->_entitiesInstance !== null)
-            $this->_entitiesInstance->setEnvironment();
-        if ($this->_recoveryInstance !== null)
-            $this->_recoveryInstance->setEnvironment();
-        if ($this->_cacheInstance !== null)
-            $this->_cacheInstance->setEnvironment();
-        if ($this->_sessionInstance !== null)
-            $this->_sessionInstance->setEnvironment();
-        if ($this->_ticketingInstance !== null)
-            $this->_ticketingInstance->setEnvironment();
-        if ($this->_ioInstance !== null)
-            $this->_ioInstance->setEnvironment();
-        if ($this->_cryptoInstance !== null)
-            $this->_cryptoInstance->setEnvironment();
-        if ($this->_socialInstance !== null)
-            $this->_socialInstance->setEnvironment();
+        $this->_rescueInstance?->setEnvironment();
+        $this->_authoritiesInstance?->setEnvironment();
+        $this->_entitiesInstance?->setEnvironment();
+        $this->_recoveryInstance?->setEnvironment();
+        $this->_cacheInstance?->setEnvironment();
+        $this->_sessionInstance?->setEnvironment();
+        $this->_ticketingInstance?->setEnvironment();
+        $this->_ioInstance?->setEnvironment();
+        $this->_cryptoInstance?->setEnvironment();
+        $this->_socialInstance?->setEnvironment();
     }
 
 

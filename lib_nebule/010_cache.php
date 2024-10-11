@@ -45,7 +45,7 @@ class Cache extends Functions
     private int $_sessionBufferLimit = 0;
     private bool $_flushCache = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         $this->_findFlushCache();
@@ -62,7 +62,7 @@ class Cache extends Functions
         $this->_findFlushCache();
     }
 
-    private function _findFlushCache()
+    private function _findFlushCache(): void
     {
         global $bootstrap_flush; // FIXME recalculate without bootstrap
 

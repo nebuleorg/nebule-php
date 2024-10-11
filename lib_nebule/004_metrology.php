@@ -34,7 +34,7 @@ class Metrology extends Functions
     private int $_actionCount = 0;
     private array $_actionArray = array();
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_setTimeStart();
         $this->_setDefaultLogsLevel();

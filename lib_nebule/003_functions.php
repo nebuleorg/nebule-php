@@ -34,7 +34,7 @@ class Functions
         $this->_initialisation();
     }
 
-    public function setEnvironment()
+    public function setEnvironment(): void
     {
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
@@ -50,7 +50,7 @@ class Functions
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
     }
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         // Replace on children classes.
         \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __FUNCTION__, '165707c8');
@@ -126,7 +126,7 @@ class Functions
         return $instance;
     }
 
-    public function dateCompare($date1, $date2)
+    public function dateCompare($date1, $date2): bool|int
     {
         if ($date1 == '') return false;
         if ($date2 == '') return false;
@@ -189,7 +189,7 @@ class Functions
         )
             return '';
 
-        $textOID = $this->getNIDfromData($text);
+        $textOID = $this->getNidFromData($text);
         $this->_ioInstance->setObject($textOID, $text);
         $propertyOID = $this->_nebuleInstance->getNIDfromData('text/plain');
         $propertyRID = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
@@ -203,7 +203,7 @@ class Functions
         return $textOID;
     }
 
-    public function getNIDfromData(string $data, string $algo = ''): string
+    public function getNidFromData(string $data, string $algo = ''): string
     {
         if ($algo == '')
             $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');

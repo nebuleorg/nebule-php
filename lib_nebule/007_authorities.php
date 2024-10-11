@@ -37,7 +37,7 @@ class Authorities extends Functions
     private bool $_permitInstanceEntityAsAuthority = false;
     private bool $_permitDefaultEntityAsAuthority = false;
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_getPermitInstanceAsAuthority();
         $this->_getPermitDefaultAsAuthority();
@@ -68,7 +68,7 @@ class Authorities extends Functions
      *
      * @return void
      */
-    private function _findGlobalAuthorities()
+    private function _findGlobalAuthorities(): void
     {
         $this->_findEntityByType(References::LIB_RID_SECURITY_AUTHORITY,
             $this->_securityAuthoritiesID,
@@ -236,7 +236,7 @@ class Authorities extends Functions
      *
      * @return void
      */
-    private function _findLocalAuthorities()
+    private function _findLocalAuthorities(): void
     {
         $this->_authoritiesID[$this->_puppetmasterID] = $this->_puppetmasterID;
         $this->_authoritiesInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
@@ -425,7 +425,7 @@ class Authorities extends Functions
      */
     public function getIsLocalAuthority($entity): bool
     {
-        if (is_a($entity, 'Node'))
+        if (is_a($entity, 'Node')) // FIXME
             $entity = $entity->getID();
         if ($entity == '0')
             return false;
