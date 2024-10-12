@@ -8,12 +8,12 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241010';
+const BOOTSTRAP_VERSION = '020241012';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
-const BOOTSTRAP_FUNCTION_VERSION = '020240225';
+const BOOTSTRAP_FUNCTION_VERSION = '020241012';
 // ------------------------------------------------------------------------------------------
 
 
@@ -341,9 +341,9 @@ const LIB_FIRST_GENERATED_NAME_SIZE = 6;
 const LIB_FIRST_GENERATED_PASSWORD_SIZE = 14;
 const LIB_FIRST_RELOAD_DELAY = 3000;
 const LIB_FIRST_LOCALISATIONS = array(
-    'http://cerberus.nebule.org',
     'http://puppetmaster.nebule.org',
-    'http://bachue.nebule.org',
+    'http://code.master.nebule.org',
+    'http://security.master.nebule.org',
 );
 const LIB_FIRST_AUTHORITIES_PUBLIC_KEY = array(
     '-----BEGIN PUBLIC KEY-----
@@ -808,7 +808,7 @@ Jggg==";
  * Result of Lib PP initialisation.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$libraryCheckOK = false;
+$libraryPPCheckOK = false;
 
 /**
  * Activate rescue mode to recovery code problems.
@@ -1159,7 +1159,7 @@ function lib_getMetrologyTimer(string $type): string
 function lib_init(): bool
 {
     global $nebuleLocalAuthorities,
-           $libraryCheckOK,
+           $libraryPPCheckOK,
            $libraryRescueMode,
            $needFirstSynchronization;
 
@@ -1232,7 +1232,7 @@ function lib_init(): bool
     lib_setDefaultEntity($libraryRescueMode);
     lib_setPublicEntity();
 
-    $libraryCheckOK = true;
+    $libraryPPCheckOK = true;
     return true;
 }
 
@@ -4245,7 +4245,7 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
  *
  * @return void
  */
-function bootstrap_logUserSession()
+function bootstrap_logUserSession(): void
 {
     $sessionId = session_id();
     log_add('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
@@ -4311,7 +4311,7 @@ function bootstrap_getSwitchApplication(): void
  *
  * @return void
  */
-function bootstrap_setPermitOpenFileCode()
+function bootstrap_setPermitOpenFileCode(): void
 {
     ini_set('allow_url_fopen', '1');
     ini_set('allow_url_include', '1');
@@ -4340,13 +4340,13 @@ function bootstrap_setPermitOpenFileCode()
  */
 function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 {
-    global $libraryCheckOK,
+    global $libraryPPCheckOK,
            $bootstrapLibraryIID,
            $bootstrapLibraryOID,
            $bootstrapLibrarySID,
            $lastReferenceSID;
 
-    if (!$libraryCheckOK)
+    if (!$libraryPPCheckOK)
         return;
 
     // Try to find on session.
@@ -4410,9 +4410,9 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 function bootstrap_includeLibraryPOO(): void
 {
     global $bootstrapLibraryOID,
-           $libraryCheckOK;
+           $libraryPPCheckOK;
 
-    if (!$libraryCheckOK)
+    if (!$libraryPPCheckOK)
         return;
 
     if ($bootstrapLibraryOID == '') {
@@ -4435,27 +4435,31 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 {
     global $nebuleInstance,
            $bootstrapLibraryIID,
-           $libraryCheckOK;
+           $libraryPPCheckOK;
 
-    if (!$libraryCheckOK)
+    if (!$libraryPPCheckOK)
         return;
 
     if ($bootstrapLibraryIID != '') {
         try {
             if (class_exists('\Nebule\Library\nebule', false))
             {
-                log_add('Find class \Nebule\Library\nebule to instancing', 'info', __FUNCTION__, 'daff566b');
+                log_add('find class \Nebule\Library\nebule to instancing', 'info', __FUNCTION__, 'daff566b');
                 if ((float)BOOTSTRAP_FUNCTION_VERSION >= (float)\Nebule\Library\nebule::NEBULE_FUNCTION_VERSION)
                 {
-                    if ($bootstrapLibraryInstanceSleep == '')
+                    if ($bootstrapLibraryInstanceSleep == '') {
+                        log_add('instancing new class \Nebule\Library\nebule', 'info', __FUNCTION__, '79835c0f');
                         $nebuleInstance = new nebule();
-                    else
+                    }
+                    else {
+                        log_add('deserialize previous class \Nebule\Library\nebule', 'info', __FUNCTION__, 'de329729');
                         $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                    }
                     log_reopen(BOOTSTRAP_NAME);
                 } else
                     bootstrap_setBreak('43', __FUNCTION__);
             } else
-                log_add('No class \Nebule\Library\nebule to instancing', 'error', __FUNCTION__, '60a345b8');
+                log_add('no class \Nebule\Library\nebule to instancing', 'error', __FUNCTION__, '60a345b8');
         } catch (\Error $e) {
             log_reopen(BOOTSTRAP_NAME);
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -4512,7 +4516,7 @@ function bootstrap_saveLibraryPOO(): void
 function bootstrap_findApplication(): void
 {
     global $nebuleInstance,
-           $libraryCheckOK,
+           $libraryPPCheckOK,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapUpdate;
@@ -4520,7 +4524,7 @@ function bootstrap_findApplication(): void
     $bootstrapApplicationIID = '';
     $bootstrapApplicationOID = '';
 
-    if (!$libraryCheckOK || !is_a($nebuleInstance, 'Nebule\Library\nebule'))
+    if (!$libraryPPCheckOK || !is_a($nebuleInstance, 'Nebule\Library\nebule'))
         return;
 
     // Get ID of app.
@@ -4654,9 +4658,9 @@ function bootstrap_getApplicationPreload(): void
     global $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationNoPreload,
-           $libraryCheckOK;
+           $libraryPPCheckOK;
 
-    if (!$libraryCheckOK)
+    if (!$libraryPPCheckOK)
         return;
 
     if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID]))
@@ -4681,9 +4685,9 @@ function bootstrap_getApplicationPreload(): void
 function bootstrap_includeApplication(): void
 {
     global $bootstrapApplicationOID,
-           $libraryCheckOK;
+           $libraryPPCheckOK;
 
-    if (!$libraryCheckOK)
+    if (!$libraryPPCheckOK)
         return;
 
     //log_add('include application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8683e195');
@@ -4733,7 +4737,7 @@ function bootstrap_getApplicationNamespace(string $oid): string
 function bootstrap_loadApplication(): void
 {
     global $nebuleInstance,
-           $libraryCheckOK,
+           $libraryPPCheckOK,
            $applicationInstance,
            $applicationDisplayInstance,
            $applicationActionInstance,
@@ -4750,7 +4754,7 @@ function bootstrap_loadApplication(): void
 
     if ($bootstrapApplicationOID == ''
         || $bootstrapApplicationOID == '0'
-        || !$libraryCheckOK
+        || !$libraryPPCheckOK
         //|| !class_exists('Application', false)
         || !class_exists($nameSpaceApplication, false)
     ) {
@@ -5537,7 +5541,7 @@ function bootstrap_htmlHeader()
  *
  * @return void
  */
-function bootstrap_htmlTop()
+function bootstrap_htmlTop():void
 {
     global $nebuleServerEntity;
 
@@ -5588,8 +5592,8 @@ function bootstrap_htmlTop()
  *
  * @return void
  */
-function bootstrap_htmlBottom()
-{
+function bootstrap_htmlBottom():void
+    {
     echo '    </div>' . "\n";
     echo '</div>';
     ?>
@@ -5633,7 +5637,7 @@ function bootstrap_displayOnBreak(): void
  *
  * @return void
  */
-function bootstrap_inlineDisplayOnBreak()
+function bootstrap_inlineDisplayOnBreak(): void
 {
     global $bootstrapBreak,
            $libraryRescueMode,
@@ -5658,7 +5662,7 @@ function bootstrap_inlineDisplayOnBreak()
     echo "</p></div>\n";
 }
 
-function bootstrap_breakDisplay1OnError()
+function bootstrap_breakDisplay1OnError(): void
 {
     global $bootstrapBreak,
            $libraryRescueMode,
@@ -5683,7 +5687,7 @@ function bootstrap_breakDisplay1OnError()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay2Bootstrap()
+function bootstrap_breakDisplay2Bootstrap(): void
 {
     global $bootstrapCodeIID,
            $bootstrapCodeBID,
@@ -5719,7 +5723,7 @@ function bootstrap_breakDisplay2Bootstrap()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay3LibraryPP()
+function bootstrap_breakDisplay3LibraryPP(): void
 {
     global $nebuleSecurityAuthorities,
            $nebuleCodeAuthorities,
@@ -5793,13 +5797,14 @@ function bootstrap_breakDisplay3LibraryPP()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay4LibraryPOO()
+function bootstrap_breakDisplay4LibraryPOO(): void
 {
     global $nebuleInstance,
            $bootstrapLibraryIID,
            $bootstrapLibraryOID,
            $bootstrapLibrarySID,
-           $nebuleLibVersion;
+           $nebuleLibVersion,
+           $libraryPPCheckOK;
 
     log_add('4: library POO', 'info', __FUNCTION__, '811b1513');
     echo '<div class="parts">' . "\n" . '<span class="partstitle">#4 nebule library POO</span><br/>';
@@ -5826,18 +5831,25 @@ function bootstrap_breakDisplay4LibraryPOO()
         bootstrap_echoLineTitle('library SID');
         bootstrap_echoLinkNID($bootstrapLibrarySID);
         echo "<br />\n";
-        bootstrap_breakDisplay41LibraryEntities();
-        bootstrap_breakDisplay42LibraryCryptography();
-        bootstrap_breakDisplay43LibraryIO();
-        bootstrap_breakDisplay44LibrarySocial();
-        bootstrap_breakDisplay45LibraryStats();
-    } else
-        echo "Not loaded.\n";
+        if ($nebuleInstance->getLoadingStatus()) {
+            bootstrap_breakDisplay41LibraryEntities();
+            bootstrap_breakDisplay42LibraryCryptography();
+            bootstrap_breakDisplay43LibraryIO();
+            bootstrap_breakDisplay44LibrarySocial();
+            bootstrap_breakDisplay45LibraryStats();
+        } else {
+            bootstrap_echoLineTitle('library status');
+            echo '<span class="error">Loading failed</span>' . "\n";
+        }
+    } else {
+        bootstrap_echoLineTitle('library status');
+        echo '<span class="error">Not loaded</span>' . "\n";
+    }
 
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay41LibraryEntities()
+function bootstrap_breakDisplay41LibraryEntities(): void
 {
     global $nebuleInstance;
 
@@ -5920,7 +5932,7 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
     }
 }
 
-function bootstrap_breakDisplay42LibraryCryptography()
+function bootstrap_breakDisplay42LibraryCryptography(): void
 {
     global $nebuleInstance;
 
@@ -5952,7 +5964,7 @@ function bootstrap_breakDisplay42LibraryCryptography()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay43LibraryIO()
+function bootstrap_breakDisplay43LibraryIO(): void
 {
     global $nebuleInstance;
 
@@ -6003,7 +6015,7 @@ function bootstrap_breakDisplay43LibraryIO()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay44LibrarySocial()
+function bootstrap_breakDisplay44LibrarySocial(): void
 {
     global $nebuleInstance;
 
@@ -6028,7 +6040,7 @@ function bootstrap_breakDisplay44LibrarySocial()
         bootstrap_echoEndLineTest(false);
 }
 
-function bootstrap_breakDisplay45LibraryStats()
+function bootstrap_breakDisplay45LibraryStats(): void
 {
     global $nebuleInstance;
 
@@ -6049,7 +6061,7 @@ function bootstrap_breakDisplay45LibraryStats()
     echo 'CWc=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
 }
 
-function bootstrap_breakDisplay5Application()
+function bootstrap_breakDisplay5Application(): void
 {
     global $bootstrapApplicationIID,
            $bootstrapApplicationOID,
@@ -6074,7 +6086,7 @@ function bootstrap_breakDisplay5Application()
     echo '</div>' . "\n";
 }
 
-function bootstrap_breakDisplay6End()
+function bootstrap_breakDisplay6End(): void
 {
     lib_setMetrologyTimer('tE');
 

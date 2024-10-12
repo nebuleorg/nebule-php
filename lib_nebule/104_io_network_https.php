@@ -20,7 +20,6 @@ class ioNetworkHTTPS extends io implements ioInterface
     private int $_maxLink = 0;
     private int $_maxData = 0;
     private string $_defaultLocalisation = '';
-    private string $_filesTrancodeKey = '0';
 
     protected function _initialisation(): void
     {
@@ -37,13 +36,6 @@ class ioNetworkHTTPS extends io implements ioInterface
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
         ini_set('default_socket_timeout', $this->_configurationInstance->getOptionAsString('ioTimeout'));
         $this->_metrologyInstance->addLog('instancing class ioNetworkHTTPS', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '884a3959');
-    }
-
-    public function __sleep()
-    {
-        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTrancodeKey = '';
     }
 
     /**
@@ -303,17 +295,6 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         // Disabled on HTTP
         return false;
-    }
-
-    /**
-     * Destructeur.
-     * Fin de traitement - Rien à fermer sur un fs.
-     */
-    public function __destruct()
-    {
-        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTrancodeKey = '';
     }
 
     /**

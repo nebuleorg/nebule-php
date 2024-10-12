@@ -31,6 +31,22 @@ class io extends Functions implements ioInterface
     private array $_listLocalisations = array();
     private array $_listFilterStrings = array();
     private array $_listModes = array();
+    protected string $_filesTranscodeKey = '';
+
+    public function __sleep()
+    {
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
+        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $this->_filesTranscodeKey = '';
+        return array();
+    }
+
+    public function __destruct()
+    {
+        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
+        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $this->_filesTranscodeKey = '';
+    }
 
     public function __toString(): string
     {

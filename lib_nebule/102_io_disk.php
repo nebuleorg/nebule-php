@@ -20,7 +20,6 @@ class ioDisk extends io implements ioInterface
     private int $_maxLink = 0;
     private int $_maxData = 0;
     private string $_mode = '';
-    private string $_filesTranscodeKey = '';
 
     protected function _initialisation(): void
     {
@@ -32,13 +31,6 @@ class ioDisk extends io implements ioInterface
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         $this->_metrologyInstance->addLog('instancing class ioDisk', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e4958dd2');
-    }
-
-    public function __sleep()
-    {
-        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTranscodeKey = '';
     }
 
     /**
@@ -607,16 +599,5 @@ class ioDisk extends io implements ioInterface
 
         // Si on arrive là c'est que c'est bon.
         return true;
-    }
-
-    /**
-     * Destructeur.
-     * Fin de traitement - Rien à fermer sur un fs.
-     */
-    public function __destruct()
-    {
-        /** @noinspection PhpFieldImmediatelyRewrittenInspection */
-        $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $this->_filesTranscodeKey = '';
     }
 }

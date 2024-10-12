@@ -16,7 +16,7 @@ class nebule
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2023';
-    const NEBULE_FUNCTION_VERSION = '020240225';
+    const NEBULE_FUNCTION_VERSION = '020241012';
     const NEBULE_ENVIRONMENT_FILE = 'c'; // Into folder /
     const NEBULE_BOOTSTRAP_FILE = 'index.php'; // Into folder /
     const NEBULE_LOCAL_ENTITY_FILE = 'e'; // Into folder /
@@ -226,6 +226,7 @@ class nebule
         'nebule/reference',
     );
 
+    private $_loadingStatus = false;
     private ?nebule $_nebuleInstance = null;
     private ?Metrology $_metrologyInstance = null;
     private ?Configuration $_configurationInstance = null;
@@ -341,6 +342,7 @@ class nebule
         $this->_findCurrentTokenPool();
         $this->_findCurrentToken();
 
+        $this->_loadingStatus = true;
         $this->_metrologyInstance->addLog('End init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '474676ed');
     }
 
@@ -351,7 +353,8 @@ class nebule
     {
         $this->_metrologyInstance->setEnvironment();
         $this->_configurationInstance->setEnvironment();
-        $this->_rescueInstance?->setEnvironment();
+        if ($this->_rescueInstance !== null)
+            $this->_rescueInstance->setEnvironment();
         $this->_authoritiesInstance?->setEnvironment();
         $this->_entitiesInstance?->setEnvironment();
         $this->_recoveryInstance?->setEnvironment();
@@ -363,6 +366,10 @@ class nebule
         $this->_socialInstance?->setEnvironment();
     }
 
+    public function getLoadingStatus(): bool
+    {
+        return $this->_loadingStatus;
+    }
 
 
     public function getMetrologyInstance(): ?Metrology

@@ -135,7 +135,7 @@ class Node extends Functions implements nodeInterface
         $this->_cacheUpdate = '';
     }
 
-    protected function _initialisation()
+    protected function _initialisation(): void
     {
         $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
     }
