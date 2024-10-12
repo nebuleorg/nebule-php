@@ -45,9 +45,9 @@ class SocialAuthority extends SocialMySelf implements SocialInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
-        foreach ($this->_authoritiesInstance->getLocalAuthoritiesID() as $autority) {
+        foreach ($this->_nebuleInstance->getAuthoritiesInstance()->getLocalAuthoritiesID() as $authority) {
             foreach ($link->getSigners() as $signer) {
-                if ($signer == $autority) {
+                if ($signer == $authority) {
                     $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
                     return 1;
                 }

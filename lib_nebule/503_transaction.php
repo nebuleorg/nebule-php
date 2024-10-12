@@ -36,7 +36,7 @@ class Transaction extends Link implements linkInterface
      *
      * @var boolean
      */
-    protected $_isTransaction = false;
+    protected bool $_isTransaction = false;
 
     /**
      * ID de l'objet contenant les transactions.
@@ -44,21 +44,21 @@ class Transaction extends Link implements linkInterface
      *
      * @var string
      */
-    protected $_transactionsObjectID = '';
+    protected string $_transactionsObjectID = '';
 
     /**
      * Mode de transaction, si valide dans la monnaie.
      *
      * @var string
      */
-    protected $_transactionsMode = '';
+    protected string $_transactionsMode = '';
 
     /**
      * Date des transactions.
      *
-     * @var DateTime|null
+     * @var ?DateTime
      */
-    protected $_transactionsTimestamp = null;
+    protected ?DateTime $_transactionsTimestamp = null;
 
     /**
      * Table des transactions unitaires.
@@ -75,7 +75,7 @@ class Transaction extends Link implements linkInterface
      *
      * @var array
      */
-    protected $_transactionsArray = array();
+    protected array $_transactionsArray = array();
 
     /**
      * Liste des variables à enregistrer dans la session php lors de la mise en sommeil de l'instance.
@@ -113,7 +113,7 @@ class Transaction extends Link implements linkInterface
      *
      * @return void
      */
-    private function _extractByMode_disabled()
+    private function _extractByMode_disabled(): void
     {
         // Si transaction en mode LNS.
         $hashLNS = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
@@ -140,7 +140,7 @@ class Transaction extends Link implements linkInterface
      *
      * @return void
      */
-    private function _extractModeLNS_disabled()
+    private function _extractModeLNS_disabled(): void
     {
         return;
     /*    $this->_transactionsMode = 'LNS';

@@ -46,9 +46,9 @@ class SocialSelf extends SocialMySelf implements SocialInterface
         global $applicationInstance;
 
         if (is_a($applicationInstance, 'Applications'))
-            $currentEntity = $this->_applicationInstance->getCurrentEntity();
+            $currentEntity = $this->_nebuleInstance->getApplicationInstance()->getCurrentEntity();
         else
-            $currentEntity = $this->_entitiesInstance->getCurrentEntityID();
+            $currentEntity = $this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityID();
 
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 

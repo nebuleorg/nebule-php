@@ -51,7 +51,6 @@ class Currency extends Node implements nodeInterface
         '_isTokenPool',
         '_isToken',
         '_isWallet',
-        '_isTransaction',
         '_properties',
         '_propertiesInherited',
         '_propertiesForced',
@@ -179,7 +178,7 @@ class Currency extends Node implements nodeInterface
      *
      * @param string $id
      */
-    private function _loadCurrency(string $id)
+    private function _loadCurrency(string $id): void
     {
         // Vérifie que c'est bien un objet.
         if (!Node::checkNID($id)
@@ -370,7 +369,7 @@ class Currency extends Node implements nodeInterface
      * )
      *
      */
-    protected function _normalizeInputParam(&$param)
+    protected function _normalizeInputParam(&$param): void
     {
         foreach ($param as $key => $value) {
             foreach ($this->_propertiesList as $type => $nameArray) {
@@ -565,7 +564,7 @@ class Currency extends Node implements nodeInterface
      * @param boolean $obfuscated
      * @return string
      */
-    private function _createCurrency($param, $protected = false, $obfuscated = false)
+    private function _createCurrency($param, $protected = false, $obfuscated = false): string
     {
         // Identifiant final de la monnaie.
         $this->_id = '0';
@@ -757,7 +756,7 @@ class Currency extends Node implements nodeInterface
      * @param string $value
      * @return string
      */
-    protected function _stringFilter($value, $limit = 1024)
+    protected function _stringFilter($value, $limit = 1024): string
     {
         if ($value == '') {
             return '';
@@ -782,7 +781,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return array:string
      */
-    public function getPoolList()
+    public function getPoolList(): array
     {
         return $this->_getItemList('CID');
     }
@@ -792,12 +791,12 @@ class Currency extends Node implements nodeInterface
      *
      * @return integer
      */
-    public function getPoolCount()
+    public function getPoolCount(): int
     {
         return sizeof($this->_getItemList('CID'));
     }
 
-    protected function _getItemList($type)
+    protected function _getItemList($type): array
     {
         $links1 = array();
         $links2 = array();
@@ -852,9 +851,9 @@ class Currency extends Node implements nodeInterface
      *
      * @param string $key
      * @param integer $maxsize
-     * @return string|null
+     * @return bool|string|null
      */
-    protected function _getParam($key, $maxsize)
+    protected function _getParam($key, $maxsize): bool|string|null
     {
         // La réponse.
         $result = null;
@@ -933,11 +932,11 @@ class Currency extends Node implements nodeInterface
     /**
      * Lit une clé dans la monnaie définie retourne un texte avec la valeur.
      *
-     * @param string $key
+     * @param string  $key
      * @param integer $maxsize
-     * @return string|null
+     * @return bool|string|null
      */
-    protected function _getParamFromCurrency($key, $maxsize)
+    protected function _getParamFromCurrency($key, $maxsize): bool|string|null
     {
         $return = null;
 
@@ -976,9 +975,9 @@ class Currency extends Node implements nodeInterface
      *
      * @param string $key
      * @param integer $maxsize
-     * @return string|null
+     * @return ?string
      */
-    protected function _getParamFromPool($key, $maxsize)
+    protected function _getParamFromPool($key, $maxsize): ?string
     {
         $return = null;
 
@@ -1018,9 +1017,9 @@ class Currency extends Node implements nodeInterface
      *
      * @param string $key
      * @param integer $maxsize
-     * @return string|null
+     * @return ?string
      */
-    protected function _getParamFromObject($key, $maxsize)
+    protected function _getParamFromObject($key, $maxsize): ?string
     {
         $result = null;
 
@@ -1077,9 +1076,9 @@ class Currency extends Node implements nodeInterface
      *
      * @param string $key
      * @param integer $maxsize
-     * @return string
+     * @return ?string
      */
-    protected function _getParamFromLinks($key, $maxsize)
+    protected function _getParamFromLinks($key, $maxsize): ?string
     {
         $result = '';
 
@@ -1161,7 +1160,7 @@ class Currency extends Node implements nodeInterface
      * @param unknown $value
      * @return boolean
      */
-    protected function _setParam($key, $value)
+    protected function _setParam($key, $value): bool
     {
         // @todo
 
@@ -1173,9 +1172,9 @@ class Currency extends Node implements nodeInterface
      * La taille maximum dépend de la clé.
      *
      * @param string $key
-     * @return string|null
+     * @return bool|string|null
      */
-    public function getParam($key)
+    public function getParam($key): bool|string|null
     {
         // @todo faire les vérifications des variables.
 
@@ -1213,7 +1212,7 @@ class Currency extends Node implements nodeInterface
      * @param string $key
      * @return boolean
      */
-    public function getParamInherited($key)
+    public function getParamInherited($key): bool
     {
         if (get_class($this) == 'Currency') {
             return false;
@@ -1244,7 +1243,7 @@ class Currency extends Node implements nodeInterface
      * @param string $key
      * @return boolean
      */
-    public function getParamForced($key)
+    public function getParamForced($key): bool
     {
         // Initalise les caches.
 
@@ -1276,7 +1275,7 @@ class Currency extends Node implements nodeInterface
      * @param unknown $value
      * @return boolean
      */
-    public function setParam($key, $value)
+    public function setParam($key, $value): bool
     {
         // @todo faire les vérifications des variables.
 
@@ -1290,7 +1289,7 @@ class Currency extends Node implements nodeInterface
      * @param $currency string|Currency
      * @return boolean
      */
-    public function setCID($currency = '0')
+    public function setCID($currency = '0'): bool
     {
         if (is_string($currency)
             && $currency != ''
@@ -1329,7 +1328,7 @@ class Currency extends Node implements nodeInterface
      * @param $pool string|TokenPool
      * @return boolean
      */
-    public function setPID($pool = '0')
+    public function setPID($pool = '0'): bool
     {
         if (is_string($pool)
             && $pool != ''
@@ -1365,7 +1364,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return boolean
      */
-    public function setAID()
+    public function setAID(): bool
     {
         if (get_class($this) == 'Currency') {
             $id = $this->_getParamFromObject('AID', (int)$this->_propertiesList['currency']['CurrencyAutorityID']['limit']);
@@ -1458,7 +1457,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return void
      */
-    private function _extractCAParray()
+    private function _extractCAParray(): void
     {
         $this->_CAParray = array();
 
@@ -1478,7 +1477,7 @@ class Currency extends Node implements nodeInterface
      *
      * @return array
      */
-    public function getPropertiesList()
+    public function getPropertiesList(): array
     {
         return $this->_propertiesList;
     }
@@ -1488,9 +1487,9 @@ class Currency extends Node implements nodeInterface
      * Extrait la valeur relative de la monnaie à un instant donné.
      *
      * @param $date string
-     * @return double
+     * @return float|int
      */
-    public function getRelativeValue($date)
+    public function getRelativeValue($date): float|int
     {
 
         // Récupère la liste des jetons.

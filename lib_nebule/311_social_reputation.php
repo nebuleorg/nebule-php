@@ -48,7 +48,7 @@ class SocialReputation extends SocialMySelf implements SocialInterface
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
             foreach ($link->getSigners() as $signer) {
-                if (false) { // @TODO
+                if (false) { // TODO check...
                     $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
                     return 1;
                 }

@@ -226,7 +226,23 @@ class nebule
         'nebule/reference',
     );
 
-    private $_loadingStatus = false;
+    const SESSION_SAVED_VARS = array(
+        //'_loadingStatus',
+        //'_metrologyInstance',
+        '_configurationInstance',
+        //'_rescueInstance',
+        '_authoritiesInstance',
+        '_entitiesInstance',
+        '_recoveryInstance',
+        '_cacheInstance',
+        '_sessionInstance',
+        '_ticketingInstance',
+        //'_ioInstance',
+        '_cryptoInstance',
+        //'_socialInstance',
+    );
+
+    private bool $_loadingStatus = false;
     private ?nebule $_nebuleInstance = null;
     private ?Metrology $_metrologyInstance = null;
     private ?Configuration $_configurationInstance = null;
@@ -270,6 +286,11 @@ class nebule
         return self::NEBULE_LICENCE_NAME;
     }
 
+    public function __sleep()
+    {
+        return $this::SESSION_SAVED_VARS;
+    }
+
     private function _initialisation(): void
     {
         global $nebuleInstance;
@@ -293,6 +314,8 @@ class nebule
         if (!$this->_nebuleCheckEnvironment())
             $this->_nebuleInitEnvironment();
 
+        $this->_socialInstance = new Social($this);
+        $this->_setEnvironmentInstances();
         $this->_authoritiesInstance = new Authorities($this);
         $this->_setEnvironmentInstances();
         $this->_recoveryInstance = new Recovery($this);
@@ -300,12 +323,6 @@ class nebule
         $this->_entitiesInstance = new Entities($this);
         $this->_setEnvironmentInstances();
         $this->_ticketingInstance = new Ticketing($this);
-        $this->_setEnvironmentInstances();
-        //$this->_ioInstance = new io($this);
-        //$this->_setEnvironmentInstances();
-        //$this->_cryptoInstance = new Crypto($this);
-        //$this->_setEnvironmentInstances();
-        $this->_socialInstance = new Social($this);
         $this->_setEnvironmentInstances();
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
@@ -348,6 +365,7 @@ class nebule
 
     /**
      * Reload all instances in all library components.
+     * TODO use vars by address instead for (null) instances.
      */
     private function _setEnvironmentInstances(): void
     {

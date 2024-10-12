@@ -224,7 +224,8 @@ $bootstrapApplicationIID = '0';
 
 /**
  * ID de l'application mémorisée dans la session PHP.
- * @ */
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
 $bootstrapApplicationOID = '0';
 
 /**
@@ -4351,6 +4352,9 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 
     // Try to find on session.
     session_start();
+log_add('MARK session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'], 'info', __FUNCTION__, '00000000'); // FIXME unsaved session !
+log_add('MARK session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'], 'info', __FUNCTION__, '00000000');
+log_add('MARK session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'], 'info', __FUNCTION__, '00000000');
     if (isset($_SESSION['bootstrapLibraryIID'])
         && nod_checkNID($_SESSION['bootstrapLibraryIID'])
         && io_checkNodeHaveLink($_SESSION['bootstrapLibraryIID'])
@@ -4361,6 +4365,7 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
         && isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']])
         && $_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']] != ''
     ) {
+        log_add('load serialized class \Nebule\Library\nebule', 'info', __FUNCTION__, '0a485dce');
         $bootstrapLibraryIID = $_SESSION['bootstrapLibraryIID'];
         $bootstrapLibraryOID = $_SESSION['bootstrapLibraryOID'];
         $bootstrapLibrarySID = $_SESSION['bootstrapLibrarySID'];
@@ -4484,6 +4489,7 @@ function bootstrap_saveLibraryPOO(): void
 
     if (!is_a($nebuleInstance, 'Nebule\Library\nebule'))
         return;
+    log_add('serialize class \Nebule\Library\nebule', 'info', __FUNCTION__, '01fc1f8f');
 
     session_start();
     $_SESSION['bootstrapLibraryIID'] = $bootstrapLibraryIID;

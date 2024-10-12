@@ -80,7 +80,7 @@ class TokenPool extends Currency implements nodeInterface
      *
      * @param string $id
      */
-    private function _loadTokenPool(string $id)
+    private function _loadTokenPool(string $id): void
     {
         // Vérifie que c'est bien un objet.
         if (!Node::checkNID($id)
@@ -371,7 +371,7 @@ class TokenPool extends Currency implements nodeInterface
      *
      * @return array:string
      */
-    public function getTokenList()
+    public function getTokenList(): array
     {
         return $this->_getItemList('PID');
     }
@@ -381,7 +381,7 @@ class TokenPool extends Currency implements nodeInterface
      *
      * @return integer
      */
-    public function getTokenCount()
+    public function getTokenCount(): int
     {
         return sizeof($this->_getItemList('PID'));
     }
@@ -391,9 +391,9 @@ class TokenPool extends Currency implements nodeInterface
      * Extrait la valeur relative du sac de jetons à un instant donné.
      *
      * @param $date string
-     * @return double
+     * @return float|int
      */
-    public function getRelativeValue($date)
+    public function getRelativeValue($date): float|int
     {
         // Récupère la liste des jetons.
         $items = $this->_getItemList('PID');

@@ -80,7 +80,7 @@ class Token extends TokenPool implements nodeInterface
      *
      * @param string $id
      */
-    private function _loadToken(string $id)
+    private function _loadToken(string $id): void
     {
         // Vérifie que c'est bien un objet.
         if (!Node::checkNID($id)
@@ -376,9 +376,9 @@ class Token extends TokenPool implements nodeInterface
      * Extrait la valeur relative du jeton à un instant donné.
      *
      * @param $date string
-     * @return double
+     * @return float|int
      */
-    public function getRelativeValue($date = '')
+    public function getRelativeValue($date = ''): float|int
     {
         // Prépare la date de traitement.
         if (is_string($date)
