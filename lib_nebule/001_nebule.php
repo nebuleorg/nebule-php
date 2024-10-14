@@ -226,22 +226,6 @@ class nebule
         'nebule/reference',
     );
 
-    const SESSION_SAVED_VARS = array(
-        //'_loadingStatus',
-        //'_metrologyInstance',
-        '_configurationInstance',
-        //'_rescueInstance',
-        '_authoritiesInstance',
-        '_entitiesInstance',
-        '_recoveryInstance',
-        '_cacheInstance',
-        '_sessionInstance',
-        '_ticketingInstance',
-        //'_ioInstance',
-        '_cryptoInstance',
-        //'_socialInstance',
-    );
-
     private bool $_loadingStatus = false;
     private ?nebule $_nebuleInstance = null;
     private ?Metrology $_metrologyInstance = null;
@@ -256,12 +240,22 @@ class nebule
     private ?ioInterface $_ioInstance = null;
     private ?CryptoInterface $_cryptoInstance = null;
     private ?SocialInterface $_socialInstance = null;
+    private string $_configurationSerialized = '';
+    private string $_authoritiesSerialized = '';
+    private string $_entitiesSerialized = '';
+    private string $_recoverySerialized = '';
+    private string $_cacheSerialized = '';
+    private string $_sessionSerialized = '';
+    private string $_ticketingSerialized = '';
+    private string $_cryptoSerialized = '';
 
 
 
     public function __construct()
     {
-        global $metrologyStartTime;
+        global $nebuleInstance ,$metrologyStartTime;
+        $this->_nebuleInstance = $this;
+        $nebuleInstance = $this;
         syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="1452ed72" LogF="include nebule library" LogM="Loading nebule library"');
 
         $this->_initialisation();
@@ -269,8 +263,42 @@ class nebule
 
     public function __wakeup()
     {
-        global $metrologyStartTime;
+        global $nebuleInstance ,$metrologyStartTime;
+        $this->_nebuleInstance = $this;
+        $nebuleInstance = $this;
         syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="2d9358d5" LogF="include nebule library" LogM="Reloading nebule library"');
+
+        if ($this->_configurationSerialized != '')
+            $this->_configurationInstance = unserialize($this->_configurationSerialized);
+        $this->_configurationSerialized = '';
+
+        if ($this->_authoritiesSerialized != '')
+            $this->_authoritiesInstance = unserialize($this->_authoritiesSerialized);
+        $this->_authoritiesSerialized = '';
+
+        if ($this->_entitiesSerialized != '')
+            $this->_entitiesInstance = unserialize($this->_entitiesSerialized);
+        $this->_entitiesSerialized = '';
+
+        if ($this->_recoverySerialized != '')
+            $this->_recoveryInstance = unserialize($this->_recoverySerialized);
+        $this->_recoverySerialized = '';
+
+        if ($this->_cacheSerialized != '')
+            $this->_cacheInstance = unserialize($this->_cacheSerialized);
+        $this->_cacheSerialized = '';
+
+        if ($this->_sessionSerialized != '')
+            $this->_sessionInstance = unserialize($this->_sessionSerialized);
+        $this->_sessionSerialized = '';
+
+        if ($this->_ticketingSerialized != '')
+            $this->_ticketingInstance = unserialize($this->_ticketingSerialized);
+        $this->_ticketingSerialized = '';
+
+        if ($this->_cryptoSerialized != '')
+            $this->_cryptoInstance = unserialize($this->_cryptoSerialized);
+        $this->_cryptoSerialized = '';
 
         $this->_initialisation();
     }
@@ -288,15 +316,37 @@ class nebule
 
     public function __sleep()
     {
-        return $this::SESSION_SAVED_VARS;
+        $return = array();
+
+        $this->_configurationSerialized = serialize($this->_configurationInstance);
+        $return[] = '_configurationSerialized';
+
+        $this->_authoritiesSerialized = serialize($this->_authoritiesInstance);
+        $return[] = '_authoritiesSerialized';
+
+        $this->_entitiesSerialized = serialize($this->_entitiesInstance);
+        $return[] = '_entitiesSerialized';
+
+        $this->_recoverySerialized = serialize($this->_recoveryInstance);
+        $return[] = '_recoverySerialized';
+
+        $this->_cacheSerialized = serialize($this->_cacheInstance);
+        $return[] = '_cacheSerialized';
+
+        $this->_sessionSerialized = serialize($this->_sessionInstance);
+        $return[] = '_sessionSerialized';
+
+        $this->_ticketingSerialized = serialize($this->_ticketingInstance);
+        $return[] = '_ticketingSerialized';
+
+        $this->_cryptoSerialized = serialize($this->_cryptoInstance);
+        $return[] = '_cryptoSerialized';
+
+        return $return;
     }
 
     private function _initialisation(): void
     {
-        global $nebuleInstance;
-
-        $this->_nebuleInstance = $this;
-        $nebuleInstance = $this;
         $this->_metrologyInstance = new Metrology($this);
         $this->_configurationInstance = new Configuration($this);
         $this->_setEnvironmentInstances();

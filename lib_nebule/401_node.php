@@ -102,8 +102,7 @@ class Node extends Functions implements nodeInterface
         ) {
             $this->_id = $id;
             $this->_metrologyInstance->addLog('new instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
-        } elseif ($id == '0')
-        {
+        } elseif ($id == '0') {
             $this->_id = '0';
             $this->_isNew = true;
             $this->_metrologyInstance->addLog('instance for new ' . get_class($this), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a16c2373');
@@ -124,7 +123,8 @@ class Node extends Functions implements nodeInterface
 
     public function __wakeup()
     {
-        global $nebuleInstance; // FIXME
+        global $nebuleInstance;
+        $this->_nebuleInstance = $nebuleInstance;
         $this->setEnvironment();
         $this->_initialisation();
 

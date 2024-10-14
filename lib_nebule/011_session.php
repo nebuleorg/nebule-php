@@ -45,6 +45,24 @@ class Session extends Functions
         return $val;
     }
 
+    public function getSessionStoreAsSting(string $name): ?string
+    {
+        session_start();
+
+        if ($name == ''
+            || $this->_flushCache
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
+            || !isset($_SESSION['Option'][$name])
+        )
+            $val = null;
+        else
+            $val = $_SESSION['Option'][$name];
+
+        session_write_close();
+
+        return $val;
+    }
+
     /**
      * Ecrit la valeur d'une option dans la session php.
      *

@@ -24,6 +24,7 @@ class Entities extends Functions
 
     protected function _initialisation(): void
     {
+        $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'ad5a5b0c');
         $this->_findInstanceEntity();
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_instanceEntityInstance);
         $this->_recoveryInstance->setInstanceEntityAsRecovery($this->_instanceEntityInstance);
@@ -35,23 +36,20 @@ class Entities extends Functions
         $this->_getCurrentEntity();
         $this->_getCurrentEntityPrivateKey();
         $this->_getCurrentEntityPassword();
-        $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'ad5a5b0c');
     }
 
     private function _findInstanceEntity(): void
     {
         $instance = null;
-        // Vérifie si une valeur n'est pas mémorisée dans la session.
-        $id = $this->_sessionInstance->getSessionStore('nebuleHostEntity');
-
-        // Si il existe une variable de session pour l'hôte en cours, la lit.
-        if ($id !== false
+        $id = $this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntity');
+        if ($id !== null
             && $id != ''
         ) {
-            $instance = unserialize($this->_sessionInstance->getSessionStore('nebuleHostEntityInstance'));
+            $this->_metrologyInstance->addLog('instancing host entity ' . $this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntity'), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '331c4f70');
+            $instance = unserialize($this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntityInstance'));
         }
 
-        if ($id !== false
+        if ($id !== null
             && $id != ''
             && $instance !== false
             && $instance !== ''

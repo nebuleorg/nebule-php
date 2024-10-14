@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241012';
+const BOOTSTRAP_VERSION = '020241014';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4333,14 +4333,49 @@ function bootstrap_setPermitOpenFileCode(): void
  ------------------------------------------------------------------------------------------
  */
 
+function bootstrap_checkSessionLibraryPOO():void { // FIXME TEST TO REMOVE
+    if (isset($_SESSION['bootstrapLibraryIID'])) {
+        log_add('MARK session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'], 'info', __FUNCTION__, '00000000');
+        if (nod_checkNID($_SESSION['bootstrapLibraryIID']))
+            log_add('MARK session bootstrapLibraryIID NID OK', 'info', __FUNCTION__, '00000000');
+        if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryIID']))
+            log_add('MARK session bootstrapLibraryIID I/O have link', 'info', __FUNCTION__, '00000000');
+        if (obj_checkContent($_SESSION['bootstrapLibraryIID']))
+            log_add('MARK session bootstrapLibraryIID I/O have content', 'info', __FUNCTION__, '00000000');
+    }
+    else
+        log_add('MARK session bootstrapLibraryIID=null', 'info', __FUNCTION__, '00000000');
+
+    if (isset($_SESSION['bootstrapLibraryOID'])) {
+        log_add('MARK session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'], 'info', __FUNCTION__, '00000000');
+        if (nod_checkNID($_SESSION['bootstrapLibraryOID']))
+            log_add('MARK session bootstrapLibraryOID NID OK', 'info', __FUNCTION__, '00000000');
+        if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryOID']))
+            log_add('MARK session bootstrapLibraryOID I/O have link', 'info', __FUNCTION__, '00000000');
+        if (obj_checkContent($_SESSION['bootstrapLibraryOID']))
+            log_add('MARK session bootstrapLibraryOID I/O have content', 'info', __FUNCTION__, '00000000');
+    }
+    else
+        log_add('MARK session bootstrapLibraryOID=null', 'info', __FUNCTION__, '00000000');
+
+    if (isset($_SESSION['bootstrapLibrarySID']))
+        log_add('MARK session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'], 'info', __FUNCTION__, '00000000');
+    else
+        log_add('MARK session bootstrapLibrarySID=null', 'info', __FUNCTION__, '00000000');
+
+    if (isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']]))
+        log_add('MARK session bootstrapLibraryInstanceSleep=' . substr($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']],0,256), 'info', __FUNCTION__, '00000000');
+    else
+        log_add('MARK session bootstrapLibraryInstanceSleep=null', 'info', __FUNCTION__, '00000000');
+}
+
 /**
  * Try to find nebule Lib POO.
  *
  * @param string $bootstrapLibraryInstanceSleep
  * @return void
  */
-function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
-{
+function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void {
     global $libraryPPCheckOK,
            $bootstrapLibraryIID,
            $bootstrapLibraryOID,
@@ -4352,13 +4387,11 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
 
     // Try to find on session.
     session_start();
-log_add('MARK session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'], 'info', __FUNCTION__, '00000000'); // FIXME unsaved session !
-log_add('MARK session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'], 'info', __FUNCTION__, '00000000');
-log_add('MARK session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'], 'info', __FUNCTION__, '00000000');
+    bootstrap_checkSessionLibraryPOO(); // FIXME unsaved session !
     if (isset($_SESSION['bootstrapLibraryIID'])
         && nod_checkNID($_SESSION['bootstrapLibraryIID'])
         && io_checkNodeHaveLink($_SESSION['bootstrapLibraryIID'])
-        && obj_checkContent($_SESSION['bootstrapLibraryIID'])
+        //&& obj_checkContent($_SESSION['bootstrapLibraryIID'])
         && nod_checkNID($_SESSION['bootstrapLibraryOID'])
         && io_checkNodeHaveLink($_SESSION['bootstrapLibraryOID'])
         && obj_checkContent($_SESSION['bootstrapLibraryOID'])
@@ -4458,7 +4491,9 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
                     }
                     else {
                         log_add('deserialize previous class \Nebule\Library\nebule', 'info', __FUNCTION__, 'de329729');
-                        $nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                        //$nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
+                        unserialize($bootstrapLibraryInstanceSleep);
+                        $bootstrapLibraryInstanceSleep = '';
                     }
                     log_reopen(BOOTSTRAP_NAME);
                 } else
