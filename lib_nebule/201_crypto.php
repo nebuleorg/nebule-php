@@ -10,6 +10,14 @@ namespace Nebule\Library;
  */
 class Crypto extends Functions implements CryptoInterface
 {
+    const SESSION_SAVED_VARS = array(
+        '_defaultInstance',
+        '_ready',
+        '_listClasses',
+        '_listInstances',
+        '_listTypes',
+    );
+
     const DEFAULT_CLASS = 'Openssl';
 
     const TYPE = '';

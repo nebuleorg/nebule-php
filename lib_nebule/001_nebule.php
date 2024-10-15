@@ -261,48 +261,6 @@ class nebule
         $this->_initialisation();
     }
 
-    public function __wakeup()
-    {
-        global $nebuleInstance ,$metrologyStartTime;
-        $this->_nebuleInstance = $this;
-        $nebuleInstance = $this;
-        syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="2d9358d5" LogF="include nebule library" LogM="Reloading nebule library"');
-
-        if ($this->_configurationSerialized != '')
-            $this->_configurationInstance = unserialize($this->_configurationSerialized);
-        $this->_configurationSerialized = '';
-
-        if ($this->_authoritiesSerialized != '')
-            $this->_authoritiesInstance = unserialize($this->_authoritiesSerialized);
-        $this->_authoritiesSerialized = '';
-
-        if ($this->_entitiesSerialized != '')
-            $this->_entitiesInstance = unserialize($this->_entitiesSerialized);
-        $this->_entitiesSerialized = '';
-
-        if ($this->_recoverySerialized != '')
-            $this->_recoveryInstance = unserialize($this->_recoverySerialized);
-        $this->_recoverySerialized = '';
-
-        if ($this->_cacheSerialized != '')
-            $this->_cacheInstance = unserialize($this->_cacheSerialized);
-        $this->_cacheSerialized = '';
-
-        if ($this->_sessionSerialized != '')
-            $this->_sessionInstance = unserialize($this->_sessionSerialized);
-        $this->_sessionSerialized = '';
-
-        if ($this->_ticketingSerialized != '')
-            $this->_ticketingInstance = unserialize($this->_ticketingSerialized);
-        $this->_ticketingSerialized = '';
-
-        if ($this->_cryptoSerialized != '')
-            $this->_cryptoInstance = unserialize($this->_cryptoSerialized);
-        $this->_cryptoSerialized = '';
-
-        $this->_initialisation();
-    }
-
     public function __destruct()
     {
         $this->_cacheInstance->saveCacheOnSessionBuffer();
@@ -345,20 +303,56 @@ class nebule
         return $return;
     }
 
+    public function __wakeup()
+    {
+        global $nebuleInstance ,$metrologyStartTime;
+        $this->_nebuleInstance = $this;
+        $nebuleInstance = $this;
+        syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="2d9358d5" LogF="include nebule library" LogM="Reloading nebule library"');
+
+        $this->_initialisation();
+    }
+
     private function _initialisation(): void
     {
         $this->_metrologyInstance = new Metrology($this);
-        $this->_configurationInstance = new Configuration($this);
+
+        if ($this->_configurationSerialized != '') {
+            $this->_configurationInstance = unserialize($this->_configurationSerialized);
+            $this->_configurationSerialized = '';
+        }
+        else
+            $this->_configurationInstance = new Configuration($this);
         $this->_setEnvironmentInstances();
+
         $this->_rescueInstance = new Rescue($this);
         $this->_setEnvironmentInstances();
-        $this->_sessionInstance = new Session($this);
+
+        if ($this->_sessionSerialized != '') {
+            $this->_sessionInstance = unserialize($this->_sessionSerialized);
+            $this->_sessionSerialized = '';
+        }
+        else
+            $this->_sessionInstance = new Session($this);
         $this->_setEnvironmentInstances();
-        $this->_cacheInstance = new Cache($this);
+
+        if ($this->_cacheSerialized != '') {
+            $this->_cacheInstance = unserialize($this->_cacheSerialized);
+            $this->_cacheSerialized = '';
+        }
+        else
+            $this->_cacheInstance = new Cache($this);
         $this->_setEnvironmentInstances();
+
         $this->_ioInstance = new io($this);
         $this->_setEnvironmentInstances();
-        $this->_cryptoInstance = new Crypto($this);
+
+        if ($this->_cryptoSerialized != '') {
+            $this->_cryptoInstance = unserialize($this->_cryptoSerialized);
+            $this->_cryptoSerialized = '';
+        }
+        else
+            $this->_cryptoInstance = new Crypto($this);
         $this->_setEnvironmentInstances();
 
         if (!$this->_nebuleCheckEnvironment())
@@ -366,13 +360,37 @@ class nebule
 
         $this->_socialInstance = new Social($this);
         $this->_setEnvironmentInstances();
-        $this->_authoritiesInstance = new Authorities($this);
+
+        if ($this->_authoritiesSerialized != '') {
+            $this->_authoritiesInstance = unserialize($this->_authoritiesSerialized);
+            $this->_authoritiesSerialized = '';
+        }
+        else
+            $this->_authoritiesInstance = new Authorities($this);
         $this->_setEnvironmentInstances();
-        $this->_recoveryInstance = new Recovery($this);
+
+        if ($this->_recoverySerialized != '') {
+            $this->_recoveryInstance = unserialize($this->_recoverySerialized);
+            $this->_recoverySerialized = '';
+        }
+        else
+            $this->_recoveryInstance = new Recovery($this);
         $this->_setEnvironmentInstances();
-        $this->_entitiesInstance = new Entities($this);
+
+        if ($this->_entitiesSerialized != '') {
+            $this->_entitiesInstance = unserialize($this->_entitiesSerialized);
+            $this->_entitiesSerialized = '';
+        }
+        else
+            $this->_entitiesInstance = new Entities($this);
         $this->_setEnvironmentInstances();
-        $this->_ticketingInstance = new Ticketing($this);
+
+        if ($this->_ticketingSerialized != '') {
+            $this->_ticketingInstance = unserialize($this->_ticketingSerialized);
+            $this->_ticketingSerialized = '';
+        }
+        else
+            $this->_ticketingInstance = new Ticketing($this);
         $this->_setEnvironmentInstances();
 
         $this->_metrologyInstance->addLog('First step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');

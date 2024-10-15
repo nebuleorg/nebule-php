@@ -13,6 +13,8 @@ use Nebule\Library\nebule;
  */
 class Functions
 {
+    const SESSION_SAVED_VARS = array(); // Replace on children classes.
+
     protected ?nebule $_nebuleInstance = null;
     protected ?Metrology $_metrologyInstance = null;
     protected ?Configuration $_configurationInstance = null;
@@ -34,8 +36,20 @@ class Functions
         $this->_initialisation();
     }
 
+    public function __sleep()
+    {
+        return $this::SESSION_SAVED_VARS;
+    }
+
+    public function __wakeup()
+    {
+        //
+    }
+
     public function setEnvironment(): void
     {
+        if ($this->_nebuleInstance === null)
+            return;
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
         $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();

@@ -211,7 +211,7 @@ class Link implements linkInterface
      */
     public function setBlocInstance(blocLink $instance)
     {
-        $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+        $this->_metrologyInstance?->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
         if (!is_null($this->_blocLink))

@@ -12,6 +12,12 @@ namespace Nebule\Library;
  */
 class Configuration extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_overwriteOptionCacheLock',
+        '_optionCache',
+        '_permitOptionsByLinks',
+    );
+
     /**
      * Liste des noms des options.
      *
@@ -1149,6 +1155,7 @@ class Configuration extends Functions
         if ($name == ''
             || !$this->_permitOptionsByLinks
             || $this->_optionsByLinksIsInUse
+            || $this->_nebuleInstance === null
         )
             return '';
 

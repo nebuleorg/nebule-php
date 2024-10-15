@@ -12,6 +12,33 @@ namespace Nebule\Library;
  */
 class Authorities extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_puppetmasterID',
+        '_puppetmasterInstance',
+        '_securityAuthoritiesID',
+        '_securityAuthoritiesInstance',
+        '_securitySignersInstance',
+        '_codeAuthoritiesID',
+        '_codeAuthoritiesInstance',
+        '_codeSignersInstance',
+        '_directoryAuthoritiesID',
+        '_directoryAuthoritiesInstance',
+        '_directorySignersInstance',
+        '_timeAuthoritiesID',
+        '_timeAuthoritiesInstance',
+        '_timeSignersInstance',
+        '_authoritiesID',
+        '_authoritiesInstances',
+        '_localAuthoritiesID',
+        '_localAuthoritiesInstances',
+        '_localPrimaryAuthoritiesID',
+        '_localPrimaryAuthoritiesInstances',
+        '_localAuthoritiesSigners',
+        '_specialEntitiesID',
+        '_permitInstanceEntityAsAuthority',
+        '_permitDefaultEntityAsAuthority',
+    );
+
     private string $_puppetmasterID = '';
     private ?Entity $_puppetmasterInstance = null;
     private array $_securityAuthoritiesID = array();

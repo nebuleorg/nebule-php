@@ -12,6 +12,14 @@ namespace Nebule\Library;
  */
 class Recovery extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_recoveryEntities',
+        '_recoveryEntitiesInstances',
+        '_recoveryEntitiesSigners',
+        '_permitInstanceEntityAsRecovery',
+        '_permitDefaultEntityAsRecovery',
+    );
+
     private array $_recoveryEntities = array();
     private array $_recoveryEntitiesInstances = array();
     private array $_recoveryEntitiesSigners = array();

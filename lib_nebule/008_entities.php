@@ -12,6 +12,18 @@ namespace Nebule\Library;
  */
 class Entities extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_instanceEntity',
+        '_instanceEntityInstance',
+        '_defaultEntity',
+        '_defaultEntityInstance',
+        '_currentEntityID',
+        '_currentEntityInstance',
+        '_currentEntityPrivateKey',
+        '_currentEntityPrivateKeyInstance',
+        '_currentEntityIsUnlocked',
+    );
+
     private string $_instanceEntity = '';
     private ?Entity $_instanceEntityInstance = null;
     private string $_defaultEntity = '';

@@ -12,6 +12,10 @@ namespace Nebule\Library;
      */
 class Ticketing extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_validTicket',
+    );
+
     const TICKET_SIZE = 256; // Octet
 
     private bool $_validTicket = false;

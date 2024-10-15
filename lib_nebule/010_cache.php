@@ -12,6 +12,13 @@ namespace Nebule\Library;
  */
 class Cache extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_cache',
+        '_cacheDateInsertion',
+        '_sessionBufferLimit',
+        '_flushCache',
+    );
+
     const TYPE_NODE = 'node';
     const TYPE_GROUP = 'group';
     const TYPE_ENTITY = 'entity';
@@ -56,10 +63,10 @@ class Cache extends Functions
     {
         global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        /*$this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
-        $this->_findFlushCache();
+        $this->_findFlushCache();*/
     }
 
     private function _findFlushCache(): void

@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241014';
+const BOOTSTRAP_VERSION = '020241015';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4487,7 +4487,8 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
                 {
                     if ($bootstrapLibraryInstanceSleep == '') {
                         log_add('instancing new class \Nebule\Library\nebule', 'info', __FUNCTION__, '79835c0f');
-                        $nebuleInstance = new nebule();
+                        //$nebuleInstance = new nebule();
+                        new nebule();
                     }
                     else {
                         log_add('deserialize previous class \Nebule\Library\nebule', 'info', __FUNCTION__, 'de329729');
@@ -6086,20 +6087,20 @@ function bootstrap_breakDisplay45LibraryStats(): void
     global $nebuleInstance;
 
     bootstrap_echoLineTitle('metrology inputs');
-    echo 'Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead() . ' ';
-    echo 'Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify() . ' ';
-    echo 'Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead() . ' ';
-    echo 'Ov=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
+    echo 'Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkRead() . ' ';
+    echo 'Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkVerify() . ' ';
+    echo 'Or=' . lib_getMetrology('or') . '+' . $nebuleInstance?->getMetrologyInstance()->getObjectRead() . ' ';
+    echo 'Ov=' . lib_getMetrology('or') . '+' . $nebuleInstance?->getMetrologyInstance()->getObjectVerify() . " (PP+POO)<br />\n";
     bootstrap_echoLineTitle('metrology buffers');
-    echo 'Lc=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize() . ' ';
-    echo 'Oc=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize() . ' ';
-    echo 'Ec=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize() . ' ';
-    echo 'Gc=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize() . ' ';
-    echo 'Cc=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize() . ' ';
-    echo 'CUc=' . $nebuleInstance->getCacheInstance()->getCacheCurrencySize() . ' ';
-    echo 'CPc=' . $nebuleInstance->getCacheInstance()->getCacheTokenPoolSize() . ' ';
-    echo 'CTc=' . $nebuleInstance->getCacheInstance()->getCacheTokenSize() . ' ';
-    echo 'CWc=' . $nebuleInstance->getCacheInstance()->getCacheWalletSize();
+    echo 'Lc=' . $nebuleInstance?->getCacheInstance()->getCacheLinkSize() . ' ';
+    echo 'Oc=' . $nebuleInstance?->getCacheInstance()->getCacheObjectSize() . ' ';
+    echo 'Ec=' . $nebuleInstance?->getCacheInstance()->getCacheEntitySize() . ' ';
+    echo 'Gc=' . $nebuleInstance?->getCacheInstance()->getCacheGroupSize() . ' ';
+    echo 'Cc=' . $nebuleInstance?->getCacheInstance()->getCacheConversationSize() . ' ';
+    echo 'CUc=' . $nebuleInstance?->getCacheInstance()->getCacheCurrencySize() . ' ';
+    echo 'CPc=' . $nebuleInstance?->getCacheInstance()->getCacheTokenPoolSize() . ' ';
+    echo 'CTc=' . $nebuleInstance?->getCacheInstance()->getCacheTokenSize() . ' ';
+    echo 'CWc=' . $nebuleInstance?->getCacheInstance()->getCacheWalletSize();
 }
 
 function bootstrap_breakDisplay5Application(): void
@@ -7337,20 +7338,20 @@ function bootstrap_logMetrology(): void
     foreach ($nebuleMetrologyTimers as $i => $v)
         $timers .= " $i=$v";
 
-    if (is_a($nebuleInstance, 'Nebule\Library\nebule'))
-        $caches = ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkRead()
-            . ' Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance->getMetrologyInstance()->getLinkVerify()
-            . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectRead()
-            . ' Ov=' . lib_getMetrology('ov') . '+' . $nebuleInstance->getMetrologyInstance()->getObjectVerify()
+    //if (is_a($nebuleInstance, 'Nebule\Library\nebule') && $nebuleInstance !== null)
+        $caches = ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkRead()
+            . ' Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkVerify()
+            . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance?->getMetrologyInstance()->getObjectRead()
+            . ' Ov=' . lib_getMetrology('ov') . '+' . $nebuleInstance?->getMetrologyInstance()->getObjectVerify()
             . ' (PP+POO) -'
-            . ' LC=' . $nebuleInstance->getCacheInstance()->getCacheLinkSize()
-            . ' OC=' . $nebuleInstance->getCacheInstance()->getCacheObjectSize()
-            . ' EC=' . $nebuleInstance->getCacheInstance()->getCacheEntitySize()
-            . ' GC=' . $nebuleInstance->getCacheInstance()->getCacheGroupSize()
-            . ' CC=' . $nebuleInstance->getCacheInstance()->getCacheConversationSize();
-    else
+            . ' LC=' . $nebuleInstance?->getCacheInstance()->getCacheLinkSize()
+            . ' OC=' . $nebuleInstance?->getCacheInstance()->getCacheObjectSize()
+            . ' EC=' . $nebuleInstance?->getCacheInstance()->getCacheEntitySize()
+            . ' GC=' . $nebuleInstance?->getCacheInstance()->getCacheGroupSize()
+            . ' CC=' . $nebuleInstance?->getCacheInstance()->getCacheConversationSize();
+    /*else
         $caches = ' Lr=' . lib_getMetrology('lr') . ' Lv=' . lib_getMetrology('lv')
-            . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';
+            . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';*/
 
     log_add('end bootstrap Mp='
         . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . 'Mb'

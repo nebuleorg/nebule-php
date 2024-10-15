@@ -12,6 +12,10 @@ namespace Nebule\Library;
  */
 class Session extends Functions
 {
+    const SESSION_SAVED_VARS = array(
+        '_flushCache',
+    );
+
     private bool $_flushCache = false;
 
     protected function _initialisation(): void
