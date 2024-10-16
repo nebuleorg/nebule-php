@@ -30,7 +30,7 @@ class ioDisk extends io implements ioInterface
 
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
-        $this->_metrologyInstance->addLog('instancing class ioDisk', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e4958dd2');
+        $this->_metrologyInstance->addLog('instancing class ioDisk', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e4958dd2');
     }
 
     /**

@@ -3,7 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe de gestion du côté social des liens limités à l'entité en cours.
+ * Head class to manage social interacts with links for current entity.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -37,7 +38,7 @@ class Social extends Functions implements SocialInterface
         }
 
         $this->_initDefault('socialLibrary');
-        $this->_metrologyInstance->addLog('instancing class Social', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '3f6d9bf1');
+        $this->_metrologyInstance->addLog('instancing class Social', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3f6d9bf1');
     }
 
     /**

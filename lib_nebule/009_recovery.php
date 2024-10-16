@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Recovery entities class for the nebule library.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -29,7 +30,7 @@ class Recovery extends Functions
     protected function _initialisation(): void
     {
         //$this->_findRecoveryEntities();
-        $this->_metrologyInstance->addLog('instancing class Recovery', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '496c1d98');
+        $this->_metrologyInstance->addLog('instancing class Recovery', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '496c1d98');
     }
 
 

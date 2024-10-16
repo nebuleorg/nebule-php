@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Recovery entities class for the nebule library.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -20,7 +21,7 @@ class Session extends Functions
 
     protected function _initialisation(): void
     {
-        $this->_metrologyInstance->addLog('instancing class Session', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '5a444198');
+        $this->_metrologyInstance->addLog('instancing class Session', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5a444198');
     }
 
     /**
@@ -36,7 +37,7 @@ class Session extends Functions
 
         if ($name == ''
             || $this->_flushCache
-            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions') // FIXME this->_configurationInstance = null on wake up.
             || !isset($_SESSION['Option'][$name])
         ) {
             session_write_close();

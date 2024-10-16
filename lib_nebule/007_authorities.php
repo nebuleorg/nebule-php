@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Authorities class for the nebule library.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -71,7 +72,7 @@ class Authorities extends Functions
         $this->_findPuppetmaster();
         //$this->_findGlobalAuthorities();
         //$this->_findLocalAuthorities();
-        $this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '16aa56f1');
+        $this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '16aa56f1');
     }
 
     /**

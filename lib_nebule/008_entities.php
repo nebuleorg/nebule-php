@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Local entities class for the nebule library.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -36,7 +37,7 @@ class Entities extends Functions
 
     protected function _initialisation(): void
     {
-        $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'ad5a5b0c');
+        $this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ad5a5b0c');
         $this->_findInstanceEntity();
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_instanceEntityInstance);
         $this->_recoveryInstance->setInstanceEntityAsRecovery($this->_instanceEntityInstance);
@@ -57,7 +58,7 @@ class Entities extends Functions
         if ($id !== null
             && $id != ''
         ) {
-            $this->_metrologyInstance->addLog('instancing host entity ' . $this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntity'), Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '331c4f70');
+            $this->_metrologyInstance->addLog('instancing host entity ' . $this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntity'), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '331c4f70');
             $instance = unserialize($this->_sessionInstance->getSessionStoreAsSting('nebuleHostEntityInstance'));
         }
 

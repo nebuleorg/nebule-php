@@ -5,11 +5,13 @@ use Nebule\Library\nebule;
 
 /**
  * Metrology class for the nebule library.
+ * Do not serialize on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
+ * TODO use LOG_LEVEL_AUDIT to facilitate audit of instance and what people do.
  */
 class Metrology extends Functions
 {
@@ -38,7 +40,7 @@ class Metrology extends Functions
     {
         $this->_setTimeStart();
         $this->_setDefaultLogsLevel();
-        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __FUNCTION__, '6315c8af');
+        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __METHOD__, '6315c8af');
     }
 
     public function __toString(): string

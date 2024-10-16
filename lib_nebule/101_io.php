@@ -64,7 +64,7 @@ class io extends Functions implements ioInterface
         }
 
         $this->_initDefault('ioLibrary');
-        $this->_metrologyInstance->addLog('instancing class io', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'f5d7dc7f');
+        $this->_metrologyInstance->addLog('instancing class io', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f5d7dc7f');
     }
 
     /**

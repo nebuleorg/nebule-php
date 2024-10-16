@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Rescue class for the nebule library.
+ * Do not serialize on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -15,7 +16,7 @@ class Rescue extends Functions
     protected function _initialisation(): void
     {
         $this->_findModeRescue();
-        $this->_metrologyInstance->addLog('instancing class Rescue', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'de62afce');
+        $this->_metrologyInstance->addLog('instancing class Rescue', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'de62afce');
     }
 
     /**
@@ -38,8 +39,10 @@ class Rescue extends Functions
                     || filter_has_var(INPUT_POST, References::COMMAND_RESCUE)
                 )
             )
-        )
+        ) {
+            $this->_metrologyInstance->addLog('rescue asked by user input (' . References::COMMAND_RESCUE . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'feb40da2');
             $this->_modeRescue = true;
+        }
     }
 
     /**

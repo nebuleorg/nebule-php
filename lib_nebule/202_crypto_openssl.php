@@ -10,6 +10,8 @@ namespace Nebule\Library;
  */
 class CryptoOpenssl extends Crypto implements CryptoInterface
 {
+    const SESSION_SAVED_VARS = array();
+
     const TYPE = 'Openssl';
 
     const HASH_ALGORITHM = array(

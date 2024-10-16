@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Configuration class for the nebule library.
+ * Do not serialize on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -12,12 +13,6 @@ namespace Nebule\Library;
  */
 class Configuration extends Functions
 {
-    const SESSION_SAVED_VARS = array(
-        '_overwriteOptionCacheLock',
-        '_optionCache',
-        '_permitOptionsByLinks',
-    );
-
     /**
      * Liste des noms des options.
      *
@@ -733,7 +728,7 @@ class Configuration extends Functions
 
     protected function _initialisation(): void
     {
-        $this->_metrologyInstance->addLog('instancing class Configuration', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'fbaec5ee');
+        $this->_metrologyInstance->addLog('instancing class Configuration', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'fbaec5ee');
     }
 
     public static function getListOptionsName(): array

@@ -13,9 +13,9 @@ namespace Nebule\Library;
  */
 class CryptoSoftware extends Crypto implements CryptoInterface
 {
-    const TYPE = 'Software';
+    const SESSION_SAVED_VARS = array();
 
-    protected ?Cache $_cacheInstance;
+    const TYPE = 'Software';
 
     protected function _initialisation(): void
     {

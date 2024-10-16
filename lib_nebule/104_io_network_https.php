@@ -35,7 +35,7 @@ class ioNetworkHTTPS extends io implements ioInterface
         ini_set('allow_url_include', 'true');
         ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
         ini_set('default_socket_timeout', $this->_configurationInstance->getOptionAsString('ioTimeout'));
-        $this->_metrologyInstance->addLog('instancing class ioNetworkHTTPS', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '884a3959');
+        $this->_metrologyInstance->addLog('instancing class ioNetworkHTTPS', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '884a3959');
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Configuration class for the nebule library.
+ * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -56,7 +57,7 @@ class Cache extends Functions
     {
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         $this->_findFlushCache();
-        $this->_metrologyInstance->addLog('instancing class Cache', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'b7e8c992');
+        $this->_metrologyInstance->addLog('instancing class Cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b7e8c992');
     }
 
     public function __wakeup()
