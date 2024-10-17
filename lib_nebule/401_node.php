@@ -93,8 +93,8 @@ class Node extends Functions implements nodeInterface
      */
     public function __construct(nebule $nebuleInstance, string $nid)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->setEnvironment();
+        //$this->_nebuleInstance = $nebuleInstance;
+        $this->setEnvironment($nebuleInstance);
         $this->_initialisation();
 
         $id = trim(strtolower($nid));

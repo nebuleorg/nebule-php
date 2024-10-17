@@ -12,10 +12,10 @@ namespace Nebule\Library;
  */
 class Documentation extends Functions
 {
-	protected function _initialisation(): void
+	/*protected function _initialisation(): void
     {
 		// Nothing
-	}
+	}*/
 
 	public function display_content(): void
     {

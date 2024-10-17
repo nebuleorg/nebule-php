@@ -24,7 +24,7 @@ class Ticketing extends Functions
     protected function _initialisation(): void
     {
         $this->_findActionTicket();
-        $this->_metrologyInstance->addLog('instancing class Ticketing', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e1e0a7f3');
+        //$this->_metrologyInstance->addLog('instancing class Ticketing', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e1e0a7f3');
     }
 
 

@@ -31,9 +31,9 @@ class Functions
 
     public function __construct(nebule $nebuleInstance)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->setEnvironment();
-        $this->_initialisation();
+        //$this->_nebuleInstance = $nebuleInstance;
+        //$this->setEnvironment($nebuleInstance);
+        //$this->_initialisation();
     }
 
     public function __sleep()
@@ -46,10 +46,12 @@ class Functions
         //
     }
 
-    public function setEnvironment(): void
+    public function setEnvironment(nebule $nebuleInstance): void
     {
-        if ($this->_nebuleInstance === null)
-            return;
+        $nebuleInstance->getMetrologyInstance()?->addLog('set class environment', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '6b424a34');
+        $this->_nebuleInstance = $nebuleInstance;
+        //if ($this->_nebuleInstance === null)
+        //    return;
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
         $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
@@ -64,10 +66,17 @@ class Functions
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
     }
 
+    public function initialisation(): void
+    {
+        // Replace on children classes.
+        $this->_metrologyInstance?->addLog('class initialisation', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '165707c8');
+        $this->_initialisation();
+    }
+
     protected function _initialisation(): void
     {
         // Replace on children classes.
-        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __METHOD__, '165707c8');
+        //\Nebule\Bootstrap\log_add('class initialisation', 'debug', __METHOD__, '165707c8');
     }
 
 

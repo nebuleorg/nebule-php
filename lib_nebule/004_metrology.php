@@ -38,9 +38,10 @@ class Metrology extends Functions
 
     protected function _initialisation(): void
     {
+        //Parent::_initialisation();
         $this->_setTimeStart();
         $this->_setDefaultLogsLevel();
-        \Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __METHOD__, '6315c8af');
+        //\Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __METHOD__, '6315c8af');
     }
 
     public function __toString(): string

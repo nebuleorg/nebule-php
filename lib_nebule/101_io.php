@@ -99,16 +99,14 @@ class io extends Functions implements ioInterface
     protected function _initDefault(string $name): void
     {
         $option = $this->_configurationInstance->getOptionAsString($name);
-        if (isset($this->_listClasses[get_class($this) . $option]))
-        {
+        if (isset($this->_listClasses[get_class($this) . $option])) {
             $this->_defaultInstance = $this->_listInstances[$option];
             $this->_ready = true;
-        }
-        elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS]))
-        {
+        } elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS])) {
             $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
             $this->_ready = true;
-        }
+        } else
+            $this->_metrologyInstance->addLog('no default i/o class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
     }
 
     /**

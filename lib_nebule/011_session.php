@@ -19,10 +19,10 @@ class Session extends Functions
 
     private bool $_flushCache = false;
 
-    protected function _initialisation(): void
+    /*protected function _initialisation(): void
     {
         $this->_metrologyInstance->addLog('instancing class Session', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5a444198');
-    }
+    }*/
 
     /**
      * Lit la valeur d'une option dans la session php.

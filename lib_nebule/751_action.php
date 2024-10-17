@@ -109,7 +109,7 @@ abstract class Actions extends Functions
         $this->initialisation();
     }
 
-    public function initialisation()
+    public function initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Load actions', Metrology::LOG_LEVEL_DEBUG);
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
