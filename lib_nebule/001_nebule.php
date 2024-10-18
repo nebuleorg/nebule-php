@@ -283,30 +283,6 @@ class nebule
 
     public function __sleep()
     {
-        /*$return = array();
-
-        $this->_authoritiesSerialized = serialize($this->_authoritiesInstance);
-        $return[] = '_authoritiesSerialized';
-
-        $this->_entitiesSerialized = serialize($this->_entitiesInstance);
-        $return[] = '_entitiesSerialized';
-
-        $this->_recoverySerialized = serialize($this->_recoveryInstance);
-        $return[] = '_recoverySerialized';
-
-        $this->_cacheSerialized = serialize($this->_cacheInstance);
-        $return[] = '_cacheSerialized';
-
-        $this->_sessionSerialized = serialize($this->_sessionInstance);
-        $return[] = '_sessionSerialized';
-
-        $this->_ticketingSerialized = serialize($this->_ticketingInstance);
-        $return[] = '_ticketingSerialized';
-
-        $this->_cryptoSerialized = serialize($this->_cryptoInstance);
-        $return[] = '_cryptoSerialized';
-
-        return $return;*/
         return self::SESSION_SAVED_VARS;
     }
 
@@ -378,92 +354,53 @@ class nebule
 
     private function _initConfiguration(): void {
         $this->_configurationInstance = new Configuration($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initRescue(): void {
         $this->_rescueInstance = new Rescue($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initSession(): void {
-        if ($this->_sessionSerialized != '') {
-            $this->_sessionInstance = unserialize($this->_sessionSerialized);
-            $this->_sessionSerialized = '';
-        }
-        elseif ($this->_sessionInstance === null)
+        if ($this->_sessionInstance === null)
             $this->_sessionInstance = new Session($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initCache(): void {
-        if ($this->_cacheSerialized != '') {
-            $this->_cacheInstance = unserialize($this->_cacheSerialized);
-            $this->_cacheSerialized = '';
-        }
-        elseif ($this->_cacheInstance === null)
+        if ($this->_cacheInstance === null)
             $this->_cacheInstance = new Cache($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initIO(): void {
         $this->_ioInstance = new io($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initCrypto(): void {
-        if ($this->_cryptoSerialized != '') {
-            $this->_cryptoInstance = unserialize($this->_cryptoSerialized);
-            $this->_cryptoSerialized = '';
-        }
-        elseif ($this->_cryptoInstance === null)
+        if ($this->_cryptoInstance === null)
             $this->_cryptoInstance = new Crypto($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initSocial(): void {
         $this->_socialInstance = new Social($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initAuthorities(): void {
-        if ($this->_authoritiesSerialized != '') {
-            $this->_authoritiesInstance = unserialize($this->_authoritiesSerialized);
-            $this->_authoritiesSerialized = '';
-        }
-        elseif ($this->_authoritiesInstance === null)
+        if ($this->_authoritiesInstance === null)
             $this->_authoritiesInstance = new Authorities($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initRecovery(): void {
-        if ($this->_recoverySerialized != '') {
-            $this->_recoveryInstance = unserialize($this->_recoverySerialized);
-            $this->_recoverySerialized = '';
-        }
-        elseif ($this->_recoveryInstance === null)
+        if ($this->_recoveryInstance === null)
             $this->_recoveryInstance = new Recovery($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initEntities(): void {
-        if ($this->_entitiesSerialized != '') {
-            $this->_entitiesInstance = unserialize($this->_entitiesSerialized);
-            $this->_entitiesSerialized = '';
-        }
-        elseif ($this->_entitiesInstance === null)
+        if ($this->_entitiesInstance === null)
             $this->_entitiesInstance = new Entities($this);
-        //$this->_setEnvironmentInstances();
     }
 
     private function _initTicketing(): void {
-        if ($this->_ticketingSerialized != '') {
-            $this->_ticketingInstance = unserialize($this->_ticketingSerialized);
-            $this->_ticketingSerialized = '';
-        }
-        elseif ($this->_ticketingInstance === null)
+        if ($this->_ticketingInstance === null)
             $this->_ticketingInstance = new Ticketing($this);
-        //$this->_setEnvironmentInstances();
     }
 
     /**
@@ -472,18 +409,30 @@ class nebule
      */
     private function _setEnvironmentInstances(): void
     {
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_metrologyInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_metrologyInstance->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_configurationInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_configurationInstance->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_rescueInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         if ($this->_rescueInstance !== null)
             $this->_rescueInstance->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_authoritiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_authoritiesInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_entitiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_entitiesInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_recoveryInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_recoveryInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cacheInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_cacheInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_sessionInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_sessionInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ticketingInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_ticketingInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ioInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_ioInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cryptoInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_cryptoInstance?->setEnvironment($this);
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_socialInstance?->setEnvironment($this);
     }
 

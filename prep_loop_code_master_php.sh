@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020241010
+# Version 020241018
 
 echo ' > start'
 
@@ -181,6 +181,9 @@ function work_full_reinit()
   sudo chmod 644 l/*
   sudo chown 1000:33 o/*
   sudo chmod 644 o/*
+
+  echo ' > flush PHP sessions'
+  sudo /usr/bin/rm -f /var/lib/php/sessions/*
 }
 
 function work_export()

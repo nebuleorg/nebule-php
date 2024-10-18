@@ -22,7 +22,6 @@ class Metrology extends Functions
     const LOG_LEVEL_AUDIT = 4;
     const LOG_LEVEL_FUNCTION = 8;
     const LOG_LEVEL_DEBUG = 16;
-    const DEFAULT_LOG_LEVEL = 1;
     const DEFAULT_DEBUG_FILE = 'debug';
 
     private int $_countLinkRead = 0;
@@ -36,12 +35,12 @@ class Metrology extends Functions
     private int $_actionCount = 0;
     private array $_actionArray = array();
 
-    protected function _initialisation(): void
-    {
-        //Parent::_initialisation();
+    public function __construct(nebule $nebuleInstance){
+        parent::__construct($nebuleInstance);
         $this->_setTimeStart();
-        $this->_setDefaultLogsLevel();
-        //\Nebule\Bootstrap\log_add('instancing class Functions', 'debug', __METHOD__, '6315c8af');
+        $this->_getPermitLogsOnDebugFile();
+        $this->_getPermitLogs();
+        $this->_getDefaultLogsLevel();
     }
 
     public function __toString(): string
@@ -126,7 +125,17 @@ class Metrology extends Functions
     private int $_logsLevel = self::LOG_LEVEL_NORMAL;
     private bool $_permitLogsOnDebugFile = false;
 
-    private function _setDefaultLogsLevel(): void
+    private function _getPermitLogsOnDebugFile(): void
+    {
+        // If permitted, write debug level logs to debug file.
+        if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile'))
+        {
+            file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
+            $this->_permitLogsOnDebugFile = true;
+        }
+    }
+
+    private function _getPermitLogs(): void
     {
         $getPermitLogs = Configuration::getOptionFromEnvironmentAsStringStatic('permitLogs');
         if ($getPermitLogs == 'true')
@@ -138,44 +147,58 @@ class Metrology extends Functions
         else
             $this->_permitLogs = false;
 
+        $this->_addLog('permitLogs=' . (string)$this->_permitLogs, self::LOG_LEVEL_DEBUG, __METHOD__, '10c133be');
+    }
+
+    private function _getDefaultLogsLevel(): void
+    {
         $level = Configuration::getOptionFromEnvironmentAsStringStatic('logsLevel');
         if ($level == '')
             $level = Configuration::OPTIONS_DEFAULT_VALUE['logsLevel'];
 
         $this->setLogsLevel($level);
-
-        // If permitted, write debug level logs to debug file.
-        if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile'))
-        {
-            file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
-            $this->_permitLogsOnDebugFile = true;
-        }
     }
 
     public function setLogsLevel(string $level): void
     {
         switch ($level) {
             case 'NORMAL':
+            case self::LOG_LEVEL_NORMAL:
                 $this->_logsLevel = self::LOG_LEVEL_NORMAL;
+                $levelName = 'NORMAL';
                 break;
             case 'ERROR':
+            case self::LOG_LEVEL_ERROR:
                 $this->_logsLevel = self::LOG_LEVEL_ERROR;
+                $levelName = 'ERROR';
                 break;
             case 'DEVELOP':
+            case self::LOG_LEVEL_DEVELOP:
                 $this->_logsLevel = self::LOG_LEVEL_DEVELOP;
+                $levelName = 'DEVELOP';
+                break;
+            case 'AUDIT':
+            case self::LOG_LEVEL_AUDIT:
+                $this->_logsLevel = self::LOG_LEVEL_AUDIT;
+                $levelName = 'AUDIT';
                 break;
             case 'FUNCTION':
+            case self::LOG_LEVEL_FUNCTION:
                 $this->_logsLevel = self::LOG_LEVEL_FUNCTION;
+                $levelName = 'FUNCTION';
                 break;
             case 'DEBUG':
+            case self::LOG_LEVEL_DEBUG:
                 $this->_logsLevel = self::LOG_LEVEL_DEBUG;
+                $levelName = 'DEBUG';
                 break;
             default:
-                $this->_logsLevel = self::DEFAULT_LOG_LEVEL;
+                $this->_logsLevel = self::LOG_LEVEL_ERROR;
+                $levelName = 'ERROR';
+                $this->addLog('invalid logs level : '  . $level, self::LOG_LEVEL_ERROR, __METHOD__, '2e57f5d2');
         }
 
-        if ($this->_permitLogs && $this->_logsLevel > self::LOG_LEVEL_ERROR)
-            syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogLset="' . $this->_logsLevel . '(' . $level . ')"');
+        $this->addLog('logsLevel=' . (string)$this->_logsLevel. ' (' . $levelName . ')', self::LOG_LEVEL_DEBUG, __METHOD__, '63efc8ea');
     }
 
     /**
@@ -191,7 +214,11 @@ class Metrology extends Functions
     {
         if (!$this->_permitLogs)
             return;
+        $this->_addLog($message, $level, $function, $luid);
+    }
 
+    private function _addLog(string $message, int $level = self::LOG_LEVEL_ERROR, string $function = '', string $luid = '00000000'): void
+    {
         $logLevel = $level;
 
         if ($logLevel <= $this->_logsLevel) {

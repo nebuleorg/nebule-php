@@ -29,26 +29,16 @@ class Functions
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
 
-    public function __construct(nebule $nebuleInstance)
-    {
-        //$this->_nebuleInstance = $nebuleInstance;
-        //$this->setEnvironment($nebuleInstance);
-        //$this->_initialisation();
-    }
+    public function __construct(nebule $nebuleInstance){}
 
-    public function __sleep()
-    {
+    public function __sleep(){
         return $this::SESSION_SAVED_VARS;
     }
 
-    public function __wakeup()
-    {
-        //
-    }
+    public function __wakeup(){}
 
-    public function setEnvironment(nebule $nebuleInstance): void
-    {
-        $nebuleInstance->getMetrologyInstance()?->addLog('set class environment', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '6b424a34');
+    public function setEnvironment(nebule $nebuleInstance): void{
+        $nebuleInstance->getMetrologyInstance()->addLog('set class environment', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '6b424a34');
         $this->_nebuleInstance = $nebuleInstance;
         //if ($this->_nebuleInstance === null)
         //    return;
@@ -66,18 +56,13 @@ class Functions
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
     }
 
-    public function initialisation(): void
-    {
+    public function initialisation(): void{
         // Replace on children classes.
-        $this->_metrologyInstance?->addLog('class initialisation', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '165707c8');
+        $this->_metrologyInstance->addLog('class initialisation', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '165707c8');
         $this->_initialisation();
     }
 
-    protected function _initialisation(): void
-    {
-        // Replace on children classes.
-        //\Nebule\Bootstrap\log_add('class initialisation', 'debug', __METHOD__, '165707c8');
-    }
+    protected function _initialisation(): void{}
 
 
 
