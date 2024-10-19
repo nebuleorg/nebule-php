@@ -409,31 +409,18 @@ class nebule
      */
     private function _setEnvironmentInstances(): void
     {
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_metrologyInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_metrologyInstance->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_configurationInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_configurationInstance->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_rescueInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        if ($this->_rescueInstance !== null)
-            $this->_rescueInstance->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_authoritiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_authoritiesInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_entitiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_entitiesInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_recoveryInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_recoveryInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cacheInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_cacheInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_sessionInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_sessionInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ticketingInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_ticketingInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ioInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_ioInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cryptoInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_cryptoInstance?->setEnvironment($this);
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-        $this->_socialInstance?->setEnvironment($this);
+        $this->_rescueInstance->setEnvironment($this);
+        $this->_authoritiesInstance->setEnvironment($this);
+        $this->_entitiesInstance->setEnvironment($this);
+        $this->_recoveryInstance->setEnvironment($this);
+        $this->_cacheInstance->setEnvironment($this);
+        $this->_sessionInstance->setEnvironment($this);
+        $this->_ticketingInstance->setEnvironment($this);
+        $this->_ioInstance->setEnvironment($this);
+        $this->_cryptoInstance->setEnvironment($this);
+        $this->_socialInstance->setEnvironment($this);
     }
 
     private function _initAllInstances(): void
@@ -441,15 +428,15 @@ $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstan
         $this->_metrologyInstance->initialisation();
         $this->_configurationInstance->initialisation();
         $this->_rescueInstance->initialisation();
-        $this->_authoritiesInstance?->initialisation();
-        $this->_entitiesInstance?->initialisation();
-        $this->_recoveryInstance?->initialisation();
-        $this->_cacheInstance?->initialisation();
-        $this->_sessionInstance?->initialisation();
-        $this->_ticketingInstance?->initialisation();
-        $this->_ioInstance?->initialisation();
-        $this->_cryptoInstance?->initialisation();
-        $this->_socialInstance?->initialisation();
+        $this->_authoritiesInstance->initialisation();
+        $this->_entitiesInstance->initialisation();
+        $this->_recoveryInstance->initialisation();
+        $this->_cacheInstance->initialisation();
+        $this->_sessionInstance->initialisation();
+        $this->_ticketingInstance->initialisation();
+        $this->_ioInstance->initialisation();
+        $this->_cryptoInstance->initialisation();
+        $this->_socialInstance->initialisation();
     }
 
     public function getLoadingStatus(): bool
