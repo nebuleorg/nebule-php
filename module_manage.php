@@ -412,7 +412,7 @@ class ModuleManage extends Modules
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
             // Flush le cache de l'objet du module pour que les changements soient pris en compte tout de suite.
-            $this->_cacheInstance->unsetObjectCache($this->_actionAddModuleRID); // @todo ne marche pas...
+            $this->_cacheInstance->unsetObjectOnCache($this->_actionAddModuleRID); // @todo ne marche pas...
         }
     }
 

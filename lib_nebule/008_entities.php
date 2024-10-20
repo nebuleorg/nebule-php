@@ -37,7 +37,6 @@ class Entities extends Functions
 
     protected function _initialisation(): void
     {
-        //$this->_metrologyInstance->addLog('instancing class Entities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ad5a5b0c');
         $this->_findInstanceEntity();
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_instanceEntityInstance);
         $this->_recoveryInstance->setInstanceEntityAsRecovery($this->_instanceEntityInstance);

@@ -3270,7 +3270,7 @@ abstract class Actions extends Functions
             $this->_entitiesInstance->unsetTempCurrentEntity();
 
             // Efface le cache pour recharger l'entité.
-            $this->_nebuleInstance->getCacheInstance()->unsetCacheEntity($this->_actionCreateEntityID);
+            $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
 
             // Recrée l'instance de l'objet.
             $this->_actionCreateEntityInstance = $this->_cacheInstance->newEntity($this->_actionCreateEntityID);

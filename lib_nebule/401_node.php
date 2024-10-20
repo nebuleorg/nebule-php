@@ -45,7 +45,6 @@ class Node extends Functions implements nodeInterface
         '_idProtectedKey',
         '_idUnprotectedKey',
         '_markProtectedChecked',
-        '_cacheCurrentEntityUnlocked',
         '_usedUpdate',
         '_isEntity',
         '_isGroup',
@@ -65,7 +64,6 @@ class Node extends Functions implements nodeInterface
     protected array $_cachePropertiesID = array();
     protected array $_cacheProperty = array();
     protected array $_cacheProperties = array();
-    protected string $_cacheUpdate = '';
     protected bool $_cacheMarkDanger = false;
     protected bool $_cacheMarkWarning = false;
     protected bool $_cacheMarkProtected = false;
@@ -74,7 +72,6 @@ class Node extends Functions implements nodeInterface
     protected string $_idProtectedKey = '0';
     protected string $_idUnprotectedKey = '0';
     protected bool $_markProtectedChecked = false;
-    protected bool $_cacheCurrentEntityUnlocked = false;
     protected ?string $_data = null;
     protected bool $_haveData = false;
     protected string $_code = '';
@@ -93,22 +90,21 @@ class Node extends Functions implements nodeInterface
      */
     public function __construct(nebule $nebuleInstance, string $nid)
     {
-        //$this->_nebuleInstance = $nebuleInstance;
+        parent::__construct($nebuleInstance);
         $this->setEnvironment($nebuleInstance);
-        $this->_initialisation();
 
         $id = trim(strtolower($nid));
         if (self::checkNID($id, false, false)
         ) {
             $this->_id = $id;
             $this->_metrologyInstance->addLog('new instance ' . get_class($this) . ' nid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fb8f6e3');
-        } elseif ($id == '0') {
+        } else {
             $this->_id = '0';
             $this->_isNew = true;
             $this->_metrologyInstance->addLog('instance for new ' . get_class($this), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a16c2373');
         }
 
-        $this->_localConstruct();
+        $this->initialisation();
     }
 
     public function __toString(): string
@@ -123,27 +119,16 @@ class Node extends Functions implements nodeInterface
 
     public function __wakeup()
     {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->setEnvironment();
-        $this->_initialisation();
-
-        $this->_cacheMarkDanger = false;
-        $this->_cacheMarkWarning = false;
-        $this->_data = '';
-        $this->_haveData = false;
-        $this->_cacheUpdate = '';
+        //global $nebuleInstance;
+        //$this->_nebuleInstance = $nebuleInstance;
+        //$this->setEnvironment($nebuleInstance);
+        //$this->_initialisation();
     }
 
     protected function _initialisation(): void
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_permitBuffer = $this->_configurationInstance->getOptionAsBoolean('permitBufferIO');
-    }
-
-    protected function _localConstruct(): void
-    {
-        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
     /**
@@ -250,14 +235,14 @@ class Node extends Functions implements nodeInterface
      * There's a specific treatment for NID empty or '0'.
      *
      * @param string $nid
-     * @param bool   $permitEmpty permit NID=''
-     * @param bool   $permitZero  permit NID='0'
+     * @param bool   $permitNull permit NID=''
+     * @param bool   $permitZero permit NID='0'
      * @return boolean
      */
-    static public function checkNID(string &$nid, bool $permitEmpty = false, bool $permitZero = false): bool
+    static public function checkNID(string &$nid, bool $permitNull = false, bool $permitZero = false): bool
     {
         // May be empty or zero in some case.
-        if ($permitEmpty && $nid == '') return true;
+        if ($permitNull && $nid == '') return true;
         if ($permitZero && $nid == '0') return true;
 
         // Check hash value.
@@ -1558,7 +1543,7 @@ class Node extends Functions implements nodeInterface
         return false; // FIXME disabled!
 
         /*if ($this->_markProtectedChecked === true
-            && $this->_cacheCurrentEntityUnlocked === $this->_nebuleInstance->getCurrentEntityUnlocked()
+            && $this->_entitiesInstance->getCurrentEntityIsUnlocked() === $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             if ($this->_cacheMarkProtected === true) {
                 $this->_metrology->addLog('Object protected - cache - protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -1573,7 +1558,7 @@ class Node extends Functions implements nodeInterface
         }
 
         // Mémorise l'état de connexion de l'entité courante.
-        $this->_cacheCurrentEntityUnlocked = $this->_nebuleInstance->getCurrentEntityUnlocked();
+        $this->_entitiesInstance->getCurrentEntityIsUnlocked() = $this->_nebuleInstance->getCurrentEntityUnlocked();
 
         // Liste les liens à la recherche de la propriété.
         $listS = array();
@@ -2899,7 +2884,7 @@ class Node extends Functions implements nodeInterface
                 $links = array_merge($links, $newLinks);
             }
             else
-                $this->_cacheInstance->unsetCache($line, Cache::TYPE_BLOCLINK);
+                $this->_cacheInstance->unsetOnCache($line, Cache::TYPE_BLOCLINK);
         }
     }
 

@@ -27,12 +27,6 @@ class Recovery extends Functions
     private bool $_permitInstanceEntityAsRecovery = false;
     private bool $_permitDefaultEntityAsRecovery = false;
 
-    /*protected function _initialisation(): void
-    {
-        //$this->_findRecoveryEntities();
-        $this->_metrologyInstance->addLog('instancing class Recovery', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '496c1d98');
-    }*/
-
 
     public function setInstanceEntityAsRecovery(Entity $instance): void
     {

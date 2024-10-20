@@ -23,7 +23,7 @@ class io extends Functions implements ioInterface
     private const FILTER = '';
     private const LOCALISATION = '';
 
-    private ?ioInterface $_defaultInstance = null;
+    private ?ioInterface $_defaultInstanceIO = null;
     private bool $_ready = false;
     private array $_listClasses = array();
     private array $_listInstances = array();
@@ -63,7 +63,7 @@ class io extends Functions implements ioInterface
                 $this->_initSubClass($class, $this->_nebuleInstance);
         }
 
-        $this->_initDefault('ioLibrary');
+        $this->_getDefaultInstanceIO('ioLibrary');
         $this->_metrologyInstance->addLog('instancing class io', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f5d7dc7f');
     }
 
@@ -76,7 +76,10 @@ class io extends Functions implements ioInterface
      */
     protected function _initSubClass(string $class, nebule $nebuleInstance): void
     {
-        $instance = new $class($nebuleInstance);
+        //$instance = new $class($nebuleInstance);
+        $instance = new $class();
+        $instance->setEnvironment($nebuleInstance);
+        $instance->initialisation();
         $type = $instance->getType();
         $filterString = $instance->getFilterString();
         $url = $instance->getLocalisation();
@@ -96,17 +99,19 @@ class io extends Functions implements ioInterface
      * @param string $name
      * @return void
      */
-    protected function _initDefault(string $name): void
+    protected function _getDefaultInstanceIO(string $name): void
     {
         $option = $this->_configurationInstance->getOptionAsString($name);
         if (isset($this->_listClasses[get_class($this) . $option])) {
-            $this->_defaultInstance = $this->_listInstances[$option];
+            $this->_defaultInstanceIO = $this->_listInstances[$option];
             $this->_ready = true;
         } elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS])) {
-            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
+            $this->_defaultInstanceIO = $this->_listInstances[self::DEFAULT_CLASS];
             $this->_ready = true;
-        } else
+        } else {
+            $this->_defaultInstanceIO = $this;
             $this->_metrologyInstance->addLog('no default i/o class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
+        }
     }
 
     /**
@@ -146,8 +151,8 @@ class io extends Functions implements ioInterface
      */
     public function getLocalisation(): string
     {
-        if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstance))
-            return $this->_defaultInstance->getLocalisation();
+        if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstanceIO))
+            return $this->_defaultInstanceIO->getLocalisation();
         return get_class($this)::LOCALISATION;
     }
 
@@ -160,14 +165,14 @@ class io extends Functions implements ioInterface
     private function _findType(string $url): ioInterface
     {
         if ($url == '')
-            return $this->_defaultInstance;
+            return $this->_defaultInstanceIO;
 
         // Fait le tour des modules IO et de leurs filtres pour déterminer le protocole.
         foreach ($this->_listFilterStrings as $type => $pattern) {
             if (preg_match($pattern, $url))
                 return $this->_listInstances[$type];
         }
-        return $this->_defaultInstance;
+        return $this->_defaultInstanceIO;
     }
 
     /**
@@ -192,7 +197,7 @@ class io extends Functions implements ioInterface
             && isset($this->_listInstances[$type])
         )
             return $this->_listInstances[$type];
-        return $this->_defaultInstance;
+        return $this->_defaultInstanceIO;
     }
 
     /**
@@ -201,7 +206,7 @@ class io extends Functions implements ioInterface
      */
     public function getMode(): string
     {
-        return $this->_defaultInstance->getMode();
+        return $this->_defaultInstanceIO->getMode();
     }
 
     /**
@@ -232,7 +237,7 @@ class io extends Functions implements ioInterface
      */
     public function getInstanceEntityID(string $url = ''): string
     {
-        return $this->_defaultInstance->getInstanceEntityID($url);
+        return $this->_defaultInstanceIO->getInstanceEntityID($url);
     }
 
     /**

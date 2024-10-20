@@ -42,7 +42,6 @@ class Group extends Node implements nodeInterface
         '_idProtectedKey',
         '_idUnprotectedKey',
         '_markProtectedChecked',
-        '_cacheCurrentEntityUnlocked',
         '_usedUpdate',
         '_isGroup',
         '_isConversation',
@@ -55,9 +54,9 @@ class Group extends Node implements nodeInterface
         '_referenceObjectObfuscated',
     );
 
-    protected function _localConstruct(): void
+    protected function _initialisation(): void
     {
-        $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
         $this->getReferenceObjectProtected();

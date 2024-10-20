@@ -28,6 +28,8 @@ class Functions
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
+    protected bool $_environmentSet = false;
+    protected bool $_initialisationSet = false;
 
     public function __construct(nebule $nebuleInstance){}
 
@@ -38,10 +40,12 @@ class Functions
     public function __wakeup(){}
 
     public function setEnvironment(nebule $nebuleInstance): void{
-        $nebuleInstance->getMetrologyInstance()->addLog('set class environment', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '6b424a34');
+        if ($this->_environmentSet)
+            return;
+        $this->_environmentSet = true;
+
+        $nebuleInstance->getMetrologyInstance()->addLog('set class environment', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '6b424a34');
         $this->_nebuleInstance = $nebuleInstance;
-        //if ($this->_nebuleInstance === null)
-        //    return;
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
         $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
@@ -54,8 +58,7 @@ class Functions
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
-
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_metrologyInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
+/*$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_metrologyInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_configurationInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_rescueInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_authoritiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
@@ -66,11 +69,14 @@ $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_sessionInsta
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ticketingInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ioInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
 $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cryptoInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
+$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');*/
     }
 
     public function initialisation(): void{
-        // Replace on children classes.
+        if ($this->_initialisationSet)
+            return;
+        $this->_initialisationSet = true;
+
         $this->_metrologyInstance->addLog('class initialisation', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '165707c8');
         $this->_initialisation();
     }

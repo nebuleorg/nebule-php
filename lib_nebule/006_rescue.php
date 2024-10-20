@@ -16,21 +16,10 @@ class Rescue extends Functions
     protected function _initialisation(): void
     {
         $this->_findModeRescue();
-        //$this->_metrologyInstance->addLog('instancing class Rescue', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'de62afce');
     }
 
-    /**
-     * Variable de mode de récupération.
-     *
-     * @var boolean
-     */
     private bool $_modeRescue = false;
 
-    /**
-     * Extrait si on est en mode de récupération.
-     *
-     * @return void
-     */
     private function _findModeRescue(): void
     {
         if ($this->_configurationInstance->getOptionUntyped('modeRescue')
@@ -45,10 +34,6 @@ class Rescue extends Functions
         }
     }
 
-    /**
-     * Retourne si le mode de récupération est activé.
-     * @return boolean
-     */
     public function getModeRescue(): bool
     {
         return $this->_modeRescue;

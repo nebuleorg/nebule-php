@@ -88,13 +88,9 @@ $this->_metrologyInstance->addLog('MARK4', Metrology::LOG_LEVEL_NORMAL, $this::c
      */
     private function _findPuppetmaster()
     {
-$this->_metrologyInstance->addLog('MARK31', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_puppetmasterID = $this->_configurationInstance->getOptionUntyped('puppetmaster');
-$this->_metrologyInstance->addLog('MARK32', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_puppetmasterInstance = $this->_cacheInstance->newEntity($this->_puppetmasterID);
-$this->_metrologyInstance->addLog('MARK33', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmasterID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88848d09');
-$this->_metrologyInstance->addLog('MARK34', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
     }
 
 

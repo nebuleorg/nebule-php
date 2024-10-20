@@ -16,7 +16,6 @@ class Cache extends Functions
     const SESSION_SAVED_VARS = array(
         '_cache',
         '_cacheDateInsertion',
-        '_sessionBufferLimit',
         '_flushCache',
     );
 
@@ -56,26 +55,28 @@ class Cache extends Functions
     protected function _initialisation(): void
     {
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
-        $this->_findFlushCache();
-        //$this->_metrologyInstance->addLog('instancing class Cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b7e8c992');
+        $this->_getFlushCache();
     }
 
     public function __wakeup()
     {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        /*$this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
-        $this->_findFlushCache();*/
+        foreach ($this->_cache as $type => $table) {
+            foreach ($table as $item => $instance) {
+                $instance->setEnvironment($this->_nebuleInstance);
+                $instance->initialisation();
+            }
+        }
     }
 
-    private function _findFlushCache(): void
+    private function _getFlushCache(): void
     {
-        global $bootstrap_flush; // FIXME recalculate without bootstrap
-
-        if ($bootstrap_flush) {
+        if (filter_has_var(INPUT_GET, References::COMMAND_FLUSH)
+            || filter_has_var(INPUT_POST, References::COMMAND_FLUSH)
+        ) {
             $this->_metrologyInstance->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
+            $this->_cache = array();
+            $this->_cacheDateInsertion = array();
             $this->_flushCache = true;
         }
     }
@@ -85,12 +86,7 @@ class Cache extends Functions
         return $this->_flushCache;
     }
 
-    /**
-     * Extrait les instances du buffer de session vers le cache.
-     *
-     * @return void
-     */
-    public function readCacheOnSessionBuffer(): void
+    public function readCacheOnSessionBuffer_DEPRECATED(): void
     {
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
@@ -122,12 +118,7 @@ class Cache extends Functions
         $this->_getCacheNeedCleaning();
     }
 
-    /**
-     * Sauvegarde les instances du cache vers le buffer de session.
-     *
-     * @return void
-     */
-    public function saveCacheOnSessionBuffer(): void
+    public function saveCacheOnSessionBuffer_DEPRECATED(): void
     {
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
@@ -150,11 +141,6 @@ class Cache extends Functions
         session_write_close();
     }
 
-    /**
-     * Vide le buffer dans la session php.
-     *
-     * @return boolean
-     */
     public function flushBufferStore(): bool
     {
         $this->_metrologyInstance->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -165,12 +151,6 @@ class Cache extends Functions
         return true;
     }
 
-    /**
-     * Nettoye le cache du nombre d'entrés demandées.
-     *
-     * @param int $c
-     * @return void
-     */
     private function _cleanCacheOverflow(int $c = 0): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
@@ -207,24 +187,11 @@ class Cache extends Functions
         }
     }
 
-    /**
-     * Retourne la taille totale de tous les caches.
-     * Cette taille ne doit pas exéder la taille définie dans l'option sessionBufferSize.
-     *
-     * @return int
-     */
     private function _getAllCachesSize(): int
     {
         return sizeof($this->_cache);
     }
 
-    /**
-     * Vérifie si il faut libérer une place pour l'ajout en cache d'un nouvel objet/lien.
-     * C'est à dire que la taille maximum du cache est atteinte.
-     * Libère au moins une place si besoin.
-     *
-     * @return void
-     */
     private function _getCacheNeedOnePlace(): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
@@ -236,13 +203,6 @@ class Cache extends Functions
             $this->_cleanCacheOverflow($size - $limit + 1);
     }
 
-    /**
-     * Vérifie si il faut libérer de la place en cache.
-     * C'est à dire que la taille maximum du cache est atteinte.
-     * Libère de la place si besoin.
-     *
-     * @return void
-     */
     private function _getCacheNeedCleaning(): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer'))
@@ -269,16 +229,9 @@ class Cache extends Functions
             $type = self::TYPE_NODE;
     }
 
-    /**
-     * Check if an object is already present on cache.
-     *
-     * @param string $nid
-     * @param string $type
-     * @return bool
-     */
     public function getIsOnCache(string $nid, string $type = ''): bool
     {
-        if ($nid == '' || $nid == '0') return false;
+        if ($this->_flushCache || $nid == '' || $nid == '0') return false;
 
         if ($type == '') {
             foreach (self::KNOWN_TYPE as $known) {
@@ -294,19 +247,12 @@ class Cache extends Functions
 
     public function newNode(string $nid, string $type = Cache::TYPE_NODE): node
     {
-        if ($nid == '')
-            $nid = '0';
-
         $this->_filterNodeType($type);
 
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$nid])
-        ) {
-            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+        if ($this->getIsOnCache($nid, $type)) {
             $instance = $this->_cache[$type][$nid];
+            $this->_writeCacheTimestamp($nid, $type);
         } else {
-            $this->_getCacheNeedOnePlace();
-
             switch ($type)
             {
                 case self::TYPE_GROUP:
@@ -334,135 +280,129 @@ class Cache extends Functions
                     $instance = new Wallet($this->_nebuleInstance, $nid);
                     break;
                 default:
+                    $type = self::TYPE_NODE;
                     $instance = new Node($this->_nebuleInstance, $nid);
             }
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-                && $instance->getID() != '0'
-            ) {
-                $this->_cache[$type][$nid] = $instance;
-                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            }
+            $this->_writeCacheNodes($instance, $type);
         }
         return $instance;
     }
 
     public function newEntity(string $nid): Entity
     {
-        if ($nid == '')
-            $nid = '0';
-
-        $type = Cache::TYPE_ENTITY;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$nid])
-        ) {
-            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            $instance = $this->_cache[$type][$nid];
+        if ($this->getIsOnCache($nid, Cache::TYPE_ENTITY)) {
+            $instance = $this->_cache[Cache::TYPE_ENTITY][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_ENTITY);
         } else {
-            $this->_getCacheNeedOnePlace();
-
             $instance = new Entity($this->_nebuleInstance, $nid);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-                && $instance->getID() != '0'
-            ) {
-                $this->_cache[$type][$nid] = $instance;
-                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            }
+            $this->_writeCacheNodes($instance, Cache::TYPE_ENTITY);
         }
         return $instance;
     }
 
     public function newGroup(string $nid): Group
     {
-        if ($nid == '')
-            $nid = '0';
-
-        $type = Cache::TYPE_GROUP;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$nid])
-        ) {
-            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            $instance = $this->_cache[$type][$nid];
+        if ($this->getIsOnCache($nid, Cache::TYPE_GROUP)) {
+            $instance = $this->_cache[Cache::TYPE_GROUP][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_GROUP);
         } else {
-            $this->_getCacheNeedOnePlace();
-
             $instance = new Group($this->_nebuleInstance, $nid);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-                && $instance->getID() != '0'
-            ) {
-                $this->_cache[$type][$nid] = $instance;
-                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            }
+            $this->_writeCacheNodes($instance, Cache::TYPE_GROUP);
         }
         return $instance;
     }
 
     public function newConversation(string $nid): Conversation
     {
-        if ($nid == '')
-            $nid = '0';
-
-        $type = Cache::TYPE_CONVERSATION;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$nid])
-        ) {
-            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            $instance = $this->_cache[$type][$nid];
+        if ($this->getIsOnCache($nid, Cache::TYPE_CONVERSATION)) {
+            $instance = $this->_cache[Cache::TYPE_CONVERSATION][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_CONVERSATION);
         } else {
-            $this->_getCacheNeedOnePlace();
-
             $instance = new Conversation($this->_nebuleInstance, $nid);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-                && $instance->getID() != '0'
-            ) {
-                $this->_cache[$type][$nid] = $instance;
-                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            }
+            $this->_writeCacheNodes($instance, Cache::TYPE_CONVERSATION);
         }
         return $instance;
     }
 
     public function newCurrency(string $nid): Currency
     {
-        if ($nid == '')
-            $nid = '0';
-
-        $type = Cache::TYPE_CURRENCY;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$nid])
-        ) {
-            $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            $instance = $this->_cache[$type][$nid];
+        if ($this->getIsOnCache($nid, Cache::TYPE_CURRENCY)) {
+            $instance = $this->_cache[Cache::TYPE_CURRENCY][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_CURRENCY);
         } else {
-            $this->_getCacheNeedOnePlace();
-
             $instance = new Currency($this->_nebuleInstance, $nid);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-                && $instance->getID() != '0'
-            ) {
-                $this->_cache[$type][$nid] = $instance;
-                $this->_cacheDateInsertion[$type][$nid] = microtime(true);
-            }
+            $this->_writeCacheNodes($instance, Cache::TYPE_CURRENCY);
         }
         return $instance;
     }
 
-    /**
-     * Supprime le cache d'un noeud.
-     *
-     * @param string $item
-     * @param string $type
-     * @return boolean
-     */
-    public function unsetCache(string $item, string $type = Cache::TYPE_NODE): bool
+    public function newTokenPool(string $nid): TokenPool
+    {
+        if ($this->getIsOnCache($nid, Cache::TYPE_TOKENPOOL)) {
+            $instance = $this->_cache[Cache::TYPE_TOKENPOOL][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_TOKENPOOL);
+        } else {
+            $instance = new TokenPool($this->_nebuleInstance, $nid);
+            $this->_writeCacheNodes($instance, Cache::TYPE_TOKENPOOL);
+        }
+        return $instance;
+    }
+
+    public function newToken(string $nid): Token
+    {
+        if ($this->getIsOnCache($nid, Cache::TYPE_TOKEN)) {
+            $instance = $this->_cache[Cache::TYPE_TOKEN][$nid];
+            $this->_writeCacheTimestamp($nid, Cache::TYPE_TOKEN);
+        } else {
+            $instance = new Token($this->_nebuleInstance, $nid);
+            $this->_writeCacheNodes($instance, Cache::TYPE_TOKEN);
+        }
+        return $instance;
+    }
+
+    public function newBlockLink(string $link, string $type = cache::TYPE_BLOCLINK): blocLinkInterface
+    {
+        // FIXME
+        if (!$this->_flushCache
+            && isset($this->_cache[$type][$link])
+        ) {
+            $this->_cacheDateInsertion[$type][$link] = microtime(true);
+            $instance = $this->_cache[$type][$link];
+        } else {
+            $instance = new blocLink($this->_nebuleInstance, $link, $type);
+            $this->_writeCacheBlockLinks($instance, Cache::TYPE_BLOCLINK);
+        }
+        return $instance;
+    }
+
+    private function _writeCacheTimestamp(string $nid, string $type): void
+    {
+        $this->_cacheDateInsertion[$type][$nid] = microtime(true);
+    }
+
+    private function _writeCacheNodes(Node $instance, string $type): void
+    {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+            && $instance->getID() != '0'
+        ) {
+            $this->_getCacheNeedOnePlace();
+            $this->_cache[$type][$instance->getID()] = $instance;
+            $this->_writeCacheTimestamp($instance->getID(), $type);
+        }
+    }
+
+    private function _writeCacheBlockLinks(blocLink $instance, string $type): void
+    {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+            && !$instance->getNew()
+        ) {
+            $this->_getCacheNeedOnePlace();
+            $this->_cache[$type][$instance->getLID()] = $instance;
+            $this->_writeCacheTimestamp($instance->getLID(), $type);
+        }
+    }
+
+    public function unsetOnCache(string $item, string $type = Cache::TYPE_NODE): bool
     {
         $this->_filterNodeType($type);
 
@@ -473,23 +413,11 @@ class Cache extends Functions
         return false;
     }
 
-    /**
-     * Retire le cache d'un objet.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de l'objet.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetObjectCache(string $id): bool
+    public function unsetObjectOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_NODE);
+        return $this->unsetOnCache($id, self::TYPE_NODE);
     }
 
-    /**
-     * Retourne le nombre d'objets dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheObjectSize(): int
     {
         if (isset($this->_cache[self::TYPE_NODE]))
@@ -498,23 +426,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'une entité.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de l'entité.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheEntity(string $id): bool
+    public function unsetEntityOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_ENTITY);
+        return $this->unsetOnCache($id, self::TYPE_ENTITY);
     }
 
-    /**
-     * Retourne le nombre d'entités dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheEntitySize(): int
     {
         if (isset($this->_cache[self::TYPE_ENTITY]))
@@ -523,23 +439,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'un groupe.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du groupe.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheGroup(string $id): bool
+    public function unsetGroupOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_GROUP);
+        return $this->unsetOnCache($id, self::TYPE_GROUP);
     }
 
-    /**
-     * Retourne le nombre de groupes dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheGroupSize(): int
     {
         if (isset($this->_cache[self::TYPE_GROUP]))
@@ -548,22 +452,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Supprime le cache d'une conversation.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function unsetCacheConversation(string $id): bool
+    public function unsetConversationOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_CONVERSATION);
+        return $this->unsetOnCache($id, self::TYPE_CONVERSATION);
     }
 
-    /**
-     * Retourne le nombre de conversations dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheConversationSize(): int
     {
         if (isset($this->_cache[self::TYPE_CONVERSATION]))
@@ -572,23 +465,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'une monnaie.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la monnaie.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheCurrency(string $id): bool
+    public function unsetCurrencyOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_CURRENCY);
+        return $this->unsetOnCache($id, self::TYPE_CURRENCY);
     }
 
-    /**
-     * Retourne le nombre de monnaies dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheCurrencySize(): int
     {
         if (isset($this->_cache[self::TYPE_CURRENCY]))
@@ -597,23 +478,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'un sac de jetons.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du sac de jetons.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheTokenPool(string $id): bool
+    public function unsetTokenPoolOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_TOKEN);
+        return $this->unsetOnCache($id, self::TYPE_TOKEN);
     }
 
-    /**
-     * Retourne le nombre de jetons dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheTokenSize(): int
     {
         if (isset($this->_cache[self::TYPE_TOKEN]))
@@ -622,23 +491,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'un jeton.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du jeton.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheToken(string $id): bool
+    public function unsetTokenOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_TOKENPOOL);
+        return $this->unsetOnCache($id, self::TYPE_TOKENPOOL);
     }
 
-    /**
-     * Retourne le nombre de sacs de jetons dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheTokenPoolSize(): int
     {
         if (isset($this->_cache[self::TYPE_TOKENPOOL]))
@@ -647,23 +504,11 @@ class Cache extends Functions
             return 0;
     }
 
-    /**
-     * Retire le cache d'un poretfeuille.
-     * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture du portefeuille.
-     *
-     * @param $id string
-     * @return boolean
-     */
-    public function unsetCacheWallet(string $id): bool
+    public function unsetWalletOnCache(string $id): bool
     {
-        return $this->unsetCache($id, self::TYPE_WALLET);
+        return $this->unsetOnCache($id, self::TYPE_WALLET);
     }
 
-    /**
-     * Retourne le nombre de portefeuilles dans le cache.
-     *
-     * @return integer
-     */
     public function getCacheWalletSize(): int
     {
         if (isset($this->_cache[self::TYPE_WALLET]))
@@ -683,88 +528,6 @@ class Cache extends Functions
     }
 
     /**
-     * Nouvelle instance d'un lien.
-     *
-     * @param string $link
-     * @param string $type
-     * @return blocLinkInterface
-     */
-    public function newBlockLink(string $link, string $type = self::TYPE_LINK): blocLinkInterface
-    {
-        if ($link == '')
-            $link = 'invalid';
-
-        $this->_filterLinkType($type);
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$link])
-        ) {
-            $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            $instance = $this->_cache[$type][$link];
-        } else {
-            $this->_getCacheNeedOnePlace();
-
-            $instance = new blocLink($this->_nebuleInstance, $link, $type);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
-                $this->_cache[$type][$link] = $instance;
-                $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            }
-        }
-        return $instance;
-    }
-
-    public function newTokenPool(string $link): TokenPool
-    {
-        if ($link == '')
-            $link = 'invalid';
-
-        $type = Cache::TYPE_TOKENPOOL;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$link])
-        ) {
-            $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            $instance = $this->_cache[$type][$link];
-        } else {
-            $this->_getCacheNeedOnePlace();
-
-            $instance = new TokenPool($this->_nebuleInstance, $link, $type);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
-                $this->_cache[$type][$link] = $instance;
-                $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            }
-        }
-        return $instance;
-    }
-
-    public function newToken(string $link): Token
-    {
-        if ($link == '')
-            $link = 'invalid';
-
-        $type = Cache::TYPE_TOKEN;
-
-        if (!$this->_flushCache
-            && isset($this->_cache[$type][$link])
-        ) {
-            $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            $instance = $this->_cache[$type][$link];
-        } else {
-            $this->_getCacheNeedOnePlace();
-
-            $instance = new Token($this->_nebuleInstance, $link, $type);
-
-            if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')) {
-                $this->_cache[$type][$link] = $instance;
-                $this->_cacheDateInsertion[$type][$link] = microtime(true);
-            }
-        }
-        return $instance;
-    }
-
-    /**
      * Retire le cache d'une transaction.
      * C'est utilisé lorsque l'on modifie une propriété et que l'on souhaite forcer la relecture de la transaction.
      *
@@ -773,7 +536,7 @@ class Cache extends Functions
      */
     public function unsetCacheLink(string $link): bool
     {
-        return $this->unsetCache($link, self::TYPE_LINK);
+        return $this->unsetOnCache($link, self::TYPE_LINK);
     }
 
     /**

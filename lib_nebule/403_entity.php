@@ -68,7 +68,7 @@ class Entity extends Node implements nodeInterface
      * Specific part of constructor for an entity.
      * @return void
      */
-    protected function _localConstruct(): void
+    protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))

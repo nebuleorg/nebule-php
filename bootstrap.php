@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241019';
+const BOOTSTRAP_VERSION = '020241020';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4211,8 +4211,6 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
 {
     global $bootstrapFlush;
 
-    session_start();
-
     $askFlush = false;
     if (filter_has_var(INPUT_GET, LIB_ARG_FLUSH_SESSION)
         || filter_has_var(INPUT_POST, LIB_ARG_FLUSH_SESSION)
@@ -4220,10 +4218,10 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
         log_add('input ' . LIB_ARG_FLUSH_SESSION . ' ask flush session', 'warn', __FUNCTION__, '4abe475a');
         $askFlush = true;
     }
-    
+
+    session_start();
     if (($askFlush || $forceFlush) && (isset($_SESSION['sessionOk']) || bootstrap_getUserBreak())) {
         $bootstrapFlush = true;
-
         session_unset();
         session_destroy();
         session_write_close();
