@@ -59,8 +59,10 @@ class io extends Functions implements ioInterface
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+                $this->_metrologyInstance->addLog('init sub class ' . $class::TYPE, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '23e04bdc');
                 $this->_initSubClass($class, $this->_nebuleInstance);
+            }
         }
 
         $this->_getDefaultInstanceIO('ioLibrary');
