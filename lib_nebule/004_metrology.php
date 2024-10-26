@@ -18,10 +18,17 @@ class Metrology extends Functions
     const DEFAULT_ACTION_STATE_SIZE = 64;
     const LOG_LEVEL_NORMAL = 0;
     const LOG_LEVEL_ERROR = 1;
-    const LOG_LEVEL_DEVELOP = 2;
-    const LOG_LEVEL_AUDIT = 4;
+    const LOG_LEVEL_AUDIT = 2;
+    const LOG_LEVEL_DEVELOP = 4;
     const LOG_LEVEL_FUNCTION = 8;
     const LOG_LEVEL_DEBUG = 16;
+    const LOG_LEVEL_NAMES = array(
+        '1' => 'error',
+        '2' => 'audit',
+        '4' => 'develop',
+        '8' => 'function',
+        '16' => 'debug',
+    );
     const DEFAULT_DEBUG_FILE = 'debug';
 
     private int $_countLinkRead = 0;
@@ -219,12 +226,15 @@ class Metrology extends Functions
 
     private function _addLog(string $message, int $level = self::LOG_LEVEL_ERROR, string $function = '', string $luid = '00000000'): void
     {
-        $logLevel = $level;
+        $levelName = 'normal';
+        foreach (self::LOG_LEVEL_NAMES as $i => $l)
+            if (($level / $i) >= 1 )
+                $levelName = $l;
 
-        if ($logLevel <= $this->_logsLevel) {
-            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+        if ($level <= $this->_logsLevel) {
+            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $levelName . '(' . $level . ')" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
 
-            if ($logLevel == self::LOG_LEVEL_DEBUG)
+            if ($level == self::LOG_LEVEL_DEBUG)
                 $logM = $logM . ' LogMem="' . memory_get_usage() . '"';
 
             syslog(LOG_INFO, $logM);
@@ -232,7 +242,7 @@ class Metrology extends Functions
 
         if ($this->_permitLogsOnDebugFile)
         {
-            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $logLevel . '" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
+            $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $levelName . '(' . $level . ')" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
             if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
                 file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $logM . "\n", FILE_APPEND);
         }

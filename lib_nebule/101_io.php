@@ -18,16 +18,11 @@ use Nebule\Library\nebule;
  */
 class io extends Functions implements ioInterface
 {
-    const DEFAULT_CLASS = 'Disk';
-    private const TYPE = '';
-    private const FILTER = '';
-    private const LOCALISATION = '';
+    const DEFAULT_CLASS = 'disk';
+    const FILTER = '';
+    const LOCALISATION = '';
 
-    private ?ioInterface $_defaultInstanceIO = null;
-    private bool $_ready = false;
-    private array $_listClasses = array();
-    private array $_listInstances = array();
-    private array $_listTypes = array();
+    protected ?ioInterface $_defaultInstance = null;
     private array $_listLocalisations = array();
     private array $_listFilterStrings = array();
     private array $_listModes = array();
@@ -55,85 +50,22 @@ class io extends Functions implements ioInterface
 
     protected function _initialisation(): void
     {
+        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass) {
-                $this->_metrologyInstance->addLog('init sub class ' . $class::TYPE, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '23e04bdc');
-                $this->_initSubClass($class, $this->_nebuleInstance);
+                $instance = $this->_initSubInstance($class);
+                $filterString = $instance->getFilterString();
+                $url = $instance->getLocalisation();
+                $mode = $instance->getMode();
+                $this->_listLocalisations[$url] = $instance;
+                $this->_listFilterStrings[$instance->getType()] = $filterString;
+                $this->_listModes[$instance->getType()] = $mode;
             }
         }
-
-        $this->_getDefaultInstanceIO('ioLibrary');
-        $this->_metrologyInstance->addLog('instancing class io', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f5d7dc7f');
-    }
-
-    /**
-     * Init instance for a module class.
-     *
-     * @param string $class
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    protected function _initSubClass(string $class, nebule $nebuleInstance): void
-    {
-        //$instance = new $class($nebuleInstance);
-        $instance = new $class();
-        $instance->setEnvironment($nebuleInstance);
-        $instance->initialisation();
-        $type = $instance->getType();
-        $filterString = $instance->getFilterString();
-        $url = $instance->getLocalisation();
-        $mode = $instance->getMode();
-
-        $this->_listClasses[$class] = $class;
-        $this->_listTypes[$class] = $type;
-        $this->_listInstances[$type] = $instance;
-        $this->_listLocalisations[$url] = $instance;
-        $this->_listFilterStrings[$type] = $filterString;
-        $this->_listModes[$type] = $mode;
-    }
-
-    /**
-     * Select default instance and set ready.
-     *
-     * @param string $name
-     * @return void
-     */
-    protected function _getDefaultInstanceIO(string $name): void
-    {
-        $option = $this->_configurationInstance->getOptionAsString($name);
-        if (isset($this->_listClasses[get_class($this) . $option])) {
-            $this->_defaultInstanceIO = $this->_listInstances[$option];
-            $this->_ready = true;
-        } elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS])) {
-            $this->_defaultInstanceIO = $this->_listInstances[self::DEFAULT_CLASS];
-            $this->_ready = true;
-        } else {
-            $this->_defaultInstanceIO = $this;
-            $this->_metrologyInstance->addLog('no default i/o class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getType()
-     */
-    public function getType(): string
-    {
-        //if (self::TYPE == '' && ! is_null($this->_defaultInstance))
-        //    return $this->_defaultInstance->getType();
-        return get_class($this)::TYPE;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see ioInterface::getReady()
-     */
-    public function getReady(): bool
-    {
-        return $this->_ready;
+        $this->_getDefaultSubInstance('ioLibrary');
     }
 
     /**
@@ -153,53 +85,32 @@ class io extends Functions implements ioInterface
      */
     public function getLocalisation(): string
     {
-        if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstanceIO))
-            return $this->_defaultInstanceIO->getLocalisation();
+        if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstance))
+            return $this->_defaultInstance->getLocalisation();
         return get_class($this)::LOCALISATION;
     }
 
-    /**
-     * Recherche l'instance d'un module IO par rapport à son type de localisation.
-     *
-     * @param string $url
-     * @return ioInterface
-     */
-    private function _findType(string $url): ioInterface
+    private function _getInstanceByURL(string $url): ioInterface
     {
-        if ($url == '')
-            return $this->_defaultInstanceIO;
-
-        // Fait le tour des modules IO et de leurs filtres pour déterminer le protocole.
-        foreach ($this->_listFilterStrings as $type => $pattern) {
+        $return = $this->_defaultInstance;
+        foreach ($this->_listFilterStrings as $type => $pattern)
             if (preg_match($pattern, $url))
-                return $this->_listInstances[$type];
-        }
-        return $this->_defaultInstanceIO;
+                $return =  $this->_listInstances[$type];
+        if (!is_a($return, 'Nebule\Library\io'))
+            $return = $this;
+        return $return;
     }
 
-    /**
-     * List modules names sorted by getType().
-     *
-     * @return array:string
-     */
     public function getModulesList(): array
     {
         return $this->_listTypes;
     }
 
-    /**
-     * List modules instances sorted by getType().
-     *
-     * @param string $type
-     * @return ioInterface
-     */
-    public function getModule(string $type): ioInterface
+    public function getModuleByType(string $type): ioInterface
     {
-        if ($type != ''
-            && isset($this->_listInstances[$type])
-        )
+        if (isset($this->_listInstances[$type]))
             return $this->_listInstances[$type];
-        return $this->_defaultInstanceIO;
+        return $this->_defaultInstance;
     }
 
     /**
@@ -208,7 +119,7 @@ class io extends Functions implements ioInterface
      */
     public function getMode(): string
     {
-        return $this->_defaultInstanceIO->getMode();
+        return $this->_defaultInstance->getMode();
     }
 
     /**
@@ -239,7 +150,7 @@ class io extends Functions implements ioInterface
      */
     public function getInstanceEntityID(string $url = ''): string
     {
-        return $this->_defaultInstanceIO->getInstanceEntityID($url);
+        return $this->_defaultInstance->getInstanceEntityID($url);
     }
 
     /**
@@ -248,7 +159,7 @@ class io extends Functions implements ioInterface
      */
     public function checkLinksDirectory(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkLinksDirectory($url);
     }
 
@@ -258,7 +169,7 @@ class io extends Functions implements ioInterface
      */
     public function checkObjectsDirectory(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkObjectsDirectory($url);
     }
 
@@ -268,7 +179,7 @@ class io extends Functions implements ioInterface
      */
     public function checkLinksRead(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkLinksRead($url);
     }
 
@@ -278,7 +189,7 @@ class io extends Functions implements ioInterface
      */
     public function checkLinksWrite(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkLinksWrite($url);
     }
 
@@ -288,7 +199,7 @@ class io extends Functions implements ioInterface
      */
     public function checkObjectsRead(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkObjectsRead($url);
     }
 
@@ -298,7 +209,7 @@ class io extends Functions implements ioInterface
      */
     public function checkObjectsWrite(string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkObjectsWrite($url);
     }
 
@@ -308,7 +219,7 @@ class io extends Functions implements ioInterface
      */
     public function checkLinkPresent(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkLinkPresent($oid, $url);
     }
 
@@ -318,7 +229,7 @@ class io extends Functions implements ioInterface
      */
     public function checkObjectPresent(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->checkObjectPresent($oid, $url);
     }
 
@@ -328,7 +239,7 @@ class io extends Functions implements ioInterface
      */
     public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->getBlockLinks($oid, $url, $offset);
     }
 
@@ -338,7 +249,7 @@ class io extends Functions implements ioInterface
      */
     public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->getObfuscatedLinks($entity, $signer, $url);
     }
 
@@ -348,7 +259,7 @@ class io extends Functions implements ioInterface
      */
     public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->getObject($oid, $maxsize, $url);
     }
 
@@ -358,7 +269,7 @@ class io extends Functions implements ioInterface
      */
     public function setBlockLink(string $oid, string &$link, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->setBlockLink($oid, $link, $url);
     }
 
@@ -368,7 +279,7 @@ class io extends Functions implements ioInterface
      */
     public function setObject(string $oid, string &$data, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->setObject($oid, $data, $url);
     }
 
@@ -378,7 +289,7 @@ class io extends Functions implements ioInterface
      */
     public function unsetLink(string $oid, string &$link, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->unsetLink($oid, $link, $url);
     }
 
@@ -388,7 +299,7 @@ class io extends Functions implements ioInterface
      */
     public function flushLinks(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->flushLinks($oid, $url);
     }
 
@@ -398,7 +309,7 @@ class io extends Functions implements ioInterface
      */
     public function unsetObject(string $oid, string $url = ''): bool
     {
-        $instance = $this->_findType($url);
+        $instance = $this->_getInstanceByURL($url);
         return $instance->unsetObject($oid, $url);
     }
 }

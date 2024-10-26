@@ -18,9 +18,7 @@ class Crypto extends Functions implements CryptoInterface
         '_listTypes',
     );
 
-    const DEFAULT_CLASS = 'Openssl';
-
-    const TYPE = '';
+    const DEFAULT_CLASS = 'openssl';
 
     const RANDOM_PSEUDO = 1;
     const RANDOM_STRONG = 2;
@@ -29,10 +27,6 @@ class Crypto extends Functions implements CryptoInterface
     const TYPE_ASYMMETRIC = 3;
 
     private ?CryptoInterface $_defaultInstance = null;
-    private bool $_ready = false;
-    private array $_listClasses = array();
-    private array $_listInstances = array();
-    private array $_listTypes = array();
 
     public function __toString(): string
     {
@@ -41,59 +35,15 @@ class Crypto extends Functions implements CryptoInterface
 
     protected function _initialisation(): void
     {
+        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass)
-                $this->_initSubClass($class, $this->_nebuleInstance);
+                $this->_initSubInstance($class);
         }
-
-        $this->_initDefault('cryptoLibrary');
-        $this->_metrologyInstance->addLog('instancing class Crypto', Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, 'e8315139');
-    }
-
-    protected function _initSubClass(string $class, nebule $nebuleInstance): void
-    {
-        $instance = new $class($nebuleInstance);
-        $type = $instance->getType();
-
-        $this->_listClasses[$class] = $class;
-        $this->_listTypes[$class] = $type;
-        $this->_listInstances[$type] = $instance;
-    }
-
-    protected function _initDefault(string $name): void
-    {
-        $option = $this->_configurationInstance->getOptionAsString($name);
-        if (isset($this->_listClasses[get_class($this) . $option])) {
-            $this->_defaultInstance = $this->_listInstances[$option];
-            $this->_ready = true;
-        } elseif (isset($this->_listClasses[get_class($this) . self::DEFAULT_CLASS])) {
-            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
-            $this->_ready = true;
-        } else
-            $this->_metrologyInstance->addLog('no default crypto class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'aecd084e');
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::getType()
-     */
-    public function getType(): string
-    {
-        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
-            return $this->_defaultInstance->getType();
-        return get_class($this)::TYPE;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see CryptoInterface::getReady()
-     */
-    public function getReady(): bool
-    {
-        return $this->_ready;
+        $this->_getDefaultSubInstance('cryptoLibrary');
     }
 
     /**

@@ -67,13 +67,9 @@ class Authorities extends Functions
 
     protected function _initialisation(): void
     {
-$this->_metrologyInstance->addLog('MARK1', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_getPermitInstanceAsAuthority();
-$this->_metrologyInstance->addLog('MARK2', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_getPermitDefaultAsAuthority();
-$this->_metrologyInstance->addLog('MARK3', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         $this->_findPuppetmaster();
-$this->_metrologyInstance->addLog('MARK4', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         //$this->_findGlobalAuthorities();
         //$this->_findLocalAuthorities();
         //$this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '16aa56f1');
@@ -86,7 +82,7 @@ $this->_metrologyInstance->addLog('MARK4', Metrology::LOG_LEVEL_NORMAL, $this::c
      *
      * @return void
      */
-    private function _findPuppetmaster()
+    private function _findPuppetmaster(): void
     {
         $this->_puppetmasterID = $this->_configurationInstance->getOptionUntyped('puppetmaster');
         $this->_puppetmasterInstance = $this->_cacheInstance->newEntity($this->_puppetmasterID);

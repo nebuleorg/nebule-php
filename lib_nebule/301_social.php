@@ -14,13 +14,8 @@ namespace Nebule\Library;
 class Social extends Functions implements SocialInterface
 {
     const DEFAULT_CLASS = 'authority';
-    const TYPE = '';
 
     private ?SocialInterface $_defaultInstance = null;
-    private bool $_ready = false;
-    private array $_listClasses = array();
-    private array $_listInstances = array();
-    private array $_listTypes = array();
 
     public function __toString(): string
     {
@@ -29,74 +24,15 @@ class Social extends Functions implements SocialInterface
 
     protected function _initialisation(): void
     {
+        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass)
-                $this->_initSubClass($class, $this->_nebuleInstance);
+                $this->_initSubInstance($class);
         }
-
-        $this->_initDefault('socialLibrary');
-        $this->_metrologyInstance->addLog('instancing class Social', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3f6d9bf1');
-    }
-
-    /**
-     * Init instance for a module class.
-     *
-     * @param string $class
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    protected function _initSubClass(string $class, nebule $nebuleInstance): void
-    {
-        $instance = new $class($nebuleInstance);
-        $type = $instance->getType();
-
-        $this->_listClasses[$type] = $class;
-        $this->_listTypes[$class] = $type;
-        $this->_listInstances[$type] = $instance;
-    }
-
-    /**
-     * Select default instance and set ready.
-     *
-     * @param string $name
-     * @return void
-     */
-    protected function _initDefault(string $name): void
-    {
-        $option = $this->_configurationInstance->getOptionAsString($name);
-        if (isset($this->_listInstances[$option]))
-        {
-            $this->_defaultInstance = $this->_listInstances[$option];
-            $this->_ready = true;
-        }
-        elseif (isset($this->_listInstances[self::DEFAULT_CLASS]))
-        {
-            $this->_defaultInstance = $this->_listInstances[self::DEFAULT_CLASS];
-            $this->_ready = true;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see SocialInterface::getType()
-     */
-    public function getType(): string
-    {
-        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
-            return $this->_defaultInstance->getType();
-        return get_class($this)::TYPE;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see SocialInterface::getReady()
-     */
-    public function getReady(): bool
-    {
-        return $this->_ready;
+        $this->_getDefaultSubInstance('socialLibrary');
     }
 
     /**

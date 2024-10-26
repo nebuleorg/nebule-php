@@ -492,7 +492,7 @@ class Configuration extends Functions
         'cryptoSymmetricAlgorithm' => 'aes.256.ctr',
         'cryptoAsymmetricAlgorithm' => 'rsa.2048',
         'socialLibrary' => 'authority',
-        'ioLibrary' => 'Local',
+        'ioLibrary' => 'Disk',
         'ioReadMaxLinks' => '2000',
         'ioReadMaxData' => '10000',
         'ioReadMaxUpload' => '2000000',

@@ -87,7 +87,9 @@ class Entity extends Node implements nodeInterface
      */
     private function _loadEntity(string $id): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions id=' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+// FIXME ça merde dans IO !
+$this->_metrologyInstance->addLog('MARK Mp=' . sprintf('%01.3f', memory_get_usage() / 1024 / 1024) . 'Mb', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
         if (!$this->_ioInstance->checkObjectPresent($id)
             || !$this->_ioInstance->checkLinkPresent($id)
         ) {

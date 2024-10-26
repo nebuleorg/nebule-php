@@ -13,7 +13,9 @@ use Nebule\Library\nebule;
  */
 class Functions
 {
-    const SESSION_SAVED_VARS = array(); // Replace on children classes.
+    const SESSION_SAVED_VARS = array(); // Replaced on children classes.
+    const DEFAULT_CLASS = ''; // Replaced on children classes.
+    const TYPE = ''; // Replaced on children classes.
 
     protected ?nebule $_nebuleInstance = null;
     protected ?Metrology $_metrologyInstance = null;
@@ -30,6 +32,11 @@ class Functions
     protected ?SocialInterface $_socialInstance = null;
     protected bool $_environmentSet = false;
     protected bool $_initialisationSet = false;
+    protected array $_listClasses = array();
+    protected array $_listTypes = array();
+    protected array $_listInstances = array();
+    private ?Functions $_defaultInstance = null;
+    protected bool $_ready = false;
 
     public function __construct(nebule $nebuleInstance){}
 
@@ -44,7 +51,7 @@ class Functions
             return;
         $this->_environmentSet = true;
 
-        $nebuleInstance->getMetrologyInstance()->addLog('set class environment', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '6b424a34');
+        $nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
@@ -77,11 +84,56 @@ $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstan
             return;
         $this->_initialisationSet = true;
 
-        $this->_metrologyInstance->addLog('class initialisation', Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '165707c8');
+        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         $this->_initialisation();
     }
 
     protected function _initialisation(): void{}
+
+    protected function _initSubInstance(string $class): functions
+    {
+        $this->_metrologyInstance->addLog('Track functions ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instance = new $class($this->_nebuleInstance);
+        $instance->setEnvironment($this->_nebuleInstance);
+        $instance->initialisation();
+        $type = strtolower($instance->getType());
+
+        $this->_listClasses[$type] = $class;
+        $this->_listTypes[$class] = $type;
+        $this->_listInstances[$type] = $instance;
+
+        return $instance;
+    }
+
+    protected function _getDefaultSubInstance(string $name): void
+    {
+        $this->_metrologyInstance->addLog('Track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $option = strtolower($this->_configurationInstance->getOptionAsString($name));
+        if (isset($this->_listClasses[$option])) {
+            $this->_metrologyInstance->addLog('get default instance with option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '04260a5e');
+            $this->_defaultInstance = $this->_listInstances[$option];
+            $this->_ready = true;
+        } elseif (isset($this->_listClasses[$this::DEFAULT_CLASS])) {
+            $this->_metrologyInstance->addLog('get default instance with default value', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f2f81904');
+            $this->_defaultInstance = $this->_listInstances[$this::DEFAULT_CLASS];
+            $this->_ready = true;
+        } else {
+            $this->_defaultInstance = $this;
+            $this->_metrologyInstance->addLog('no default ' . get_class($this) . ' class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
+        }
+    }
+
+    public function getType(): string
+    {
+        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
+            return $this->_defaultInstance->getType();
+        return get_class($this)::TYPE;
+    }
+
+    public function getReady(): bool
+    {
+        return $this->_ready;
+    }
 
 
 
