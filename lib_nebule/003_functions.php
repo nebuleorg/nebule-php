@@ -35,7 +35,7 @@ class Functions
     protected array $_listClasses = array();
     protected array $_listTypes = array();
     protected array $_listInstances = array();
-    private ?Functions $_defaultInstance = null;
+    //private ?Functions $_defaultInstance = null;
     protected bool $_ready = false;
 
     public function __construct(nebule $nebuleInstance){}
@@ -65,18 +65,6 @@ class Functions
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
-/*$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_metrologyInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_configurationInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_rescueInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_authoritiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_entitiesInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_recoveryInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cacheInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_sessionInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ticketingInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_ioInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_cryptoInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');
-$this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstance), Metrology::LOG_LEVEL_NORMAL, $this::class . '::' . __FUNCTION__, '00000000');*/
     }
 
     public function initialisation(): void{
@@ -96,7 +84,7 @@ $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstan
         $instance = new $class($this->_nebuleInstance);
         $instance->setEnvironment($this->_nebuleInstance);
         $instance->initialisation();
-        $type = strtolower($instance->getType());
+        $type = strtolower($instance::TYPE);
 
         $this->_listClasses[$type] = $class;
         $this->_listTypes[$class] = $type;
@@ -105,29 +93,24 @@ $this->_metrologyInstance->addLog('MARK class=' . get_class($this->_socialInstan
         return $instance;
     }
 
-    protected function _getDefaultSubInstance(string $name): void
+    protected function _getDefaultSubInstance(string $name): Functions
     {
         $this->_metrologyInstance->addLog('Track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $option = strtolower($this->_configurationInstance->getOptionAsString($name));
         if (isset($this->_listClasses[$option])) {
             $this->_metrologyInstance->addLog('get default instance with option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '04260a5e');
-            $this->_defaultInstance = $this->_listInstances[$option];
+            $defaultInstance = $this->_listInstances[$option];
             $this->_ready = true;
         } elseif (isset($this->_listClasses[$this::DEFAULT_CLASS])) {
             $this->_metrologyInstance->addLog('get default instance with default value', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f2f81904');
-            $this->_defaultInstance = $this->_listInstances[$this::DEFAULT_CLASS];
+            $defaultInstance = $this->_listInstances[$this::DEFAULT_CLASS];
             $this->_ready = true;
         } else {
-            $this->_defaultInstance = $this;
+            $defaultInstance = $this;
             $this->_metrologyInstance->addLog('no default ' . get_class($this) . ' class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
         }
-    }
-
-    public function getType(): string
-    {
-        if (get_class($this)::TYPE == '' && ! is_null($this->_defaultInstance))
-            return $this->_defaultInstance->getType();
-        return get_class($this)::TYPE;
+        $this->_metrologyInstance->addLog('set default class ' . get_class($defaultInstance), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4233cb6c');
+        return $defaultInstance;
     }
 
     public function getReady(): bool

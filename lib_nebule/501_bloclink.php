@@ -8,7 +8,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class blocLink implements blocLinkInterface
+class blocLink extends Functions implements blocLinkInterface
 {
     const SESSION_SAVED_VARS = array(
         '_rawBlocLink',
@@ -34,12 +34,6 @@ class blocLink implements blocLinkInterface
     const LINK_MAX_BS_SIZE = 16384;
     const LINK_MAX_RL_SIZE = 4096;
 
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Cache $_cache = null;
-    protected ?io $_io = null;
-    protected ?CryptoInterface $_crypto = null;
     protected string $_rawBlocLink = '';
     protected string $_linksType = '';
     protected array $_links = array();
@@ -55,22 +49,11 @@ class blocLink implements blocLinkInterface
     protected int $_maxRS = 1;
     protected ?string $_lid = null;
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @param string $blocLink
-     * @param string $linkType
-     * @return void
-     */
     public function __construct(nebule $nebuleInstance, string $blocLink, string $linkType = Cache::TYPE_LINK)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_cache = $nebuleInstance->getCacheInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        parent::__construct($nebuleInstance);
+        $this->setEnvironment($nebuleInstance);
+
         $this->_linksType = $linkType;
         $this->_maxRL = $this->_configurationInstance->getOptionAsInteger('linkMaxRL');
         $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID');
@@ -86,44 +69,33 @@ class blocLink implements blocLinkInterface
         else
             $this->_parse($blocLink);
         
-        $this->_lid = $this->_crypto->hash($blocLink);
+        $this->_lid = $this->_cryptoInstance->hash($blocLink);
+
+        $this->initialisation();
     }
 
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
     public function __toString()
     {
         return $this->_rawBlocLink;
     }
 
-    /**
-     * Mise en sommeil de l'instance.
-     *
-     * @return string[]
-     */
     public function __sleep()
     {
         return self::SESSION_SAVED_VARS;
     }
 
-    /**
-     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
-     *
-     * @return void
-     */
     public function __wakeup()
     {
-        global $nebuleInstance;
+        /*global $nebuleInstance;
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_io = $nebuleInstance->getIoInstance();
-        $this->_crypto = $nebuleInstance->getCryptoInstance();
+        $this->_ioInstance = $nebuleInstance->getIoInstance();
+        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();*/
+    }
 
-        // Reload current bloclink on links.
+    protected function _initialisation(): void
+    {
         foreach ($this->_links as $link)
             $link->setBlocInstance($this);
     }
@@ -740,10 +712,10 @@ class blocLink implements blocLinkInterface
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
-            $hash = $this->_crypto->hash($bh_bl, $algo . '.' . $size);
-            $publicKey = $this->_io->getObject($nid);
+            $hash = $this->_cryptoInstance->hash($bh_bl, $algo . '.' . $size);
+            $publicKey = $this->_ioInstance->getObject($nid);
 
-            if ($this->_crypto->verify($hash, $sign, $publicKey))
+            if ($this->_cryptoInstance->verify($hash, $sign, $publicKey))
             {
                 $this->_parsedLink["bs/rs$i/sig"] = $sig;
                 return true;
@@ -757,7 +729,7 @@ class blocLink implements blocLinkInterface
         $this->_metrologyInstance->addLog($oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!Node::checkNID($oid, false)
-            || !$this->_io->checkObjectPresent($oid)
+            || !$this->_ioInstance->checkObjectPresent($oid)
         )
             return false;
         return true;
@@ -901,12 +873,12 @@ class blocLink implements blocLinkInterface
 
         // If needed, in history.
         if ($this->_configurationInstance->getOptionAsBoolean('permitHistoryLinksSign'))
-            $this->_io->setBlockLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
+            $this->_ioInstance->setBlockLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
 
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {
             if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                $this->_io->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
+                $this->_ioInstance->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'], $this->_rawBlocLink);
             else
                 break;
         }
@@ -917,12 +889,12 @@ class blocLink implements blocLinkInterface
                 if ($this->_parsedLink['bl/rl' . $i . '/req'] != 'c') {
                     for ($j = 0; $j > $this->_maxRLUID; $j++) {
                         if (isset($this->_parsedLink['bl/rl' . $i . '/nid' . $j]))
-                            $this->_io->setBlockLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
+                            $this->_ioInstance->setBlockLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
                     }
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                     for ($j = 0; $j > $this->_maxRS; $j++) {
                         if (isset($this->_parsedLink['bs/rs'.$j.'/eid']))
-                            $this->_io->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'] . '-'
+                            $this->_ioInstance->setBlockLink($this->_parsedLink['bs/rs'.$j.'/eid'] . '-'
                                 . $this->_parsedLink['bl/rl' . $i . '/nid1'], $this->_rawBlocLink);
                         else
                             break;

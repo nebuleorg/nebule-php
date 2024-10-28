@@ -10,7 +10,7 @@ use Nebule\Library\linkInterface;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Link implements linkInterface
+class Link extends Functions implements linkInterface
 {
     const SESSION_SAVED_VARS = array(
         '_rawLink',
@@ -25,11 +25,6 @@ class Link implements linkInterface
         '_maxRLUID',
     );
 
-    protected ?\Nebule\Library\nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?io $_ioInstance = null;
-    protected ?CryptoInterface $_cryptoInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
     protected ?blocLink $_blocLink = null;
     protected string $_rawLink = '';
     protected array $_parsedLink = array();
@@ -42,40 +37,50 @@ class Link implements linkInterface
     protected bool $_permitObfuscated = false;
     protected int $_maxRLUID = 3;
 
-
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule   $nebuleInstance
-     * @param string   $rl
-     * @param blocLink $blocLink
-     * @return void
-     */
     public function __construct(nebule $nebuleInstance, string $rl, blocLinkInterface $blocLink)
     {
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_ioInstance = $nebuleInstance->getIoInstance();
-        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
-        $this->_permitObfuscated = $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');
-        $this->_blocLink = $blocLink;
-        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID');
-        $this->_rawLink = $rl;
+        parent::__construct($nebuleInstance);
+        $this->setEnvironment($nebuleInstance);
 
         $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
+        $this->_blocLink = $blocLink;
+        $this->_rawLink = $rl;
         $this->_validStructure = $this->_checkRL($rl);
 
-        // Détecte si c'est un lien dissimulé.
+        $this->initialisation();
+    }
+
+    public function __toString()
+    {
+        return $this->_rawLink;
+    }
+
+    public function __sleep()
+    {
+        return self::SESSION_SAVED_VARS;
+    }
+
+    public function __wakeup()
+    {
+        /*global $nebuleInstance;
+        $this->_nebuleInstance = $nebuleInstance;
+        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
+        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
+        $this->_ioInstance = $nebuleInstance->getIoInstance();
+        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
+        $this->_permitObfuscated = (bool)$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');*/
+    }
+
+    protected function _initialisation(): void
+    {
+        $this->_permitObfuscated = $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');
+        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID');
+
         $this->_obfuscated = false;
         if ($this->_permitObfuscated && $this->_parsedLink['bl/rl/req'] == 'c')
             $this->_extractObfuscated();
-
-        // Actions supplémentaires pour les dérivés de liens.
-        $this->_initialisation();
     }
 
     /**
@@ -157,59 +162,13 @@ class Link implements linkInterface
     }
 
     /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->_rawLink;
-    }
-
-    /**
-     * Mise en sommeil de l'instance.
-     *
-     * @return string[]
-     */
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    /**
-     * Fonction de réveil de l'instance et de réinitialisation de certaines variables non sauvegardées.
-     *
-     * @return void
-     */
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_metrologyInstance = $nebuleInstance->getMetrologyInstance();
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-        $this->_ioInstance = $nebuleInstance->getIoInstance();
-        $this->_cryptoInstance = $nebuleInstance->getCryptoInstance();
-        $this->_permitObfuscated = (bool)$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');
-    }
-
-    /**
-     * Initialisation post-constructor.
-     *
-     * @return void
-     */
-    protected function _initialisation(): void
-    {
-        // Nothing to do here.
-    }
-
-    /**
      * Force bloc instance if not defined.
      * Should be only use on link's instance wakeup.
      *
      * @param blocLink $instance
      * @return void
      */
-    public function setBlocInstance(blocLink $instance)
+    public function setBlocInstance(blocLink $instance): void
     {
         $this->_metrologyInstance?->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
@@ -241,10 +200,6 @@ class Link implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
-
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink : ' . gettype($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK _blocklink=' . serialize($this->_blocLink), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
         return $this->_blocLink;
     }
 

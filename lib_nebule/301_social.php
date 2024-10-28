@@ -29,10 +29,12 @@ class Social extends Functions implements SocialInterface
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+                $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'aa8a205b');
                 $this->_initSubInstance($class);
+            }
         }
-        $this->_getDefaultSubInstance('socialLibrary');
+        $this->_defaultInstance = $this->_getDefaultSubInstance('socialLibrary');
     }
 
     /**

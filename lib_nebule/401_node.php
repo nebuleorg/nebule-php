@@ -2872,14 +2872,12 @@ class Node extends Functions implements nodeInterface
 
         foreach ($lines as $line)
         {
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK line=' . $line, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $bloc = $this->_cacheInstance->newBlockLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             )
             {
                 $newLinks = $bloc->getLinks(); // FIXME
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK type=' . gettype($newLinks), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
             }

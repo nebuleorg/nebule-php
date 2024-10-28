@@ -39,7 +39,7 @@ interface ioInterface
      *
      * @return string
      */
-    public function getType(): string;
+    //public function getType(): string;
 
     /**
      * Retourne l'état de préparation'.

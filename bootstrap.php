@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241026';
+const BOOTSTRAP_VERSION = '020241028';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -7336,7 +7336,7 @@ function bootstrap_logMetrology(): void
     foreach ($nebuleMetrologyTimers as $i => $v)
         $timers .= " $i=$v";
 
-    //if (is_a($nebuleInstance, 'Nebule\Library\nebule') && $nebuleInstance !== null)
+    if (is_a($nebuleInstance, 'Nebule\Library\nebule') && $nebuleInstance !== null)
         $caches = ' Lr=' . lib_getMetrology('lr') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkRead()
             . ' Lv=' . lib_getMetrology('lv') . '+' . $nebuleInstance?->getMetrologyInstance()->getLinkVerify()
             . ' Or=' . lib_getMetrology('or') . '+' . $nebuleInstance?->getMetrologyInstance()->getObjectRead()
@@ -7347,9 +7347,9 @@ function bootstrap_logMetrology(): void
             . ' EC=' . $nebuleInstance?->getCacheInstance()->getCacheEntitySize()
             . ' GC=' . $nebuleInstance?->getCacheInstance()->getCacheGroupSize()
             . ' CC=' . $nebuleInstance?->getCacheInstance()->getCacheConversationSize();
-    /*else
+    else
         $caches = ' Lr=' . lib_getMetrology('lr') . ' Lv=' . lib_getMetrology('lv')
-            . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';*/
+            . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';
 
     log_add('end bootstrap Mp='
         . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . 'Mb'

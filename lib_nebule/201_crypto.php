@@ -40,10 +40,12 @@ class Crypto extends Functions implements CryptoInterface
         $size = strlen($myClass);
         $list = get_declared_classes();
         foreach ($list as $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass)
+            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+                $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '53556863');
                 $this->_initSubInstance($class);
+            }
         }
-        $this->_getDefaultSubInstance('cryptoLibrary');
+        $this->_defaultInstance = $this->_getDefaultSubInstance('cryptoLibrary');
     }
 
     /**

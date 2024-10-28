@@ -56,16 +56,17 @@ class io extends Functions implements ioInterface
         $list = get_declared_classes();
         foreach ($list as $class) {
             if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+                $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b8f416f7');
                 $instance = $this->_initSubInstance($class);
                 $filterString = $instance->getFilterString();
                 $url = $instance->getLocalisation();
                 $mode = $instance->getMode();
                 $this->_listLocalisations[$url] = $instance;
-                $this->_listFilterStrings[$instance->getType()] = $filterString;
-                $this->_listModes[$instance->getType()] = $mode;
+                $this->_listFilterStrings[$instance::TYPE] = $filterString;
+                $this->_listModes[$instance::TYPE] = $mode;
             }
         }
-        $this->_getDefaultSubInstance('ioLibrary');
+        $this->_defaultInstance = $this->_getDefaultSubInstance('ioLibrary');
     }
 
     /**
@@ -96,8 +97,9 @@ class io extends Functions implements ioInterface
         foreach ($this->_listFilterStrings as $type => $pattern)
             if (preg_match($pattern, $url))
                 $return =  $this->_listInstances[$type];
-        if (!is_a($return, 'Nebule\Library\io'))
+        if (!is_a($return, 'Nebule\Library\io')) {
             $return = $this;
+        }
         return $return;
     }
 

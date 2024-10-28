@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020241018
+# Version 020241028
 
 echo ' > start'
 
@@ -406,8 +406,10 @@ EOF
   )
   for link in "${links[@]}"
   do
+    echo -n .
     sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
   done
+  echo
 
   echo -n "autent" > "o/${autentNameOID}"
   echo -n "Au" > "o/${autentSurnameOID}"
