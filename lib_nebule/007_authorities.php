@@ -70,7 +70,7 @@ class Authorities extends Functions
         $this->_getPermitInstanceAsAuthority();
         $this->_getPermitDefaultAsAuthority();
         $this->_findPuppetmaster();
-        //$this->_findGlobalAuthorities();
+        //$this->_findGlobalAuthorities(); FIXME
         //$this->_findLocalAuthorities();
         //$this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '16aa56f1');
     }

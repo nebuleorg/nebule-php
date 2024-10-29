@@ -89,6 +89,20 @@ class Session extends Functions
         return true;
     }
 
+    public function setSessionStoreAsString(string $name, string $content): bool
+    {
+        if ($name == ''
+            || $this->_flushCache
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
+        )
+            return false;
+
+        session_start();
+        $_SESSION['Option'][$name] = $content;
+        session_write_close();
+        return true;
+    }
+
     /**
      * Vide les options dans la session php.
      * FIXME
@@ -153,17 +167,45 @@ class Session extends Functions
         return true;
     }
 
-    /**
-     * Re-sauvegarde les instances des certains objets avant la sauvegarde du cache vers le buffer de session.
-     * Ces objets sont potentiellement modifiés depuis leur première instanciation.
-     * FIXME
-     *
-     * @return void
-     */
-    private function _saveCurrentsObjectsOnSessionBuffer(): void
-    {
-        $this->setSessionStore('nebuleHostEntityInstance', serialize($this->_entitiesInstance->getInstanceEntityInstance()));
-        $this->setSessionStore('nebulePublicEntityInstance', serialize($this->_entitiesInstance->getCurrentEntityInstance()));
+    public function setSessionHostEntity(?Node $instance): void {
+        if ($instance !== null)
+            $this->setSessionStore('nebuleHostEntityInstance', serialize($instance));
+    }
+
+    public function getSessionHostEntity(): ?Node {
+        $this->_metrologyInstance->addLog('get host entity ' . $this->getSessionStoreAsSting('nebuleHostEntity'), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '331c4f70');
+        return $this->_getSessionEntity('nebuleHostEntityInstance');
+    }
+
+    public function setSessionCurrentEntity(?Node $instance): void {
+        if ($instance !== null)
+            $this->setSessionStore('nebulePublicEntityInstance', serialize($instance));
+    }
+
+    public function getSessionCurrentEntity(): ?Node {
+        return $this->_getSessionEntity('nebulePublicEntityInstance');
+    }
+
+    private function _getSessionEntity(string $name): ?Node {
+        session_start();
+        if ($this->_flushCache
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
+            || !isset($_SESSION['Buffer'][$name])
+            || !is_string($_SESSION['Buffer'][$name])
+        ) {
+            session_write_close();
+            return null;
+        }
+        try {
+            $instance = unserialize($_SESSION['Option'][$name]);
+            $instance->setEnvironment($this->_nebuleInstance);
+            $instance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
+            return null;
+        }
+        session_write_close();
+        return $instance;
     }
 
     /**

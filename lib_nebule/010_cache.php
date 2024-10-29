@@ -56,17 +56,23 @@ class Cache extends Functions
     {
         $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         $this->_getFlushCache();
-    }
-
-    public function __wakeup()
-    {
-        $this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         foreach ($this->_cache as $type => $table) {
             foreach ($table as $item => $instance) {
                 $instance->setEnvironment($this->_nebuleInstance);
                 $instance->initialisation();
             }
         }
+    }
+
+    public function __wakeup()
+    {
+        /*$this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
+        foreach ($this->_cache as $type => $table) {
+            foreach ($table as $item => $instance) {
+                $instance->setEnvironment($this->_nebuleInstance);
+                $instance->initialisation();
+            }
+        }*/
     }
 
     private function _getFlushCache(): void
