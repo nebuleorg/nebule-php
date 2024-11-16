@@ -375,7 +375,7 @@ class Cache extends Functions
             $this->_cacheDateInsertion[$type][$link] = microtime(true);
             $instance = $this->_cache[$type][$link];
         } else {
-            $instance = new blocLink($this->_nebuleInstance, $link, $type);
+            $instance = new BlocLink($this->_nebuleInstance, $link, $type);
             $this->_writeCacheBlockLinks($instance, Cache::TYPE_BLOCLINK);
         }
         return $instance;
@@ -397,7 +397,7 @@ class Cache extends Functions
         }
     }
 
-    private function _writeCacheBlockLinks(blocLink $instance, string $type): void
+    private function _writeCacheBlockLinks(BlocLink $instance, string $type): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
             && !$instance->getNew()

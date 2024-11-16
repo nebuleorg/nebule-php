@@ -8,7 +8,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class blocLink extends Functions implements blocLinkInterface
+class BlocLink extends Functions implements blocLinkInterface
 {
     const SESSION_SAVED_VARS = array(
         '_rawBlocLink',
@@ -518,7 +518,7 @@ class blocLink extends Functions implements blocLinkInterface
         $this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i,
             Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($rl) > blocLink::LINK_MAX_RL_SIZE)
+        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE)
         {
             $this->_metrologyInstance->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+',
                 Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');

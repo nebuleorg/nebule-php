@@ -25,7 +25,7 @@ class LinkRegister extends Functions implements linkInterface
         '_maxRLUID',
     );
 
-    protected ?blocLink $_blocLink = null;
+    protected ?BlocLink $_blocLink = null;
     protected string $_rawLink = '';
     protected array $_parsedLink = array();
     protected array $_parsedLinkObfuscated = array();
@@ -94,7 +94,7 @@ class LinkRegister extends Functions implements linkInterface
         $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
-        if (strlen($rl) > blocLink::LINK_MAX_RL_SIZE)
+        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE)
         {
             $this->_metrologyInstance->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+',
                 Metrology::LOG_LEVEL_ERROR, __METHOD__, '8d33e123');
@@ -166,10 +166,10 @@ class LinkRegister extends Functions implements linkInterface
      * Force bloc instance if not defined.
      * Should be only use on link's instance wakeup.
      *
-     * @param blocLink $instance
+     * @param BlocLink $instance
      * @return void
      */
-    public function setBlocInstance(blocLink $instance): void
+    public function setBlocInstance(BlocLink $instance): void
     {
         $this->_metrologyInstance?->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
@@ -195,9 +195,9 @@ class LinkRegister extends Functions implements linkInterface
     /**
      * Retourne le bloc du lien.
      *
-     * @return blocLink
+     * @return BlocLink
      */
-    public function getBlocLink(): blocLink
+    public function getBlocLink(): BlocLink
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
@@ -411,7 +411,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         ?>
 
-        <li><a href="#l">L / Lien</a>
+        <li><a href="#l">L / Registre de lien</a>
             <ul>
                 <li><a href="#ls">LS / Structure</a></li>
                 <li><a href="#lelpo">LELPO / Liens à Propos d’un Objet</a></li>
@@ -481,7 +481,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         ?>
 
-        <h1 id="l">L / Lien</h1>
+        <h1 id="l">L / Registre de lien</h1>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux nœuds, généralement des objets.
             Le type de cette relation est définie par un troisième objet, c'est la façon dont on va interpréter
             la relation entre les deux premiers nœuds.

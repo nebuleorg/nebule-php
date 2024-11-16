@@ -1640,7 +1640,7 @@ abstract class Actions extends Functions
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if ($argDelete !== ''
-            && strlen($argDelete) >= blocLink::NID_MIN_HASH_SIZE
+            && strlen($argDelete) >= BlocLink::NID_MIN_HASH_SIZE
             && Node::checkNID($argDelete)
         ) {
             $this->_actionDeleteGroup = true;
@@ -1893,7 +1893,7 @@ abstract class Actions extends Functions
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if ($argDelete !== ''
-            && strlen($argDelete) >= blocLink::NID_MIN_HASH_SIZE
+            && strlen($argDelete) >= BlocLink::NID_MIN_HASH_SIZE
             && Node::checkNID($argDelete)
         ) {
             $this->_actionDeleteConversation = true;

@@ -964,7 +964,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return void
      */
-    static public function echoDocumentationTitles()
+    static public function echoDocumentationTitles(): void
     {
         ?>
 
@@ -993,7 +993,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return void
      */
-    static public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 

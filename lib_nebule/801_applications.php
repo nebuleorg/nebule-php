@@ -1897,33 +1897,31 @@ tE=0.0632s
         </ul>
         <p>Table d'utilisabilité des entités calculée par la bibliothèque orienté objet (entities error level) :</p>
         <ul>
-            <li>1 : puppet n'est pas une entité</li>
-            <li>2 : puppet a un EID=0</li>
-            <li>3 : l'EID de puppet n'est pas celui de la configuration</li>
-            <li>11 : la liste des autorités de sécurité est vide</li>
-            <li>12 : une des autorités de sécurité n'est pas une entité</li>
-            <li>13 : une des autorités de sécurité a un EID=0</li>
-            <li>21 : la liste des autorités du code est vide</li>
-            <li>22 : une des autorités du code n'est pas une entité</li>
-            <li>23 : une des autorités du code a un EID=0</li>
-            <li>31 : la liste des autorités de l'annuaire est vide</li>
-            <li>32 : une des autorités de l'annuaire n'est pas une entité</li>
-            <li>33 : une des autorités de l'annuaire a un EID=0</li>
-            <li>41 : la liste des autorités du temps est vide</li>
-            <li>42 : une des autorités du temps n'est pas une entité</li>
-            <li>43 : une des autorités du temps a un EID=0</li>
-            <li>51 : l'entité instance n'est pas une entité</li>
-            <li>52 : l'entité instance a un EID=0</li>
-            <li>61 : l'entité courante n'est pas une entité</li>
-            <li>62 : l'entité courante a un EID=0</li>
-            <li>128 : toutes les entités utilisées sont bonnes</li>
+            <li>1 : L'entité puppet n'est pas une entité.</li>
+            <li>2 : L'entité puppet a un EID=0.</li>
+            <li>3 : L'EID de puppet n'est pas celui de la configuration.</li>
+            <li>11 : La liste des autorités de sécurité est vide.</li>
+            <li>12 : Une des autorités de sécurité n'est pas une entité.</li>
+            <li>13 : Une des autorités de sécurité a un EID=0.</li>
+            <li>21 : La liste des autorités du code est vide.</li>
+            <li>22 : Une des autorités du code n'est pas une entité.</li>
+            <li>23 : Une des autorités du code a un EID=0.</li>
+            <li>31 : La liste des autorités de l'annuaire est vide.</li>
+            <li>32 : Une des autorités de l'annuaire n'est pas une entité.</li>
+            <li>33 : Une des autorités de l'annuaire a un EID=0.</li>
+            <li>41 : La liste des autorités du temps est vide.</li>
+            <li>42 : Une des autorités du temps n'est pas une entité.</li>
+            <li>43 : Une des autorités du temps a un EID=0.</li>
+            <li>51 : L'entité instance n'est pas une entité.</li>
+            <li>52 : L'entité instance a un EID=0.</li>
+            <li>61 : L'entité courante n'est pas une entité.</li>
+            <li>62 : L'entité courante a un EID=0.</li>
+            <li>128 : Toutes les entités utilisées sont bonnes.</li>
         </ul>
-        <p>Les temps de chargement :</p>
+        <p>Les temps de chargement (voir <a href="#mc">MC</a>) :</p>
         <ul>
-            <li>tB : temps de chargement du boostrap après la bibliothèque PP</li>
-            <li>tL : temps de chargement du boostrap après la bibliothèque POO</li>
-            <li>tA : temps de chargement du boostrap après l'application</li>
-            <li>tE : temps de fin de chargement de page d'interruption</li>
+            <li>tB : Temps de chargement du boostrap après la bibliothèque PP.</li>
+            <li>tE : Temps de fin de chargement de page d'interruption.</li>
         </ul>
         <p style="color: red; font-weight: bold">À compléter avec la description des lignes...</p>
 

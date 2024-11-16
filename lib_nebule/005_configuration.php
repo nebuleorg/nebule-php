@@ -1251,7 +1251,7 @@ class Configuration extends Functions
         $source = $entity;
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
-        $newLink = new blocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
+        $newLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 
         if ($newLink->addLink($link)
             && $newLink->sign($signer)

@@ -297,4 +297,102 @@ class Metrology extends Functions
             $this->_actionArray[$i] = $this->_actionArray[$i + 1];
         return $r;
     }
+
+    static public function echoDocumentationTitles(): void
+    {
+        ?>
+
+        <li><a href="#m">M / Métrologie</a>
+            <ul>
+                <li><a href="#mc">MC / Chronométrage</a></li>
+                <li><a href="#ms">MS / Statistiques</a></li>
+                <li><a href="#mj">MJ / Journalisation</a>
+                    <ul>
+                        <li><a href="#mjs">MJS / Journalisation Système</a></li>
+                        <li><a href="#mjd">MJD / Debug</a></li>
+                        <li><a href="#mjc">MJC / Liste de Codes</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+        <?php
+    }
+
+    static public function echoDocumentationCore(): void
+    {
+        ?>
+
+        <?php Displays::docDispTitle(1, 'm', 'Métrologie'); ?>
+        <p>Cette partie métrologie rassemble tout ce qui concerne les mesures de performances internes ainsi que la
+            journalisation.</p>
+
+        <?php Displays::docDispTitle(2, 'mc', 'Chronométrage'); ?>
+        <p>Les mesures de temps sont indiquées avec chaque trace de journalisation :</p>
+        <ul>
+            <li>Marque temporelle absolue en début de trace (log).</li>
+            <li>Marque temporelle relative dans le champ LogT avec en référence le début d'exécution du code.</li>
+        </ul>
+        <p>Des mesures de temps relatives internes sont écrites avec la toute dernière trace laissée par le bootstrap :</p>
+        <ul>
+            <li><code>tB</code> : Temps de chargement du boostrap après la bibliothèque PP.</li>
+            <li><code>tL</code> : Temps de chargement du boostrap après la bibliothèque POO.</li>
+            <li><code>tA</code> : Temps de chargement du boostrap après l'application.</li>
+        </ul>
+        <p>Ces mesures de temps internes permettent de faire des comparaisons de performances entre serveurs.</p>
+
+        <?php Displays::docDispTitle(2, 'ms', 'Statistiques'); ?>
+        <p>Les statistiques d'usage des objets et des liens sont alimentées par certaines fonctions. Les résultats sont
+            affichés dans la journalisation avec la toute dernière trace laissée par le bootstrap.</p>
+        <p>Les statistiques :</p>
+        <ul>
+            <li>Mémoire utilisée :
+                <ul>
+                    <li><code>Mp</code> : Maximum mémoire utilisée lors de l'exécution du code, en Mbytes. Une valeur au-delà du
+                        maximum permit dans la configuration PHP entraînera un arrêt automatique du code.</li>
+                </ul>
+            </li>
+            <li>Mesures de temps : voir <a href="#mc">MC</a></li>
+            <li>Mesures d'utilisation :
+                <ul>
+                    <li><code>Lr</code> : Liens lus (PP+POO).</li>
+                    <li><code>Lv</code> : Liens vérifiés (PP+POO).</li>
+                    <li><code>Or</code> : Objets lus (PP+POO).</li>
+                    <li><code>Ov</code> : Objets vérifiés (PP+POO).</li>
+                    <li><code>LC</code> : Liens en cache.</li>
+                    <li><code>OC</code> : Objets en cache.</li>
+                    <li><code>EC</code> : Entités en cache.</li>
+                    <li><code>GC</code> : Groupes en cache.</li>
+                    <li><code>CC</code> : Conversations en cache.</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Certaines valeurs sont indiquées PP+POO, c'est-à-dire la valeur retournée par la bibliothèque PP avant le +,
+            et par la bibliothèque POO après le +.</p>
+        <p>La bibliothèque PP ne gère pas de cache, les valeurs de cache concernent uniquement la bibliothèque POO.</p>
+
+        <?php Displays::docDispTitle(2, 'mj', 'Journalisation'); ?>
+        <?php Displays::docDispTitle(3, 'mjs', 'Journalisation Système'); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <?php Displays::docDispTitle(3, 'mjd', 'Debug'); ?>
+        <p>Si l'option <b>permitLogsOnDebugFile</b> est activée, un fichier
+            <i><?php echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE; ?></i>
+            est créé puis alimenté avec toutes les traces générées par le bootstrap et les applications indépendamment
+            du niveau de journalisation demandé. Ce fichier est utilisé pour du dépannage uniquement. Et ce fichier est
+            systématiquement supprimé à chaque exécution du code, au début, quelque soit l'état de l'option
+            <b>permitLogsOnDebugFile</b>.</p>
+
+        <?php Displays::docDispTitle(3, 'mjc', 'Liste de Codes'); ?>
+        <p>Liste non exhaustive de codes de journalisation :</p>
+        <ul>
+            <li><code>100000XX</code> : Code générique de traçage des interruptions du bootstrap avec XX le code associé.</li>
+            <li><code>1111c0de</code> : Code générique de traçage des appels des fonctions.</li>
+            <li><code>76941959</code> : Démarrage du bootstrap. Info.</li>
+            <li><code>50615f80</code> : Création du fichier de débug. Info.</li>
+            <li style="color: red; font-weight: bold">A compléter...</li>
+        </ul>
+
+        <?php
+	}
 }

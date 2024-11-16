@@ -1114,7 +1114,7 @@ class Group extends Node implements nodeInterface
         $target = $this->_id;
         $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new blocLink($this->_nebuleInstance, $link);
+        $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
