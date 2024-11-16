@@ -49,7 +49,7 @@ class Documentation extends Functions
 
         <?php
         blocLink::echoDocumentationTitles();
-        Link::echoDocumentationTitles();
+        LinkRegister::echoDocumentationTitles();
         Transaction::echoDocumentationTitles();
         Crypto::echoDocumentationTitles();
         Social::echoDocumentationTitles();
@@ -71,7 +71,7 @@ class Documentation extends Functions
         Applications::echoDocumentationCore();
         Modules::echoDocumentationCore();
         blocLink::echoDocumentationCore();
-        Link::echoDocumentationCore();
+        LinkRegister::echoDocumentationCore();
         Transaction::echoDocumentationCore();
         Crypto::echoDocumentationCore();
         Social::echoDocumentationCore();

@@ -123,12 +123,12 @@ class Display extends Displays
             <div class="header-center">
                 <p>
                     <?php
-                    $name = $this->_entitiesInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_entitiesInstance->getInstanceEntity())
+                    $name = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
+                    if ($name != $this->_entitiesInstance->getServerEntityID())
                         echo $name;
                     else
                         echo '/';
-                    echo '<br />' . $this->_entitiesInstance->getInstanceEntity();
+                    echo '<br />' . $this->_entitiesInstance->getServerEntityID();
                     ?>
                 </p>
             </div>

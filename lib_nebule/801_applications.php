@@ -1858,6 +1858,73 @@ application SID       :
 #6 end bootstrap
 tE=0.0632s
         </pre>
+        <p>Les codes d'interruption :</p>
+        <ul>
+            <li>[00] unknown buggy interrupt reason</li>
+            <li>[11] user interrupt</li>
+            <li>[21] library init error</li>
+            <li>[22] library i/o : link's folder error</li>
+            <li>[23] library i/o : link's folder error</li>
+            <li>[24] library i/o : object's folder error</li>
+            <li>[25] library i/o : object's folder error</li>
+            <li>[31] library load : finding library IID error</li>
+            <li>[32] library load : finding library OID error</li>
+            <li>[41] library load : find code error</li>
+            <li>[42] library load : include code error</li>
+            <li>[43] library load : functional version too old</li>
+            <li>[44] library load : load error</li>
+            <li>[45] application : find code error</li>
+            <li>[46] application : include code error</li>
+            <li>[47] application : load error</li>
+            <li>[51] unknown bootstrap hash</li>
+            <li>[61] no local server entity</li>
+            <li>[62] local server entity error</li>
+            <li>[71] need sync puppetmaster</li>
+            <li>[72] need sync authorities of security</li>
+            <li>[73] need sync authorities of security</li>
+            <li>[74] need sync authorities of code</li>
+            <li>[75] need sync authorities of code</li>
+            <li>[76] need sync authorities of time</li>
+            <li>[77] need sync authorities of time</li>
+            <li>[78] need sync authorities of directory</li>
+            <li>[79] need sync authorities of directory</li>
+            <li>[81] library init : I/O open error</li>
+            <li>[82] library init : puppetmaster error</li>
+            <li>[83] library init : security authority error</li>
+            <li>[84] library init : code authority error</li>
+            <li>[85] library init : time authority error</li>
+            <li>[86] library init : directory authority error</li>
+        </ul>
+        <p>Table d'utilisabilité des entités calculée par la bibliothèque orienté objet (entities error level) :</p>
+        <ul>
+            <li>1 : puppet n'est pas une entité</li>
+            <li>2 : puppet a un EID=0</li>
+            <li>3 : l'EID de puppet n'est pas celui de la configuration</li>
+            <li>11 : la liste des autorités de sécurité est vide</li>
+            <li>12 : une des autorités de sécurité n'est pas une entité</li>
+            <li>13 : une des autorités de sécurité a un EID=0</li>
+            <li>21 : la liste des autorités du code est vide</li>
+            <li>22 : une des autorités du code n'est pas une entité</li>
+            <li>23 : une des autorités du code a un EID=0</li>
+            <li>31 : la liste des autorités de l'annuaire est vide</li>
+            <li>32 : une des autorités de l'annuaire n'est pas une entité</li>
+            <li>33 : une des autorités de l'annuaire a un EID=0</li>
+            <li>41 : la liste des autorités du temps est vide</li>
+            <li>42 : une des autorités du temps n'est pas une entité</li>
+            <li>43 : une des autorités du temps a un EID=0</li>
+            <li>51 : l'entité instance n'est pas une entité</li>
+            <li>52 : l'entité instance a un EID=0</li>
+            <li>61 : l'entité courante n'est pas une entité</li>
+            <li>62 : l'entité courante a un EID=0</li>
+            <li>128 : toutes les entités utilisées sont bonnes</li>
+        </ul>
+        <p>Les temps de chargement :</p>
+        <ul>
+            <li>tB : temps de chargement du boostrap après la bibliothèque PP</li>
+            <li>tL : temps de chargement du boostrap après la bibliothèque POO</li>
+            <li>tA : temps de chargement du boostrap après l'application</li>
+            <li>tE : temps de fin de chargement de page d'interruption</li>
+        </ul>
         <p style="color: red; font-weight: bold">À compléter avec la description des lignes...</p>
 
         <?php Displays::docDispTitle(4, 'oabe', 'Applications externes'); ?>

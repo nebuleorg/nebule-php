@@ -70,9 +70,9 @@ class Authorities extends Functions
         $this->_getPermitInstanceAsAuthority();
         $this->_getPermitDefaultAsAuthority();
         $this->_findPuppetmaster();
-        //$this->_findGlobalAuthorities(); FIXME
-        //$this->_findLocalAuthorities();
-        //$this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '16aa56f1');
+        $this->_findGlobalAuthorities();
+        $this->_findLocalAuthorities();
+        $this->_metrologyInstance->addLog('instancing class Authorities', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '16aa56f1');
     }
 
     /**
@@ -338,24 +338,24 @@ class Authorities extends Functions
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $entitiesInstance->getInstanceEntity(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $entitiesInstance->getInstanceEntity(),
+                'bs/rs1/eid' => $entitiesInstance->getServerEntityID(),
             );
-            $entitiesInstance->getInstanceEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
 
         if ($this->_permitDefaultEntityAsAuthority) {
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $entitiesInstance->getInstanceEntity(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getDefaultEntityID(),
             );
-            $entitiesInstance->getInstanceEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
 
         foreach ($list as $link) {

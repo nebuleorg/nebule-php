@@ -883,7 +883,7 @@ class nebule
     private string $_currentTokenPool = '';
     private ?TokenPool $_currentTokenPoolInstance = null;
 
-    private function _findCurrentTokenPool()
+    private function _findCurrentTokenPool(): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
@@ -938,7 +938,7 @@ class nebule
     private string $_currentTokenID = '';
     private ?Token $_currentTokenInstance = null;
 
-    private function _findCurrentToken()
+    private function _findCurrentToken(): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenID = '0';
@@ -999,7 +999,7 @@ class nebule
     {
         if (!$this->_authoritiesInstance->getPuppetmasterInstance() instanceof Entity) return 1;
         if ($this->_authoritiesInstance->getPuppetmasterEID() == '0') return 2;
-        if ($this->_authoritiesInstance->getPuppetmasterEID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3; // TODO à retirer
+        if ($this->_authoritiesInstance->getPuppetmasterEID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3;
 
         if (sizeof($this->_authoritiesInstance->getSecurityAuthoritiesInstance()) == 0) return 11;
         foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
@@ -1029,11 +1029,9 @@ class nebule
             if ($instance->getID() == '0') return 43;
         }
 
-        // Vérifie que l'entité de l'instance nebule est une entité et a été trouvée.
         if (!$this->_instanceEntityInstance_DEPRECATED instanceof Entity) return 51;
         if ($this->_instanceEntityInstance_DEPRECATED->getID() == '0') return 52;
 
-        // Vérifie qu'une entité courante existe et est une entité.
         if (!$this->_entitiesInstance->getCurrentEntityInstance() instanceof Entity) return 61;
         if ($this->_entitiesInstance->getCurrentEntityInstance()->getID() == '0') return 62;
 

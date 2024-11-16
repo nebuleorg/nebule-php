@@ -257,7 +257,7 @@ class Functions
         $propertyRID = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $link = 'l>' . $textOID . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
-        $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscate && !$newLink->setObfuscate())
             return '';
         $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());

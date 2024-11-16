@@ -452,7 +452,7 @@ class blocLink extends Functions implements blocLinkInterface
             if ($this->_linksType == Cache::TYPE_TRANSACTION)
                 $instanceRL = new Transaction($this->_nebuleInstance, $rl, $this);
             else
-                $instanceRL = new Link($this->_nebuleInstance, $rl, $this); // FIXME ne fonctionne pas correctement !
+                $instanceRL = new LinkRegister($this->_nebuleInstance, $rl, $this); // FIXME ne fonctionne pas correctement !
             if (!$instanceRL->getValid()) return false;
 
             $this->_links[] = $instanceRL;
@@ -748,7 +748,7 @@ class blocLink extends Functions implements blocLinkInterface
         )
             return false;
 
-        $instance = new Link($this->_nebuleInstance, $rl, $this);
+        $instance = new LinkRegister($this->_nebuleInstance, $rl, $this);
         if ($instance->getValidStructure()
             && $this->_newLinkCount <= $this->_configurationInstance->getOptionAsInteger('linkMaxRL')
         )
@@ -981,6 +981,12 @@ class blocLink extends Functions implements blocLinkInterface
         ?>
 
         <h1 id="b">B / Bloc de liens</h1>
+        <p>Le bloc de liens permet d'agréger un ou plusieurs registres de liens, de le rendre transferable et de le
+            sécuriser. Voir <a href="#l">L</a>.</p>
+        <p>On parlera par facilité de bloc de liens BL pour la partie opérationnelle contenant uniquement les registres
+            de liens RL. Cependant, le bloc de liens doit être compris aussi avec le bloc d'entête BH permettant sa
+            transmission et le loc de signature permettant sa sécurisation. Sa sureté de fonctionnement est gérée par sa
+            structure rigide prédéfinit par le bloc d'entête.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p style="color:red;">Cette partie est périmée avec la nouvelle version de liens !</p>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
@@ -988,6 +994,56 @@ class blocLink extends Functions implements blocLinkInterface
 
         <h2 id="bd">BD / Description</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <h2 id="bs">BS / Structure</h2>
+        <p>Le bloc de liens est enregistré dans une structure avec un format définit et contraint afin de pouvoir être
+            stocké et échangé de façon sûre et sécurisée.</p>
+        <p>Cette structure a quatre niveaux de profondeur avec pour chaque niveau un séparateur de champs spécifique. Il
+            n'y a pas de risque de confusion lors de la navigation dans les champs avec ces séparateurs spécifiques.</p>
+        <p>La structure du bloc de liens :</p>
+        <ul>
+            <li>L : BH_BL_BS
+                <ul>
+                    <li>BH : RF/RV
+                        <ul>
+                            <li>RF : APP:TYP
+                                <ul>
+                                    <li>APP : nebule</li>
+                                    <li>TYP : link</li>
+                                </ul>
+                            </li>
+                            <li>RV : VERS:SUB
+                                <ul>
+                                    <li>VER : 2</li>
+                                    <li>SUB : 0</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>BL : RC/RL/RL...
+                        <ul>
+                            <li>RC : MOD>CHR</li>
+                            <li>RL : REQ>NID>NID>NID...
+                                <ul>
+                                    <li>REQ</li>
+                                    <li>NID : hash.algo.size</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>BS : RS/RS...
+                        <ul>
+                            <li>RS : EID>SIG
+                                <ul>
+                                    <li>EID : hash.algo.size</li>
+                                    <li>SIG : sign.algo.size</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
 
         <h2 id="bc">BC / Construction</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>

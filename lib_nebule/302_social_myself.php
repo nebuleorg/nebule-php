@@ -41,11 +41,11 @@ class SocialMySelf extends Social implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link  &$link
-     * @param string $socialClass
+     * @param LinkRegister  &$link
+     * @param string         $socialClass
      * @return float
      */
-    public function linkSocialScore(Link &$link, string $socialClass = ''): float
+    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 

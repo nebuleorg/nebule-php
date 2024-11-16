@@ -29,7 +29,7 @@ interface SocialInterface
     public function getReady(): bool;
 
     public function arraySocialFilter(array &$links, string $socialClass = ''): void;
-    public function linkSocialScore(Link &$link, string $socialClass = ''): float;
+    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float;
     public function setList(array $listID): bool;
     public function unsetList(): bool;
 }

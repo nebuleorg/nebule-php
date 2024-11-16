@@ -1679,7 +1679,7 @@ class ModuleEntities extends Modules
             $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
             $signers[] = $this->_authoritiesInstance->getTimeSignersInstance()[$instance->getID()];
         }
-        $entities[] = $this->_entitiesInstance->getInstanceEntityInstance();
+        $entities[] = $this->_entitiesInstance->getServerEntityInstance();
         $masters[] = 'Hôte';
         $signers[] = array();
 

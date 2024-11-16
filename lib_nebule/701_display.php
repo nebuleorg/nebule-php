@@ -1732,12 +1732,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             <div class="header-center">
                 <p>
                     <?php
-                    $name = $this->_entitiesInstance->getInstanceEntityInstance()->getFullName();
-                    if ($name != $this->_entitiesInstance->getInstanceEntity())
+                    $name = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
+                    if ($name != $this->_entitiesInstance->getServerEntityID())
                         echo $name;
                     else
                         echo '/';
-                    echo '<br />' . $this->_entitiesInstance->getInstanceEntity();
+                    echo '<br />' . $this->_entitiesInstance->getServerEntityID();
                     ?>
                 </p>
             </div>
@@ -3490,7 +3490,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Retourne la représentation html du message d'une conversation en fonction des paramètres passés.
-     *
      * Les paramètres d'activation de contenus :
      * - enableDisplayColor : Affiche le carré de couleur.
      *     Par défaut true : affiche le carré de couleur.
@@ -3498,17 +3497,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * - enableDisplayIcon : Affiche le carré avec l'image du type message sur la couleur de l'objet en fond.
      *     Par défaut true : affiche le carré de l'image/icône.
      *     Boolean
-     *
      * Les paramètres de définition de contenus :
      * - social : Détermine le niveau social de tri des liens.
      *     Par défaut vide : utilise le niveau social par défaut.
      *     String
      *
-     * @param Link $link
+     * @param LinkRegister $link
      * @param array $param
      * @return string
      */
-    public function getDisplayMessage(Link $link, array $param): string
+    public function getDisplayMessage(LinkRegister $link, array $param): string
     {
         $result = '';
 
@@ -3838,13 +3836,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Pour la fonction getDisplayMessage().
      * Prépare les icônes des drapeaux.
      *
-     * @param Node   $messageInstance
-     * @param Link   $link
-     * @param array  $param
-     * @param string $cssCode
+     * @param Node         $messageInstance
+     * @param LinkRegister $link
+     * @param array        $param
+     * @param string       $cssCode
      * @return string
      */
-    private function _getDisplayMessageFlags(Node $messageInstance, Link $link, array $param, string $cssCode): string
+    private function _getDisplayMessageFlags(Node $messageInstance, LinkRegister $link, array $param, string $cssCode): string
     {
         $result = '<span class="message' . $cssCode . 'FlagsObj">';
         // Ajoute le lien.
@@ -4567,7 +4565,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $result .= $this->getDisplayInformation_DEPRECATED($item['information'], $param);
             elseif (isset($item['link'])
-                && is_a($item['link'], 'Nebule\Library\Link')
+                && is_a($item['link'], 'Nebule\Library\LinkRegister')
             )
                 $result .= $this->getDisplayMessage($item['link'], $param);
             // Sinon n'affiche rien.
@@ -4848,7 +4846,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     /**
      * Retourne la représentation html du lien en fonction des paramètres passés.
-     *
      * Les paramètres de définition de contenus :
      * - displaySize : Détermine la taille de l'affichage de l'élément complet.
      *     Tailles disponibles :
@@ -4858,15 +4855,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *     - large : grande taille correspondant à un carré de base de 64 pixels de large par défaut.
      *     Par défaut small : taille petite.
      *     String
-     *
      * Exemple de table de paramètres avec les valeurs par défaut :
-     *
      * $param = array(
      * 'displaySize' => 'small',
      * );
      *
-     * @param Link|string $link
-     * @param array $param
+     * @param LinkRegister|string $link
+     * @param array               $param
      * @return string
      */
     public function getDisplayLink($link, array $param): string
@@ -4882,14 +4877,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $instance = null;
 
         // Prépare le lien.
-        if (is_a($link, 'Nebule\Library\Link'))
+        if (is_a($link, 'Nebule\Library\LinkRegister'))
             $instance = $link;
         elseif (is_string($link))
             $instance = $this->_cacheInstance->newBlockLink($link);
 
         // Teste la validité du lien.
         if ($instance == null
-            || !is_a($instance, 'Nebule\Library\Link')
+            || !is_a($instance, 'Nebule\Library\LinkRegister')
         )
             return '';
 
@@ -5329,7 +5324,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         if ($link == '')
             return '';
-        if (!is_a($link, 'Nebule\Library\Link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             $link = $this->_cacheInstance->newBlockLink($link);
         if (!$link->getValid())
             return '';

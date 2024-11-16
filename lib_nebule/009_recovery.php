@@ -78,24 +78,24 @@ class Recovery extends Functions
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refRecovery,
-                'bl/rl/nid2' => $entitiesInstance->getInstanceEntity(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $entitiesInstance->getInstanceEntity(),
+                'bs/rs1/eid' => $entitiesInstance->getServerEntityID(),
             );
-            $entitiesInstance->getInstanceEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')) {
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refRecovery,
-                'bl/rl/nid2' => $entitiesInstance->getInstanceEntity(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getDefaultEntityID(),
             );
-            $entitiesInstance->getInstanceEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
 
         foreach ($list as $link) {

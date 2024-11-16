@@ -37,11 +37,11 @@ class SocialNotself extends SocialMySelf implements SocialInterface
     /**
      * Calcul le score social d'un lien.
      *
-     * @param Link  &$link
-     * @param string $socialClass
+     * @param LinkRegister  &$link
+     * @param string         $socialClass
      * @return float
      */
-    public function linkSocialScore(Link &$link, string $socialClass = ''): float
+    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
         global $applicationInstance;
 

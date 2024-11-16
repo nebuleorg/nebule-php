@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241029';
+const BOOTSTRAP_VERSION = '020241116';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -481,8 +481,8 @@ const BREAK_DESCRIPTIONS = array(
     '23' => "library i/o : link's folder error",
     '24' => "library i/o : object's folder error",
     '25' => "library i/o : object's folder error",
-    '31' => 'library load : finding library IID error.',
-    '32' => 'library load : finding library OID error.',
+    '31' => 'library load : finding library IID error',
+    '32' => 'library load : finding library OID error',
     '41' => 'library load : find code error',
     '42' => 'library load : include code error',
     '43' => 'library load : functional version too old',
@@ -5056,7 +5056,7 @@ function bootstrap_getCheckFingerprint(): void
  *
  * @return void
  */
-function bootstrap_htmlHeader()
+function bootstrap_htmlHeader():void
 {
     global $libraryRescueMode;
 
@@ -5913,8 +5913,8 @@ function bootstrap_breakDisplay41LibraryEntities(): void
         $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay411DisplayEntity('server entity',
-        array($nebuleInstance->getEntitiesInstance()->getInstanceEntity() => $nebuleInstance->getEntitiesInstance()->getInstanceEntity()),
-        array($nebuleInstance->getEntitiesInstance()->getInstanceEntity() => $nebuleInstance->getEntitiesInstance()->getInstanceEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getServerEntityID() => $nebuleInstance->getEntitiesInstance()->getServerEntityID()),
+        array($nebuleInstance->getEntitiesInstance()->getServerEntityID() => $nebuleInstance->getEntitiesInstance()->getServerEntityInstance()),
         $nebuleInstanceCheck > 60);
 
     bootstrap_breakDisplay411DisplayEntity('default entity',

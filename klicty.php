@@ -3139,7 +3139,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             // Ajoute des entités à ne pas afficher.
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
-            $listOkEntities[$this->_entitiesInstance->getInstanceEntity()] = true;
+            $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;

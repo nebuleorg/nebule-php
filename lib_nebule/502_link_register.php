@@ -10,7 +10,7 @@ use Nebule\Library\linkInterface;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Link extends Functions implements linkInterface
+class LinkRegister extends Functions implements linkInterface
 {
     const SESSION_SAVED_VARS = array(
         '_rawLink',
@@ -35,7 +35,7 @@ class Link extends Functions implements linkInterface
     protected bool $_validStructure = false;
     protected bool $_signed = false;
     protected bool $_permitObfuscated = false;
-    protected int $_maxRLUID = 3;
+    protected int $_maxRLUID = 4;
 
     public function __construct(nebule $nebuleInstance, string $rl, blocLinkInterface $blocLink)
     {
@@ -76,7 +76,7 @@ class Link extends Functions implements linkInterface
     protected function _initialisation(): void
     {
         $this->_permitObfuscated = $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');
-        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID');
+        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID'); // FIXME ne lit pas correctement la valeur.
 
         $this->_obfuscated = false;
         if ($this->_permitObfuscated && $this->_parsedLink['bl/rl/req'] == 'c')
@@ -118,7 +118,8 @@ class Link extends Functions implements linkInterface
             $j++;
             if ($j > $this->_maxRLUID)
             {
-                $this->_metrologyInstance->addLog('BL/RL overflow '.substr($rl, 0, 60) . '+ maxRLUID='
+                $this->_metrologyInstance->addLog('BL/RL overflow ' . substr($rl, 0, 200)
+                    . '+ maxRLUID='
                     . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
                 return false;
             }
@@ -336,7 +337,7 @@ class Link extends Functions implements linkInterface
      * @return boolean
      * @todo
      *
-     * Le lien à dissimulé est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du champs source.
+     * Le lien à dissimuler est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du champs source.
      *
      */
     public function setObfuscate(): bool
@@ -495,8 +496,10 @@ class Link extends Functions implements linkInterface
             <a href="https://fr.wikipedia.org/wiki/Hypergraphe">hypergraphe</a> orienté. Vu l'usage qu'il est fait des
             nœuds dans les liens, nous pouvons cependant déjà considérer que nous sommes dans un hypergraphe au-delà
             de deux nœuds.</p>
-        <p>Le lien ne porte pas son autoprotection. Il est enregistré dans un bloc de liens qui se charge de faire
-            cohabiter et de protéger un ou plusieurs liens. Voir <a href="#b">B</a>.</p>
+        <p>Le lien est enregistré dans un registre avec un format définit et contraint afin de pouvoir être stocké et
+            échangé de façon sûre et sécurisée.</p>
+        <p>Le registre de lien ne porte pas son autoprotection. Il est enregistré dans un bloc de liens qui se charge de
+            faire cohabiter et de protéger un ou plusieurs liens simultanément. Voir <a href="#b">B</a>.</p>
 
         <h2 id="ls">LS / Structure</h2>
         <p>Chaque lien est écrit dans ce que l'on appelle un registre de lien. Ce registre va comprendre plusieurs

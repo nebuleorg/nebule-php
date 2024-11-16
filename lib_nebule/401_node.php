@@ -533,7 +533,7 @@ class Node extends Functions implements nodeInterface
         // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
-        if ($link == '' || !is_a($link, 'Nebule\Library\Link'))
+        if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
 
         // Extrait le contenu de l'objet de propriété.
@@ -704,7 +704,7 @@ class Node extends Functions implements nodeInterface
         $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
-        $newLink = new Link($this->_nebuleInstance, $link, $newBlockLink);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
         $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());
@@ -2906,11 +2906,11 @@ class Node extends Functions implements nodeInterface
      * Filtering on have bl/rl/req, bl/rl/nid1, bl/rl/nid2, bl/rl/nid3, bl/rl/nid4, bl/rl/nid*, bs/rs1/eid, or not have.
      * TODO revoir pour les liens de type x...
      *
-     * @param Link  $link
-     * @param array $filter
+     * @param LinkRegister $link
+     * @param array        $filter
      * @return bool
      */
-    protected function _filterLinkByStructure(Link &$link, array $filter): bool
+    protected function _filterLinkByStructure(LinkRegister &$link, array $filter): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $parsedLink = $link->getParsed();
@@ -3119,7 +3119,7 @@ class Node extends Functions implements nodeInterface
 
         $links = $this->getReferencedObjectListID($reference, $socialClass);
         $link = end($links);
-        if (!is_a($link, 'Nebule\Library\Link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
         return $link->getParsed()['bl/rl/nid2'];
     }
@@ -3140,7 +3140,7 @@ class Node extends Functions implements nodeInterface
 
         $links = $this->getReferencedLinks($reference, $socialClass);
         $link = end($links);
-        if (!is_a($link, 'Nebule\Library\Link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
         return $link->getParsed()['bs/rs1/eid'];
     }
@@ -3153,7 +3153,7 @@ class Node extends Functions implements nodeInterface
         $link = end($links);
         $list = array();
         $listOK = array();
-        if (!is_a($link, 'Nebule\Library\Link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             return array();
         foreach ($links as $link) {
             if (!isset($listOK[$link->getParsed()['bs/rs1/eid']])) {
@@ -3596,7 +3596,7 @@ class Node extends Functions implements nodeInterface
         if ($rl == '')
             return false;
         $newBlockLink = new blocLink($this->_nebuleInstance, 'new');
-        $newLink = new Link($this->_nebuleInstance, $rl, $newBlockLink);
+        $newLink = new LinkRegister($this->_nebuleInstance, $rl, $newBlockLink);
         if ($obfuscated && !$newLink->setObfuscate())
             return false;
         return $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID(), $date);

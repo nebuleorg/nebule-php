@@ -195,7 +195,7 @@ abstract class Actions extends Functions
 
         // Gère la dissimulation d'un lien.
         if ($this->_actionObfuscateLinkInstance != ''
-            && is_a($this->_actionObfuscateLinkInstance, 'Nebule\Library\Link')
+            && is_a($this->_actionObfuscateLinkInstance, 'Nebule\Library\LinkRegister')
             && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
             $this->_actionObfuscateLink();
@@ -409,25 +409,25 @@ abstract class Actions extends Functions
         ) {
             // Lien à signer 1.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance1, 'Nebule\Library\Link')
+                && is_a($this->_actionSignLinkInstance1, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
 
             // Lien à signer 2.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance2, 'Nebule\Library\Link')
+                && is_a($this->_actionSignLinkInstance2, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance2, $this->_actionSignLinkInstance2Obfuscate);
 
             // Lien à signer 3.
             if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
-                && is_a($this->_actionSignLinkInstance3, 'Nebule\Library\Link')
+                && is_a($this->_actionSignLinkInstance3, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance !== null
-                && is_a($this->_actionUploadLinkInstance, 'Nebule\Library\Link')
+                && is_a($this->_actionUploadLinkInstance, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionUploadLink($this->_actionUploadLinkInstance);
 
@@ -523,7 +523,7 @@ abstract class Actions extends Functions
      * Définit si il y a une action en cours de chargement de lien pré-signé.
      * Contient le lien à charger ou un texte vide.
      *
-     * @var Link|string
+     * @var LinkRegister|string
      */
     protected $_actionUploadLinkInstance = null;
 
@@ -2488,13 +2488,13 @@ abstract class Actions extends Functions
 
     /**
      * Signe un lien.
-     * @param ?Link $link
-     * @param boolean $obfuscate
+     *
+     * @param ?LinkRegister $link
+     * @param boolean       $obfuscate
      * @return void
      * FIXME
-     *
      */
-    protected function _actionSignLink(?Link $link, $obfuscate = 'default')
+    protected function _actionSignLink(?LinkRegister $link, $obfuscate = 'default')
     {
         if ($this->_unlocked) {
             $this->_metrologyInstance->addLog('Action sign link', Metrology::LOG_LEVEL_DEBUG);
@@ -2527,39 +2527,33 @@ abstract class Actions extends Functions
 
     /**
      * Ecrit un lien pré-signé.
-     *
      * Cette fonction est appelée par la fonction specialActions().
      * Elle est utilisée par l'application upload et le module module_upload de l'application sylabe.
      * Le fonctioneement est identique dans ces deux usages même si l'affichage ne le montre pas.
-     *
      * La fonction nécessite au minimum les droits :
      *   - permitWrite
      *   - permitWriteLink
      *   - permitUploadLink
      * L'activation de la fonction est ensuite conditionnée par une conbinaison d'autres droits ou facteurs.
-     *
      * Si le droit permitPublicUploadCodeAuthoritiesLink est activé :
      *   les liens signés du maître du code sont acceptés ;
      *   les liens des autres entités sont ignorés avec seulement ce droit.
-     *
      * Si le droit permitPublicUploadLink est activé :
      *   tous les liens signés sont acceptés ;
      *   les entités signataires doivent exister localement pour la vérification les signatures.
-     *
      * Si l'entité en cours est déverrouillée, this->_unlocked :
      *   la réception de liens est prise comme une action légitime ;
      *   les liens signés de toutes les entités sont acceptés ;
      *   les liens non signés sont signés par l'entité en cours.
      * Si un lien est structurellement valide mais non signé, il est régénéré et signé par l'entité en cours.
-     *
      * Les liens ne sont écris que si leurs signatures sont valides.
      *
-     * @param Link $link
+     * @param LinkRegister $link
      * @return void
      */
-    protected function _actionUploadLink(Link $link)
+    protected function _actionUploadLink(LinkRegister $link)
     {
-        if (!is_a($link, 'Nebule\Library\Link')
+        if (!is_a($link, 'Nebule\Library\LinkRegister')
             || !$link->getValid()
             || true // FIXME
         )
@@ -3789,7 +3783,7 @@ abstract class Actions extends Functions
         return false; // FIXME
 
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         // Signe le lien.
         $newLink->sign($signer);
@@ -3874,9 +3868,8 @@ abstract class Actions extends Functions
      * Extrait et analyse un lien.
      *
      * @param string $link : lien à extraire.
-     * @return ?Link : une instance de lien.
-     *
-     * Accepte une chaine de caractère représentant un lien.
+     * @return ?LinkRegister : une instance de lien.
+     *                     Accepte une chaine de caractère représentant un lien.
      * En fonction du nombre de champs, c'est interprété :
      * 2 champs : 0_0_0_action_source_0_0
      * 3 champs : 0_0_0_action_source_target_0
@@ -3887,7 +3880,7 @@ abstract class Actions extends Functions
      * Sinon    : 0_0_0_0_0_0_0
      * Retourne une instance du lien.
      */
-    public function flatLinkExtractAsInstance_disabled(string $link): ?Link
+    public function flatLinkExtractAsInstance_disabled(string $link): ?LinkRegister
     {
         return null; // FIXME
         // Vérifier compatibilité avec liens incomplets...

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Library\nebule;
-use Nebule\Library\Link;
+use Nebule\Library\LinkRegister;
 use DateTime;
 
 /**
@@ -29,7 +29,7 @@ use DateTime;
  * La description de la transaction peut en fait contenir plusieurs transactions élémentaires.
  * ------------------------------------------------------------------------------------------
  */
-class Transaction extends Link implements linkInterface
+class Transaction extends LinkRegister implements linkInterface
 {
     /**
      * Booléen si le lien est une transaction ET qu'elle est valide.

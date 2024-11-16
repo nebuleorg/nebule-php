@@ -1195,7 +1195,7 @@ class ModuleObjects extends Modules
 
             // Ajoute des entités et groupes à ne pas afficher.
             $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
-            $listOkEntities[$this->_entitiesInstance->getInstanceEntity()] = true;
+            $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
@@ -1203,7 +1203,7 @@ class ModuleObjects extends Modules
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
             $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_applicationInstance->getCurrentEntityID()] = true;
-            $listOkGroups[$this->_entitiesInstance->getInstanceEntity()] = true;
+            $listOkGroups[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkGroups[$this->_authoritiesInstance->getCodeMaster()] = true;

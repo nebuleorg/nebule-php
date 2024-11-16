@@ -309,7 +309,7 @@ class Group extends Node implements nodeInterface
         $target = $this->getReferenceObject();
         $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->signWrite();
 
         $this->_isGroup = false;
@@ -415,7 +415,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectClosed();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -472,7 +472,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectClosed();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
             if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
@@ -580,7 +580,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectProtected();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -637,7 +637,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectProtected();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
             if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
@@ -755,7 +755,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectObfuscated();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -817,7 +817,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->getReferenceObjectObfuscated();
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
             if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
@@ -905,7 +905,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->_id;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -959,7 +959,7 @@ class Group extends Node implements nodeInterface
         $target = $id;
         $meta = $this->_id;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
@@ -1168,7 +1168,7 @@ class Group extends Node implements nodeInterface
         $target = $this->_id;
         $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
 
         // Si besoin, obfuscation du lien.
