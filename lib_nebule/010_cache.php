@@ -80,7 +80,7 @@ class Cache extends Functions
         if (filter_has_var(INPUT_GET, References::COMMAND_FLUSH)
             || filter_has_var(INPUT_POST, References::COMMAND_FLUSH)
         ) {
-            $this->_metrologyInstance->addLog('Ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
+            $this->_metrologyInstance->addLog('ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
             $this->_cache = array();
             $this->_cacheDateInsertion = array();
             $this->_flushCache = true;
@@ -149,7 +149,7 @@ class Cache extends Functions
 
     public function flushBufferStore(): bool
     {
-        $this->_metrologyInstance->addLog('Flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('flush buffer store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         session_start();
         unset($_SESSION['Buffer']);
         $_SESSION['Buffer'] = array();

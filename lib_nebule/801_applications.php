@@ -146,7 +146,7 @@ abstract class Applications extends Functions implements applicationInterface
      */
     protected function _findCurrentEntity(): void
     {
-        $this->_metrologyInstance->addLog('Find current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '639622a1');
+        /*$this->_metrologyInstance->addLog('finding current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '639622a1');
         
         $arg_ent = filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if ($arg_ent === false || $arg_ent === null)
@@ -174,6 +174,10 @@ abstract class Applications extends Functions implements applicationInterface
             unset($cache);
         }
         unset($arg_ent);
+        $this->_metrologyInstance->addLog('found current entity EID=' . $this->_currentEntityOID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '59e25e72');*/
+
+        $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
+        $this->_currentEntityInstance = $this->_entitiesInstance->getCurrentEntityInstance();
     }
 
     public function getCurrentEntityID(): string
@@ -192,23 +196,23 @@ abstract class Applications extends Functions implements applicationInterface
      *
      * @var boolean
      */
-    protected $_askDownload = false;
+    protected bool $_askDownload = false;
     /**
      * ID de l'objet demandé au téléchargement.
      *
      * @var string
      */
-    protected $_askDownloadObject = '';
+    protected string $_askDownloadObject = '';
     /**
      * ID de l'objet dont les liens sont demandés au téléchargement.
      *
      * @var string
      */
-    protected $_askDownloadLinks = '';
+    protected string $_askDownloadLinks = '';
 
     /**
      * Retourne si la requête web est un téléchargement d'objet ou de lien.
-     * Des accélérations pruvent être prévues dans ce cas.
+     * Des accélérations peuvent être prévues dans ce cas.
      *
      * @return boolean
      */
@@ -228,13 +232,13 @@ abstract class Applications extends Functions implements applicationInterface
         if (Node::checkNID($arg_dwlobj)) {
             $this->_askDownload = true;
             $this->_askDownloadObject = trim($arg_dwlobj);
-            $this->_metrologyInstance->addLog('Ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df913e73');
+            $this->_metrologyInstance->addLog('ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df913e73');
         }
         $arg_dwllnk = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_dwllnk)) {
             $this->_askDownload = true;
             $this->_askDownloadLinks = trim($arg_dwllnk);
-            $this->_metrologyInstance->addLog('Ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '98d5ee6d');
+            $this->_metrologyInstance->addLog('ask for download links ' . $arg_dwllnk, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '98d5ee6d');
         }
         return $this->_askDownload;
     }
@@ -253,7 +257,7 @@ abstract class Applications extends Functions implements applicationInterface
         if ($this->_askDownloadLinks != '') // Détermine si c'est un lien à télécharger.
         {
             if ($this->_nebuleInstance->getIoInstance()->checkLinkPresent($this->_askDownloadLinks)) {
-                $this->_metrologyInstance->addLog('Sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '91b305b1');
+                $this->_metrologyInstance->addLog('Sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '91b305b1');
                 // Flush des erreurs.
                 ob_end_clean();
                 // Transmission.
@@ -263,7 +267,7 @@ abstract class Applications extends Functions implements applicationInterface
                 header('Content-Transfer-Encoding: binary');
                 header('Expires: 0');
 
-                $this->_metrologyInstance->addLog('End sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd5318e9f');
+                $this->_metrologyInstance->addLog('End sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5318e9f');
             } else {
                 $err404 = true;
                 $this->_metrologyInstance->addLog('Error 404 sending links ' . $this->_askDownloadLinks, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'df11e69f');
@@ -273,7 +277,7 @@ abstract class Applications extends Functions implements applicationInterface
             $instance = $this->_cacheInstance->newNode($this->_askDownloadObject);
             $data = $instance->getContent(0);
             if ($data != null) {
-                $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '18852ac4');
+                $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '18852ac4');
                 // Calcul type mime, nom et suffixe de fichier pour l'utilisateur final.
                 $downloadmime = $instance->getType('all');
                 $downloadname = $instance->getName('all');
@@ -291,7 +295,7 @@ abstract class Applications extends Functions implements applicationInterface
                 header('Expires: 0');
                 echo $data;
 
-                $this->_metrologyInstance->addLog('End sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '99f390f9');
+                $this->_metrologyInstance->addLog('End sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '99f390f9');
             } else {
                 $err404 = true;
                 $this->_metrologyInstance->addLog('Error 404 sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f8234249');
@@ -299,7 +303,7 @@ abstract class Applications extends Functions implements applicationInterface
         }
 
         if ($err404) {
-            $this->_metrologyInstance->addLog('Sending error 404 ', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6efad36a');
+            $this->_metrologyInstance->addLog('Sending error 404 ', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6efad36a');
             // Transmission.
             ob_end_clean();
             ob_clean();

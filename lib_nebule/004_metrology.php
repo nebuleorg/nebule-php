@@ -348,8 +348,9 @@ class Metrology extends Functions
         <ul>
             <li>Mémoire utilisée :
                 <ul>
-                    <li><code>Mp</code> : Maximum mémoire utilisée lors de l'exécution du code, en Mbytes. Une valeur au-delà du
-                        maximum permit dans la configuration PHP entraînera un arrêt automatique du code.</li>
+                    <li><code>Mp</code> : Maximum mémoire utilisée lors de l'exécution du code comparée au maximum
+                        autorisé, en MBytes. Une valeur au-delà du maximum autorisé dans la configuration PHP (php.ini,
+                        option <code>memory_limit</code>) entraîne un arrêt automatique du code.</li>
                 </ul>
             </li>
             <li>Mesures de temps : voir <a href="#mc">MC</a></li>

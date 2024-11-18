@@ -82,7 +82,7 @@ class Ticketing extends Functions
             // Le ticket est connu et n'est pas utilisé, c'est bon.
             // Il est marqué maintenant comme utilisé.
             // Les actions peuvent être réalisées.
-            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7083b07d'); // Log
+            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7083b07d'); // Log
             $this->_validTicket = true;
             $_SESSION['Tickets'][$ticket] = false;
         } else {

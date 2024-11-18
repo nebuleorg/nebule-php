@@ -15,7 +15,7 @@ class App1
     const APPLICATION_NAME = 'applis';
     const APPLICATION_SURNAME = 'nebule/applis';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240712';
+    const APPLICATION_VERSION = '020241118';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -44,15 +44,21 @@ class App1
         echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
         echo "</div></a>\n";
 
+        // Display flush page.
+        echo '<a href="/?f">';
+        echo '<div class="apps" style="background:#111111;">';
+        echo '<span class="appstitle">Nf</span><br /><span class="appsname">flush</span>';
+        echo "</div></a>\n";
+
         // Display default page.
         echo '<a href="/?a=0">';
-        echo '<div class="apps" style="background:#111111;">';
+        echo '<div class="apps" style="background:#222222;">';
         echo '<span class="appstitle">N0</span><br /><span class="appsname">defolt</span>';
         echo "</div></a>\n";
 
         // Display page of technical documentation.
         echo '<a href="/?a=3">';
-        echo '<div class="apps" style="background:#222222;">';
+        echo '<div class="apps" style="background:#333333;">';
         echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
         echo "</div></a>\n";
 

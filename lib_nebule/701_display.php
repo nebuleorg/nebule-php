@@ -376,7 +376,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // If we don't use modules, list of modes must not be empty.
         if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
-            $this->_metrologyInstance->addLog('Search mode, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ddcc0850');
+            $this->_metrologyInstance->addLog('search mode, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ddcc0850');
             return;
         }
 
@@ -416,7 +416,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
         }
         $this->_sessionInstance->setSessionStore($applicationName . 'DisplayMode', $this->_currentDisplayMode);
-        $this->_metrologyInstance->addLog('Current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bda64a7b');
+        $this->_metrologyInstance->addLog('current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bda64a7b');
     }
 
     /**
@@ -440,7 +440,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module->getCommandName() == $this->_currentDisplayMode && strtolower($module->getType()) == 'application') {
-                    $this->_metrologyInstance->addLog('Find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7cd85d87');
+                    $this->_metrologyInstance->addLog('find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7cd85d87');
                     $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
                 }
             }
@@ -480,12 +480,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         global $applicationName;
 
         if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
-            $this->_metrologyInstance->addLog('Search view, no module and no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82b83c17');
+            $this->_metrologyInstance->addLog('search view, no module and no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82b83c17');
             return;
         }
 
         if ($this->_applicationInstance::USE_MODULES && sizeof($this->_applicationInstance->getModulesListInstances()) == 0) {
-            $this->_metrologyInstance->addLog('Search view, module but no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '21dc60cc');
+            $this->_metrologyInstance->addLog('search view, module but no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '21dc60cc');
             return;
         }
 
@@ -496,7 +496,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Si activé, extrait les modes.
         if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
-            $this->_metrologyInstance->addLog('Search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
+            $this->_metrologyInstance->addLog('search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
             // Si demande la vue par défaut.
@@ -541,7 +541,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             unset($cache);
         }
-        $this->_metrologyInstance->addLog('Current view : ' . $this->_currentDisplayView, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f5231ed0');
+        $this->_metrologyInstance->addLog('current view : ' . $this->_currentDisplayView, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f5231ed0');
 
         unset($arg_view, $list_views_names, $ok_view);
     }
@@ -566,7 +566,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($arg_id != '')
             $this->_inlineContentID = $arg_id;
 
-        $this->_metrologyInstance->addLog('Find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '046d378a');
+        $this->_metrologyInstance->addLog('find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '046d378a');
     }
 
     protected $_inlineContentID = '';
@@ -603,7 +603,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_inlineContentIndex[$id] = $id;
         $this->_inlineContentOptions[$id] = $options;
 
-        $this->_metrologyInstance->addLog('Register sub display : ' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e3c2b608');
+        $this->_metrologyInstance->addLog('register sub display : ' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e3c2b608');
         ?>
 
         <div class="inlinecontent" id="<?php echo $id; ?>">
@@ -1770,11 +1770,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayInline(): void
     {
-        $this->_metrologyInstance->addLog('Display inline', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bfcdcd6d');
+        $this->_metrologyInstance->addLog('display inline', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bfcdcd6d');
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
-                $this->_metrologyInstance->addLog('Display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f74be2e8');
+                $this->_metrologyInstance->addLog('display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f74be2e8');
                 $module->displayModuleInline();
                 echo "\n";
             }
@@ -1891,8 +1891,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un message d'erreur pré-formaté.
      * Use DisplayNotify()
      *
-     * @param string      $text
-     * @param string|null $arg1
+     * @param string $text
+     * @param string $arg1
      * @return void
      */
     public function displayMessageError_DEPRECATED(string $text, string $arg1 = ''): void
@@ -1974,7 +1974,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             } else {
                 $notify = new DisplayNotify($this->_applicationInstance);
                 $notify->setMessage('::::display:content:errorNotAvailable');
-                $notify->setType(DisplayNotify::TYPE_ERROR);
+                $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $result .= $notify->getHTML();
             }
         } elseif ($isGroup) {
@@ -2124,14 +2124,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             $notify = new DisplayNotify($this->_applicationInstance);
             $notify->setMessage('::::display:content:errorBan');
-            $notify->setType(DisplayNotify::TYPE_ERROR);
+            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
             $result .= $notify->getHTML();
         } elseif ($protected
             && $nid == $object->getProtectedID()
         ) {
             $notify = new DisplayNotify($this->_applicationInstance);
             $notify->setMessage('::::display:content:warningObjectProctected');
-            $notify->setType(DisplayNotify::TYPE_WARN);
+            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
             $result .= $notify->getHTML();
             $unprotectedObject = $this->_cacheInstance->newNode($object->getUnprotectedID());
             $unprotectedName = $unprotectedObject->getFullName('all');
@@ -2152,7 +2152,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($warning) {
                 $notify = new DisplayNotify($this->_applicationInstance);
                 $notify->setMessage('::::display:content:warningTaggedWarning');
-                $notify->setType(DisplayNotify::TYPE_WARN);
+                $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                 $result .= $notify->getHTML();
             }
             if ($protected
@@ -2161,7 +2161,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             ) {
                 $notify = new DisplayNotify($this->_applicationInstance);
                 $notify->setMessage('::::display:content:warningObjectProctected');
-                $notify->setType(DisplayNotify::TYPE_WARN);
+                $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                 $result .= $notify->getHTML();
             }
             $divOpen = "<div class=\"textcontent" . $size . "\">\n\t";
@@ -2177,12 +2177,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:warningTooBig');
-                            $notify->setType(DisplayNotify::TYPE_WARN);
+                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayNotify::TYPE_ERROR);
+                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
                     }
@@ -2195,12 +2195,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:warningTooBig');
-                            $notify->setType(DisplayNotify::TYPE_WARN);
+                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayNotify::TYPE_ERROR);
+                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
                     }
@@ -2218,12 +2218,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:warningTooBig');
-                            $notify->setType(DisplayNotify::TYPE_WARN);
+                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayNotify::TYPE_ERROR);
+                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
                     }
@@ -2237,13 +2237,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:warningTooBig');
-                            $notify->setType(DisplayNotify::TYPE_WARN);
+                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                             $result .= $notify->getHTML();
                         }
                         else {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:errorNotAvailable');
-                            $notify->setType(DisplayNotify::TYPE_ERROR);
+                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
                     }
@@ -2256,12 +2256,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:warningTooBig');
-                            $notify->setType(DisplayNotify::TYPE_WARN);
+                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                             $result .= $notify->getHTML();
                         } else {
                             $notify = new DisplayNotify($this->_applicationInstance);
                             $notify->setMessage('::::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayNotify::TYPE_ERROR);
+                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                             $result .= $notify->getHTML();
                         }
                     }
@@ -2269,20 +2269,20 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 case nebule::REFERENCE_OBJECT_CRYPT_RSA :
                     $notify = new DisplayNotify($this->_applicationInstance);
                     $notify->setMessage('::::display:content:warningObjectProctected');
-                    $notify->setType(DisplayNotify::TYPE_WARN);
+                    $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                     $result .= $notify->getHTML();
                     break;
                 default :
                     $notify = new DisplayNotify($this->_applicationInstance);
                     $notify->setMessage('::::display:content:errorNotDisplayable');
-                    $notify->setType(DisplayNotify::TYPE_WARN);
+                    $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                     $result .= $notify->getHTML();
                     break;
             }
         } else {
             $notify = new DisplayNotify($this->_applicationInstance);
             $notify->setMessage('::::display:content:errorNotAvailable');
-            $notify->setType(DisplayNotify::TYPE_ERROR);
+            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
             $result .= $notify->getHTML();
         }
 
@@ -2745,8 +2745,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Recherche par référence une image.
      * Fait une mise en cache du résultat.
      *
-     * @param string|Node $rid
-     * @param boolean     $useBuffer
+     * @param Node    $rid
+     * @param boolean $useBuffer
      * @return Node
      */
     public function getImageByReference(Node $rid, bool $useBuffer = true): Node

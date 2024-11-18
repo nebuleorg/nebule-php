@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241116';
+const BOOTSTRAP_VERSION = '020241118';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5900,17 +5900,25 @@ function bootstrap_breakDisplay41LibraryEntities(): void
         array($nebuleInstance->getAuthoritiesInstance()->getPuppetmasterEID() => $nebuleInstance->getAuthoritiesInstance()->getPuppetmasterInstance()),
         $nebuleInstanceCheck > 10);
 
-    bootstrap_breakDisplay411DisplayEntity('security authority', $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesEID(),
-        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 20);
+    bootstrap_breakDisplay411DisplayEntity('security authority',
+        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(),
+        $nebuleInstanceCheck > 20);
 
-    bootstrap_breakDisplay411DisplayEntity('code authority', $nebuleInstance->getAuthoritiesInstance()->getCodeAuthoritiesEID(),
-        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(), $nebuleInstanceCheck > 30);
+    bootstrap_breakDisplay411DisplayEntity('code authority',
+        $nebuleInstance->getAuthoritiesInstance()->getCodeAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getSecurityAuthoritiesInstance(),
+        $nebuleInstanceCheck > 30);
 
-    bootstrap_breakDisplay411DisplayEntity('directory authority', $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesEID(),
-        $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesInstance(), $nebuleInstanceCheck > 40);
+    bootstrap_breakDisplay411DisplayEntity('directory authority',
+        $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getDirectoryAuthoritiesInstance(),
+        $nebuleInstanceCheck > 40);
 
-    bootstrap_breakDisplay411DisplayEntity('time authority', $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesEID(),
-        $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesInstance(), $nebuleInstanceCheck > 50);
+    bootstrap_breakDisplay411DisplayEntity('time authority',
+        $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesEID(),
+        $nebuleInstance->getAuthoritiesInstance()->getTimeAuthoritiesInstance(),
+        $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay411DisplayEntity('server entity',
         array($nebuleInstance->getEntitiesInstance()->getServerEntityID() => $nebuleInstance->getEntitiesInstance()->getServerEntityID()),
@@ -7352,7 +7360,7 @@ function bootstrap_logMetrology(): void
             . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';
 
     log_add('end bootstrap Mp='
-        . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . 'Mb'
+        . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . '/' . ini_get('memory_limit') . 'B'
         . $timers
         . $caches,
         'info',
