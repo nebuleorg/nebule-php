@@ -221,7 +221,7 @@ class Entity extends Node implements nodeInterface
         return $t;
     }
 
-    private $_typeVerified = false;
+    private bool $_typeVerified = false;
 
     public function getKeyType(): string
     {

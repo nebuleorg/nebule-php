@@ -305,12 +305,12 @@ class Conversation extends Group implements nodeInterface
     /**
      * Retourne si l'entité est à l'écoute du groupe.
      *
-     * @param string|Node|Entity $entity
-     * @param string             $socialClass
+     * @param string|Node $entity
+     * @param string      $socialClass
      * @param array:string $socialListID
      * @return boolean
      */
-    public function getIsFollower($entity, string $socialClass = '', $socialListID = null): bool
+    public function getIsFollower(Node|string $entity, string $socialClass = '', $socialListID = null): bool
     {
         // Vérifie que c'est bien une entité.
         if ($entity == '') {

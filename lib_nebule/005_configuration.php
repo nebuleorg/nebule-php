@@ -1013,7 +1013,7 @@ class Configuration extends Functions
             foreach ($file as $line) {
                 $l = trim($line);
 
-                if ($l == '' || substr($l, 0, 1) == "#")
+                if ($l == '' || str_starts_with($l, '#'))
                     continue;
 
                 $nameOnFile = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));

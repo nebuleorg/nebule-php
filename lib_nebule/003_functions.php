@@ -72,7 +72,7 @@ class Functions
             return;
         $this->_initialisationSet = true;
 
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $this->_metrologyInstance->addLog('Track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         $this->_initialisation();
     }
 
@@ -80,12 +80,13 @@ class Functions
 
     protected function _initSubInstance(string $class): functions
     {
-        $this->_metrologyInstance->addLog('Track functions ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('Track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new $class($this->_nebuleInstance);
         $instance->setEnvironment($this->_nebuleInstance);
         $instance->initialisation();
         $type = strtolower($instance::TYPE);
 
+        $this->_metrologyInstance->addLog('add sub-instance ' . $class . ' as ' . $type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '68634e7f');
         $this->_listClasses[$type] = $class;
         $this->_listTypes[$class] = $type;
         $this->_listInstances[$type] = $instance;

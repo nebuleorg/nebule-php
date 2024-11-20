@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241119';
+const BOOTSTRAP_VERSION = '020241120';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5864,12 +5864,12 @@ function bootstrap_breakDisplay4LibraryPOO(): void
         echo ' version ' . $nebuleLibVersion;
     echo "<br />\n";
 
-    if (is_a($nebuleInstance, 'Nebule\Library\nebule')) {
-        bootstrap_echoLineTitle('functional level');
-        echo 'found ' . \Nebule\Library\nebule::NEBULE_FUNCTION_VERSION . ', need >= ' . BOOTSTRAP_FUNCTION_VERSION;
-        echo "<br />\n";
+    if ($nebuleInstance instanceof \Nebule\Library\nebule) {
         bootstrap_echoLineTitle('library SID');
         bootstrap_echoLinkNID($bootstrapLibrarySID);
+        echo "<br />\n";
+        bootstrap_echoLineTitle('functional level');
+        echo 'found ' . \Nebule\Library\nebule::NEBULE_FUNCTION_VERSION . ', need >= ' . BOOTSTRAP_FUNCTION_VERSION;
         echo "<br />\n";
         if ($nebuleInstance->getLoadingStatus()) {
             bootstrap_breakDisplay41LibraryEntities();
@@ -5933,7 +5933,7 @@ function bootstrap_breakDisplay41LibraryEntities(): void
     bootstrap_breakDisplay411DisplayEntity('current entity',
         array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityID()),
         array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance()),
-        $nebuleInstanceCheck > 70);
+        $nebuleInstanceCheck > 80);
 
     $entity = lib_getOption('subordinationEntity');
     if ($entity != '') {
@@ -5941,7 +5941,7 @@ function bootstrap_breakDisplay41LibraryEntities(): void
         bootstrap_breakDisplay411DisplayEntity('subordination',
             array($entity => $entity),
             array($entity => $instance),
-            $nebuleInstanceCheck > 70);
+            $nebuleInstanceCheck > 80);
     } else {
         bootstrap_echoLineTitle('subordination');
         echo "none<br />\n";

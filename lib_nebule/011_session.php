@@ -180,7 +180,7 @@ class Session extends Functions
     public function getSessionStoreAsEntity(string $name): ?Node {
         $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_getEntityFromSession($name);
-        if ($instance === null || !is_a($instance, 'Nebule\Library\Entity'))
+        if ($instance === null || !$instance instanceof Entity)
             $instance = new Entity($this->_nebuleInstance, '0');
         $this->_metrologyInstance->addLog('get entity for ' . $name . ' from session EID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '19f3e422');
         return $instance;

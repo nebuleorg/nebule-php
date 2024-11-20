@@ -36,11 +36,8 @@ class Crypto extends Functions implements CryptoInterface
     protected function _initialisation(): void
     {
         $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $myClass = get_class($this);
-        $size = strlen($myClass);
-        $list = get_declared_classes();
-        foreach ($list as $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
+        foreach (get_declared_classes() as $class) {
+            if (str_starts_with($class, get_class($this)) && $class != get_class($this)) {
                 $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '53556863');
                 $this->_initSubInstance($class);
             }
@@ -94,9 +91,9 @@ class Crypto extends Functions implements CryptoInterface
     {
         // FIXME refaire un sélecteur plus propre !
         if ($quality == Crypto::RANDOM_STRONG)
-            return $this->_listInstances['Openssl']->getRandom($size);
+            return $this->_listInstances['openssl']->getRandom($size);
         else
-            return $this->_listInstances['Software']->getRandom($size);
+            return $this->_listInstances['software']->getRandom($size);
     }
 
     /**
@@ -105,7 +102,7 @@ class Crypto extends Functions implements CryptoInterface
      */
     public function getEntropy(string &$data): float
     {
-        return $this->_listInstances['Software']->getEntropy($data);
+        return $this->_listInstances['software']->getEntropy($data);
     }
 
     // --------------------------------------------------------------------------------

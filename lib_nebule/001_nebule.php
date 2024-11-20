@@ -674,24 +674,6 @@ class nebule
 
 
 
-    private string $_instanceEntity_DEPRECATED = '';
-    private ?Entity $_instanceEntityInstance_DEPRECATED = null;
-
-
-
-    private string $_defaultEntity_DEPRECATED = '';
-    private ?Entity $_defaultEntityInstance_DEPRECATED = null;
-
-
-
-    private string $_currentEntityID = '';
-    private ?Entity $_currentEntityInstance = null;
-    private string $_currentEntityPrivateKey = '';
-    private ?Node $_currentEntityPrivateKeyInstance = null;
-    private bool $_currentEntityIsUnlocked = false;
-
-
-
     private array $_listEntitiesUnlocked = array();
     private array $_listEntitiesUnlockedInstances = array();
 
@@ -715,13 +697,13 @@ class nebule
         $this->_listEntitiesUnlockedInstances[$eid] = $entity;
     }
 
-    public function removeListEntitiesUnlocked(Entity $entity)
+    public function removeListEntitiesUnlocked(Entity $entity): void
     {
         unset($this->_listEntitiesUnlocked[$entity->getID()]);
         unset($this->_listEntitiesUnlockedInstances[$entity->getID()]);
     }
 
-    public function flushListEntitiesUnlocked()
+    public function flushListEntitiesUnlocked(): void
     {
         $this->_listEntitiesUnlocked = array();
         $this->_listEntitiesUnlockedInstances = array();
@@ -731,7 +713,7 @@ class nebule
     private string $_currentGroupID = '';
     private ?Group $_currentGroupInstance = null;
 
-    private function _findCurrentGroup()
+    private function _findCurrentGroup(): void
     {
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_GROUP))
             $arg_grp = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -780,7 +762,7 @@ class nebule
     private string $_currentConversationID = '';
     private ?Conversation $_currentConversationInstance = null;
 
-    private function _findCurrentConversation()
+    private function _findCurrentConversation(): void
     {
         if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_CONVERSATION))
             $arg_cvt = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -828,7 +810,7 @@ class nebule
     private string $_currentCurrencyID = '';
     private ?Currency $_currentCurrencyInstance = null;
 
-    private function _findCurrentCurrency()
+    private function _findCurrentCurrency(): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrencyID = '0';
@@ -1029,13 +1011,15 @@ class nebule
             if ($instance->getID() == '0') return 43;
         }
 
-        if (!$this->_instanceEntityInstance_DEPRECATED instanceof Entity) return 51;
-        if ($this->_instanceEntityInstance_DEPRECATED->getID() == '0') return 52;
+        if (!$this->_entitiesInstance->getServerEntityInstance() instanceof Entity) return 51;
+        if ($this->_entitiesInstance->getServerEntityID() == '0') return 52;
 
-        if (!$this->_entitiesInstance->getCurrentEntityInstance() instanceof Entity) return 61;
-        if ($this->_entitiesInstance->getCurrentEntityInstance()->getID() == '0') return 62;
+        if (!$this->_entitiesInstance->getDefaultEntityInstance() instanceof Entity) return 61;
+        if ($this->_entitiesInstance->getDefaultEntityInstance()->getID() == '0') return 62;
 
-        // Tout est bon et l'instance est utilisée.
+        if (!$this->_entitiesInstance->getCurrentEntityInstance() instanceof Entity) return 71;
+        if ($this->_entitiesInstance->getCurrentEntityInstance()->getID() == '0') return 72;
+
         return 128;
     }
 
