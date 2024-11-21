@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240829';
+    const APPLICATION_VERSION = '020241121';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -1808,7 +1808,7 @@ class Action extends Actions
     const COMMAND_OPTION_NAME = 'name';
     const COMMAND_OPTION_VALUE = 'value';
 
-    public function genericActions()
+    public function genericActions():void
     {
         $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
@@ -1835,7 +1835,7 @@ class Action extends Actions
     }
 
 
-    public function specialActions()
+    public function specialActions():void
     {
         $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
 
@@ -1854,7 +1854,7 @@ class Action extends Actions
     protected string $_actionOptionName = '';
     protected string $_actionOptionValue = '';
 
-    protected function _extractActionChangeOption()
+    protected function _extractActionChangeOption():void
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_unlocked
@@ -1892,7 +1892,7 @@ class Action extends Actions
     }
 
 
-    protected function _actionChangeOption()
+    protected function _actionChangeOption():void
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))

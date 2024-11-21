@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241120';
+const BOOTSTRAP_VERSION = '020241121';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -6201,7 +6201,7 @@ function bootstrap_echoLinkNID(string $nid, string $name = ''): void
  *
  * @return void
  */
-function bootstrap_displayNoPreloadApplication()
+function bootstrap_displayNoPreloadApplication(): void
 {
     global $bootstrapApplicationOID;
     log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
@@ -6215,7 +6215,7 @@ function bootstrap_displayNoPreloadApplication()
  *
  * @return void
  */
-function bootstrap_displayPreloadApplication()
+function bootstrap_displayPreloadApplication(): void
 {
     global $nebuleInstance,
            $applicationInstance,

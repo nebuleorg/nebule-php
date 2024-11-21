@@ -248,7 +248,7 @@ class Action extends Actions
     /**
      * Traitement des actions génériques.
      */
-    public function genericActions()
+    public function genericActions(): void
     {
         $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
@@ -266,7 +266,7 @@ class Action extends Actions
      *
      * @return void
      */
-    public function specialActions()
+    public function specialActions(): void
     {
         $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 

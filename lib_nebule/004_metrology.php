@@ -391,6 +391,10 @@ class Metrology extends Functions
             <li><code>1111c0de</code> : Code générique de traçage des appels des fonctions.</li>
             <li><code>76941959</code> : Démarrage du bootstrap. Info.</li>
             <li><code>50615f80</code> : Création du fichier de débug. Info.</li>
+            <li><code>41ba02a9</code> : Erreur lors de l'initialisation de l'instance de l'application par le bootstrap. Error.</li>
+            <li><code>d121af4c</code> : Erreur lors de l'initialisation de l'instance de traduction de l'application par le bootstrap. Error.</li>
+            <li><code>4bb6af65</code> : Erreur lors de l'initialisation de l'instance d'affichage de l'application par le bootstrap. Error.</li>
+            <li><code>308b8a96</code> : Erreur lors de l'initialisation de l'instance des actions de l'application par le bootstrap. Error.</li>
             <li style="color: red; font-weight: bold">A compléter...</li>
         </ul>
 
