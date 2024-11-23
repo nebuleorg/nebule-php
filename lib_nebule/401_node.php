@@ -91,7 +91,7 @@ class Node extends Functions implements nodeInterface
     public function __construct(nebule $nebuleInstance, string $nid)
     {
         parent::__construct($nebuleInstance);
-        $this->setEnvironment($nebuleInstance);
+        $this->setEnvironmentLibrary($nebuleInstance);
 
         $id = trim(strtolower($nid));
         if (self::checkNID($id, false, false)

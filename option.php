@@ -124,7 +124,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     protected function _displayFull(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+        if (!str_contains(Application::APPLICATION_WEBSITE, '://'))
             $linkApplicationWebsite = 'http' . '://' . Application::APPLICATION_WEBSITE;
 
         // Récupère l'entité déverrouillée ou l'entité instance du serveur.

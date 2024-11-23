@@ -402,18 +402,18 @@ class nebule
      */
     private function _setEnvironmentInstances(): void
     {
-        $this->_metrologyInstance->setEnvironment($this);
-        $this->_configurationInstance->setEnvironment($this);
-        $this->_rescueInstance->setEnvironment($this);
-        $this->_sessionInstance->setEnvironment($this);
-        $this->_cryptoInstance->setEnvironment($this);
-        $this->_ioInstance->setEnvironment($this);
-        $this->_cacheInstance->setEnvironment($this);
-        $this->_socialInstance->setEnvironment($this);
-        $this->_authoritiesInstance->setEnvironment($this);
-        $this->_entitiesInstance->setEnvironment($this);
-        $this->_recoveryInstance->setEnvironment($this);
-        $this->_ticketingInstance->setEnvironment($this);
+        $this->_metrologyInstance->setEnvironmentLibrary($this);
+        $this->_configurationInstance->setEnvironmentLibrary($this);
+        $this->_rescueInstance->setEnvironmentLibrary($this);
+        $this->_sessionInstance->setEnvironmentLibrary($this);
+        $this->_cryptoInstance->setEnvironmentLibrary($this);
+        $this->_ioInstance->setEnvironmentLibrary($this);
+        $this->_cacheInstance->setEnvironmentLibrary($this);
+        $this->_socialInstance->setEnvironmentLibrary($this);
+        $this->_authoritiesInstance->setEnvironmentLibrary($this);
+        $this->_entitiesInstance->setEnvironmentLibrary($this);
+        $this->_recoveryInstance->setEnvironmentLibrary($this);
+        $this->_ticketingInstance->setEnvironmentLibrary($this);
     }
 
     private function _initAllInstances(): void

@@ -22,10 +22,10 @@ interface applicationInterface
     public function initialisation(): void;
     public function getClassName(): string;
     public function getName(): string;
-    public function getNebuleInstance(): nebule;
-    public function getDisplayInstance(): Displays;
-    public function getTranslateInstance(): Translates;
-    public function getMetrologyInstance(): Metrology;
-    public function getActionInstance(): Actions;
+    public function getNebuleInstance(): ?nebule;
+    public function getDisplayInstance(): ?Displays;
+    public function getTranslateInstance(): ?Translates;
+    public function getMetrologyInstance(): ?Metrology;
+    public function getActionInstance(): ?Actions;
     // TODO
 }

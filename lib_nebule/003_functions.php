@@ -30,7 +30,12 @@ class Functions
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
-    protected bool $_environmentSet = false;
+    protected ?Applications $_applicationInstance = null;
+    protected ?Displays $_displayInstance = null;
+    protected ?Actions $_actionInstance = null;
+    protected ?Translates $_translateInstance = null;
+    protected bool $_environmentLibrarySet = false;
+    protected bool $_environmentApplicationSet = false;
     protected bool $_initialisationSet = false;
     protected array $_listClasses = array();
     protected array $_listTypes = array();
@@ -46,12 +51,12 @@ class Functions
 
     public function __wakeup(){}
 
-    public function setEnvironment(nebule $nebuleInstance): void{
-        if ($this->_environmentSet)
+    public function setEnvironmentLibrary(nebule $nebuleInstance): void{
+        if ($this->_environmentLibrarySet)
             return;
-        $this->_environmentSet = true;
+        $this->_environmentLibrarySet = true;
 
-        $nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         $this->_nebuleInstance = $nebuleInstance;
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_configurationInstance = $this->_nebuleInstance->getConfigurationInstance();
@@ -64,7 +69,16 @@ class Functions
         $this->_ticketingInstance = $this->_nebuleInstance->getTicketingInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
-        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
+        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();}
+
+    public function setEnvironmentApplication(Applications $applicationInstance): void{
+        if ($this->_environmentApplicationSet)
+            return;
+        $this->_environmentApplicationSet = true;
+
+        //$this->setEnvironmentLibrary($applicationInstance->getNebuleInstance());
+
+        $this->_applicationInstance = $applicationInstance;
     }
 
     public function initialisation(): void{
@@ -72,7 +86,7 @@ class Functions
             return;
         $this->_initialisationSet = true;
 
-        $this->_metrologyInstance->addLog('Track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         $this->_initialisation();
     }
 

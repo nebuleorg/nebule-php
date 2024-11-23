@@ -219,7 +219,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironment($this->_nebuleInstance);
+        parent::__construct($this->_nebuleInstance);
+        $this->setEnvironmentLibrary($this->_nebuleInstance);
         $this->initialisation();
     }
 
@@ -279,48 +280,28 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Les instances interdépendantes doivent être synchronisées.
     }
 
-    /**
-     * Fonction de suppression de l'instance.
-     */
     public function __destruct()
     {
         return true;
     }
 
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return 'Display';
     }
 
-    /**
-     * Fonction de mise en sommeil.
-     *
-     * @return array:string
-     */
     public function __sleep() // TODO do not cache
     {
         return array();
     }
 
-    /**
-     * Fonction de réveil.
-     *
-     * Récupère l'instance de la librairie nebule et de l'application.
-     *
-     * @return void
-     */
     public function __wakeup(): void // TODO do not cache
     {
         global $applicationInstance;
 
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironment();
+        $this->setEnvironmentLibrary($this->_nebuleInstance);
         $this->initialisation();
     }
 

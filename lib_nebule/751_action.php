@@ -105,7 +105,8 @@ abstract class Actions extends Functions
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironment();
+        parent::__construct($this->_nebuleInstance);
+        $this->setEnvironmentLibrary($this->_nebuleInstance);
         $this->initialisation();
     }
 
@@ -141,7 +142,7 @@ abstract class Actions extends Functions
 
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironment();
+        $this->setEnvironmentLibrary($this->_nebuleInstance);
         $this->initialisation();
     }
 

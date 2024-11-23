@@ -75,11 +75,11 @@ abstract class Applications extends Functions implements applicationInterface
     public function getClassName(): string { return static::class; }
     public function getName(): string { return static::APPLICATION_NAME; }
     public function getNamespace(): string { return $this->_applicationNamespace; }
-    public function getNebuleInstance(): nebule { return $this->_nebuleInstance; }
-    public function getDisplayInstance(): Displays { return $this->_displayInstance; }
-    public function getTranslateInstance(): Translates { return $this->_translateInstance; }
-    public function getMetrologyInstance(): Metrology { return $this->_metrologyInstance; }
-    public function getActionInstance(): Actions { return $this->_actionInstance; }
+    public function getNebuleInstance(): ?nebule { return $this->_nebuleInstance; }
+    public function getDisplayInstance(): ?Displays { return $this->_displayInstance; }
+    public function getTranslateInstance(): ?Translates { return $this->_translateInstance; }
+    public function getMetrologyInstance(): ?Metrology { return $this->_metrologyInstance; }
+    public function getActionInstance(): ?Actions { return $this->_actionInstance; }
     public function getApplicationModulesInstance(): ApplicationModules { return $this->_applicationModulesInstance; }
     public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObject(); }
     public function getCurrentObjectInstance(): Node { return $this->_nebuleInstance->getCurrentObjectInstance(); }

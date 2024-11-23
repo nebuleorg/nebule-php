@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241121';
+const BOOTSTRAP_VERSION = '020241123';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4825,46 +4825,62 @@ function bootstrap_loadApplication(): void
     session_abort();
 
     try {
-            if ($bootstrapApplicationInstanceSleep == '')
-                $applicationInstance = new $nameSpaceApplication($nebuleInstance);
-            else
-                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+        if ($bootstrapApplicationInstanceSleep == '') {
+            log_add('application load new instance', 'debug', __FUNCTION__, '397ce035');
+            $applicationInstance = new $nameSpaceApplication($nebuleInstance);
+        }
+        else {
+            log_add('application load serialized instance', 'debug', __FUNCTION__, 'b5f2f3f2');
+            $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+        }
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('Application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+        log_add('application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
-            if ($bootstrapApplicationDisplayInstanceSleep == '')
-                $applicationDisplayInstance = new $nameSpaceDisplay($applicationInstance);
-            else
-                $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+        if ($bootstrapApplicationDisplayInstanceSleep == '') {
+            log_add('application display load new instance', 'debug', __FUNCTION__, '451a8518');
+            $applicationDisplayInstance = new $nameSpaceDisplay($applicationInstance);
+        }
+        else {
+            log_add('application display load serialized instance', 'debug', __FUNCTION__, '85463d91');
+            $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
+        }
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('Application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
+        log_add('application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
-            if ($bootstrapApplicationActionInstanceSleep == '')
-                $applicationActionInstance = new $nameSpaceAction($applicationInstance);
-            else
-                $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+        if ($bootstrapApplicationActionInstanceSleep == '') {
+            log_add('application action load new instance', 'debug', __FUNCTION__, 'd3478bd7');
+            $applicationActionInstance = new $nameSpaceAction($applicationInstance);
+        }
+        else {
+            log_add('application action load serialized instance', 'debug', __FUNCTION__, 'a3767062');
+            $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
+        }
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('Application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
+        log_add('application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 
     try {
-        if ($bootstrapApplicationTranslateInstanceSleep == '')
+        if ($bootstrapApplicationTranslateInstanceSleep == '') {
+            log_add('application translate load new instance', 'debug', __FUNCTION__, 'bd674f44');
             $applicationTranslateInstance = new $nameSpaceTranslate($applicationInstance);
-        else
+        }
+        else {
+            log_add('application translate load serialized instance', 'debug', __FUNCTION__, '9a750c51');
             $applicationTranslateInstance = unserialize($bootstrapApplicationTranslateInstanceSleep);
+        }
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('Application translate load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
+        log_add('application translate load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 }
@@ -6270,6 +6286,8 @@ function bootstrap_displayPreloadApplication(): void
         log_add('error preload application code OID=' . $bootstrapApplicationOID . ' classe=' . get_class($applicationInstance), 'error', __FUNCTION__, '2e87a827');
         return;
     }
+    if (!is_a($applicationDisplayInstance, '\Nebule\Library\Displays'))
+        return;
 
     echo 'Name=' . $applicationInstance->getClassName() . "<br/>\n";
 

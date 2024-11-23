@@ -51,7 +51,7 @@ abstract class Modules extends Functions implements moduleInterface
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironment();
+        $this->setEnvironmentLibrary();
         $this->_initialisation();
     }
 

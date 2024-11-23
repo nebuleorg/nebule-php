@@ -52,7 +52,7 @@ class BlocLink extends Functions implements blocLinkInterface
     public function __construct(nebule $nebuleInstance, string $blocLink, string $linkType = Cache::TYPE_LINK)
     {
         parent::__construct($nebuleInstance);
-        $this->setEnvironment($nebuleInstance);
+        $this->setEnvironmentLibrary($nebuleInstance);
 
         $this->_linksType = $linkType;
         $this->_maxRL = $this->_configurationInstance->getOptionAsInteger('linkMaxRL');

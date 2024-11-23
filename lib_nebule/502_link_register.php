@@ -40,7 +40,7 @@ class LinkRegister extends Functions implements linkInterface
     public function __construct(nebule $nebuleInstance, string $rl, blocLinkInterface $blocLink)
     {
         parent::__construct($nebuleInstance);
-        $this->setEnvironment($nebuleInstance);
+        $this->setEnvironmentLibrary($nebuleInstance);
 
         $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
