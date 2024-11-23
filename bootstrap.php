@@ -13,7 +13,7 @@ const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
-const BOOTSTRAP_FUNCTION_VERSION = '020241012';
+const BOOTSTRAP_FUNCTION_VERSION = '020241123';
 // ------------------------------------------------------------------------------------------
 
 
@@ -275,24 +275,6 @@ $bootstrapSwitchApplication = '';
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $applicationInstance = null;
-
-/**
- * Instance d'affichage de l'application.
- * @noinspection PhpUnusedLocalVariableInspection
- */
-$applicationDisplayInstance = null;
-
-/**
- * Instance d'action de l'application.
- * @noinspection PhpUnusedLocalVariableInspection
- */
-$applicationActionInstance = null;
-
-/**
- * Instance de traduction de l'application.
- * @noinspection PhpUnusedLocalVariableInspection
- */
-$applicationTranslateInstance = null;
 
 /**
  * Name space of the application.
@@ -4485,12 +4467,10 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
                 {
                     if ($bootstrapLibraryInstanceSleep == '') {
                         log_add('instancing new class \Nebule\Library\nebule', 'info', __FUNCTION__, '79835c0f');
-                        //$nebuleInstance = new nebule();
                         new nebule();
                     }
                     else {
                         log_add('deserialize previous class \Nebule\Library\nebule', 'info', __FUNCTION__, 'de329729');
-                        //$nebuleInstance = unserialize($bootstrapLibraryInstanceSleep);
                         unserialize($bootstrapLibraryInstanceSleep);
                         $bootstrapLibraryInstanceSleep = '';
                     }
@@ -4770,7 +4750,7 @@ function bootstrap_getApplicationNamespace(string $oid): string
 }
 
 /**
- * Load the application code.
+ * Load the application instance.
  *
  * @return void
  */
@@ -4779,23 +4759,16 @@ function bootstrap_loadApplication(): void
     global $nebuleInstance,
            $libraryPPCheckOK,
            $applicationInstance,
-           $applicationDisplayInstance,
-           $applicationActionInstance,
-           $applicationTranslateInstance,
            $applicationNameSpace,
            $bootstrapApplicationOID;
 
     $nameSpace = bootstrap_getApplicationNamespace($bootstrapApplicationOID);
     $nameSpaceApplication = $nameSpace.'\\Application';
     $applicationNameSpace = $nameSpaceApplication;
-    $nameSpaceDisplay = $nameSpace.'\\Display';
-    $nameSpaceAction = $nameSpace.'\\Action';
-    $nameSpaceTranslate = $nameSpace.'\\Translate';
 
     if ($bootstrapApplicationOID == ''
         || $bootstrapApplicationOID == '0'
         || !$libraryPPCheckOK
-        //|| !class_exists('Application', false)
         || !class_exists($nameSpaceApplication, false)
     ) {
         log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace, 'error', __FUNCTION__, 'ec10ca1d');
@@ -4806,22 +4779,10 @@ function bootstrap_loadApplication(): void
 
     // Get app instances from session if exist.
     $bootstrapApplicationInstanceSleep = '';
-    $bootstrapApplicationDisplayInstanceSleep = '';
-    $bootstrapApplicationActionInstanceSleep = '';
-    $bootstrapApplicationTranslateInstanceSleep = '';
     session_start();
     if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID])
         && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] != '')
         $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID];
-    if (isset($_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] != '')
-        $bootstrapApplicationDisplayInstanceSleep = $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID];
-    if (isset($_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] != '')
-        $bootstrapApplicationActionInstanceSleep = $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID];
-    if (isset($_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID])
-        && $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID] != '')
-        $bootstrapApplicationTranslateInstanceSleep = $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID];
     session_abort();
 
     try {
@@ -4838,118 +4799,43 @@ function bootstrap_loadApplication(): void
         log_add('application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
         bootstrap_setBreak('47', __FUNCTION__);
     }
-
-    try {
-        if ($bootstrapApplicationDisplayInstanceSleep == '') {
-            log_add('application display load new instance', 'debug', __FUNCTION__, '451a8518');
-            $applicationDisplayInstance = new $nameSpaceDisplay($applicationInstance);
-        }
-        else {
-            log_add('application display load serialized instance', 'debug', __FUNCTION__, '85463d91');
-            $applicationDisplayInstance = unserialize($bootstrapApplicationDisplayInstanceSleep);
-        }
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('application display load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '4c7da4e2');
-        bootstrap_setBreak('47', __FUNCTION__);
-    }
-
-    try {
-        if ($bootstrapApplicationActionInstanceSleep == '') {
-            log_add('application action load new instance', 'debug', __FUNCTION__, 'd3478bd7');
-            $applicationActionInstance = new $nameSpaceAction($applicationInstance);
-        }
-        else {
-            log_add('application action load serialized instance', 'debug', __FUNCTION__, 'a3767062');
-            $applicationActionInstance = unserialize($bootstrapApplicationActionInstanceSleep);
-        }
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('application action load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '3c042de3');
-        bootstrap_setBreak('47', __FUNCTION__);
-    }
-
-    try {
-        if ($bootstrapApplicationTranslateInstanceSleep == '') {
-            log_add('application translate load new instance', 'debug', __FUNCTION__, 'bd674f44');
-            $applicationTranslateInstance = new $nameSpaceTranslate($applicationInstance);
-        }
-        else {
-            log_add('application translate load serialized instance', 'debug', __FUNCTION__, '9a750c51');
-            $applicationTranslateInstance = unserialize($bootstrapApplicationTranslateInstanceSleep);
-        }
-    } catch (\Error $e) {
-        log_reopen(BOOTSTRAP_NAME);
-        log_add('application translate load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '585648a2');
-        bootstrap_setBreak('47', __FUNCTION__);
-    }
 }
 
 /**
- * Save nebule Library POO code on session.
+ * Initialize application instance.
  *
- * @param bool $run
+ * @param  bool $run
  * @return void
  */
 function bootstrap_initApplication(bool $run): void
 {
-    global $applicationInstance,
-           $applicationDisplayInstance,
-           $applicationActionInstance,
-           $applicationTranslateInstance;
+    global $nebuleInstance,
+           $applicationInstance;
 
-    // Check
     if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
         log_addAndDisplay('error init application', 'error', __FUNCTION__, '41ba02a9');
         return;
     }
-    if (! is_a($applicationTranslateInstance, 'Nebule\Library\Translates')) {
-        log_addAndDisplay('error init translates', 'error', __FUNCTION__, 'd121af4c');
-        return;
-    }
-    if (! is_a($applicationDisplayInstance, 'Nebule\Library\Displays')) {
-        log_addAndDisplay('error init displays', 'error', __FUNCTION__, '4bb6af65');
-        return;
-    }
-    if (! is_a($applicationActionInstance, 'Nebule\Library\Actions')) {
-        log_addAndDisplay('error init actions', 'error', __FUNCTION__, '308b8a96');
-        return;
-    }
 
-    // Initialisation de réveil de l'instance de l'application.
+    $applicationInstance->setEnvironmentLibrary($nebuleInstance);
     $applicationInstance->initialisation();
 
-    // Si la requête web est un téléchargement d'objet ou de lien, des accélérations peuvent être prévues dans ce cas.
     if (!$applicationInstance->askDownload()) {
-        // Initialisation de réveil des instances.
-        $applicationTranslateInstance->initialisation();
-        $applicationDisplayInstance->initialisation();
-        $applicationActionInstance->initialisation();
-
-        // Réalise les tests de sécurité.
         $applicationInstance->checkSecurity();
     }
 
-    // Appel de l'application.
     if ($run)
         $applicationInstance->router();
-
-    // Sérialise les instances et les sauve dans la session PHP.
-    //bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
-    //bootstrap_saveApplication();
 }
 
 /**
- * Save nebule Library POO code on session.
+ * Save application on session.
  *
  * @return void
  */
 function bootstrap_saveApplication(): void
 {
     global $applicationInstance,
-           $applicationDisplayInstance,
-           $applicationActionInstance,
-           $applicationTranslateInstance,
            $bootstrapApplicationIID,
            $bootstrapApplicationOID,
            $bootstrapApplicationSID;
@@ -4961,9 +4847,6 @@ function bootstrap_saveApplication(): void
     $_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID] = $bootstrapApplicationOID;
     if (is_a($applicationInstance, 'Nebule\Library\Applications')) {
         $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] = serialize($applicationInstance);
-        $_SESSION['bootstrapApplicationsDisplayInstances'][$bootstrapApplicationOID] = serialize($applicationDisplayInstance);
-        $_SESSION['bootstrapApplicationsActionInstances'][$bootstrapApplicationOID] = serialize($applicationActionInstance);
-        $_SESSION['bootstrapApplicationsTranslateInstances'][$bootstrapApplicationOID] = serialize($applicationTranslateInstance);
     }
     session_write_close();
 }
@@ -6235,7 +6118,6 @@ function bootstrap_displayPreloadApplication(): void
 {
     global $nebuleInstance,
            $applicationInstance,
-           $applicationDisplayInstance,
            $applicationNameSpace,
            $bootstrapLibraryIID,
            $bootstrapApplicationOID,
@@ -6286,19 +6168,17 @@ function bootstrap_displayPreloadApplication(): void
         log_add('error preload application code OID=' . $bootstrapApplicationOID . ' classe=' . get_class($applicationInstance), 'error', __FUNCTION__, '2e87a827');
         return;
     }
-    if (!is_a($applicationDisplayInstance, '\Nebule\Library\Displays'))
-        return;
 
     echo 'Name=' . $applicationInstance->getClassName() . "<br/>\n";
 
     // Récupération des éléments annexes nécessaires à l'affichage de l'application.
     echo 'sync<span class="preloadsync">' . "\n";
-    $items = $applicationDisplayInstance->getNeededObjectsList();
+    $items = $applicationInstance->getDisplayInstance()->getNeededObjectsList();
     $nb = 0;
     foreach ($items as $item) {
         if (!$nebuleInstance->getIoInstance()->checkObjectPresent($item)) {
             $instance = $nebuleInstance->getCacheInstance()->newNode($item);
-            $applicationDisplayInstance->displayInlineObjectColorNolink($instance);
+            $applicationInstance->getDisplayInstance()->displayInlineObjectColorNolink($instance);
             echo "\n";
             $instance->syncObject(false);
             $nb++;

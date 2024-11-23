@@ -156,7 +156,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     public function setIcon(?Node $oid, bool $update = true): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($oid === null)
             $this->_icon = null;
         elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
@@ -172,7 +172,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null
             || $icon === null
             || !$icon->checkPresent()
@@ -188,7 +188,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     protected function _getNidDefaultIcon(?Node $rid): Node
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
@@ -198,7 +198,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     protected function _getIconUpdate(?Node $nid): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_iconUpdate) {
             //$updateIcon = $nid->getUpdateNID(true, false, $this->_social); // FIXME TODO ERROR
             $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME

@@ -71,7 +71,7 @@ class Entity extends Node implements nodeInterface
      */
     protected function _initialisation(): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
             $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         if ($this->_isNew)
@@ -88,7 +88,7 @@ class Entity extends Node implements nodeInterface
      */
     private function _loadEntity(string $id): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions id=' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions id=' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_ioInstance->checkObjectPresent($id)
             || !$this->_ioInstance->checkLinkPresent($id)
         ) {
@@ -111,7 +111,7 @@ class Entity extends Node implements nodeInterface
      */
     private function _createNewEntity(): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'on puisse créer une entité.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
@@ -175,7 +175,7 @@ class Entity extends Node implements nodeInterface
     // Utilisé pour la création d'une nouvelle entité, càd dont la clé publique n'est pas encore reconnue.
     private function _createNewEntityWriteLink(string $link, string $source, string $target, string $meta): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Signe le lien.
         $signe = $this->signLink($link);
         if ($signe === false)
@@ -203,7 +203,7 @@ class Entity extends Node implements nodeInterface
      */
     private function _verifyEntity(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
         $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
@@ -238,7 +238,7 @@ class Entity extends Node implements nodeInterface
 
     public function getIsPublicKey(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
         $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
@@ -251,7 +251,7 @@ class Entity extends Node implements nodeInterface
 
     public function getIsPrivateKey(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
         $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
@@ -271,7 +271,7 @@ class Entity extends Node implements nodeInterface
 
     public function getPublicKey(): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0'
             || $this->_publicKey == ''
         )
@@ -289,7 +289,7 @@ class Entity extends Node implements nodeInterface
     // Retourne l'identifiant de la clé privée.
     public function getPrivateKeyID(): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie la présence d'un ID de clé privée. La recherche au besoin.
         if (!isset($this->_privateKeyID)
             || !$this->_privateKeyID != '0'
@@ -302,7 +302,7 @@ class Entity extends Node implements nodeInterface
     // Retrouve l'identifiant de la clé privée.
     private function _findPrivateKeyID(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
 
@@ -350,7 +350,7 @@ class Entity extends Node implements nodeInterface
     // Retrouve la clé privée.
     private function _findPrivateKey(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie la présence d'une clé privée.
         if (isset($this->_privateKey) && $this->_privateKey != '')
             return true;
@@ -366,7 +366,7 @@ class Entity extends Node implements nodeInterface
     // Définit le mot de passe de la clé privée.
     public function setPrivateKeyPassword(string $passwd): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_findPrivateKey();
         if (!$this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd))
             return false;
@@ -386,7 +386,7 @@ class Entity extends Node implements nodeInterface
      */
     public function unsetPrivateKeyPassword(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return false;
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
@@ -405,7 +405,7 @@ class Entity extends Node implements nodeInterface
 
     public function changePrivateKeyPassword(string $newPasswd): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return false;
         // Vérifie que le mot de passe actuel est présent.
@@ -482,7 +482,7 @@ class Entity extends Node implements nodeInterface
      */
     public function signLink(string $link, string $algo = ''): ?string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_privateKey == '') {
             $this->_metrologyInstance->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '91353b7d');
             return null;
@@ -506,7 +506,7 @@ class Entity extends Node implements nodeInterface
      */
     public function signWriteLink(string $link)
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $signe = $this->signLink($link);
         if ($signe === false) {
             return false;
@@ -538,7 +538,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getFullName(string $socialClass = ''): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return '';
         if (isset($this->_fullName)
@@ -603,7 +603,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getFaceID(int$size = 400): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return '';
         if ($size == '0')
@@ -726,7 +726,7 @@ class Entity extends Node implements nodeInterface
     // Ecrit l'objet si non présent.
     public function write(): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $ok = $this->_ioInstance->setObject($this->_id, $this->_publicKey);
         $this->_metrologyInstance->addAction('addent', $this->_id, $ok);
 
@@ -840,7 +840,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getListIsFollowerOfGroupLinks(string $socialClass = 'myself'): array
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
             '',
@@ -873,7 +873,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getListIsFollowerOnGroupID(string $socialClass = 'myself'): array
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $list = array();
 
         // Liste tous les liens de définition des membres du groupe.
@@ -909,7 +909,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getListIsFollowerOfConversationLinks(string $socialClass = 'myself'): array
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
             '',
@@ -943,7 +943,7 @@ class Entity extends Node implements nodeInterface
      */
     public function getListIsFollowerOnConversationID(string $socialClass = 'myself'): array
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $list = array();
 
         // Liste tous les liens de définition des membres du groupe.

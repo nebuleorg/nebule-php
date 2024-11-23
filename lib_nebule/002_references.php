@@ -3477,6 +3477,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
         foreach ( self::OBJ_IMG as $name => $content) {
             $nebuleInstance->getMetrologyInstance()->addLog('create ref icon ' . 'f>' . self::REF_IMG[$name], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07a97058');
             $instance = new Node($nebuleInstance, '0');
+            $instance->setEnvironmentLibrary($nebuleInstance); // TODO verify if needed.
             $decoded = (string)base64_decode($content, false);
             if ($instance->setContent($decoded)) {
                 if ($instance->write())

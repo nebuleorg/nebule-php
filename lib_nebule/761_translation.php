@@ -13,7 +13,7 @@ use Nebule\Application\Autent\Translate;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Translates
+abstract class Translates extends Functions
 {
     const DEFAULT_COMMAND_LANGUAGE = 'lang';
     const DEFAULT_LANGUAGE = 'en-en';
@@ -219,10 +219,6 @@ abstract class Translates
     ];
 
     protected bool $_useModules = false;
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Session $_sessionInstance = null;
-    protected ?Applications $_applicationInstance = null;
     protected ?ApplicationModules $_applicationModulesInstance = null;
     protected string $_currentLanguage = '';
     protected string $_currentLanguageIcon = '';
@@ -231,26 +227,16 @@ abstract class Translates
     protected ?Translates $_currentLanguageInstance = null;
     protected ?Translates $_defaultLanguageInstance = null;
 
-    public function __construct(Applications $applicationInstance) {
+    /*public function __construct(Applications $applicationInstance) {
         $this->_applicationInstance = $applicationInstance;
-    }
+    }*/
     public function __toString() { return 'Traduction'; }
     public function __sleep() { return array(); } // TODO do not cache
-    public function __wakeup() { // TODO do not cache
-        global $applicationInstance;
-        $this->_applicationInstance = $applicationInstance;
-    }
 
-    /**
-     * Initialisation des variables et instances interdépendantes.
-     *
-     * @return void
-     */
-    public function initialisation(): void {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_metrologyInstance->addLog('Load translates', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
+
+
+    protected function _initialisation(): void {
+        $this->_metrologyInstance->addLog('initialisation translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c845beb4');
         $this->_applicationModulesInstance = $this->_applicationInstance->getApplicationModulesInstance();
 
         $this->_findDefaultLanguage();

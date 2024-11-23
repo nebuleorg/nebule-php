@@ -92,17 +92,6 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     const APPLICATION_EXPIRATION_COUNT = 'klicty/expiration/count';
 
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }
-
     public static function getOption($name)
     {
         if ($name == '' || !is_string($name)) return false;
@@ -585,7 +574,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
@@ -625,8 +614,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_findInlineContentID();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_traductionInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
+        if ($this->_translateInstance !== null) {
+            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
         }
     }
 
@@ -751,7 +740,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            echo $this->_traductionInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
+            echo $this->_translateInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1263,7 +1252,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         } ?>">
             <div class="header-left">
                 <img src="<?php echo $this->_logoApplication; ?>" alt="[K]"
-                     title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"
+                     title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
             <?php
@@ -1419,7 +1408,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
             <div class="menu-applications-logo">
                 <img src="<?php echo $this->_logoApplication; ?>" alt="[K]"
-                     title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"
+                     title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
             <div class="menu-applications">
@@ -3291,8 +3280,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Propose de la verrouiller.
                 $list = array();
-                $list[0]['title'] = $this->_traductionInstance->getTranslate('::::lock');
-                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::::entity:unlocked');
+                $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
+                $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
@@ -3317,7 +3306,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
 
                 echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="klictyModuleEntityConnect">' . "\n";
-                echo $this->_traductionInstance->getTranslate('::::Password') . "<br />\n";
+                echo $this->_translateInstance->getTranslate('::::Password') . "<br />\n";
                 echo '</div>' . "\n";
 
                 echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="klictyModuleEntityConnect">' . "\n";
@@ -3328,7 +3317,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <input type="hidden" name="ent"
                            value="<?php echo $this->_applicationInstance->getCurrentEntityID(); ?>">
                     <input type="password" name="pwd">
-                    <input type="submit" value="<?php echo $this->_traductionInstance->getTranslate('::::unlock'); ?>">
+                    <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
                 </form>
                 <?php
                 echo '</div>' . "\n";
@@ -3349,8 +3338,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             ) {
                 // Propose de la verrouiller.
                 $list = array();
-                $list[0]['title'] = $this->_traductionInstance->getTranslate('::::lock');
-                $list[0]['desc'] = $this->_traductionInstance->getTranslate('::::entity:unlocked');
+                $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
+                $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
                 $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
@@ -3390,15 +3379,15 @@ private function _displayContentAbout()
     <div id="iconsWelcome">
         <div id="iconWelcome1">
             <?php $this->displayUpdateImage($iconLL, '::Share', 'iconNormalDisplay') ?><br/>
-            <?php echo $this->_traductionInstance->getTranslate('::Share'); ?>
+            <?php echo $this->_translateInstance->getTranslate('::Share'); ?>
         </div>
         <div id="iconWelcome2">
             <?php $this->displayUpdateImage($iconLK, '::Protection', 'iconNormalDisplay') ?><br/>
-            <?php echo $this->_traductionInstance->getTranslate('::Protection'); ?>
+            <?php echo $this->_translateInstance->getTranslate('::Protection'); ?>
         </div>
         <div id="iconWelcome3">
             <?php $this->displayUpdateImage($iconTIME, '::TimeLimited', 'iconNormalDisplay') ?><br/>
-            <?php echo $this->_traductionInstance->getTranslate('::TimeLimited'); ?>
+            <?php echo $this->_translateInstance->getTranslate('::TimeLimited'); ?>
         </div>
     </div>
 
@@ -3419,7 +3408,7 @@ private function _displayContentAbout()
                 echo $this->getDisplayInformation_DEPRECATED('::::' . $applicationLevel, $param);
             }
             $param['informationType'] = 'information';
-            echo $this->getDisplayInformation_DEPRECATED($this->_traductionInstance->getTranslate('::Version') . ' : ' . Application::APPLICATION_VERSION, $param);
+            echo $this->getDisplayInformation_DEPRECATED($this->_translateInstance->getTranslate('::Version') . ' : ' . Application::APPLICATION_VERSION, $param);
             ?>
         </div>
     </div>
@@ -3441,9 +3430,9 @@ private function _displayContentAbout()
     $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD);
     echo $this->getDisplayTitle_DEPRECATED(':::SelectLanguage', $icon);
     $i = 0;
-    foreach ($this->_traductionInstance->getLanguageList() as $lang) {
-        $actionList[$i]['title'] = $this->_traductionInstance->getTranslate(':::Language:' . $lang);
-        $actionList[$i]['icon'] = $this->_traductionInstance->getLanguageIcon($lang);
+    foreach ($this->_translateInstance->getLanguageList() as $lang) {
+        $actionList[$i]['title'] = $this->_translateInstance->getTranslate(':::Language:' . $lang);
+        $actionList[$i]['icon'] = $this->_translateInstance->getLanguageIcon($lang);
         $actionList[$i]['desc'] = '';
         $actionList[$i]['htlink'] = '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND .
@@ -3492,7 +3481,7 @@ private function _displayContentAbout()
     ?>
 
     <div id="welcomeFooter">
-        <p><?php echo $this->_traductionInstance->getTranslate('::Citation'); ?></p>
+        <p><?php echo $this->_translateInstance->getTranslate('::Citation'); ?></p>
         <p>
             <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_SURNAME; ?> <img
                         alt="<?php echo Application::APPLICATION_SURNAME; ?>"
@@ -3570,13 +3559,13 @@ private function _displayContentAbout()
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -3599,7 +3588,7 @@ private function _displayContentAbout()
                     foreach ($klictyTimeList as $time) {
                         $klicty_time_total = $klicty_time_total + $time;
                     }
-                    echo $this->_traductionInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $klicty_time_total);
+                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $klicty_time_total);
                     echo ' (';
                     foreach ($klictyTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -3692,32 +3681,32 @@ private function _displayContentAbout()
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorNotAvailable');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('klictyDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTooBig');
+                            $msg = $this->_translateInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
-                            $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
+                            $msg = $this->_translateInstance->getTranslate(':::display:content:errorTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorBan');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'protected':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:ObjectProctected');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:ObjectProctected');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:OK');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -3944,7 +3933,7 @@ private function _displayContentAbout()
 
         $desc = '';
         if (isset($item['desc'])) {
-            $desc = $this->_traductionInstance->getTranslate($item['desc']);
+            $desc = $this->_translateInstance->getTranslate($item['desc']);
         }
 
         $icon = '';
@@ -4022,7 +4011,7 @@ private function _displayContentAbout()
                                     '::::display:content:warningTaggedWarning',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                echo $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning'); ?></p>
+                                echo $this->_translateInstance->getTranslate('::::display:content:warningTaggedWarning'); ?></p>
                         </div>
                         <?php
                     }
@@ -4037,7 +4026,7 @@ private function _displayContentAbout()
                                     '::::display:content:errorBan',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                echo $this->_traductionInstance->getTranslate('::::display:content:errorBan'); ?></p>
+                                echo $this->_translateInstance->getTranslate('::::display:content:errorBan'); ?></p>
                         </div>
                         <?php
                     }
@@ -4052,7 +4041,7 @@ private function _displayContentAbout()
                                     '::::display:content:ObjectProctected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                echo $this->_traductionInstance->getTranslate('::::display:content:ObjectProctected'); ?></p>
+                                echo $this->_translateInstance->getTranslate('::::display:content:ObjectProctected'); ?></p>
                         </div>
                         <?php
                     }
@@ -4066,7 +4055,7 @@ private function _displayContentAbout()
                             foreach ($item['actions'] as $action) {
                                 $icon = $this->_cacheInstance->newNode($action['icon']);
                                 $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
-                                $actionName = $this->_traductionInstance->getTranslate($action['name']);
+                                $actionName = $this->_translateInstance->getTranslate($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";
                                 unset($actionIcon, $actionName);
                             }
@@ -4784,11 +4773,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    public function __construct(Application $applicationInstance)
-    {
-        parent::__construct($applicationInstance);
-    }
-
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::Welcome' => 'Bienvenue sur <i>klicty</i>.',

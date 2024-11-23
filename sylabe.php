@@ -136,17 +136,6 @@ class Application extends Applications implements applicationInterface
     );
 
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }
-
     public static function getOption($name)
     {
         if ($name == ''
@@ -310,7 +299,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
         $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cf96279b');
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
@@ -334,11 +323,11 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_findInlineContentID();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_traductionInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_traductionInstance->getCurrentLanguage();
-            $this->_currentDisplayLanguageInstance = $this->_traductionInstance->getCurrentLanguageInstance();
-            $this->_displayLanguageList = $this->_traductionInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_traductionInstance->getLanguageModuleInstanceList();
+        if ($this->_translateInstance !== null) {
+            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
+            $this->_currentDisplayLanguageInstance = $this->_translateInstance->getCurrentLanguageInstance();
+            $this->_displayLanguageList = $this->_translateInstance->getLanguageList();
+            $this->_displayLanguageInstanceList = $this->_translateInstance->getLanguageModuleInstanceList();
         }
     }
 
@@ -513,7 +502,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo Application::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo Application::APPLICATION_NAME . ' - ';
-            echo $this->_traductionInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
+            echo $this->_translateInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
@@ -1178,14 +1167,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
                     ?>
                     <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
-                         title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"
+                         title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
                          onclick="display_menu('layout-menu-applications');"/>
                     <?php
                 } else {
                     ?>
                     <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
                         <img src="<?php echo $this->_logoApplication; ?>" alt="[M]"
-                             title="<?php echo $this->_traductionInstance->getTranslate('::menu'); ?>"/>
+                             title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"/>
                     </a>
                     <?php
                 }
@@ -1581,13 +1570,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
 		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    echo $this->_traductionInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     /*		$bootstrapTimeList = $this->_bootstrapInstance->getMetrologyInstance()->getTimeArray();
@@ -1610,7 +1599,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                     foreach ($sylabeTimeList as $time) {
                         $sylabe_time_total = $sylabe_time_total + $time;
                     }
-                    echo $this->_traductionInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
+                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
                     echo ' (';
                     foreach ($sylabeTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
@@ -1717,32 +1706,32 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorNotAvailable');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayUnverifyLargeContent')) {
-                            $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTooBig');
+                            $msg = $this->_translateInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
-                            $msg = $this->_traductionInstance->getTranslate(':::display:content:errorTooBig');
+                            $msg = $this->_translateInstance->getTranslate(':::display:content:errorTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:warningTaggedWarning');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:errorBan');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'notAnObject':
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:notAnObject');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:notAnObject');
                         $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_traductionInstance->getTranslate('::::display:content:OK');
+                        $msg = $this->_translateInstance->getTranslate('::::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }
@@ -1916,10 +1905,7 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    public function __construct(Application $applicationInstance)
-    {
-        parent::__construct($applicationInstance);
-    }
+    // Tout par défaut.
 }
 
 

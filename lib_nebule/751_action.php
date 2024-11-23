@@ -97,53 +97,31 @@ abstract class Actions extends Functions
     const DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT = 'creactkcnt';
 
     protected ?Applications $_applicationInstance = null;
-    protected ?Translates $_traductionInstance = null;
+    protected ?Translates $_translateInstance = null;
     protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
 
-    public function __construct(Applications $applicationInstance)
+    /*public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
         parent::__construct($this->_nebuleInstance);
         $this->setEnvironmentLibrary($this->_nebuleInstance);
         $this->initialisation();
-    }
+    }*/
+    public function __destruct() { return true; }
+    public function __toString() { return 'Action'; }
+    public function __sleep() { return array(); } // TODO do not cache
 
-    public function initialisation(): void
+
+
+    protected function _initialisation(): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('load actions', Metrology::LOG_LEVEL_DEBUG);
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('initialisation action', Metrology::LOG_LEVEL_DEBUG);
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
         // Les instances interdépendantes doivent être synchronisées.
-    }
-
-    public function __destruct()
-    {
-        return true;
-    }
-
-    public function __toString()
-    {
-        return 'Action';
-    }
-
-    public function __sleep() // TODO do not cache
-    {
-        return array();
-    }
-
-    public function __wakeup() // TODO do not cache
-    {
-        global $applicationInstance;
-
-        $this->_applicationInstance = $applicationInstance;
-        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironmentLibrary($this->_nebuleInstance);
-        $this->initialisation();
     }
 
 

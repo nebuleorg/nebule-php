@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241121';
+    const APPLICATION_VERSION = '020241123';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -1810,7 +1810,7 @@ class Action extends Actions
 
     public function genericActions():void
     {
-        $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
+        $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
         if ($this->_unlocked
             && $this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getServerEntityID()
@@ -1831,13 +1831,13 @@ class Action extends Actions
                 $this->_actionSignLink($this->_actionSignLinkInstance1);
         }
 
-        $this->_metrologyInstance->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bb221384');
+        $this->_metrologyInstance->addLog('generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bb221384');
     }
 
 
     public function specialActions():void
     {
-        $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
+        $this->_metrologyInstance->addLog('special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4e9ebfc1');
 
         if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
             $this->_extractActionSynchronizeApplication();
@@ -1846,7 +1846,7 @@ class Action extends Actions
                 $this->_actionSynchronizeApplication();
         }
 
-        $this->_metrologyInstance->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1bb0ef71');
+        $this->_metrologyInstance->addLog('special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1bb0ef71');
     }
 
 
@@ -1859,7 +1859,7 @@ class Action extends Actions
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_unlocked
         ) {
-            $this->_metrologyInstance->addLog('Extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
+            $this->_metrologyInstance->addLog('extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
 
             $argName = '';
             if (filter_has_var(INPUT_GET, self::COMMAND_OPTION_NAME)) {
@@ -1947,11 +1947,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    public function __construct(Application $applicationInstance)
-    {
-        parent::__construct($applicationInstance);
-    }
-
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::INFO' => 'Information',

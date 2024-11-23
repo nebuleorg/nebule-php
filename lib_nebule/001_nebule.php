@@ -16,7 +16,7 @@ class nebule
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2023';
-    const NEBULE_FUNCTION_VERSION = '020241012';
+    const NEBULE_FUNCTION_VERSION = '020241123';
     const NEBULE_ENVIRONMENT_FILE = 'c'; // Into folder /
     const NEBULE_BOOTSTRAP_FILE = 'index.php'; // Into folder /
     const NEBULE_LOCAL_ENTITY_FILE = 'e'; // Into folder /
@@ -311,26 +311,8 @@ class nebule
         $this->_configurationInstance->flushCache();
 
         $this->_getSubordinationEntity();
-        //$this->_cacheInstance->readCacheOnSessionBuffer();
-
         $this->_checkWriteableIO();
-
-        //$this->_findPuppetmaster(); TODO cleaning...
-        //$this->_findGlobalAuthorities();
-        //$this->_findLocalAuthorities();
-        //$this->_findInstanceEntity();
-        //$this->_findDefaultEntity();
-        //$this->_addInstanceEntityAsAuthorities();
-        //$this->_addDefaultEntityAsAuthorities();
-        //$this->_getCurrentEntity();
-        //$this->_addLocalAuthorities();
-        //$this->_findRecoveryEntities();
-        //$this->_addInstanceEntityAsRecovery();
-        //$this->_addDefaultEntityAsRecovery();
-
         $this->_findCurrentObjet();
-        //$this->_getCurrentEntityPrivateKey();
-        //$this->_getCurrentEntityPassword();
         $this->_findCurrentGroup();
         $this->_findCurrentConversation();
         $this->_findCurrentCurrency();
@@ -744,7 +726,7 @@ class nebule
         }
         unset($arg_grp);
 
-        $this->_metrologyInstance->addLog('Find current group ' . $this->_currentGroupID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
+        $this->_metrologyInstance->addLog('find current group ' . $this->_currentGroupID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
     public function getCurrentGroupID(): string
@@ -792,7 +774,7 @@ class nebule
         }
         unset($arg_cvt);
 
-        $this->_metrologyInstance->addLog('Find current conversation ' . $this->_currentConversationID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adf0b5df');
+        $this->_metrologyInstance->addLog('find current conversation ' . $this->_currentConversationID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adf0b5df');
     }
 
     public function getCurrentConversationID(): string
@@ -847,7 +829,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrologyInstance->addLog('Find current currency ' . $this->_currentCurrencyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '952d5651');
+        $this->_metrologyInstance->addLog('find current currency ' . $this->_currentCurrencyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '952d5651');
     }
 
     public function getCurrentCurrencyID(): string
@@ -902,7 +884,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrologyInstance->addLog('Find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8485d55');
+        $this->_metrologyInstance->addLog('find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8485d55');
     }
 
     public function getCurrentTokenPool(): string
@@ -957,7 +939,7 @@ class nebule
         }
         unset($arg);
 
-        $this->_metrologyInstance->addLog('Find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
+        $this->_metrologyInstance->addLog('find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
     }
 
     public function getCurrentTokenID(): string
@@ -1086,7 +1068,7 @@ class nebule
             $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
         );
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_socialInstance->arraySocialFilter($result, $socialClass);
 
         // retourne le résultat.
@@ -1122,11 +1104,11 @@ class nebule
      * Extrait la liste des liens définissant les groupes d'objets.
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
-     * @param string        $socialClass
-     * @param string|Entity $entity
+     * @param string $socialClass
+     * @param Entity $entity
      * @return array:Link
      */
-    public function getListGroupsLinks($entity = '', string $socialClass = ''): array
+    public function getListGroupsLinks(Entity $entity, string $socialClass = ''): array
     {
         return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
@@ -1135,11 +1117,11 @@ class nebule
      * Extrait la liste des ID des groupes d'objets.
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
-     * @param string|entity $entity
-     * @param string        $socialClass
+     * @param Entity $entity
+     * @param string $socialClass
      * @return array
      */
-    public function getListGroupsID($entity = '', string $socialClass = ''): array
+    public function getListGroupsID(Entity $entity, string $socialClass = ''): array
     {
         return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
@@ -1152,11 +1134,11 @@ class nebule
      * Retourne la liste.
      * $entity : Permet de ne sélectionner que les conversations générés par une entité.
      *
-     * @param string|entity $entity
-     * @param string        $socialClass
+     * @param Entity $entity
+     * @param string $socialClass
      * @return array
      */
-    public function getListConversationsLinks($entity = '', string $socialClass = ''): array
+    public function getListConversationsLinks(Entity $entity, string $socialClass = ''): array
     {
         return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
@@ -1166,11 +1148,11 @@ class nebule
      * Géré comme des groupes d'objets.
      * $entity Permet de ne sélectionner que les conversations générées par une entité.
      *
-     * @param string|entity $entity
-     * @param string        $socialClass
+     * @param Entity $entity
+     * @param string $socialClass
      * @return array
      */
-    public function getListConversationsID($entity = '', string $socialClass = ''): array
+    public function getListConversationsID(Entity $entity, string $socialClass = ''): array
     {
         return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
@@ -1186,7 +1168,7 @@ class nebule
      */
     public function getDisplayNextObject(): string
     {
-        $this->_metrologyInstance->addLog('Extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
+        $this->_metrologyInstance->addLog('extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
 
         $arg = trim(' ' . filter_input(INPUT_GET, Displays::DEFAULT_NEXT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 

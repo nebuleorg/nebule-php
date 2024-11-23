@@ -60,7 +60,7 @@ class Entities extends Functions
      */
     private function _findServerEntity(): void
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleHostEntityInstance');
         if ($instance->getID() == '0')
             $instance = $this->_findServerEntityFromFile();
@@ -74,7 +74,7 @@ class Entities extends Functions
 
     private function _findServerEntityFromFile(): Entity
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $arg = filter_var(trim(strtok(file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE), "\n")), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if ($arg === false || $arg === null || $arg == '')
             $arg = '0';
@@ -110,7 +110,7 @@ class Entities extends Functions
      */
     private function _findDefaultEntity(): void
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleDefaultEntityInstance');
         if ($instance->getID() == '0')
             $instance = $this->_findDefaultEntityFromOption();
@@ -125,7 +125,7 @@ class Entities extends Functions
 
     private function _findDefaultEntityFromOption(): Entity
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newEntity($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultCurrentEntity'));
         $this->_metrologyInstance->addLog('find default entity from config file EID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf459003');
         return $instance;
@@ -154,7 +154,7 @@ class Entities extends Functions
      */
     private function _findCurrentEntity(): void
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_findCurrentEntityFromArg();
         if ($instance->getID() == '0')
             $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebulePublicEntityInstance');
@@ -180,7 +180,7 @@ class Entities extends Functions
 
     private function _findCurrentEntityFromArg(): Entity
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Extract anf filter
         if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_TO_ENTITY)
             && filter_has_var(INPUT_GET, References::COMMAND_SELECT_ENTITY)
@@ -226,7 +226,7 @@ class Entities extends Functions
 
     private function _findCurrentEntityPrivateKey(): void
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $privateKey = $this->_sessionInstance->getSessionStore('nebulePrivateEntity');
 
         if ($privateKey !== false
@@ -269,7 +269,7 @@ class Entities extends Functions
 
     private function _findCurrentEntityPassword(): void
     {
-        $this->_metrologyInstance->addLog('Track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT)
             || filter_has_var(INPUT_POST, References::COMMAND_AUTH_ENTITY_LOGOUT))
         {

@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Application\Autent\Display;
+use Nebule\Application\Option\Action;
+use Nebule\Application\Option\Translate;
 use const Nebule\Bootstrap\LIB_ARG_BOOTSTRAP_BREAK;
 use const Nebule\Bootstrap\LIB_ARG_FLUSH_SESSION;
 use const Nebule\Bootstrap\LIB_ARG_INLINE_DISPLAY;
@@ -34,17 +37,11 @@ abstract class Applications extends Functions implements applicationInterface
     const LIST_MODULES_INTERNAL = array();
     const LIST_MODULES_EXTERNAL = array();
 
-    protected ?Applications $_applicationInstance = null;
-    protected ?Displays $_displayInstance = null;
-    protected ?Actions $_actionInstance = null;
-    protected ?Translates $_translateInstance = null;
     protected ?ApplicationModules $_applicationModulesInstance = null;
     protected string $_applicationNamespace = '';
 
-    public function initialisation(): void
+    protected function _initialisation(): void
     {
-        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance; // FIXME maybe without global vars ?
-
         $this->_applicationInstance = $this;
         $this->_applicationNamespace = '\\Nebule\\Application\\' . strtoupper(substr(static::APPLICATION_NAME, 0, 1)) . strtolower(substr(static::APPLICATION_NAME, 1));
 
@@ -53,9 +50,46 @@ abstract class Applications extends Functions implements applicationInterface
         if ($this->_findAskDownload())
             return; // Do nothing more on app.
 
-        $this->_translateInstance = $applicationTranslateInstance;
-        $this->_displayInstance = $applicationDisplayInstance;
-        $this->_actionInstance = $applicationActionInstance;
+        $this->_metrologyInstance->addLog('instancing application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9d8c59bb');
+        $this->_displayInstance = new Display($this->_nebuleInstance);
+
+        $this->_metrologyInstance->addLog('instancing application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e19f2105');
+        $this->_actionInstance = new Action($this->_nebuleInstance);
+
+        $this->_metrologyInstance->addLog('instancing application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8fc40a38');
+        $this->_translateInstance = new Translate($this->_nebuleInstance);
+
+        $this->_displayInstance->setEnvironmentLibrary($this->_nebuleInstance);
+        $this->_displayInstance->setEnvironmentApplication($this);
+
+        $this->_actionInstance->setEnvironmentLibrary($this->_nebuleInstance);
+        $this->_actionInstance->setEnvironmentApplication($this);
+
+        $this->_translateInstance->setEnvironmentLibrary($this->_nebuleInstance);
+        $this->_translateInstance->setEnvironmentApplication($this);
+
+        $this->_metrologyInstance->addLog('instancing application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
+        try {
+            $this->_displayInstance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('instancing application display error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c7da4e2');
+        }
+
+        $this->_metrologyInstance->addLog('instancing application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3478bd7');
+        try {
+            $this->_actionInstance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('instancing application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
+        }
+
+        $this->_metrologyInstance->addLog('instancing application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
+        try {
+            $this->_translateInstance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('instancing application translate error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
+        }
+
+        $this->_metrologyInstance->addLog('instancing application modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ddcee4c');
         $this->_applicationModulesInstance = new ApplicationModules($this);
 
         $this->_loadModules();
@@ -64,12 +98,7 @@ abstract class Applications extends Functions implements applicationInterface
     public function __destruct() { return true; }
     public function __toString(): string { return static::class; }
     public function __sleep(): array { return array(); }
-    public function __wakeup()
-    {
-        global $nebuleInstance;
-        $this->_nebuleInstance = $nebuleInstance;
-        $this->_configurationInstance = $nebuleInstance->getConfigurationInstance();
-    }
+
 
 
     public function getClassName(): string { return static::class; }
