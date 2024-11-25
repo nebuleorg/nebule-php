@@ -51,13 +51,16 @@ abstract class Applications extends Functions implements applicationInterface
             return; // Do nothing more on app.
 
         $this->_metrologyInstance->addLog('instancing application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9d8c59bb');
-        $this->_displayInstance = new Display($this->_nebuleInstance);
+        $displayName = $this->_applicationNamespace . '\Display';
+        $this->_displayInstance = new $displayName($this->_nebuleInstance);
 
         $this->_metrologyInstance->addLog('instancing application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e19f2105');
-        $this->_actionInstance = new Action($this->_nebuleInstance);
+        $actionName = $this->_applicationNamespace . '\Action';
+        $this->_actionInstance = new $actionName($this->_nebuleInstance);
 
         $this->_metrologyInstance->addLog('instancing application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8fc40a38');
-        $this->_translateInstance = new Translate($this->_nebuleInstance);
+        $translateName = $this->_applicationNamespace . '\Translate';
+        $this->_translateInstance = new $translateName($this->_nebuleInstance);
 
         $this->_displayInstance->setEnvironmentLibrary($this->_nebuleInstance);
         $this->_displayInstance->setEnvironmentApplication($this);

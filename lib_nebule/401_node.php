@@ -121,7 +121,7 @@ class Node extends Functions implements nodeInterface
     {
         //global $nebuleInstance;
         //$this->_nebuleInstance = $nebuleInstance;
-        //$this->setEnvironment($nebuleInstance);
+        //$this->setEnvironmentLibrary($nebuleInstance);
         //$this->_initialisation();
     }
 

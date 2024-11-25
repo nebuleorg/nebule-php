@@ -98,7 +98,7 @@ class Functions
     {
         $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new $class($this->_nebuleInstance);
-        $instance->setEnvironment($this->_nebuleInstance);
+        $instance->setEnvironmentLibrary($this->_nebuleInstance);
         $instance->initialisation();
         $type = strtolower($instance::TYPE);
 

@@ -75,8 +75,14 @@ class Entities extends Functions
     private function _findServerEntityFromFile(): Entity
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $arg = filter_var(trim(strtok(file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE), "\n")), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if ($arg === false || $arg === null || $arg == '')
+        $filecontent = file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE);
+        if (is_bool($filecontent))
+            $filecontent = '';
+        $filecontent = strtok($filecontent, "\n");
+        if (is_bool($filecontent))
+            $filecontent = '';
+        $arg = filter_var(trim($filecontent), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (is_bool($arg) || $arg === null || $arg == '')
             $arg = '0';
 
         if (!Node::checkNID($arg, false, false)

@@ -58,7 +58,7 @@ class Cache extends Functions
         $this->_getFlushCache();
         foreach ($this->_cache as $type => $table) {
             foreach ($table as $item => $instance) {
-                $instance->setEnvironment($this->_nebuleInstance);
+                $instance->setEnvironmentLibrary($this->_nebuleInstance);
                 $instance->initialisation();
             }
         }
@@ -69,7 +69,7 @@ class Cache extends Functions
         /*$this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
         foreach ($this->_cache as $type => $table) {
             foreach ($table as $item => $instance) {
-                $instance->setEnvironment($this->_nebuleInstance);
+                $instance->setEnvironmentLibrary($this->_nebuleInstance);
                 $instance->initialisation();
             }
         }*/

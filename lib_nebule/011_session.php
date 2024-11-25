@@ -198,7 +198,7 @@ class Session extends Functions
         }
         try {
             $instance = unserialize($_SESSION['Option'][$name]);
-            $instance->setEnvironment($this->_nebuleInstance);
+            $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->initialisation();
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
