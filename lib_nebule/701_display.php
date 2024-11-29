@@ -195,9 +195,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     );
 
 
-    protected ?Applications $_applicationInstance = null;
-    protected ?Translates $_translateInstance = null;
-    protected ?Actions $_actionInstance = null;
     protected bool $_unlocked = false;
     protected string $_urlLinkObjectPrefix = '';
     protected string $_urlLinkGroupPrefix = '';
@@ -215,14 +212,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
 
-    /*public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        parent::__construct($this->_nebuleInstance);
-        $this->setEnvironmentLibrary($this->_nebuleInstance);
-        $this->initialisation();
-    }*/
     public function __destruct() { return true; }
     public function __toString(): string { return 'Display'; }
     public function __sleep() { return array(); } // TODO do not cache
@@ -1660,7 +1649,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayFull(): void
     {
-        global $applicationVersion, $applicationLicence, $applicationWebsite, $applicationName, $applicationSurname, $applicationAuthor;
+        global $applicationVersion,
+               $applicationLicence,
+               $applicationWebsite,
+               $applicationName,
+               $applicationSurname,
+               $applicationAuthor;
         ?>
         <!DOCTYPE html>
         <html lang="">

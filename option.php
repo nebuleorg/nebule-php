@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241123';
+    const APPLICATION_VERSION = '020241129';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -191,7 +191,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
             if ($this->_rescueInstance->getModeRescue())
                 $this->displayMessageWarning_DEPRECATED('::::RESCUE');
-
+//echo gettype($this->_actionInstance) . "<br />\n"; // FIXME
             $this->_displayActions();
 
             switch ($this->getCurrentDisplayView()) {

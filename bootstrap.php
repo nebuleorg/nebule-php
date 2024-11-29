@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241125';
+const BOOTSTRAP_VERSION = '020241129';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -4197,7 +4197,8 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
     if (filter_has_var(INPUT_GET, LIB_ARG_FLUSH_SESSION)
         || filter_has_var(INPUT_POST, LIB_ARG_FLUSH_SESSION)
     ) {
-        log_add('input ' . LIB_ARG_FLUSH_SESSION . ' ask flush session', 'warn', __FUNCTION__, '4abe475a');
+        log_add('input ' . LIB_ARG_FLUSH_SESSION . ' ask flush session',
+            'warn', __FUNCTION__, '4abe475a');
         $askFlush = true;
     }
 
@@ -4229,7 +4230,8 @@ function bootstrap_getFlushSession(bool $forceFlush = false): void
 function bootstrap_logUserSession(): void
 {
     $sessionId = session_id();
-    log_add('session hash id ' . crypto_getDataHash($sessionId), 'info', __FUNCTION__, '36ebd66b');
+    log_add('session hash id ' . crypto_getDataHash($sessionId),
+        'info', __FUNCTION__, '36ebd66b');
 }
 
 /**
@@ -4245,7 +4247,8 @@ function bootstrap_getUpdate(): void
     if (filter_has_var(INPUT_GET, LIB_ARG_UPDATE_APPLICATION)
         || filter_has_var(INPUT_POST, LIB_ARG_UPDATE_APPLICATION)
     ) {
-        log_add('input ' . LIB_ARG_UPDATE_APPLICATION . ' ask update', 'warn', __FUNCTION__, 'ac8a2330');
+        log_add('input ' . LIB_ARG_UPDATE_APPLICATION . ' ask update',
+            'warn', __FUNCTION__, 'ac8a2330');
 
         session_start();
 
@@ -4273,12 +4276,15 @@ function bootstrap_getSwitchApplication(): void
 
     $arg = '';
     if (filter_has_var(INPUT_GET, LIB_ARG_SWITCH_APPLICATION))
-        $arg = trim(filter_input(INPUT_GET, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg = trim(filter_input(INPUT_GET, LIB_ARG_SWITCH_APPLICATION,
+            FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
     elseif (filter_has_var(INPUT_POST, LIB_ARG_SWITCH_APPLICATION))
-        $arg = trim(filter_input(INPUT_POST, LIB_ARG_SWITCH_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg = trim(filter_input(INPUT_POST, LIB_ARG_SWITCH_APPLICATION,
+            FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
     if ($arg != '')
-        log_add('input ' . LIB_ARG_SWITCH_APPLICATION . ' ask switch application to ' . $arg, 'info', __FUNCTION__, 'd1a3f3f9');
+        log_add('input ' . LIB_ARG_SWITCH_APPLICATION . ' ask switch application to ' . $arg,
+            'info', __FUNCTION__, 'd1a3f3f9');
 
     if (!app_checkOID($arg))
         return;
@@ -4315,38 +4321,52 @@ function bootstrap_setPermitOpenFileCode(): void
 
 function bootstrap_checkSessionLibraryPOO():void { // FIXME TEST TO REMOVE
     if (isset($_SESSION['bootstrapLibraryIID'])) {
-        log_add('MARK session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'], 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'],
+            'info', __FUNCTION__, '00000000');
         if (nod_checkNID($_SESSION['bootstrapLibraryIID']))
-            log_add('MARK session bootstrapLibraryIID NID OK', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryIID NID OK',
+                'info', __FUNCTION__, '00000000');
         if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryIID']))
-            log_add('MARK session bootstrapLibraryIID I/O have link', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryIID I/O have link',
+                'info', __FUNCTION__, '00000000');
         if (obj_checkContent($_SESSION['bootstrapLibraryIID']))
-            log_add('MARK session bootstrapLibraryIID I/O have content', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryIID I/O have content',
+                'info', __FUNCTION__, '00000000');
     }
     else
         log_add('MARK session bootstrapLibraryIID=null', 'info', __FUNCTION__, '00000000');
 
     if (isset($_SESSION['bootstrapLibraryOID'])) {
-        log_add('MARK session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'], 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'],
+            'info', __FUNCTION__, '00000000');
         if (nod_checkNID($_SESSION['bootstrapLibraryOID']))
-            log_add('MARK session bootstrapLibraryOID NID OK', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryOID NID OK',
+                'info', __FUNCTION__, '00000000');
         if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryOID']))
-            log_add('MARK session bootstrapLibraryOID I/O have link', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryOID I/O have link',
+                'info', __FUNCTION__, '00000000');
         if (obj_checkContent($_SESSION['bootstrapLibraryOID']))
-            log_add('MARK session bootstrapLibraryOID I/O have content', 'info', __FUNCTION__, '00000000');
+            log_add('MARK session bootstrapLibraryOID I/O have content',
+                'info', __FUNCTION__, '00000000');
     }
     else
-        log_add('MARK session bootstrapLibraryOID=null', 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibraryOID=null',
+            'info', __FUNCTION__, '00000000');
 
     if (isset($_SESSION['bootstrapLibrarySID']))
-        log_add('MARK session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'], 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'],
+            'info', __FUNCTION__, '00000000');
     else
-        log_add('MARK session bootstrapLibrarySID=null', 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibrarySID=null',
+            'info', __FUNCTION__, '00000000');
 
     if (isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']]))
-        log_add('MARK session bootstrapLibraryInstanceSleep=' . substr($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']],0,256), 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibraryInstanceSleep='
+            . substr($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']],0,256),
+            'info', __FUNCTION__, '00000000');
     else
-        log_add('MARK session bootstrapLibraryInstanceSleep=null', 'info', __FUNCTION__, '00000000');
+        log_add('MARK session bootstrapLibraryInstanceSleep=null',
+            'info', __FUNCTION__, '00000000');
 }
 
 /**
@@ -4378,7 +4398,8 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void 
         && isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']])
         && $_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']] != ''
     ) {
-        log_add('load serialized class \Nebule\Library\nebule', 'info', __FUNCTION__, '0a485dce');
+        log_add('load serialized class \Nebule\Library\nebule',
+            'info', __FUNCTION__, '0a485dce');
         $bootstrapLibraryIID = $_SESSION['bootstrapLibraryIID'];
         $bootstrapLibraryOID = $_SESSION['bootstrapLibraryOID'];
         $bootstrapLibrarySID = $_SESSION['bootstrapLibrarySID'];
@@ -4402,7 +4423,8 @@ function bootstrap_findLibraryPOO(string &$bootstrapLibraryInstanceSleep): void 
                 && io_checkNodeHaveLink($bootstrapLibraryOID)
                 && obj_checkContent($bootstrapLibraryOID)
             )
-                log_add('find nebule library (' . $bootstrapLibraryIID . ')', 'info', __FUNCTION__, '90ee41fc');
+                log_add('find nebule library (' . $bootstrapLibraryIID . ')',
+                    'info', __FUNCTION__, '90ee41fc');
             else {
                 $bootstrapLibraryIID = '';
                 $bootstrapLibraryOID = '';
@@ -4462,15 +4484,18 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
         try {
             if (class_exists('\Nebule\Library\nebule', false))
             {
-                log_add('find class \Nebule\Library\nebule to instancing', 'info', __FUNCTION__, 'daff566b');
+                log_add('find class \Nebule\Library\nebule to instancing',
+                    'info', __FUNCTION__, 'daff566b');
                 if ((float)BOOTSTRAP_FUNCTION_VERSION >= (float)\Nebule\Library\nebule::NEBULE_FUNCTION_VERSION)
                 {
                     if ($bootstrapLibraryInstanceSleep == '') {
-                        log_add('instancing new class \Nebule\Library\nebule', 'info', __FUNCTION__, '79835c0f');
+                        log_add('instancing new class \Nebule\Library\nebule',
+                            'info', __FUNCTION__, '79835c0f');
                         new nebule();
                     }
                     else {
-                        log_add('deserialize previous class \Nebule\Library\nebule', 'info', __FUNCTION__, 'de329729');
+                        log_add('deserialize previous class \Nebule\Library\nebule',
+                            'info', __FUNCTION__, 'de329729');
                         unserialize($bootstrapLibraryInstanceSleep);
                         $bootstrapLibraryInstanceSleep = '';
                     }
@@ -4478,7 +4503,8 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void
                 } else
                     bootstrap_setBreak('43', __FUNCTION__);
             } else
-                log_add('no class \Nebule\Library\nebule to instancing', 'error', __FUNCTION__, '60a345b8');
+                log_add('no class \Nebule\Library\nebule to instancing',
+                    'error', __FUNCTION__, '60a345b8');
         } catch (\Error $e) {
             log_reopen(BOOTSTRAP_NAME);
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -4575,7 +4601,8 @@ function bootstrap_findApplication(): void
         $bootstrapApplicationOID = '0';
     }
 
-    log_add('find application IID=' . $bootstrapApplicationIID . ' OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '5bb68dab');
+    log_add('find application IID=' . $bootstrapApplicationIID . ' OID=' . $bootstrapApplicationOID,
+        'info', __FUNCTION__, '5bb68dab');
 }
 
 /**
@@ -4594,7 +4621,8 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
     if ($bootstrapSwitchApplication != ''
         && $bootstrapSwitchApplication != $bootstrapApplicationIID
     ) {
-        log_add('ask switch application IID=' . $bootstrapSwitchApplication, 'info', __FUNCTION__, '0cbacda8');
+        log_add('ask switch application IID=' . $bootstrapSwitchApplication,
+            'info', __FUNCTION__, '0cbacda8');
         if ($bootstrapSwitchApplication == '0'
             || $bootstrapSwitchApplication == '1'
             || $bootstrapSwitchApplication == '2'
@@ -4605,7 +4633,11 @@ function bootstrap_findApplicationAsk(string &$bootstrapApplicationIID): void
             || $bootstrapSwitchApplication == '7'
             || $bootstrapSwitchApplication == '8'
             || $bootstrapSwitchApplication == '9'
-            || lnk_checkExist('f', LIB_RID_INTERFACE_APPLICATIONS, $bootstrapSwitchApplication, $phpNID, $codeBranchNID)
+            || lnk_checkExist('f',
+                LIB_RID_INTERFACE_APPLICATIONS,
+                $bootstrapSwitchApplication,
+                $phpNID,
+                $codeBranchNID)
         )
             $bootstrapApplicationIID = $bootstrapSwitchApplication;
     }
@@ -4627,7 +4659,8 @@ function bootstrap_findApplicationSession(string &$bootstrapApplicationIID): voi
     )
     {
         $bootstrapApplicationIID = $_SESSION['bootstrapApplicationIID'][0];
-        log_add('application on session IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '14e62960');
+        log_add('application on session IID=' . $bootstrapApplicationIID,
+            'debug', __FUNCTION__, '14e62960');
     }
     session_abort();
 }
@@ -4665,14 +4698,10 @@ function bootstrap_findApplicationDefault(string &$bootstrapApplicationIID): voi
     else
         $bootstrapApplicationIID = '0';
 
-    log_add('use default application IID=' . $bootstrapApplicationIID, 'debug', __FUNCTION__, '423ae49b');
+    log_add('use default application IID=' . $bootstrapApplicationIID,
+        'debug', __FUNCTION__, '423ae49b');
 }
 
-/**
- * Get if app need to be preloaded.
- *
- * @return void
- */
 function bootstrap_getApplicationPreload(): void
 {
     global $bootstrapApplicationIID,
@@ -4697,12 +4726,7 @@ function bootstrap_getApplicationPreload(): void
         $bootstrapApplicationNoPreload = false;
 }
 
-/**
- * Include the application code.
- *
- * @return void
- */
-function bootstrap_includeApplication(): void
+function bootstrap_includeApplicationFile(): void
 {
     global $bootstrapApplicationOID,
            $libraryPPCheckOK;
@@ -4721,11 +4745,6 @@ function bootstrap_includeApplication(): void
     }
 }
 
-/**
- * Find the application namespace.
- * @param string $oid
- * @return string
- */
 function bootstrap_getApplicationNamespace(string $oid): string
 {
     $value = '';
@@ -4754,7 +4773,7 @@ function bootstrap_getApplicationNamespace(string $oid): string
  *
  * @return void
  */
-function bootstrap_loadApplication(): void
+function bootstrap_instancingApplication(): void
 {
     global $nebuleInstance,
            $libraryPPCheckOK,
@@ -4771,7 +4790,8 @@ function bootstrap_loadApplication(): void
         || !$libraryPPCheckOK
         || !class_exists($nameSpaceApplication, false)
     ) {
-        log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace, 'error', __FUNCTION__, 'ec10ca1d');
+        log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace,
+            'error', __FUNCTION__, 'ec10ca1d');
         return;
     }
 
@@ -4796,18 +4816,14 @@ function bootstrap_loadApplication(): void
         }
     } catch (\Error $e) {
         log_reopen(BOOTSTRAP_NAME);
-        log_add('application load error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), 'error', __FUNCTION__, '202824cb');
+        log_add('application load error ('  . $e->getCode() . ') : ' . $e->getFile()
+            . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),
+            'error', __FUNCTION__, '202824cb');
         bootstrap_setBreak('47', __FUNCTION__);
     }
 }
 
-/**
- * Initialize application instance.
- *
- * @param  bool $run
- * @return void
- */
-function bootstrap_initApplication(bool $run): void
+function bootstrap_initialisationApplication(bool $run): void
 {
     global $nebuleInstance,
            $applicationInstance;
@@ -4824,16 +4840,19 @@ function bootstrap_initApplication(bool $run): void
         $applicationInstance->checkSecurity();
     }
 
-    if ($run)
-        $applicationInstance->router();
+    if ($run) {
+        try {
+            $applicationInstance->router();
+        } catch (\Exception $e) {
+            log_reopen(BOOTSTRAP_NAME);
+            log_add('application router error ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),
+                'error', __FUNCTION__, 'b51282b5');
+        }
+    }
 }
 
-/**
- * Save application on session.
- *
- * @return void
- */
-function bootstrap_saveApplication(): void
+function bootstrap_saveApplicationOnSession(): void
 {
     global $applicationInstance,
            $bootstrapApplicationIID,
@@ -6104,9 +6123,9 @@ function bootstrap_displayNoPreloadApplication(): void
 {
     global $bootstrapApplicationOID;
     log_add('load application without preload ' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'e01ea813');
-    bootstrap_includeApplication();
-    bootstrap_loadApplication();
-    bootstrap_initApplication(true);
+    bootstrap_includeApplicationFile();
+    bootstrap_instancingApplication();
+    bootstrap_initialisationApplication(true);
 }
 
 /**
@@ -6156,9 +6175,9 @@ function bootstrap_displayPreloadApplication(): void
     flush();
 
     log_add('preload application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8d24b491');
-    bootstrap_includeApplication();
-    bootstrap_loadApplication();
-    bootstrap_initApplication(false);
+    bootstrap_includeApplicationFile();
+    bootstrap_instancingApplication();
+    bootstrap_initialisationApplication(false);
 
     if ($applicationInstance === null) {
         log_add('error preload application code OID=' . $bootstrapApplicationOID . ' null', 'error', __FUNCTION__, '9c685c75');
@@ -7231,7 +7250,7 @@ function bootstrap_displayRouter(): void
 
     // Sérialise les instances et les sauve dans la session PHP.
     bootstrap_saveLibraryPOO(); // FIXME à supprimer ?
-    bootstrap_saveApplication();
+    bootstrap_saveApplicationOnSession();
 }
 
 function bootstrap_logMetrology(): void

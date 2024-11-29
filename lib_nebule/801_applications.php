@@ -71,29 +71,29 @@ abstract class Applications extends Functions implements applicationInterface
         $this->_translateInstance->setEnvironmentLibrary($this->_nebuleInstance);
         $this->_translateInstance->setEnvironmentApplication($this);
 
-        $this->_metrologyInstance->addLog('instancing application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
+        $this->_metrologyInstance->addLog('initialisation application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
         try {
             $this->_displayInstance->initialisation();
         } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('instancing application display error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c7da4e2');
+            $this->_metrologyInstance->addLog('initialisation application display error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c7da4e2');
         }
 
-        $this->_metrologyInstance->addLog('instancing application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3478bd7');
+        $this->_metrologyInstance->addLog('initialisation application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3478bd7');
         try {
             $this->_actionInstance->initialisation();
         } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('instancing application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
-        }
-
-        $this->_metrologyInstance->addLog('instancing application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
-        try {
-            $this->_translateInstance->initialisation();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('instancing application translate error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
+            $this->_metrologyInstance->addLog('initialisation application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
         }
 
         $this->_metrologyInstance->addLog('instancing application modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ddcee4c');
         $this->_applicationModulesInstance = new ApplicationModules($this);
+
+        $this->_metrologyInstance->addLog('initialisation application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
+        try {
+            $this->_translateInstance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('initialisation application translate error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
+        }
 
         $this->_loadModules();
     }
@@ -776,25 +776,20 @@ abstract class Applications extends Functions implements applicationInterface
      */
     public function router(): void
     {
-        global $applicationTranslateInstance, $applicationDisplayInstance, $applicationActionInstance;
+        $this->_metrologyInstance->addLog('running application', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cd5ec83d');
 
-        $this->_metrologyInstance->addLog('Running application', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cd5ec83d');
-
-        if ($this->_askDownload) {
+        if ($this->_askDownload)
             $this->_download();
-        } else {
-            // Affichage.
-            $this->_metrologyInstance->addLog('Running display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '13cb1fd7');
-
-            // Récupère les instances.
-            $this->_translateInstance = $applicationTranslateInstance;
-            $this->_displayInstance = $applicationDisplayInstance;
-            $this->_actionInstance = $applicationActionInstance;
-
-            // Affichage !
-            $this->_displayInstance->display();
-
-            $this->_metrologyInstance->addLog('End display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07edae7d');
+        else {
+            $this->_metrologyInstance->addLog('running display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '13cb1fd7');
+            try {
+                $this->_displayInstance->display();
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error display ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '93be3bc2');
+            }
+            $this->_metrologyInstance->addLog('end display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07edae7d');
         }
     }
 
