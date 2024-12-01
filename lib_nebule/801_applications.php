@@ -50,16 +50,16 @@ abstract class Applications extends Functions implements applicationInterface
         if ($this->_findAskDownload())
             return; // Do nothing more on app.
 
-        $this->_metrologyInstance->addLog('instancing application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9d8c59bb');
         $displayName = $this->_applicationNamespace . '\Display';
+        $this->_metrologyInstance->addLog('instancing application display ' . $displayName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9d8c59bb');
         $this->_displayInstance = new $displayName($this->_nebuleInstance);
 
-        $this->_metrologyInstance->addLog('instancing application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e19f2105');
         $actionName = $this->_applicationNamespace . '\Action';
+        $this->_metrologyInstance->addLog('instancing application action '  .$actionName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e19f2105');
         $this->_actionInstance = new $actionName($this->_nebuleInstance);
 
-        $this->_metrologyInstance->addLog('instancing application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8fc40a38');
         $translateName = $this->_applicationNamespace . '\Translate';
+        $this->_metrologyInstance->addLog('instancing application translate ' . $translateName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8fc40a38');
         $this->_translateInstance = new $translateName($this->_nebuleInstance);
 
         $this->_displayInstance->setEnvironmentLibrary($this->_nebuleInstance);
@@ -70,6 +70,9 @@ abstract class Applications extends Functions implements applicationInterface
 
         $this->_translateInstance->setEnvironmentLibrary($this->_nebuleInstance);
         $this->_translateInstance->setEnvironmentApplication($this);
+
+        $this->_metrologyInstance->addLog('instancing application modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ddcee4c');
+        $this->_applicationModulesInstance = new ApplicationModules($this);
 
         $this->_metrologyInstance->addLog('initialisation application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
         try {
@@ -84,9 +87,6 @@ abstract class Applications extends Functions implements applicationInterface
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog('initialisation application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
         }
-
-        $this->_metrologyInstance->addLog('instancing application modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ddcee4c');
-        $this->_applicationModulesInstance = new ApplicationModules($this);
 
         $this->_metrologyInstance->addLog('initialisation application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
         try {

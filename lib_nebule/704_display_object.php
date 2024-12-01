@@ -488,6 +488,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $divTitleMenuContentClose = '';
         $divTitleMenuActionsOpen = '';
         $divTitleMenuActionsClose = '';
+        $divMenuContentOpen = '';
+        $divMenuContentClose = '';
         $menuContent = '';
         $menuActions = '';
         if ($this->_displayLink
@@ -634,8 +636,6 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             }
 
             if ($this->_displayJS) {
-                $divMenuContentOpen = '';
-                $divMenuContentClose = '';
                 $divTitleMenuOpen = '  <div class="objectTitleMenuContentLayout" id="objectTitleMenu-' . $this->_actionsID . '" '
                     . "onclick=\"display_hide('objectTitleMenu-" . $this->_actionsID . "');\" >\n";
                 $divTitleMenuOpen .= '   <div class="objectTitleMenuContent">' . "\n";
@@ -963,7 +963,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $count = 0;
 
         foreach ($list as $object) {
-            $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
+            if (is_string($object))
+                $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
             $htLink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_displayInstance->prepareObjectColor($object);
             $icon = '';

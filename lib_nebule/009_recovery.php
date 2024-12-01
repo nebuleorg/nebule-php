@@ -17,15 +17,11 @@ class Recovery extends Functions
         '_recoveryEntities',
         '_recoveryEntitiesInstances',
         '_recoveryEntitiesSigners',
-        '_permitInstanceEntityAsRecovery',
-        '_permitDefaultEntityAsRecovery',
     );
 
     private array $_recoveryEntities = array();
     private array $_recoveryEntitiesInstances = array();
     private array $_recoveryEntitiesSigners = array();
-    private bool $_permitInstanceEntityAsRecovery = false;
-    private bool $_permitDefaultEntityAsRecovery = false;
 
 
     public function setInstanceEntityAsRecovery(Entity $instance): void
@@ -33,12 +29,9 @@ class Recovery extends Functions
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $this->_permitInstanceEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery');
-
-        $eid = $instance->getID();
-        if ($this->_permitInstanceEntityAsRecovery) {
-            $this->_addAsLocalRecovery($instance, $eid);
-            $this->_metrologyInstance->addLog('Add instance entity as recovery', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa22c32d');
+        if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')) {
+            $this->_addAsLocalRecovery($instance);
+            $this->_metrologyInstance->addLog('Add server entity as recovery', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fa22c32d');
         }
     }
 
@@ -47,17 +40,17 @@ class Recovery extends Functions
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $this->_permitDefaultEntityAsRecovery = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery');
-
-        $eid = $instance->getID();
-        if ($this->_permitDefaultEntityAsRecovery) {
-            $this->_addAsLocalRecovery($instance, $eid);
-            $this->_metrologyInstance->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa22c32d');
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsRecovery')) {
+            $this->_addAsLocalRecovery($instance);
+            $this->_metrologyInstance->addLog('Add default entity as recovery', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd8bcdd46');
         }
     }
 
-    private function _addAsLocalRecovery(Entity $instance, String $eid, string $signer='0'): void
+    private function _addAsLocalRecovery(Entity $instance, string $signer='0'): void
     {
+        $eid = $instance->getID();
+        if ($eid == '0')
+            return;
         $this->_recoveryEntities[$eid] = $eid;
         $this->_recoveryEntitiesInstances[$eid] = $instance;
         $this->_recoveryEntitiesSigners[$eid] = $signer;
@@ -99,9 +92,8 @@ class Recovery extends Functions
         }
 
         foreach ($list as $link) {
-            $eid = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->_cacheInstance->newEntity($eid);
-            $this->_addAsLocalRecovery($instance, $eid, $link->getParsed()['bs/rs1/eid']);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $this->_addAsLocalRecovery($instance, $link->getParsed()['bs/rs1/eid']);
         }
         unset($list);
     }

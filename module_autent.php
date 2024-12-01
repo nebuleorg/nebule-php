@@ -103,11 +103,6 @@ class ModuleAutent extends \Nebule\Library\Modules {
         }
     }
 
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
     public function displayModuleInline(): void {
         // Nothing
     }

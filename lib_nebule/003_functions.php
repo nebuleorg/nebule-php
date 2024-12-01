@@ -77,10 +77,10 @@ class Functions
             return;
         $this->_environmentApplicationSet = true;
 
-        //$this->setEnvironmentLibrary($applicationInstance->getNebuleInstance());
-
         $this->_applicationInstance = $applicationInstance;
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
     }
 
     public function initialisation(): void {

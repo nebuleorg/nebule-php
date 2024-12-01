@@ -222,10 +222,8 @@ class Cache extends Functions
 
     private function _checkKnownNodeType(string &$type): bool
     {
-        foreach (self::KNOWN_TYPE as $known) {
-            if ($type == $known)
-                return true;
-        }
+        if (in_array($type, self::KNOWN_TYPE))
+            return true;
         return false;
     }
 

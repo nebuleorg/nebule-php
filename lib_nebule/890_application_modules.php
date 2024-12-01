@@ -67,7 +67,7 @@ class ApplicationModules
         if (!$this->_applicationInstance::USE_MODULES
             || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
         ) {
-            $this->_metrologyInstance->addLog('Do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
+            $this->_metrologyInstance->addLog('do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
         $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -84,6 +84,8 @@ class ApplicationModules
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
                 continue;
             }
+            $instance->setEnvironmentLibrary($this->_nebuleInstance);
+            $instance->setEnvironmentApplication($this->_applicationInstance);
             try {
                 $instance->initialisation();
             } catch (\Error $e) {

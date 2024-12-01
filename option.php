@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Option;
 use Nebule\Library\Configuration;
-use Nebule\Library\Crypto;use Nebule\Library\DisplayColor;
+use Nebule\Library\Crypto;use Nebule\Library\DisplayBlankLine;use Nebule\Library\DisplayColor;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayItemIconMessage;
@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241129';
+    const APPLICATION_VERSION = '020241201';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -191,7 +191,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
             if ($this->_rescueInstance->getModeRescue())
                 $this->displayMessageWarning_DEPRECATED('::::RESCUE');
-//echo gettype($this->_actionInstance) . "<br />\n"; // FIXME
             $this->_displayActions();
 
             switch ($this->getCurrentDisplayView()) {
@@ -738,7 +737,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instanceList->display();
 
         $instanceMessage = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage->setMessage("The global authorities are entities with specials capabilities on common things like code. Global authorities can't be removed or disabled.");
+        $instanceMessage->setMessage("The global authorities are entities with specials capabilities on common
+            things like code. Global authorities can't be removed or disabled.<br/>&nbsp;");
         $instanceMessage->setType(DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage->setDisplayAlone(true);
         $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
@@ -952,22 +952,26 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
         $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-        $instanceMessage1->setMessage("The local authorities are entities with specials capabilities on local server.");
+        $instanceMessage1->setMessage("The local authorities are entities with specials capabilities on local
+            server.<br/>&nbsp;");
         $instanceMessage1->setRatio(DisplayItem::SIZE_SMALL);
         $instanceMessage1->setIconText('Type');
         $instanceList->addItem($instanceMessage1);
         $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
         $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage2->setMessage("There are two levels of local authorities:<br />
- 1: Local forced authorities defined by options, known as primary local authorities.<br />
- 2: Local authorities defined by links from primary local authorities, known as secondary local authorities.");
+            1: Local forced authorities defined by options, known as primary local authorities.<br />
+            2: Local authorities defined by links from primary local authorities, known as secondary local authorities.
+            <br/>&nbsp;");
         $instanceMessage2->setRatio(DisplayItem::SIZE_SMALL);
         $instanceMessage2->setIconText('Type');
         $instanceList->addItem($instanceMessage2);
         $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
         $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-        $instanceMessage3->setMessage("An entity can be added as secondary authority and later can be removed.<br />
-Primary authorities can't be removed, they are forced by two options on the environment file : 'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.");
+        $instanceMessage3->setMessage("An entity can be added as secondary authority and later can be removed.
+            <br />
+            Primary authorities can't be removed, they are forced by two options on the environment file :
+            'permitInstanceEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.<br/>&nbsp;");
         $instanceMessage3->setRatio(DisplayItem::SIZE_SMALL);
         $instanceMessage3->setIconText('Type');
         $instanceList->addItem($instanceMessage3);
@@ -1124,7 +1128,8 @@ Primary authorities can't be removed, they are forced by two options on the envi
             $instanceList = new DisplayList($this->_applicationInstance);
 
             $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
-            $instanceMessage1->setMessage("Type of an option can be 'string', 'boolean' or 'integer'. The type is defined by construct and can't be changed.");
+            $instanceMessage1->setMessage("The type of option can be 'string', 'boolean' or 'integer'. The type
+                is defined by construct and can't be changed.<br/>&nbsp;");
             $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage1);
@@ -1132,10 +1137,10 @@ Primary authorities can't be removed, they are forced by two options on the envi
             $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
             $instanceMessage2->setMessage("Status of an option can be :<br/>
                 - useful : it's value have to be changed for normal operation.<br/>
-                - carful : it's value can be changed for normal operation but be careful this may reduce availability or
-                stability.<br/>
+                - careful : it's value can be changed for normal operation but be careful this may reduce availability
+                or stability.<br/>
                 - critical : it's value should not be changed for normal operation, it's critical for the security. Be
-                sure it's not an error.");
+                sure it's not an error.<br/>&nbsp;");
             $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage2);
@@ -1143,9 +1148,9 @@ Primary authorities can't be removed, they are forced by two options on the envi
             $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
             $instanceMessage3->setMessage("Protection of an option can be :<br/>
                 - writable : the value can be changed with a link.<br/>
-                - forced : the value have been changed in the local environment file. It can't be change by link.<br/>
+                - forced : the value have been changed in the local environment file. It can't be changed by link.<br/>
                 - locked : the option is defined as it's value can't be changed by link. It can be overridden in the
-                local environment file.");
+                local environment file.<br/>&nbsp;");
             $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage3);
@@ -1177,409 +1182,263 @@ Primary authorities can't be removed, they are forced by two options on the envi
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, '::::NoPreload', DisplayItem::RATIO_SHORT, 'Preload');
+                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NoPreload', DisplayItem::RATIO_SHORT, 'Preload');
         }
-        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, '::::OkPreload', DisplayItem::RATIO_SHORT, 'Preload');
+        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::OkPreload', DisplayItem::RATIO_SHORT, 'Preload');
+    }
+
+    private function _getInfoAppActivated(string $application):DisplayInformation {
+        $instance = new Node($this->_nebuleInstance, $application);
+        $linksList = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $application,
+            'bl/rl/nid2' => $this->_referenceActivated, // FIXME
+            'bl/rl/nid3' => $application,
+        );
+        $instance->getLinks($linksList, $filter);
+        foreach ($linksList as $link) {
+            $signer = $link->getParsed()['bs/rs1/eid'];
+            if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
+                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', DisplayItem::RATIO_SHORT, 'Activation');
+        }
+        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', DisplayItem::RATIO_SHORT, 'Activation');
+    }
+
+    private function _getInfoAppRun(string $application):DisplayInformation {
+        $instance = new Node($this->_nebuleInstance, $application);
+        $linksList = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $application,
+            'bl/rl/nid2' => $this->_referenceActivated, // FIXME
+            'bl/rl/nid3' => $application,
+        );
+        $instance->getLinks($linksList, $filter);
+        foreach ($linksList as $link) {
+            $signer = $link->getParsed()['bs/rs1/eid'];
+            if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
+                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', DisplayItem::RATIO_SHORT, 'Activation');
+        }
+        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', DisplayItem::RATIO_SHORT, 'Activation');
     }
 
 
     
     private string $_referenceAppID = \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS;
-    private string $_referencePHP = '';
     private string $_referenceNoPreload = '';
+    private string $_referenceActivated = '';
 
     private function _displayApplications(): void
     {
-        $this->_referencePHP = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_OBJECT_APP_PHP, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+        $referencePHP = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_OBJECT_APP_PHP, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
         $this->_referenceNoPreload = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+        $this->_referenceActivated = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
         
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Applications');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
         $instanceTitle->display();
-        ?>
 
-        <div id="apps">
-            <?php
-            $instanceAppsID = $this->_cacheInstance->newNode($this->_referenceAppID);
+        echo '<div id="apps">' . "\n";
+
+        $instanceAppsID = $this->_cacheInstance->newNode($this->_referenceAppID);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . $this->_referenceAppID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $this->_referencePHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $referencePHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceAppsID->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-            $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList = new DisplayList($this->_applicationInstance);
 
-            $appListed = array();
-            $linksList = array();
-            foreach ($this->_authoritiesInstance->getCodeAuthoritiesEID() as $eid) {
-                $linksList = $instanceAppsID->getLinksOnFields($eid, '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
+        $appListed = array();
+        $linksList = array();
+        foreach ($this->_authoritiesInstance->getCodeAuthoritiesEID() as $eid) {
+            $linksList = $instanceAppsID->getLinksOnFields($eid, '', 'f', $this->_referenceAppID, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK5 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-                foreach ($linksList as $link) {
-                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
-                    if (isset($appListed[$hashTarget]))
-                        continue;
-                    $appListed[$hashTarget] = true;
-                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+            foreach ($linksList as $link) {
+                $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                if (isset($appListed[$hashTarget]))
+                    continue;
+                $appListed[$hashTarget] = true;
+                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                    $instanceApplication = new DisplayObject($this->_applicationInstance);
-                    $instanceApplication->setNID($hashTargetInstance);
-                    $instanceApplication->setEnableNID(false);
-                    $instanceApplication->setEnableName(true);
-                    //$instanceApplication->setName($optionName);
-                    $instanceApplication->setEnableColor(true);
-                    $instanceApplication->setEnableIcon(false);
-                    $instanceApplication->setEnableLink(false);
-                    $instanceApplication->setEnableJS(false);
-                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
-                    $instanceList->addItem($instanceApplication);
+                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication->setNID($hashTargetInstance);
+                $instanceApplication->setEnableNID(false);
+                $instanceApplication->setEnableName(true);
+                //$instanceApplication->setName($optionName);
+                $instanceApplication->setEnableColor(true);
+                $instanceApplication->setEnableIcon(false);
+                $instanceApplication->setEnableLink(false);
+                $instanceApplication->setEnableJS(false);
+                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceList->addItem($instanceApplication);
 
-                    $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        $eid,
-                        DisplayItem::RATIO_SHORT,
-                        'Signer EID'));
-                    $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
-                }
+                $instanceList->addItem($this->_addInfoShort(
+                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    $eid,
+                    DisplayItem::RATIO_SHORT,
+                    'Signer EID'));
+                $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
+                $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
+
+                $instanceOpen = new DisplayInformation($this->_applicationInstance);
+                $instanceOpen->setType(DisplayItemIconMessage::TYPE_PLAY);
+                $instanceOpen->setLink('?' . References::COMMAND_SWITCH_APPLICATION . '=' . $hashTarget);
+                $instanceOpen->setMessage(':::Open');
+                $instanceList->addItem($instanceOpen);
+
+                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceList->addItem($instanceLB);
             }
+        }
 
-            // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
-            if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                && !$this->_rescueInstance->getModeRescue()
-            ) {
-                $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityID(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
+        // Liste les applications reconnues par l'entité instance du serveur, si autorité locale et pas en mode de récupération.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
+            && !$this->_rescueInstance->getModeRescue()
+        ) {
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-                foreach ($linksList as $link) {
-                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
-                    if (isset($appListed[$hashTarget]))
-                        continue;
-                    $appListed[$hashTarget] = true;
-                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+            foreach ($linksList as $link) {
+                $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                if (isset($appListed[$hashTarget]))
+                    continue;
+                $appListed[$hashTarget] = true;
+                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                    $instanceApplication = new DisplayObject($this->_applicationInstance);
-                    $instanceApplication->setNID($hashTargetInstance);
-                    $instanceApplication->setEnableNID(false);
-                    $instanceApplication->setEnableName(true);
-                    //$instanceApplication->setName($optionName);
-                    $instanceApplication->setEnableColor(true);
-                    $instanceApplication->setEnableIcon(false);
-                    $instanceApplication->setEnableLink(false);
-                    $instanceApplication->setEnableJS(false);
-                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
-                    $instanceList->addItem($instanceApplication);
+                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication->setNID($hashTargetInstance);
+                $instanceApplication->setEnableNID(false);
+                $instanceApplication->setEnableName(true);
+                //$instanceApplication->setName($optionName);
+                $instanceApplication->setEnableColor(true);
+                $instanceApplication->setEnableIcon(false);
+                $instanceApplication->setEnableLink(false);
+                $instanceApplication->setEnableJS(false);
+                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceList->addItem($instanceApplication);
 
-                    $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        $this->_entitiesInstance->getServerEntityID(),
-                        DisplayItem::RATIO_SHORT,
-                        'Signer EID'));
-                    $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
-                }
+                $instanceList->addItem($this->_addInfoShort(
+                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    $this->_entitiesInstance->getServerEntityID(),
+                    DisplayItem::RATIO_SHORT,
+                    'Signer EID'));
+                $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
+                $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
+
+                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceList->addItem($instanceLB);
             }
+        }
 
-            // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
-            if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                && !$this->_rescueInstance->getModeRescue()
-            ) {
-                $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $this->_referencePHP);
+        // Liste les applications reconnues par l'entité par défaut, si autorité locale et pas en mode de récupération.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
+            && !$this->_rescueInstance->getModeRescue()
+        ) {
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-                foreach ($linksList as $link) {
-                    $hashTarget = $link->getParsed()['bl/rl/nid2'];
-                    if (isset($appListed[$hashTarget]))
-                        continue;
-                    $appListed[$hashTarget] = true;
-                    $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+            foreach ($linksList as $link) {
+                $hashTarget = $link->getParsed()['bl/rl/nid2'];
+                if (isset($appListed[$hashTarget]))
+                    continue;
+                $appListed[$hashTarget] = true;
+                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                    $instanceApplication = new DisplayObject($this->_applicationInstance);
-                    $instanceApplication->setNID($hashTargetInstance);
-                    $instanceApplication->setEnableNID(false);
-                    $instanceApplication->setEnableName(true);
-                    //$instanceApplication->setName($optionName);
-                    $instanceApplication->setEnableColor(true);
-                    $instanceApplication->setEnableIcon(false);
-                    $instanceApplication->setEnableLink(false);
-                    $instanceApplication->setEnableJS(false);
-                    $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
-                    $instanceList->addItem($instanceApplication);
+                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication->setNID($hashTargetInstance);
+                $instanceApplication->setEnableNID(false);
+                $instanceApplication->setEnableName(true);
+                //$instanceApplication->setName($optionName);
+                $instanceApplication->setEnableColor(true);
+                $instanceApplication->setEnableIcon(false);
+                $instanceApplication->setEnableLink(false);
+                $instanceApplication->setEnableJS(false);
+                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceList->addItem($instanceApplication);
 
-                    $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        $this->_entitiesInstance->getDefaultEntityID(),
-                        DisplayItem::RATIO_SHORT,
-                        'Signer EID'));
-                    $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
-                }
+                $instanceList->addItem($this->_addInfoShort(
+                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    $this->_entitiesInstance->getDefaultEntityID(),
+                    DisplayItem::RATIO_SHORT,
+                    'Signer EID'));
+                $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
+                $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
+
+                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceList->addItem($instanceLB);
             }
-            unset($linksList);
+        }
+        unset($linksList);
 
-            $instanceList->setSize(DisplayItem::SIZE_SMALL);
-            $instanceList->display();
+        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->display();
 
-
-
-
-            $applicationsList = array(); // FIXME debug...
-
-
-            // Lister les applications.
-            $application = '';
-            $signersList = array();
-            foreach ($applicationsList as $application) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('add application ' . $application, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de6e59f5');
-
-                $color = '#' . substr($application . '000000', 0, 6);
-                //$colorSigner = '#'.substr($signersList[$application].'000000',0,6);
-                $instance = new Node($this->_nebuleInstance, $application);
-                $title = $instance->getName('authority');
-                $shortName = substr($instance->getSurname('authority') . '--', 0, 2);
-                $shortName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
-
-                // Recherche si l'application ne doit pas être pré-chargée.
-                $noPreloadSigner = '';
-                //$this->_referencePHP = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
-//                $linksList = $instance->readLinksFilterFull('', '', 'f', $application, $this->_referencePHP, $application); // FIXME error !!!
-                $linksList = array();
-                $filter = array(
-                    'bl/rl/req' => 'f',
-                    'bl/rl/nid1' => $application,
-                    'bl/rl/nid2' => $this->_referencePHP,
-                    'bl/rl/nid3' => $application,
-                );
-                $instance->getLinks($linksList, $filter);
-                if (sizeof($linksList) != 0) {
-                    $signer = '';
-                    $authority = '';
-                    foreach ($linksList as $link) {
-                        $signer = $link->getParsed()['bs/rs1/eid'];
-                        foreach ($this->_authoritiesInstance->getLocalAuthoritiesID() as $authority) {
-                            if ($signer == $authority) {
-                                // Si le lien est valide, active le chargement direct de l'application.
-                                $noPreloadSigner = $signer;
-                                break 2;
-                            }
-                        }
-                    }
-                    unset($signer, $authority);
-                }
-
-                // Recherche si l'application est activée par l'entité instance de serveur.
-                // Ou si l'application est en liste blanche.
-                // Ou si c'est l'application par défaut.
-                $activable = true;
-                $activated = false;
-                foreach (References::ACTIVE_APPLICATIONS_WHITELIST as $item) {
-                    if ($application == $item) {
-                        $activated = true;
-                        $activable = false;
-                    }
-                }
-                if ($application == $this->_configurationInstance->getOptionUntyped('defaultApplication'))
-                    $activated = true;
-                if (!$activated) {
-                    $refActivated = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
-//                    $linksList = $instance->readLinksFilterFull($this->_entitiesInstance->getInstanceEntity(), '', 'f', $application, $refActivated, $application);
-                    $filter = array(
-                        'bs/rs1/eid' => $this->_entitiesInstance->getServerEntityID(),
-                        'bl/rl/req' => 'f',
-                        'bl/rl/nid1' => $application,
-                        'bl/rl/nid2' => $refActivated,
-                        'bl/rl/nid3' => $application,
-                    );
-                    $instance->getLinks($linksList, $filter);
-                    if (sizeof($linksList) != 0)
-                        $activated = true;
-                }
-
-                // Recherche de la dernière mise à jour.
-                $updater = $signersList[$application];
-                $linksResult = array();
-                foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance) {
-//                    $linksResult = $instance->readLinksFilterFull($this->_nebuleInstance->getCodeMaster(), '', 'f', $application, '', $this->_referenceAppID);
-                    $filter = array(
-                        'bs/rs1/eid' => $instance->getID(),
-                        'bl/rl/req' => 'f',
-                        'bl/rl/nid1' => $application,
-                        'bl/rl/nid2' => '',
-                        'bl/rl/nid3' => $this->_referenceAppID,
-                    );
-                    $instance->getLinks($linksResult, $filter);
-                }
-                $linksList = array();
-                if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')
-                    && !$this->_rescueInstance->getModeRescue()
-                ) {
-//                    $linksList = $instance->readLinksFilterFull($this->_entitiesInstance->getInstanceEntity(), '', 'f', $application, '', $this->_referenceAppID);
-                    foreach ($linksList as $link)
-                        $linksResult[] = $link;
-                }
-                if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
-                    && !$this->_rescueInstance->getModeRescue()
-                ) {
-//                    $linksList = $instance->readLinksFilterFull($this->_nebuleInstance->getDefaultEntity(), '', 'f', $application, '', $this->_referenceAppID);
-                    foreach ($linksList as $link)
-                        $linksResult[] = $link;
-                }
-                unset($linksList);
-                // Trie les liens par date.
-                if (sizeof($linksResult) != 0) {
-                    $linkdate = array();
-                    foreach ($linksResult as $n => $t)
-                        $linkdate[$n] = $t->getDate();
-                    array_multisort($linkdate, SORT_STRING, SORT_ASC, $linksResult);
-                    unset($linkdate, $n, $t);
-                }
-                // Prend le dernier.
-                if (sizeof($linksResult) > 0) {
-                    $link = end($linksResult);
-                    $updater = $link->getParsed()['bs/rs1/eid'];
-                }
-                unset($linksResult);
-                ?>
-
-                <div class="appItemList">
-                    <a href="/?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $application; ?>">
-                        <div class="appLink" style="background:<?php echo $color; ?>;">
-                            <span class="appShortname"><?php echo $shortName; ?></span><br/><span
-                                    class="appTitle"><?php echo $title; ?></span>
-                        </div>
-                    </a>
-                    <div class="appInfos">
-                        <div class="appActions">
-                            <?php
-                            if ($activated)
-                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IOK) . 'Enabled'; // FIXME replace with REFERENCE_ICON_INFO_OK
-                            else
-                                echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_IERR) . 'Disabled'; // FIXME replace with REFERENCE_ICON_INFO_ERROR
-
-                            echo "<br />\n";
-
-                            if ($activable
-                                && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
-                                && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
-                                && $this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getServerEntityID()
-                            ) {
-                                if ($activated) {
-                                    $this->displayHypertextLink(
-                                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_LX) . 'Disable',
-                                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $application . '_' . $refActivated . '_' . $application
-                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
-                                    );
-                                } else {
-                                    $this->displayHypertextLink(
-                                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_LL) . 'Enable',
-                                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $application . '_' . $refActivated . '_' . $application
-                                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
-                                    );
-                                }
-                                echo "<br />\n";
-                            }
-
-                            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
-                                        'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
-                                        'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                                    || $this->_entitiesInstance->getCurrentEntityIsUnlocked()
-                            ) {
-                                $this->displayHypertextLink(
-                                    $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize',
-                                    '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $application
-                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
-                                );
-                            }
-                            ?>
-
-                        </div>
-                        <div class="appName"><?php echo $instance->getName('authority'); ?></div>
-                        <div class="appRef"><?php echo $instance->getID(); ?></div>
-                        <div class="appSigner">Declared by <?php $this->displayInlineObjectColorIconName(
-                                $signersList[$application],
-                                '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $signersList[$application]); ?>
-                            <?php
-                            if ($updater != $signersList[$application]) {
-                                ?>
-                                and updated by <?php $this->displayInlineObjectColorIconName(
-                                    $updater,
-                                    '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $updater); ?>
-                                <?php
-                            }
-                            ?>
-
-                        </div>
-                        <?php
-                        if ($noPreloadSigner != '') {
-                            ?>
-
-                            <div class="appNoPreload">No preload by <?php $this->displayInlineObjectColorIconName(
-                                    $noPreloadSigner,
-                                    '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_DISPLAY_APPLICATION
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_SELECT_ENTITY
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=default'
-                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $noPreloadSigner); ?>.
-                            </div>
-                            <?php
-                        }
-                        ?>
-
-                    </div>
-                </div>
-                <?php
-            }
-            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
-                        'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
-                        'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
-                    || $this->_entitiesInstance->getCurrentEntityIsUnlocked()
-            ) {
-                ?>
-
-                <div id="syncallapps">
-                    <?php
-                    $this->displayHypertextLink(
-                        $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
-                        '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
-                    );
-                    ?>
-
-                </div>
-                <?php
-            }
-            unset($application, $applicationsList, $instance, $updater, $color, $title, $shortName, $noPreloadSigner);
+        /* TODO synchro all apps updates
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject',
+                    'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink',
+                    'permitSynchronizeApplication', 'permitPublicSynchronizeApplication'))
+                || $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+        ) {
             ?>
 
-        </div>
+            <div id="syncallapps">
+                <?php
+                $this->displayHypertextLink(
+                    $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
+                    '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
+                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue()
+                );
+                ?>
 
-        <div id="help">
-            Many differents applications can be used. The application to use can be selected from the list on <a
-                    href="?a=0">application 0</a> or here on the list.<br/>
+            </div>
+            <?php
+        }*/
+
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage1->setMessage('Many different applications can be used. The application to use can
+            be selected from the list on <a href="?a=1">application 1</a> or here on this list.<br/>
             At any time you can switch to another application and come back later to the first one without losing work
-            in progress or authentication.<br/>
-            <br/>
-            An application can be <?php echo $this->convertInlineIconFace(Displays::REFERENCE_ICON_INFO_OK) . 'enabled'; ?>
-            or <?php echo $this->convertInlineIconFace(Displays::REFERENCE_ICON_INFO_ERROR) . 'disabled'; ?>.<br/>
-            To be usable, each application have to be enabled on the list here. Without activation, the bootstrap refuse
-            to load an application.<br/>
+            in progress or authentication.<br/>&nbsp;');
+        $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
+        $instanceList->addItem($instanceMessage1);
+
+        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage2->setMessage("An application can be enabled or disabled.<br/>
+            To be usable, each application have to be enabled on the list here. Without activation, the bootstrap
+            refuse to load an application.<br/>
             To be enabled, an application have to be activated with a link generated by a local authority.<br/>
-            By default, the application 'option' is automaticaly enabled and can't be disabled.<br/>
-            <br/>
-            All applications can
-            be <?php echo $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'synchronized'; ?> to get last
-            updates.<br/>
-            Synchronization must be enabled with the option <i>permitSynchronizeApplication</i> and if needed with the
-            option <i>permitPublicSynchronizeApplication</i>.<br/>
-            <br/>
-            Each application is declared by the <a href="http://code.master.nebule.org">code master</a> or by a local
-            authority and can be updated by a local authority.<br/>
+            By default, the application 'option' is automatically enabled and can't be disabled.<br/>&nbsp;");
+        $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
+        $instanceList->addItem($instanceMessage2);
+
+        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3->setMessage('All applications can be synchronized to get last updates.<br/>
+            Synchronization must be enabled with the option <i>permitSynchronizeApplication</i> and if needed with
+            the option <i>permitPublicSynchronizeApplication</i>.<br/>&nbsp;');
+        $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
+        $instanceList->addItem($instanceMessage3);
+
+        $instanceMessage4 = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage4->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage4->setMessage('Each application is declared by the
+            <a href="http://code.master.nebule.org">code master</a> or by a local authority and can be updated by a
+            local authority.<br/>
             On first loading of an application, a preload permit to enhance the user experience. The preload can be
-            disabled for an application by the code master or by a local authority.
-        </div>
-        <?php
+            disabled for an application by the code master or by a local authority.<br/>&nbsp;');
+        $instanceMessage4->setRatio(DisplayItem::RATIO_LONG);
+        $instanceList->addItem($instanceMessage4);
+
+        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->display();
+
+        echo "</div>\n";
     }
 
 
@@ -1950,12 +1809,27 @@ class Translate extends Translates
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::INFO' => 'Information',
+            ':::NoPreload' => 'Non préchargé',
+            ':::OkPreload' => 'Préchargé',
+            ':::Activated' => 'Activé',
+            ':::NotActivated' => 'Désactivé',
+            ':::Open' => "Lancer l'application",
         ],
         'en-en' => [
             '::INFO' => 'Information',
+            ':::NoPreload' => 'Not preloaded',
+            ':::OkPreload' => 'Preloaded',
+            ':::Activated' => 'Activated',
+            ':::NotActivated' => 'Not activated',
+            ':::Open' => 'Open application',
         ],
         'es-co' => [
             '::INFO' => 'Information',
+            ':::NoPreload' => 'Not preloaded',
+            ':::OkPreload' => 'Preloaded',
+            ':::Activated' => 'Activated',
+            ':::NotActivated' => 'Not activated',
+            ':::Open' => 'Open application',
         ],
     ];
 }

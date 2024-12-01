@@ -5,6 +5,8 @@ namespace Nebule\Library;
 /**
  * Classe DisplayList
  *       ---
+ * Display a list of mix with DisplayInformation, DisplayObject, DisplaySecurity, DisplayQuery and DisplayBlankLine.
+ *       ---
  *  Example:
  *   FIXME
  *       ---
@@ -21,7 +23,8 @@ class DisplayList extends DisplayItem implements DisplayInterface
     private array $_list = array();
 
     public function getHTML(): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content',
+            Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (sizeof($this->_list) == 0 && $this->_enableWarnIfEmpty)
         {
@@ -38,14 +41,15 @@ class DisplayList extends DisplayItem implements DisplayInterface
         $result .= '<div class="listContent">' . "\n";
         $result .= "\n";
         foreach ($this->_list as $item){
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item),
+                Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
             if ($item instanceof DisplayInformation) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
             } elseif ($item instanceof DisplayObject) {
                 $item->setSize($this->_sizeCSS);
-                // $item->setDisplayAlone(false); TODO
+                //$item->setDisplayAlone(false); TODO
                 $result .= $item->getHTML();
             } elseif ($item instanceof DisplaySecurity) {
                 $item->setSize($this->_sizeCSS);
@@ -55,7 +59,8 @@ class DisplayList extends DisplayItem implements DisplayInterface
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            }
+            } elseif ($item instanceof DisplayBlankLine)
+                $result .= $item->getHTML();
             $result .= "\n";
         }
         $result .= '</div>';
@@ -70,8 +75,12 @@ class DisplayList extends DisplayItem implements DisplayInterface
             || $item instanceof DisplayObject
             || $item instanceof DisplaySecurity
             || $item instanceof DisplayQuery
+            || $item instanceof DisplayBlankLine
         )
             $this->_list[] = $item;
+        else
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('invalid instance ' . get_class($item)
+                . ' to add on display list', Metrology::LOG_LEVEL_ERROR, __METHOD__, '93aa0cae');
     }
 
     private bool $_enableWarnIfEmpty = false;
@@ -92,4 +101,30 @@ class DisplayList extends DisplayItem implements DisplayInterface
         </style>
         <?php
     }
+}
+
+
+/**
+ * Classe DisplayBlankLine
+ *       ---
+ * Force display a blank line in DisplayList.
+ *       ---
+ *  Example:
+ *   FIXME
+ *       ---
+ *  Usage:
+ *   FIXME
+ *
+ * @author Projet nebule
+ * @license GNU GPLv3
+ * @copyright Projet nebule
+ * @link www.nebule.org
+ */
+class DisplayBlankLine extends DisplayItem implements DisplayInterface
+{
+    public function getHTML(): string {
+        return "<br />&nbsp;<br />\n";
+    }
+
+    public static function displayCSS(): void {}
 }

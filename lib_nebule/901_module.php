@@ -41,49 +41,23 @@ abstract class Modules extends Functions implements moduleInterface
     protected bool $_unlocked = false;
 
 
-    /**
-     * Constructeur.
-     *
-     * @param Applications $applicationInstance
-     * @return void
-     */
     public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironmentLibrary();
+        $this->setEnvironmentLibrary($this->_nebuleInstance);
+        Parent::__construct($this->_nebuleInstance);
         $this->_initialisation();
     }
 
-    /**
-     * Configuration spécifique au module.
-     *
-     * @return void
-     */
-    protected function _initialisation(): void
-    {
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-    }
-
-
-    /**
-     * Fonction de suppression de l'instance.
-     *
-     * @return boolean
-     */
-    public function __destruct()
-    {
-        return true;
-    }
-
-    /**
-     * Donne le texte par défaut lorsque l'instance est utilisée comme texte.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->MODULE_NAME;
+    }
+
+    protected function _initialisation(): void
+    {
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
     public function getClassName(): string
@@ -235,9 +209,8 @@ abstract class Modules extends Functions implements moduleInterface
         if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE, FILTER_SANITIZE_STRING));
 
-            if ($arg != '') {
+            if ($arg != '')
                 $return = $arg;
-            }
 
             unset($arg);
         }
@@ -247,11 +220,6 @@ abstract class Modules extends Functions implements moduleInterface
         return $return;
     }
 
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * @return void
-     */
     public function getCSS(): void
     {
         echo '<style type="text/css">' . "\n";
@@ -259,47 +227,21 @@ abstract class Modules extends Functions implements moduleInterface
         echo '</style>' . "\n";
     }
 
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * Obsolète !!!
-     *
-     * @return void
-     */
     public function headerStyle(): void
     {
         // N'affiche rien par défaut.
     }
 
-    /**
-     * Affichage de surcharges de java script.
-     *
-     * @return void
-     */
     public function headerScript(): void
     {
-        // N'affiche rien par défaut.
+        // Nothing by default.
     }
 
-    /**
-     * Action principale.
-     *
-     * @return void
-     */
     public function action(): void
     {
-        // Ne fait rien par défaut.
+        // Nothing by default.
     }
 
-    /**
-     * Traduction.
-     * Si besoin, extrait la langue de destination.
-     * Si aucune traduction n'est trouvée dans la langue demandée, retourne le texte d'origine.
-     *
-     * @param string $text
-     * @param string $lang
-     * @return string
-     */
     public function getTranslateInstance(string $text, string $lang = ''): string
     {
         $result = $text;

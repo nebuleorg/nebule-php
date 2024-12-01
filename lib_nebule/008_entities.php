@@ -37,17 +37,29 @@ class Entities extends Functions
 
     protected function _initialisation(): void
     {
+        $this->_metrologyInstance->addLog('MARK20', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findServerEntity();
+        $this->_metrologyInstance->addLog('MARK21', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_authoritiesInstance->setInstanceEntityAsAuthorities($this->_serverEntityInstance);
+        $this->_metrologyInstance->addLog('MARK22', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_recoveryInstance->setInstanceEntityAsRecovery($this->_serverEntityInstance);
+        $this->_metrologyInstance->addLog('MARK23', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findDefaultEntity();
+        $this->_metrologyInstance->addLog('MARK24', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_authoritiesInstance->setDefaultEntityAsAuthorities($this->_defaultEntityInstance);
+        $this->_metrologyInstance->addLog('MARK25', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_recoveryInstance->setDefaultEntityAsRecovery($this->_defaultEntityInstance);
+        $this->_metrologyInstance->addLog('MARK26', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_authoritiesInstance->setLinkedLocalAuthorities($this);
+        $this->_metrologyInstance->addLog('MARK27', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_recoveryInstance->setLinkedRecoveryEntities($this);
+        $this->_metrologyInstance->addLog('MARK28', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findCurrentEntity();
+        $this->_metrologyInstance->addLog('MARK29', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findCurrentEntityPrivateKey();
+        $this->_metrologyInstance->addLog('MARK2a', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findCurrentEntityPassword();
+        $this->_metrologyInstance->addLog('MARK2b', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
 

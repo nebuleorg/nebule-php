@@ -28,11 +28,14 @@ abstract class DisplayItem implements DisplayInterface
     public const RATIO_LONG = 'long';
 
     protected ?nebule $_nebuleInstance = null;
-    protected ?Displays $_displayInstance = null;
-    protected ?Applications $_applicationInstance = null;
     protected ?Configuration $_configurationInstance = null;
+    protected ?Rescue $_rescueInstance = null;
     protected ?Metrology $_metrologyInstance = null;
+    protected ?Cache $_cacheInstance = null;
+    protected ?Entities $_entitiesInstance = null;
+    protected ?Applications $_applicationInstance = null;
     protected ?Translates $_traductionInstance = null;
+    protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
     protected string $_social = '';
     protected string $_sizeCSS = '';
@@ -42,11 +45,16 @@ abstract class DisplayItem implements DisplayInterface
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->_displayInstance = $applicationInstance->getDisplayInstance();
         $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
+        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
         $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
+        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
+        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
+        $this->_displayInstance = $applicationInstance->getDisplayInstance();
         $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('init instance ' . get_class($this),
+            Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
         $this->_init();
     }
     protected function _init(): void { $this->setSocial(''); } // Should be overridden by children classes.
@@ -165,7 +173,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         $this->_iconUpdate = $update;
     }
 
-    public function setIconText(String $text)
+    public function setIconText(String $text): void
     {
         $this->_iconText = $this->_traductionInstance->getTranslate($text);
     }

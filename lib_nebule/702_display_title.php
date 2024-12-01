@@ -47,7 +47,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
         return $result;
     }
 
-    private function _getIconHTML(&$result)
+    private function _getIconHTML(&$result): void
     {
         if ($this->_icon === null)
             return;
@@ -57,12 +57,12 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
         $result .= '</div>' . "\n";
     }
 
-    private function _getTitleHTML(&$result)
+    private function _getTitleHTML(&$result): void
     {
         $result .= '<h1>' . $this->_title . "</h1>\n";
     }
 
-    private function _getEntityHTML(&$result)
+    private function _getEntityHTML(&$result): void
     {
         if ($this->_applicationInstance->getCurrentEntityID() != $this->_entitiesInstance->getCurrentEntityID()
             || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
@@ -81,8 +81,8 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
             $instance->setEnableFlags(false);
             $instance->setEnableStatus(false);
             $instance->setEnableContent(false);
-            $instance->setSize(DisplayObject::SIZE_SMALL);
-            $instance->setRatio(DisplayObject::RATIO_SHORT);
+            $instance->setSize(DisplayItem::SIZE_SMALL);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
             $instance->setEnableJS(false);
             $instance->setEnableActions(false);
             $result .= $instance->getHTML();
