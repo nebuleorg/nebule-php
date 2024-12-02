@@ -342,16 +342,16 @@ abstract class Translates extends Functions
         if ($lang == '')
             $lang = $this->_currentLanguage;
 
-        if (substr($text, 0, 1) == '<')
+        if (str_starts_with($text, '<'))
             return $text;
 
         $classAppTranslate = $this->_applicationInstance->getNamespace() . '\\' . 'Translate';
 
-        if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[$lang][$text]))
+        if (str_starts_with($text, '::::') && isset(Translates::TRANSLATE_TABLE[$lang][$text]))
             return Translates::TRANSLATE_TABLE[$lang][$text];
-        if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[$lang][$text]))
+        if (str_starts_with($text, ':::') && isset($classAppTranslate::TRANSLATE_TABLE[$lang][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[$lang][$text];
-        if (substr($text, 0, 2) == '::'
+        if (str_starts_with($text, '::')
             && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
             && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
@@ -363,11 +363,11 @@ abstract class Translates extends Functions
         if ($lang == self::DEFAULT_LANGUAGE)
             return $text;
 
-        if (substr($text, 0, 4) == '::::' && isset(Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+        if (str_starts_with($text, '::::') && isset(Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
-        if (substr($text, 0, 3) == ':::' && isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+        if (str_starts_with($text, ':::') && isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
-        if (substr($text, 0, 2) == '::'
+        if (str_starts_with($text, '::')
             && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
             && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];

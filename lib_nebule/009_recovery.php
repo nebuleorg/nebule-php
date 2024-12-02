@@ -37,6 +37,7 @@ class Recovery extends Functions
 
     public function setDefaultEntityAsRecovery(Entity $instance): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
@@ -58,6 +59,7 @@ class Recovery extends Functions
 
     public function setLinkedRecoveryEntities(Entities $entitiesInstance): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_recoveryEntities = array();
         $this->_recoveryEntitiesInstances = array();
 

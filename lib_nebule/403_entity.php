@@ -821,18 +821,6 @@ class Entity extends Node implements nodeInterface
 
 
     /**
-     * Retourne si l'entité est une autorité locale.
-     * Fait appel à la fonction dédiée de la classe nebule.
-     *
-     * @return boolean
-     */
-    public function getIsLocalAuthority(): bool
-    {
-        return $this->_authoritiesInstance->getIsLocalAuthority($this->_id);
-    }
-
-
-    /**
      * Retourne la liste des liens vers les groupes dont l'entité est à l'écoute.
      *
      * @param string $socialClass
@@ -846,12 +834,12 @@ class Entity extends Node implements nodeInterface
             '',
             '',
             'l',
-            $this->id,
+            $this->_id,
             '',
             $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
-        // Fait un tri par pertinance sociale.
+        // Fait un tri par pertinence sociale.
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
@@ -881,7 +869,7 @@ class Entity extends Node implements nodeInterface
             '',
             '',
             'l',
-            $this->id,
+            $this->_id,
             '',
             $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
@@ -915,7 +903,7 @@ class Entity extends Node implements nodeInterface
             '',
             '',
             'l',
-            $this->id,
+            $this->_id,
             '',
             $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );

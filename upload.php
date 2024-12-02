@@ -39,7 +39,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241202';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
@@ -66,7 +66,7 @@ class Display extends Displays
     public function _displayFull(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+        if (!str_contains(Application::APPLICATION_WEBSITE, '://'))
             $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
         ?>
         <!DOCTYPE html>
@@ -179,9 +179,11 @@ class Display extends Displays
                         <div>
                             <form enctype="multipart/form-data" method="post"
                                   action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                                <input type="text" class="newlink"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
-                                       value=""/><br/>
+                                <label>
+                                    <input type="text" class="newlink"
+                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
+                                           value=""/>
+                                </label><br/>
                                 <input type="submit"
                                        value="Upload"/>
                             </form>

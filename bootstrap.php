@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241201';
+const BOOTSTRAP_VERSION = '020241202';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -5882,16 +5882,19 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
         bootstrap_echoLineTitle($title);
 
         $name = $eid;
-        if (gettype($listInstance[$eid]) == 'object' && get_class($listInstance[$eid]) == 'Entity')
+        if (is_a($listInstance[$eid], 'Nebule\Library\Entity'))
             $name = $listInstance[$eid]->getName();
 
         if ($ok)
         {
             bootstrap_echoLinkNID($eid, $name);
-            //echo '<a href="o/' . $eid . '">' . $name . '</a> OK';
             echo ' OK';
-            if ($nebuleInstance->getAuthoritiesInstance()->getIsLocalAuthority($listInstance[$eid]))
+            if ($nebuleInstance->getAuthoritiesInstance()->getIsLocalAuthorityEID($eid))
                 echo ' (local authority)';
+            if ($nebuleInstance->getAuthoritiesInstance()->getIsGlobalAuthorityEID($eid))
+                echo ' (global authority)';
+            if (is_a($listInstance[$eid], 'Nebule\Library\Entity') && $listInstance[$eid]->isSetPrivateKeyPassword())
+                echo ' (unlocked)';
         } else
             echo '<span class="error">ERROR!</span>';
         echo  "<br />\n";

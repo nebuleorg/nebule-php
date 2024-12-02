@@ -51,7 +51,7 @@ class Session extends Functions
         return $val;
     }
 
-    public function getSessionStoreAsSting(string $name): ?string
+    public function getSessionStoreAsString(string $name): string
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
@@ -61,7 +61,7 @@ class Session extends Functions
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
             || !isset($_SESSION['Option'][$name])
         )
-            $val = null;
+            $val = '';
         else
             $val = $_SESSION['Option'][$name];
 

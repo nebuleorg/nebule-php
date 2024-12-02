@@ -384,13 +384,9 @@ class ApplicationModules
 
         // Liste les modules reconnue par une entité locale.
         $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), $hashActivation, $module->getID());
-        $link = null;
-        foreach ($linksList as $link) {
-            // Vérifie que le signataire est une entité locale.
-            if ($this->_authoritiesInstance->getIsLocalAuthority($link->getParsed()['bs/rs1/eid'])) {
+        foreach ($linksList as $link)
+            if ($this->_authoritiesInstance->getIsLocalAuthorityEID($link->getParsed()['bs/rs1/eid']))
                 return true;
-            }
-        }
         return false;
     }
 

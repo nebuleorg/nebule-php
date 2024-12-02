@@ -13,6 +13,7 @@ use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\References;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleTranslates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
 use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
@@ -50,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241202';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -1328,7 +1329,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * Seule exception, la vue 'menu' est traitée comme un affichage du menu sans JS et sans passer directement par un module.
      * Le contenu du menu est lui dépendant du module en cours et de certaines réponses des autres modules.
      */
-    private function _displayContent()
+    private function _displayContent(): void
     {
         if ($this->_currentDisplayView == 'menu') {
             $this->_displayInternalMenuApplications();
@@ -1348,7 +1349,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     /**
      * Affiche la métrologie.
      */
-    private function _displayMetrology()
+    private function _displayMetrology(): void
     {
         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {
             ?>
@@ -1388,7 +1389,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
     // Affiche la fin de page.
-    private function _displayFooter()
+    private function _displayFooter(): void
     {
         ?>
 
@@ -1401,7 +1402,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1($object, $help = '', $desc = '')
+    public function displayObjectDivHeaderH1($object, $help = '', $desc = ''): void
     {
         $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
@@ -1570,7 +1571,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitle($icon, $title = '', $desc = '', $help = '')
+    public function displayDivTextTitle($icon, $title = '', $desc = '', $help = ''): void
     {
         $this->displayDivTextTitleH1($icon, $title, $desc, $help);
     }
@@ -1584,7 +1585,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = '')
+    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = ''): void
     {
         ?>
 
@@ -1623,7 +1624,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = '')
+    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = ''): void
     {
         ?>
 
@@ -1680,12 +1681,6 @@ class Action extends Actions
  */
 class Translate extends Translates
 {
-    public function __construct(Application $applicationInstance)
-    {
-        parent::__construct($applicationInstance);
-    }
-
-
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
         ],

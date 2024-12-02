@@ -292,6 +292,7 @@ class Authorities extends Functions
 
     public function setInstanceEntityAsAuthorities(Entity $instance): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_permitInstanceEntityAsAuthority) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -301,6 +302,7 @@ class Authorities extends Functions
 
     public function setDefaultEntityAsAuthorities(Entity $instance): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_permitDefaultEntityAsAuthority) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -328,6 +330,7 @@ class Authorities extends Functions
      */
     public function setLinkedLocalAuthorities(Entities $entitiesInstance): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
 
@@ -362,6 +365,7 @@ class Authorities extends Functions
             $eid = $link->getParsed()['bl/rl/nid1'];
             $instance = $this->_cacheInstance->newEntity($eid);
             $this->_addAsLocalAuthority($instance, $eid, $link->getParsed()['bs/rs1/eid']);
+            $this->_metrologyInstance->addLog('add as local authority EID=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0074f2c6');
         }
     }
 
@@ -445,23 +449,32 @@ class Authorities extends Functions
         return $this->_specialEntitiesID;
     }
 
-    /**
-     * Retourne si l'entité est autorité locale.
-     *
-     * @param Entity|string $entity
-     * @return boolean
-     */
-    public function getIsLocalAuthority($entity): bool
+    public function getIsGlobalAuthority(Entity $entity): bool
     {
-        if (is_a($entity, 'Node')) // FIXME
-            $entity = $entity->getID();
-        if ($entity == '0')
-            return false;
+        return $this->getIsGlobalAuthorityEID($entity->getID());
+    }
 
-        foreach ($this->_localAuthoritiesID as $authority) {
-            if ($entity == $authority)
-                return true;
-        }
+    public function getIsGlobalAuthorityEID(string $eid): bool
+    {
+        if ($eid != '0'
+            && ($eid == $this->_puppetmasterID
+                || in_array($eid, $this->_securityAuthoritiesID)
+                || in_array($eid, $this->_codeAuthoritiesID)
+            )
+        )
+            return true;
+        return false;
+    }
+
+    public function getIsLocalAuthority(Entity $entity): bool
+    {
+        return $this->getIsLocalAuthorityEID($entity->getID());
+    }
+
+    public function getIsLocalAuthorityEID(string $eid): bool
+    {
+        if ($eid != '0' && in_array($eid, $this->_localAuthoritiesID))
+            return true;
         return false;
     }
 }
