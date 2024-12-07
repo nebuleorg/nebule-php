@@ -59,7 +59,10 @@ class Entities extends Functions
         $this->_findCurrentEntityPrivateKey();
         $this->_metrologyInstance->addLog('MARK2a', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_findCurrentEntityPassword();
-        $this->_metrologyInstance->addLog('MARK2b', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        if ($this->_currentEntityIsUnlocked)
+            $this->_metrologyInstance->addLog('MARK2b true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        else
+            $this->_metrologyInstance->addLog('MARK2b false', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
 
