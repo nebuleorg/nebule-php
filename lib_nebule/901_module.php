@@ -41,14 +41,14 @@ abstract class Modules extends Functions implements moduleInterface
     protected bool $_unlocked = false;
 
 
-    public function __construct(Applications $applicationInstance)
+    /*public function __construct(Applications $applicationInstance)
     {
         $this->_applicationInstance = $applicationInstance;
         $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
         $this->setEnvironmentLibrary($this->_nebuleInstance);
         Parent::__construct($this->_nebuleInstance);
         $this->_initialisation();
-    }
+    }*/
 
     public function __toString(): string
     {

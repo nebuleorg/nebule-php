@@ -13,7 +13,7 @@ namespace Nebule\Library;
  */
 interface moduleInterface
 {
-    public function __construct(Applications $applicationInstance);
+    public function __construct(nebule $nebuleInstance);
     public function __toString(): string;
 
     public function getClassName(): string;

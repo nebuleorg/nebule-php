@@ -29,7 +29,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'desc';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020240829';
+    protected string $MODULE_VERSION = '020241211';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -49,13 +49,6 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
     private string $_comebackAppId = '';
 
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
     public function getHookList(string $hookName, ?Node $nid = null): array {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
@@ -75,11 +68,6 @@ class ModuleAutent extends \Nebule\Library\Modules {
     }
 
 
-    /**
-     * Affichage principale.
-     *
-     * @return void
-     */
     public function displayModule(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
             $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));

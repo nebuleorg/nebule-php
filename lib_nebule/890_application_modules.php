@@ -77,7 +77,8 @@ class ApplicationModules
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
             try {
-                $instance = new $moduleFullName($this->_applicationInstance);
+                //$instance = new $moduleFullName($this->_applicationInstance);
+                $instance = new $moduleFullName($this->_nebuleInstance);
             } catch (\Error $e) {
                 $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"

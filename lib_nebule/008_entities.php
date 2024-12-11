@@ -320,9 +320,12 @@ class Entities extends Functions
         if ($this->_currentEntityInstance->setPrivateKeyPassword($arg_pwd))
         {
             $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
+            $this->_currentEntityIsUnlocked = true;
             $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
-        } else
+        } else {
             $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
+            $this->_currentEntityIsUnlocked = false;
+        }
     }
 
     public function getCurrentEntityIsUnlocked(): bool
