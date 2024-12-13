@@ -58,15 +58,15 @@ class Application extends Applications implements applicationInterface
     const USE_MODULES_TRANSLATE = true;
     const USE_MODULES_EXTERNAL = true;
     const LIST_MODULES_INTERNAL = array(
-        'module_manage',
-        'module_admin',
-        'module_objects',
-        'module_groups',
-        'module_entities',
-        'module_lang_fr-fr',
+        'ModuleManage',
+        'ModuleAdmin',
+        'ModuleObjects',
+        'ModuleGroups',
+        'ModuleEntities',
+        'ModuleTranslateFRFR',
     );
     const LIST_MODULES_EXTERNAL = array(
-        'module_neblog'
+        'ModuleNeblog'
     );
 
     const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';

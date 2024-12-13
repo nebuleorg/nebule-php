@@ -332,8 +332,8 @@ abstract class Translates extends Functions
     public function getCurrentLanguage(): string { return $this->_currentLanguage; }
     public function getCurrentLanguageIcon(): string { return $this->_currentLanguageIcon; }
     public function getLanguageModuleInstanceList(): array { return $this->_applicationModulesInstance->getModulesTranslateListInstances(); }
-    public function getCurrentLanguageInstance(): Translates { return $this->_currentLanguageInstance; }
-    public function getDefaultLanguageInstance(): Translates  { return $this->_defaultLanguageInstance; }
+    public function getCurrentLanguageInstance(): ?Translates { return $this->_currentLanguageInstance; }
+    public function getDefaultLanguageInstance(): ?Translates  { return $this->_defaultLanguageInstance; }
 
 
     public function getTranslate(string $text, string $lang = ''): string {

@@ -59,7 +59,7 @@ class Application extends Applications
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;
     const USE_MODULES_EXTERNAL = false;
-    const LIST_MODULES_INTERNAL = array('module_neblog', 'module_lang_fr-fr');
+    const LIST_MODULES_INTERNAL = array('ModuleNeblog', 'ModuleTranslateFRFR');
     const LIST_MODULES_EXTERNAL = array();
 
     /**
@@ -214,12 +214,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * Variable du logo de l'application.
      * @var string
      */
-    private $_logoApplication = '';
+    private string $_logoApplication = '';
 
     /**
      * Recherche le logo de l'application.
      */
-    private function _findLogoApplication()
+    private function _findLogoApplication(): void
     {
         $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
         // @todo
@@ -229,12 +229,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * Variable du lien du logo de l'application.
      * @var string
      */
-    private $_logoApplicationLink = '';
+    private string $_logoApplicationLink = '';
 
     /**
      * Recherche le lien du logo de l'application.
      */
-    private function _findLogoApplicationLink()
+    private function _findLogoApplicationLink(): void
     {
         $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
         // @todo
@@ -244,12 +244,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * Variable du nom de l'application.
      * @var string
      */
-    private $_logoApplicationName = '';
+    private string $_logoApplicationName = '';
 
     /**
      * Recherche le nom de l'application.
      */
-    private function _findLogoApplicationName()
+    private function _findLogoApplicationName(): void
     {
         $this->_logoApplicationName = Application::APPLICATION_NAME;
         // @todo
@@ -1359,13 +1359,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 <p>
                     <?php
                     echo 'Lib nebule : ';
-                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', $this->_metrologyInstance->getLinkRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', $this->_metrologyInstance->getLinkVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
                     echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', $this->_metrologyInstance->getObjectRead());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
                     echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', $this->_metrologyInstance->getObjectVerify());
+                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     $this->_metrologyInstance->addTime();

@@ -11,8 +11,7 @@ namespace Nebule\Library;
  * @link www.nebule.org
  *
  */
-interface moduleInterface
-{
+interface moduleInterface {
     public function __construct(nebule $nebuleInstance);
     public function __toString(): string;
 
@@ -36,4 +35,10 @@ interface moduleInterface
     public function getAppViewList(): array;
     public function getHookList(string $hookName, ?Node $nid = null): array;
     public function displayModule(): void;
+}
+
+Interface moduleTranslateInterface {
+    public function __construct(nebule $nebuleInstance);
+    public function __destruct();
+    public function __toString(): string;
 }

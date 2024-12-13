@@ -70,12 +70,19 @@ class ApplicationModules
             $this->_metrologyInstance->addLog('do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
-        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1111c0de');
 
         foreach ($this->_applicationInstance::LIST_MODULES_INTERNAL as $moduleName) {
+            if (str_starts_with($moduleName, 'DModuleTranslate')) // TODO check interface too.
+                continue;
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
-            $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4879c453');
+            $classImplement = class_implements($moduleFullName);
+foreach ($classImplement as $interface)
+    $this->_metrologyInstance->addLog('interface ' . $interface, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (in_array('\Nebule\Library\moduleTranslateInterface', $classImplement))
+    $this->_metrologyInstance->addLog('interface OK', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4879c453');
             try {
                 //$instance = new $moduleFullName($this->_applicationInstance);
                 $instance = new $moduleFullName($this->_nebuleInstance);
@@ -85,6 +92,8 @@ class ApplicationModules
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
                 continue;
             }
+            if ($instance instanceof \Nebule\Library\moduleTranslateInterface) // FIXME
+                return;
             $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->setEnvironmentApplication($this->_applicationInstance);
             try {
@@ -102,7 +111,7 @@ class ApplicationModules
             $this->_listModulesSignerRID[$moduleFullName] = '0';
             $this->_listModulesValid[$moduleFullName] = true;
         }
-        $this->_metrologyInstance->addLog('internal modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '050783df');
+        $this->_metrologyInstance->addLog('internal modules loaded', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '050783df');
     }
 
     protected function _initExternalModules(): void {
@@ -125,12 +134,12 @@ class ApplicationModules
             )
                 continue;
             $moduleID = $moduleInstanceOID->getID();
-            $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '06a13897');
+            $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '06a13897');
             include('o/' . $moduleID);                // @todo A modifier, passer par IO.
             $this->_listModulesRID[] = $moduleInstanceRID->getID();
             $this->_listModulesOID[] = $moduleID;
         }
-        $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a95de198');
+        $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a95de198');
     }
 
     protected function _initTranslateModules(): void {
@@ -153,14 +162,14 @@ class ApplicationModules
             )
                 continue;
             $moduleID = $moduleInstanceOID->getID();
-            $this->_metrologyInstance->addLog('Load translate module ' . $moduleID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6d2f16cb');
+            $this->_metrologyInstance->addLog('Load translate module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6d2f16cb');
             include('o/' . $moduleID);                // @todo A modifier, passer par IO.
             $this->_listModulesTranslateRID[] = $moduleInstanceRID->getID();
             $this->_listModulesTranslateOID[] = $moduleID;
         }
         $list = get_declared_classes();
 
-        $this->_metrologyInstance->addLog('translate modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7e7aeaed');
+        $this->_metrologyInstance->addLog('translate modules loaded', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7e7aeaed');
     }
 
 

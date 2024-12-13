@@ -205,8 +205,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected string $_urlLinkTokenPrefix = '';
     protected string $_urlLinkTransactionPrefix = '';
     protected string $_urlLinkWalletPrefix = '';
-    protected string $_currentDisplayLanguage;
-    protected Translate $_currentDisplayLanguageInstance;
+    protected string $_currentDisplayLanguage = '';
+    protected ?Translates $_currentDisplayLanguageInstance = null;
     protected array $_displayLanguageList = array();
     protected array $_displayLanguageInstanceList = array();
 
