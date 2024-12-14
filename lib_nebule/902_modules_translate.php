@@ -10,7 +10,7 @@ namespace Nebule\Library;
 * @copyright Projet nebule
 * @link www.nebule.org
 */
-abstract class ModuleTranslates implements moduleTranslateInterface
+abstract class ModuleTranslates implements ModuleTranslateInterface
 {
     const MODULE_TYPE = 'Traduction';
     const MODULE_LANGUAGE = '/';

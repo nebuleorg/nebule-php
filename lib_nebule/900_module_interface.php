@@ -2,16 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
-/**
- * L'interface moduleInterface
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- *
- */
-interface moduleInterface {
+interface ModuleInterface {
     public function __construct(nebule $nebuleInstance);
     public function __toString(): string;
 
@@ -37,7 +28,7 @@ interface moduleInterface {
     public function displayModule(): void;
 }
 
-Interface moduleTranslateInterface {
+Interface ModuleTranslateInterface {
     public function __construct(nebule $nebuleInstance);
     public function __destruct();
     public function __toString(): string;

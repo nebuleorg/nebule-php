@@ -74,6 +74,13 @@ abstract class Applications extends Functions implements applicationInterface
         $this->_metrologyInstance->addLog('instancing application modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ddcee4c');
         $this->_applicationModulesInstance = new ApplicationModules($this);
 
+        $this->_metrologyInstance->addLog('initialisation application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
+        try {
+            $this->_translateInstance->initialisation();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('initialisation application translate error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
+        }
+
         $this->_metrologyInstance->addLog('initialisation application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
         try {
             $this->_displayInstance->initialisation();
@@ -86,13 +93,6 @@ abstract class Applications extends Functions implements applicationInterface
             $this->_actionInstance->initialisation();
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog('initialisation application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
-        }
-
-        $this->_metrologyInstance->addLog('initialisation application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
-        try {
-            $this->_translateInstance->initialisation();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('initialisation application translate error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
         }
 
         $this->_loadModules();

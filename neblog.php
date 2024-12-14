@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241202';
+    const APPLICATION_VERSION = '020241214';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -164,14 +164,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
     protected function _initialisation(): void
     {
-        /*$this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cf96279b');
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();*/
-
         // Vide, est surchargé juste avant l'affichage.
         $this->setUrlLinkObjectPrefix('?');
         $this->setUrlLinkGroupPrefix('?');
@@ -1140,9 +1132,10 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      *
      * @return void
      */
-    private function _displayInternalMenuApplications()
+    private function _displayInternalMenuApplications(): void
     {
-        $modules = $this->_applicationInstance->getModulesListInstances();
+        //$modules = $this->_applicationInstance->getModulesListInstances();
+        $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
         $list = array();
         $j = 0;
         $currentModuleName = 'noModuleFind-';
@@ -1151,7 +1144,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         foreach ($modules as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Mémorise le nom du module trouvé.
                 $currentModuleName = $module->getMenuName();
@@ -1180,13 +1173,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1202,7 +1195,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         foreach ($modules as $module) {
             if ($module->getCommandName() != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
@@ -1216,13 +1209,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1238,7 +1231,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         foreach ($modules as $module) {
             if ($module->getCommandName() != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList('menu');
@@ -1252,13 +1245,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
                             }
-                            $desc = $module->getTraduction($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             if ($desc == '') {
                                 $desc = '&nbsp;';
                             }
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTraduction($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -1273,7 +1266,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         // Appelle la liste des modules.
         foreach ($modules as $module) {
             // Extrait le nom du module.
-            $moduleName = $module->getTraduction($module->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+            $moduleName = $module->getTranslateInstance($module->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
             // Liste les options à afficher.
             $appTitleList = $module->getAppTitleList();
@@ -1289,13 +1282,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                     if ($icon == '') {
                         $icon = self::DEFAULT_ICON_LSTOBJ;
                     }
-                    $desc = $module->getTraduction($appDescList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                    $desc = $module->getTranslateInstance($appDescList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     if ($desc == '') {
                         $desc = '&nbsp;';
                     }
 
                     $list[$j]['icon'] = $icon;
-                    $list[$j]['title'] = $module->getTraduction($appTitleList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                    $list[$j]['title'] = $module->getTranslateInstance($appTitleList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;

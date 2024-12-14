@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Modules extends Functions implements moduleInterface
+abstract class Modules extends Functions implements ModuleInterface
 {
     protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
 
