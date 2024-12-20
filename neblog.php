@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241214';
+    const APPLICATION_VERSION = '020241220';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -1311,17 +1311,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
-    /**
-     * Contenu de la page.
-     *
-     * Affiche le contenu des pages en fonction du mode demandé.
-     * Un seul mode est pris en compte pour l'affichage, les autres sont ignorés.
-     *
-     * Le traitement de l'affichage de la vue est faite par le module gérant le mode d'affichage.
-     *
-     * Seule exception, la vue 'menu' est traitée comme un affichage du menu sans JS et sans passer directement par un module.
-     * Le contenu du menu est lui dépendant du module en cours et de certaines réponses des autres modules.
-     */
+
     private function _displayContent(): void
     {
         if ($this->_currentDisplayView == 'menu') {
@@ -1339,9 +1329,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
-    /**
-     * Affiche la métrologie.
-     */
+
     private function _displayMetrology(): void
     {
         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {

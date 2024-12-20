@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Application\Neblog\Action;
+use Nebule\Library;
 use Nebule\Library\Displays;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
@@ -23,7 +24,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'log';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241214';
+    protected string $MODULE_VERSION = '020241220';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -54,13 +55,7 @@ class ModuleNeblog extends Modules
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
 
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
+
     public function getHookList(string $hookName, ?Node $nid = null): array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
@@ -106,16 +101,11 @@ class ModuleNeblog extends Modules
     }
 
 
-    /**
-     * Affichage principale.
-     *
-     * @return void
-     */
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayList();
+            case $this->MODULE_REGISTERED_VIEWS[0]:
+                $this->_displayBlog();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayNew();
@@ -130,16 +120,11 @@ class ModuleNeblog extends Modules
                 $this->_displayAbout();
                 break;
             default:
-                $this->_displayBlog();
+                $this->_displayList();
                 break;
         }
     }
 
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
     public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -153,11 +138,7 @@ class ModuleNeblog extends Modules
     }
 
 
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * @return void
-     */
+
     public function headerStyle(): void
     {
         /*?> FIXME
@@ -177,93 +158,55 @@ class ModuleNeblog extends Modules
     }
 
 
-    /**
-     * Display view of blog.
-     */
+
     private function _displayBlog(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:blog:dispblog', $icon, false);
-
-        // Affichage le blog.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispblog');
     }
 
-    /**
-     * Display inline view of blog.
-     */
     private function _display_InlineBlog(): void
     {
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        $instanceObject = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+        $instanceObject->setNID($this->_applicationInstance->getCurrentObjectInstance());
+        $instanceObject->setEnableColor(true);
+        $instanceObject->setEnableIcon(true);
+        $instanceObject->setEnableName(true);
+        $instanceObject->setEnableRefs(false);
+        $instanceObject->setEnableNID(false);
+        $instanceObject->setEnableFlags(true);
+        $instanceObject->setEnableFlagProtection(false);
+        $instanceObject->setEnableFlagObfuscate(false);
+        $instanceObject->setEnableFlagState(true);
+        $instanceObject->setEnableFlagEmotions(false);
+        $instanceObject->setEnableStatus(true);
+        $instanceObject->setEnableContent(false);
+        $instanceObject->setEnableJS(false);
+        $instanceObject->setEnableLink(true);
+        $instanceObject->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instanceObject->setStatus('');
+        $instanceObject->display();
     }
 
-    /**
-     * Display view of list of blog.
-     */
     private function _displayList(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:list:listblog', $icon, false);
-
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displist');
     }
 
-    /**
-     * Display inline view of list of blog.
-     */
     private function _display_InlineList(): void
     {
-        // TODO
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setEnableWarnIfEmpty();
+
+        $instanceList->display();
     }
 
-    /**
-     * Display view of blog.
-     */
     private function _displayNew(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:newblog', $icon, false);
 
@@ -292,12 +235,8 @@ class ModuleNeblog extends Modules
         <?php
     }
 
-    /**
-     * Display view of blog.
-     */
     private function _displayModify(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:modify:modblog', $icon, false);
 
@@ -312,12 +251,8 @@ class ModuleNeblog extends Modules
         echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
-    /**
-     * Display view of blog.
-     */
     private function _displayDelete(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:delete:delblog', $icon, false);
 
@@ -332,12 +267,8 @@ class ModuleNeblog extends Modules
         echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::Developpement', $param);
     }
 
-    /**
-     * Display view of blog.
-     */
     private function _displayAbout(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:about:title', $icon, false);
 
