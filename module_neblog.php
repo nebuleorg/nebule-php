@@ -4,6 +4,7 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Neblog\Action;
 use Nebule\Library;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\Node;
@@ -24,12 +25,15 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'log';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241220';
+    protected string $MODULE_VERSION = '020241221';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     protected string $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
+
+    const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
+    const RID_BLOG_ITEM = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
 
     protected array $MODULE_REGISTERED_VIEWS = array(
         'blog',
@@ -162,7 +166,10 @@ class ModuleNeblog extends Modules
     private function _displayBlog(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:blog:dispblog', $icon, false);
+        $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::neblog:module:blog:dispblog');
+        $title->setIcon($icon);
+        $title->display();
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('dispblog');
     }
 
@@ -192,7 +199,10 @@ class ModuleNeblog extends Modules
     private function _displayList(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:list:listblog', $icon, false);
+        $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::neblog:module:blog:listblog');
+        $title->setIcon($icon);
+        $title->display();
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('displist');
     }
 
@@ -238,7 +248,10 @@ class ModuleNeblog extends Modules
     private function _displayModify(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:modify:modblog', $icon, false);
+        $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::neblog:module:blog:modblog');
+        $title->setIcon($icon);
+        $title->display();
 
         // TODO
         $param = array(
@@ -254,7 +267,10 @@ class ModuleNeblog extends Modules
     private function _displayDelete(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:delete:delblog', $icon, false);
+        $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::neblog:module:delete:delblog');
+        $title->setIcon($icon);
+        $title->display();
 
         // TODO
         $param = array(
@@ -270,7 +286,10 @@ class ModuleNeblog extends Modules
     private function _displayAbout(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:about:title', $icon, false);
+        $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $title->setTitle('::neblog:module:about:title');
+        $title->setIcon($icon);
+        $title->display();
 
         echo '<div>';
         echo '<p>' . $this->_translateInstance->getTranslate('::neblog:module:about:desc') . '</p>';
@@ -364,6 +383,97 @@ class ModuleNeblog extends Modules
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);*/
         }
     }
+
+
+
+    private function _getInstanceBlogRID(): Node
+    {
+        return $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
+    }
+
+    private function _getInstanceBlogItemRID(): Node
+    {
+        return $this->_cacheInstance->newNode(self::RID_BLOG_ITEM);
+    }
+
+    private function _getListBlogsOID(): array
+    {
+        $instance = $this->_getInstanceBlogRID();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => self::RID_BLOG_NODE,
+            'bl/rl/nid3' => self::RID_BLOG_NODE,
+            'bl/rl/nid4' => '',
+        );
+        $instance->getLinks($links, $filter);
+        $list = array();
+        foreach ($links as $link) {
+            $parsedLink = $link->getParsed();
+            $oid = $parsedLink['bl/rl/nid2'];
+            $list[$oid] = $oid;
+        }
+        return $list;
+    }
+
+    private function _getCountBlogs(): int
+    {
+        $instance = $this->_getInstanceBlogRID();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => self::RID_BLOG_NODE,
+            'bl/rl/nid3' => self::RID_BLOG_NODE,
+            'bl/rl/nid4' => '',
+        );
+        $instance->getLinks($links, $filter);
+        return sizeof($links);
+    }
+
+    private function _getListBlogItemOID(): array
+    {
+        $instance = $this->_getInstanceBlogItemRID();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => self::RID_BLOG_NODE, // FIXME
+            'bl/rl/nid3' => self::RID_BLOG_NODE, // FIXME
+            'bl/rl/nid4' => '',
+        );
+        $instance->getLinks($links, $filter);
+        $list = array();
+        foreach ($links as $link) {
+            $parsedLink = $link->getParsed();
+            $oid = $parsedLink['bl/rl/nid2'];
+            $list[$oid] = $oid;
+        }
+        return $list;
+    }
+
+    private function _getCountBlogItem(): int
+    {
+        $instance = $this->_getInstanceBlogItemRID();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => self::RID_BLOG_NODE, // FIXME
+            'bl/rl/nid3' => self::RID_BLOG_NODE, // FIXME
+            'bl/rl/nid4' => '',
+        );
+        $instance->getLinks($links, $filter);
+        return sizeof($links);
+    }
+
+    private function _setNewBlog(): void
+    {
+
+    }
+
+    private function _setNewBlogItem(): void
+    {
+
+    }
+
 
 
     CONST TRANSLATE_TABLE = [
