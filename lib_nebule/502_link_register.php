@@ -595,6 +595,10 @@ class LinkRegister extends Functions implements linkInterface
             par un objet méta.</p>
         <p>Les liens de type <code>l</code> ne devraient avoir ni <code>HashMeta</code> nul ni <code>HashCible</code>
             nul.</p>
+        <p><code>l</code> comme <i>link</i>.</p>
+        <p>Lors de la lecture de multiples liens <code>l</code>, on ne retient qu'un seul lien. On retient le dernier
+            lien en date après filtrage social, éventuellement le dernier en date de l'entité signataire avec le plus
+            fort score social.</p>
 
         <h4 id="lraf">LRAF / Action <code>f</code> – Dérivé d’objet</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -606,6 +610,8 @@ class LinkRegister extends Functions implements linkInterface
             discussion sur ce blog. Il est même probable que le blog n’affichera pas les autres textes en relations si
             ils n’ont pas un contexte appartenant à ce blog.</p>
         <p><code>f</code> comme <i>fork</i>.</p>
+        <p>Lors de la lecture de multiples liens <code>f</code>, on retient une liste de liens. On peut ne retenir que
+            les liens ayant un minimum de score social de leurs entités signataires.</p>
 
         <h4 id="lrau">LRAU / Action <code>u</code> – Mise à jour d’objet</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>

@@ -247,7 +247,7 @@ class ModuleManage extends Modules
      *
      * @return void
      */
-    public function action(): void
+    public function actions(): void
     {
         // Création d'un module.
         $this->_extractActionAddModule();

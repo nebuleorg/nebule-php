@@ -13,11 +13,6 @@ namespace Nebule\Library;
  */
 class Configuration extends Functions
 {
-    /**
-     * Liste des noms des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_LIST = array(
         'puppetmaster',
         'hostURL',
@@ -110,11 +105,6 @@ class Configuration extends Functions
         'subordinationEntity',
     );
 
-    /**
-     * Liste des catégories de tri des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_CATEGORIES = array(
         'Global',
         'Objects',
@@ -131,11 +121,6 @@ class Configuration extends Functions
         'Display',
     );
 
-    /**
-     * Liste de catégorisation des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_CATEGORY = array(
         'puppetmaster' => 'Global',
         'hostURL' => 'Global',
@@ -228,16 +213,6 @@ class Configuration extends Functions
         'subordinationEntity' => 'Global',
     );
 
-    /**
-     * Liste des types des options.
-     *
-     * Les types supportés :
-     * - string
-     * - boolean
-     * - integer
-     *
-     * @var array:string
-     */
     const OPTIONS_TYPE = array(
         'puppetmaster' => 'string',
         'hostURL' => 'string',
@@ -330,12 +305,6 @@ class Configuration extends Functions
         'subordinationEntity' => 'string',
     );
 
-    /**
-     * Liste des options qui sont modifiables.
-     * Les options non modifiables peuvent cependant être forcées dans le fichier d'environnement.
-     *
-     * @var array:bool
-     */
     const OPTIONS_WRITABLE = array(
         'puppetmaster' => false,
         'hostURL' => true,
@@ -428,11 +397,6 @@ class Configuration extends Functions
         'subordinationEntity' => false,
     );
 
-    /**
-     * Liste des valeurs par défaut des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_DEFAULT_VALUE = array(
         'puppetmaster' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
         'hostURL' => 'localhost',
@@ -525,11 +489,6 @@ class Configuration extends Functions
         'subordinationEntity' => '',
     );
 
-    /**
-     * Liste de la criticité des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_CRITICALITY = array(
         'puppetmaster' => 'critical',
         'hostURL' => 'useful',
@@ -622,11 +581,6 @@ class Configuration extends Functions
         'subordinationEntity' => 'critical',
     );
 
-    /**
-     * Liste des descriptions des options.
-     *
-     * @var array:string
-     */
     const OPTIONS_DESCRIPTION = array(
         'puppetmaster' => 'The master of all. the authority of all globals authorities.',
         'hostURL' => "The URL, domain name, of this server. This is use by others servers and others entities to find this server and it's local entities.",

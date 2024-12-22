@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241222';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
@@ -979,22 +979,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <p>
                 <?php
-                // Vérifie le ticket.
-                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
-                    // Appelle les actions spéciales.
-                    $this->_actionInstance->specialActions();
-
-                    // Appelle les actions génériques.
-                    $this->_actionInstance->genericActions();
-
-                    // Appelle les actions du module concerné par le mode d'affichage.
-                    foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                        if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-                            $module->action();
-                        }
-                    }
-                }
+                $this->_actionInstance->getActions();
                 ?>
 
             </p>

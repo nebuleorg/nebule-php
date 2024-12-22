@@ -626,7 +626,7 @@ class ModuleEntities extends Modules
      *
      * @return void
      */
-    public function action(): void
+    public function actions(): void
     {
         $this->_findSynchronizeEntity();
         $this->_actionSynchronizeEntity();

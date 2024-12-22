@@ -237,7 +237,7 @@ abstract class Modules extends Functions implements ModuleInterface
         // Nothing by default.
     }
 
-    public function action(): void
+    public function actions(): void
     {
         // Nothing by default.
     }

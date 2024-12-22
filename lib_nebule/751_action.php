@@ -101,23 +101,14 @@ abstract class Actions extends Functions
     protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
 
-    /*public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        parent::__construct($this->_nebuleInstance);
-        $this->setEnvironmentLibrary($this->_nebuleInstance);
-        $this->initialisation();
-    }*/
     public function __destruct() { return true; }
     public function __toString() { return 'Action'; }
     public function __sleep() { return array(); } // TODO do not cache
 
 
 
-    protected function _initialisation(): void
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('initialisation action', Metrology::LOG_LEVEL_DEBUG);
+    protected function _initialisation(): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('initialisation action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4b67de69');
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
@@ -125,15 +116,44 @@ abstract class Actions extends Functions
     }
 
 
-    public function genericActions(): void
-    {
-        $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG);
+    public function getActions(): void {
+        try {
+            $this->_metrologyInstance->addLog('call special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00da4388');
+            $this->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error special actions ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '8a263023');
+        }
 
-        // Vérifie que l'entité est déverrouillée.
-        if (!$this->_unlocked)
+        try {
+            $this->_metrologyInstance->addLog('call generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5f58e568');
+            $this->genericActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error generic actions ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd27f51b8');
+        }
+
+        try {
+            $this->_metrologyInstance->addLog('call application actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '285f18cf');
+            $this->applicationActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error actions for application ' . $this->_applicationInstance->getName()
+                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f90d32f4');
+        }
+
+        $this->modulesActions(); // try catch inside
+    }
+
+    public function genericActions(): void {
+        $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '84b627f1');
+
+        if (!$this->_ticketingInstance->checkActionTicket() || $this->_unlocked)
             return;
 
-        // Extrait les actions.
         $this->_extractActionObfuscateLink();
         $this->_extractActionDeleteObject();
         $this->_extractActionProtectObject();
@@ -170,9 +190,8 @@ abstract class Actions extends Functions
         $this->_extractActionCreateTokens();
         $this->_extractActionAddProperty();
 
-        $this->_metrologyInstance->addLog('router generic actions', Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('router generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '59d4a536');
 
-        // Gère la dissimulation d'un lien.
         if ($this->_actionObfuscateLinkInstance !== null
             && $this->_actionObfuscateLinkInstance != ''
             && is_a($this->_actionObfuscateLinkInstance, 'Nebule\Library\LinkRegister')
@@ -180,13 +199,11 @@ abstract class Actions extends Functions
         )
             $this->_actionObfuscateLink();
 
-        // Gère la suppression d'un objet.
         if ($this->_actionDeleteObject
             && is_a($this->_actionDeleteObjectInstance, 'Nebule\Library\Node')
         )
             $this->_actionDeleteObject();
 
-        // Gère la protection/déprotection d'un objet.
         if ($this->_actionProtectObjectInstance != ''
             && is_a($this->_actionProtectObjectInstance, 'Nebule\Library\Node')
         )
@@ -204,7 +221,6 @@ abstract class Actions extends Functions
         if ($this->_actionCancelShareProtectObjectToEntity != '')
             $this->_actionCancelShareProtectObjectToEntity();
 
-        // Gère les synchronisations (toujours les objets avant les liens).
         if ($this->_actionSynchronizeObjectInstance != '')
             $this->_actionSynchronizeObject();
         if ($this->_actionSynchronizeEntityInstance != '')
@@ -216,7 +232,6 @@ abstract class Actions extends Functions
         if ($this->_actionSynchronizeNewEntityID != '')
             $this->_actionSynchronizeNewEntity();
 
-        // Gère les marques des objets.
         if ($this->_actionMarkObject != '')
             $this->_actionMarkObject();
         if ($this->_actionUnmarkObject != '')
@@ -224,13 +239,11 @@ abstract class Actions extends Functions
         if ($this->_actionUnmarkAllObjects)
             $this->_actionUnmarkAllObjects();
 
-        // Gère les téléchargements.
         if ($this->_actionUploadFile)
             $this->_actionUploadFile();
         if ($this->_actionUploadText)
             $this->_actionUploadText();
 
-        // Gère les groupes.
         if ($this->_actionCreateGroup)
             $this->_actionCreateGroup();
         if ($this->_actionDeleteGroup)
@@ -244,7 +257,6 @@ abstract class Actions extends Functions
         if ($this->_actionRemoveItemFromGroup != '')
             $this->_actionRemoveItemFromGroup();
 
-        // Gère les conversations et messages.
         if ($this->_actionCreateConversation)
             $this->_actionCreateConversation();
         if ($this->_actionDeleteConversation)
@@ -262,7 +274,6 @@ abstract class Actions extends Functions
         if ($this->_actionAddProperty != '')
             $this->_actionAddProperty();
 
-        // Gère les monnaies.
         if ($this->_actionCreateCurrency)
             $this->_actionCreateCurrency();
         if ($this->_actionCreateTokenPool)
@@ -270,7 +281,29 @@ abstract class Actions extends Functions
         if ($this->_actionCreateTokens)
             $this->_actionCreateTokens();
 
-        $this->_metrologyInstance->addLog('generic actions end', Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2046b14');
+    }
+
+    public function applicationActions():void {}
+
+    public function modulesActions():void {
+        $this->_metrologyInstance->addLog('modules actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7e8844dc');
+        if (!$this->_ticketingInstance->checkActionTicket() || $this->_unlocked)
+            return;
+        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+$this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . ' / ' . $this->_displayInstance->getCurrentDisplayMode(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode()) {
+                try {
+                    $this->_metrologyInstance->addLog('actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
+                    $module->actions();
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error actions for module ' . $module->getCommandName()
+                        . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c48b1d8c');
+                }
+            }
+        }
     }
 
     protected function _getOptionAsBoolean(string $name): bool
@@ -354,7 +387,7 @@ abstract class Actions extends Functions
      */
     public function specialActions(): void
     {
-        $this->_metrologyInstance->addLog('special actions', Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6f9dfb64');
 
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
         if ($this->_checkBooleanOptions(array('permitPublicCreateEntity'))
@@ -374,7 +407,7 @@ abstract class Actions extends Functions
             $this->_extractActionUploadFileLinks();
         }
 
-        $this->_metrologyInstance->addLog('router special actions', Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('router special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0b4f22ef');
 
         // Si l'action de création d'entité est validée.
         if ($this->_actionCreateEntity)
@@ -416,7 +449,7 @@ abstract class Actions extends Functions
                 $this->_actionUploadFileLinks();
         }
 
-        $this->_metrologyInstance->addLog('special actions end', Metrology::LOG_LEVEL_DEBUG);
+        $this->_metrologyInstance->addLog('special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88ff0291');
     }
 
 
@@ -428,7 +461,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
@@ -454,7 +487,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
@@ -480,7 +513,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
@@ -526,7 +559,7 @@ abstract class Actions extends Functions
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if ($arg == '')
@@ -565,7 +598,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('ObfuscateLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg == '')
@@ -602,7 +635,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('DeleteObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
@@ -641,7 +674,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('ProtectObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -660,7 +693,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('UnprotectObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -679,7 +712,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('ShareProtectObjectToEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -698,7 +731,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('ShareProtectObjectToGroupOpened'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -717,7 +750,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('ShareProtectObjectToGroupClosed'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -736,7 +769,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CancelShareProtectObjectToEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -764,7 +797,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SynchronizeObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -793,7 +826,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SynchronizeEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -821,7 +854,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SynchronizeObjectLinks'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -851,7 +884,7 @@ abstract class Actions extends Functions
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -881,7 +914,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('SynchronizeNewEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -911,7 +944,7 @@ abstract class Actions extends Functions
             ) {
                 // Extrait l'ID de l'objet de l'entité à synchroniser.
                 $id = substr($parseURL['path'], 3);
-                $this->_metrologyInstance->addLog('extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_AUDIT);
+                $this->_metrologyInstance->addLog('extract action synchronize new entity - ID=' . $id, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 // Vérifie l'ID.
                 if (!$this->_ioInstance->checkObjectPresent($id)
                     && Node::checkNID($id)
@@ -923,7 +956,7 @@ abstract class Actions extends Functions
                         $port = $parseURL['port'];
                         $this->_actionSynchronizeNewEntityURL .= ':' . $port;
                     }
-                    $this->_metrologyInstance->addLog('extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_AUDIT);
+                    $this->_metrologyInstance->addLog('extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 }
             }
         }
@@ -939,7 +972,7 @@ abstract class Actions extends Functions
      */
     protected function _extractActionMarkObject(): void
     {
-        $this->_metrologyInstance->addLog('extract action mark object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action mark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -955,7 +988,7 @@ abstract class Actions extends Functions
      */
     protected function _extractActionUnmarkObject(): void
     {
-        $this->_metrologyInstance->addLog('extract action unmark object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action unmark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -973,7 +1006,7 @@ abstract class Actions extends Functions
      */
     protected function _extractActionUnmarkAllObjects(): void
     {
-        $this->_metrologyInstance->addLog('extract action unmark all objects', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action unmark all objects', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
 
@@ -1050,7 +1083,7 @@ abstract class Actions extends Functions
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
             // Lit le contenu de la variable _FILE si un fichier est téléchargé.
             if (isset($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['error'])
@@ -1072,12 +1105,12 @@ abstract class Actions extends Functions
                         $this->_actionUploadFileLinksSize = $upsize;
                         $this->_actionUploadFileLinksPath = $uppath;
                     } else {
-                        $this->_metrologyInstance->addLog('action _extractActionUploadFileLinks File size too big', Metrology::LOG_LEVEL_ERROR);
+                        $this->_metrologyInstance->addLog('action _extractActionUploadFileLinks File size too big', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                         $this->_actionUploadFileLinksError = true;
                         $this->_actionUploadFileLinksErrorMessage = 'File size too big';
                     }
                 } else {
-                    $this->_metrologyInstance->addLog('action _extractActionUploadFileLinks File upload error', Metrology::LOG_LEVEL_ERROR);
+                    $this->_metrologyInstance->addLog('action _extractActionUploadFileLinks File upload error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                     $this->_actionUploadFileLinksError = true;
                     $this->_actionUploadFileLinksErrorMessage = 'File upload error';
                 }
@@ -1152,7 +1185,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('UploadFile'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action upload file', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action upload file', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $uploadArgName = self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE;
         if (!isset($_FILES[$uploadArgName]))
@@ -1202,49 +1235,49 @@ abstract class Actions extends Functions
                             $this->_actionUploadFileObfuscateLinks = $argObf;
                         }
                     } else {
-                        $this->_metrologyInstance->addLog('action _extractActionUploadFile ioReadMaxData exeeded', Metrology::LOG_LEVEL_ERROR);
+                        $this->_metrologyInstance->addLog('action _extractActionUploadFile ioReadMaxData exeeded', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                         $this->_actionUploadFileError = true;
                         $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
                     }
                 } else {
-                    $this->_metrologyInstance->addLog('action _extractActionUploadFile upload error', Metrology::LOG_LEVEL_ERROR);
+                    $this->_metrologyInstance->addLog('action _extractActionUploadFile upload error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                     $this->_actionUploadFileError = true;
                     $this->_actionUploadFileErrorMessage = "No uploaded file.";
                 }
                 unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
                 break;
             case UPLOAD_ERR_INI_SIZE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
                 break;
             case UPLOAD_ERR_FORM_SIZE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
                 break;
             case UPLOAD_ERR_PARTIAL:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "The uploaded file was only partially uploaded.";
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "No file was uploaded.";
                 break;
             case UPLOAD_ERR_NO_TMP_DIR:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "Missing a temporary folder.";
                 break;
             case UPLOAD_ERR_CANT_WRITE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "Failed to write file to disk.";
                 break;
             case UPLOAD_ERR_EXTENSION:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop.";
                 break;
@@ -1340,7 +1373,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('UploadText'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action upload text', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action upload text', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
 
@@ -1444,7 +1477,7 @@ abstract class Actions extends Functions
         )
             return;
 
-        $this->_metrologyInstance->addLog('extract action create entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
 
@@ -1478,7 +1511,7 @@ abstract class Actions extends Functions
             if ($argPasswd1 == $argPasswd2)
                 $this->_actionCreateEntityPassword = $argPasswd1;
             else {
-                $this->_metrologyInstance->addLog('action _extractActionCreateEntity passwords not match', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionCreateEntity passwords not match', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionCreateEntityError = true;
                 $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
             }
@@ -1541,7 +1574,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
 
@@ -1615,7 +1648,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('DeleteGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1650,7 +1683,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('AddToGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1677,7 +1710,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('RemoveFromGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1704,7 +1737,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('AddItemToGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1731,7 +1764,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('RemoveItemFromGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1790,7 +1823,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION);
 
@@ -1868,7 +1901,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('DeleteConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action delete conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1903,7 +1936,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('AddMessageOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add to conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action add to conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1930,7 +1963,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('RemoveMessageOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove from conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action remove from conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1957,7 +1990,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('AddMemberOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add item to conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action add item to conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1984,7 +2017,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('RemoveMemberOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove item from conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action remove item from conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2004,7 +2037,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateMessage'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create message', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create message', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE);
 
@@ -2061,7 +2094,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('AddProperty'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argAdd = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2088,7 +2121,7 @@ abstract class Actions extends Functions
                 if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionAddPropertyObfuscateLinks = $argObf;
             } else {
-                $this->_metrologyInstance->addLog('action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionAddPropertyError = true;
                 $this->_actionAddPropertyErrorMessage = 'Valeur vide.';
             }
@@ -2190,7 +2223,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateCurrency'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create currency', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create currency', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CURRENCY);
 
@@ -2214,13 +2247,13 @@ abstract class Actions extends Functions
                     unset($value, $valueArray);
                 } else
                     $this->_actionCreateCurrencyParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $this->_metrologyInstance->addLog('extract action create currency - _' . $property['shortname'] . ':' . $this->_actionCreateCurrencyParam[$name], Metrology::LOG_LEVEL_DEVELOP);
+                $this->_metrologyInstance->addLog('extract action create currency - _' . $property['shortname'] . ':' . $this->_actionCreateCurrencyParam[$name], Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '00000000');
 
                 // Extrait si forcé.
                 if (isset($property['forceable'])) {
                     $this->_actionCreateCurrencyParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateCurrencyParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT);
+                        $this->_metrologyInstance->addLog('extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 }
             }
         }
@@ -2304,7 +2337,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateTokenPool'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create token pool', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create token pool', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL);
 
@@ -2328,13 +2361,13 @@ abstract class Actions extends Functions
                     unset($value, $valueArray);
                 } else
                     $this->_actionCreateTokenPoolParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $this->_metrologyInstance->addLog('extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_AUDIT);
+                $this->_metrologyInstance->addLog('extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
                 // Extrait si forcé.
                 if (isset($property['forceable'])) {
                     $this->_actionCreateTokenPoolParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateTokenPoolParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT);
+                        $this->_metrologyInstance->addLog('extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 }
             }
         }
@@ -2418,7 +2451,7 @@ abstract class Actions extends Functions
         if (!$this->_checkPermitAction('CreateTokens'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create tokens', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('extract action create tokens', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS);
 
@@ -2442,13 +2475,13 @@ abstract class Actions extends Functions
                     unset($value, $valueArray);
                 } else
                     $this->_actionCreateTokensParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $this->_metrologyInstance->addLog('extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_AUDIT);
+                $this->_metrologyInstance->addLog('extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
                 // Extrait si forcé.
                 if (isset($property['forceable'])) {
                     $this->_actionCreateTokensParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateTokensParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT);
+                        $this->_metrologyInstance->addLog('extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 }
             }
 
@@ -2477,7 +2510,7 @@ abstract class Actions extends Functions
     protected function _actionSignLink(?LinkRegister $link, $obfuscate = 'default'): void
     {
         if ($this->_unlocked) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
             // On cache le lien ?
             if ($obfuscate !== false
@@ -2491,7 +2524,7 @@ abstract class Actions extends Functions
         } elseif ($this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
             || $this->_getOptionAsBoolean('permitPublicUploadLink')
         ) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
             // Affichage du lien.
             echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_ADDLNK') . $this->_displayInstance->convertInlineLinkFace($link);
@@ -2539,7 +2572,7 @@ abstract class Actions extends Functions
         )
             return;
         
-        $this->_metrologyInstance->addLog('action upload link', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action upload link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         if ($link->getSigned()
             && (($link->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
@@ -2550,7 +2583,7 @@ abstract class Actions extends Functions
             )
         ) {
             $link->write();
-            $this->_metrologyInstance->addLog('action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+            $this->_metrologyInstance->addLog('action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         } elseif ($this->_unlocked) {
             $link = $this->_cacheInstance->newBlockLink(
                 '0_'
@@ -2562,7 +2595,7 @@ abstract class Actions extends Functions
                 . $link->getParsed()['bl/rl/nid3']
             );
             $link->signWrite();
-            $this->_metrologyInstance->addLog('action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+            $this->_metrologyInstance->addLog('action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         }
 
         // Affichage des actions.
@@ -2583,7 +2616,7 @@ abstract class Actions extends Functions
         )
             return;
 
-        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // On dissimule le lien.
         $this->_actionObfuscateLinkInstance->obfuscateWrite();
@@ -2598,7 +2631,7 @@ abstract class Actions extends Functions
      */
     protected function _actionDeleteObject(): void
     {
-        $this->_metrologyInstance->addLog('action delete object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Suppression de l'objet.
         if ($this->_actionDeleteObjectForce)
@@ -2616,7 +2649,7 @@ abstract class Actions extends Functions
      */
     protected function _actionProtectObject(): void
     {
-        $this->_metrologyInstance->addLog('action protect object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande de protection de l'objet.
         $this->_actionProtectObjectInstance->setProtected();
@@ -2631,7 +2664,7 @@ abstract class Actions extends Functions
      */
     protected function _actionUnprotectObject(): void
     {
-        $this->_metrologyInstance->addLog('action unprotect object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande de protection de l'objet.
         $this->_actionUnprotectObjectInstance->setUnprotected();
@@ -2645,7 +2678,7 @@ abstract class Actions extends Functions
      */
     protected function _actionShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
@@ -2659,7 +2692,7 @@ abstract class Actions extends Functions
      */
     protected function _actionShareProtectObjectToGroupOpened(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
@@ -2677,7 +2710,7 @@ abstract class Actions extends Functions
      */
     protected function _actionShareProtectObjectToGroupClosed(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
@@ -2695,7 +2728,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCancelShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Demande d'annulation de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
@@ -2710,7 +2743,7 @@ abstract class Actions extends Functions
      */
     protected function _actionSynchronizeObject(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
 
@@ -2727,7 +2760,7 @@ abstract class Actions extends Functions
      */
     protected function _actionSynchronizeEntity(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
 
@@ -2768,7 +2801,7 @@ abstract class Actions extends Functions
      */
     protected function _actionSynchronizeObjectLinks(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
 
@@ -2785,7 +2818,7 @@ abstract class Actions extends Functions
      */
     protected function _actionSynchronizeApplication(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize application', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action synchronize application', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeApplicationInstance);
 
@@ -2826,7 +2859,7 @@ abstract class Actions extends Functions
      */
     protected function _actionSynchronizeNewEntity(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize new entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action synchronize new entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Vérifie si l'objet est déjà présent.
         $present = $this->_ioInstance->checkObjectPresent($this->_actionSynchronizeNewEntityID);
@@ -2835,7 +2868,7 @@ abstract class Actions extends Functions
         // Calcul de l'empreinte.
         $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
         if ($hash != $this->_actionSynchronizeNewEntityID) {
-            $this->_metrologyInstance->addLog('action synchronize new entity - Hash error', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action synchronize new entity - Hash error', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             unset($data);
             echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT') .
                 $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeNewEntityID) .
@@ -2850,7 +2883,7 @@ abstract class Actions extends Functions
         $this->_actionSynchronizeNewEntityInstance = $this->_cacheInstance->newEntity($this->_actionSynchronizeNewEntityID);
 
         if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
-            $this->_metrologyInstance->addLog('action synchronize new entity - Not entity', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action synchronize new entity - Not entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             if (!$present)
                 $this->_actionSynchronizeNewEntityInstance->deleteObject();
         }
@@ -2894,7 +2927,7 @@ abstract class Actions extends Functions
      */
     protected function _actionMarkObject(): void
     {
-        $this->_metrologyInstance->addLog('action mark object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action mark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $this->_applicationInstance->setMarkObject($this->_actionMarkObject);
 
@@ -2908,7 +2941,7 @@ abstract class Actions extends Functions
      */
     protected function _actionUnmarkObject(): void
     {
-        $this->_metrologyInstance->addLog('action unmark object', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action unmark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $this->_applicationInstance->setUnmarkObject($this->_actionUnmarkObject);
 
@@ -2922,7 +2955,7 @@ abstract class Actions extends Functions
      */
     protected function _actionUnmarkAllObjects(): void
     {
-        $this->_metrologyInstance->addLog('action unmark all objects', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action unmark all objects', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $this->_applicationInstance->setUnmarkAllObjects();
 
@@ -2938,7 +2971,7 @@ abstract class Actions extends Functions
      */
     protected function _actionUploadFile(): void
     {
-        $this->_metrologyInstance->addLog('action upload file', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action upload file', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Lit le contenu du fichier.
         $data = file_get_contents($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['tmp_name']);
@@ -2946,7 +2979,7 @@ abstract class Actions extends Functions
         // Ecrit le contenu dans l'objet.
         $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
         if ($instance === false) {
-            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionUploadFileError = true;
             $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
             return;
@@ -2956,7 +2989,7 @@ abstract class Actions extends Functions
         $id = $instance->getID();
         unset($data);
         if ($id == '0') {
-            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionUploadFileError = true;
             $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
             return;
@@ -2998,12 +3031,12 @@ abstract class Actions extends Functions
      */
     protected function _actionUploadText(): void
     {
-        $this->_metrologyInstance->addLog('action upload text', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action upload text', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Crée l'instance de l'objet.
         $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
         if ($instance === false) {
-            $this->_metrologyInstance->addLog('action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionUploadFileError = true;
             $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
             return;
@@ -3012,7 +3045,7 @@ abstract class Actions extends Functions
         // Lit l'ID.
         $id = $instance->getID();
         if ($id == '0') {
-            $this->_metrologyInstance->addLog('action _actionUploadText cant create object', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionUploadText cant create object', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionUploadFileError = true;
             $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
             return;
@@ -3072,7 +3105,7 @@ abstract class Actions extends Functions
      */
     protected function _actionUploadFileLinks(): void
     {
-        $this->_metrologyInstance->addLog('action upload file signed links', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action upload file signed links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Ecrit les liens correctement signés.
         $updata = file($this->_actionUploadFileLinksPath);
@@ -3093,7 +3126,7 @@ abstract class Actions extends Functions
                     ) {
                         $instance->write();
                         $nbLinks++;
-                        $this->_metrologyInstance->addLog('action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+                        $this->_metrologyInstance->addLog('action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     } elseif ($this->_unlocked) {
                         $instance = $this->_cacheInstance->newBlockLink(
                             '0_'
@@ -3106,7 +3139,7 @@ abstract class Actions extends Functions
                         );
                         $instance->signWrite();
                         $nbLinks++;
-                        $this->_metrologyInstance->addLog('action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL);
+                        $this->_metrologyInstance->addLog('action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     }
                 }
             }
@@ -3125,7 +3158,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateEntity(): void
     {
-        $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Création de la nouvelle entité nebule.
         $instance = new Entity($this->_nebuleInstance, 'new');
@@ -3252,7 +3285,7 @@ abstract class Actions extends Functions
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateEntity cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateEntity cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateEntityError = true;
             $this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
         }
@@ -3267,7 +3300,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateGroup(): void
     {
-        $this->_metrologyInstance->addLog('action create group', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Création du nouveau groupe.
         $instance = new Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
@@ -3284,7 +3317,7 @@ abstract class Actions extends Functions
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateGroup cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateGroup cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateGroupError = true;
             $this->_actionCreateGroupErrorMessage = 'Echec de la génération.';
         }
@@ -3299,7 +3332,7 @@ abstract class Actions extends Functions
      */
     protected function _actionDeleteGroup(): void
     {
-        $this->_metrologyInstance->addLog('action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         /**
          * Instance du groupe.
@@ -3313,13 +3346,13 @@ abstract class Actions extends Functions
         ) {
             $this->_actionDeleteGroupError = false;
             $this->_actionDeleteGroupErrorMessage = 'Pas un groupe.';
-            $this->_metrologyInstance->addLog('action delete not a group', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action delete not a group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             return;
         }
 
         // Suppression.
         if ($instance->getMarkClosed()) {
-            $this->_metrologyInstance->addLog('action delete group closed', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action delete group closed', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             $instance->unsetMarkClosed();
         }
         $instance->unsetGroup();
@@ -3327,7 +3360,7 @@ abstract class Actions extends Functions
         // Vérification.
         if ($instance->getIsGroup('myself')) {
             // Si ce n'est pas bon.
-            $this->_metrologyInstance->addLog('action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionDeleteGroup cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionDeleteGroupError = true;
             $this->_actionDeleteGroupErrorMessage = 'Echec de la génération.';
         }
@@ -3345,7 +3378,7 @@ abstract class Actions extends Functions
      */
     protected function _actionAddToGroup(): void
     {
-        $this->_metrologyInstance->addLog('action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $instanceGroupe = $this->_cacheInstance->newGroup($this->_actionAddToGroup);
         $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
         unset($instanceGroupe);
@@ -3362,7 +3395,7 @@ abstract class Actions extends Functions
      */
     protected function _actionRemoveFromGroup(): void
     {
-        $this->_metrologyInstance->addLog('action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $instanceGroupe = $this->_cacheInstance->newGroup($this->_actionRemoveFromGroup);
         $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
         unset($instanceGroupe);
@@ -3377,7 +3410,7 @@ abstract class Actions extends Functions
      */
     protected function _actionAddItemToGroup(): void
     {
-        $this->_metrologyInstance->addLog('action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
 
         // Affichage des actions.
@@ -3390,7 +3423,7 @@ abstract class Actions extends Functions
      */
     protected function _actionRemoveItemFromGroup(): void
     {
-        $this->_metrologyInstance->addLog('action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
 
         // Affichage des actions.
@@ -3403,7 +3436,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateConversation(): void
     {
-        $this->_metrologyInstance->addLog('action create conversation', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Création de la nouvelle conversation.
         $instance = new Conversation(
@@ -3427,7 +3460,7 @@ abstract class Actions extends Functions
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateConversation cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateConversation cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateConversationError = true;
             $this->_actionCreateConversationErrorMessage = 'Echec de la génération.';
         }
@@ -3445,7 +3478,7 @@ abstract class Actions extends Functions
      */
     protected function _actionDeleteConversation(): void
     {
-        $this->_metrologyInstance->addLog('action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Suppression.
         $instance = $this->_cacheInstance->newConversation($this->_actionDeleteConversationID);
@@ -3455,15 +3488,15 @@ abstract class Actions extends Functions
         ) {
             $this->_actionDeleteConversationError = false;
             $this->_actionDeleteConversationErrorMessage = 'Pas un conversation.';
-            $this->_metrologyInstance->addLog('action delete not a group', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action delete not a group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             return;
         }
         if ($instance->getIsConversationClosed()) {
-            $this->_metrologyInstance->addLog('action delete conversation closed', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action delete conversation closed', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             $instance->setUnmarkConversationClosed();
             $test = $instance->getIsConversationClosed();
         } else {
-            $this->_metrologyInstance->addLog('action delete conversation', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action delete conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             $instance->setUnmarkConversationOpened();
             $test = $instance->getIsConversationOpened();
         }
@@ -3471,7 +3504,7 @@ abstract class Actions extends Functions
         // Vérification.
         if ($test) {
             // Si ce n'est pas bon.
-            $this->_metrologyInstance->addLog('action _actionDeleteConversation cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionDeleteConversation cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionDeleteConversationError = true;
             $this->_actionDeleteConversationErrorMessage = 'Echec de la génération.';
         }
@@ -3487,7 +3520,7 @@ abstract class Actions extends Functions
      */
     protected function _actionAddMessageOnConversation(): void
     {
-        $this->_metrologyInstance->addLog('action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newConversation($this->_actionAddMessageOnConversation);
         $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
@@ -3503,7 +3536,7 @@ abstract class Actions extends Functions
      */
     protected function _actionRemoveMessageOnConversation(): void
     {
-        $this->_metrologyInstance->addLog('action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newConversation($this->_actionRemoveMessageOnConversation);
         $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
@@ -3519,7 +3552,7 @@ abstract class Actions extends Functions
      */
     protected function _actionAddMemberOnConversation(): void
     {
-        $this->_metrologyInstance->addLog('action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newConversation($this->_actionAddMemberOnConversation);
         $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
@@ -3535,7 +3568,7 @@ abstract class Actions extends Functions
      */
     protected function _actionRemoveMemberOnConversation(): void
     {
-        $this->_metrologyInstance->addLog('action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newConversation($this->_actionRemoveMemberOnConversation);
         $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
@@ -3553,12 +3586,12 @@ abstract class Actions extends Functions
     protected function _actionCreateMessage(): void
     {
         $id = $this->_actionUploadTextID;
-        $this->_metrologyInstance->addLog('action create message ' . $id, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create message ' . $id, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         if ($this->_actionCreateMessageProtected) {
-            $this->_metrologyInstance->addLog('action create message protected', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action create message protected', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         }
         if ($this->_actionCreateMessageObfuscateLinks) {
-            $this->_metrologyInstance->addLog('action create message with obfuscated links', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action create message with obfuscated links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         }
 
         // Création de l'instance du message.
@@ -3581,7 +3614,7 @@ abstract class Actions extends Functions
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateMessage cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateMessage cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateMessageError = true;
             $this->_actionCreateMessageErrorMessage = 'Echec de la génération.';
         }
@@ -3598,18 +3631,18 @@ abstract class Actions extends Functions
     {
         $prop = $this->_actionAddProperty;
         $propID = $this->_nebuleInstance->getCryptoInstance()->hash($prop);
-        $this->_metrologyInstance->addLog('action add property ' . $prop, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add property ' . $prop, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $objectID = $this->_actionAddPropertyObject;
-        $this->_metrologyInstance->addLog('action add property for ' . $objectID, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add property for ' . $objectID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $value = $this->_actionAddPropertyValue;
         $valueID = $this->_nebuleInstance->getCryptoInstance()->hash($value);
-        $this->_metrologyInstance->addLog('action add property value : ' . $value, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action add property value : ' . $value, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $protected = $this->_actionAddPropertyProtected;
         if ($protected) {
-            $this->_metrologyInstance->addLog('action add property protected', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action add property protected', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         }
         if ($this->_actionAddPropertyObfuscateLinks) {
-            $this->_metrologyInstance->addLog('action add property with obfuscated links', Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action add property with obfuscated links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         }
 
         // Création des objets si besoin.
@@ -3639,7 +3672,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateCurrency(): void
     {
-        $this->_metrologyInstance->addLog('action create currency', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create currency', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Création de la nouvelle monnaie.
         $instance = new Currency($this->_nebuleInstance, 'new', $this->_actionCreateCurrencyParam, false, false);
@@ -3655,11 +3688,11 @@ abstract class Actions extends Functions
             $this->_actionCreateCurrencyInstance = $instance;
             $this->_actionCreateCurrencyID = $instance->getID();
 
-            $this->_metrologyInstance->addLog('action _actionCreateCurrency generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action _actionCreateCurrency generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateCurrency cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateCurrency cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateCurrencyError = true;
             $this->_actionCreateCurrencyErrorMessage = 'Echec de la génération.';
         }
@@ -3674,7 +3707,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateTokenPool(): void
     {
-        $this->_metrologyInstance->addLog('action create token pool', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create token pool', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Création du nouveau sac de jetons.
         $instance = new TokenPool($this->_nebuleInstance, 'new', $this->_actionCreateTokenPoolParam, false, false);
@@ -3690,11 +3723,11 @@ abstract class Actions extends Functions
             $this->_actionCreateTokenPoolInstance = $instance;
             $this->_actionCreateTokenPoolID = $instance->getID();
 
-            $this->_metrologyInstance->addLog('action _actionCreateTokenPool generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT);
+            $this->_metrologyInstance->addLog('action _actionCreateTokenPool generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action _actionCreateTokenPool cant generate', Metrology::LOG_LEVEL_ERROR);
+            $this->_metrologyInstance->addLog('action _actionCreateTokenPool cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_actionCreateTokenPoolError = true;
             $this->_actionCreateTokenPoolErrorMessage = 'Echec de la génération.';
         }
@@ -3709,7 +3742,7 @@ abstract class Actions extends Functions
      */
     protected function _actionCreateTokens(): void
     {
-        $this->_metrologyInstance->addLog('action create tokens', Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('action create tokens', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instance = $this->_tokenizingInstance->getCurrentTokenInstance();
         for ($i = 0; $i < $this->_actionCreateTokensCount; $i++) {
@@ -3729,11 +3762,11 @@ abstract class Actions extends Functions
                 $this->_actionCreateTokensInstance[$i] = $instance;
                 $this->_actionCreateTokensID[$i] = $instance->getID();
 
-                $this->_metrologyInstance->addLog('action _actionCreateTokens generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT);
+                $this->_metrologyInstance->addLog('action _actionCreateTokens generated ID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             } else {
                 // Si ce n'est pas bon.
                 $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-                $this->_metrologyInstance->addLog('action _actionCreateTokens cant generate', Metrology::LOG_LEVEL_ERROR);
+                $this->_metrologyInstance->addLog('action _actionCreateTokens cant generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_actionCreateTokensError = true;
                 $this->_actionCreateTokensErrorMessage = 'Echec de la génération.';
 

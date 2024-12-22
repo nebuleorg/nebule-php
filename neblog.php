@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241221';
+    const APPLICATION_VERSION = '020241222';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -897,7 +897,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     /**
      * Affichage des actions.
      */
-    private function _displayActions()
+    private function _displayActions(): void
     {
         ?>
 
@@ -906,22 +906,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         } ?>">
             <p>
                 <?php
-                // Vérifie le ticket.
-                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
-                    // Appelle les actions spéciales.
-                    $this->_actionInstance->specialActions();
-
-                    // Appelle les actions génériques.
-                    $this->_actionInstance->genericActions();
-
-                    // Appelle les actions du module concerné par le mode d'affichage.
-                    foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                        if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '55fba077');
-                            $module->action();
-                        }
-                    }
-                }
+                $this->_actionInstance->getActions();
                 ?>
 
             </p>
@@ -940,7 +925,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
      * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
      */
-    private function _displayHeader()
+    private function _displayHeader(): void
     {
         ?>
 
@@ -1299,7 +1284,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             }
         }
 
-        // Ajoute l'application 0.
+        // Add application 1
         $list[$j]['icon'] = parent::DEFAULT_APPLICATION_LOGO;
         $list[$j]['title'] = BOOTSTRAP_NAME;
         $list[$j]['htlink'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;

@@ -49,7 +49,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241222';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -1107,7 +1107,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /**
      * Affichage des actions.
      */
-    private function _displayActions()
+    private function _displayActions(): void
     {
         ?>
 
@@ -1116,22 +1116,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <p>
                 <?php
-                // Vérifie le ticket.
-                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
-                    // Appelle les actions spéciales.
-                    $this->_actionInstance->specialActions();
-
-                    // Appelle les actions génériques.
-                    $this->_actionInstance->genericActions();
-
-                    // Appelle les actions du module concerné par le mode d'affichage.
-                    foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                        if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '55fba077');
-                            $module->action();
-                        }
-                    }
-                }
+                $this->_actionInstance->getActions();
                 ?>
 
             </p>
@@ -1150,7 +1135,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
      * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
      */
-    private function _displayHeader()
+    private function _displayHeader(): void
     {
         ?>
 

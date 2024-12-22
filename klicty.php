@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241222';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1185,7 +1185,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affichage des actions.
      */
-    private function _displayActions()
+    private function _displayActions(): void
     {
         ?>
 
@@ -1194,14 +1194,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         } ?>">
             <p>
                 <?php
-                // Vérifie le ticket.
-                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
-                    // Appelle les actions spéciales.
-                    $this->_actionInstance->specialActions();
-
-                    // Appelle les actions génériques.
-                    $this->_actionInstance->genericActions();
-                }
+                $this->_actionInstance->getActions();
                 ?>
 
             </p>
@@ -1209,7 +1202,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         <?php
     }
 
-    private function _displayInlineActions()
+    private function _displayInlineActions(): void
     {
         ?>
 

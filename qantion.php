@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240815';
+    const APPLICATION_VERSION = '020241222';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -979,22 +979,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <p>
                 <?php
-                // Vérifie le ticket.
-                if ($this->_nebuleInstance->getTicketingInstance()->checkActionTicket()) {
-                    // Appelle les actions spéciales.
-                    $this->_actionInstance->specialActions();
-
-                    // Appelle les actions génériques.
-                    $this->_actionInstance->genericActions();
-
-                    // Appelle les actions du module concerné par le mode d'affichage.
-                    foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                        if ($module->getCommandName() == $this->_currentDisplayMode) {
-                            $this->_metrologyInstance->addLog('Actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-                            $module->action();
-                        }
-                    }
-                }
+                $this->_actionInstance->getActions();
                 ?>
 
             </p>

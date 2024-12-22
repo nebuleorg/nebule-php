@@ -25,7 +25,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'log';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241221';
+    protected string $MODULE_VERSION = '020241222';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -210,8 +210,26 @@ class ModuleNeblog extends Modules
     {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $instanceList->setEnableWarnIfEmpty();
 
+        $list = $this->_getListBlogs();
+
+        foreach ($list as $blogNID) {
+            $blogInstance = $this->_cacheInstance->newNode($blogNID);
+            $instance = new Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($blogInstance);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instanceList->addItem($instance);
+        }
+
+        $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
     }
 
@@ -226,7 +244,8 @@ class ModuleNeblog extends Modules
             <h1>New blog</h1>
             <div>
                 <form enctype="multipart/form-data" method="post"
-                      action="<?php echo '?' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                      action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[1]
+                          . '&' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                     <label>
                         <input type="text" class="newblog"
                                name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
@@ -301,16 +320,15 @@ class ModuleNeblog extends Modules
     const DEFAULT_COMMAND_ACTION_RID = 'actaddnam';
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
     const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
-    private $_actionAddBlogName = '';
-    private $_actionAddBlogTitle = '';
-    private $_actionChangeBlog = false;
+    private string $_actionAddBlogName = '';
+    private string $_actionAddBlogTitle = '';
+    private bool $_actionChangeBlog = false;
 
-    public function action(): void
+    public function actions(): void
     {
         $this->_extractActionAddBlog();
-        if ($this->_actionChangeBlog) {
+        if ($this->_actionChangeBlog)
             $this->_actionAddBlog();
-        }
     }
 
     private function _extractActionAddBlog(): void
@@ -320,18 +338,18 @@ class ModuleNeblog extends Modules
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
             $arg_name = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_NAME, FILTER_SANITIZE_STRING));
             $arg_title = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_TITLE, FILTER_SANITIZE_STRING));
 
             if ($arg_name != '') {
                 $this->_actionAddBlogName = $arg_name;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
             }
             if (Node::checkNID($arg_title)) {
                 $this->_actionAddBlogTitle = $arg_title;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
             }
 
             if ($this->_actionAddBlogName != ''
@@ -351,7 +369,7 @@ class ModuleNeblog extends Modules
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_unlocked
         ) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
 
             // Crée l'objet de la référence de l'application.
             /*$instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
@@ -385,28 +403,41 @@ class ModuleNeblog extends Modules
     }
 
 
+    /*
+     * Definition of new blog with 'BlogNID' NID:
+     *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
+     * BlogNID should not have content.
+     * BlogNID should have name.
+     * BlogNID must not have update.
+     *
+     * On a blog 'BlogNID', definition of a new entry with 'EntryOID' OID:
+     *  -  f>BlogNID>EntryOID>RID_BLOG_ITEM
+     * EntryOID must have content.
+     * EntryOID can have name.
+     * EntryOID can have update.
+     *
+     * On an entry 'EntryOID', definition of a new answer with 'AnswerOID' OID:
+     *  -  f>EntryOID>AnswerOID>BlogNID
+     * AnswerOID must have content.
+     * AnswerOID should not have name.
+     * AnswerOID can have update.
+     *
+     * Only one level of answer for now. TODO
+     */
 
-    private function _getInstanceBlogRID(): Node
+    // Common functions
+    private function _getLinks(array &$links, Node $nid1, string $nid3): void
     {
-        return $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
-    }
-
-    private function _getInstanceBlogItemRID(): Node
-    {
-        return $this->_cacheInstance->newNode(self::RID_BLOG_ITEM);
-    }
-
-    private function _getListBlogsOID(): array
-    {
-        $instance = $this->_getInstanceBlogRID();
-        $links = array();
         $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => self::RID_BLOG_NODE,
-            'bl/rl/nid3' => self::RID_BLOG_NODE,
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $nid1->getID(),
+            'bl/rl/nid3' => $nid3,
             'bl/rl/nid4' => '',
         );
-        $instance->getLinks($links, $filter);
+        $nid1->getLinks($links, $filter);
+    }
+    private function _getOnLinksNID2(array &$links): array
+    {
         $list = array();
         foreach ($links as $link) {
             $parsedLink = $link->getParsed();
@@ -416,60 +447,56 @@ class ModuleNeblog extends Modules
         return $list;
     }
 
+    // Blogs
+    private function _getListBlogs(): array
+    {
+        $links = array();
+        $this->_getLinks($links, $this->_cacheInstance->newNode(self::RID_BLOG_NODE), self::RID_BLOG_NODE);
+        return $this->_getOnLinksNID2($links);
+    }
     private function _getCountBlogs(): int
     {
-        $instance = $this->_getInstanceBlogRID();
         $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => self::RID_BLOG_NODE,
-            'bl/rl/nid3' => self::RID_BLOG_NODE,
-            'bl/rl/nid4' => '',
-        );
-        $instance->getLinks($links, $filter);
+        $this->_getLinks($links, $this->_cacheInstance->newNode(self::RID_BLOG_NODE), self::RID_BLOG_NODE);
         return sizeof($links);
     }
-
-    private function _getListBlogItemOID(): array
-    {
-        $instance = $this->_getInstanceBlogItemRID();
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => self::RID_BLOG_NODE, // FIXME
-            'bl/rl/nid3' => self::RID_BLOG_NODE, // FIXME
-            'bl/rl/nid4' => '',
-        );
-        $instance->getLinks($links, $filter);
-        $list = array();
-        foreach ($links as $link) {
-            $parsedLink = $link->getParsed();
-            $oid = $parsedLink['bl/rl/nid2'];
-            $list[$oid] = $oid;
-        }
-        return $list;
-    }
-
-    private function _getCountBlogItem(): int
-    {
-        $instance = $this->_getInstanceBlogItemRID();
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => self::RID_BLOG_NODE, // FIXME
-            'bl/rl/nid3' => self::RID_BLOG_NODE, // FIXME
-            'bl/rl/nid4' => '',
-        );
-        $instance->getLinks($links, $filter);
-        return sizeof($links);
-    }
-
     private function _setNewBlog(): void
     {
 
     }
 
-    private function _setNewBlogItem(): void
+    // Entries on blogs
+    private function _getListBlogEntries(Node $blog): array
+    {
+        $links = array();
+        $this->_getLinks($links, $blog, self::RID_BLOG_ITEM);
+        return $this->_getOnLinksNID2($links);
+    }
+    private function _getCountBlogEntries(Node $blog): int
+    {
+        $links = array();
+        $this->_getLinks($links, $blog, self::RID_BLOG_ITEM);
+        return sizeof($links);
+    }
+    private function _setNewBlogEntry(): void
+    {
+
+    }
+
+    // Answers of entry on blogs
+    private function _getListBlogEntryAnswers(Node $entry, Node $blog): array
+    {
+        $links = array();
+        $this->_getLinks($links, $entry, $blog->getID());
+        return $this->_getOnLinksNID2($links);
+    }
+    private function _getCountBlogEntryAnswers(Node $entry, Node $blog): int
+    {
+        $links = array();
+        $this->_getLinks($links, $entry, $blog->getID());
+        return sizeof($links);
+    }
+    private function _setNewBlogEntryAnswer(): void
     {
 
     }
