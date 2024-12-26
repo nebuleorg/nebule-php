@@ -242,9 +242,6 @@ abstract class Translates extends Functions
         $this->_findDefaultLanguage();
         $this->_findLanguages();
         $this->_findCurrentLanguage();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
     }
 
 

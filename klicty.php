@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241222';
+    const APPLICATION_VERSION = '020241226';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2024';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1194,7 +1194,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         } ?>">
             <p>
                 <?php
-                $this->_actionInstance->getActions();
+                $this->_actionInstance->getDisplayActions();
                 ?>
 
             </p>
@@ -4670,7 +4670,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4684,7 +4684,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4698,7 +4698,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4713,7 +4713,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_DATE);
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
                 }
             }
             // Crée l'objet du nombre de vues.
@@ -4727,7 +4727,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_COUNT);
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
                 }
             }
 
@@ -4738,7 +4738,7 @@ class Action extends Actions
                 $source = $this->_applicationInstance->getCurrentObjectID();
                 $target = $id;
                 $meta = '0';
-                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
             }
 
             unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);

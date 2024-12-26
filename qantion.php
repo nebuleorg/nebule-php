@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241222';
+    const APPLICATION_VERSION = '020241226';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2024';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -979,7 +979,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         } ?>">
             <p>
                 <?php
-                $this->_actionInstance->getActions();
+                $this->_actionInstance->getDisplayActions();
                 ?>
 
             </p>

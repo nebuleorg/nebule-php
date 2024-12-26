@@ -292,7 +292,7 @@ class Action extends Actions
                 && is_a($this->_actionUploadLinkInstance, 'Link')
             ) {
                 sleep(self::ACTION_APPLY_DELAY);
-                $this->_actionUploadLink($this->_actionUploadLinkInstance);
+                $this->_actionUploadLink_DISABLED($this->_actionUploadLinkInstance);
             }
 
             // Fichier de liens pré-signés.

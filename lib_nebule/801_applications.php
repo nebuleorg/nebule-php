@@ -94,6 +94,7 @@ abstract class Applications extends Functions implements applicationInterface
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog('initialisation application action error ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
         }
+        $this->_actionInstance->getActions(); // try catch inside
     }
 
     public function __destruct() { return true; }

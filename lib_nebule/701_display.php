@@ -267,20 +267,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
-
-        // Aucun affichage, aucune traduction, aucune action avant le retour de cette fonction.
-        // Les instances interdépendantes doivent être synchronisées.
     }
 
 
 
-    /**
-     * Retourne la liste des objets nécessaires au bon fonctionnement de l'application.
-     *
-     * Vide par défaut, est remplacé par l'application.
-     *
-     * @return array:string
-     */
     public function getNeededObjectsList(): array
     {
         return $this->_neededObjectsList;
