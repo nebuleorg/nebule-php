@@ -1310,6 +1310,10 @@ class Configuration extends Functions
      */
     public function checkBooleanOptions(array $list): bool
     {
+        if (sizeof($list) == 0) {
+            $this->_metrologyInstance->addLog('empty list of options', Metrology::LOG_LEVEL_NORMAL, __METHOD__,'558f764f');
+            return false;
+        }
         foreach ($list as $name)
         {
             if (($name == 'unlocked' && !$this->_entitiesInstance->getCurrentEntityIsUnlocked())
@@ -1318,7 +1322,7 @@ class Configuration extends Functions
                 || !$this->getOptionAsBoolean($name)
             )
             {
-                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_NORMAL, __METHOD__,'8318122c');
+                $this->_metrologyInstance->addLog('not permitted with option=' . $name . ' on list', Metrology::LOG_LEVEL_NORMAL, __METHOD__,'8318122c');
                 return false;
             }
         }

@@ -300,69 +300,55 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
         }
     }
 
-    protected function _getOptionAsBoolean(string $name): bool
-    {
-        return $this->_configurationInstance->getOptionAsBoolean($name);
-    }
-
-    protected function _checkBooleanOptions(array $list): bool
-    {
-        return $this->_configurationInstance->checkBooleanOptions($list);
-    }
-
-    const GROUP_ACTIONS_PERMIT = array(
-        'DeleteObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'ProtectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'UnprotectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'ShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'ShareProtectObjectToGroupOpened' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'ShareProtectObjectToGroupClosed' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'CancelShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'SynchronizeObject' => ['permitWrite','permitWriteObject'],
-        'SynchronizeEntity' => ['permitWrite','permitWriteObject'],
-        'SynchronizeObjectLinks' => ['permitWrite','permitWriteLink'],
-        'SynchronizeApplication' => ['permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink','permitSynchronizeApplication'],
-        'SynchronizeNewEntity' => ['permitWrite','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
-        'UploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
-        'UploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'UploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'CreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity'],
-        'CreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'],
-        'SignLink' => ['unlocked','permitWrite','permitWriteLink','permitCreateLink'],
-        'UploadLink' => ['permitWrite','permitWriteLink','permitUploadLink'],
-        'ObfuscateLink' => ['unlocked','permitWrite','permitWriteLink','permitObfuscatedLink'],
-        'DeleteGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
-        'AddToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
-        'RemoveFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
-        'AddItemToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
-        'RemoveItemFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
-        'CreateConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
-        'DeleteConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
-        'AddMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
-        'RemoveMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
-        'AddMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
-        'RemoveMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
-        'CreateMessage' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
-        'AddProperty' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'CreateCurrency' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
-        'CreateTokenPool' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
-        'CreateTokens' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
-    );
-
-    protected function _checkPermitAction($name): bool
+    protected function _checkPermitGroupAction($name): bool
     {
         if (!isset(self::GROUP_ACTIONS_PERMIT[$name]))
         {
-            $this->_metrologyInstance->addLog('unknown action ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'5edb0ddf');
+            $this->_metrologyInstance->addLog('unknown group action ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'5edb0ddf');
             return false;
         }
-        if (!$this->_configurationInstance->checkBooleanOptions(self::GROUP_ACTIONS_PERMIT[$name]))
-        {
-            $this->_metrologyInstance->addLog('insuffisant permission for action=' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'a5f2e385');
-            return false;
-        }
-        return true;
+        return $this->_configurationInstance->checkBooleanOptions(self::GROUP_ACTIONS_PERMIT[$name]);
     }
+
+    const GROUP_ACTIONS_PERMIT = array(
+        'GroupDeleteObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupProtectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateLink' => ['unlocked','permitCreateLink'],
+        'GroupUnprotectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToGroupOpened' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToGroupClosed' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCancelShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupSynchronizeObject' => ['permitWrite','permitWriteObject'],
+        'GroupSynchronizeEntity' => ['permitWrite','permitWriteObject'],
+        'GroupSynchronizeObjectLinks' => ['permitWrite','permitWriteLink'],
+        'GroupSynchronizeApplication' => ['permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink','permitSynchronizeApplication'],
+        'GroupSynchronizeNewEntity' => ['permitWrite','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
+        'GroupUploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'GroupUploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupUploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity'],
+        'GroupCreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'],
+        'GroupSignLink' => ['unlocked','permitWrite','permitWriteLink','permitCreateLink'],
+        'GroupUploadLink' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'GroupObfuscateLink' => ['unlocked','permitWrite','permitWriteLink','permitObfuscatedLink'],
+        'GroupDeleteGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupAddToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupRemoveFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupAddItemToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupRemoveItemFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupCreateConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'GroupDeleteConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupAddMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupRemoveMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupAddMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupRemoveMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupCreateMessage' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'GroupAddProperty' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateCurrency' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'GroupCreateTokenPool' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'GroupCreateTokens' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+    );
 
 
 
@@ -381,16 +367,16 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
      */
     public function specialActions(): void
     {
-        $this->_metrologyInstance->addLog('special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6f9dfb64');
+        $this->_metrologyInstance->addLog('extract special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6f9dfb64');
 
         // Vérifie que l'action de création d'entité soit permise entité verrouillée.
-        if ($this->_checkBooleanOptions(array('permitPublicCreateEntity'))
+        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             || $this->_unlocked
         )
             $this->_extractActionCreateEntity();
 
         // Vérifie que l'action de chargement de lien soit permise.
-        if ($this->_checkBooleanOptions(array('permitWrite','permitWriteLink','permitUploadLink'))
+        if ($this->_configurationInstance->checkBooleanOptions(self::GROUP_ACTIONS_PERMIT['GroupUploadLink'])
             || $this->_unlocked
         ) {
             // Extrait les actions.
@@ -408,26 +394,26 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             $this->_actionCreateEntity();
 
         // Si l'action de chargement de lien est permise y compris entité verrouillée.
-        if ($this->_checkBooleanOptions(array('permitWrite','permitWriteLink','permitUploadLink'))
-            && ($this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_getOptionAsBoolean('permitPublicUploadLink')
+        if ($this->_configurationInstance->checkBooleanOptions(self::GROUP_ACTIONS_PERMIT['GroupUploadLink'])
+            && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
             // Lien à signer 1.
-            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
+            if ($this->_checkPermitGroupAction('GroupCreateLink')
                 && is_a($this->_actionSignLinkInstance1, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
 
             // Lien à signer 2.
-            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
+            if ($this->_checkPermitGroupAction('GroupCreateLink')
                 && is_a($this->_actionSignLinkInstance2, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance2, $this->_actionSignLinkInstance2Obfuscate);
 
             // Lien à signer 3.
-            if ($this->_checkBooleanOptions(array('unlocked','permitCreateLink'))
+            if ($this->_checkPermitGroupAction('GroupCreateLink')
                 && is_a($this->_actionSignLinkInstance3, 'Nebule\Library\LinkRegister')
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
@@ -451,31 +437,42 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
         $this->_displayInstance->displayInlineLastAction(); // FIXME
     }
 
-    protected ?LinkRegister $_actionSignLinkInstance1 = null;
+    protected string $_actionSignLinkInstance1 = '';
     protected bool $_actionSignLinkInstance1Obfuscate = false;
     protected function _extractActionSignLink1(): void
     {
-        if (!$this->_checkPermitAction('SignLink'))
+        if (!$this->_checkPermitGroupAction('GroupSignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c5415d94');
+        $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c5415d94');
 
-        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
-        if ($arg == '')
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        if ($arg != ''
-            && strlen($arg) != 0
-        ) {
-            $this->_actionSignLinkInstance1 = $this->flatLinkExtractAsInstance_DISABLED($arg);
-            $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
+        try {
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        } catch (\Exception $e) {
+            $arg = '';
         }
+        if ($arg == '')
+            try {
+                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            } catch (\Exception $e) {
+                $arg = '';
+            }
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
+
+        if ($arg == '')
+            return ;
+        $this->_actionSignLinkInstance1 = $arg;
+        $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
+
     }
-    protected function _actionSignLink(?LinkRegister $link, bool $obfuscate = false): void
+    protected function _actionSignLink(string $link, bool $obfuscate = false): void
     {
         if ($this->_unlocked) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8baa9fae');
+
+            $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
+            $blockLinkInstance->addLink($link);
+
 
             // On cache le lien ? // FIXME
             if ($obfuscate !== false
@@ -485,70 +482,82 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             //...
 
             $link->signWrite();
-        } elseif ($this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-            || $this->_getOptionAsBoolean('permitPublicUploadLink')
+        } elseif ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+            || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
         ) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
 
             if ($link->getSigned())
                 $link->write();
         }
     }
 
-    protected ?LinkRegister $_actionSignLinkInstance2 = null;
+    protected string $_actionSignLinkInstance2 = '';
     protected bool $_actionSignLinkInstance2Obfuscate = false;
     protected function _extractActionSignLink2(): void
     {
-        if (!$this->_checkPermitAction('SignLink'))
+        if (!$this->_checkPermitGroupAction('GroupSignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'e1059b93');
+        $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e1059b93');
 
-        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
-        if ($arg == '')
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        if ($arg != ''
-            && strlen($arg) != 0
-        ) {
-            $this->_actionSignLinkInstance2 = $this->flatLinkExtractAsInstance_DISABLED($arg);
-            $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
+        try {
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        } catch (\Exception $e) {
+            $arg = '';
         }
+        if ($arg == '')
+            try {
+                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            } catch (\Exception $e) {
+                $arg = '';
+            }
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
+
+        if ($arg == '')
+            return ;
+        $this->_actionSignLinkInstance2 = $arg;
+        $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
     }
 
-    protected ?LinkRegister $_actionSignLinkInstance3 = null;
+    protected string $_actionSignLinkInstance3 = '';
     protected bool $_actionSignLinkInstance3Obfuscate = false;
     protected function _extractActionSignLink3(): void
     {
-        if (!$this->_checkPermitAction('SignLink'))
+        if (!$this->_checkPermitGroupAction('GroupSignLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cc145716');
+        $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cc145716');
 
-        $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
-        if ($arg == '')
-            $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
-        if ($arg != ''
-            && strlen($arg) != 0
-        ) {
-            $this->_actionSignLinkInstance3 = $this->flatLinkExtractAsInstance_DISABLED($arg);
-            $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
+        try {
+            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        } catch (\Exception $e) {
+            $arg = '';
         }
+        if ($arg == '')
+            try {
+                $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            } catch (\Exception $e) {
+                $arg = '';
+            }
+        $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
+
+        if ($arg == '')
+            return ;
+            $this->_actionSignLinkInstance3 = $arg;
+            $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
     }
 
     protected ?LinkRegister $_actionUploadLinkInstance = null;
     protected function _extractActionUploadLink(): void
     {
-        if ($this->_checkPermitAction('UploadLink')
-            && ($this->_getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_checkPermitGroupAction('GroupUploadLink')
+            && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0e682f22');
+            $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0e682f22');
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             if ($arg == '')
@@ -556,7 +565,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
 
             // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
-            if ($this->_getOptionAsBoolean('permitPublicUploadLink')
+            if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
                 $permitNotCodeMaster = true;
@@ -581,10 +590,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected ?LinkRegister $_actionObfuscateLinkInstance = null;
     protected function _extractActionObfuscateLink(): void
     {
-        if (!$this->_checkPermitAction('ObfuscateLink'))
+        if (!$this->_checkPermitGroupAction('GroupObfuscateLink'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c22677ad');
+        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c22677ad');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg == '')
@@ -601,7 +610,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
         )
             return;
 
-        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b3bf62a9');
 
         // On dissimule le lien.
         $this->_actionObfuscateLinkInstance->obfuscateWrite();
@@ -622,10 +631,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionDeleteObject(): void
     {
-        if (!$this->_checkPermitAction('DeleteObject'))
+        if (!$this->_checkPermitGroupAction('GroupDeleteObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '19096242');
+        $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19096242');
 
         $argObject = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
@@ -644,13 +653,13 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
 
         // Extraction si la suppression doit être cachée.
         if ($argObfuscate
-            && $this->_getOptionAsBoolean('permitObfuscatedLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
             $this->_actionDeleteObjectObfuscate = true;
     }
     protected function _actionDeleteObject(): void
     {
-        $this->_metrologyInstance->addLog('action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '234f6195');
 
         // Suppression de l'objet.
         if ($this->_actionDeleteObjectForce)
@@ -662,10 +671,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected ?Node $_actionProtectObjectInstance = null;
     protected function _extractActionProtectObject(): void
     {
-        if (!$this->_checkPermitAction('ProtectObject'))
+        if (!$this->_checkPermitGroupAction('GroupProtectObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd4d5b6f4');
+        $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd4d5b6f4');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -674,7 +683,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionProtectObject(): void
     {
-        $this->_metrologyInstance->addLog('action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0aff7e01');
 
         // Demande de protection de l'objet.
         $this->_actionProtectObjectInstance->setProtected();
@@ -683,10 +692,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected ?Node $_actionUnprotectObjectInstance = null;
     protected function _extractActionUnprotectObject(): void
     {
-        if (!$this->_checkPermitAction('UnprotectObject'))
+        if (!$this->_checkPermitGroupAction('GroupUnprotectObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4a15018f');
+        $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4a15018f');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -695,7 +704,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionUnprotectObject(): void
     {
-        $this->_metrologyInstance->addLog('action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '2a652083');
 
         // Demande de protection de l'objet.
         $this->_actionUnprotectObjectInstance->setUnprotected();
@@ -704,10 +713,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionShareProtectObjectToEntity = '';
     protected function _extractActionShareProtectObjectToEntity(): void
     {
-        if (!$this->_checkPermitAction('ShareProtectObjectToEntity'))
+        if (!$this->_checkPermitGroupAction('GroupShareProtectObjectToEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae098953');
+        $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae098953');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -716,7 +725,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27bac517');
 
         // Demande de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
@@ -725,10 +734,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionShareProtectObjectToGroupOpened = '';
     protected function _extractActionShareProtectObjectToGroupOpened(): void
     {
-        if (!$this->_checkPermitAction('ShareProtectObjectToGroupOpened'))
+        if (!$this->_checkPermitGroupAction('GroupShareProtectObjectToGroupOpened'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '302775bd');
+        $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '302775bd');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -737,7 +746,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionShareProtectObjectToGroupOpened(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7ee74');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
@@ -750,10 +759,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionShareProtectObjectToGroupClosed = '';
     protected function _extractActionShareProtectObjectToGroupClosed(): void
     {
-        if (!$this->_checkPermitAction('ShareProtectObjectToGroupClosed'))
+        if (!$this->_checkPermitGroupAction('GroupShareProtectObjectToGroupClosed'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c6c42849');
+        $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c6c42849');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -762,7 +771,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionShareProtectObjectToGroupClosed(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b217dcb1');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
@@ -775,10 +784,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionCancelShareProtectObjectToEntity = '';
     protected function _extractActionCancelShareProtectObjectToEntity(): void
     {
-        if (!$this->_checkPermitAction('CancelShareProtectObjectToEntity'))
+        if (!$this->_checkPermitGroupAction('GroupCancelShareProtectObjectToEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'bf5ed8c7');
+        $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bf5ed8c7');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -787,7 +796,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionCancelShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '71313220');
 
         // Demande d'annulation de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
@@ -800,10 +809,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionSynchronizeObject(): void
     {
-        if (!$this->_checkPermitAction('SynchronizeObject'))
+        if (!$this->_checkPermitGroupAction('GroupSynchronizeObject'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd9e5454c');
+        $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd9e5454c');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -812,7 +821,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionSynchronizeObject(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '74dfb558');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
 
@@ -827,10 +836,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionSynchronizeEntity(): void
     {
-        if (!$this->_checkPermitAction('SynchronizeEntity'))
+        if (!$this->_checkPermitGroupAction('GroupSynchronizeEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2ec437bf');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -839,7 +848,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionSynchronizeEntity(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f41d4b64');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
 
@@ -878,10 +887,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionSynchronizeObjectLinks(): void
     {
-        if (!$this->_checkPermitAction('SynchronizeObjectLinks'))
+        if (!$this->_checkPermitGroupAction('GroupSynchronizeObjectLinks'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ec3ab52');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -890,7 +899,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionSynchronizeObjectLinks(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4dc338f4');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
 
@@ -905,12 +914,12 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionSynchronizeApplication(): void
     {
-        if ($this->_checkPermitAction('SynchronizeApplication')
-            && ($this->_getOptionAsBoolean('permitPublicSynchronizeApplication')
+        if ($this->_checkPermitGroupAction('GroupSynchronizeApplication')
+            && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2692acb5');
 
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -920,7 +929,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _actionSynchronizeApplication(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize application', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('action synchronize application', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c5d52f3e');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeApplicationInstance);
 
@@ -961,10 +970,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionSynchronizeNewEntity(): void
     {
-        if (!$this->_checkPermitAction('SynchronizeNewEntity'))
+        if (!$this->_checkPermitGroupAction('GroupSynchronizeNewEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1075,7 +1084,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionMarkObject = '';
     protected function _extractActionMarkObject(): void
     {
-        $this->_metrologyInstance->addLog('extract action mark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action mark object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1092,7 +1101,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionUnmarkObject = '';
     protected function _extractActionUnmarkObject(): void
     {
-        $this->_metrologyInstance->addLog('extract action unmark object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action unmark object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1109,7 +1118,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected bool $_actionUnmarkAllObjects = false;
     protected function _extractActionUnmarkAllObjects(): void
     {
-        $this->_metrologyInstance->addLog('extract action unmark all objects', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action unmark all objects', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT);
 
@@ -1135,13 +1144,13 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionUploadFileLinks(): void
     {
-        if ($this->_checkPermitAction('UploadFileLinks')
-            && ($this->_getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+        if ($this->_checkPermitGroupAction('GroupUploadFileLinks')
+            && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_unlocked
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Lit le contenu de la variable _FILE si un fichier est téléchargé.
             if (isset($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['error'])
@@ -1221,9 +1230,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                 if ($instance->getValid()) {
                     if ($instance->getSigned()
                         && (($instance->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
-                                && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                                && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                             )
-                            || $this->_getOptionAsBoolean('permitPublicUploadLink')
+                            || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                             || $this->_unlocked
                         )
                     ) {
@@ -1279,10 +1288,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionUploadFile(): void
     {
-        if (!$this->_checkPermitAction('UploadFile'))
+        if (!$this->_checkPermitGroupAction('GroupUploadFile'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action upload file', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action upload file', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $uploadArgName = self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE;
         if (!isset($_FILES[$uploadArgName]))
@@ -1325,10 +1334,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                         $this->_actionUploadFileSize = $upsize;
                         $this->_actionUploadFilePath = $uppath;
                         $this->_actionUploadFileUpdate = $argUpd;
-                        if ($this->_getOptionAsBoolean('permitProtectedObject')) {
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
                             $this->_actionUploadFileProtect = $argPrt;
                         }
-                        if ($this->_getOptionAsBoolean('permitObfuscatedLink')) {
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                             $this->_actionUploadFileObfuscateLinks = $argObf;
                         }
                     } else {
@@ -1480,10 +1489,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionUploadText(): void
     {
-        if (!$this->_checkPermitAction('UploadText'))
+        if (!$this->_checkPermitGroupAction('GroupUploadText'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action upload text', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action upload text', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT);
 
@@ -1507,9 +1516,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                 else
                     $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
 
-                if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
                     $this->_actionUploadTextProtect = $argPrt;
-                if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionUploadTextObfuscateLinks = $argObf;
             }
         }
@@ -1582,12 +1591,12 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionCreateEntity(): void
     {
-        if ((!$this->_unlocked && !$this->_getOptionAsBoolean('permitPublicCreateEntity'))
-            || !$this->_checkPermitAction('CreateEntity')
+        if ((!$this->_unlocked && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
+            || !$this->_checkPermitGroupAction('GroupCreateEntity')
         )
             return;
 
-        $this->_metrologyInstance->addLog('extract action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY);
 
@@ -1615,7 +1624,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             $this->_actionCreateEntityFirstname = $argFstnam;
             $this->_actionCreateEntityNikename = $argNiknam;
             $this->_actionCreateEntityName = $argName;
-            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                 $this->_actionCreateEntityObfuscateLinks = $argObf;
 
             if ($argPasswd1 == $argPasswd2)
@@ -1789,10 +1798,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionCreateGroup(): void
     {
-        if (!$this->_checkPermitAction('CreateGroup'))
+        if (!$this->_checkPermitGroupAction('GroupCreateGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP);
 
@@ -1811,7 +1820,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             // Sauvegarde les valeurs.
             $this->_actionCreateGroupName = $argName;
             $this->_actionCreateGroupClosed = $argCld;
-            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                 $this->_actionCreateGroupObfuscateLinks = $argObf;
         }
     }
@@ -1858,10 +1867,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionDeleteGroup(): void
     {
-        if (!$this->_checkPermitAction('DeleteGroup'))
+        if (!$this->_checkPermitGroupAction('GroupDeleteGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1912,10 +1921,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionAddToGroup(): void
     {
-        if (!$this->_checkPermitAction('AddToGroup'))
+        if (!$this->_checkPermitGroupAction('GroupAddToGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1936,10 +1945,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionRemoveFromGroup(): void
     {
-        if (!$this->_checkPermitAction('RemoveFromGroup'))
+        if (!$this->_checkPermitGroupAction('GroupRemoveFromGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1960,10 +1969,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionAddItemToGroup(): void
     {
-        if (!$this->_checkPermitAction('AddItemToGroup'))
+        if (!$this->_checkPermitGroupAction('GroupAddItemToGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -1983,10 +1992,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionRemoveItemFromGroup(): void
     {
-        if (!$this->_checkPermitAction('RemoveItemFromGroup'))
+        if (!$this->_checkPermitGroupAction('GroupRemoveItemFromGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2030,10 +2039,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionCreateConversation(): void
     {
-        if (!$this->_checkPermitAction('CreateConversation'))
+        if (!$this->_checkPermitGroupAction('GroupCreateConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION);
 
@@ -2053,9 +2062,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             // Sauvegarde les valeurs.
             $this->_actionCreateConversationName = $argName;
             $this->_actionCreateConversationClosed = $argCld;
-            if ($this->_getOptionAsBoolean('permitProtectedObject'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
                 $this->_actionCreateConversationProtected = $argPrt;
-            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                 $this->_actionCreateConversationObfuscateLinks = $argObf;
         }
     }
@@ -2110,10 +2119,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionDeleteConversation(): void
     {
-        if (!$this->_checkPermitAction('DeleteConversation'))
+        if (!$this->_checkPermitGroupAction('GroupDeleteConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action delete conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action delete conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argDelete = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2166,10 +2175,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionAddMessageOnConversation(): void
     {
-        if (!$this->_checkPermitAction('AddMessageOnConversation'))
+        if (!$this->_checkPermitGroupAction('GroupAddMessageOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add to conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action add to conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2191,10 +2200,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionRemoveMessageOnConversation(): void
     {
-        if (!$this->_checkPermitAction('RemoveMessageOnConversation'))
+        if (!$this->_checkPermitGroupAction('GroupRemoveMessageOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove from conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2216,10 +2225,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionAddMemberOnConversation(): void
     {
-        if (!$this->_checkPermitAction('AddMemberOnConversation'))
+        if (!$this->_checkPermitGroupAction('GroupAddMemberOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add item to conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2241,10 +2250,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionRemoveMemberOnConversation(): void
     {
-        if (!$this->_checkPermitAction('RemoveMemberOnConversation'))
+        if (!$this->_checkPermitGroupAction('GroupRemoveMemberOnConversation'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove item from conversation', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2267,10 +2276,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     protected string $_actionCreateMessageErrorMessage = 'Initialisation de la suppression.';
     protected function _extractActionCreateMessage(): void
     {
-        if (!$this->_checkPermitAction('CreateMessage'))
+        if (!$this->_checkPermitGroupAction('GroupCreateMessage'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create message', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create message', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_MESSAGE);
 
@@ -2284,9 +2293,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
             $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_OBFUSCATE_LINKS);
 
             // Sauvegarde les valeurs.
-            if ($this->_getOptionAsBoolean('permitProtectedObject'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
                 $this->_actionCreateMessageProtected = $argPrt;
-            if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                 $this->_actionCreateMessageObfuscateLinks = $argObf;
         }
 
@@ -2342,10 +2351,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionAddProperty(): void
     {
-        if (!$this->_checkPermitAction('AddProperty'))
+        if (!$this->_checkPermitGroupAction('GroupAddProperty'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argAdd = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
@@ -2367,9 +2376,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                 else
                     $this->_actionAddPropertyObject = $argObj;
                 $this->_actionAddPropertyValue = $argVal;
-                if ($this->_getOptionAsBoolean('permitProtectedObject'))
+                if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
                     $this->_actionAddPropertyProtected = $argPrt;
-                if ($this->_getOptionAsBoolean('permitObfuscatedLink'))
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                     $this->_actionAddPropertyObfuscateLinks = $argObf;
             } else {
                 $this->_metrologyInstance->addLog('action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
@@ -2467,10 +2476,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
      */
     protected function _extractActionCreateCurrency(): void
     {
-        if (!$this->_checkPermitAction('CreateCurrency'))
+        if (!$this->_checkPermitGroupAction('GroupCreateCurrency'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create currency', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create currency', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_CURRENCY);
 
@@ -2500,7 +2509,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                 if (isset($property['forceable'])) {
                     $this->_actionCreateCurrencyParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateCurrencyParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+                        $this->_metrologyInstance->addLog('extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
         }
@@ -2561,10 +2570,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionCreateTokenPool(): void
     {
-        if (!$this->_checkPermitAction('CreateTokenPool'))
+        if (!$this->_checkPermitGroupAction('GroupCreateTokenPool'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create token pool', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create token pool', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKEN_POOL);
 
@@ -2588,13 +2597,13 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                     unset($value, $valueArray);
                 } else
                     $this->_actionCreateTokenPoolParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $this->_metrologyInstance->addLog('extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+                $this->_metrologyInstance->addLog('extract action create token pool - p' . $property['key'] . ':' . $this->_actionCreateTokenPoolParam[$name], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
                 // Extrait si forcé.
                 if (isset($property['forceable'])) {
                     $this->_actionCreateTokenPoolParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateTokenPoolParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+                        $this->_metrologyInstance->addLog('extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
         }
@@ -2656,10 +2665,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
     protected function _extractActionCreateTokens(): void
     {
-        if (!$this->_checkPermitAction('CreateTokens'))
+        if (!$this->_checkPermitGroupAction('GroupCreateTokens'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action create tokens', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('extract action create tokens', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS);
 
@@ -2683,13 +2692,13 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
                     unset($value, $valueArray);
                 } else
                     $this->_actionCreateTokensParam[$name] = trim(filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                $this->_metrologyInstance->addLog('extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+                $this->_metrologyInstance->addLog('extract action create tokens - t' . $property['key'] . ':' . $this->_actionCreateTokensParam[$name], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
                 // Extrait si forcé.
                 if (isset($property['forceable'])) {
                     $this->_actionCreateTokensParam['Force' . $name] = filter_has_var(INPUT_POST, 'f' . $property['shortname']);
                     if ($this->_actionCreateTokensParam['Force' . $name])
-                        $this->_metrologyInstance->addLog('extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+                        $this->_metrologyInstance->addLog('extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
 
@@ -2772,9 +2781,9 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
 
         if ($link->getSigned()
             && (($link->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
-                    && $this->_getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                    && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 )
-                || $this->_getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
         ) {
@@ -2820,7 +2829,7 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
 
         // Si besoin, obfuscation du lien.
         if ($obfuscate
-            && $this->_getOptionAsBoolean('permitObfuscatedLink')
+            && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         ) {
             $newLink->setObfuscate();
         }
@@ -2892,6 +2901,15 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     
             unset($date, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
             return $list;*/
+    }
+
+    public function flatLinkExtractAsArray(string $link): array {
+        $list = array();
+
+        $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
+        $blockLinkInstance->addLink($link);
+
+        return $list;
     }
 
     /**
