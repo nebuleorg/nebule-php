@@ -25,7 +25,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'log';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241222';
+    protected string $MODULE_VERSION = '020241228';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -215,7 +215,7 @@ class ModuleNeblog extends Modules
 
         foreach ($list as $blogNID) {
             $blogInstance = $this->_cacheInstance->newNode($blogNID);
-            $instance = new Library\DisplayObject($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);

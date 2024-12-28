@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Upload;
+use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayItem;
+use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayNotify;
 use Nebule\Library\Metrology;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
@@ -39,7 +43,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241202';
+    const APPLICATION_VERSION = '020241228';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
@@ -158,19 +162,16 @@ class Display extends Displays
                         || $this->_unlocked
                     )
                 ) {
-                    // Vérifie si tous les liens pré-signés peuvent être chargés. Sinon par défaut, c'est juste ceux du maître du code.
                     if (!$this->_unlocked) {
-                        $param = array(
-                            'enableDisplayAlone' => true,
-                            'enableDisplayIcon' => true,
-                            'informationType' => 'warn',
-                            'displayRatio' => 'short',
-                        );
-                        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::info_OnlySignedLinks', $param);
-                        } else {
-                            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::info_OnlyLinksFromCodeMaster', $param);
-                        }
+                        $instanceMessage = new DisplayInformation($this->_applicationInstance);
+                        $instanceMessage->setType(DisplayItemIconMessage::TYPE_WARN);
+                        $instanceMessage->setDisplayAlone(true);
+                        $instanceMessage->setRatio(DisplayItem::RATIO_SHORT);
+                        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink'))
+                            $instanceMessage->setMessage('::::info_OnlySignedLinks');
+                        else
+                            $instanceMessage->setMessage('::::info_OnlyLinksFromCodeMaster');
+                        $instanceMessage->display();
                     }
                     ?>
 
@@ -208,8 +209,8 @@ class Display extends Displays
                         <h1>Upload result</h1>
                         <div class="result">
                             <?php
-                            $this->_actionInstance->genericActions();
-                            $this->_actionInstance->specialActions();
+                            //$this->_actionInstance->genericActions();
+                            //$this->_actionInstance->specialActions();
 
                             ?>
 
@@ -217,13 +218,40 @@ class Display extends Displays
                     </div>
                     <?php
                 } else {
-                    $param = array(
-                        'enableDisplayAlone' => true,
-                        'enableDisplayIcon' => true,
-                        'informationType' => 'error',
-                        'displayRatio' => 'short',
-                    );
-                    echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+                    $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+
+                    foreach (array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitPublicUploadLink', 'permitPublicUploadCodeAuthoritiesLink') as $option) {
+                        $variable = "instanceMessage$option";
+                        $$variable = new DisplayInformation($this->_applicationInstance);
+                        if ($this->_configurationInstance->getOptionAsBoolean($option)) {
+                            $value = 'true';
+                            $$variable->setType(DisplayItemIconMessage::TYPE_OK);
+                        } else {
+                            $value = 'false';
+                            $$variable->setType(DisplayItemIconMessage::TYPE_ERROR);
+                        }
+                        $$variable->setMessage("Option $option=" . $value);
+                        $instanceList->addItem($$variable);
+                    }
+
+                    $instanceMessageUnlock = new DisplayInformation($this->_applicationInstance);
+                        if ($this->_configurationInstance->getOptionAsBoolean($option)) {
+                            $value = 'true';
+                            $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_OK);
+                        } else {
+                            $value = 'false';
+                            $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_ERROR);
+                        }
+                    $instanceMessageUnlock->setMessage('Entity unlocked : ' . $value);
+                    $instanceList->addItem($instanceMessageUnlock);
+
+                    $instanceMessageError = new DisplayInformation($this->_applicationInstance);
+                    $instanceMessageError->setMessage('::::err_NotPermit');
+                    $instanceMessageError->setType(DisplayItemIconMessage::TYPE_ERROR);
+                    $instanceList->addItem($instanceMessageError);
+
+                    $instanceList->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceList->display();
                 }
                 ?>
             </div>
@@ -329,7 +357,7 @@ class Translate extends Translates
             '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
             '::::info_OnlySignedLinks' => 'Uniquement des liens signés !',
             '::::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::err_NotPermit' => 'Non autorisé !',
             '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
             '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
             '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
@@ -354,7 +382,7 @@ class Translate extends Translates
             '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
             '::::info_OnlySignedLinks' => 'Only signed links!',
             '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::err_NotPermit' => 'Not authorized!',
             '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
             '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
             '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
@@ -379,7 +407,7 @@ class Translate extends Translates
             '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
             '::::info_OnlySignedLinks' => 'Only signed links!',
             '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            '::::err_NotPermit' => 'Non autorisé sur ce serveur !',
+            '::::err_NotPermit' => 'Not authorized!',
             '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
             '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
             '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
