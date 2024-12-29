@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020241028
+# Version 020241229
 
 echo ' > start'
 
@@ -69,6 +69,7 @@ function work_full_reinit()
   cat "${WORKSPACE}/nebule.env" > c
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' c
   sed -i 's/^#hostURL = .*$/hostURL = bachue.developpement.nebule.org/' c
+  sed -i 's/^#permitUploadLink = .*$/permitUploadLink = true/' c
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' c
   sed -i 's/^#logsLevel = .*$/logsLevel = DEVELOP/' c
   sed -i 's/^#permitInstanceEntityAsAuthority = .*$/permitInstanceEntityAsAuthority = true/' c

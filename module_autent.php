@@ -29,7 +29,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'desc';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241211';
+    protected string $MODULE_VERSION = '020241229';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -134,7 +134,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
-        $this->_displayAddButton($instanceList, $title, $type, $urlLink);
+        $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->display();
     }
@@ -228,12 +228,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link): void {
+    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
         $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
         $instance->setType($type);
         $instance->setRatio(DisplayItem::RATIO_SHORT);
         $instance->setLink($link);
+        if ($title != '')
+            $instance->setIconText($title);
         $instanceList->addItem($instance);
     }
 

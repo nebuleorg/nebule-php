@@ -224,30 +224,32 @@ class Display extends Displays
                         $variable = "instanceMessage$option";
                         $$variable = new DisplayInformation($this->_applicationInstance);
                         if ($this->_configurationInstance->getOptionAsBoolean($option)) {
-                            $value = 'true';
+                            $$variable->setMessage("$option<br />true");
                             $$variable->setType(DisplayItemIconMessage::TYPE_OK);
                         } else {
-                            $value = 'false';
+                            $$variable->setMessage("$option<br />false");
                             $$variable->setType(DisplayItemIconMessage::TYPE_ERROR);
+                            if ($option == 'permitPublicUploadLink' || $option == 'permitPublicUploadCodeAuthoritiesLink')
+                                $$variable->setType(DisplayItemIconMessage::TYPE_WARN);
                         }
-                        $$variable->setMessage("Option $option=" . $value);
+                        $$variable->setIconText('Option');
                         $instanceList->addItem($$variable);
                     }
 
                     $instanceMessageUnlock = new DisplayInformation($this->_applicationInstance);
-                        if ($this->_configurationInstance->getOptionAsBoolean($option)) {
-                            $value = 'true';
+                        if ($this->_unlocked) {
+                            $instanceMessageUnlock->setMessage('Entity unlocked');
                             $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_OK);
                         } else {
-                            $value = 'false';
+                            $instanceMessageUnlock->setMessage('Entity locked');
                             $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_ERROR);
                         }
-                    $instanceMessageUnlock->setMessage('Entity unlocked : ' . $value);
                     $instanceList->addItem($instanceMessageUnlock);
 
                     $instanceMessageError = new DisplayInformation($this->_applicationInstance);
                     $instanceMessageError->setMessage('::::err_NotPermit');
                     $instanceMessageError->setType(DisplayItemIconMessage::TYPE_ERROR);
+                    $instanceMessageError->setIconText('Final result of conditions');
                     $instanceList->addItem($instanceMessageError);
 
                     $instanceList->setRatio(DisplayItem::RATIO_SHORT);

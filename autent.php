@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241211';
+    const APPLICATION_VERSION = '020241229';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2024';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
@@ -289,6 +289,7 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            ':::connexion' => 'Connexion',
             ':::login' => 'Se connecter',
             ':::logout' => 'Se déconnecter',
             ':::return' => "Revenir à l'application",
@@ -311,6 +312,7 @@ class Translate extends Translates
             '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'en-en' => [
+            ':::connexion' => 'Connection',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
             ':::return' => 'Return to application',
@@ -333,6 +335,7 @@ class Translate extends Translates
             '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'es-co' => [
+            ':::connexion' => 'Connection',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
             ':::return' => 'Return to application',

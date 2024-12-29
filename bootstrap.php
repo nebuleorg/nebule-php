@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241222';
+const BOOTSTRAP_VERSION = '020241229';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -79,8 +79,13 @@ ob_start();
  */
 
 // Logs setting and initializing.
-/** @noinspection PhpUnusedLocalVariableInspection */
-$loggerSessionID = bin2hex(openssl_random_pseudo_bytes(6, $false));
+try {
+    /** @noinspection PhpUnusedLocalVariableInspection */
+    $loggerSessionID = bin2hex(random_bytes(6));
+} catch (\Exception $e) {
+    /** @noinspection PhpUnusedLocalVariableInspection */
+    $loggerSessionID = '0123456789ab';
+}
 $metrologyStartTime = (float)microtime(true);
 $permitLogsOnDebugFile = false;
 
@@ -321,7 +326,7 @@ const LIB_NID_MAX_HASH_SIZE = 8192;
 const LIB_NID_MIN_ALGO_SIZE = 2;
 const LIB_NID_MAX_ALGO_SIZE = 12;
 const LIB_FIRST_GENERATED_NAME_SIZE = 6;
-const LIB_FIRST_GENERATED_PASSWORD_SIZE = 14;
+const LIB_FIRST_GENERATED_PASSWORD_SIZE = 16;
 const LIB_FIRST_RELOAD_DELAY = 3000;
 const LIB_FIRST_LOCALISATIONS = array(
     'http://puppetmaster.nebule.org',
@@ -6943,11 +6948,13 @@ function bootstrap_firstDisplay9NeededObjects(): bool
     return $ok;
 }
 
-/**
- * Crée le fichier des options par défaut.
- *
- * @return bool
- */
+    /**
+     * Crée le fichier des options par défaut.
+     *
+     * @return bool
+     * @throws RandomException
+     * @throws RandomException
+     */
 function bootstrap_firstDisplay10LocaleEntity(): bool
 {
     global $nebuleInstance,
@@ -6966,8 +6973,15 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
 
             // Generate new password for new local entity.
             $nebulePasswordEntity = '';
-            $newPasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
-            $nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $newPasswd);
+            try {
+                #$strong = true;
+                #$newPasswd = openssl_random_pseudo_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20, $strong);
+                $newPasswd = random_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
+            } catch (\Exception $e) {
+                $newPasswd = 'ERROR GEN RANDOM ';
+            }
+            #$nebulePasswordEntity .= preg_replace('/[^[:print:]]/', '', $newPasswd);
+            $nebulePasswordEntity .= preg_replace('/[^a-zA-Z0-9,;:*&#+=_-]/', '', $newPasswd);
             $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
             /** @noinspection PhpUnusedLocalVariableInspection */
             $newPasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
@@ -7000,7 +7014,7 @@ function bootstrap_firstDisplay10LocaleEntity(): bool
                     $name .= $genname[$i];
                     // Insertion de voyelles.
                     if (($i % 3) == 0) {
-                        $car = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 14;
+                        $car = hexdec(bin2hex(random_bytes(1))) % 14;
                         switch ($car) {
                             case 0 :
                             case 6 :

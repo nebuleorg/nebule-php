@@ -5414,7 +5414,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $this->displayInlineOKFace();
                 else
                     $this->displayInlineErrorFace();
-                $this->displayInlineObjectColor($array['action']);
+                $instance = $this->_cacheInstance->newNode($array['action']);
+                $this->displayInlineObjectColor($instance);
                 break;
             case 'delobj' :
                 $this->displayInlineIconFace('DEFAULT_ICON_LD');
@@ -5422,7 +5423,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $this->displayInlineOKFace();
                 else
                     $this->displayInlineErrorFace();
-                $this->displayInlineObjectColor($array['action']);
+                $instance = $this->_cacheInstance->newNode($array['action']);
+                $this->displayInlineObjectColor($instance);
                 break;
             case 'addent' :
                 $this->displayInlineIconFace('DEFAULT_ICON_ADDENT');
