@@ -145,7 +145,7 @@ abstract class Actions extends Functions
     public function genericActions(): void {
         $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '84b627f1');
 
-        if (!$this->_ticketingInstance->checkActionTicket() || $this->_unlocked)
+        if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
             return;
 
         $this->_extractActionObfuscateLink();
@@ -282,7 +282,7 @@ abstract class Actions extends Functions
 
     public function modulesActions():void {
         $this->_metrologyInstance->addLog('modules actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7e8844dc');
-        if (!$this->_ticketingInstance->checkActionTicket() || $this->_unlocked)
+        if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
             return;
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
 $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . ' / ' . $this->_displayInstance->getCurrentDisplayMode(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');

@@ -42,23 +42,30 @@ class Ticketing extends Functions
     private function _findActionTicket(): void
     {
         $ticket = '0';
-        // Lit et nettoie le contenu de la variable GET.
-        $arg_get = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        // Lit et nettoie le contenu de la variable POST.
-        $arg_post = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        try {
+            $arg_get = (string)filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
+        } catch (\Exception $e) {
+            $arg_get = '';
+        }
+        $arg_get = trim($arg_get);
+        try {
+            $arg_post = (string)filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
+        } catch (\Exception $e) {
+            $arg_post = '';
+        }
+        $arg_post = trim($arg_post);
 
         // Vérifie les variables.
         if ($arg_get != ''
             && strlen($arg_get) >= self::TICKET_SIZE
             && ctype_xdigit($arg_get)
-        ) {
+        )
             $ticket = $arg_get;
-        } elseif ($arg_post != ''
+        elseif ($arg_post != ''
             && strlen($arg_post) >= self::TICKET_SIZE
             && ctype_xdigit($arg_post)
-        ) {
+        )
             $ticket = $arg_post;
-        }
         unset($arg_get, $arg_post);
 
         // Vérifie le ticket.
@@ -66,14 +73,14 @@ class Ticketing extends Functions
         if ($ticket == '0') {
             // Le ticket est null, aucun ticket trouvé en argument.
             // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: none', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd396f0a9'); // Log
+            $this->_metrologyInstance->addLog('check ticket: none', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd396f0a9');
             $this->_validTicket = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
             && $_SESSION['Tickets'][$ticket] !== true
         ) {
             // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
             // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd516f0d4'); // Log
+            $this->_metrologyInstance->addLog('check ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd516f0d4');
             $this->_validTicket = false;
             $_SESSION['Ticket'][$ticket] = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
@@ -82,14 +89,14 @@ class Ticketing extends Functions
             // Le ticket est connu et n'est pas utilisé, c'est bon.
             // Il est marqué maintenant comme utilisé.
             // Les actions peuvent être réalisées.
-            $this->_metrologyInstance->addLog('Ticket: valid ' . $ticket, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7083b07d'); // Log
+            $this->_metrologyInstance->addLog('check ticket: valid ' . $ticket, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7083b07d');
             $this->_validTicket = true;
             $_SESSION['Tickets'][$ticket] = false;
         } else {
             // Le ticket est inconnu.
             // Pas de mémorisation.
             // Aucune action ne doit être réalisée.
-            $this->_metrologyInstance->addLog('Ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b221e760'); // Log
+            $this->_metrologyInstance->addLog('check ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b221e760');
             $this->_validTicket = false;
         }
         session_write_close();
@@ -126,8 +133,11 @@ class Ticketing extends Functions
      */
     public function getActionTicketValue(): string
     {
-        $data = $this->_nebuleInstance->getCryptoInstance()->getRandom(self::TICKET_SIZE, Crypto::RANDOM_PSEUDO);
-        $ticket = $this->_nebuleInstance->getCryptoInstance()->hash($data);
+        //$data = $this->_cryptoInstance->getRandom(self::TICKET_SIZE, Crypto::RANDOM_PSEUDO);
+        $data = $this->_cryptoInstance->getRandom(self::TICKET_SIZE / 8, Crypto::RANDOM_PSEUDO);
+        //$ticket = $this->_cryptoInstance->hash($data);
+        $ticket = bin2hex($data);
+        $this->_metrologyInstance->addLog('new ticket = ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8957de86');
         session_start();
         $_SESSION['Tickets'][$ticket] = true;
         session_write_close();

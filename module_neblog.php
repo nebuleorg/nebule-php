@@ -245,7 +245,7 @@ class ModuleNeblog extends Modules
             <div>
                 <form enctype="multipart/form-data" method="post"
                       action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[1]
-                          . '&' . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
                     <label>
                         <input type="text" class="newblog"
                                name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
