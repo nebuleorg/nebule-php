@@ -24,92 +24,70 @@ class Ticketing extends Functions
     protected function _initialisation(): void
     {
         $this->_findActionTicket();
-        //$this->_metrologyInstance->addLog('instancing class Ticketing', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e1e0a7f3');
     }
 
 
 
     /**
-     * Lit le ticket pour les actions et le valide si il est connu et non utilisé.
-     * Le ticket reconnu est marqué dans la liste des ticket afin d'interdire le rejeu.
-     * Le ticket inconnu n'est pas marqué afin d'empêcher une attaque par remplissage.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
+     * Extract ticket from URL and check validity.
      *
      * @return void
      */
     private function _findActionTicket(): void
     {
-        $ticket = '0';
+        $ticket = '';
         try {
             $arg_get = (string)filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
+            $arg_get = trim($arg_get);
         } catch (\Exception $e) {
             $arg_get = '';
         }
-        $arg_get = trim($arg_get);
         try {
             $arg_post = (string)filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
+            $arg_post = trim($arg_post);
         } catch (\Exception $e) {
             $arg_post = '';
         }
-        $arg_post = trim($arg_post);
 
-        // Vérifie les variables.
-        if ($arg_get != ''
-            && strlen($arg_get) >= self::TICKET_SIZE
-            && ctype_xdigit($arg_get)
+        if ($arg_get != '' && strlen($arg_get) >= self::TICKET_SIZE && ctype_xdigit($arg_get)
         )
             $ticket = $arg_get;
-        elseif ($arg_post != ''
-            && strlen($arg_post) >= self::TICKET_SIZE
-            && ctype_xdigit($arg_post)
+        elseif ($arg_post != '' && strlen($arg_post) >= self::TICKET_SIZE && ctype_xdigit($arg_post)
         )
             $ticket = $arg_post;
-        unset($arg_get, $arg_post);
 
-        // Vérifie le ticket.
-        session_start();
-        if ($ticket == '0') {
-            // Le ticket est null, aucun ticket trouvé en argument.
-            // Aucune action ne doit être réalisée.
+        // Verify ticket.
+        if ($ticket == '') {
+            // No ticket or null, no action.
             $this->_metrologyInstance->addLog('check ticket: none', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd396f0a9');
             $this->_validTicket = false;
-        } elseif (isset($_SESSION['Ticket'][$ticket])
+            return;
+        }
+        session_start();
+        if (isset($_SESSION['Ticket'][$ticket])
             && $_SESSION['Tickets'][$ticket] !== true
         ) {
-            // Le ticket est déjà connu mais est déjà utilisé, c'est un rejeu.
-            // Aucune action ne doit être réalisée.
+            // Ticket already used, refused, no action.
             $this->_metrologyInstance->addLog('check ticket: replay ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd516f0d4');
             $this->_validTicket = false;
             $_SESSION['Ticket'][$ticket] = false;
         } elseif (isset($_SESSION['Ticket'][$ticket])
             && $_SESSION['Tickets'][$ticket] === true
         ) {
-            // Le ticket est connu et n'est pas utilisé, c'est bon.
-            // Il est marqué maintenant comme utilisé.
-            // Les actions peuvent être réalisées.
+            // Valid and not already used ticket, accepted.
             $this->_metrologyInstance->addLog('check ticket: valid ' . $ticket, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7083b07d');
             $this->_validTicket = true;
             $_SESSION['Tickets'][$ticket] = false;
         } else {
-            // Le ticket est inconnu.
-            // Pas de mémorisation.
-            // Aucune action ne doit être réalisée.
+            // Unknown ticket, refused, no action.
             $this->_metrologyInstance->addLog('check ticket: error ' . $ticket, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b221e760');
             $this->_validTicket = false;
         }
         session_write_close();
-        unset($ticket);
     }
 
     /**
-     * Génère un ticket pour valider une action et interdire le rejeu d'action.
-     * Stock le ticket pour vérification ultérieure.
-     * Retourne le ticket avec la ligne pour insertion directe dans une url.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
+     * Return a URL part with ticket.
      *
      * @return string
      */
@@ -119,15 +97,8 @@ class Ticketing extends Functions
     }
 
     /**
-     * Génère un ticket pour valider une action et interdire le rejeu d'action.
-     * Stock le ticket pour vérification ultérieure.
-     * Retourne la valeur du ticket.
-     *
-     * La valeur de référence est pseudo-aléatoire mais suffisante pour résister
-     *   à une attaque le temps d'une session utilisateur.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
+     * Return the value of a ticket to validate an action after. The value is stored to be compared after and refuse
+     * unvalidated action or double played ticket. The value must be included on URL (GET or POST).
      *
      * @return string
      */
@@ -137,7 +108,7 @@ class Ticketing extends Functions
         $data = $this->_cryptoInstance->getRandom(self::TICKET_SIZE / 8, Crypto::RANDOM_PSEUDO);
         //$ticket = $this->_cryptoInstance->hash($data);
         $ticket = bin2hex($data);
-        $this->_metrologyInstance->addLog('new ticket = ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8957de86');
+        $this->_metrologyInstance->addLog('new ticket ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8957de86');
         session_start();
         $_SESSION['Tickets'][$ticket] = true;
         session_write_close();
@@ -145,10 +116,7 @@ class Ticketing extends Functions
     }
 
     /**
-     * Vérifie que le ticket est connu, valide et non utilisé.
-     *
-     * Pour que certaines actions puissent être validées, un ticket doit être présenté dans l'URL.
-     * Le ticket doit être connu, valide et non utilisé.
+     * Return if a valide ticket have been detected on URL.
      *
      * @return boolean
      */
