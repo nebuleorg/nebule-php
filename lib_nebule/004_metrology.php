@@ -387,27 +387,30 @@ class Metrology extends Functions
         <?php Displays::docDispTitle(3, 'mjc', 'Liste de Codes'); ?>
         <?php Displays::docDispTitle(4, 'mjcg', 'Codes génériques'); ?>
         <ul>
-            <li><code>100000XX</code> : Code générique de traçage des interruptions du bootstrap avec XX le code associé.</li>
-            <li><code>1111c0de</code> : Code générique de traçage des appels des fonctions.</li>
+            <li><code>100000XX</code> : Error. Code générique de traçage des interruptions du bootstrap avec XX le code associé.</li>
+            <li><code>1111c0de</code> : Function. Code générique de traçage des appels des fonctions.</li>
         </ul>
         <?php Displays::docDispTitle(4, 'mjcc', 'Codes communs'); ?>
         <p>Liste non exhaustive de codes de journalisation :</p>
         <ul>
-            <li><code>76941959</code> : Démarrage du bootstrap. Info.</li>
-            <li><code>50615f80</code> : Création du fichier de débug. Info.</li>
-            <li><code>41ba02a9</code> : Erreur lors de l'initialisation de l'instance de l'application par le bootstrap. Error.</li>
-            <li><code>d121af4c</code> : Erreur lors de l'initialisation de l'instance de traduction de l'application par le bootstrap. Error.</li>
-            <li><code>4bb6af65</code> : Erreur lors de l'initialisation de l'instance d'affichage de l'application par le bootstrap. Error.</li>
-            <li><code>308b8a96</code> : Erreur lors de l'initialisation de l'instance des actions de l'application par le bootstrap. Error.</li>
+            <li><code>76941959</code> : Info. Démarrage du bootstrap.</li>
+            <li><code>50615f80</code> : Info. Création du fichier de débug.</li>
+            <li><code>41ba02a9</code> : Error. Erreur lors de l'initialisation de l'instance de l'application par le bootstrap.</li>
+            <li><code>d121af4c</code> : Error. Erreur lors de l'initialisation de l'instance de traduction de l'application par le bootstrap.</li>
+            <li><code>4bb6af65</code> : Error. Erreur lors de l'initialisation de l'instance d'affichage de l'application par le bootstrap.</li>
+            <li><code>308b8a96</code> : Error. Erreur lors de l'initialisation de l'instance des actions de l'application par le bootstrap.</li>
             <li style="color: red; font-weight: bold">A compléter...</li>
         </ul>
         <?php Displays::docDispTitle(4, 'mjct', 'Codes ticketing'); ?>
         <ul>
-            <li><code>d396f0a9</code> : Ticket vide. Debug.</li>
-            <li><code>d516f0d4</code> : Ticket déjà utilisé, tentative de rejeu de ticket. Error.</li>
-            <li><code>7083b07d</code> : Ticket valide. Audit.</li>
-            <li><code>b221e760</code> : Ticket inconnu. Error.</li>
-            <li><code>8957de86</code> : Valeur du nouveau ticket généré. Debug.</li>
+            <li><code>d396f0a9</code> : Debug. Ticket vide.</li>
+            <li><code>d516f0d4</code> : Error. Ticket déjà utilisé, tentative de rejeu de ticket.</li>
+            <li><code>7083b07d</code> : Audit. Ticket valide.</li>
+            <li><code>b221e760</code> : Error. Ticket inconnu.</li>
+            <li><code>8957de86</code> : Debug. Valeur du nouveau ticket généré.</li>
+            <li><code>d767b2ca</code> : Debug. Option permitActionWithoutTicket=true ticket always valid.</li>
+            <li><code>80fa0154</code> : Error. Cannot get ticket from GET.</li>
+            <li><code>65b5e0cc</code> : Error. Cannot get ticket from POST.</li>
         </ul>
 
         <?php

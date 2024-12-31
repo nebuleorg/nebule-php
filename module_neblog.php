@@ -22,7 +22,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::neblog:module:objects:ModuleName';
     protected string $MODULE_MENU_NAME = '::neblog:module:objects:MenuName';
-    protected string $MODULE_COMMAND_NAME = 'log';
+    protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
     protected string $MODULE_VERSION = '020241228';
@@ -322,40 +322,50 @@ class ModuleNeblog extends Modules
     const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
     private string $_actionAddBlogName = '';
     private string $_actionAddBlogTitle = '';
-    private bool $_actionChangeBlog = false;
 
     public function actions(): void
     {
         $this->_extractActionAddBlog();
-        if ($this->_actionChangeBlog)
+        if ($this->_actionAddBlogName != '' && $this->_actionAddBlogTitle != '')
             $this->_actionAddBlog();
     }
 
     private function _extractActionAddBlog(): void
     {
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
-            $arg_name = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_NAME, FILTER_SANITIZE_STRING));
-            $arg_title = trim(filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_TITLE, FILTER_SANITIZE_STRING));
+            try {
+                $arg_name = (string)filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_NAME, FILTER_SANITIZE_STRING | FILTER_NULL_ON_FAILURE);
+                $arg_name = trim($arg_name);
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error reading blog name on POST '
+                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cb392f6b');
+                $arg_name = '';
+            }
+            try {
+                $arg_title = (string)filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_TITLE, FILTER_SANITIZE_STRING | FILTER_NULL_ON_FAILURE);
+                $arg_name = trim($arg_title);
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error reading blog title on POST '
+                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '65c3ec6b');
+                $arg_title = '';
+            }
+$this->_metrologyInstance->addLog('MARK arg_name=' . $arg_name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('MARK arg_title=' . $arg_title, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             if ($arg_name != '') {
                 $this->_actionAddBlogName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
             }
-            if (Node::checkNID($arg_title)) {
+            if ($arg_title != '') {
                 $this->_actionAddBlogTitle = $arg_title;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
-            }
-
-            if ($this->_actionAddBlogName != ''
-                && $this->_actionAddBlogTitle != ''
-            ) {
-                $this->_actionChangeBlog = true;
             }
         }
     }

@@ -87,7 +87,7 @@ class Application extends Applications
  */
 class Display extends Displays
 {
-    const DEFAULT_DISPLAY_MODE = 'log';
+    const DEFAULT_DISPLAY_MODE = 'blog';
     const DEFAULT_DISPLAY_VIEW = 'blog';
     const DEFAULT_LINK_COMMAND = 'lnk';
     const DEFAULT_APPLICATION_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9

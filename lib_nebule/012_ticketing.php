@@ -35,17 +35,32 @@ class Ticketing extends Functions
      */
     private function _findActionTicket(): void
     {
+        $this->_metrologyInstance->addLog('find ticket', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitActionWithoutTicket')) {
+            $this->_metrologyInstance->addLog('check ticket: permitActionWithoutTicket=true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd767b2ca');
+            $this->_validTicket = true;
+            return;
+        }
+
         $ticket = '';
         try {
             $arg_get = (string)filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
             $arg_get = trim($arg_get);
         } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error reading ticket on GET '
+                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '80fa0154');
             $arg_get = '';
         }
         try {
             $arg_post = (string)filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
             $arg_post = trim($arg_post);
         } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error reading ticket on POST '
+                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '65b5e0cc');
             $arg_post = '';
         }
 
@@ -104,9 +119,8 @@ class Ticketing extends Functions
      */
     public function getActionTicketValue(): string
     {
-        //$data = $this->_cryptoInstance->getRandom(self::TICKET_SIZE, Crypto::RANDOM_PSEUDO);
+        $this->_metrologyInstance->addLog('get ticket', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $data = $this->_cryptoInstance->getRandom(self::TICKET_SIZE / 8, Crypto::RANDOM_PSEUDO);
-        //$ticket = $this->_cryptoInstance->hash($data);
         $ticket = bin2hex($data);
         $this->_metrologyInstance->addLog('new ticket ' . $ticket, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8957de86');
         session_start();

@@ -64,6 +64,7 @@ class Configuration extends Functions
         'permitApplicationModules',
         'permitApplicationModulesExternal',
         'permitApplicationModulesTranslate',
+        'permitActionWithoutTicket',
         'codeBranch',
         'logsLevel',
         'modeRescue',
@@ -172,6 +173,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'Applications',
         'permitApplicationModulesExternal' => 'Applications',
         'permitApplicationModulesTranslate' => 'Applications',
+        'permitActionWithoutTicket' => 'Global',
         'codeBranch' => 'Global',
         'logsLevel' => 'Logs',
         'modeRescue' => 'Global',
@@ -264,6 +266,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'boolean',
         'permitApplicationModulesExternal' => 'boolean',
         'permitApplicationModulesTranslate' => 'boolean',
+        'permitActionWithoutTicket' => 'boolean',
         'codeBranch' => 'string',
         'logsLevel' => 'string',
         'modeRescue' => 'boolean',
@@ -356,6 +359,7 @@ class Configuration extends Functions
         'permitApplicationModules' => false,
         'permitApplicationModulesExternal' => false,
         'permitApplicationModulesTranslate' => false,
+        'permitActionWithoutTicket' => false,
         'codeBranch' => false,
         'logsLevel' => false,
         'modeRescue' => false,
@@ -448,6 +452,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'true',
         'permitApplicationModulesExternal' => 'false',
         'permitApplicationModulesTranslate' => 'true',
+        'permitActionWithoutTicket' => 'false',
         'codeBranch' => 'develop',
         'logsLevel' => 'NORMAL',
         'modeRescue' => 'false',
@@ -540,6 +545,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'careful',
         'permitApplicationModulesExternal' => 'critical',
         'permitApplicationModulesTranslate' => 'careful',
+        'permitActionWithoutTicket' => 'critical',
         'codeBranch' => 'careful',
         'logsLevel' => 'useful',
         'modeRescue' => 'critical',
@@ -621,6 +627,7 @@ class Configuration extends Functions
         'permitRecoveryRemoveEntity' => 'An entity can remove shared protection to recovery entity. By default, it is not permitted.',
         'permitInstanceEntityAsRecovery' => 'Declare instance entity of this server as recovery entity.',
         'permitDefaultEntityAsRecovery' => 'Declare default entity on this server as recovery entity.',
+        'permitActionWithoutTicket' => 'An action do not need valid ticket.',
         'permitAddLinkToSigner' => 'Todo description...',
         'permitListOtherHash' => 'Todo description...',
         'permitLocalisationStats' => 'Todo description...',
@@ -1311,7 +1318,7 @@ class Configuration extends Functions
     public function checkBooleanOptions(array $list): bool
     {
         if (sizeof($list) == 0) {
-            $this->_metrologyInstance->addLog('empty list of options', Metrology::LOG_LEVEL_NORMAL, __METHOD__,'558f764f');
+            $this->_metrologyInstance->addLog('empty list of options', Metrology::LOG_LEVEL_ERROR, __METHOD__,'558f764f');
             return false;
         }
         foreach ($list as $name)
@@ -1322,7 +1329,7 @@ class Configuration extends Functions
                 || !$this->getOptionAsBoolean($name)
             )
             {
-                $this->_metrologyInstance->addLog('not permitted with option=' . $name . ' on list', Metrology::LOG_LEVEL_NORMAL, __METHOD__,'8318122c');
+                $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__,'8318122c');
                 return false;
             }
         }

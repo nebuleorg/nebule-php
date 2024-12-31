@@ -281,11 +281,10 @@ abstract class Actions extends Functions
     public function applicationActions():void {}
 
     public function modulesActions():void {
-        $this->_metrologyInstance->addLog('modules actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7e8844dc');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('call modules actions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
             return;
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-$this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . ' / ' . $this->_displayInstance->getCurrentDisplayMode(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode()) {
                 try {
                     $this->_metrologyInstance->addLog('actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
@@ -311,9 +310,10 @@ $this->_metrologyInstance->addLog('MARK module ' . $module->getCommandName() . '
     }
 
     const GROUP_ACTIONS_PERMIT = array(
+        'GroupCreateObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateLink' => ['unlocked','permitWrite','permitCreateLink'],
         'GroupDeleteObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
         'GroupProtectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'GroupCreateLink' => ['unlocked','permitCreateLink'],
         'GroupUnprotectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
         'GroupShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
         'GroupShareProtectObjectToGroupOpened' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
