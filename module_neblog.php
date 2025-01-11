@@ -25,13 +25,15 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241228';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     protected string $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
 
+    const COMMAND_ACTION_NEW_BLOG_NAME = 'actionnewblogname';
+    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actionnewblogtitle';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
     const RID_BLOG_ITEM = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
 
@@ -147,17 +149,17 @@ class ModuleNeblog extends Modules
     {
         /*?> FIXME
 
-        .sylabeModuleObjectsDescList1 { padding:5px; background:rgba(255,255,255,0.5); background-origin:border-box; color:#000000; clear:both; }
-        .sylabeModuleObjectsDescList2 { padding:5px; background:rgba(230,230,230,0.5); background-origin:border-box; color:#000000; clear:both; }
-        .sylabeModuleObjectsDescError { padding:5px; background:rgba(0,0,0,0.3); background-origin:border-box; clear:both; }
-        .sylabeModuleObjectsDescError .sylabeModuleObjectsDescAttrib { font-style:italic; color:#202020; }
-        .sylabeModuleObjectsDescIcon { float:left; margin-right:5px; }
-        .sylabeModuleObjectsDescContent { min-width:300px; }
-        .sylabeModuleObjectsDescDate, .sylabeModuleObjectsDescSigner { float:right; margin-left:10px; }
-        .sylabeModuleObjectsDescSigner a { color:#000000; }
-        .sylabeModuleObjectsDescValue { font-weight:bold; }
-        .sylabeModuleObjectsDescEmotion { font-weight:bold; }
-        .sylabeModuleObjectsDescEmotion img { height:16px; width:16px; }
+        .neblogModuleObjectsDescList1 { padding:5px; background:rgba(255,255,255,0.5); background-origin:border-box; color:#000000; clear:both; }
+        .neblogModuleObjectsDescList2 { padding:5px; background:rgba(230,230,230,0.5); background-origin:border-box; color:#000000; clear:both; }
+        .neblogModuleObjectsDescError { padding:5px; background:rgba(0,0,0,0.3); background-origin:border-box; clear:both; }
+        .neblogModuleObjectsDescError .neblogModuleObjectsDescAttrib { font-style:italic; color:#202020; }
+        .neblogModuleObjectsDescIcon { float:left; margin-right:5px; }
+        .neblogModuleObjectsDescContent { min-width:300px; }
+        .neblogModuleObjectsDescDate, .neblogModuleObjectsDescSigner { float:right; margin-left:10px; }
+        .neblogModuleObjectsDescSigner a { color:#000000; }
+        .neblogModuleObjectsDescValue { font-weight:bold; }
+        .neblogModuleObjectsDescEmotion { font-weight:bold; }
+        .neblogModuleObjectsDescEmotion img { height:16px; width:16px; }
         <?php*/
     }
 
@@ -248,12 +250,12 @@ class ModuleNeblog extends Modules
                           . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
                     <label>
                         <input type="text" class="newblog"
-                               name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
+                               name="<?php echo self::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
                                value="Name"/>
                     </label><br/>
                     <label>
                         <input type="text" class="newblog"
-                               name="<?php echo Action::COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
+                               name="<?php echo self::COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
                                value="Title"/>
                     </label><br/>
                     <input type="submit"
@@ -316,10 +318,7 @@ class ModuleNeblog extends Modules
     }
 
 
-    const DEFAULT_COMMAND_ACTION_NOM = 'actaddnam';
-    const DEFAULT_COMMAND_ACTION_RID = 'actaddnam';
-    const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
-    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
+
     private string $_actionAddBlogName = '';
     private string $_actionAddBlogTitle = '';
 
@@ -332,37 +331,16 @@ class ModuleNeblog extends Modules
 
     private function _extractActionAddBlog(): void
     {
-        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
-        ) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
-            try {
-                $arg_name = (string)filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_NAME, FILTER_SANITIZE_STRING | FILTER_NULL_ON_FAILURE);
-                $arg_name = trim($arg_name);
-            } catch (\Exception $e) {
-                $this->_metrologyInstance->addLog('error reading blog name on POST '
-                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
-                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cb392f6b');
-                $arg_name = '';
-            }
-            try {
-                $arg_title = (string)filter_input(INPUT_POST, self::COMMAND_ACTION_NEW_BLOG_TITLE, FILTER_SANITIZE_STRING | FILTER_NULL_ON_FAILURE);
-                $arg_name = trim($arg_title);
-            } catch (\Exception $e) {
-                $this->_metrologyInstance->addLog('error reading blog title on POST '
-                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
-                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '65c3ec6b');
-                $arg_title = '';
-            }
-$this->_metrologyInstance->addLog('MARK arg_name=' . $arg_name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('MARK arg_title=' . $arg_title, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
+            $arg_name = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_NAME);
             if ($arg_name != '') {
                 $this->_actionAddBlogName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
             }
+
+            $arg_title = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_TITLE);
             if ($arg_title != '') {
                 $this->_actionAddBlogTitle = $arg_title;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
@@ -374,11 +352,7 @@ $this->_metrologyInstance->addLog('MARK arg_title=' . $arg_title, Metrology::LOG
     {
         global $bootstrapApplicationIID;
 
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_unlocked
-        ) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
 
             // Crée l'objet de la référence de l'application.

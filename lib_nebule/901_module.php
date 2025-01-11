@@ -19,9 +19,9 @@ abstract class Modules extends Functions implements ModuleInterface
     protected string $MODULE_COMMAND_NAME = 'none';
     protected string $MODULE_DEFAULT_VIEW = 'disp';
     protected string $MODULE_DESCRIPTION = 'Description';
-    protected string $MODULE_VERSION = '020240721';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 sylabe 2013-2024';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
     protected string $MODULE_HELP = 'Help';
     protected string $MODULE_INTERFACE = '2.0';

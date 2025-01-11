@@ -1312,6 +1312,8 @@ class Configuration extends Functions
 
     /**
      * Check a list of boolean options. If one is false, return false.
+     * Except for unlocked that check the current entity state.
+     * Except for ticket that check a valid ticket.
      * @param array $list
      * @return bool
      */
@@ -1323,12 +1325,20 @@ class Configuration extends Functions
         }
         foreach ($list as $name)
         {
-            if (($name == 'unlocked' && !$this->_entitiesInstance->getCurrentEntityIsUnlocked())
-                || !isset(self::OPTIONS_TYPE[$name])
+            if ($name == 'unlocked') {
+                if (!$this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+                    $this->_metrologyInstance->addLog('not permitted with entity locked', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a6c88b6b');
+                    return false;
+                }
+            } elseif ($name == 'ticket') {
+                if (!$this->_ticketingInstance->checkActionTicket()) {
+                    $this->_metrologyInstance->addLog('not permitted with invalid ticket', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ccd082e7');
+                    return false;
+                }
+            } elseif (!isset(self::OPTIONS_TYPE[$name])
                 || self::OPTIONS_TYPE[$name] != 'boolean'
                 || !$this->getOptionAsBoolean($name)
-            )
-            {
+            ) {
                 $this->_metrologyInstance->addLog('not permitted with option=' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__,'8318122c');
                 return false;
             }

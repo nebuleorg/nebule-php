@@ -43,8 +43,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241228';
-    const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
+    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';

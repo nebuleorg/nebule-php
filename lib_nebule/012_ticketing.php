@@ -42,34 +42,9 @@ class Ticketing extends Functions
             return;
         }
 
-        $ticket = '';
-        try {
-            $arg_get = (string)filter_input(INPUT_GET, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            $arg_get = trim($arg_get);
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error reading ticket on GET '
-                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '80fa0154');
-            $arg_get = '';
-        }
-        try {
-            $arg_post = (string)filter_input(INPUT_POST, References::COMMAND_SELECT_TICKET, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            $arg_post = trim($arg_post);
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error reading ticket on POST '
-                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '65b5e0cc');
-            $arg_post = '';
-        }
-
-        if ($arg_get != '' && strlen($arg_get) >= self::TICKET_SIZE && ctype_xdigit($arg_get)
-        )
-            $ticket = $arg_get;
-        elseif ($arg_post != '' && strlen($arg_post) >= self::TICKET_SIZE && ctype_xdigit($arg_post)
-        )
-            $ticket = $arg_post;
+        $ticket = $this->getFilterInput(References::COMMAND_SELECT_TICKET);
+        if (strlen($ticket) < self::TICKET_SIZE || !ctype_xdigit($ticket))
+            $ticket = '';
 
         // Verify ticket.
         if ($ticket == '') {

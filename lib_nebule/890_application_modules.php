@@ -78,14 +78,10 @@ class ApplicationModules
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             $classImplement = class_implements($moduleFullName);
-foreach ($classImplement as $interface)
-    $this->_metrologyInstance->addLog('MARK interface ' . $interface, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement)) {
+            if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement))
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' have translate interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fde052bb');
-            }
-            if (! in_array('Nebule\Library\ModuleInterface', $classImplement)) {
+            if (! in_array('Nebule\Library\ModuleInterface', $classImplement))
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' do not have module interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e242b56a');
-            }
             $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4879c453');
             try {
                 //$instance = new $moduleFullName($this->_applicationInstance);
@@ -457,7 +453,7 @@ foreach ($classImplement as $interface)
             return false;
 
         if ($name == ''
-            || substr($name, 0, 6) != 'Module'
+            || !str_starts_with($name, 'Module')
             || $name == 'Modules'
         )
             return false;

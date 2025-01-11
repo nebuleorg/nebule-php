@@ -49,8 +49,8 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241226';
-    const APPLICATION_LICENCE = 'GNU GPL 2013-2024';
+    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -1905,9 +1905,9 @@ class ModuleHelp extends Modules
     protected string $MODULE_COMMAND_NAME = 'hlp';
     protected string $MODULE_DEFAULT_VIEW = '1st';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:help:ModuleDescription';
-    protected string $MODULE_VERSION = '020230110';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2023';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
     protected string $MODULE_HELP = '::sylabe:module:help:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';

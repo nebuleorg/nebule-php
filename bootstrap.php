@@ -8,8 +8,8 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020241231';
-const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2024';
+const BOOTSTRAP_VERSION = '020250111';
+const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -105,7 +105,10 @@ function log_initDebugFile(): void
 {
     global $metrologyStartTime, $permitLogsOnDebugFile;
 
-    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE))
+    if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE)
+        && !filter_has_var(INPUT_GET, LIB_ARG_INLINE_DISPLAY)
+        && !filter_has_var(INPUT_POST, LIB_ARG_INLINE_DISPLAY)
+    )
         unlink(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE);
 
     if (lib_getOption('permitLogsOnDebugFile'))

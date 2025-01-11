@@ -46,8 +46,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241226';
-    const APPLICATION_LICENCE = 'GNU GPL 2016-2024';
+    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -1799,9 +1799,9 @@ class ModuleHelp extends Modules
     protected string $MODULE_COMMAND_NAME = 'hlp';
     protected string $MODULE_DEFAULT_VIEW = '1st';
     protected string $MODULE_DESCRIPTION = '::messae:module:help:ModuleDescription';
-    protected string $MODULE_VERSION = '020230110';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2016-2020';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2016-2025';
     protected string $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
     protected string $MODULE_HELP = '::messae:module:help:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';

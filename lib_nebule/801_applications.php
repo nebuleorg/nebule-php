@@ -1120,8 +1120,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'share';
     const APPLICATION_SURNAME = 'nebule/share';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020240802';
-    const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
+    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '70428bfe9e818c0140c06fd681a669370158f1290e589594e9397e567b020796cb29.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -1448,54 +1448,54 @@ class Traduction extends Traductions
         <p>Si la bibliothèque ne peut être chargée, quelque soit les arguments passés, le <i>bootstrap</i> renverra
             systématiquement sur la page d'interruption avec une erreur.</p>
         <p>Le résultat est une page contenant en partie centrale, par exemple :</p>
-        <pre>
+        <pre>#1 bootstrap break on
 #1 bootstrap break on
 - [11] user interrupt
-tB=0.0161s
-? Flush PHP session (9ccb83)
+tB=0.0820s
+? Flush PHP session (3d964e)
 
 #2 bootstrap
 bootstrap RID         : fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288
 bootstrap BID         : 81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288
 bootstrap CID         : a9e420daf12bc21278317e180fd51460fa786f275a2923d7a7b0cb0ac9c1ee2f.sha2.256
 bootstrap IID         : 304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e4b3bffb90d47e73832374176.none.288
-bootstrap OID         : d0de067c522905d681cb6095ebad8f1bcea28fa6e0ca03a27ed9fd784d468221.sha2.256 OK
-bootstrap SID         : 61c5907df8b34c33eaa7e3df8c0e6a483f949c7e004b0d192d2756d388d60434.sha2.256
+bootstrap OID         : 37cce34df78966b2c18ca145fd4b8cd085d64887a4c06ca6b46b4abfc603473a.sha2.256 OK
+bootstrap SID         : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
 
 #3 nebule library PP
-library version       : 020231126
-puppetmaster          : 702989efb9cb940605853652992399b077d0c4ee9f5a817387641a14838a77a1.sha2.256
-security authority    : 488f70485b940ed254b05a4f312d948e4ff1d9a3821568e1c5709f51bf1d70b7.sha2.256
-code authority        : 61c5907df8b34c33eaa7e3df8c0e6a483f949c7e004b0d192d2756d388d60434.sha2.256
-directory authority   : af90bfb248ea1338b4c4aee5b2cf07d2479e6351f321760b15440b987ba4e731.sha2.256
-time authority        : 288239c8ba88f43a6581f45e95152f5a4ac3ff560b3162bf97bd614a1c8659cd.sha2.256
-server entity         : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256
+library version       : 020250111
+puppetmaster          : 81b01d19877fcce130914137810101297a03305806212085693db81aac9dc989.sha2.256
+security authority    : 13257cc65415ab642418d086f76db4a32011cf70173e3d77db6db0031191b9fc.sha2.256
+code authority        : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
+directory authority   : 8e3eaf7607bd0c7f355dec8933d69331235c151e144ddb99b91eac5e0bffab22.sha2.256
+time authority        : 037b1c30219d17270402fa1ec8e9a709bf7207adc8cdf941b17f096de1d193ec.sha2.256
+server entity         : 13839ab4e217129b8e0bcc13b21201c4d5e894404aaa9db21b98839d482d60db.sha2.256
 default entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256
 current entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256
 code branch           : 81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288 (develop)
-php version           : found 7.4.33, need >= 7.3.0
+php version           : found 8.2.26, need >= 8.0.0
 
 #4 nebule library POO
-tL=0.0425s
+tL=0.4047s
 library RID           : 780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288
 library IID           : 21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288
-library OID           : 358f523ec5bbc7e2d5cb4d4fb3c83cd2659055c9b0eb8955cdcef88d1cf6491d.sha2.256 version 020231126
-functional level      : found 020231125, need >= 020231125
-library SID           : 61c5907df8b34c33eaa7e3df8c0e6a483f949c7e004b0d192d2756d388d60434.sha2.256
-puppetmaster          : 702989efb9cb940605853652992399b077d0c4ee9f5a817387641a14838a77a1.sha2.256 OK
-security authority    : 488f70485b940ed254b05a4f312d948e4ff1d9a3821568e1c5709f51bf1d70b7.sha2.256 OK
-code authority        : 61c5907df8b34c33eaa7e3df8c0e6a483f949c7e004b0d192d2756d388d60434.sha2.256 OK
-directory authority   : af90bfb248ea1338b4c4aee5b2cf07d2479e6351f321760b15440b987ba4e731.sha2.256 OK
-time authority        : 288239c8ba88f43a6581f45e95152f5a4ac3ff560b3162bf97bd614a1c8659cd.sha2.256 OK
-server entity         : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK (local authority)
-default entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256 OK (local authority)
-current entity        : 5fe528863badf85aceb5337d7cf9f72262a7c5abc501b4f205b68ad179f5f06d.sha2.256 OK (local authority)
-subordination         : cdc0daf378b1a425b5a3be326da558d663b7b2256112eae3dc39d3a41ab9faf3.sha2.256 OK
+library OID           : 8c158d1e16f80cfa7c29726ce26f8a8e21b9a78723c54526f28b95eedc5774d9.sha2.256 version 020250111
+library SID           : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
+functional level      : found 020241123, need >= 020241123
+puppetmaster          : 81b01d19877fcce130914137810101297a03305806212085693db81aac9dc989.sha2.256 OK (global authority)
+security authority    : 13257cc65415ab642418d086f76db4a32011cf70173e3d77db6db0031191b9fc.sha2.256 OK (global authority)
+code authority        : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256 OK (local authority) (global authority)
+directory authority   : 8e3eaf7607bd0c7f355dec8933d69331235c151e144ddb99b91eac5e0bffab22.sha2.256 OK
+time authority        : 037b1c30219d17270402fa1ec8e9a709bf7207adc8cdf941b17f096de1d193ec.sha2.256 OK
+server entity         : aqrobo OK (local authority)
+default entity        : aqrobo OK (local authority)
+current entity        : aqrobo OK (local authority)
+subordination         : 0 OK
 cryptography class    : Nebule\Library\CryptoOpenssl
 cryptography          : hash sha2.256 OK
 cryptography          : symmetric aes.256.ctr OK
 cryptography          : asymmetric rsa.2048 OK
-cryptography          : pseudo-random entropy 7.9127928330703/8 OK
+cryptography          : pseudo-random entropy 7.908364047653/8 OK
 i/o class             : Nebule\Library\io
 i/o                   : Nebule\Library\ioDisk (RW) file://, links OK, objects OK
 i/o                   : Nebule\Library\ioNetworkHTTP (RO) http://code.master.nebule.org, links OK no write., objects OK no write.
@@ -1512,17 +1512,17 @@ social                : Nebule\Library\SocialOnList OK
 social                : Nebule\Library\SocialOffList OK
 social                : Nebule\Library\SocialReputation OK
 social                : Nebule\Library\SocialUnreputation OK
-metrology inputs      : Lr=226+0 Lv=226+0 Or=233+0 Ov=233+0 (PP+POO)
-metrology buffers     : Lc=73 Oc=53 Ec=7 Gc=0 Cc=0 CUc=0 CPc=0 CTc=0 CWc=0
+metrology inputs      : Lr=247+310 Lv=247+0 Or=255+2 Ov=255+2 (PP+POO)
+metrology buffers     : Lc=0 Oc=7 Ec=6 Gc=0 Cc=0 CUc=0 CPc=0 CTc=0 CWc=0
 
 #5 application
 application RID       : 4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288
-application IID       : c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288 load
-application OID       : ecd05f820e0a3fb2acf95c36e04a40e95698ddc168a20bbb8350e4fe53b16738.sha2.256
+application IID       : 1 load
+application OID       : 1
 application SID       :
 
 #6 end bootstrap
-tE=0.0632s
+tE=0.8049s
         </pre>
         <p>Les codes d'interruption :</p>
         <ul>

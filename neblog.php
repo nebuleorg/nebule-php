@@ -51,8 +51,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020241226';
-    const APPLICATION_LICENCE = 'GNU GPL 2024-2024';
+    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -489,12 +489,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 color: #000000;
             }
 
-            .sylabeMenuListContentActionModules {
+            .neblogMenuListContentActionModules {
                 background: rgba(0, 0, 0, 0.5);
                 color: #ffffff;
             }
 
-            .sylabeMenuListContentActionHooks {
+            .neblogMenuListContentActionHooks {
                 background: rgba(255, 255, 255, 0.66);
             }
 
@@ -1142,7 +1142,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
                     $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menuDesc', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['ref'] = Application::APPLICATION_NAME;
-                    $list[$j]['class'] = 'sylabeMenuListContentActionModules';
+                    $list[$j]['class'] = 'neblogMenuListContentActionModules';
                     $j++;
                 }
 
@@ -1168,7 +1168,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
-                            $list[$j]['class'] = 'sylabeMenuListContentActionHooks';
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
                             $j++;
                         }
                     }
@@ -1204,7 +1204,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
-                            $list[$j]['class'] = 'sylabeMenuListContentActionHooks';
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
                             $j++;
                         }
                     }
@@ -1240,7 +1240,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
-                            $list[$j]['class'] = 'sylabeMenuListContentActionHooks';
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
                             $j++;
                         }
                     }
@@ -1278,7 +1278,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
                     $list[$j]['ref'] = $moduleName;
-                    $list[$j]['class'] = 'sylabeMenuListContentActionModules';
+                    $list[$j]['class'] = 'neblogMenuListContentActionModules';
                     $j++;
                 }
             }
@@ -1290,7 +1290,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $list[$j]['htlink'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
         $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::appSwitch', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';
-        $list[$j]['class'] = 'sylabeMenuListContentActionModules';
+        $list[$j]['class'] = 'neblogMenuListContentActionModules';
 
         echo $this->getDisplayMenuList($list, 'Medium');
     }
@@ -1317,7 +1317,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
     private function _displayMetrology(): void
     {
-        if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {
+        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayMetrology')) {
             ?>
 
             <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
@@ -1335,14 +1335,14 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                     echo "<br />\n";
                     // Calcul de temps de chargement de la page - stop
                     $this->_metrologyInstance->addTime();
-                    $sylabeTimeList = $this->_metrologyInstance->getTimeArray();
-                    $sylabe_time_total = 0;
-                    foreach ($sylabeTimeList as $time) {
-                        $sylabe_time_total = $sylabe_time_total + $time;
+                    $neblogTimeList = $this->_metrologyInstance->getTimeArray();
+                    $neblog_time_total = 0;
+                    foreach ($neblogTimeList as $time) {
+                        $neblog_time_total = $neblog_time_total + $time;
                     }
-                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
+                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $neblog_time_total);
                     echo ' (';
-                    foreach ($sylabeTimeList as $time) {
+                    foreach ($neblogTimeList as $time) {
                         echo sprintf(" %1.4fs", $time);
                     }
                     echo " )\n";
@@ -1451,7 +1451,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
-                        if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayUnverifyLargeContent')) {
+                        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayUnverifyLargeContent')) {
                             $msg = $this->_translateInstance->getTranslate('::::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
@@ -1500,7 +1500,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     private function _displayDivOnlineHelp($help)
     {
         // Si authorisé à afficher l'aide.
-        if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayOnlineHelp')) {
+        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
             $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
             $txt = str_replace('&', '&amp;', $txt);

@@ -288,4 +288,43 @@ class Functions
             $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
     }
+
+    public function getFilterInput(string $name, int $flag=0): string {
+        $arg = '';
+        $type = 'POST';
+        try {
+            if (filter_has_var(INPUT_POST, $name)) {
+                $arg = filter_input(INPUT_POST, $name, FILTER_SANITIZE_STRING, $flag);
+                if ($arg === false || $arg === null)
+                    $arg = '';
+                $arg = trim($arg);
+            } else
+                $this->_metrologyInstance->addLog("get input '$name' type $type not present", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd15e6dba');
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog("error reading '$name' on POST "
+                . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '9afa9eda');
+        }
+        if ($arg == '') {
+            $type = 'GET';
+            try {
+                if (filter_has_var(INPUT_POST, $name)) {
+                    $arg = filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING, $flag);
+                    if ($arg === false || $arg === null)
+                        $arg = '';
+                    $arg = trim($arg);
+                } else
+                    $this->_metrologyInstance->addLog("get input '$name' type $type not present", Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3f409bc1');
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog("error reading '$name' on GET "
+                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '40aeb7cd');
+            }
+        }
+        if ($arg != '')
+            $this->_metrologyInstance->addLog("get filtered input '$name' type $type result=$arg", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cf05e78e');
+        return $arg;
+    }
 }

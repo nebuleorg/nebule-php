@@ -446,18 +446,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c5415d94');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        if ($arg == '')
-            try {
-                $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SIGN_LINK1);
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK1_OBFUSCATE);
 
         if ($arg == '')
@@ -502,18 +491,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e1059b93');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        if ($arg == '')
-            try {
-                $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SIGN_LINK2);
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK2_OBFUSCATE);
 
         if ($arg == '')
@@ -531,18 +509,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cc145716');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        if ($arg == '')
-            try {
-                $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SIGN_LINK3);
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SIGN_LINK3_OBFUSCATE);
 
         if ($arg == '')
@@ -562,18 +529,7 @@ abstract class Actions extends Functions
         ) {
             $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0e682f22');
 
-            try {
-                $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-            if ($arg == '')
-                try {
-                    $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-                } catch (\Exception $e) {
-                    $arg = '';
-                }
-            $arg = trim($arg);
+            $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK);
 
             // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
@@ -607,18 +563,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c22677ad');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        if ($arg == '')
-            try {
-                $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK);
 
         if (strlen($arg) != 0)
             $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_DISABLED($arg);
@@ -657,12 +602,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19096242');
 
-        try {
-            $argObject = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $argObject = '';
-        }
-        $argObject = trim($argObject);
+        $argObject = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT, FILTER_FLAG_ENCODE_LOW);
         $argForce = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_FORCE);
         $argObfuscate = filter_has_var(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_OBJECT_OBFUSCATE);
 
@@ -702,12 +642,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd4d5b6f4');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionProtectObjectInstance = $this->_cacheInstance->newNode($arg);
@@ -728,12 +663,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4a15018f');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionUnprotectObjectInstance = $this->_cacheInstance->newNode($arg);
@@ -754,12 +684,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae098953');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToEntity = $arg;
@@ -780,12 +705,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '302775bd');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToGroupOpened = $arg;
@@ -810,12 +730,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c6c42849');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToGroupClosed = $arg;
@@ -840,12 +755,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bf5ed8c7');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionCancelShareProtectObjectToEntity = $arg;
@@ -870,12 +780,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd9e5454c');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_OBJECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionSynchronizeObjectInstance = $this->_cacheInstance->newNode($arg);
@@ -902,12 +807,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2ec437bf');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newEntity($arg);
@@ -958,12 +858,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ec3ab52');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_LINKS, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionSynchronizeObjectLinksInstance = $this->_cacheInstance->newNode($arg);
@@ -992,12 +887,7 @@ abstract class Actions extends Functions
         ) {
             $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2692acb5');
 
-            try {
-                $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $arg = '';
-            }
-            $arg = trim($arg);
+            $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION, FILTER_FLAG_ENCODE_LOW);
 
             if (Node::checkNID($arg))
                 $this->_actionSynchronizeApplicationInstance = $this->_cacheInstance->newNode($arg);
@@ -1051,12 +941,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_NEW_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
         // Extraction de l'URL et stockage pour traitement.
         if ($arg != ''
@@ -1167,12 +1052,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('extract action mark object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_MARK_OBJECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionMarkObject = $arg;
@@ -1189,12 +1069,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('extract action unmark object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionUnmarkObject = $arg;
@@ -1589,24 +1464,9 @@ abstract class Actions extends Functions
 
         // Extraction du lien et stockage pour traitement.
         if ($arg !== false) {
-            // Lit et nettoye le contenu des variables POST.
-            try {
-                $argText = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argText = '';
-            }
-            try {
-                $argName = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argName = '';
-            }
-            $argName = trim($argName);
-            try {
-                $argType = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argType = '';
-            }
-            $argType = trim($argType);
+            $argText = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argType = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Extrait les options de téléchargement.
             $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_TEXT_PROTECT);
@@ -1710,55 +1570,14 @@ abstract class Actions extends Functions
 
         // Si on crée une nouvelle entité.
         if ($this->_actionCreateEntity) {
-            // Lit et nettoye le contenu des variables GET.
-            try {
-                $argPrefix = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argPrefix = '';
-            }
-            $argPrefix = trim($argPrefix);
-            try {
-                $argSuffix = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argSuffix = '';
-            }
-            $argSuffix = trim($argSuffix);
-            try {
-                $argFstnam = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argFstnam = '';
-            }
-            $argFstnam = trim($argFstnam);
-            try {
-                $argNiknam = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argNiknam = '';
-            }
-            $argNiknam = trim($argNiknam);
-            try {
-                $argName = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argName = '';
-            }
-            $argName = trim($argName);
-            try {
-                $argPasswd1 = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argPasswd1 = '';
-            }
-            $argPasswd1 = trim($argPasswd1);
-            try {
-                $argPasswd2 = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argPasswd2 = '';
-            }
-            $argPasswd2 = trim($argPasswd2);
-            try {
-                $argType = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argType = '';
-            }
-            $argType = trim($argType);
+            $argPrefix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argSuffix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argFstnam = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argNiknam = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argPasswd1 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argPasswd2 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argType = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Extrait les options de téléchargement.
             $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
@@ -1955,13 +1774,7 @@ abstract class Actions extends Functions
 
         // Si on crée une nouvelle entité.
         if ($this->_actionCreateGroup) {
-            // Lit et nettoye le contenu des variables GET.
-            try {
-                $argName = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argName = '';
-            }
-            $argName = trim($argName);
+            $argName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Extrait les options de téléchargement.
             $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED);
@@ -2022,12 +1835,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $argDelete = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $argDelete = '';
-        }
-        $argDelete = trim($argDelete);
+        $argDelete = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_DELETE_GROUP, FILTER_FLAG_ENCODE_LOW);
 
         if ($argDelete !== ''
             && strlen($argDelete) >= BlocLink::NID_MIN_HASH_SIZE
@@ -2081,12 +1889,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_TO_GROUP, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionAddToGroup = $arg;
@@ -2110,12 +1913,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionRemoveFromGroup = $arg;
@@ -2139,12 +1937,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_GROUP, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionAddItemToGroup = $arg;
@@ -2167,12 +1960,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionRemoveItemFromGroup = $arg;
@@ -2226,13 +2014,7 @@ abstract class Actions extends Functions
 
         // Si on crée une nouvelle conversation.
         if ($this->_actionCreateConversation) {
-            // Lit et nettoye le contenu des variables GET.
-            try {
-                $argName = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argName = '';
-            }
-            $argName = trim($argName);
+            $argName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // Extrait les options de téléchargement.
             $argCld = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_CONVERSATION_CLOSED);
@@ -2304,12 +2086,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action delete conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $argDelete = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $argDelete = '';
-        }
-        $argDelete = trim($argDelete);
+        $argDelete = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if ($argDelete !== ''
             && strlen($argDelete) >= BlocLink::NID_MIN_HASH_SIZE
@@ -2365,12 +2142,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action add to conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionAddMessageOnConversation = $arg;
@@ -2395,12 +2167,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action remove from conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionRemoveMessageOnConversation = $arg;
@@ -2425,12 +2192,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action add item to conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionAddMemberOnConversation = $arg;
@@ -2455,12 +2217,7 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action remove item from conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $arg = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $arg = '';
-        }
-        $arg = trim($arg);
+        $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
             $this->_actionRemoveMemberOnConversation = $arg;
@@ -2561,31 +2318,15 @@ abstract class Actions extends Functions
 
         $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        try {
-            $argAdd = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-        } catch (\Exception $e) {
-            $argAdd = '';
-        }
-        $argAdd = trim($argAdd);
+        $argAdd = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY, FILTER_FLAG_ENCODE_LOW);
 
         if ($argAdd != '')
             $this->_actionAddProperty = $argAdd;
 
         // Si on crée une nouvelle propriété.
         if ($this->_actionAddProperty != '') {
-            // Extrait les autres variables.
-            try {
-                $argObj = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argObj = '';
-            }
-            $argObj = trim($argObj);
-            try {
-                $argVal = (string)filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_VALUE, FILTER_SANITIZE_STRING | FILTER_NULL_ON_FAILURE);
-            } catch (\Exception $e) {
-                $argVal = '';
-            }
-            $argVal = trim($argVal);
+            $argObj = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBJECT, FILTER_FLAG_ENCODE_LOW);
+            $argVal = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_VALUE);
             $argPrt = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_PROTECTED);
             $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ADD_PROPERTY_OBFUSCATE_LINKS);
 
@@ -2712,22 +2453,23 @@ abstract class Actions extends Functions
             $propertiesList = $instance->getPropertiesList();
             unset($instance);
 
-            foreach ($propertiesList['currency'] as $name => $property) {
+            /*foreach ($propertiesList['currency'] as $name => $property) {
                 // Extrait une valeur.
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE | FILTER_FORCE_ARRAY);
+                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Exception $e) {
                         $valueArray = '';
                     }
+                    $valueArray = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     foreach ($valueArray as $item)
                         $value .= ' ' . trim($item);
                     $this->_actionCreateCurrencyParam[$name] = trim($value);
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateCurrencyParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
+                        $this->_actionCreateCurrencyParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
                     } catch (\Exception $e) {
                         $this->_actionCreateCurrencyParam[$name] = '';
                     }
@@ -2741,7 +2483,7 @@ abstract class Actions extends Functions
                     if ($this->_actionCreateCurrencyParam['Force' . $name])
                         $this->_metrologyInstance->addLog('extract action create currency - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
-            }
+            }*/
         }
     }
     protected function _actionCreateCurrency(): void
@@ -2816,12 +2558,12 @@ abstract class Actions extends Functions
             $propertiesList = $instance->getPropertiesList();
             unset($instance);
 
-            foreach ($propertiesList['tokenpool'] as $name => $property) {
+            /*foreach ($propertiesList['tokenpool'] as $name => $property) {
                 // Extrait une valeur.
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE | FILTER_FORCE_ARRAY);
+                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Exception $e) {
                         $valueArray = '';
                     }
@@ -2831,7 +2573,7 @@ abstract class Actions extends Functions
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateTokenPoolParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE);
+                        $this->_actionCreateTokenPoolParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
                     } catch (\Exception $e) {
                         $this->_actionCreateTokenPoolParam[$name] = '';
                     }
@@ -2845,7 +2587,7 @@ abstract class Actions extends Functions
                     if ($this->_actionCreateTokenPoolParam['Force' . $name])
                         $this->_metrologyInstance->addLog('extract action create token pool - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
-            }
+            }*/
         }
     }
     protected function _actionCreateTokenPool(): void
@@ -2921,12 +2663,12 @@ abstract class Actions extends Functions
             $propertiesList = $instance->getPropertiesList();
             unset($instance);
 
-            foreach ($propertiesList['token'] as $name => $property) {
+            /*foreach ($propertiesList['token'] as $name => $property) {
                 // Extrait une valeur.
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE | FILTER_FORCE_ARRAY);
+                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Exception $e) {
                         $valueArray = '';
                     }
@@ -2936,7 +2678,7 @@ abstract class Actions extends Functions
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateTokensParam[$name] = trim((string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_NULL_ON_FAILURE));
+                        $this->_actionCreateTokensParam[$name] = trim((string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
                     } catch (\Exception $e) {
                         $this->_actionCreateTokensParam[$name] = '';
                     }
@@ -2950,14 +2692,10 @@ abstract class Actions extends Functions
                     if ($this->_actionCreateTokensParam['Force' . $name])
                         $this->_metrologyInstance->addLog('extract action create tokens - f' . $property['shortname'] . ':true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
-            }
+            }*/
 
             // Extrait le nombre de jetons à générer.
-            try {
-                $this->_actionCreateTokensCount = (int)trim((string)filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT, FILTER_SANITIZE_NUMBER_INT | FILTER_NULL_ON_FAILURE));
-            } catch (\Exception $e) {
-                $this->_actionCreateTokensCount = 0;
-            }
+            $this->_actionCreateTokensCount = (int)$this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_TOKENS_COUNT, FILTER_SANITIZE_NUMBER_INT);
         }
     }
     protected function _actionCreateTokens(): void

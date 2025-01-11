@@ -24,16 +24,16 @@ use Nebule\Library\References;
  */
 class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_TYPE = 'Application';
-    protected string $MODULE_NAME = '::sylabe:module:objects:ModuleName';
-    protected string $MODULE_MENU_NAME = '::sylabe:module:objects:MenuName';
+    protected string $MODULE_NAME = '::autent:module:objects:ModuleName';
+    protected string $MODULE_MENU_NAME = '::autent:module:objects:MenuName';
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'desc';
-    protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020241229';
+    protected string $MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2024';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected string $MODULE_HELP = '::sylabe:module:objects:ModuleHelp';
+    protected string $MODULE_HELP = '::autent:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
 
     protected array $MODULE_REGISTERED_VIEWS = array('desc', 'unlock', 'logout');

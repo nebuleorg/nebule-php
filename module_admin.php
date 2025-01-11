@@ -23,9 +23,9 @@ class ModuleAdmin extends Modules
     protected string $MODULE_COMMAND_NAME = 'adm';
     protected string $MODULE_DEFAULT_VIEW = 'options';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected string $MODULE_VERSION = '020240720';
+    protected string $MODULE_VERSION = '020250111';
     protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2024';
+    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
     protected string $MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
