@@ -12,6 +12,7 @@ namespace Nebule\Library;
  */
 class References //extends Functions
 {
+    const VIRTUAL_NODE_SIZE = 36;
     // Les commandes.
     const COMMAND_SWITCH_APPLICATION = 'a';
     const COMMAND_APPLICATION_BACK = 'c';
@@ -136,7 +137,7 @@ class References //extends Functions
     const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
 
     const ACTIVE_APPLICATIONS_WHITELIST = array(
-        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.non.296',
+        '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.none.296',
     );
 
     const OBJ_IMG = array(

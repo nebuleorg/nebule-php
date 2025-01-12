@@ -490,7 +490,7 @@ class Configuration extends Functions
         'permitApplication8' => 'false',
         'permitApplication9' => 'false',
         'defaultObfuscateLinks' => 'false',
-        'defaultLinksVersion' => '2.0',
+        'defaultLinksVersion' => '2:0',
         'subordinationEntity' => '',
     );
 
@@ -752,17 +752,6 @@ class Configuration extends Functions
     }
 
     /**
-     * Extrait les options nebule.
-     * Retourne :
-     *  - un texte ;
-     *  - le contenu de l'option dans l'environnement ;
-     *  - ou le contenu de l'option dans les liens ;
-     *  - ou le contenu de l'option par défaut ;
-     *  - ou ''.
-     *
-     * La valeur trouvée dans l'environnement est prioritaire.
-     * C'est la façon de forcer une option.
-     *
      * @param string $name
      * @return string
      */
@@ -772,22 +761,15 @@ class Configuration extends Functions
     }
 
     /**
-     * Extrait les options nebule.
-     * Retourne :
-     *  - un booléen ;
-     *  - le contenu de l'option dans l'environnement ;
-     *  - ou le contenu de l'option dans les liens ;
-     *  - ou le contenu de l'option par défaut ;
-     *  - ou false.
-     *
-     * La valeur trouvée dans l'environnement est prioritaire.
-     * C'est la façon de forcer une option.
-     *
      * @param string $name
      * @return bool
      */
     public function getOptionAsBoolean(string $name): bool
     {
+        if (!self::OPTIONS_TYPE[$name] != 'boolean') {
+            $this->_metrologyInstance->addLog('get option ' . $name . ' as bool but not bool', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
+            return false;
+        }
         if ($this->_getOption($name) == 'true')
             return true;
         else
@@ -795,22 +777,15 @@ class Configuration extends Functions
     }
 
     /**
-     * Extrait les options nebule.
-     * Retourne :
-     *  - un nombre ;
-     *  - le contenu de l'option dans l'environnement ;
-     *  - ou le contenu de l'option dans les liens ;
-     *  - ou le contenu de l'option par défaut ;
-     *  - ou 0.
-     *
-     * La valeur trouvée dans l'environnement est prioritaire.
-     * C'est la façon de forcer une option.
-     *
      * @param string $name
      * @return int
      */
     public function getOptionAsInteger(string $name): int
     {
+        if (!self::OPTIONS_TYPE[$name] != 'integer') {
+            $this->_metrologyInstance->addLog('get option ' . $name . ' as int but not int', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
+            return 0;
+        }
         return (int)$this->_getOption($name);
     }
 

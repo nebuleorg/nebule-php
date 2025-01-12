@@ -32,6 +32,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
 
+    const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actionnewblogname';
     const COMMAND_ACTION_NEW_BLOG_TITLE = 'actionnewblogtitle';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
@@ -58,8 +59,14 @@ class ModuleNeblog extends Modules
     protected array $MODULE_APP_DESC_LIST = array();
     protected array $MODULE_APP_VIEW_LIST = array();
 
-    const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
+    private string $_actionAddBlogName = '';
+    private node $_instanceBlogNodeRID;
+    private node $_instanceBlogItemRID;
 
+    protected function _initialisation(): void{
+        $this->_instanceBlogNodeRID = $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
+        $this->_instanceBlogItemRID = $this->_cacheInstance->newNode(self::RID_BLOG_ITEM);
+    }
 
 
     public function getHookList(string $hookName, ?Node $nid = null): array
@@ -319,13 +326,10 @@ class ModuleNeblog extends Modules
 
 
 
-    private string $_actionAddBlogName = '';
-    private string $_actionAddBlogTitle = '';
-
     public function actions(): void
     {
         $this->_extractActionAddBlog();
-        if ($this->_actionAddBlogName != '' && $this->_actionAddBlogTitle != '')
+        if ($this->_actionAddBlogName != '')
             $this->_actionAddBlog();
     }
 
@@ -339,50 +343,19 @@ class ModuleNeblog extends Modules
                 $this->_actionAddBlogName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
             }
-
-            $arg_title = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_TITLE);
-            if ($arg_title != '') {
-                $this->_actionAddBlogTitle = $arg_title;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog title:' . $arg_title, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3376510b');
-            }
         }
     }
 
     private function _actionAddBlog(): void
     {
-        global $bootstrapApplicationIID;
-
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
 
-            // Crée l'objet de la référence de l'application.
-            /*$instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
-
-            // Création du type mime.
-            $instance->setType($this->_hashModule);
-
-            // Crée le lien de hash.
-            $date = date(DATE_ATOM);
-            $signer = $this->_nebuleInstance->getCurrentEntity();
-            $action = 'l';
-            $source = $this->_actionAddModuleRID;
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
-
-            // Crée l'objet du nom.
-            $instance->setName($this->_actionAddModuleName);
-
-            // Crée le lien de référence.
-            $action = 'f';
-            $source = $this->_hashModule;
-            $target = $this->_actionAddModuleRID;
-            $meta = $this->_hashModule;
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
-
-            // Crée le lien d'activation dans l'application.
-            $source = $bootstrapApplicationIID;
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);*/
+            $instanceNode = $this->_cacheInstance->newVirtualNode();
+            $instanceBL = new Library\BlocLink($this->_nebuleInstance, 'new');
+            $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . self::RID_BLOG_NODE);
+            $instanceBL->signWrite();
+            $instanceNode->setName($this->_actionAddBlogName);
         }
     }
 
@@ -435,13 +408,13 @@ class ModuleNeblog extends Modules
     private function _getListBlogs(): array
     {
         $links = array();
-        $this->_getLinks($links, $this->_cacheInstance->newNode(self::RID_BLOG_NODE), self::RID_BLOG_NODE);
+        $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
         return $this->_getOnLinksNID2($links);
     }
     private function _getCountBlogs(): int
     {
         $links = array();
-        $this->_getLinks($links, $this->_cacheInstance->newNode(self::RID_BLOG_NODE), self::RID_BLOG_NODE);
+        $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
         return sizeof($links);
     }
     private function _setNewBlog(): void

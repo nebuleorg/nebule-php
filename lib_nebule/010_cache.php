@@ -249,7 +249,16 @@ class Cache extends Functions
         return false;
     }
 
-    public function newNode(string $nid, string $type = Cache::TYPE_NODE): node
+    public function newVirtualNode(): Node
+    {
+        $nid = $this->_cryptoInstance->getRandom(References::VIRTUAL_NODE_SIZE) . '.none.' . (References::VIRTUAL_NODE_SIZE * 4);
+        $instance = new Node($this->_nebuleInstance, $nid);
+        $this->_cache[self::TYPE_NODE][$nid] = $instance;
+        $this->_writeCacheTimestamp($nid, self::TYPE_NODE);
+        return $instance;
+    }
+
+    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node
     {
         $this->_filterNodeType($type);
 
