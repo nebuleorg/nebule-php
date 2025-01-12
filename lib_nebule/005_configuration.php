@@ -766,7 +766,7 @@ class Configuration extends Functions
      */
     public function getOptionAsBoolean(string $name): bool
     {
-        if (!self::OPTIONS_TYPE[$name] != 'boolean') {
+        if (self::OPTIONS_TYPE[$name] != 'boolean') {
             $this->_metrologyInstance->addLog('get option ' . $name . ' as bool but not bool', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
             return false;
         }
@@ -782,7 +782,7 @@ class Configuration extends Functions
      */
     public function getOptionAsInteger(string $name): int
     {
-        if (!self::OPTIONS_TYPE[$name] != 'integer') {
+        if (self::OPTIONS_TYPE[$name] != 'integer') {
             $this->_metrologyInstance->addLog('get option ' . $name . ' as int but not int', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
             return 0;
         }

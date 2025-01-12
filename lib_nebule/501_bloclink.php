@@ -832,6 +832,7 @@ class BlocLink extends Functions implements blocLinkInterface
             $this->_valid = true;
             return true;
         }
+
         return false;
     }
 

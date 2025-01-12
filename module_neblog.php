@@ -34,7 +34,6 @@ class ModuleNeblog extends Modules
 
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actionnewblogname';
-    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actionnewblogtitle';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
     const RID_BLOG_ITEM = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
 
@@ -260,11 +259,6 @@ class ModuleNeblog extends Modules
                                name="<?php echo self::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
                                value="Name"/>
                     </label><br/>
-                    <label>
-                        <input type="text" class="newblog"
-                               name="<?php echo self::COMMAND_ACTION_NEW_BLOG_TITLE; ?>"
-                               value="Title"/>
-                    </label><br/>
                     <input type="submit"
                            value="Create"/>
                 </form>
@@ -352,7 +346,7 @@ class ModuleNeblog extends Modules
             $this->_nebuleInstance->getMetrologyInstance()->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
 
             $instanceNode = $this->_cacheInstance->newVirtualNode();
-            $instanceBL = new Library\BlocLink($this->_nebuleInstance, 'new');
+            $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
             $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . self::RID_BLOG_NODE);
             $instanceBL->signWrite();
             $instanceNode->setName($this->_actionAddBlogName);
