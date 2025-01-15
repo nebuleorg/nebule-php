@@ -166,7 +166,7 @@ class Cache extends Functions
             return;
 
         if ($c > 100)
-            $this->_metrologyInstance->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5bdb6961'); // Log
+            $this->_metrologyInstance->addLog(__METHOD__ . ' cache need flush ' . $c . '/' . sizeof($this->_cacheDateInsertion), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '5bdb6961');
 
         for ($i = 0; $i < $c; $i++)
         {
@@ -251,7 +251,8 @@ class Cache extends Functions
 
     public function newVirtualNode(): Node
     {
-        $nid = $this->_cryptoInstance->getRandom(References::VIRTUAL_NODE_SIZE) . '.none.' . (References::VIRTUAL_NODE_SIZE * 4);
+        $nid = bin2hex($this->_cryptoInstance->getRandom(References::VIRTUAL_NODE_SIZE)) . '.none.' . (References::VIRTUAL_NODE_SIZE * 8);
+        $this->_metrologyInstance->addLog('new virtual nid ' . $nid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c00832c2');
         $instance = new Node($this->_nebuleInstance, $nid);
         $this->_cache[self::TYPE_NODE][$nid] = $instance;
         $this->_writeCacheTimestamp($nid, self::TYPE_NODE);

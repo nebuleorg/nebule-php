@@ -792,14 +792,14 @@ class BlocLink extends Functions implements blocLinkInterface
         }
 
         if ($date == '')
-            $date = '0' . date(DATE_ATOM);
+            $date = '0>0' . date('YmdHis');
 
         // Prepare new link to sign.
         $this->_rawBlocLink .= $date . $this->_newBL;
         $this->_parse($this->_rawBlocLink);
         $this->_newLink = false;
 
-        if ($this->_validStructure) {
+        if (!$this->_validStructure) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('can not sign invalid link',
                 Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cd989943');
             return false;

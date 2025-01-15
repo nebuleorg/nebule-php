@@ -347,7 +347,8 @@ class ModuleNeblog extends Modules
 
             $instanceNode = $this->_cacheInstance->newVirtualNode();
             $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-            $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . self::RID_BLOG_NODE);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '24eb5b6b');
+            $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_NODE);
             $instanceBL->signWrite();
             $instanceNode->setName($this->_actionAddBlogName);
         }
