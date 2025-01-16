@@ -120,23 +120,32 @@ class BlocLink extends Functions implements blocLinkInterface
         // Extract blocs from link L : BH_BL_BS
         $bh = strtok(trim($link), '_');
         if (is_bool($bh)) return false;
+        $this->_metrologyInstance->addLog('check link BH=' . $bh, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '36e5871a');
         $bl = strtok('_');
         if (is_bool($bl)) return false;
+        $this->_metrologyInstance->addLog('check link BL=' . $bl, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dc1eb20f');
         $bs = strtok('_');
-        if (is_bool($bs)) return false;
+        if (!$this->_newLink && is_bool($bs)) return false;
+        $this->_metrologyInstance->addLog('check link BS=' . $bs, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '41e23a37');
 
         // Check link overflow
         if (strtok('_') !== false) return false;
 
         // Check BH, BL and BS.
-        //if (!$this->_checkBH($bh)) $this->_metrology->addLog('check link BH failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '80cbba4b');
-        if (!$this->_checkBH($bh)) return false;
-        //if (!$this->_checkBL($bl)) $this->_metrology->addLog('check link BL failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c5d22fda');
-        if (!$this->_checkBL($bl)) return false;
-        //if (!$this->_checkBS($bh, $bl, $bs)) $this->_metrology->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
+        if (!$this->_checkBH($bh)) {
+            $this->_metrologyInstance->addLog('check link BH failed ' . $link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '80cbba4b');
+            return false;
+        }
+        if (!$this->_checkBL($bl)) {
+            $this->_metrologyInstance->addLog('check link BL failed ' . $link, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c5d22fda');
+            return false;
+        }
         $bh_bl = $bh . '_' . $bl;
         // Do not check on new link before sign.
-        if (!$this->_newLink && !$this->_checkBS($bh_bl, $bs)) return false;
+        if (!$this->_newLink && !$this->_checkBS($bh_bl, $bs)) {
+            $this->_metrologyInstance->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
+            return false;
+        }
 
         $this->_parsedLink['link'] = $link;
         $this->_validStructure = true;
@@ -599,7 +608,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
-        $this->_metrologyInstance->addLog(substr($bh_bl, 0, 256) . ' / ' . substr($bs, 0, 512),
+        $this->_metrologyInstance->addLog(substr($bs, 0, 512),
             Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($bs) > self::LINK_MAX_BS_SIZE)
@@ -644,7 +653,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRS(string &$rs, string &$bh_bl, string $i): bool
     {
-        $this->_metrologyInstance->addLog(substr($bh_bl, 0, 256) . ' / ' . substr($rs, 0, 512)
+        $this->_metrologyInstance->addLog(substr($rs, 0, 512)
             . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rs) > 4096) return false; // TODO à revoir.
@@ -683,7 +692,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkSIG(string &$bh_bl, string &$sig, string &$nid, string $i): bool
     {
-        $this->_metrologyInstance->addLog(substr($bh_bl, 0, 512) . ' / ' . $sig . ' / ' . $nid . ' / ' . $i,
+        $this->_metrologyInstance->addLog($sig . ' / ' . $nid . ' / ' . $i,
             Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($sig) > 4096) return false; // TODO à revoir.
