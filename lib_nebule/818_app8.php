@@ -15,7 +15,7 @@ class App8
     const APPLICATION_NAME = 'defolt';
     const APPLICATION_SURNAME = 'nebule/defolt';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250118';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -24,8 +24,8 @@ class App8
     public function display(): void
     {
         // Initialisation des logs
-        \Nebule\Bootstrap\log_reopen('app0');
-        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
+        \Nebule\Bootstrap\log_reopen('app8');
+        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, '2067738b');
 
         echo 'CHK';
         ob_end_clean();

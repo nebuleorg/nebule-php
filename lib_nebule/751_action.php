@@ -1206,7 +1206,7 @@ abstract class Actions extends Functions
                         $nbLinks++;
                         $this->_metrologyInstance->addLog('action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     } elseif ($this->_unlocked) {
-                        $instance = $this->_cacheInstance->newBlockLink(
+                        /*$instance = $this->_cacheInstance->newBlockLink( FIXME
                             '0_'
                             . $this->_entitiesInstance->getCurrentEntityID() . '_'
                             . $instance->getDate() . '_'
@@ -1215,7 +1215,7 @@ abstract class Actions extends Functions
                             . $instance->getParsed()['bl/rl/nid2'] . '_'
                             . $instance->getParsed()['bl/rl/nid3']
                         );
-                        $instance->signWrite();
+                        $instance->signWrite();*/
                         $nbLinks++;
                         $this->_metrologyInstance->addLog('action upload file links - unsigned link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     }

@@ -69,7 +69,8 @@ class Functions
         $this->_ticketingInstance = $this->_nebuleInstance->getTicketingInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
-        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();}
+        $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
+    }
 
     public function setEnvironmentApplication(Applications $applicationInstance): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');

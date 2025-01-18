@@ -330,12 +330,12 @@ class ModuleNeblog extends Modules
     private function _extractActionAddBlog(): void
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
+            $this->_metrologyInstance->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
             $arg_name = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_NAME);
             if ($arg_name != '') {
                 $this->_actionAddBlogName = $arg_name;
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
+                $this->_metrologyInstance->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
             }
         }
     }
@@ -343,11 +343,11 @@ class ModuleNeblog extends Modules
     private function _actionAddBlog(): void
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
+            $this->_metrologyInstance->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
 
             $instanceNode = $this->_cacheInstance->newVirtualNode();
             $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '24eb5b6b');
+            $this->_metrologyInstance->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '24eb5b6b');
             $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_NODE);
             $instanceBL->signWrite();
             $instanceNode->setName($this->_actionAddBlogName);
@@ -396,6 +396,7 @@ class ModuleNeblog extends Modules
             $oid = $parsedLink['bl/rl/nid2'];
             $list[$oid] = $oid;
         }
+$this->_metrologyInstance->addLog('MARK2 links nb=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $list;
     }
 
@@ -403,7 +404,10 @@ class ModuleNeblog extends Modules
     private function _getListBlogs(): array
     {
         $links = array();
+$this->_metrologyInstance->addLog('MARK RID_BLOG_NODE=' . self::RID_BLOG_NODE, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('MARK _instanceBlogNodeRID=' . $this->_instanceBlogNodeRID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
+$this->_metrologyInstance->addLog('MARK1 links nb=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $this->_getOnLinksNID2($links);
     }
     private function _getCountBlogs(): int
