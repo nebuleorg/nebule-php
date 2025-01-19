@@ -157,7 +157,7 @@ class Authorities extends Functions
             $instance = $this->_cacheInstance->newEntity($eid);
             $listEID[$eid] = $eid;
             $listInstances[$eid] = $instance;
-            $signersInstances[$eid] = $link->getSigners();
+            $signersInstances[$eid] = $link->getSignersEID();
             $this->_metrologyInstance->addLog('Find ' . $name . ' authority ' . $eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e6f75b5e');
         }
     }

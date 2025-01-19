@@ -41,6 +41,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         parent::__construct($nebuleInstance);
         $this->setEnvironmentLibrary($nebuleInstance);
+        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID'); // FIXME ne lit pas correctement la valeur.
 
         $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
@@ -76,7 +77,6 @@ class LinkRegister extends Functions implements linkInterface
     protected function _initialisation(): void
     {
         $this->_permitObfuscated = $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink');
-        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID'); // FIXME ne lit pas correctement la valeur.
 
         $this->_obfuscated = false;
         if ($this->_permitObfuscated && $this->_parsedLink['bl/rl/req'] == 'c')
@@ -144,7 +144,7 @@ class LinkRegister extends Functions implements linkInterface
      */
     protected function _checkREQ(string &$req): bool
     {
-        $this->_metrologyInstance->addLog(substr($req, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
+        $this->_metrologyInstance->addLog(substr($req, 0, 5), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
         if ($req != 'l'
@@ -204,11 +204,6 @@ class LinkRegister extends Functions implements linkInterface
         return $this->_blocLink;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see linkInterface::getParsed()
-     * @return array
-     */
     public function getParsed(): array
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
@@ -217,24 +212,14 @@ class LinkRegister extends Functions implements linkInterface
         return $this->_parsedLink;
     }
 
-    /**
-     * Retourne l'entité signataire du lien.
-     *
-     * @return array
-     */
-    public function getSigners(): array
+    public function getSignersEID(): array
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
             __METHOD__, '1111c0de');
 
-        return $this->_blocLink->getSigners();
+        return $this->_blocLink->getSignersEID();
     }
 
-    /**
-     * Retourne la date du lien.
-     *
-     * @return string
-     */
     public function getDate(): string
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION,

@@ -31,7 +31,7 @@ interface blocLinkInterface
      *
      * @return array
      */
-    public function getSigners(): array;
+    public function getSignersEID(): array;
 
     /**
      * Get parsed content of the link.
@@ -184,5 +184,5 @@ interface linkInterface
 
     public function getDate(): string;
 
-    public function getSigners(): array;
+    public function getSignersEID(): array;
 }

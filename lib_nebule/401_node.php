@@ -647,7 +647,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Recherche une propriété de l'objet est sgnée par une entité.
+     * Recherche une propriété de l'objet est signée par une entité.
      * Si la propriété est vide, vérifie pour toute propriété.
      *
      * @param string $entity
@@ -2875,8 +2875,7 @@ class Node extends Functions implements nodeInterface
             $bloc = $this->_cacheInstance->newBlockLink($line, Cache::TYPE_BLOCLINK);
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
-            )
-            {
+            ) {
                 $newLinks = $bloc->getLinks(); // FIXME
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);

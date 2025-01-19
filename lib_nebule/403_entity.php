@@ -495,7 +495,7 @@ class Entity extends Node implements nodeInterface
             $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
 
         $hash = $this->_cryptoInstance->hash($link, $algo);
-        return $this->_cryptoInstance->sign($hash, $this->_privateKey, $this->_privateKeyPassword);
+        return $this->_cryptoInstance->sign($hash, $this->_privateKey, $this->_privateKeyPassword) . '.' . $algo;
     }
 
     /**

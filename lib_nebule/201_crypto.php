@@ -113,6 +113,8 @@ class Crypto extends Functions implements CryptoInterface
      */
     public function hash(string $data, string $algo = ''): string
     {
+        if ($algo == '')
+            $algo = References::REFERENCE_CRYPTO_HASH_ALGORITHM;
         return $this->_defaultInstance->hash($data, $algo);
     }
 

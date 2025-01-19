@@ -545,7 +545,7 @@ abstract class Actions extends Functions
                 $instance = $this->flatLinkExtractAsInstance_DISABLED($arg);
                 if ($instance->getValid()
                     && $instance->getSigned()
-                    && ($instance->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
+                    && ($instance->getSignersEID() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
                         || $permitNotCodeMaster
                     )
                 )
@@ -1195,7 +1195,7 @@ abstract class Actions extends Functions
                 $instance = $this->_cacheInstance->newBlockLink($line);
                 if ($instance->getValid()) {
                     if ($instance->getSigned()
-                        && (($instance->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
+                        && (($instance->getSignersEID() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
                                 && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                             )
                             || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
@@ -2772,7 +2772,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action upload link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         if ($link->getSigned()
-            && (($link->getSigners() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
+            && (($link->getSignersEID() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
                     && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 )
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')

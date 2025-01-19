@@ -45,7 +45,7 @@ class SocialNotMyself extends SocialMySelf implements SocialInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
-        foreach ($link->getSigners() as $signer) {
+        foreach ($link->getSignersEID() as $signer) {
             if ($signer != $this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityID()) {
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
                 return 1;
@@ -53,7 +53,7 @@ class SocialNotMyself extends SocialMySelf implements SocialInterface
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
-        foreach ($link->getSigners() as $signer)
+        foreach ($link->getSignersEID() as $signer)
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
         return 0;
     }

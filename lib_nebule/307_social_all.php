@@ -42,7 +42,7 @@ class SocialAll extends SocialMySelf implements SocialInterface
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=all score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
-        foreach ($link->getSigners() as $signer)
+        foreach ($link->getSignersEID() as $signer)
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=all score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
 
         return 1;

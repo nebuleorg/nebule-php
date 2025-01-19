@@ -3457,7 +3457,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Prépare l'objet.
         $messageInstance = $this->getTypedInstanceFromNID($link->getParsed()['bl/rl/nid2']);
-        $signerInstance = $this->getTypedInstanceFromNID($link->getSigners()[0]); // FIXME [0] correction sauvage !
+        $signerInstance = $this->getTypedInstanceFromNID($link->getSignersEID()[0]); // FIXME [0] correction sauvage !
 
         // Prépare les paramètres d'activation de contenus.
         if (!isset($param['enableDisplayColor'])
@@ -4878,7 +4878,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $contantDisplayValid .= '/>';
             }
 
-            foreach ($instance->getSigners() as $signer)
+            foreach ($instance->getSignersEID() as $signer)
             {
                 $object = $this->_cacheInstance->newNode($signer);
                 $contantDisplaySigner .= '<img title="' . $object->getFullName();
@@ -5318,8 +5318,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Prépare le contenu à afficher.
         $return = '';
-        foreach ($link->getSigners() as $signer)
-            $return .= $this->convertInlineObjectColor($signer);
+        foreach ($link->getSignersEID() as $signer)
+            $return .= $this->convertInlineObjectColor($this->_cacheInstance->newEntity($signer));
         $return .= $colorDate;
         $return .= $iconUpdate;
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
@@ -5396,7 +5396,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function displayInlineLastAction(): void
     {
-        $array = $this->_metrologyInstance->getLastAction();
+        /*$array = $this->_metrologyInstance->getLastAction();
         if (sizeof($array) == 0)
             return;
         switch ($array['type']) {
@@ -5436,12 +5436,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 break;
         }
         echo "\n";
-        unset($array);
+        unset($array);*/
     }
 
     public function displayInlineAllActions(): void
     {
-        $count = 0;
+        /*$count = 0;
         while (true) {
             $array = $this->_metrologyInstance->getFirstAction();
             if (sizeof($array) == 0 || $count > Metrology::DEFAULT_ACTION_STATE_SIZE)
@@ -5491,7 +5491,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo "&nbsp;";
         }
         unset($array);
-        flush();
+        flush();*/
     }
 
 

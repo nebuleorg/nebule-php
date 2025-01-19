@@ -32,7 +32,8 @@ class ModuleNeblog extends Modules
     protected string $MODULE_HELP = '::neblog:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
 
-    const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
+    const COMMAND_SELECT_BLOG = 'blog';
+    const COMMAND_SELECT_BLOG_ITEM = 'item';
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actionnewblogname';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
     const RID_BLOG_ITEM = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
@@ -79,13 +80,7 @@ class ModuleNeblog extends Modules
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuNeblog':
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[0]['name'] = '::neblog:module:blog:dispblog';
-                    $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
-                }
+                # List blogs
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[1]['name'] = '::neblog:module:list:listblog';
                     $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
@@ -93,20 +88,20 @@ class ModuleNeblog extends Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[2]) {
+                # New blog
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[2]['name'] = '::neblog:module:new:newblog';
                     $hookArray[2]['icon'] = $this->MODULE_REGISTERED_ICONS[2];
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[5]) {
-                    $hookArray[5]['name'] = '::neblog:module:about:title';
-                    $hookArray[5]['icon'] = $this->MODULE_REGISTERED_ICONS[5];
-                    $hookArray[5]['desc'] = '';
-                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5];
-                }
+                # About
+                $hookArray[5]['name'] = '::neblog:module:about:title';
+                $hookArray[5]['icon'] = $this->MODULE_REGISTERED_ICONS[5];
+                $hookArray[5]['desc'] = '';
+                $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[5];
                 break;
         }
         return $hookArray;
@@ -183,8 +178,11 @@ class ModuleNeblog extends Modules
 
     private function _display_InlineBlog(): void
     {
+        $currentBlog = $this->getFilterInput(self::COMMAND_SELECT_BLOG);
+        $currentBlogInstance = $this->_cacheInstance->newNode($currentBlog);
+
         $instanceObject = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instanceObject->setNID($this->_applicationInstance->getCurrentObjectInstance());
+        $instanceObject->setNID($currentBlogInstance);
         $instanceObject->setEnableColor(true);
         $instanceObject->setEnableIcon(true);
         $instanceObject->setEnableName(true);
@@ -202,6 +200,35 @@ class ModuleNeblog extends Modules
         $instanceObject->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instanceObject->setStatus('');
         $instanceObject->display();
+
+        // List
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+
+        $list = $this->_getListBlogEntries($currentBlogInstance);
+
+        foreach ($list as $blogItemNID) {
+            $blogInstance = $this->_cacheInstance->newNode($blogItemNID);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($blogInstance);
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $currentBlog
+                . '&' . self::COMMAND_SELECT_BLOG_ITEM . '=' . $blogItemNID);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instanceList->addItem($instance);
+        }
+
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
     }
 
     private function _displayList(): void
@@ -225,6 +252,9 @@ class ModuleNeblog extends Modules
             $blogInstance = $this->_cacheInstance->newNode($blogNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -396,7 +426,6 @@ class ModuleNeblog extends Modules
             $oid = $parsedLink['bl/rl/nid2'];
             $list[$oid] = $oid;
         }
-$this->_metrologyInstance->addLog('MARK2 links nb=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $list;
     }
 
@@ -404,10 +433,7 @@ $this->_metrologyInstance->addLog('MARK2 links nb=' . sizeof($list), Metrology::
     private function _getListBlogs(): array
     {
         $links = array();
-$this->_metrologyInstance->addLog('MARK RID_BLOG_NODE=' . self::RID_BLOG_NODE, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('MARK _instanceBlogNodeRID=' . $this->_instanceBlogNodeRID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
-$this->_metrologyInstance->addLog('MARK1 links nb=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $this->_getOnLinksNID2($links);
     }
     private function _getCountBlogs(): int
