@@ -10,7 +10,32 @@ use Nebule\Library\Modules;
 use Nebule\Library\Node;
 
 /**
- * Ce module permet gérer les objets.
+ * This module can manage blogs with articles, pages, and messages in articles.
+ *
+ * Definition of new blog with 'BlogNID' NID:
+ *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
+ * BlogNID should not have content.
+ * BlogNID should have name.
+ * BlogNID must not have update.
+ *
+ * On a blog 'BlogNID', definition of a new post with 'PostOID' OID:
+ *  -  f>BlogNID>PostOID>RID_BLOG_POST
+ * PostOID must have content.
+ * PostOID can have name.
+ * PostOID can have update.
+ *
+ * On an entry 'EntryOID', definition of a new answer with 'AnswerOID' OID:
+ *  -  f>EntryOID>AnswerOID>RID_BLOG_ANSWER
+ * AnswerOID must have content.
+ * AnswerOID should not have name.
+ * AnswerOID can have update.
+ * Only one level of answer for now. TODO
+ *
+ * On a blog 'BlogNID', definition of a new page with 'PageOID' OID:
+ *  -  f>BlogNID>PageOID>RID_BLOG_PAGE
+ * PageOID must have content.
+ * PageOID can have name.
+ * PageOID can have update.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -25,7 +50,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250120';
+    protected string $MODULE_VERSION = '020250124';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -33,18 +58,18 @@ class ModuleNeblog extends Modules
     protected string $MODULE_INTERFACE = '3.0';
 
     const COMMAND_SELECT_BLOG = 'blog';
-    const COMMAND_SELECT_ITEM = 'item';
-    const COMMAND_SELECT_MSG = 'msg';
+    const COMMAND_SELECT_POST = 'post';
+    const COMMAND_SELECT_ANSWER = 'answ';
     const COMMAND_SELECT_PAGE= 'page';
     const COMMAND_ACTION_NEW_BLOG_NAME = 'actionnewblogname';
-    const COMMAND_ACTION_NEW_ITEM_NAME = 'actionnewitemname';
-    const COMMAND_ACTION_NEW_ITEM_CONTENT = 'actionnewitemcontent';
-    const COMMAND_ACTION_NEW_MESSAGE = 'actionnewitemcontent';
-    const COMMAND_ACTION_NEW_PAGE_NAME = 'actionnewitemname';
-    const COMMAND_ACTION_NEW_PAGE_CONTENT = 'actionnewitemcontent';
+    const COMMAND_ACTION_NEW_ITEM_NAME = 'actionnewpostname';
+    const COMMAND_ACTION_NEW_ITEM_CONTENT = 'actionnewpostcontent';
+    const COMMAND_ACTION_NEW_ANSWER = 'actionnewpostcontent';
+    const COMMAND_ACTION_NEW_PAGE_NAME = 'actionnewpostname';
+    const COMMAND_ACTION_NEW_PAGE_CONTENT = 'actionnewpostcontent';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
-    const RID_BLOG_ITEM = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
-    const RID_BLOG_MESSAGE = 'a3fe5534f7c9537145f5f5c7eba4a2c747cb781614f66898a4779a3ffaf6538856c7.none.272';
+    const RID_BLOG_POST = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
+    const RID_BLOG_ANSWER = 'a3fe5534f7c9537145f5f5c7eba4a2c747cb781614f66898a4779a3ffaf6538856c7.none.272';
     const RID_BLOG_PAGE = '0188e8440a7cb80ade4affb0449ae92b089bed48d380024a625ab54826d4a2c2ca67.none.272';
 
     protected array $MODULE_REGISTERED_VIEWS = array(
@@ -53,10 +78,10 @@ class ModuleNeblog extends Modules
         'newblog', // 2
         'modblog', // 3
         'delblog', // 4
-        'item',    // 5
-        'newitem', // 6
-        'moditem', // 7
-        'delitem', // 8
+        'post',    // 5
+        'newpost', // 6
+        'modpost', // 7
+        'delpost', // 8
         'page',    // 9
         'pages',   // 10
         'newpage', // 11
@@ -64,6 +89,7 @@ class ModuleNeblog extends Modules
         'delpage', // 13
         'about',   // 14
     );
+
     protected array $MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
         Displays::DEFAULT_ICON_LSTOBJ,
@@ -78,13 +104,63 @@ class ModuleNeblog extends Modules
     protected array $MODULE_APP_VIEW_LIST = array();
 
     private string $_actionAddBlogName = '';
-    private node $_instanceBlogNodeRID;
-    private node $_instanceBlogItemRID;
+    private string $_actionAddPostName = '';
+    private string $_actionAddPostContent = '';
+    private string $_actionAddAnswerContent = '';
+    private string $_actionAddPageName = '';
+    private string $_actionAddPageContent = '';
+    private ?node $_instanceBlogNodeRID = null;
+    private ?node $_instanceBlogPostRID = null;
+    private ?node $_instanceBlogAnswerRID = null;
+    private ?node $_instanceBlogPageRID = null;
+    private ?node $_instanceCurrentBlog = null;
+    private ?node $_instanceCurrentBlogPost = null;
+    private ?node $_instanceCurrentBlogPage = null;
 
     protected function _initialisation(): void{
         $this->_instanceBlogNodeRID = $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
-        $this->_instanceBlogItemRID = $this->_cacheInstance->newNode(self::RID_BLOG_ITEM);
+        $this->_instanceBlogPostRID = $this->_cacheInstance->newNode(self::RID_BLOG_POST);
+        $this->_instanceBlogAnswerRID = $this->_cacheInstance->newNode(self::RID_BLOG_ANSWER);
+        $this->_instanceBlogPageRID = $this->_cacheInstance->newNode(self::RID_BLOG_PAGE);
+
+        $this->_getCurrentBlog();
+        $this->_getCurrentBlogPost();
+        $this->_getCurrentBlogPage();
     }
+
+    private function _getCurrentBlog(): void
+    {
+        if ($this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlog') != '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlog');
+        else
+            $nid = $this->getFilterInput(self::COMMAND_SELECT_BLOG);
+        $this->_instanceCurrentBlog = $this->_cacheInstance->newNode($nid);
+        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog . ' ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '184e42c6');
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlog', $nid);
+    }
+
+    private function _getCurrentBlogPost(): void
+    {
+        if ($this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPost') != '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPost');
+        else
+            $nid = $this->getFilterInput(self::COMMAND_SELECT_POST);
+        $this->_instanceCurrentBlogPost = $this->_cacheInstance->newNode($nid);
+        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'df3fcf87');
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPost', $nid);
+    }
+
+    private function _getCurrentBlogPage(): void
+    {
+        if ($this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPage') != '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPage');
+        else
+            $nid = $this->getFilterInput(self::COMMAND_SELECT_PAGE);
+        $this->_instanceCurrentBlogPage = $this->_cacheInstance->newNode($nid);
+        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c7298189');
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
+    }
+
 
 
     public function getHookList(string $hookName, ?Node $nid = null): array
@@ -100,35 +176,39 @@ class ModuleNeblog extends Modules
             case 'selfMenuNeblog':
                 # List blogs
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[1]) {
-                    $hookArray[1]['name'] = '::neblog:module:list:listblogs';
+                    $hookArray[1]['name'] = '::neblog:module:list:blogs';
                     $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
                 }
                 # New blog
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
-                    $hookArray[2]['name'] = '::neblog:module:new:newblog';
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
+                    && $this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+                    $hookArray[2]['name'] = '::neblog:module:new:blog';
                     $hookArray[2]['icon'] = $this->MODULE_REGISTERED_ICONS[2];
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
                 }
                 # List pages
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[10]) {
-                    $hookArray[3]['name'] = '::neblog:module:list:listpages';
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]) {
+                    $hookArray[3]['name'] = '::neblog:module:list:pages';
                     $hookArray[3]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[10];
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[10]
+                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID();
                 }
                 # New page
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]) {
-                    $hookArray[4]['name'] = '::neblog:module:list:listpages';
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[10]
+                    && $this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+                    $hookArray[4]['name'] = '::neblog:module:new:page';
                     $hookArray[4]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
                     $hookArray[4]['desc'] = '';
                     $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[11];
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[11]
+                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID();
                 }
                 # About
                 $hookArray[5]['name'] = '::neblog:module:about:title';
@@ -158,16 +238,16 @@ class ModuleNeblog extends Modules
                 $this->_displayDelBlog();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayItem();
+                $this->_displayPost();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[6]:
-                $this->_displayNewItem();
+                $this->_displayNewPost();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayModItem();
+                $this->_displayModPost();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[8]:
-                $this->_displayDelItem();
+                $this->_displayDelPost();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[9]:
                 $this->_displayPage();
@@ -235,7 +315,7 @@ class ModuleNeblog extends Modules
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
         $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::neblog:module:blog:dispblog');
+        $title->setTitle('::neblog:module:blog:disp');
         $title->setIcon($icon);
         $title->display();
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog');
@@ -243,11 +323,8 @@ class ModuleNeblog extends Modules
 
     private function _display_InlineBlog(): void
     {
-        $currentBlog = $this->getFilterInput(self::COMMAND_SELECT_BLOG);
-        $currentBlogInstance = $this->_cacheInstance->newNode($currentBlog);
-
         $instanceObject = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instanceObject->setNID($currentBlogInstance);
+        $instanceObject->setNID($this->_instanceCurrentBlog);
         $instanceObject->setEnableColor(true);
         $instanceObject->setEnableIcon(true);
         $instanceObject->setEnableName(true);
@@ -270,16 +347,27 @@ class ModuleNeblog extends Modules
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
-        $list = $this->_getListBlogEntries($currentBlogInstance);
+        if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceIcon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::neblog:module:new:post');
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[6]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID());
+            $instanceList->addItem($instance);
+        }
 
-        foreach ($list as $blogItemNID) {
-            $blogInstance = $this->_cacheInstance->newNode($blogItemNID);
+        $list = $this->_getListBlogPosts($this->_instanceCurrentBlog);
+
+        foreach ($list as $blogPostNID) {
+            $blogInstance = $this->_cacheInstance->newNode($blogPostNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
-                . '&' . self::COMMAND_SELECT_BLOG . '=' . $currentBlog
-                . '&' . self::COMMAND_SELECT_ITEM . '=' . $blogItemNID);
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . self::COMMAND_SELECT_POST . '=' . $blogPostNID);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -311,6 +399,16 @@ class ModuleNeblog extends Modules
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
+        if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceIcon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::neblog:module:new:blog');
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2]);
+            $instanceList->addItem($instance);
+        }
+
         $list = $this->_getListBlogs();
 
         foreach ($list as $blogNID) {
@@ -339,16 +437,15 @@ class ModuleNeblog extends Modules
     private function _displayNewBlog(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:newblog', $icon, false);
-
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:blog', $icon, false);
         ?>
 
         <div>
             <h1>New blog</h1>
             <div>
                 <form enctype="multipart/form-data" method="post"
-                      action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[1]
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                    action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[1]
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
                     <label>
                         <input type="text" class="newblog"
                                name="<?php echo self::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
@@ -379,32 +476,37 @@ class ModuleNeblog extends Modules
         $title->display();
     }
 
-    private function _displayItem(): void
+    private function _displayPost(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::neblog:module:show:item');
+        $title->setTitle('::neblog:module:show:post');
         $title->setIcon($icon);
         $title->display();
     }
 
-    private function _displayNewItem(): void
+    private function _displayNewPost(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[2]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:newblog', $icon, false);
-
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::neblog:module:new:post', $icon, false);
         ?>
 
         <div>
-            <h1>New blog</h1>
+            <h1>New post</h1>
             <div>
                 <form enctype="multipart/form-data" method="post"
-                      action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[1]
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                    action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[0]
+                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
                     <label>
-                        <input type="text" class="newblog"
-                               name="<?php echo self::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
+                        <input type="text" class="newpost"
+                               name="<?php echo self::COMMAND_ACTION_NEW_ITEM_NAME; ?>"
                                value="Name"/>
+                    </label><br/>
+                    <label>
+                        <input type="text" class="newpost"
+                               name="<?php echo self::COMMAND_ACTION_NEW_ITEM_CONTENT; ?>"
+                               value="Content"/>
                     </label><br/>
                     <input type="submit"
                            value="Create"/>
@@ -414,20 +516,20 @@ class ModuleNeblog extends Modules
         <?php
     }
 
-    private function _displayModItem(): void
+    private function _displayModPost(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[3]);
         $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::neblog:module:mod:item');
+        $title->setTitle('::neblog:module:mod:post');
         $title->setIcon($icon);
         $title->display();
     }
 
-    private function _displayDelItem(): void
+    private function _displayDelPost(): void
     {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[4]);
         $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::neblog:module:delete:item');
+        $title->setTitle('::neblog:module:delete:post');
         $title->setIcon($icon);
         $title->display();
     }
@@ -463,11 +565,12 @@ class ModuleNeblog extends Modules
         ?>
 
         <div>
-            <h1>New blog</h1>
+            <h1>New page</h1>
             <div>
                 <form enctype="multipart/form-data" method="post"
-                      action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[9]
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                    action="<?php echo '?view=' . $this->MODULE_REGISTERED_VIEWS[10]
+                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
                     <label>
                         <input type="text" class="newpage"
                                name="<?php echo self::COMMAND_ACTION_NEW_PAGE_NAME; ?>"
@@ -520,60 +623,55 @@ class ModuleNeblog extends Modules
 
     public function actions(): void
     {
-        $this->_extractActionAddBlog();
-        if ($this->_actionAddBlogName != '')
-            $this->_actionAddBlog();
+        if ($this->_extractActionAddBlog())
+            $this->_setNewBlog($this->_actionAddBlogName);
+        if ($this->_extractActionAddPost())
+            $this->_setNewBlogPost($this->_actionAddBlogName, $this->_actionAddPostContent);
+        if ($this->_extractActionAddComment())
+            $this->_setNewPostAnswer($this->_actionAddAnswerContent);
+        if ($this->_extractActionAddPage())
+            $this->_setNewBlogPage($this->_actionAddPageName, $this->_actionAddPageContent);
     }
 
-    private function _extractActionAddBlog(): void
+    private function _extractActionAddBlog(): bool
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
             $this->_metrologyInstance->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
-            $arg_name = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_NAME);
-            if ($arg_name != '') {
-                $this->_actionAddBlogName = $arg_name;
-                $this->_metrologyInstance->addLog('extract action add blog name:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
+            $this->_actionAddBlogName = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_NAME);
+            if ($this->_actionAddBlogName != '') {
+                $this->_metrologyInstance->addLog('extract action add blog name:' . $this->_actionAddBlogName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2ae0f501');
+                return true;
             }
         }
+        return false;
     }
 
-    private function _actionAddBlog(): void
+    private function _extractActionAddPost(): bool
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
-            $this->_metrologyInstance->addLog('action add blog', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '047b0bdc');
+            $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b54fc74c');
 
-            $instanceNode = $this->_cacheInstance->newVirtualNode();
-            $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-            $this->_metrologyInstance->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '24eb5b6b');
-            $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_NODE);
-            $instanceBL->signWrite();
-            $instanceNode->setName($this->_actionAddBlogName);
+            $this->_actionAddPostName = $this->getFilterInput(self::COMMAND_ACTION_NEW_ITEM_NAME);
+            $this->_actionAddPostContent = $this->getFilterInput(self::COMMAND_ACTION_NEW_ITEM_CONTENT);
+            if ($this->_actionAddPostContent != '') {
+                $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '48cdf007');
+                return true;
+            }
         }
+        return false;
     }
 
+    private function _extractActionAddComment(): bool
+    {
+        return false;
+    }
 
-    /*
-     * Definition of new blog with 'BlogNID' NID:
-     *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
-     * BlogNID should not have content.
-     * BlogNID should have name.
-     * BlogNID must not have update.
-     *
-     * On a blog 'BlogNID', definition of a new entry with 'EntryOID' OID:
-     *  -  f>BlogNID>EntryOID>RID_BLOG_ITEM
-     * EntryOID must have content.
-     * EntryOID can have name.
-     * EntryOID can have update.
-     *
-     * On an entry 'EntryOID', definition of a new answer with 'AnswerOID' OID:
-     *  -  f>EntryOID>AnswerOID>BlogNID
-     * AnswerOID must have content.
-     * AnswerOID should not have name.
-     * AnswerOID can have update.
-     *
-     * Only one level of answer for now. TODO
-     */
+    private function _extractActionAddPage(): bool
+    {
+        return false;
+    }
+
 
     // Common functions
     private function _getLinks(array &$links, Node $nid1, string $nid3): void
@@ -610,45 +708,80 @@ class ModuleNeblog extends Modules
         $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
         return sizeof($links);
     }
-    private function _setNewBlog(): void
+    private function _setNewBlog(string $name): void
     {
-
+        $instanceNode = $this->_cacheInstance->newVirtualNode();
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $this->_metrologyInstance->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '24eb5b6b');
+        $instanceBL->addLink('f>' . self::RID_BLOG_NODE . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_NODE);
+        $instanceBL->signWrite();
+        $instanceNode->setName($name);
     }
 
     // Entries on blogs
-    private function _getListBlogEntries(Node $blog): array
+    private function _getListBlogPosts(Node $blog): array
     {
         $links = array();
-        $this->_getLinks($links, $blog, self::RID_BLOG_ITEM);
+        $this->_getLinks($links, $blog, self::RID_BLOG_POST);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountBlogEntries(Node $blog): int
+    private function _getCountBlogPosts(Node $blog): int
     {
         $links = array();
-        $this->_getLinks($links, $blog, self::RID_BLOG_ITEM);
+        $this->_getLinks($links, $blog, self::RID_BLOG_POST);
         return sizeof($links);
     }
-    private function _setNewBlogEntry(): void
+    private function _setNewBlogPost(string $name, string $content): void
     {
-
+        $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
+        $instanceNode->setContent($content);
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $this->_metrologyInstance->addLog('new blog post oid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '5e3b8f18');
+        $instanceBL->addLink('f>' . $this->_instanceCurrentBlog->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_POST);
+        $instanceBL->signWrite();
+        $instanceNode->setName($name);
     }
 
     // Answers of entry on blogs
-    private function _getListBlogEntryAnswers(Node $entry, Node $blog): array
+    private function _getListPostAnswers(Node $entry): array
     {
         $links = array();
-        $this->_getLinks($links, $entry, $blog->getID());
+        $this->_getLinks($links, $entry, self::RID_BLOG_ANSWER);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountBlogEntryAnswers(Node $entry, Node $blog): int
+    private function _getCountPostAnswers(Node $entry): int
     {
         $links = array();
-        $this->_getLinks($links, $entry, $blog->getID());
+        $this->_getLinks($links, $entry, self::RID_BLOG_ANSWER);
         return sizeof($links);
     }
-    private function _setNewBlogEntryAnswer(): void
+    private function _setNewPostAnswer(string $name): void
     {
+        // TODO
+    }
 
+    // Pages on blogs
+    private function _getListBlogPages(Node $blog): array
+    {
+        $links = array();
+        $this->_getLinks($links, $blog, self::RID_BLOG_PAGE);
+        return $this->_getOnLinksNID2($links);
+    }
+    private function _getCountBlogPages(Node $blog): int
+    {
+        $links = array();
+        $this->_getLinks($links, $blog, self::RID_BLOG_PAGE);
+        return sizeof($links);
+    }
+    private function _setNewBlogPage(string $name, string $content): void
+    {
+        $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
+        $instanceNode->setContent($content);
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $this->_metrologyInstance->addLog('new blog page oid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '94d38ae6');
+        $instanceBL->addLink('f>' . $this->_instanceCurrentBlog->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_PAGE);
+        $instanceBL->signWrite();
+        $instanceNode->setName($name);
     }
 
 

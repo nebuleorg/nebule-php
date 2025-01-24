@@ -310,7 +310,7 @@ class Functions
         if ($arg == '') {
             $type = 'GET';
             try {
-                if (filter_has_var(INPUT_POST, $name)) {
+                if (filter_has_var(INPUT_GET, $name)) {
                     $arg = filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING, $flag);
                     if ($arg === false || $arg === null)
                         $arg = '';
