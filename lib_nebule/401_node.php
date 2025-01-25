@@ -82,7 +82,7 @@ class Node extends Functions implements nodeInterface
     /**
      * Create instance of a node or derivative.
      * Always give a valid nebule instance.
-     * For new node, set $id as '0'. This is mandatory to add data (or other) after with dedicated function.
+     * For new node, set $id as '0' or 'new'. This is mandatory to add data (or other) after with dedicated function.
      * If $id is invalid, the instance return getID = '0', even if new but not initialised.
      *
      * @param nebule $nebuleInstance
@@ -133,6 +133,7 @@ class Node extends Functions implements nodeInterface
 
     /**
      * On new node (ID='0'), add content and recalculate ID.
+     * Don't forget to write with write().
      *
      * @param string $data
      * @return bool
@@ -148,7 +149,7 @@ class Node extends Functions implements nodeInterface
         )
             return false;
 
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitCreateObject'))) {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitCreateObject'))) {
             $this->_metrologyInstance->addLog('Create object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '83a27d1e');
             $this->_id = '0';
             return false;
@@ -704,9 +705,9 @@ class Node extends Functions implements nodeInterface
         $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
-        if ($obfuscated && !$newLink->setObfuscate())
-            return false;
+        $newBlockLink->addLink($link);
+        //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
+        //    return false;
         $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID());
 
         // Supprime le résultat dans le cache.
@@ -756,7 +757,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Ecriture du type mime.
+     * Écriture du type mime.
      *
      * @param string $type
      * @return boolean
@@ -3595,9 +3596,9 @@ class Node extends Functions implements nodeInterface
         if ($rl == '')
             return false;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newLink = new LinkRegister($this->_nebuleInstance, $rl, $newBlockLink);
-        if ($obfuscated && !$newLink->setObfuscate())
-            return false;
+        $newBlockLink->addLink($rl);
+        //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
+        //    return false;
         return $newBlockLink->signwrite($this->_entitiesInstance->getCurrentEntityID(), $date);
     }
 

@@ -418,8 +418,10 @@ class ioDisk extends io implements ioInterface
 
         if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid))
             return true;
-        if (file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) !== false)
+        if (file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) !== false) {
+            $this->_metrologyInstance->addLog('ok write oid=' . $oid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e2f2baa1');
             return true;
+        }
 
         $this->_mode = 'RO';
         return false;
