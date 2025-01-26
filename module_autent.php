@@ -27,16 +27,16 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_NAME = '::autent:module:objects:ModuleName';
     protected string $MODULE_MENU_NAME = '::autent:module:objects:MenuName';
     protected string $MODULE_COMMAND_NAME = 'autent';
-    protected string $MODULE_DEFAULT_VIEW = 'desc';
+    protected string $MODULE_DEFAULT_VIEW = 'login';
     protected string $MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
+    protected string $MODULE_VERSION = '020250126';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     protected string $MODULE_HELP = '::autent:module:objects:ModuleHelp';
     protected string $MODULE_INTERFACE = '3.0';
 
-    protected array $MODULE_REGISTERED_VIEWS = array('desc', 'unlock', 'logout');
+    protected array $MODULE_REGISTERED_VIEWS = array('desc', 'login', 'logout');
     protected array $MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
@@ -161,7 +161,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 DisplayQuery::QUERY_PASSWORD,
                 '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getServerEntityID()
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
         else

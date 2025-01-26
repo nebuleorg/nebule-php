@@ -965,6 +965,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         foreach ($list as $object) {
             if (is_string($object))
                 $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
+            if ($object === null)
+                continue;
             $htLink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_displayInstance->prepareObjectColor($object);
             $icon = '';

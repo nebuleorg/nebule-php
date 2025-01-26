@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250126';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -165,15 +165,15 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     protected function _initialisation(): void
     {
         // Vide, est surchargé juste avant l'affichage.
-        $this->setUrlLinkObjectPrefix('?');
-        $this->setUrlLinkGroupPrefix('?');
-        $this->setUrlLinkConversationPrefix('?');
-        $this->setUrlLinkEntityPrefix('?');
-        $this->setUrlLinkCurrencyPrefix('?');
-        $this->setUrlLinkTokenPoolPrefix('?');
-        $this->setUrlLinkTokenPrefix('?');
-        $this->setUrlLinkTransactionPrefix('?');
-        $this->setUrlLinkWalletPrefix('?');
+        $this->setUrlLinkObjectPrefix('?a=4&l=');
+        $this->setUrlLinkGroupPrefix('?a=4&l=');
+        $this->setUrlLinkConversationPrefix('?a=4&l=');
+        $this->setUrlLinkEntityPrefix('?a=4&l=');
+        $this->setUrlLinkCurrencyPrefix('?a=4&l=');
+        $this->setUrlLinkTokenPoolPrefix('?a=4&l=');
+        $this->setUrlLinkTokenPrefix('?a=4&l=');
+        $this->setUrlLinkTransactionPrefix('?a=4&l=');
+        $this->setUrlLinkWalletPrefix('?a=4&l=');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();
@@ -182,6 +182,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
+        $this->_findCurrentApplication();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
         if ($this->_translateInstance !== null) {
@@ -1630,11 +1631,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Action extends Actions
-{
-    const COMMAND_ACTION_NEW_BLOG_NAME = 'actnewblogname';
-    const COMMAND_ACTION_NEW_BLOG_TITLE = 'actnewblogtitle';
-}
+class Action extends Actions {}
 
 
 /**
@@ -1649,10 +1646,22 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            ':::login' => 'Se connecter',
+            ':::return' => 'Revenir au blog',
+            ':::posts' => 'Posts',
+            ':::answers' => 'Réponses',
         ],
         'en-en' => [
+            ':::login' => 'Connecting',
+            ':::return' => 'Return to blog',
+            ':::posts' => 'Posts',
+            ':::answers' => 'Answers',
         ],
         'es-co' => [
+            ':::login' => 'Connecting',
+            ':::return' => 'Return to blog',
+            ':::posts' => 'Posts',
+            ':::answers' => 'Answers',
         ],
     ];
 }

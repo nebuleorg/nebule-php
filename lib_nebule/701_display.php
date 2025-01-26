@@ -2500,11 +2500,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
      *
-     * @param Node|Entity|Group|Conversation $object
-     * @param string                         $htlink
+     * @param Node   $object
+     * @param string $htlink
      * @return string
      */
-    public function prepareDefaultObjectOrGroupOrEntityHtlink($object, string $htlink = ''): string
+    public function prepareDefaultObjectOrGroupOrEntityHtlink(Node $object, string $htlink = ''): string
     {
         return $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
     }
@@ -2512,11 +2512,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
      *
-     * @param Node|Entity|Group|Conversation $object
-     * @param string                         $htlink
+     * @param Node   $object
+     * @param string $htlink
      * @return string
      */
-    private function _prepareDefaultObjectOrGroupOrEntityHtlink($object, string $htlink = ''): string
+    private function _prepareDefaultObjectOrGroupOrEntityHtlink(Node $object, string $htlink = ''): string
     {
         if ($htlink != '')
             return $htlink;
