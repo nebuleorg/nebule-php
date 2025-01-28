@@ -575,7 +575,7 @@ class ModuleNeblog extends Modules
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        $this->_displayAddButton($instanceList, ':::return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
+        $this->_displayAddButton($instanceList, '::returnblog', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '?view=' . $this->MODULE_REGISTERED_VIEWS[0]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID());
         $instanceList->display();
@@ -751,7 +751,7 @@ class ModuleNeblog extends Modules
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        $this->_displayAddButton($instanceList, ':::return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
+        $this->_displayAddButton($instanceList, '::returnblog', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '?view=' . $this->MODULE_REGISTERED_VIEWS[0]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID());
         $instanceList->display();
