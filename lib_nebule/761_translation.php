@@ -349,8 +349,9 @@ abstract class Translates extends Functions
         if (str_starts_with($text, ':::') && isset($classAppTranslate::TRANSLATE_TABLE[$lang][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[$lang][$text];
         if (str_starts_with($text, '::')
-            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
-            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text]))
+            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
+            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text])
+        )
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
 
         $result = $this->_getTranslateFromModules($text, $lang);
@@ -365,8 +366,9 @@ abstract class Translates extends Functions
         if (str_starts_with($text, ':::') && isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
         if (str_starts_with($text, '::')
-            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Translates')
-            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
+            && is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
+            && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text])
+        )
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
 
         $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
@@ -377,7 +379,7 @@ abstract class Translates extends Functions
         $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = '';
         foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
-            if ($module->getCommandName() == $lang && isset($module::TRANSLATE_TABLE[$lang][$text])) {
+            if ($module::MODULE_LANGUAGE == $lang && isset($module::TRANSLATE_TABLE[$lang][$text])) {
                 $result = $module::TRANSLATE_TABLE[$lang][$text];
                 $this->_metrologyInstance->addLog('find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
             }

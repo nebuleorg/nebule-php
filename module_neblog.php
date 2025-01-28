@@ -26,7 +26,7 @@ use Relay\Event\Flushed;
  * PostOID can have name.
  * PostOID can have update.
  *
- * On an entry 'EntryOID', definition of a new answer with 'AnswerOID' OID:
+ * On an post 'PostOID', definition of a new answer with 'AnswerOID' OID:
  *  -  f>PostOID>AnswerOID>RID_BLOG_ANSWER
  * AnswerOID must have content.
  * AnswerOID should not have name.
@@ -52,7 +52,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250126';
+    protected string $MODULE_VERSION = '020250128';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -69,9 +69,9 @@ class ModuleNeblog extends Modules
     const COMMAND_ACTION_SYNC_BLOG_NID = 'actionsyncblognid';
     const COMMAND_ACTION_NEW_POST_NAME = 'actionnewpostname';
     const COMMAND_ACTION_NEW_POST_CONTENT = 'actionnewpostcontent';
-    const COMMAND_ACTION_NEW_ANSWER = 'actionnewpostcontent';
-    const COMMAND_ACTION_NEW_PAGE_NAME = 'actionnewpostname';
-    const COMMAND_ACTION_NEW_PAGE_CONTENT = 'actionnewpostcontent';
+    const COMMAND_ACTION_NEW_ANSWER = 'actionnewanswcontent';
+    const COMMAND_ACTION_NEW_PAGE_NAME = 'actionnewpagename';
+    const COMMAND_ACTION_NEW_PAGE_CONTENT = 'actionnewpagecontent';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
     const RID_BLOG_POST = '29d07ad0f843ab88c024811afb74af1590d7c1877c67075c5f4f42e702142baea0fa.none.272';
     const RID_BLOG_ANSWER = 'a3fe5534f7c9537145f5f5c7eba4a2c747cb781614f66898a4779a3ffaf6538856c7.none.272';
@@ -209,7 +209,7 @@ class ModuleNeblog extends Modules
                 # Come back to blog
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[7]
                     || $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[11]) {
-                    $hookArray[4]['name'] = '::neblog:module:disp:blog';
+                    $hookArray[4]['name'] = '::neblog:module:blog:disp';
                     $hookArray[4]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
                     $hookArray[4]['desc'] = '';
                     $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
@@ -344,7 +344,7 @@ class ModuleNeblog extends Modules
     private function _displayBlog(): void {
         $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
         $title = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::neblog:module:disp:blog');
+        $title->setTitle('::neblog:module:blog:disp');
         $title->setIcon($icon);
         $title->display();
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog');
@@ -386,7 +386,7 @@ class ModuleNeblog extends Modules
         } elseif ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
-            $instance->setMessage(':::login');
+            $instance->setMessage('::login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
             $instanceList->addItem($instance);
@@ -415,7 +415,7 @@ class ModuleNeblog extends Modules
             $instance->setEnableRefs(true);
             $instance->setRefs(array($blogPostSID));
             $instance->setEnableStatus(true);
-            $instance->setStatus($this->_translateInstance->getTranslate(':::answers') . ':' . $this->_getCountPostAnswers($blogInstance));
+            $instance->setStatus($this->_translateInstance->getTranslate('::answers') . ':' . $this->_getCountPostAnswers($blogInstance));
             $instanceList->addItem($instance);
         }
 
@@ -455,7 +455,7 @@ class ModuleNeblog extends Modules
         } elseif ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
-            $instance->setMessage(':::login');
+            $instance->setMessage('::login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
             $instanceList->addItem($instance);
@@ -483,7 +483,11 @@ class ModuleNeblog extends Modules
             $instance->setEnableRefs(true);
             $instance->setRefs(array($blogSID));
             $instance->setEnableStatus(true);
-            $instance->setStatus($this->_translateInstance->getTranslate(':::posts') . ':' . $this->_getCountBlogPosts($blogInstance));
+            $instance->setStatus(
+                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountBlogPages($blogInstance)
+                . ' '
+                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountBlogPosts($blogInstance)
+            );
             $instanceList->addItem($instance);
         }
 
@@ -710,7 +714,10 @@ class ModuleNeblog extends Modules
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        $this->_displayAddButton($instanceList, ':::return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
+        $this->_displayAddButton($instanceList, '::returnlistpages', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
+            '?view=' . $this->MODULE_REGISTERED_VIEWS[12]
+            . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID());
+        $this->_displayAddButton($instanceList, '::returnblog', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '?view=' . $this->MODULE_REGISTERED_VIEWS[0]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID());
         $instanceList->display();
@@ -860,7 +867,7 @@ class ModuleNeblog extends Modules
         if ($this->_extractActionSyncBlog())
             $this->_setSyncBlog($this->_actionSyncBlogNID);
         if ($this->_extractActionAddPost())
-            $this->_setNewBlogPost($this->_actionAddBlogName, $this->_actionAddPostContent);
+            $this->_setNewBlogPost($this->_actionAddPostName, $this->_actionAddPostContent);
         if ($this->_extractActionAddAnswer())
             $this->_setNewPostAnswer($this->_actionAddAnswerContent);
         if ($this->_extractActionAddPage())
@@ -982,7 +989,15 @@ class ModuleNeblog extends Modules
 
 
 
-    // Blogs
+    /*
+     * Blogs
+     *
+     * Definition of new blog with 'BlogNID' NID:
+     *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
+     * BlogNID should not have content.
+     * BlogNID should have name.
+     * BlogNID must not have update.
+     */
     private function _getListBlogLinks(): array {
         $links = array();
         $this->_getLinks($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
@@ -1012,7 +1027,15 @@ class ModuleNeblog extends Modules
 
 
 
-    // Posts on blogs
+    /*
+     * Posts on blogs
+     *
+     * On a blog 'BlogNID', definition of a new post with 'PostOID' OID:
+     *  -  f>BlogNID>PostOID>RID_BLOG_POST
+     * PostOID must have content.
+     * PostOID can have name.
+     * PostOID can have update.
+     */
     private function _getListBlogPostLinks(Node $blog): array {
         $links = array();
         $this->_getLinks($links, $blog, self::RID_BLOG_POST);
@@ -1041,7 +1064,16 @@ class ModuleNeblog extends Modules
 
 
 
-    // Answers of posts on blogs
+    /*
+     * Answers of posts on blogs
+     *
+     * On an post 'PostOID', definition of a new answer with 'AnswerOID' OID:
+     *  -  f>PostOID>AnswerOID>RID_BLOG_ANSWER
+     * AnswerOID must have content.
+     * AnswerOID should not have name.
+     * AnswerOID can have update.
+     * Only one level of answer for now. TODO
+     */
     private function _getListPostAnswerLinks(Node $post): array {
         $links = array();
         $this->_getLinks($links, $post, self::RID_BLOG_ANSWER);
@@ -1069,7 +1101,15 @@ class ModuleNeblog extends Modules
 
 
 
-    // Pages on blogs
+    /*
+     * Pages on blogs
+     *
+     * On a blog 'BlogNID', definition of a new page with 'PageOID' OID:
+     *  -  f>BlogNID>PageOID>RID_BLOG_PAGE
+     * PageOID must have content.
+     * PageOID can have name.
+     * PageOID can have update.
+     */
     private function _getListBlogPages(Node $blog): array {
         $links = array();
         $this->_getLinks($links, $blog, self::RID_BLOG_PAGE);
@@ -1098,6 +1138,12 @@ class ModuleNeblog extends Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            '::login' => 'Se connecter',
+            '::returnblog' => 'Revenir au blog',
+            '::returnlistpages' => 'Liste des pages',
+            '::posts' => 'Posts',
+            '::pages' => 'Pages',
+            '::answers' => 'Réponses',
             '::neblog:module:objects:ModuleName' => 'Module des blogs',
             '::neblog:module:objects:MenuName' => 'Blogs',
             '::neblog:module:objects:ModuleDescription' => 'Module de gestion des blogs.',
@@ -1111,6 +1157,12 @@ class ModuleNeblog extends Modules
             '::neblog:module:about:desc' => 'Ceci est un gestionnaire/afficheur de weblog basé sur nebule.',
         ],
         'en-en' => [
+            '::login' => 'Connecting',
+            '::returnblog' => 'Return to blog',
+            '::returnlistpages' => 'List of pages',
+            '::posts' => 'Posts',
+            '::pages' => 'Pages',
+            '::answers' => 'Answers',
             '::neblog:module:objects:ModuleName' => 'Blogs module',
             '::neblog:module:objects:MenuName' => 'Blogs',
             '::neblog:module:objects:ModuleDescription' => 'Blogs management module.',
@@ -1124,6 +1176,12 @@ class ModuleNeblog extends Modules
             '::neblog:module:about:desc' => 'This is a manager/reader for weblog based on nebule.',
         ],
         'es-co' => [
+            '::login' => 'Connecting',
+            '::returnblog' => 'Return to blog',
+            '::returnlistpages' => 'List of pages',
+            '::posts' => 'Posts',
+            '::pages' => 'Pages',
+            '::answers' => 'Answers',
             '::neblog:module:objects:ModuleName' => 'Módulo de blogs',
             '::neblog:module:objects:MenuName' => 'Blogs',
             '::neblog:module:objects:ModuleDescription' => 'Módulo de gestión de blogs.',

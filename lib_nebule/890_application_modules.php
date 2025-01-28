@@ -61,6 +61,7 @@ class ApplicationModules
         $this->_initInternalModules();
         $this->_initExternalModules();
         $this->_initTranslateModules();
+        //$this->_findCurrentModule();
     }
 
     protected function _initInternalModules(): void {
@@ -466,9 +467,21 @@ class ApplicationModules
         return false;
     }
 
+    protected function _findCurrentModule(): void
+    {
+        if ($this->_applicationInstance::USE_MODULES) { // FIXME verifier
+            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+                if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode() && strtolower($module->getType()) == 'application') {
+                    $this->_metrologyInstance->addLog('find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '67aaf050');
+                    $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
+                }
+            }
+        }
+    }
+
     /**
      * Retourne le module en cours d'utilisation.
-     * Si les modules ne sont pas utilisés, retourne false.
+     * Si les modules ne sont pas utilisés, retourne null.
      *
      * @return Modules|null
      */
