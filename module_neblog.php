@@ -52,7 +52,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250128';
+    protected string $MODULE_VERSION = '020250131';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -250,7 +250,10 @@ class ModuleNeblog extends Modules
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this->MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayBlog();
+                if ($this->_instanceCurrentBlog->getID() != '0')
+                    $this->_displayBlog();
+                else
+                    $this->_displayBlogs();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayNewBlog();
@@ -268,7 +271,12 @@ class ModuleNeblog extends Modules
                 $this->_displaySyncBlog();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayPost();
+                if ($this->_instanceCurrentBlogPost->getID() != '0')
+                    $this->_displayPost();
+                elseif ($this->_instanceCurrentBlog->getID() != '0')
+                    $this->_displayBlog();
+                else
+                    $this->_displayBlogs();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[8]:
                 $this->_displayNewPost();
@@ -280,7 +288,12 @@ class ModuleNeblog extends Modules
                 $this->_displayDelPost();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[11]:
-                $this->_displayPage();
+                if ($this->_instanceCurrentBlogPage->getID() != '0')
+                    $this->_displayPage();
+                elseif ($this->_instanceCurrentBlog->getID() != '0')
+                    $this->_displayBlog();
+                else
+                    $this->_displayBlogs();
                 break;
             case $this->MODULE_REGISTERED_VIEWS[12]:
                 $this->_displayPages();
@@ -1151,6 +1164,7 @@ class ModuleNeblog extends Modules
             '::neblog:module:blog:disp' => 'Display blog',
             '::neblog:module:blog:list' => 'List blogs',
             '::neblog:module:blog:new' => 'New blog',
+            '::neblog:module:blog:get' => 'Get existing blog',
             '::neblog:module:blog:mod' => 'Modify blog',
             '::neblog:module:blog:del' => 'Delete blog',
             '::neblog:module:about:title' => 'A propos',
@@ -1170,6 +1184,7 @@ class ModuleNeblog extends Modules
             '::neblog:module:blog:disp' => 'Display blog',
             '::neblog:module:blog:list' => 'List blogs',
             '::neblog:module:blog:new' => 'New blog',
+            '::neblog:module:blog:get' => 'Get existing blog',
             '::neblog:module:blog:mod' => 'Modify blog',
             '::neblog:module:blog:del' => 'Delete blog',
             '::neblog:module:about:title' => 'About',
@@ -1189,6 +1204,7 @@ class ModuleNeblog extends Modules
             '::neblog:module:blog:disp' => 'Display blog',
             '::neblog:module:blog:list' => 'List blogs',
             '::neblog:module:blog:new' => 'New blog',
+            '::neblog:module:blog:get' => 'Get existing blog',
             '::neblog:module:blog:mod' => 'Modify blog',
             '::neblog:module:blog:del' => 'Delete blog',
             '::neblog:module:about:title' => 'About',

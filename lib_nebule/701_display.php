@@ -3923,8 +3923,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
                 // Liste les points d'ancrages à afficher.
-                if (substr($module->getInterface(), 0, 1) == '1'
-                    || substr($module->getInterface(), 0, 1) == '2'
+                if (str_starts_with($module->getInterface(), '1')
+                    || str_starts_with($module->getInterface(), '2')
                 )
                     $appHookList = $module->getHookList($selfHookName);
                 else
