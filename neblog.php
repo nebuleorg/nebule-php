@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250128';
+    const APPLICATION_VERSION = '020250203';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -1077,7 +1077,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 <img alt="<?php echo Application::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
                 <?php echo Application::APPLICATION_NAME; ?><br/>
                 (c) <?php echo Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR; ?><br/>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version');
+                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate(':::version');
                 echo ' : ' . Application::APPLICATION_VERSION; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo Application::APPLICATION_WEBSITE; ?></a>
             </div>
@@ -1321,7 +1321,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         if ($this->_configurationInstance->getOptionUntyped('neblogDisplayMetrology')) {
             ?>
 
-            <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
             <div class="text">
                 <p>
                     <?php
@@ -1538,9 +1538,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitle($icon, $title = '', $desc = '', $help = ''): void
+    public function displayDivTextTitle_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
     {
-        $this->displayDivTextTitleH1($icon, $title, $desc, $help);
+        $this->displayDivTextTitleH1_DEPRECATED($icon, $title, $desc, $help);
     }
 
     /**
@@ -1552,7 +1552,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = ''): void
+    public function displayDivTextTitleH1_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
     {
         ?>
 
@@ -1591,7 +1591,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * @param string $help
      * @return void
      */
-    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = ''): void
+    public function displayDivTextTitleH2_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
     {
         ?>
 
@@ -1646,10 +1646,13 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            ':::version' => 'Version',
         ],
         'en-en' => [
+            ':::version' => 'Version',
         ],
         'es-co' => [
+            ':::version' => 'Version',
         ],
     ];
 }

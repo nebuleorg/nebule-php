@@ -1994,7 +1994,7 @@ class ModuleEntities extends Modules
     private function _displayEntitySearch(): void
     {
         // Affiche la création d'une entité.
-        $this->_displayInstance->displayDivTextTitleH2(
+        $this->_displayInstance->displayDivTextTitleH2_DEPRECATED(
             Display::DEFAULT_ICON_LF,
             '::sylabe:module:entities:SearchEntity',
             '::sylabe:module:entities:SearchEntityDesc',

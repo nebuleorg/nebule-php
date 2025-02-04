@@ -880,7 +880,7 @@ class ModuleGroups extends Modules
                     if (sizeof($list) != 0) {
                         echo "<div class=\"sequence\"></div>\n";
                         // Affiche le titre.
-                        $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle(
+                        $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle_DEPRECATED(
                             $this->MODULE_LOGO,
                             '::sylabe:module:groups:display:seenFromOthers',
                             '',

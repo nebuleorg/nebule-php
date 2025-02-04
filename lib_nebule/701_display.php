@@ -3923,8 +3923,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             if ($module->getCommandName() == $this->_currentDisplayMode) {
                 // Liste les points d'ancrages à afficher.
-                if (substr($module->getInterface(), 0, 1) == '1'
-                    || substr($module->getInterface(), 0, 1) == '2'
+                if (str_starts_with($module->getInterface(), '1')
+                    || str_starts_with($module->getInterface(), '2')
                 )
                     $appHookList = $module->getHookList($selfHookName);
                 else
@@ -3933,12 +3933,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
                         if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $module->getTraduction($module->getName());
-                            $dispHookList[$i]['name'] = $module->getTraduction($appHook['name']);
+                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module->getName());
+                            $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
                             if ($dispHookList[$i]['icon'] == '')
                                 $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            $dispHookList[$i]['desc'] = $module->getTraduction($appHook['desc']);
+                            $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
                             $dispHookList[$i]['link'] = $appHook['link'];
                             if (isset($appHook['css'])
                                 && $appHook['css'] != ''
@@ -3958,8 +3958,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             if ($module->getCommandName() != $this->_currentDisplayMode) {
                 // Liste les points d'encrages à afficher.
-                if (substr($module->getInterface(), 0, 1) == '1'
-                    || substr($module->getInterface(), 0, 1) == '2'
+                if (str_starts_with($module->getInterface(), '1')
+                    || str_starts_with($module->getInterface(), '2')
                 )
                     $appHookList = $module->getHookList($selfHookName);
                 else
@@ -4000,12 +4000,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
-                        $dispHookListT[$i]['moduleName'] = $module->getTraduction($module->getName());
-                        $dispHookListT[$i]['name'] = $module->getTraduction($appHook['name']);
+                        $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module->getName());
+                        $dispHookListT[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $dispHookListT[$i]['icon'] = $appHook['icon'];
                         if ($dispHookListT[$i]['icon'] == '')
                             $dispHookListT[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                        $dispHookListT[$i]['desc'] = $module->getTraduction($appHook['desc']);
+                        $dispHookListT[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
                         $dispHookListT[$i]['link'] = $appHook['link'];
                         if (isset($appHook['css'])
                             && $appHook['css'] != ''
