@@ -9,7 +9,7 @@ $nebuleSurname = 'nebule/library';
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleDescription = 'Library of functions for nebule in php object-oriented.';
 $nebuleAuthor = 'Projet nebule';
-$nebuleLibVersion = '020250203';
+$nebuleLibVersion = '020250205';
 $nebuleLicence = 'GNU GPL 2010-2025';
 $nebuleWebsite = 'www.nebule.org';
 // ----------------------------------------------------------------------------------------
@@ -17,20 +17,19 @@ $nebuleWebsite = 'www.nebule.org';
 
 
 /*
-|------------------------------------------------------------------------------------------
-| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-|------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entraînera une modification de son empreinte
-|       et entraînera donc automatiquement son invalidation !
-|  [EN] Any modification of this code will result in a modification of its hash digest
-|       and will therefore automatically result in its invalidation!
-|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-|       tanto lugar automáticamente a su anulación!
-|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і,
-|       відповідно, автоматично призведе до його анулювання!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
+|  [EN] Any modification of this code will result in a modification of its hash digest and will therefore automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo tanto lugar automáticamente a su anulación!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
+|  [IT] Ogni modifica di questo codice comporterà una modifica della sua impronta e quindi ne causerà automaticamente l'invalidazione!
+|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
+|  [PL] Każda modyfikacja tego kodu spowoduje zmianę jego odcisku i automatycznie doprowadzi do jego unieważnienia!
 |
-|------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
 

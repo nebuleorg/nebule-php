@@ -57,7 +57,7 @@ namespace Nebule\Library;
  *       Ratios disponibles :
  *       - DisplayInformation::RATIO_SQUARE : forme carrée de 2x2 displaySize.
  *       - DisplayInformation::RATIO_SHORT : forme plate courte de 6x1 displaySize.
- *       - DisplayInformation::RATIO_LONG : forme plate longue de toute largeure disponible.
+ *       - DisplayInformation::RATIO_LONG : forme plate longue de toute largeur disponible.
  *       Default: DisplayInformation::RATIO_SHORT
  *       String
  *   - setIcon : Détermine l'icône à utiliser.
