@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250207';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -989,16 +989,11 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
     /**
-     * Affichage de la barre supérieure.
-     *
-     * La partie gauche présente le menu et l'entité en cours.
-     *
-     * La partie droite présente :
-     * - Un ok si tout se passe bien.
-     * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
-     * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
+     * Display information on top.
+     * On left the current entity.
+     * On right security checks, empty if all OK.
      */
-    private function _displayHeader()
+    private function _displayHeader(): void
     {
         ?>
 
@@ -1024,39 +1019,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 ?>
             </div>
             <?php
-            // Affiche l'entité et son image.
-            $param = array(
-                'enableDisplayColor' => true,
-                'enableDisplayIcon' => true,
-                'enableDisplayRefs' => false,
-                'enableDisplayName' => true,
-                'enableDisplayID' => false,
-                'enableDisplayFlags' => true,
-                'enableDisplayFlagProtection' => false,
-                'enableDisplayFlagObfuscate' => false,
-                'enableDisplayFlagUnlocked' => true,
-                'enableDisplayFlagState' => true,
-                'enableDisplayFlagEmotions' => false,
-                'enableDisplayStatus' => false,
-                'enableDisplayContent' => false,
-                'displaySize' => 'medium',
-                'displayRatio' => 'short',
-                'enableDisplayJS' => false,
-                'enableDisplayObjectActions' => false,
-            );
-            if ($this->_unlocked) {
-                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
-                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_FLUSH;
-            } else {
-                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID();
-            }
-            echo $this->getDisplayObject_DEPRECATED($this->_entitiesInstance->getCurrentEntityInstance(), $param);
+            $this->_displayCurentEntityOnHeader(true);
             ?>
 
             <div class="header-right">

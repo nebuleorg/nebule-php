@@ -29,7 +29,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'login';
     protected string $MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250126';
+    protected string $MODULE_VERSION = '020250207';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -193,32 +193,32 @@ class ModuleAutent extends \Nebule\Library\Modules {
     }
 
     private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey): void {
-        $instanceObject = new DisplayObject($this->_applicationInstance);
-        $instanceObject->setNID($eid);
-        $instanceObject->setEnableColor(true);
-        $instanceObject->setEnableIcon(true);
-        $instanceObject->setEnableName(true);
-        $instanceObject->setEnableRefs(false);
-        $instanceObject->setEnableNID(false);
-        $instanceObject->setEnableFlags(true);
-        $instanceObject->setEnableFlagProtection(false);
-        $instanceObject->setEnableFlagObfuscate(false);
-        $instanceObject->setEnableFlagState(true);
-        $instanceObject->setEnableFlagEmotions(false);
-        $instanceObject->setEnableStatus(true);
-        $instanceObject->setEnableContent(false);
-        $instanceObject->setEnableJS(false);
-        $instanceObject->setEnableLink(true);
-        $instanceObject->setRatio(DisplayItem::RATIO_SHORT);
-        $instanceObject->setStatus('');
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setNID($eid);
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableRefs(false);
+        $instance->setEnableNID(false);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(false);
+        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableStatus(true);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        $instance->setEnableLink(true);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setStatus('');
         if ($isKey)
-            $instanceObject->setEnableFlagUnlocked(false);
+            $instance->setEnableFlagUnlocked(false);
         else
         {
-            $instanceObject->setEnableFlagUnlocked(true);
-            $instanceObject->setFlagUnlocked($this->_unlocked);
+            $instance->setEnableFlagUnlocked(true);
+            $instance->setFlagUnlocked($this->_unlocked);
         }
-        $instanceList->addItem($instanceObject);
+        $instanceList->addItem($instance);
     }
 
     private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull): void {
@@ -240,13 +240,13 @@ class ModuleAutent extends \Nebule\Library\Modules {
     }
 
     private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link): void {
-        $instancePassword = new DisplayQuery($this->_applicationInstance);
-        $instancePassword->setMessage($message);
-        $instancePassword->setType($type);
-        $instancePassword->setLink($link);
-        $instancePassword->setHiddenName('id');
-        $instancePassword->setHiddenValue($this->_entitiesInstance->getServerEntityID());
-        $instanceList->addItem($instancePassword);
+        $instance = new DisplayQuery($this->_applicationInstance);
+        $instance->setMessage($message);
+        $instance->setType($type);
+        $instance->setLink($link);
+        $instance->setHiddenName('id');
+        $instance->setHiddenValue($this->_entitiesInstance->getServerEntityID());
+        $instanceList->addItem($instance);
     }
 
 

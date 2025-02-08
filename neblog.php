@@ -3,6 +3,9 @@ declare(strict_types=1);
 namespace Nebule\Application\Neblog;
 use Nebule\Library\applicationInterface;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayItem;
+use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayObject;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
@@ -51,7 +54,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250203';
+    const APPLICATION_VERSION = '020250207';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -895,14 +898,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
-    /**
-     * Affichage des actions.
-     */
+
     private function _displayActions(): void
     {
         ?>
 
-        <div class="layout-footer footer<?php if ($this->_unlocked) {
+        <div class="layout-footer footer<?php if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
             echo 'Unlock';
         } ?>">
             <p>
@@ -916,21 +917,17 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
+
     /**
-     * Affichage de la barre supérieure.
-     *
-     * La partie gauche présente le menu et l'entité en cours.
-     *
-     * La partie droite présente :
-     * - Un ok si tout se passe bien.
-     * - Un warning si il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
-     * - Une erreur si il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
+     * Display information on top.
+     * On left the current entity.
+     * On right security checks, empty if all OK.
      */
     private function _displayHeader(): void
     {
         ?>
 
-        <div class="layout-header header<?php if ($this->_unlocked) {
+        <div class="layout-header header<?php if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
             echo 'Unlock';
         } ?>">
             <div class="header-left">
@@ -952,95 +949,11 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 ?>
             </div>
             <?php
-            // Affiche l'entité et son image.
-            $param = array(
-                'enableDisplayColor' => true,
-                'enableDisplayIcon' => true,
-                'enableDisplayRefs' => false,
-                'enableDisplayName' => true,
-                'enableDisplayID' => false,
-                'enableDisplayFlags' => true,
-                'enableDisplayFlagProtection' => false,
-                'enableDisplayFlagObfuscate' => false,
-                'enableDisplayFlagUnlocked' => true,
-                'enableDisplayFlagState' => true,
-                'enableDisplayFlagEmotions' => false,
-                'enableDisplayStatus' => false,
-                'enableDisplayContent' => false,
-                'displaySize' => 'medium',
-                'displayRatio' => 'short',
-                'enableDisplayJS' => false,
-                'enableDisplayObjectActions' => false,
-            );
-            if ($this->_unlocked) {
-                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
-                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_FLUSH;
-            } else {
-                $param['flagUnlockedLink'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID();
-            }
-            echo $this->getDisplayObject_DEPRECATED($this->_entitiesInstance->getCurrentEntityInstance(), $param);
+            $this->_displayCurentEntityOnHeader(false);
             ?>
 
             <div class="header-right">
-                <?php
-                if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
-                    echo "&nbsp;\n";
-                } // Si un test est en warning maximum.
-                elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
-                    // Si mode rescue et en warning.
-                    if ($this->_rescueInstance->getModeRescue()) {
-                        // Si l'entité est déverrouillées.
-                        if ($this->_unlocked) {
-                            // Affiche le lien de verrouillage sans les effets.
-                            $this->displayHypertextLink(
-                                $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
-                                    '',
-                                    '',
-                                    'name="ico_lock"'),
-                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
-                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . References::COMMAND_FLUSH);
-                        } else {
-                            // Affiche de lien de déverrouillage sans les effets.
-                            $this->displayHypertextLink(
-                                $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
-                                    '',
-                                    '',
-                                    'name="ico_lock"'),
-                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID());
-                        }
-                    } // Sinon affiche le warning.
-                    else {
-                        $this->displayHypertextLink(
-                            $this->convertUpdateImage(
-                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
-                                'WARNING'),
-                            '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                            . '&' . References::COMMAND_SWITCH_TO_ENTITY);
-                    }
-                } // Sinon c'est une erreur.
-                else {
-                    $this->displayHypertextLink(
-                        $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
-                            'ERROR'),
-                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_FLUSH);
-                }
-                ?>
+                <?php $this->_displayHeaderLeft(); ?>
 
             </div>
             <div class="header-center">
@@ -1051,21 +964,12 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         <?php
     }
 
-
-    /**
-     * Affiche la partie centrale de l'entête.
-     * Non utilisé.
-     */
-    private function _displayHeaderCenter()
-    {
-        //...
-    }
+    private function _displayHeaderLeft(): void {}
+    private function _displayHeaderCenter(): void {}
 
 
-    /**
-     * Affiche le menu des applications.
-     */
-    private function _displayMenuApplications()
+
+    private function _displayMenuApplications(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)

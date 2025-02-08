@@ -2372,7 +2372,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Prépare à un objet comme image avec éventuellement un texte et un identifiant CSS.
+     * Prépare à l'affichage d'un objet comme image avec éventuellement un texte et un identifiant CSS.
      * Une recherche préalable est faite pour trouver la mise à jour la plus récente de l'objet.
      * Si l'objet commence par 'data:' c'est une image encodée en base64.
      * Retourne dans ce cas un affichage d'image.
@@ -5946,6 +5946,31 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
         }
         return $error;
+    }
+
+    protected function _displayCurentEntityOnHeader(bool $enableLink = true)
+    {
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setNID($this->_entitiesInstance->getCurrentEntityInstance());
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableRefs(false);
+        $instance->setEnableNID(false);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(false);
+        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableStatus(false);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        $instance->setEnableLink($enableLink);
+        $instance->setSize(DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setFlagUnlocked($this->_entitiesInstance->getCurrentEntityIsUnlocked());
+        $instance->display();
     }
 
     static public function docDispTitle(int $level, string $id, string $title): void {

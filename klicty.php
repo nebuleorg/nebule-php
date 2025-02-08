@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250207';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1223,13 +1223,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 
     /**
-     * Affichage de la barre supérieure.
-     *
-     * La partie gauche présente le menu et l'entité déverrouillée ou des icônes de navigation hors connexion.
-     *
-     * La partie droite présente :
-     * - Un avertissement s'il y a un problème. En mode rescue, on peut quand même verrouiller/déverrouiller l'entité.
-     * - Une erreur s'il y a un gros problème. Il n'est pas possible de déverrouiller l'entité.
+     * Display information on top.
+     * On left the current entity.
+     * On right security checks, empty if all OK.
      */
     private function _displayHeader()
     {
@@ -1244,39 +1240,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                      onclick="display_menu('layout-menu-applications');"/>
             </div>
             <?php
-            // Si l'entité n'est en cours n'est pas l'entité par défaut.
+            // Si l'entité en cours n'est pas l'entité par défaut.
             if ($this->_entitiesInstance->getCurrentEntityID() != $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity')) {
-                // Affiche l'entité et son image.
-                $param = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-//                    'enableDisplayRefs' => false,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => true,
-                    'enableDisplayFlagState' => true,
-                    'enableDisplayFlagEmotions' => false,
-                    'enableDisplayStatus' => false,
-                    'enableDisplayContent' => false,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                    'enableDisplayRefs' => true,
-                    'enableDisplayJS' => false,
-                    'enableDisplayObjectActions' => false,
-                    'objectRefs' => $this->_nebuleInstance->getListEntitiesUnlockedInstances(),
-                );
-                if ($this->_unlocked) {
-                    $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_FLUSH;
-                } else {
-                    $param['flagUnlockedLink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID();
-                }
-                echo $this->getDisplayObject_DEPRECATED($this->_entitiesInstance->getCurrentEntityInstance(), $param);
+                $this->_displayCurentEntityOnHeader(true);
             } else {
                 ?>
 

@@ -1346,10 +1346,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setEnableFlagUnlocked(bool $enable = true): void
     {
         $this->_displayFlagUnlocked = $enable;
-
-        if ($enable){
+        if ($enable)
             $this->_flagUnlockedIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_KEY));
-        }
     }
 
     public function setFlagUnlocked(bool $enable): void
@@ -1525,7 +1523,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setSelfHookName(string $name): void
     {
-        $this->_selfHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
+        $this->_selfHookName = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
     }
 
     public function setEnableTypeHook(bool $enable = true): void
@@ -1562,7 +1560,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_typeHookName = trim(filter_var($name, FILTER_SANITIZE_STRING));
     }
     
-    public function setSelfHookList(array $list)
+    public function setSelfHookList(array $list): void
     {
         $this->_selfHookList = $list;
     }
