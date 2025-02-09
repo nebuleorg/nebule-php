@@ -54,7 +54,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
         if ($this->_nid->checkPresent()) {
             if ($this->_sizeCSS == 'medium' || $this->_sizeCSS == 'full') {
                 $result .= '<div class="objectContentEntity">' . "\n<p>";
-                $result .= sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
+                $result .= sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
                 $result .= "</p>\n";
 
@@ -62,7 +62,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
                     // Liste des localisations.
                     $localisations = $this->_nid->getLocalisationsID();
                     if (sizeof($localisations) > 0) {
-                        $result .= '<table border="0"><tr><td><td>' . $this->_traductionInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
+                        $result .= '<table border="0"><tr><td><td>' . $this->_translateInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                         foreach ($localisations as $localisation) {
                             $locObject = $this->_cacheInstance->newNode($localisation);
                             $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
@@ -86,12 +86,12 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     {
         $result = '';
         $result .= '<div class="objectContentGroup">' . "\n\t<p>"
-            . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
+            . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                 $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
         if ($this->_nid->getMarkClosed())
-            $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeFerme') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
         else
-            $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::GroupeOuvert') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
         $result .= "\t</p>\n</div>\n";
         return $result;
     }
@@ -100,12 +100,12 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     {
         $result = '';
         $result .= '<div class="objectContentConversation">' . "\n\t<p>"
-            . sprintf($this->_traductionInstance->getTranslate('::UniqueID'),
+            . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                 $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
         if ($this->_nid->getMarkClosed())
-            $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationFermee') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
         else
-            $result .= "<br />\n" . $this->_traductionInstance->getTranslate('::ConversationOuverte') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
         $result .= "\t</p>\n</div>\n";
         return $result;
     }

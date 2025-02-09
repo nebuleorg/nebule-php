@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
+use Nebule\Library\DisplayBlankLine;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayItemIconMessage;
@@ -29,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     protected string $MODULE_COMMAND_NAME = 'autent';
     protected string $MODULE_DEFAULT_VIEW = 'login';
     protected string $MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250207';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -133,9 +134,12 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
+        $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
         $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
+        $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->setOnePerLine();
         $instanceList->display();
     }
 
@@ -152,6 +156,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
+        $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getCurrentEntityPrivateKeyInstance(), true);
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
@@ -166,10 +171,12 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
         else
             $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+        $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList,
             ':::return',
             DisplayItemIconMessage::TYPE_BACK,
             '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->setOnePerLine();
         $instanceList->display();
     }
 
@@ -186,9 +193,12 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
+        $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
         $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
+        $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $instanceList->setOnePerLine();
         $instanceList->display();
     }
 
@@ -211,8 +221,11 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instance->setEnableLink(true);
         $instance->setRatio(DisplayItem::RATIO_SHORT);
         $instance->setStatus('');
-        if ($isKey)
+        if ($isKey) {
             $instance->setEnableFlagUnlocked(false);
+            $instance->setName($this->_translateInstance->getTranslate('::privateKey'));
+            $instance->setType(References::REFERENCE_OBJECT_TEXT);
+        }
         else
         {
             $instance->setEnableFlagUnlocked(true);
@@ -249,13 +262,21 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->addItem($instance);
     }
 
+    private function _addBlankLine(DisplayList $instanceList): void
+    {
+        $instance = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
+        $instanceList->addItem($instance);
+    }
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            '::privateKey' => 'Clé privée',
         ],
         'en-en' => [
+            '::privateKey' => 'Private key',
         ],
         'es-co' => [
+            '::privateKey' => 'Private key',
         ],
     ];
 }

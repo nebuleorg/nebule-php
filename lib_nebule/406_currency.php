@@ -1053,7 +1053,7 @@ class Currency extends Node implements nodeInterface
 
                 // Recherche l'option demandée.
                 if (filter_var(trim(strtok($l, ':')), FILTER_SANITIZE_STRING) == $key) {
-                    $result = trim(filter_var(trim(substr($l, strpos($l, ':') + 1)), FILTER_SANITIZE_STRING));
+                    $result = trim((string)filter_var(trim(substr($l, strpos($l, ':') + 1)), FILTER_SANITIZE_STRING));
                     break;
                 }
             }

@@ -18,7 +18,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleObjects extends Modules
+class ModuleObjects extends \Nebule\Library\Modules
 {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::sylabe:module:objects:ModuleName';
@@ -26,7 +26,7 @@ class ModuleObjects extends Modules
     protected string $MODULE_COMMAND_NAME = 'obj';
     protected string $MODULE_DEFAULT_VIEW = 'disp';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -648,7 +648,7 @@ class ModuleObjects extends Modules
 
                         <div class="sylabeModuleObjectsDescList<?php echo $bg; ?>">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
@@ -678,7 +678,7 @@ class ModuleObjects extends Modules
 
                         <div class="sylabeModuleObjectsDescList<?php echo $bg; ?>">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
@@ -709,7 +709,7 @@ class ModuleObjects extends Modules
 
                         <div class="sylabeModuleObjectsDescError">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 

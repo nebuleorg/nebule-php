@@ -1124,7 +1124,7 @@ abstract class Actions extends Functions
                 && trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['name']) != ''
             ) {
                 // Extraction des méta données du fichier.
-                $upname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
                 $upsize = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['size'];
                 $uppath = $_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS]['tmp_name'];
 
@@ -1268,7 +1268,7 @@ abstract class Actions extends Functions
         switch ($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['error']) {
             case UPLOAD_ERR_OK:
                 // Extraction des méta données du fichier.
-                $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
                 $upinfo = pathinfo($upfname);
                 $upext = $upinfo['extension'];
                 $upname = basename($upfname, '.' . $upext);

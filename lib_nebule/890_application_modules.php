@@ -78,7 +78,14 @@ class ApplicationModules
                 continue;
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
-            $classImplement = class_implements($moduleFullName);
+            try {
+                $classImplement = class_implements($moduleFullName);
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' lost', Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
+                $classImplement = array();
+            }
+            if (! is_array($classImplement))
+                $classImplement = array();
             if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement))
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' have translate interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fde052bb');
             if (! in_array('Nebule\Library\ModuleInterface', $classImplement))

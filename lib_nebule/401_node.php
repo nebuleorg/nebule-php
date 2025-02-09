@@ -2837,7 +2837,7 @@ class Node extends Functions implements nodeInterface
         if ($limit < 4)
             $limit = 4;
 
-        $text = trim(filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING));
+        $text = trim((string)filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING));
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else

@@ -1612,6 +1612,137 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
+     * Prepare links depending on modules loaded.
+     */
+    protected function _configureLinks(): void
+    {
+        if (!$this->_applicationInstance::USE_MODULES)
+            return;
+
+        $namespace = '\\' . __NAMESPACE__ . '\\';
+
+        // Prefix objects.
+        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleObjects')
+            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleObjects')
+        ) {
+            $this->setUrlLinkObjectPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        } else {
+            $this->setUrlLinkObjectPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+        }
+
+        // Prefix for entities.
+        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleEntities')
+            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleEntities')
+        ) {
+            $this->setUrlLinkEntityPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=');
+        } else {
+            $this->setUrlLinkEntityPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+        }
+        
+        // Prefix for groups.
+        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleGroups')
+            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleGroups')
+        ) {
+            $this->setUrlLinkGroupPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_GROUP . '=');
+        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
+            $this->setUrlLinkGroupPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        } else {
+            $this->setUrlLinkGroupPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+        }
+
+        // Prefix pour les conversations.
+        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleMessenger')
+            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleMessenger')
+        ) {
+            $this->setUrlLinkConversationPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
+        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
+            $this->setUrlLinkConversationPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        } else {
+            $this->setUrlLinkConversationPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+        }
+
+        // Prefix currencies. FIXME
+        /*if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleQantion')
+            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleQantion')
+        ) {
+            $this->setUrlLinkCurrencyPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
+                . '&' . References::COMMAND_SELECT_CURRENCY . '=');
+            $this->setUrlLinkTokenPoolPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
+                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
+            $this->setUrlLinkTokenPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
+                . '&' . References::COMMAND_SELECT_TOKEN . '=');
+            $this->setUrlLinkTransactionPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
+                . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
+            $this->setUrlLinkWalletPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
+                . '&' . References::COMMAND_SELECT_WALLET . '=');
+        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
+            $this->setUrlLinkCurrencyPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+            $this->setUrlLinkTokenPoolPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+            $this->setUrlLinkTokenPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+            $this->setUrlLinkTransactionPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+            $this->setUrlLinkWalletPrefix('?'
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        } else {
+            $this->setUrlLinkCurrencyPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+            $this->setUrlLinkTokenPoolPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+            $this->setUrlLinkTokenPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+            $this->setUrlLinkTransactionPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+            $this->setUrlLinkWalletPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
+                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
+        }*/
+    }
+
+    /**
      * Code on apps before display.
      */
     protected function _preDisplay(): void
@@ -1624,6 +1755,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function display(): void
     {
+        $this->_configureLinks();
         $this->_preDisplay();
 
         if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
@@ -3511,7 +3643,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
             if (isset($param['flagProtectionText']))
-                $param['flagProtectionText'] = trim(filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
+                $param['flagProtectionText'] = trim((string)filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
             if (!isset($param['flagProtectionText'])
                 || trim($param['flagProtectionText']) == ''
             ) {
@@ -3521,7 +3653,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $param['flagProtectionText'] = '::::display:object:flag:unprotected';
             }
             if (isset($param['flagProtectionLink']))
-                $param['flagProtectionLink'] = trim(filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
+                $param['flagProtectionLink'] = trim((string)filter_var($param['flagProtectionLink'], FILTER_SANITIZE_URL));
             if (!isset($param['flagProtectionLink'])
                 || trim($param['flagProtectionLink']) == ''
             )
@@ -3542,7 +3674,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
             if (isset($param['flagObfuscateText'])) {
-                $param['flagObfuscateText'] = trim(filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
+                $param['flagObfuscateText'] = trim((string)filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
             }
             if (!isset($param['flagObfuscateText'])
                 || trim($param['flagObfuscateText']) == ''
@@ -3553,7 +3685,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $param['flagObfuscateText'] = '::::display:object:flag:unobfuscated';
             }
             if (isset($param['flagObfuscateLink']))
-                $param['flagObfuscateLink'] = trim(filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
+                $param['flagObfuscateLink'] = trim((string)filter_var($param['flagObfuscateLink'], FILTER_SANITIZE_URL));
             if (!isset($param['flagObfuscateLink'])
                 || trim($param['flagObfuscateLink']) == ''
             )
@@ -5948,7 +6080,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $error;
     }
 
-    protected function _displayCurentEntityOnHeader(bool $enableLink = true)
+    protected function _displayCurentEntityOnHeader(bool $enableLink = true): void
     {
         $instance = new DisplayObject($this->_applicationInstance);
         $instance->setNID($this->_entitiesInstance->getCurrentEntityInstance());
@@ -5965,6 +6097,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $instance->setEnableFlagEmotions(false);
         $instance->setEnableStatus(false);
         $instance->setEnableContent(false);
+        $instance->setEnableActions(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink($enableLink);
         $instance->setSize(DisplayItem::SIZE_MEDIUM);
@@ -5986,5 +6119,131 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $uId=strtoupper($id);
 
         echo "<h$level id=\"$dId\"></h$level><p>--<br /><br /><br /></p><h$level>$uId / $title</h$level>\n";
+    }
+
+    /**
+     * Affiche dans les barres de titres l'icône d'aide contextuelle.
+     * @param string $help
+     */
+    protected function _displayDivOnlineHelp_DEPRECATED(string $help): void
+    {
+        // Si authorisé à afficher l'aide.
+        if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayOnlineHelp')) {
+            // Prépare le texte à afficher dans la bulle.
+            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
+            $txt = str_replace('&', '&amp;', $txt);
+            $txt = str_replace('"', '&quot;', $txt);
+            $txt = str_replace("'", '&acute;', $txt);
+            //$txt = str_replace('<','&lt;',$txt);
+            $txt = str_replace("\n", ' ', $txt);
+            // Prépare l'extension de lien.
+            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
+            unset($txt);
+            // Affiche la bulle et le texte.
+            ?>
+
+            <div style="float:right;">
+                <?php
+                $image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
+                ?>
+
+                <img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay"
+                     id="curseur" <?php echo $linkext; ?> />
+            </div>
+            <?php
+            unset($linkext, $image);
+        }
+    }
+
+    /**
+     * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
+     *
+     * @param Node $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     * @return void
+     */
+    public function displayDivTextTitle_DEPRECATED(Node $icon, string $title = '', string $desc = '', string $help = ''): void
+    {
+        $this->displayDivTextTitleH1_DEPRECATED($icon, $title, $desc, $help);
+    }
+
+    /**
+     * Affiche le titre H1 pour un paragraphe de texte.
+     *
+     * @param Node $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     * @return void
+     */
+    public function displayDivTextTitleH1_DEPRECATED(Node $icon, string $title = '', string $desc = '', string $help = ''): void
+    {
+        ?>
+
+        <div class="textTitle">
+            <?php
+            if ($title != '') {
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
+            }
+
+            if ($desc == '') {
+                $desc = '-';
+            } else {
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
+            }
+
+            $this->_displayDivOnlineHelp_DEPRECATED($help);
+            ?>
+
+            <div style="float:left;">
+                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
+
+            </div>
+            <h1 class="divHeaderH1"><?php echo $title; ?></h1>
+            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
+        </div>
+        <?php
+
+    }
+
+    /**
+     * Affiche le titre H2 pour un paragraphe de texte.
+     *
+     * @param Node $icon
+     * @param string $title
+     * @param string $desc
+     * @param string $help
+     * @return void
+     */
+    public function displayDivTextTitleH2_DEPRECATED(Node $icon, string $title = '', string $desc = '', string $help = ''): void
+    {
+        ?>
+
+        <div class="textTitle2">
+            <?php
+            if ($title != '') {
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
+            }
+
+            if ($desc == '') {
+                $desc = '-';
+            } else {
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
+            }
+
+            $this->_displayDivOnlineHelp_DEPRECATED($help);
+            ?>
+
+            <div style="float:left;">
+                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
+
+            </div>
+            <h2 class="divHeaderH2"><?php echo $title; ?></h2>
+            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
+        </div>
+        <?php
+
     }
 }

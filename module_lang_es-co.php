@@ -1,24 +1,23 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Library\ModuleTranslates;
 use Nebule\Library\nebule;
 
 /**
- * This module add translation in Español ES-CO.
+ * This module add translation in Spanish ES-CO.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleTranslateESCO extends ModuleTranslates
+class ModuleTranslateESCO extends \Nebule\Library\ModuleTranslates
 {
     const MODULE_LANGUAGE = 'es-co';
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    const MODULE_VERSION = '020250111';
+    const MODULE_VERSION = '020250209';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';

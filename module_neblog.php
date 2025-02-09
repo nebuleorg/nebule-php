@@ -10,7 +10,6 @@ use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\References;
-use Relay\Event\Flushed;
 
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
@@ -52,7 +51,7 @@ use Relay\Event\Flushed;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleNeblog extends Modules
+class ModuleNeblog extends \Nebule\Library\Modules
 {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::neblog:module:objects:ModuleName';
@@ -60,7 +59,7 @@ class ModuleNeblog extends Modules
     protected string $MODULE_COMMAND_NAME = 'blog';
     protected string $MODULE_DEFAULT_VIEW = 'blog';
     protected string $MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250207';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -489,6 +488,7 @@ class ModuleNeblog extends Modules
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty();
+        $instanceList->setOnePerLine(true);
         $instanceList->display();
     }
 
@@ -1129,6 +1129,7 @@ class ModuleNeblog extends Modules
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty();
+        $instanceList->setOnePerLine(true);
         $instanceList->display();
     }
 

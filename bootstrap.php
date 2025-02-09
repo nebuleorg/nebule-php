@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250205';
+const BOOTSTRAP_VERSION = '020250209';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -1013,9 +1013,9 @@ function lib_getOptionFromFile(string $name): string {
         $file = file(LIB_LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
         if ($file !== false) {
             foreach ($file as $line) {
-                $line = trim(filter_var($line, FILTER_SANITIZE_STRING));
+                $line = trim((string)filter_var($line, FILTER_SANITIZE_STRING));
 
-                if ($line == '' || $line[0] == "#" || strpos($line, '=') === false)
+                if ($line == '' || $line[0] == "#" || !str_contains($line, '='))
                     continue;
 
                 if (trim(strtok($line, '=')) == $name) {
@@ -4718,7 +4718,7 @@ function bootstrap_getApplicationNamespace(string $oid): string {
         if (str_starts_with($l, "#"))
             continue;
 
-        $fName = trim(filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
+        $fName = trim((string)filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
         $fValue = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
         if ($fName == 'namespace') {
             $value = $fValue;

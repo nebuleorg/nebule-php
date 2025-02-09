@@ -86,7 +86,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         if ($this->_nid === null)
             return;
         if ($name != '')
-            $this->_name = trim(filter_var($name, FILTER_SANITIZE_STRING));
+            $this->_name = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
         else
             $this->_name = $this->_nid->getFullName($this->_social);
     }
@@ -98,7 +98,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
             return;
         $this->_styleCSS = ' style="background:#'
             . $this->_nid->getPrimaryColor()
-            . trim(filter_var($style, FILTER_SANITIZE_STRING))
+            . trim((string)filter_var($style, FILTER_SANITIZE_STRING))
             . ';"';
     }
 
@@ -114,7 +114,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         if ($id == '')
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
-            $this->_actionsID = trim(filter_var($id, FILTER_SANITIZE_STRING));
+            $this->_actionsID = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
 
         if ($this->_actionsID != '')
             $this->_displayActions = true;

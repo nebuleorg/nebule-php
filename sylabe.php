@@ -334,51 +334,48 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 	 * --------------------------------------------------------------------------------
 	 *
 	 * Pour l'instant, rien n'est personnalisable dans le style, mais ça viendra...
-	 * @todo
+	 * TODO
 	 */
     /**
      * Variable du logo de l'application.
      * @var string
      */
-    private $_logoApplication = '';
+    private string $_logoApplication = '';
 
     /**
      * Recherche le logo de l'application.
      */
-    private function _findLogoApplication()
+    private function _findLogoApplication(): void
     {
         $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
-        // @todo
     }
 
     /**
      * Variable du lien du logo de l'application.
      * @var string
      */
-    private $_logoApplicationLink = '';
+    private string $_logoApplicationLink = '';
 
     /**
      * Recherche le lien du logo de l'application.
      */
-    private function _findLogoApplicationLink()
+    private function _findLogoApplicationLink(): void
     {
         $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
-        // @todo
     }
 
     /**
      * Variable du nom de l'application.
      * @var string
      */
-    private $_logoApplicationName = '';
+    private string $_logoApplicationName = '';
 
     /**
      * Recherche le nom de l'application.
      */
-    private function _findLogoApplicationName()
+    private function _findLogoApplicationName(): void
     {
         $this->_logoApplicationName = Application::APPLICATION_NAME;
-        // @todo
     }
 
 
@@ -388,99 +385,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     private function _checkDefinedIcons()
     {
-        // @todo
+        // TODO
     }
-
-    /**
-     * Code before display.
-     */
-    protected function _preDisplay(): void
-    {
-        $namespace = '\\' . __NAMESPACE__ . '\\';
-
-        // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
-        $this->setUrlLinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        // Préfix pour les groupes.
-        if ($this->_applicationInstance->isModuleLoaded($namespace . 'ModuleGroups')) {
-            $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_GROUP . '=');
-        } else {
-            $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        }
-
-        // Préfix pour les conversations.
-        if ($this->_applicationInstance->isModuleLoaded($namespace . 'Nebule\\Modules\\ModuleMessenger')) {
-            $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
-        } else {
-            $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        }
-
-        // Préfix pour les entités.
-        $this->setUrlLinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
-            . '&' . References::COMMAND_SELECT_ENTITY . '=');
-
-        // Préfix pour les monnaies.
-        if ($this->_applicationInstance->isModuleLoaded('ModuleQantion')) {
-            $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
-                . '&' . References::COMMAND_SELECT_CURRENCY . '=');
-            $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
-                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
-            $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
-                . '&' . References::COMMAND_SELECT_TOKEN . '=');
-            $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
-                . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
-            $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
-                . '&' . References::COMMAND_SELECT_WALLET . '=');
-        } else {
-            $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        }
-    }
-
 
     /**
      * Display full page.
@@ -1160,59 +1066,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             ?>
 
             <div class="header-right">
-                <?php
-                if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
-                    echo "&nbsp;\n";
-                } // Si un test est en warning maximum.
-                elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
-                    // Si mode rescue et en warning.
-                    if ($this->_rescueInstance->getModeRescue()) {
-                        // Si l'entité est déverrouillées.
-                        if ($this->_unlocked) {
-                            // Affiche le lien de verrouillage sans les effets.
-                            $this->displayHypertextLink(
-                                $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
-                                    '',
-                                    '',
-                                    'name="ico_lock"'),
-                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
-                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . References::COMMAND_FLUSH);
-                        } else {
-                            // Affiche de lien de déverrouillage sans les effets.
-                            $this->displayHypertextLink(
-                                $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
-                                    '',
-                                    '',
-                                    'name="ico_lock"'),
-                                '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID());
-                        }
-                    } // Sinon affiche le warning.
-                    else {
-                        $this->displayHypertextLink(
-                            $this->convertUpdateImage(
-                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
-                                'WARNING'),
-                            '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                            . '&' . References::COMMAND_SWITCH_TO_ENTITY);
-                    }
-                } // Sinon c'est une erreur.
-                else {
-                    $this->displayHypertextLink(
-                        $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
-                            'ERROR'),
-                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_FLUSH);
-                }
-                ?>
+                <?php $this->_displayHeaderRight(); ?>
 
             </div>
             <div class="header-center">
@@ -1223,21 +1077,67 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         <?php
     }
 
-
-    /**
-     * Affiche la partie centrale de l'entête.
-     * Non utilisé.
-     */
-    private function _displayHeaderCenter()
-    {
-        //...
+    private function _displayHeaderRight(): void { // FIXME unusable
+        if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
+            echo "&nbsp;\n";
+        } // Si un test est en warning maximum.
+        elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN') {
+            // Si mode rescue et en warning.
+            if ($this->_rescueInstance->getModeRescue()) {
+                // Si l'entité est déverrouillées.
+                if ($this->_unlocked) {
+                    // Affiche le lien de verrouillage sans les effets.
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                            '',
+                            '',
+                            'name="ico_lock"'),
+                        '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_INFO
+                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_FLUSH);
+                } else {
+                    // Affiche de lien de déverrouillage sans les effets.
+                    $this->displayHypertextLink(
+                        $this->convertUpdateImage(
+                            $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                            '',
+                            '',
+                            'name="ico_lock"'),
+                        '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGIN
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID());
+                }
+            } // Sinon affiche le warning.
+            else {
+                $this->displayHypertextLink(
+                    $this->convertUpdateImage(
+                        $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
+                        'WARNING'),
+                    '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                    . '&' . References::COMMAND_SWITCH_TO_ENTITY);
+            }
+        } // Sinon c'est une erreur.
+        else {
+            $this->displayHypertextLink(
+                $this->convertUpdateImage(
+                    $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
+                    'ERROR'),
+                '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                . '&' . References::COMMAND_FLUSH);
+        }
     }
+    private function _displayHeaderCenter(): void {}
+
 
 
     /**
      * Affiche le menu des applications.
      */
-    private function _displayMenuApplications()
+    private function _displayMenuApplications(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
@@ -1502,16 +1402,16 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {
             ?>
 
-            <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
             <div class="text">
                 <p>
                     <?php
                     //		aff_title('::bloc_metrolog','imlog');
                     // Affiche les valeurs de la librairie.
                     /*		echo 'Bootstrap : ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens lus,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkRead()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
+		$this->_translateInstance->echoTraduction('%01.0f liens lus,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkRead()); echo ' ';
+		$this->_translateInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
+		$this->_translateInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
                     echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
@@ -1528,7 +1428,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 		{
 			$bootstrap_time_total = $bootstrap_time_total + $time;
 		}
-		$this->_traductionInstance->echoTraduction('Le bootstrap à pris %01.4fs pour appeler la page.','',$bootstrap_time_total);
+		$this->_translateInstance->echoTraduction('Le bootstrap à pris %01.4fs pour appeler la page.','',$bootstrap_time_total);
 		echo ' (';
 		foreach ( $bootstrapTimeList as $time )
 		{
@@ -1642,7 +1542,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         <div class="textTitle">
             <?php
-            $this->_displayDivOnlineHelp($help);
+            $this->_displayDivOnlineHelp_DEPRECATED($help);
             ?>
 
             <div class="floatRight">
@@ -1694,135 +1594,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         <?php
         unset($name, $typemime, $isEntity, $isGroup, $isConversation);
     }
-
-    /**
-     * Affiche dans les barres de titres l'icône d'aide contextuelle.
-     * @param string $help
-     */
-    private function _displayDivOnlineHelp($help)
-    {
-        // Si authorisé à afficher l'aide.
-        if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayOnlineHelp')) {
-            // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
-            $txt = str_replace('&', '&amp;', $txt);
-            $txt = str_replace('"', '&quot;', $txt);
-            $txt = str_replace("'", '&acute;', $txt);
-            //$txt = str_replace('<','&lt;',$txt);
-            $txt = str_replace("\n", ' ', $txt);
-            // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
-            unset($txt);
-            // Affiche la bulle et le texte.
-            ?>
-
-            <div style="float:right;">
-                <?php
-                $image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
-                ?>
-
-                <img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay"
-                     id="curseur" <?php echo $linkext; ?> />
-            </div>
-            <?php
-            unset($linkext, $image);
-        }
-    }
-
-
-    /**
-     * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitle($icon, $title = '', $desc = '', $help = '')
-    {
-        $this->displayDivTextTitleH1($icon, $title, $desc, $help);
-    }
-
-    /**
-     * Affiche le titre H1 pour un paragraphe de texte.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitleH1($icon, $title = '', $desc = '', $help = '')
-    {
-        ?>
-
-        <div class="textTitle">
-            <?php
-            if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            }
-
-            if ($desc == '') {
-                $desc = '-';
-            } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            }
-
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h1 class="divHeaderH1"><?php echo $title; ?></h1>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
-
-    /**
-     * Affiche le titre H2 pour un paragraphe de texte.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitleH2($icon, $title = '', $desc = '', $help = '')
-    {
-        ?>
-
-        <div class="textTitle2">
-            <?php
-            if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            }
-
-            if ($desc == '') {
-                $desc = '-';
-            } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            }
-
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h2 class="divHeaderH2"><?php echo $title; ?></h2>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
 }
-
 
 /**
  * Classe Action

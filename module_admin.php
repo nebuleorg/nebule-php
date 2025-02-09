@@ -15,7 +15,7 @@ use Nebule\Library\Node;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleAdmin extends Modules
+class ModuleAdmin extends \Nebule\Library\Modules
 {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::sylabe:module:admin:ModuleName';
@@ -23,7 +23,7 @@ class ModuleAdmin extends Modules
     protected string $MODULE_COMMAND_NAME = 'adm';
     protected string $MODULE_DEFAULT_VIEW = 'options';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';

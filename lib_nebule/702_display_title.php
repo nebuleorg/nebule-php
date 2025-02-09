@@ -98,7 +98,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
                              string $arg4 = '',
                              string $arg5 = ''): void
     {
-        $this->_title = sprintf($this->_traductionInstance->getTranslate($title), $arg1, $arg2, $arg3, $arg4, $arg5);
+        $this->_title = sprintf($this->_translateInstance->getTranslate($title), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
     public function setEnableEntity(bool $enable): void

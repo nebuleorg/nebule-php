@@ -34,7 +34,7 @@ abstract class DisplayItem implements DisplayInterface
     protected ?Cache $_cacheInstance = null;
     protected ?Entities $_entitiesInstance = null;
     protected ?Applications $_applicationInstance = null;
-    protected ?Translates $_traductionInstance = null;
+    protected ?Translates $_translateInstance = null;
     protected ?Displays $_displayInstance = null;
     protected bool $_unlocked = false;
     protected string $_social = '';
@@ -51,7 +51,7 @@ abstract class DisplayItem implements DisplayInterface
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
         $this->_displayInstance = $applicationInstance->getDisplayInstance();
-        $this->_traductionInstance = $this->_applicationInstance->getTranslateInstance();
+        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         $this->_nebuleInstance->getMetrologyInstance()->addLog('init instance ' . get_class($this),
             Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
@@ -138,20 +138,20 @@ abstract class DisplayItemCSS extends DisplayItem
     public function setClassCSS(string $class = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set class CSS ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_classCSS = trim(filter_var($class, FILTER_SANITIZE_STRING));
+        $this->_classCSS = trim((string)filter_var($class, FILTER_SANITIZE_STRING));
     }
 
     public function setIdCSS(string $id = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set id CSS ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_idCSS = trim(filter_var($id, FILTER_SANITIZE_STRING));
+        $this->_idCSS = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
     }
 
     public function setStyleCSS(string $style = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_styleCSS = ' style="'
-            . trim(filter_var($style, FILTER_SANITIZE_STRING))
+            . trim((string)filter_var($style, FILTER_SANITIZE_STRING))
             . ';"';
     }
 }
@@ -175,7 +175,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     public function setIconText(String $text): void
     {
-        $this->_iconText = $this->_traductionInstance->getTranslate($text);
+        $this->_iconText = $this->_translateInstance->getTranslate($text);
     }
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string
@@ -225,7 +225,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
         if ($alt == '')
             $alt = $oid->getID();
-        $alt = $this->_traductionInstance->getTranslate($alt);
+        $alt = $this->_translateInstance->getTranslate($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
         if ($class != '')
@@ -270,7 +270,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                                string $arg5 = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_message = sprintf($this->_traductionInstance->getTranslate($message), $arg1, $arg2, $arg3, $arg4, $arg5);
+        $this->_message = sprintf($this->_translateInstance->getTranslate($message), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
     public function setBrutMessage(string $message,
@@ -286,7 +286,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
 
     public function setLink(string $link): void
     {
-        $this->_link = trim(filter_var($link, FILTER_SANITIZE_URL));
+        $this->_link = trim((string)filter_var($link, FILTER_SANITIZE_URL));
     }
 
     public function setType(string $type): void

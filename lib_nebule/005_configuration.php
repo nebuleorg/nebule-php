@@ -952,8 +952,8 @@ class Configuration extends Functions
                 if ($l == '' || str_starts_with($l, '#'))
                     continue;
 
-                $nameOnFile = trim(filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
-                $value = trim(filter_var(strtok('='), FILTER_SANITIZE_STRING));
+                $nameOnFile = trim((string)filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
+                $value = trim((string)filter_var(strtok('='), FILTER_SANITIZE_STRING));
                 if ($nameOnFile == $name)
                     return $value;
             }

@@ -154,7 +154,7 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         }
         $result .= '</div>';
         $result .= '<div class="objectTitleText' . $padding . ' informationTitleText informationTitle' . $this->_sizeCSS . 'Text">';
-        $result .= '<div class="objectTitleRefs objectTitle' . $this->_sizeCSS . 'Refs informationTitleRefs informationTitleRefs' . $this->_type . '">' . $this->_traductionInstance->getTranslate($this->_iconText) . '</div>';
+        $result .= '<div class="objectTitleRefs objectTitle' . $this->_sizeCSS . 'Refs informationTitleRefs informationTitleRefs' . $this->_type . '">' . $this->_translateInstance->getTranslate($this->_iconText) . '</div>';
         $result .= '<div class="informationTitleName informationTitleName' . $this->_type . ' informationTitle' . $this->_sizeCSS . 'Name">' . $this->_message . '</div>';
         $result .= '</div></div></div>';
         return $result;

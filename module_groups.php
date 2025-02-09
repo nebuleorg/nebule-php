@@ -17,7 +17,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleGroups extends Modules
+class ModuleGroups extends \Nebule\Library\Modules
 {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::sylabe:module:groups:ModuleName';
@@ -25,7 +25,7 @@ class ModuleGroups extends Modules
     protected string $MODULE_COMMAND_NAME = 'grp';
     protected string $MODULE_DEFAULT_VIEW = 'disp';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -43,7 +43,10 @@ class ModuleGroups extends Modules
     protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:groups:AppDesc1');
     protected array $MODULE_APP_VIEW_LIST = array('list');
 
-    private $_hashGroup, $_hashGroupClosed, $_hashGroupObject, $_hashGroupClosedObject;
+    private string $_hashGroup;
+    private string $_hashGroupClosed;
+    private Node $_hashGroupObject;
+    private Node $_hashGroupClosedObject;
 
 
     /**
@@ -57,7 +60,6 @@ class ModuleGroups extends Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-        $this->_initTable_DEPRECATED();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
         $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
@@ -879,12 +881,11 @@ class ModuleGroups extends Modules
                     // Affichage
                     if (sizeof($list) != 0) {
                         echo "<div class=\"sequence\"></div>\n";
-                        // Affiche le titre.
-                        $this->_applicationInstance->getDisplayInstance()->displayDivTextTitle_DEPRECATED(
-                            $this->MODULE_LOGO,
-                            '::sylabe:module:groups:display:seenFromOthers',
-                            '',
-                            '');
+                        $iconNID = $this->_cacheInstance->newNode($this->MODULE_LOGO);
+                        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+                        $instance->setTitle('::sylabe:module:groups:display:seenFromOthers');
+                        $instance->setIcon($iconNID);
+                        $instance->display();
                         $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
                     }
                 }

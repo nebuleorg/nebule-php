@@ -21,6 +21,7 @@ namespace Nebule\Library;
 class DisplayList extends DisplayItem implements DisplayInterface
 {
     private array $_list = array();
+    private bool $_onPerLine = false;
 
     public function getHTML(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content',
@@ -61,6 +62,8 @@ class DisplayList extends DisplayItem implements DisplayInterface
                 $result .= $item->getHTML();
             } elseif ($item instanceof DisplayBlankLine)
                 $result .= $item->getHTML();
+            if ($this->_onPerLine)
+                $result .= '<br />';
             $result .= "\n";
         }
         $result .= '</div>';
@@ -88,6 +91,10 @@ class DisplayList extends DisplayItem implements DisplayInterface
     public function setEnableWarnIfEmpty(bool $enable = true): void
     {
         $this->_enableWarnIfEmpty = $enable;
+    }
+
+    public function setOnePerLine(bool $onePerLine = true): void {
+        $this->_onPerLine = $onePerLine;
     }
 
     public static function displayCSS(): void {

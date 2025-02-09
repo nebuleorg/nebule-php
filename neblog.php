@@ -54,7 +54,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250207';
+    const APPLICATION_VERSION = '020250209';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -262,21 +262,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
     /**
-     * Code before display.
-     */
-    protected function _preDisplay(): void
-    {
-        $namespace = '\\' . __NAMESPACE__ . '\\';
-
-        // Préfix pour les objets. Les modules sont chargés, on peut les utiliser.
-        /*$this->setHtlinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');*/
-    }
-
-
-    /**
      * Display full page.
      */
     protected function _displayFull(): void
@@ -326,9 +311,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
                     $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
                     $this->_displayContent();
-
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3012e9f4');
-                    $this->_displayMetrology();
                     ?>
 
                 </div>
@@ -953,9 +935,10 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             ?>
 
             <div class="header-right">
-                <?php $this->_displayHeaderLeft(); ?>
+                <?php $this->_displayHeaderRight(); ?>
 
             </div>
+
             <div class="header-center">
                 <?php $this->_displayHeaderCenter(); ?>
 
@@ -964,7 +947,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         <?php
     }
 
-    private function _displayHeaderLeft(): void {}
+    private function _displayHeaderRight(): void {}
     private function _displayHeaderCenter(): void {}
 
 
@@ -1218,47 +1201,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $this->_displayInlineContentID();
     }
 
-
-
-    private function _displayMetrology(): void
-    {
-        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayMetrology')) {
-            ?>
-
-            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
-            <div class="text">
-                <p>
-                    <?php
-                    echo 'Lib nebule : ';
-                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
-                    echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
-                    echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
-                    echo ' ';
-                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
-                    echo "<br />\n";
-                    // Calcul de temps de chargement de la page - stop
-                    $this->_metrologyInstance->addTime();
-                    $neblogTimeList = $this->_metrologyInstance->getTimeArray();
-                    $neblog_time_total = 0;
-                    foreach ($neblogTimeList as $time) {
-                        $neblog_time_total = $neblog_time_total + $time;
-                    }
-                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $neblog_time_total);
-                    echo ' (';
-                    foreach ($neblogTimeList as $time) {
-                        echo sprintf(" %1.4fs", $time);
-                    }
-                    echo " )\n";
-                    ?>
-
-                </p>
-            </div>
-            <?php
-        }
-    }
-
     // Affiche la fin de page.
     private function _displayFooter(): void
     {
@@ -1402,7 +1344,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
      * Affiche dans les barres de titres l'icône d'aide contextuelle.
      * @param string $help
      */
-    private function _displayDivOnlineHelp($help)
+    private function _displayDivOnlineHelp($help): void
     {
         // Si authorisé à afficher l'aide.
         if ($this->_configurationInstance->getOptionUntyped('neblogDisplayOnlineHelp')) {
@@ -1433,58 +1375,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
-    /**
-     * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitle_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
-    {
-        $this->displayDivTextTitleH1_DEPRECATED($icon, $title, $desc, $help);
-    }
-
-    /**
-     * Affiche le titre H1 pour un paragraphe de texte.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitleH1_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
-    {
-        ?>
-
-        <div class="textTitle">
-            <?php
-            if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            }
-
-            if ($desc == '') {
-                $desc = '-';
-            } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            }
-
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h1 class="divHeaderH1"><?php echo $title; ?></h1>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
 
     /**
      * Affiche le titre H2 pour un paragraphe de texte.

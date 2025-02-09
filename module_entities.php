@@ -19,7 +19,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleEntities extends Modules
+class ModuleEntities extends \Nebule\Library\Modules
 {
     protected string $MODULE_TYPE = 'Application';
     protected string $MODULE_NAME = '::sylabe:module:entities:ModuleName';
@@ -27,7 +27,7 @@ class ModuleEntities extends Modules
     protected string $MODULE_COMMAND_NAME = 'ent';
     protected string $MODULE_DEFAULT_VIEW = 'disp';
     protected string $MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
+    protected string $MODULE_VERSION = '020250209';
     protected string $MODULE_AUTHOR = 'Projet nebule';
     protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     protected string $MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -109,7 +109,6 @@ class ModuleEntities extends Modules
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
         $this->_findDisplayEntity();
-        $this->_initTable_DEPRECATED();
         $this->_hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
         $this->_hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
         $this->_hashEntityObject = $this->_cacheInstance->newNode($this->_hashEntity);
@@ -1994,11 +1993,11 @@ class ModuleEntities extends Modules
     private function _displayEntitySearch(): void
     {
         // Affiche la création d'une entité.
-        $this->_displayInstance->displayDivTextTitleH2_DEPRECATED(
-            Display::DEFAULT_ICON_LF,
-            '::sylabe:module:entities:SearchEntity',
-            '::sylabe:module:entities:SearchEntityDesc',
-            '::sylabe:module:entities:SearchEntityHelp');
+        $iconNID = $this->_cacheInstance->newNode(Display::DEFAULT_ICON_LF);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:SearchEntity');
+        $instance->setIcon($iconNID);
+        $instance->display();
 
         // Vérifie que la création soit authorisée.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2222,7 +2221,7 @@ class ModuleEntities extends Modules
 
                         <div class="sylabeModuleEntityDescList<?php echo $bg; ?>">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
@@ -2252,7 +2251,7 @@ class ModuleEntities extends Modules
 
                         <div class="sylabeModuleEntityDescList<?php echo $bg; ?>">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
@@ -2283,7 +2282,7 @@ class ModuleEntities extends Modules
 
                         <div class="sylabeModuleEntityDescError">
                             <?php
-                            if ($this->_applicationInstance->isModuleLoaded('ModuleLinks')) {
+                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 

@@ -2280,7 +2280,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
 
                 <div class="sequence"></div>
-                <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT); $this->displayDivTextTitleH2($icon, '::GroupList'); ?>
+                <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT); $this->displayDivTextTitleH2_DEPRECATED($icon, '::GroupList'); ?>
                 <div class="text">
                     <p>
                     <form method="post"
@@ -2499,7 +2499,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             // S'il y a eu le téléchargement d'un fichier.
             if ($this->_applicationInstance->getActionInstance()->getUploadObject()) {
                 // Affiche le titre.
-                $this->displayDivTextTitleH2(self::DEFAULT_ICON_LO, '::UploadedNewFile', '', '');
+                $this->displayDivTextTitleH2_DEPRECATED(self::DEFAULT_ICON_LO, '::UploadedNewFile', '', '');
 
                 // Si pas d'erreur.
                 if (!$this->_applicationInstance->getActionInstance()->getUploadObjectError()) {
@@ -2550,7 +2550,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             // Affiche le titre.
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDOBJ);
-            $this->displayDivTextTitleH2($icon, '::ObjectAdd', '::SelectUploadFile', '');
+            $this->displayDivTextTitleH2_DEPRECATED($icon, '::ObjectAdd', '::SelectUploadFile', '');
             ?>
 
             <div class="text">
@@ -2889,7 +2889,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 // Affiche le titre.
                 $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
-                $this->displayDivTextTitleH2($icon, '::ShareProtectObject', '', '');
+                $this->displayDivTextTitleH2_DEPRECATED($icon, '::ShareProtectObject', '', '');
 
                 // Avertissement.
                 $this->displayMessageWarning_DEPRECATED('::WarningSharedProtection');
@@ -3502,16 +3502,16 @@ private function _displayContentAbout()
         if ($this->_configurationInstance->getOptionUntyped('klictyDisplayMetrology')) {
             ?>
 
-            <?php $this->displayDivTextTitle(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
             <div class="text">
                 <p>
                     <?php
                     //		aff_title('::bloc_metrolog','imlog');
                     // Affiche les valeurs de la librairie.
                     /*		echo 'Bootstrap : ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens lus,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkRead()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
-		$this->_traductionInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
+		$this->_translateInstance->echoTraduction('%01.0f liens lus,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkRead()); echo ' ';
+		$this->_translateInstance->echoTraduction('%01.0f liens vérifiés,','',$this->_bootstrapInstance->getMetrologyInstance()->getLinkVerify()); echo ' ';
+		$this->_translateInstance->echoTraduction('%01.0f objets vérifiés.','',$this->_bootstrapInstance->getMetrologyInstance()->getObjectVerify()); echo "<br />\n";*/
                     echo 'Lib nebule : ';
                     echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
                     echo ' ';
@@ -3528,7 +3528,7 @@ private function _displayContentAbout()
 		{
 			$bootstrap_time_total = $bootstrap_time_total + $time;
 		}
-		$this->_traductionInstance->echoTraduction('Le bootstrap à pris %01.4fs pour appeler la page.','',$bootstrap_time_total);
+		$this->_translateInstance->echoTraduction('Le bootstrap à pris %01.4fs pour appeler la page.','',$bootstrap_time_total);
 		echo ' (';
 		foreach ( $bootstrapTimeList as $time )
 		{
@@ -3628,7 +3628,7 @@ private function _displayContentAbout()
 
         <div class="textTitle">
             <?php
-            $this->_displayDivOnlineHelp($help);
+            $this->_displayDivOnlineHelp_DEPRECATED($help);
             ?>
 
             <div class="floatRight">
@@ -3680,126 +3680,6 @@ private function _displayContentAbout()
         <?php
         unset($name, $typemime, $isEntity, $isGroup);
     }
-
-    /**
-     * Affiche dans les barres de titres l'icône d'aide contextuelle.
-     * @param string $help
-     */
-    private function _displayDivOnlineHelp($help)
-    {
-        // Si authorisé à afficher l'aide.
-        if ($this->_configurationInstance->getOptionUntyped('klictyDisplayOnlineHelp')) {
-            // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
-            $txt = str_replace('&', '&amp;', $txt);
-            $txt = str_replace('"', '&quot;', $txt);
-            $txt = str_replace("'", '&acute;', $txt);
-            //$txt = str_replace('<','&lt;',$txt);
-            $txt = str_replace("\n", ' ', $txt);
-            // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
-            unset($txt);
-            // Affiche la bulle et le texte.
-            ?>
-
-            <div style="float:right;">
-                <?php
-                $image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
-                ?>
-
-                <img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay"
-                     id="idhelp<?php echo $this->_idHelp; ?>" <?php echo $linkext; ?> />
-            </div>
-            <?php
-            unset($linkext, $image);
-            $this->_idHelp++;
-        }
-    }
-
-    private $_idHelp = 0;
-
-
-    /**
-     * Affiche le titre pour un paragraphe de texte. Par défaut, affiche le titre H1.
-     *
-     * @param Node   $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     */
-    public function displayDivTextTitle(Node $icon, string $title = '', string $desc = '', string $help = '')
-    {
-        $this->displayDivTextTitleH1($icon, $title, $desc, $help);
-    }
-
-    /**
-     * Affiche le titre H1 pour un paragraphe de texte.
-     *
-     * @param Node   $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     */
-    public function displayDivTextTitleH1(Node $icon, string $title = '', string $desc = '', string $help = '')
-    {
-        ?>
-
-        <div class="textTitle">
-            <?php
-            if ($title != '')
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            if ($desc == '')
-                $desc = '-';
-            else
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h1 class="divHeaderH1"><?php echo $title; ?></h1>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
-
-    /**
-     * Affiche le titre H2 pour un paragraphe de texte.
-     *
-     * @param Node   $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     */
-    public function displayDivTextTitleH2(Node $icon, string $title = '', string $desc = '', string $help = '')
-    {
-        ?>
-
-        <div class="textTitle2">
-            <?php
-            if ($title != '')
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            if ($desc == '')
-                $desc = '-';
-            else
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h2 class="divHeaderH2"><?php echo $title; ?></h2>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
-
 
     public function displayActionList($actionList)
     {
@@ -4524,7 +4404,7 @@ class Action extends Actions
                 && trim($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name']) != ''
             ) {
                 // Extraction des méta données du fichier.
-                $upfname = mb_convert_encoding(strtok(trim(filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
                 $upinfo = pathinfo($upfname);
                 $upext = $upinfo['extension'];
                 $upname = basename($upfname, '.' . $upext);
