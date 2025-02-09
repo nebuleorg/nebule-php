@@ -17,33 +17,33 @@ use Nebule\Library\Node;
  */
 class ModuleAdmin extends \Nebule\Library\Modules
 {
-    protected string $MODULE_TYPE = 'Application';
-    protected string $MODULE_NAME = '::sylabe:module:admin:ModuleName';
-    protected string $MODULE_MENU_NAME = '::sylabe:module:admin:MenuName';
-    protected string $MODULE_COMMAND_NAME = 'adm';
-    protected string $MODULE_DEFAULT_VIEW = 'options';
-    protected string $MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    protected string $MODULE_VERSION = '020250209';
-    protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
-    protected string $MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
-    protected string $MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
-    protected string $MODULE_INTERFACE = '3.0';
+    const MODULE_TYPE = 'Application';
+    const MODULE_NAME = '::sylabe:module:admin:ModuleName';
+    const MODULE_MENU_NAME = '::sylabe:module:admin:MenuName';
+    const MODULE_COMMAND_NAME = 'adm';
+    const MODULE_DEFAULT_VIEW = 'options';
+    const MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
+    const MODULE_VERSION = '020250209';
+    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
+    const MODULE_HELP = '::sylabe:module:admin:ModuleHelp';
+    const MODULE_INTERFACE = '3.0';
 
-    protected array $MODULE_REGISTERED_VIEWS = array(
+    const MODULE_REGISTERED_VIEWS = array(
         'appopt',
         'nebopt',
         'admins',
         'recovery',
     );
-    protected array $MODULE_REGISTERED_ICONS = array(
+    const MODULE_REGISTERED_ICONS = array(
         '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256',    // 0 : Icône admin.
         '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 1 : Icône liste entités.
     );
-    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:admin:AppTitle1');
-    protected array $MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
-    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:admin:AppDesc1');
-    protected array $MODULE_APP_VIEW_LIST = array('options');
+    const MODULE_APP_TITLE_LIST = array('::sylabe:module:admin:AppTitle1');
+    const MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
+    const MODULE_APP_DESC_LIST = array('::sylabe:module:admin:AppDesc1');
+    const MODULE_APP_VIEW_LIST = array('options');
 
 
     /**
@@ -62,37 +62,37 @@ class ModuleAdmin extends \Nebule\Library\Modules
         $hookArray = array();
         switch ($hookName) {
             case 'selfMenu':
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     // Voir les options.
                     $hookArray[0]['name'] = '::sylabe:module:admin:display:AppOptions';
-                    $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[1]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     // Voir les options.
                     $hookArray[1]['name'] = '::sylabe:module:admin:display:NebOptions';
-                    $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
+                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[2]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[2]) {
                     // Voir les admins.
                     $hookArray[2]['name'] = '::sylabe:module:admin:display:seeAdmins';
-                    $hookArray[2]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
+                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
+                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[3]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[3]) {
                     // Voir les entités de recouvrement.
                     $hookArray[3]['name'] = '::sylabe:module:admin:display:seeRecovery';
-                    $hookArray[3]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
+                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3];
+                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
                 }
                 break;
         }
@@ -108,16 +108,16 @@ class ModuleAdmin extends \Nebule\Library\Modules
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-//            case $this->MODULE_REGISTERED_VIEWS[0]:
+//            case $this::MODULE_REGISTERED_VIEWS[0]:
 //                $this->_displayAppOptions();
 //                break;
-            case $this->MODULE_REGISTERED_VIEWS[1]:
+            case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayNebOptions();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[2]:
+            case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayAdmins();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[3]:
+            case $this::MODULE_REGISTERED_VIEWS[3]:
                 $this->_displayRecoveryEntities();
                 break;
             default:
@@ -135,10 +135,10 @@ class ModuleAdmin extends \Nebule\Library\Modules
     public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[2]:
+            case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayInlineAdmins();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[3]:
+            case $this::MODULE_REGISTERED_VIEWS[3]:
                 $this->_displayInlineRecoveryEntities();
                 break;
         }
@@ -215,7 +215,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayAppOptions(): void
     {
         // Affiche le titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:AppOptions', $icon, false);
 
         if ($this->_unlocked) {
@@ -249,7 +249,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay;//.'<br />'.$optionDescription;
                 $list[$i]['param'] = $param;
                 $list[$i]['param']['informationTypeName'] = $optionType;
-                $list[$i]['param']['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                $list[$i]['param']['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                 $i++;
             }
 
@@ -274,7 +274,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayNebOptions(): void
     {
         // Affiche le titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:NebOptions', $icon, false);
 
         if ($this->_unlocked) {
@@ -316,7 +316,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay . '<br />' . $optionDescription;
                 $list[$i]['param'] = $param;
                 $list[$i]['param']['informationTypeName'] = $optionType;
-                $list[$i]['param']['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                $list[$i]['param']['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                 $i++;
             }
 
@@ -341,7 +341,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayAdmins(): void
     {
         // Affiche le titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeAdmins', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
@@ -373,9 +373,9 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 }
                 $list[$i]['icon'] = '';
                 $list[$i]['htlink'] = '?'
-                    . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_DEFAULT_VIEW
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id;
                 $list[$i]['desc'] = '';
                 $list[$i]['actions'] = array();
                 $i++;
@@ -411,7 +411,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayRecoveryEntities(): void
     {
         // Affiche le titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeRecovery', $icon, false);
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
@@ -443,9 +443,9 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 }
                 $list[$i]['icon'] = '';
                 $list[$i]['htlink'] = '?'
-                    . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getCommandName()
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')->getDefaultView()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
+                    . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_DEFAULT_VIEW
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id;
                 $list[$i]['desc'] = '';
                 $list[$i]['actions'] = array();
                 $i++;

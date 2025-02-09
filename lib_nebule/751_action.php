@@ -285,12 +285,12 @@ abstract class Actions extends Functions
         if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
             return;
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode()) {
+            if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode()) {
                 try {
-                    $this->_metrologyInstance->addLog('actions for module ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
+                    $this->_metrologyInstance->addLog('actions for module ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
                     $module->actions();
                 } catch (\Exception $e) {
-                    $this->_metrologyInstance->addLog('error actions for module ' . $module->getCommandName()
+                    $this->_metrologyInstance->addLog('error actions for module ' . $module::MODULE_COMMAND_NAME
                         . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c48b1d8c');

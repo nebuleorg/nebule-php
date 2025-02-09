@@ -42,7 +42,7 @@ use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 
 /**
- * Class Application for upload
+ * Class Application for neblog
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -856,7 +856,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Ajout de la partie CSS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->getCSS();
             }
         }
@@ -872,7 +872,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Ajout de la partie script JS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->headerScript();
                 echo "\n";
             }
@@ -985,25 +985,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
     /**
      * Affiche le menu des applications.
-     *
-     * Affiche dans l'ordre :
-     * 1 : Les actions du module concerné par le mode d'affichage.
-     *     Pour le module courant, appelle le point d'encrage (hook) nommé 'selfMenu'. Les autres
-     *       modules ne sont pas consultés.
-     *     Si c'est pour l'affichage du menu déroulant et non de la page de menu, ajoute au début
-     *       un lien vers la page de menu. Cela permet de voir toutes les entrés du menu même
-     *       si il est très long.
-     * 2 : Les actions d'autres modules pour le module concerné par le mode d'affichage.
-     *     Pour tous les modules sauf le module courant, appelle le point d'ancrage nommé de la
-     *       concaténation du nom du module courant et de 'SelfMenu'. Par exemple 'ObjectSelfMenu'.
-     * 3 : Les actions d'autres modules pour le mode d'affichage.
-     *     Pour tous les modules sauf le module courant, appelle le point d'ancrage nommé 'menu'.
-     * 4 : La liste des modules.
-     *     Pour tous les modules, affiche les entrées vers les vues définies par la variable
-     *       $MODULE_APP_TITLE_LIST de chaque modules.
-     * 5 : Une entrée vers l'application 0.
-     *
-     * @return void
      */
     private function _displayInternalMenuApplications(): void
     {
@@ -1015,18 +996,18 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Appelle les actions du module concerné par le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Mémorise le nom du module trouvé.
-                $currentModuleName = $module->getMenuName();
+                $currentModuleName = $module::MODULE_MENU_NAME;
 
                 // Affiche le lien du menu seul (sans JS).
                 if ($this->_currentDisplayView != 'menu') {
                     $list[$j]['icon'] = self::DEFAULT_LOGO_MODULE;
                     $list[$j]['title'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menu', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
-                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
                     $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menuDesc', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['ref'] = Application::APPLICATION_NAME;
@@ -1041,7 +1022,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1066,9 +1047,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Appelle les actions d'autres modules pour le module concerné par le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() != $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
@@ -1077,7 +1058,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1102,9 +1083,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
         // Appelle les actions d'autres modules pour le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() != $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTranslateInstance($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList('menu');
@@ -1113,7 +1094,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1139,18 +1120,18 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         // Appelle la liste des modules.
         foreach ($modules as $module) {
             // Extrait le nom du module.
-            $moduleName = $module->getTranslateInstance($module->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+            $moduleName = $module->getTranslateInstance($module::MODULE_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
             // Liste les options à afficher.
-            $appTitleList = $module->getAppTitleList();
+            $appTitleList = $module::MODULE_APP_TITLE_LIST;
             if (sizeof($appTitleList) != 0) {
-                $appIconList = $module->getAppIconList();
-                $appDescList = $module->getAppDescList();
-                $appViewList = $module->getAppViewList();
+                $appIconList = $module::MODULE_APP_ICON_LIST;
+                $appDescList = $module::MODULE_APP_DESC_LIST;
+                $appViewList = $module::MODULE_APP_VIEW_LIST;
                 for ($i = 0; $i < sizeof($appTitleList); $i++) {
                     $icon = $appIconList[$i];
                     if ($icon == '') {
-                        $icon = $module->getLogo();
+                        $icon = $module::MODULE_LOGO;
                     }
                     if ($icon == '') {
                         $icon = self::DEFAULT_ICON_LSTOBJ;
@@ -1162,7 +1143,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
                     $list[$j]['icon'] = $icon;
                     $list[$j]['title'] = $module->getTranslateInstance($appTitleList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
-                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
                     $list[$j]['ref'] = $moduleName;
@@ -1193,7 +1174,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
             $module = $this->_applicationInstance->getModule('ModuleNeblog');
             $module->displayModule();
             /*foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getCommandName() == $this->_currentDisplayMode) {
+                if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                     $module->displayModule();
                 }
             }*/
@@ -1212,208 +1193,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     }
 
 
-    /* --------------------------------------------------------------------------------
-	 *  Affichage des objets.
-	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1($object, $help = '', $desc = ''): void
-    {
-        $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
-        // Prépare le type mime.
-        $typemime = $object->getType('all');
-        if ($desc == '') {
-            $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($typemime);
-        }
-
-        // Détermine si c'est une entité.
-        $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
-
-        // Détermine si c'est un groupe.
-        $isGroup = $object->getIsGroup('all');
-
-        // Détermine si c'est une conversation.
-        $isConversation = $object->getIsConversation('all');
-
-        // Modifie le type au besoin.
-        if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_cacheInstance->newEntity($object->getID());
-        }
-        if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_cacheInstance->newGroup($object->getID());
-        }
-        if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_cacheInstance->newConversation($object->getID());
-        }
-
-        $name = $object->getFullName('all');
-        $present = $object->checkPresent();
-
-        // Si le contenu est présent.
-        if ($present) {
-            // Prépare l'état de l'objet.
-            $status = 'ok';
-            $content = $object->getContent(0);
-            $tooBig = false;
-            if ($content == null) {
-                $status = 'tooBig';
-            }
-            unset($content);
-        } elseif ($isConversation
-            || $isGroup
-        ) {
-            $status = 'notAnObject';
-        } else {
-            $status = 'notPresent';
-        }
-        if ($object->getMarkWarning()) {
-            $status = 'warning';
-        }
-        if ($object->getMarkDanger()) {
-            $status = 'danger';
-        }
-        // Prépare l'aide en ligne.
-        if ($help == '') {
-            if ($isEntity) {
-                $help = ':::display:default:help:Entity';
-            } elseif ($isConversation) {
-                $help = ':::display:default:help:Conversation';
-            } elseif ($isGroup) {
-                $help = ':::display:default:help:Group';
-            } else {
-                $help = ':::display:default:help:Object';
-            }
-        }
-        ?>
-
-        <div class="textTitle">
-            <?php
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div class="floatRight">
-                <?php
-                switch ($status) {
-                    case 'notPresent':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorNotAvailable');
-                        $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-                        break;
-                    case 'tooBig':
-                        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayUnverifyLargeContent')) {
-                            $msg = $this->_translateInstance->getTranslate('::::display:content:warningTooBig');
-                            $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
-                        } else {
-                            $msg = $this->_translateInstance->getTranslate(':::display:content:errorTooBig');
-                            $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-                        }
-                        break;
-                    case 'warning':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:warningTaggedWarning');
-                        $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
-                        break;
-                    case 'danger':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorBan');
-                        $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
-                        break;
-                    case 'notAnObject':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:notAnObject');
-                        $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
-                        break;
-                    default:
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:OK');
-                        $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
-                        break;
-                }
-                unset($msg);
-                ?>
-
-            </div>
-            <div style="float:left;">
-                <?php
-                $this->displayObjectColorIcon($object);
-                ?>
-
-            </div>
-            <h1 class="divHeaderH1"><?php echo $name; ?></h1>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-        unset($name, $typemime, $isEntity, $isGroup, $isConversation);
-    }
-
-    /**
-     * Affiche dans les barres de titres l'icône d'aide contextuelle.
-     * @param string $help
-     */
-    private function _displayDivOnlineHelp($help): void
-    {
-        // Si authorisé à afficher l'aide.
-        if ($this->_configurationInstance->getOptionUntyped('neblogDisplayOnlineHelp')) {
-            // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
-            $txt = str_replace('&', '&amp;', $txt);
-            $txt = str_replace('"', '&quot;', $txt);
-            $txt = str_replace("'", '&acute;', $txt);
-            //$txt = str_replace('<','&lt;',$txt);
-            $txt = str_replace("\n", ' ', $txt);
-            // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
-            unset($txt);
-            // Affiche la bulle et le texte.
-            ?>
-
-            <div style="float:right;">
-                <?php
-                $image = $this->prepareIcon(self::DEFAULT_ICON_HELP);
-                ?>
-
-                <img alt="[]" src="<?php echo $image; ?>" class="iconNormalDisplay"
-                     id="curseur" <?php echo $linkext; ?> />
-            </div>
-            <?php
-            unset($linkext, $image);
-        }
-    }
-
-
-
-    /**
-     * Affiche le titre H2 pour un paragraphe de texte.
-     *
-     * @param string $icon
-     * @param string $title
-     * @param string $desc
-     * @param string $help
-     * @return void
-     */
-    public function displayDivTextTitleH2_DEPRECATED($icon, $title = '', $desc = '', $help = ''): void
-    {
-        ?>
-
-        <div class="textTitle2">
-            <?php
-            if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
-            }
-
-            if ($desc == '') {
-                $desc = '-';
-            } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
-            }
-
-            $this->_displayDivOnlineHelp($help);
-            ?>
-
-            <div style="float:left;">
-                <?php $this->displayUpdateImage($icon, $title, 'iconegrandepuce'); ?>
-
-            </div>
-            <h2 class="divHeaderH2"><?php echo $title; ?></h2>
-            <p class="hideOnSmallMedia"><?php echo $desc; ?></p>
-        </div>
-        <?php
-
-    }
 }
 
 

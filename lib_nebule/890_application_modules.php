@@ -385,7 +385,7 @@ class ApplicationModules
                     $this->_listModulesName[$moduleName] = $moduleFullName;
                     $this->_listModulesInstance[$moduleFullName] = $instance;
                     $this->_listModulesEnabled[$moduleFullName] = true; // @todo à revoir...
-                    if ($instance->getType() == 'Traduction') {
+                    if ($instance::MODULE_TYPE == 'Traduction') {
                         $this->_metrologyInstance->addLog('add translate module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6770ac3f');
                         $this->_listModulesTranslateInstance[$moduleFullName] = $instance;
                     }
@@ -478,8 +478,8 @@ class ApplicationModules
     {
         if ($this->_applicationInstance::USE_MODULES) { // FIXME verifier
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode() && strtolower($module->getType()) == 'application') {
-                    $this->_metrologyInstance->addLog('find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '67aaf050');
+                if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode() && strtolower($module::MODULE_TYPE) == 'application') {
+                    $this->_metrologyInstance->addLog('find current module name : ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '67aaf050');
                     $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
                 }
             }
@@ -504,7 +504,7 @@ class ApplicationModules
 
         $result = null;
         foreach ($this->_listModulesInstance as $module) {
-            if ($module->getCommandName() == $this->_displayInstance->getCurrentDisplayMode()) {
+            if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode()) {
                 $result = $module;
                 break;
             }

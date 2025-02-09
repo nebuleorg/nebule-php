@@ -329,10 +329,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Extract names of commands on these modules.
             $this->_listDisplayModes = array(0 => $displayClass::DEFAULT_DISPLAY_MODE);
             foreach ($listModules as $module) {
-                if ($module->getCommandName() != ''
-                    && strtolower($module->getType()) == 'application'
+                if ($module::MODULE_COMMAND_NAME != ''
+                    && strtolower($module::MODULE_TYPE) == 'application'
                 ) {
-                    $mode = $module->getCommandName();
+                    $mode = $module::MODULE_COMMAND_NAME;
                     $this->_listDisplayModes[] = $mode;
                 }
             }
@@ -379,8 +379,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Récupère l'instance du module en cours.
         if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getCommandName() == $this->_currentDisplayMode && strtolower($module->getType()) == 'application') {
-                    $this->_metrologyInstance->addLog('find current module name : ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7cd85d87');
+                if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode && strtolower($module::MODULE_TYPE) == 'application') {
+                    $this->_metrologyInstance->addLog('find current module name : ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7cd85d87');
                     $this->_currentModuleInstance = $this->_applicationInstance->getModulesListInstances()['\\' . $module->getClassName()];
                 }
             }
@@ -436,12 +436,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Si activé, extrait les modes.
         if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
-            $this->_metrologyInstance->addLog('search view on ' . $this->_currentModuleInstance->getName(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
+            $this->_metrologyInstance->addLog('search view on ' . $this->_currentModuleInstance::MODULE_NAME, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
             // Lit les vues déclarées.
-            $list_views_names = $this->_currentModuleInstance->getRegisteredViews();
+            $list_views_names = $this->_currentModuleInstance::MODULE_REGISTERED_VIEWS;
             // Si demande la vue par défaut.
             if ($arg_view == 'default')
-                $arg_view = $this->_currentModuleInstance->getDefaultView();
+                $arg_view = $this->_currentModuleInstance::MODULE_DEFAULT_VIEW;
         } else {
             foreach ($this->_listDisplayViews as $view)
                 $list_views_names[$view] = $view;
@@ -473,7 +473,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             {
                 // Si activé, extrait les modes.
                 if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules'))
-                    $this->_currentDisplayView = $this->_currentModuleInstance->getDefaultView();
+                    $this->_currentDisplayView = $this->_currentModuleInstance::MODULE_DEFAULT_VIEW;
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;
                 // Ecrit dans le cache.
@@ -1626,8 +1626,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleObjects')
         ) {
             $this->setUrlLinkObjectPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         } else {
             $this->setUrlLinkObjectPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
@@ -1639,8 +1639,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleEntities')
         ) {
             $this->setUrlLinkEntityPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_ENTITY . '=');
         } else {
             $this->setUrlLinkEntityPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
@@ -1652,13 +1652,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleGroups')
         ) {
             $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_GROUP . '=');
         } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
             $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         } else {
             $this->setUrlLinkGroupPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
@@ -1670,13 +1670,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleMessenger')
         ) {
             $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
         } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
             $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         } else {
             $this->setUrlLinkConversationPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
@@ -1688,45 +1688,45 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleQantion')
         ) {
             $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[3]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[3]
                 . '&' . References::COMMAND_SELECT_CURRENCY . '=');
             $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[8]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[8]
                 . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
             $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[13]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[13]
                 . '&' . References::COMMAND_SELECT_TOKEN . '=');
             $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[19]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[19]
                 . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
             $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')->getRegisteredViews()[23]
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[23]
                 . '&' . References::COMMAND_SELECT_WALLET . '=');
         } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
             $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
             $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getCommandName()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')->getDefaultView()
+                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
                 . '&' . References::COMMAND_SELECT_OBJECT . '=');
         } else {
             $this->setUrlLinkCurrencyPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
@@ -1850,8 +1850,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_metrologyInstance->addLog('display inline', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bfcdcd6d');
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
-                $this->_metrologyInstance->addLog('display inline to module ' . $module->getCommandName(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f74be2e8');
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
+                $this->_metrologyInstance->addLog('display inline to module ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f74be2e8');
                 $module->displayModuleInline();
                 echo "\n";
             }
@@ -4053,10 +4053,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Ajoute les actions spécifiques à l'objet pour le module en cours.
         foreach ($modules as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 // Liste les points d'ancrages à afficher.
-                if (str_starts_with($module->getInterface(), '1')
-                    || str_starts_with($module->getInterface(), '2')
+                if (str_starts_with($module::MODULE_INTERFACE, '1')
+                    || str_starts_with($module::MODULE_INTERFACE, '2')
                 )
                     $appHookList = $module->getHookList($selfHookName);
                 else
@@ -4065,7 +4065,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
                         if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module->getName());
+                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
                             $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
                             if ($dispHookList[$i]['icon'] == '')
@@ -4088,10 +4088,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Ajoute les actions spécifiques à l'objet pour tout sauf le module en cours.
         foreach ($modules as $module) {
-            if ($module->getCommandName() != $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Liste les points d'encrages à afficher.
-                if (str_starts_with($module->getInterface(), '1')
-                    || str_starts_with($module->getInterface(), '2')
+                if (str_starts_with($module::MODULE_INTERFACE, '1')
+                    || str_starts_with($module::MODULE_INTERFACE, '2')
                 )
                     $appHookList = $module->getHookList($selfHookName);
                 else
@@ -4100,7 +4100,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
                         if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module->getName());
+                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
                             $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                             $dispHookList[$i]['icon'] = $appHook['icon'];
                             if ($dispHookList[$i]['icon'] == '')
@@ -4125,14 +4125,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $i = 0;
         foreach ($modules as $module) {
             // Liste les points d'encrages à afficher.
-            if ($module->getInterface() == '3.0')
+            if ($module::MODULE_INTERFACE == '3.0')
                 $appHookList = $module->getHookList($typeHookName, $object);
             else
                 $appHookList = $module->getHookList($typeHookName);
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
-                        $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module->getName());
+                        $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
                         $dispHookListT[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $dispHookListT[$i]['icon'] = $appHook['icon'];
                         if ($dispHookListT[$i]['icon'] == '')
@@ -4776,7 +4776,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $appHook = null;
             foreach ($appHookList as $appHook) {
                 if ($appHook['name'] != '') {
-                    $list[$i]['ref'] = $module->getTraduction($module->getName());
+                    $list[$i]['ref'] = $module->getTraduction($module::MODULE_NAME);
                     $list[$i]['title'] = $module->getTraduction($appHook['name']);
                     $list[$i]['icon'] = $appHook['icon'];
                     if ($list[$i]['icon'] == '')

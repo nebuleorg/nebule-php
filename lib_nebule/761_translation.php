@@ -251,7 +251,7 @@ abstract class Translates extends Functions
 
         if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
-                if ($module->getCommandName() == $this->_defaultLanguage) {
+                if ($module::MODULE_COMMAND_NAME == $this->_defaultLanguage) {
                     $this->_defaultLanguageInstance = $module;
                 }
             }
@@ -263,10 +263,10 @@ abstract class Translates extends Functions
     protected function _findLanguages(): void {
         if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
-                if ($module->getType() == 'traduction') {
-                    $this->_languageList[$module->getCommandName()] = $module->getCommandName();
-                    $this->_applicationModulesInstance->getModulesTranslateListInstances()[$module->getCommandName()];
-                    $this->_metrologyInstance->addLog('Find new language : ' . $module->getCommandName(), Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
+                if ($module::MODULE_TYPE == 'traduction') {
+                    $this->_languageList[$module::MODULE_COMMAND_NAME] = $module::MODULE_COMMAND_NAME;
+                    $this->_applicationModulesInstance->getModulesTranslateListInstances()[$module::MODULE_COMMAND_NAME];
+                    $this->_metrologyInstance->addLog('Find new language : ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
                 }
             }
         } else
@@ -404,7 +404,7 @@ abstract class Translates extends Functions
             return '';
         $result = '';
         foreach ($this->_applicationModulesInstance->getModulesTranslateListInstances() as $module) {
-            if ($module->getCommandName() == $this->_defaultLanguage) {
+            if ($module::MODULE_COMMAND_NAME == $this->_defaultLanguage) {
                 $result = $module->getTraduction($text, $this->_defaultLanguage);
                 $this->_metrologyInstance->addLog('module 3 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de331d22');
             }

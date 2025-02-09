@@ -12,8 +12,26 @@ namespace Nebule\Library;
  */
 abstract class Modules extends Functions implements ModuleInterface
 {
-    protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
+    const MODULE_TYPE = 'None'; // None | Application | Traduction
+    const MODULE_NAME = 'None';
+    const MODULE_MENU_NAME = 'None';
+    const MODULE_COMMAND_NAME = 'none';
+    const MODULE_DEFAULT_VIEW = 'disp';
+    const MODULE_DESCRIPTION = 'Description';
+    const MODULE_VERSION = '020250111';
+    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
+    const MODULE_HELP = 'Help';
+    const MODULE_INTERFACE = '3.0';
+    const MODULE_REGISTERED_VIEWS = array('disp');
+    const MODULE_REGISTERED_ICONS = array();
+    const MODULE_APP_TITLE_LIST = array();
+    const MODULE_APP_ICON_LIST = array();
+    const MODULE_APP_DESC_LIST = array();
+    const MODULE_APP_VIEW_LIST = array();
 
+    /*protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
     protected string $MODULE_NAME = 'None';
     protected string $MODULE_MENU_NAME = 'None';
     protected string $MODULE_COMMAND_NAME = 'none';
@@ -31,7 +49,7 @@ abstract class Modules extends Functions implements ModuleInterface
     protected array $MODULE_APP_TITLE_LIST = array();
     protected array $MODULE_APP_ICON_LIST = array();
     protected array $MODULE_APP_DESC_LIST = array();
-    protected array $MODULE_APP_VIEW_LIST = array();
+    protected array $MODULE_APP_VIEW_LIST = array();*/
 
     const DEFAULT_COMMAND_ACTION_DISPLAY_MODULE = 'name';
 
@@ -52,7 +70,7 @@ abstract class Modules extends Functions implements ModuleInterface
 
     public function __toString(): string
     {
-        return $this->MODULE_NAME;
+        return $this::MODULE_NAME;
     }
 
     protected function _initialisation(): void
@@ -65,91 +83,91 @@ abstract class Modules extends Functions implements ModuleInterface
         return static::class;
     }
 
-    public function getType(): string
+    /*public function getType(): string
     {
-        return strtolower($this->MODULE_TYPE);
+        return strtolower($this::MODULE_TYPE);
     }
 
     public function getName(): string
     {
-        return $this->MODULE_NAME;
+        return $this::MODULE_NAME;
     }
 
     public function getMenuName(): string
     {
-        return $this->MODULE_MENU_NAME;
+        return $this::MODULE_MENU_NAME;
     }
 
     public function getRegisteredViews(): array
     {
-        return $this->MODULE_REGISTERED_VIEWS;
+        return $this::MODULE_REGISTERED_VIEWS;
     }
 
     public function getCommandName(): string
     {
-        return $this->MODULE_COMMAND_NAME;
+        return $this::MODULE_COMMAND_NAME;
     }
 
     public function getDefaultView(): string
     {
-        return $this->MODULE_DEFAULT_VIEW;
+        return $this::MODULE_DEFAULT_VIEW;
     }
 
     public function getDescription(): string
     {
-        return $this->MODULE_DESCRIPTION;
+        return $this::MODULE_DESCRIPTION;
     }
 
     public function getVersion(): string
     {
-        return $this->MODULE_VERSION;
+        return $this::MODULE_VERSION;
     }
 
     public function getAuthor(): string
     {
-        return $this->MODULE_AUTHOR;
+        return $this::MODULE_AUTHOR;
     }
 
     public function getLicence(): string
     {
-        return $this->MODULE_LICENCE;
+        return $this::MODULE_LICENCE;
     }
 
     public function getLogo(): string
     {
-        return $this->MODULE_LOGO;
+        return $this::MODULE_LOGO;
     }
 
     public function getHelp(): string
     {
-        return $this->MODULE_HELP;
+        return $this::MODULE_HELP;
     }
 
     public function getInterface(): string
     {
-        return $this->MODULE_INTERFACE;
+        return $this::MODULE_INTERFACE;
     }
 
     // Gestion de la présence dans le menu des applications.
     public function getAppTitleList(): array
     {
-        return $this->MODULE_APP_TITLE_LIST;
+        return $this::MODULE_APP_TITLE_LIST;
     }
 
     public function getAppIconList(): array
     {
-        return $this->MODULE_APP_ICON_LIST;
+        return $this::MODULE_APP_ICON_LIST;
     }
 
     public function getAppDescList(): array
     {
-        return $this->MODULE_APP_DESC_LIST;
+        return $this::MODULE_APP_DESC_LIST;
     }
 
     public function getAppViewList(): array
     {
-        return $this->MODULE_APP_VIEW_LIST;
-    }
+        return $this::MODULE_APP_VIEW_LIST;
+    }*/
 
 
     /**
@@ -206,7 +224,7 @@ abstract class Modules extends Functions implements ModuleInterface
         if ($this->_commandActionDisplayModuleCache != null)
             return $this->_commandActionDisplayModuleCache;
 
-        if ($this->_displayInstance->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]) {
+        if ($this->_displayInstance->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]) {
             $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE, FILTER_SANITIZE_STRING));
 
             if ($arg != '')

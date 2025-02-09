@@ -24,29 +24,29 @@ use Nebule\Library\References;
  * @link www.nebule.org
  */
 class ModuleAutent extends \Nebule\Library\Modules {
-    protected string $MODULE_TYPE = 'Application';
-    protected string $MODULE_NAME = '::autent:module:objects:ModuleName';
-    protected string $MODULE_MENU_NAME = '::autent:module:objects:MenuName';
-    protected string $MODULE_COMMAND_NAME = 'autent';
-    protected string $MODULE_DEFAULT_VIEW = 'login';
-    protected string $MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    protected string $MODULE_VERSION = '020250209';
-    protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
-    protected string $MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    protected string $MODULE_HELP = '::autent:module:objects:ModuleHelp';
-    protected string $MODULE_INTERFACE = '3.0';
+    const MODULE_TYPE = 'Application';
+    const MODULE_NAME = '::autent:module:objects:ModuleName';
+    const MODULE_MENU_NAME = '::autent:module:objects:MenuName';
+    const MODULE_COMMAND_NAME = 'autent';
+    const MODULE_DEFAULT_VIEW = 'login';
+    const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
+    const MODULE_VERSION = '020250209';
+    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
+    const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    const MODULE_HELP = '::autent:module:objects:ModuleHelp';
+    const MODULE_INTERFACE = '3.0';
 
-    protected array $MODULE_REGISTERED_VIEWS = array('desc', 'login', 'logout');
-    protected array $MODULE_REGISTERED_ICONS = array(
+    const MODULE_REGISTERED_VIEWS = array('desc', 'login', 'logout');
+    const MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 1 : Objet.
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 2 : Objet.
     );
-    protected array $MODULE_APP_TITLE_LIST = array();
-    protected array $MODULE_APP_ICON_LIST = array();
-    protected array $MODULE_APP_DESC_LIST = array();
-    protected array $MODULE_APP_VIEW_LIST = array();
+    const MODULE_APP_TITLE_LIST = array();
+    const MODULE_APP_ICON_LIST = array();
+    const MODULE_APP_DESC_LIST = array();
+    const MODULE_APP_VIEW_LIST = array();
 
     private string $_comebackAppId = '';
 
@@ -80,10 +80,10 @@ class ModuleAutent extends \Nebule\Library\Modules {
             $this->_comebackAppId = '1';
 
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[1]:
+            case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayLogin();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[2]:
+            case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayLogout();
                 break;
             default:
@@ -118,14 +118,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[2]
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2]
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY;
             $title = ':::logout';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this->MODULE_REGISTERED_VIEWS[1]
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[1]
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY;
             $title = ':::login';
             $type = DisplayItemIconMessage::TYPE_PLAY;
@@ -166,7 +166,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 DisplayQuery::QUERY_PASSWORD,
                 '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getServerEntityID()
                 . '&' . References::COMMAND_SWITCH_TO_ENTITY);
         else

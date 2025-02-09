@@ -23,28 +23,28 @@ use Nebule\Library\References;
  */
 class ModuleManage extends \Nebule\Library\Modules
 {
-    protected string $MODULE_TYPE = 'Application';
-    protected string $MODULE_NAME = '::sylabe:module:manage:ModuleName';
-    protected string $MODULE_MENU_NAME = '::sylabe:module:manage:MenuName';
-    protected string $MODULE_COMMAND_NAME = 'modmanager';
-    protected string $MODULE_DEFAULT_VIEW = 'disp';
-    protected string $MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    protected string $MODULE_VERSION = '020250209';
-    protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
-    protected string $MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
-    protected string $MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
-    protected string $MODULE_INTERFACE = '3.0';
+    const MODULE_TYPE = 'Application';
+    const MODULE_NAME = '::sylabe:module:manage:ModuleName';
+    const MODULE_MENU_NAME = '::sylabe:module:manage:MenuName';
+    const MODULE_COMMAND_NAME = 'modmanager';
+    const MODULE_DEFAULT_VIEW = 'disp';
+    const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
+    const MODULE_VERSION = '020250209';
+    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
+    const MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
+    const MODULE_INTERFACE = '3.0';
 
-    protected array $MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
-    protected array $MODULE_REGISTERED_ICONS = array(
+    const MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
+    const MODULE_REGISTERED_ICONS = array(
         '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256',    // 0 Module
         '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636.sha2.256',    // 1 Ajout d'un module
     );
-    protected array $MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
-    protected array $MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
-    protected array $MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
-    protected array $MODULE_APP_VIEW_LIST = array('list');
+    const MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
+    const MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
+    const MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
+    const MODULE_APP_VIEW_LIST = array('list');
 
     // Constantes spécifiques à la création de liens.
     const DEFAULT_COMMAND_ACTION_NOM = 'actaddnam';
@@ -91,16 +91,16 @@ class ModuleManage extends \Nebule\Library\Modules
         switch ($hookName) {
             case 'selfMenu':
                 // Affichage des applications.
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this->MODULE_REGISTERED_VIEWS[0]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[0]['name'] = '::sylabe:module:manage:AppTitle1';
-                    $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '::sylabe:module:manage:AppDesc1';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0];
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
                 }
 
                 // Synchronisation des applications.
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -112,10 +112,10 @@ class ModuleManage extends \Nebule\Library\Modules
                     )
                 ) {
                     $hookArray[0]['name'] = '::sylabe:module:manage:syncModules';
-                    $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                    $hookArray[0]['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
@@ -123,7 +123,7 @@ class ModuleManage extends \Nebule\Library\Modules
                 }
 
                 // Ajout d'un module.
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[0]
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
@@ -131,14 +131,14 @@ class ModuleManage extends \Nebule\Library\Modules
                     && $this->_unlocked
                 ) {
                     $hookArray[1]['name'] = '::sylabe:module:manage:create:createModule';
-                    $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
+                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
+                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
                 }
 
                 // Synchronisation du module.
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -162,7 +162,7 @@ class ModuleManage extends \Nebule\Library\Modules
                 }
 
                 // Modification du code du module.
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this->MODULE_REGISTERED_VIEWS[1]
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
@@ -171,8 +171,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[3]['name'] = '::sylabe:module:manage:changeCode';
                     $hookArray[3]['icon'] = Display::DEFAULT_ICON_LU;
                     $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3]
+                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule();
                 }
@@ -190,16 +190,16 @@ class ModuleManage extends \Nebule\Library\Modules
     public function displayModule(): void
     {
         switch ($this->_displayInstance->getCurrentDisplayView()) {
-//            case $this->MODULE_REGISTERED_VIEWS[0]:
+//            case $this::MODULE_REGISTERED_VIEWS[0]:
 //                $this->_displayModules();
 //                break;
-            case $this->MODULE_REGISTERED_VIEWS[1]:
+            case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayModule();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[2]:
+            case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayCreateModule();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[3]:
+            case $this::MODULE_REGISTERED_VIEWS[3]:
                 $this->_displayChangeCode();
                 break;
             default:
@@ -216,10 +216,10 @@ class ModuleManage extends \Nebule\Library\Modules
     public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this->MODULE_REGISTERED_VIEWS[0]:
+            case $this::MODULE_REGISTERED_VIEWS[0]:
                 $this->_display_InlineModules();
                 break;
-            case $this->MODULE_REGISTERED_VIEWS[1]:
+            case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineModule();
                 break;
         }
@@ -425,7 +425,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayModules(): void
     {
         // Titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Modules', $icon, false);
 
         // Affichage la liste des modules.
@@ -470,7 +470,7 @@ class ModuleManage extends \Nebule\Library\Modules
                 <?php
                 // Affiche les différentes applications.
                 foreach ($listModules as $moduleName => $instance) {
-                    $name = $instance->getName();
+                    $name = $instance::MODULE_NAME;
                     if (is_a($instance, '\Nebule\Library\Modules')
                         && !isset($listOkModules[$name])
                     ) {
@@ -497,13 +497,13 @@ class ModuleManage extends \Nebule\Library\Modules
                             'enableDisplayLink2Object' => true,
                             'enableDisplayObjectActions' => false,
                             'enableDisplayJS' => true,
-                            'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                            'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
                             'objectName' => $instance->getTranslateInstance($name, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
-                            'objectIcon' => $instance->getLogo(),
+                            'objectIcon' => $instance::MODULE_LOGO,
                             'displaySize' => 'medium',
                             'displayRatio' => 'short',
                         );
@@ -571,7 +571,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayModule(): void
     {
         // Titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Module', $icon, false);
 
         // Affichage du module avec transmission de la variable d'affichage.
@@ -684,9 +684,9 @@ class ModuleManage extends \Nebule\Library\Modules
                     'enableDisplayLink2Object' => false,
                     'enableDisplayObjectActions' => false,
                     'enableDisplayJS' => false,
-                    'objectName' => $instance->getTraduction($instance->getDescription()),
-                    'objectIcon' => $instance->getLogo(),
-                    'objectRefs' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
+                    'objectName' => $instance->getTraduction($instance::MODULE_DESCRIPTION),
+                    'objectIcon' => $instance::MODULE_LOGO,
+                    'objectRefs' => $instance->getTraduction($instance::MODULE_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                     'displaySize' => 'medium',
                     'displayRatio' => 'long',
                 );
@@ -699,7 +699,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     'displayRatio' => 'long',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getTraduction($instance->getHelp()), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getTraduction($instance::MODULE_HELP), $param);
 
                 // Affiche l'application (RID).
                 if ($rid != '0') {
@@ -718,7 +718,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         'enableDisplayFlagEmotions' => true,
                         'enableDisplayStatus' => true,
                         'enableDisplayContent' => false,
-                        'objectName' => $instance->getTraduction($instance->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
+                        'objectName' => $instance->getTraduction($instance::MODULE_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                         'objectIcon' => Displays::DEFAULT_ICON_LO,
                         'displaySize' => 'medium',
                         'displayRatio' => 'long',
@@ -733,11 +733,11 @@ class ModuleManage extends \Nebule\Library\Modules
                     );
                     if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleReferences'))
                     {
-                        $param['link2Object'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')->getCommandName()
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')->getRegisteredViews()[0]
-                            . '&' . $this->_applicationInstance->getModule('ModuleReferences')->getCommandName() . '=' . $this->_hashModule
+                        $param['link2Object'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME . '=' . $this->_hashModule
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid;
-                        $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')->getLogo();
+                        $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')::MODULE_LOGO;
                     }
                     echo $this->_displayInstance->getDisplayObject_DEPRECATED($object, $param);
                 } else {
@@ -759,7 +759,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     $param['objectRefs'] = array(
                         '0' => $listModulesSignersRID[$id],
                     );
-                    $param['objectIcon'] = $this->MODULE_LOGO;
+                    $param['objectIcon'] = $this::MODULE_LOGO;
                     $param['enableDisplayFlagState'] = true;
                     $param['enableDisplayFlagProtection'] = true;
                     echo $this->_displayInstance->getDisplayObject_DEPRECATED($object, $param);
@@ -807,13 +807,13 @@ class ModuleManage extends \Nebule\Library\Modules
                     $dispHook = array(
                         'hookType' => 'Self',
                         'cssid' => '',
-                        'moduleName' => $this->_translateInstance->getTranslate($this->MODULE_NAME),
+                        'moduleName' => $this->_translateInstance->getTranslate($this::MODULE_NAME),
                     );
                     if (isset($listModulesEnabled[$className])
                         && $listModulesEnabled[$className]
                     ) {
-                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $rid . '_' . $hashActivation . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
@@ -821,8 +821,8 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnabled');
                         $dispHook['desc'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisable');
                     } else {
-                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $rid . '_' . $hashActivation . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
@@ -864,7 +864,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Version : ' . $instance->getVersion(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Version : ' . $instance::MODULE_VERSION, $param);
 
                 // Interface.
                 $param = array(
@@ -873,7 +873,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Interface : ' . $instance->getInterface(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('Interface : ' . $instance::MODULE_INTERFACE, $param);
 
                 // Licence.
                 $param = array(
@@ -882,7 +882,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     'displayRatio' => 'short',
                     'informationType' => 'information',
                 );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getDevelopper() . ' <br />' . $instance->getLicence(), $param);
+                echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getDevelopper() . ' <br />' . $instance::MODULE_LICENCE, $param);
 
                 // Synchronisation de l'application.
                 /*		if ( $this->_configuration->getOption('permitWrite')
@@ -900,9 +900,9 @@ class ModuleManage extends \Nebule\Library\Modules
 			$dispHook = array(
 					'hookType' => 'Self',
 					'cssid' => '',
-					'moduleName' => $this->_translateInstance->getTranslate($this->MODULE_NAME),
-					'link' => '/?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this->MODULE_COMMAND_NAME
-							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this->MODULE_REGISTERED_VIEWS[1]
+					'moduleName' => $this->_translateInstance->getTranslate($this::MODULE_NAME),
+					'link' => '/?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
+							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[1]
 							.'&'.self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE.'='.$className
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION.'='.$rid
 							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(),
@@ -929,7 +929,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayCreateModule(): void
     {
         // Titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:createModule', $icon, false);
 
         // Si autorisé à créer des liens.
@@ -943,8 +943,8 @@ class ModuleManage extends \Nebule\Library\Modules
             <div class="layoutObjectsList">
                 <div class="objectsListContent">
                     <form enctype="multipart/form-data" method="post"
-                          action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[0]
+                          action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                         <?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:nom'); ?><br/>
                         <input type="text"
@@ -980,7 +980,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayChangeCode(): void
     {
         // Titre.
-        $icon = $this->_cacheInstance->newNode($this->MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:addModuleCode', $icon, false);
 
         // Extrait le RID si nouveau module créé.
@@ -1032,8 +1032,8 @@ class ModuleManage extends \Nebule\Library\Modules
                 <div class="layoutObjectsList">
                     <div class="objectsListContent">
                         <form enctype="multipart/form-data" method="post"
-                              action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1]
+                              action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                                   . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                   . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
                             <input type="hidden"

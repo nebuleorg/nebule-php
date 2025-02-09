@@ -164,7 +164,7 @@ class Display extends Displays
         <?php
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->getCSS();
             }
         }
@@ -176,7 +176,7 @@ class Display extends Displays
 
         // Ajout de la partie script JS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->headerScript();
                 echo "\n";
             }

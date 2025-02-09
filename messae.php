@@ -855,7 +855,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Ajout de la partie CSS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->getCSS();
             }
         }
@@ -871,7 +871,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Ajout de la partie script JS du module en cours d'utilisation, si présent.
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->headerScript();
                 echo "\n";
             }
@@ -999,18 +999,18 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Appelle les actions du module concerné par le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() == $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Mémorise le nom du module trouvé.
-                $currentModuleName = $module->getMenuName();
+                $currentModuleName = $module::MODULE_MENU_NAME;
 
                 // Affiche le lien du menu seul (sans JS).
                 if ($this->_currentDisplayView != 'menu') {
                     $list[$j]['icon'] = self::DEFAULT_LOGO_MODULE;
                     $list[$j]['title'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menu', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
-                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
                     $list[$j]['desc'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::menuDesc', $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
                     $list[$j]['ref'] = Application::APPLICATION_NAME;
@@ -1025,7 +1025,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1050,9 +1050,9 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Appelle les actions d'autres modules pour le module concerné par le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() != $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
@@ -1061,7 +1061,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1086,9 +1086,9 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Appelle les actions d'autres modules pour le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module->getCommandName() != $this->_currentDisplayMode) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTraduction($module->getMenuName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+                $moduleName = $module->getTraduction($module::MODULE_MENU_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
                 // Liste les points d'encrages à afficher.
                 $appHookList = $module->getHookList('menu');
@@ -1097,7 +1097,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                         if ($appHook['name'] != '') {
                             $icon = $appHook['icon'];
                             if ($icon == '') {
-                                $icon = $module->getLogo();
+                                $icon = $module::MODULE_LOGO;
                             }
                             if ($icon == '') {
                                 $icon = self::DEFAULT_ICON_IMLOG;
@@ -1123,18 +1123,18 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Appelle la liste des modules.
         foreach ($modules as $module) {
             // Extrait le nom du module.
-            $moduleName = $module->getTraduction($module->getName(), $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
+            $moduleName = $module->getTraduction($module::MODULE_NAME, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
 
             // Liste les options à afficher.
-            $appTitleList = $module->getAppTitleList();
+            $appTitleList = $module::MODULE_APP_TITLE_LIST;
             if (sizeof($appTitleList) != 0) {
-                $appIconList = $module->getAppIconList();
-                $appDescList = $module->getAppDescList();
-                $appViewList = $module->getAppViewList();
+                $appIconList = $module::MODULE_APP_ICON_LIST;
+                $appDescList = $module::MODULE_APP_DESC_LIST;
+                $appViewList = $module::MODULE_APP_VIEW_LIST;
                 for ($i = 0; $i < sizeof($appTitleList); $i++) {
                     $icon = $appIconList[$i];
                     if ($icon == '') {
-                        $icon = $module->getLogo();
+                        $icon = $module::MODULE_LOGO;
                     }
                     if ($icon == '') {
                         $icon = self::DEFAULT_ICON_LSTOBJ;
@@ -1146,7 +1146,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
                     $list[$j]['icon'] = $icon;
                     $list[$j]['title'] = $module->getTraduction($appTitleList[$i], $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage());
-                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module->getCommandName()
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
                     $list[$j]['ref'] = $moduleName;
@@ -1234,7 +1234,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
             $this->_displayInternalMenuApplications();
         } else {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-                if ($module->getCommandName() == $this->_currentDisplayMode) {
+                if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                     $module->displayModule();
                 }
             }
@@ -1482,33 +1482,33 @@ class Translate extends Translates
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleHelp extends Modules
+class ModuleHelp extends \Nebule\Library\Modules
 {
-    protected string $MODULE_TYPE = 'Application';
-    protected string $MODULE_NAME = '::messae:module:help:ModuleName';
-    protected string $MODULE_MENU_NAME = '::messae:module:help:MenuName';
-    protected string $MODULE_COMMAND_NAME = 'hlp';
-    protected string $MODULE_DEFAULT_VIEW = '1st';
-    protected string $MODULE_DESCRIPTION = '::messae:module:help:ModuleDescription';
-    protected string $MODULE_VERSION = '020250111';
-    protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2016-2025';
-    protected string $MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
-    protected string $MODULE_HELP = '::messae:module:help:ModuleHelp';
-    protected string $MODULE_INTERFACE = '3.0';
+    const MODULE_TYPE = 'Application';
+    const MODULE_NAME = '::messae:module:help:ModuleName';
+    const MODULE_MENU_NAME = '::messae:module:help:MenuName';
+    const MODULE_COMMAND_NAME = 'hlp';
+    const MODULE_DEFAULT_VIEW = '1st';
+    const MODULE_DESCRIPTION = '::messae:module:help:ModuleDescription';
+    const MODULE_VERSION = '020250111';
+    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2016-2025';
+    const MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
+    const MODULE_HELP = '::messae:module:help:ModuleHelp';
+    const MODULE_INTERFACE = '3.0';
 
-    protected array $MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
-    protected array $MODULE_REGISTERED_ICONS = array(
+    const MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
+    const MODULE_REGISTERED_ICONS = array(
         '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d',    // 0 : icône d'aide.
         '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c',    // 1 : module
         'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b',    // 2 : bootstrap (metrologie)
         '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6',    // 3 : world
         '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1',    // 4 : lister entités
     );
-    protected array $MODULE_APP_TITLE_LIST = array('::messae:module:help:AppTitle1');
-    protected array $MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d');
-    protected array $MODULE_APP_DESC_LIST = array('::messae:module:help:AppDesc1');
-    protected array $MODULE_APP_VIEW_LIST = array('hlp');
+    const MODULE_APP_TITLE_LIST = array('::messae:module:help:AppTitle1');
+    const MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d');
+    const MODULE_APP_DESC_LIST = array('::messae:module:help:AppDesc1');
+    const MODULE_APP_VIEW_LIST = array('hlp');
 
 
     /**
@@ -1540,36 +1540,36 @@ class ModuleHelp extends Modules
         switch ($hookName) {
             case 'menu':
                 $hookArray[0]['name'] = '::messae:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                 $hookArray[0]['desc'] = '::messae:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
+                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
                 break;
             case 'selfMenu':
                 // Affiche l'aide.
                 $hookArray[0]['name'] = '::messae:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this->MODULE_REGISTERED_ICONS[0];
+                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                 $hookArray[0]['desc'] = '::messae:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[1];
+                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
 
                 // Choix de la langue.
                 $hookArray[1]['name'] = '::messae:module:help:Langue';
-                $hookArray[1]['icon'] = $this->MODULE_REGISTERED_ICONS[3];
+                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
                 $hookArray[1]['desc'] = '::messae:module:help:ChangerLangue';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[2];
+                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
 
                 // A propos.
                 $hookArray[2]['name'] = '::messae:module:help:About';
-                $hookArray[2]['icon'] = $this->MODULE_REGISTERED_ICONS[1];
+                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                 $hookArray[2]['desc'] = '';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->MODULE_REGISTERED_VIEWS[3];
+                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
 
                 // Bootstrap.
                 $hookArray[3]['name'] = '::messae:module:help:Bootstrap';
-                $hookArray[3]['icon'] = $this->MODULE_REGISTERED_ICONS[2];
+                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                 $hookArray[3]['desc'] = '';
                 $hookArray[3]['link'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
                 break;
@@ -1637,7 +1637,7 @@ class ModuleHelp extends Modules
     private function _displayHlpFirst(): void
     {
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::SelectUser'), $this->MODULE_REGISTERED_ICONS[4]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::SelectUser'), $this::MODULE_REGISTERED_ICONS[4]);
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
@@ -1708,12 +1708,12 @@ class ModuleHelp extends Modules
             'informationType' => 'information',
             'displaySize' => 'medium',
             'displayRatio' => 'short',
-            'icon' => $module->getLogo(),
+            'icon' => $module::MODULE_LOGO,
         );
-        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module->getName()), $param);
+        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTraduction($module::MODULE_NAME), $param);
 
         // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $this->MODULE_REGISTERED_ICONS[3]);
+        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $this::MODULE_REGISTERED_ICONS[3]);
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
