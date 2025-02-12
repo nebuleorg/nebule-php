@@ -753,6 +753,7 @@ class Node extends Functions implements nodeInterface
     public function getType(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING extract type=' . $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
 

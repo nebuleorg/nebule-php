@@ -225,6 +225,8 @@ class ModuleAutent extends \Nebule\Library\Modules {
             $instance->setEnableFlagUnlocked(false);
             $instance->setName($this->_translateInstance->getTranslate('::privateKey'));
             $instance->setType(References::REFERENCE_OBJECT_TEXT);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]); // FIXME
+            $instance->setIcon($instanceIcon);
         }
         else
         {

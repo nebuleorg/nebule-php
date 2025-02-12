@@ -931,6 +931,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         else {
             $iconInstance = new DisplayIcon($this->_applicationInstance);
             $iconInstance->setNID($this->_nid);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING object icon=' . (string)$this->_icon, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $iconInstance->setIcon($this->_icon);
         }
         if ($this->_name != '')
@@ -1535,8 +1536,11 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     private function _setTypeHookName(): void
     {
-        if (is_a($this->_nid, 'Nebule\Library\Entity'))
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (is_a($this->_nid, 'Nebule\Library\Entity')) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK is entity ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_typeHookName = 'typeMenuEntity';
+        }
         elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
             $this->_typeHookName = 'typeMenuConversation';
         elseif (is_a($this->_nid, 'Nebule\Library\Group'))
@@ -1551,8 +1555,10 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_typeHookName = 'typeMenuTokenPool';
         elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
             $this->_typeHookName = 'typeMenuCurrency';
-        else
+        else {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK is node ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_typeHookName = 'typeMenuObject';
+        }
     }
 
     public function setTypeHookName(string $name): void
