@@ -772,6 +772,7 @@ class Node extends Functions implements nodeInterface
 
     /**
      * Lit la taille.
+     * FIXME get from file on last solution
      *
      * @param string $socialClass
      * @return string
@@ -792,15 +793,6 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HOMOMORPHE, $socialClass);
-    }
-
-    /**
-     * Lit l'empreinte (ID).
-     * @return string
-     */
-    public function getHash(): string
-    {
-        return $this->_id;
     }
 
     /**

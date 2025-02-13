@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020250118
+# Version 020250212
 
 echo ' > start'
 
@@ -274,6 +274,7 @@ EOF
 
   cat "${WORKSPACE}/autent.php" > "/tmp/autent.php"
   tail +4 "${WORKSPACE}/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/autent.php"
+  tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/autent.php"
   autent_hash=$(sha256sum "/tmp/autent.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new autent : ${autent_hash}"
   cp "/tmp/autent.php" "o/${autent_hash}"
@@ -284,7 +285,8 @@ EOF
     tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "/tmp/sylabe.php"
+    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "/tmp/sylabe.php"
   sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
   cp "/tmp/sylabe.php" "o/${sylabe_hash}"
@@ -297,7 +299,8 @@ EOF
   { tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "/tmp/messae.php"
+    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection '; } >> "/tmp/messae.php"
   messae_hash=$(sha256sum "/tmp/messae.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new messae : ${messae_hash}"
   cp "/tmp/messae.php" "o/${messae_hash}"
@@ -319,6 +322,7 @@ EOF
   #tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/neblog.php"
   tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/neblog.php"
   tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/neblog.php"
+  tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ' >> "/tmp/neblog.php"
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
   cp "/tmp/neblog.php" "o/${neblog_hash}"

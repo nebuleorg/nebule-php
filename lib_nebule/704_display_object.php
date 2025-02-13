@@ -1538,7 +1538,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_nid, 'Nebule\Library\Entity')) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK is entity ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING is entity ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_typeHookName = 'typeMenuEntity';
         }
         elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
@@ -1556,7 +1556,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
             $this->_typeHookName = 'typeMenuCurrency';
         else {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK is node ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING is node ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_typeHookName = 'typeMenuObject';
         }
     }

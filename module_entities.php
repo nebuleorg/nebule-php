@@ -27,7 +27,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250212';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -1710,7 +1710,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             var_dump($signers[$i]); echo "<br /><br />\n"; ob_flush();
             foreach ($signers[$i] as $j => $eid)
             {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK eid='.$eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid='.$eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 $e = $this->_nebuleInstance->getCacheInstance()->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
                 $signers[$i][$j] = $e;
             }*/

@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'login';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250212';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';

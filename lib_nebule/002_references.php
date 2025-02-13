@@ -3474,15 +3474,21 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
     static public function installation($nebuleInstance): bool
     {
         $ok = true;
+        echo 'o: ';
         // Generate objects for icons.
         foreach ( self::OBJ_IMG as $name => $content) {
-            $nebuleInstance->getMetrologyInstance()->addLog('create ref icon ' . 'f>' . self::REF_IMG[$name], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07a97058');
-            $instance = new Node($nebuleInstance, '0');
-            $instance->setEnvironmentLibrary($nebuleInstance);
+            $instanceNode = new \Nebule\Library\Node($nebuleInstance, '0');
+            $instanceRef = new \Nebule\Library\Node($nebuleInstance, '0');
+            $ref = nebule::REFERENCE_NEBULE_REFERENCE;
+            $instanceRef->setContent($ref);
+            $instanceNode->setEnvironmentLibrary($nebuleInstance);
             $decoded = (string)base64_decode($content, false);
-            if ($instance->setContent($decoded)) {
-                if ($instance->write())
+            $nebuleInstance->getMetrologyInstance()->addLog('create ref icon node ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07a97058');
+            if ($instanceNode->setContent($decoded)) {
+                if ($instanceNode->write()) {
+                    $nebuleInstance->getMetrologyInstance()->addLog('ok ref icon node nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ea79ccf9');
                     echo '+';
+                }
                 else {
                     echo 'E';
                     $ok = false;
@@ -3491,7 +3497,21 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
                 echo 'E';
                 $ok = false;
             }
+            /*if (self::REF_IMG[$name] != '') {
+                $instanceBL = new \Nebule\Library\BlocLink($nebuleInstance, 'new');
+                $nebuleInstance->getMetrologyInstance()->addLog('create ref icon link l>' . self::REF_IMG[$name] . '>' . $instanceNode->getID() . '>' . $instanceRef->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6818e04c');
+                $instanceBL->addLink('l>' . self::REF_IMG[$name] . '>' . $instanceNode->getID() . '>' . $instanceRef->getID());
+                if ($instanceBL->signWrite())
+                    echo 'l';
+                else {
+                    echo 'E';
+                    $ok = false;
+                }
+            }
+            echo ' ';*/
         }
         return $ok;
     }
+
+    // TODO get Functions::signReferences() here
 }
