@@ -138,38 +138,6 @@ class Functions
 
 
 
-    static public function signReferences($nebuleInstance): bool // TODO go to References class
-    {
-        $ok = true;
-
-        // Load entity before sign.
-        // TODO
-
-        // Generate links for icons.
-        foreach ( References::OBJ_IMG as $name => $content) {
-            $instance = new Node($nebuleInstance, '0');
-            $decoded = (string)base64_decode($content, false);
-            if (!$instance->setContent($decoded))
-                $ok = false; // FIXME
-
-            $reference = $nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
-            if (References::REF_IMG[$name] != '') {
-                $nebuleInstance->getMetrologyInstance()->addLog('sign ref icon ' . 'l>' . References::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '08d23b22');
-
-                // Use credentials on the first run with local entity. FIXME peut être refait avec Entities::setTempCurrentEntity()
-                $newLink = \Nebule\Bootstrap\blk_generateSign('',
-                    'l',
-                    References::REF_IMG[$name],
-                    $instance->getID(),
-                    $reference
-                );
-                if (!\Nebule\Bootstrap\blk_write($newLink))
-                    $ok = false;
-            }
-        }
-        return $ok;
-    }
-
     public function getTypedInstanceFromNID(string $nid): Node
     {
         $social = 'all';

@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250212';
+const BOOTSTRAP_VERSION = '020250213';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -6364,7 +6364,7 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
     $ok = true;
 
     echo '<div class="parts">' . "\n";
-    echo '<span class="partstitle">#3 reserved objects</span><br/>' . "\n";
+    echo '<span class="partstitle">#3 reserved objects</span><br/>' . "\no: ";
 
     foreach (LIB_FIRST_LOCALISATIONS as $data) {
         $hash = obj_getNID($data, lib_getOption('cryptoHashAlgorithm'));
@@ -6426,6 +6426,7 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
         }
     }
 
+    echo '<br />';
     if ($ok) {
         log_add('ok objects', 'info', __FUNCTION__, '5c7be016');
         echo " ok\n";
@@ -6957,9 +6958,6 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
             $instance->setContent($nebulePrivateEntity);
             $nebuleInstance->getEntitiesInstance()->setCurrentEntity($instance);
 
-            // Write references links
-            \Nebule\Library\Functions::signReferences($nebuleInstance);
-
             bootstrap_echoLineTitle('public ID');
             echo $nebulePublicEntity . '<br/>' . "\n";
             bootstrap_echoLineTitle('private ID');
@@ -7000,9 +6998,6 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
     }
     echo "</div>\n";
 
-    $nebulePasswordEntity = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-    $nebulePasswordEntity = null;
-
     return $ok;
 }
 
@@ -7012,7 +7007,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
  * @return bool
  */
 function bootstrap_firstDisplay10NeededObjects(): bool {
-    global $nebuleInstance;
+    global $nebuleInstance, $nebulePasswordEntity;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -7021,7 +7016,8 @@ function bootstrap_firstDisplay10NeededObjects(): bool {
     echo '<span class="partstitle">#10 needed objects</span><br/>' . "\n";
 
     if (is_a($nebuleInstance, '\Nebule\Library\nebule')
-        && \Nebule\Library\References::installation($nebuleInstance)
+        && \Nebule\Library\References::createNodeReferences($nebuleInstance)
+        && \Nebule\Library\References::createLinkReferences($nebuleInstance)
     ) {
         log_add('ok objects', 'info', __FUNCTION__, 'ba3772d3');
         echo " ok\n";
@@ -7031,6 +7027,9 @@ function bootstrap_firstDisplay10NeededObjects(): bool {
     }
 
     echo "</div>\n";
+
+    $nebulePasswordEntity = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+    $nebulePasswordEntity = null;
 
     return $ok;
 }

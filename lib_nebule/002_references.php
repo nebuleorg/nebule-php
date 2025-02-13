@@ -3373,38 +3373,38 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
     );
 
     const REF_IMG = array(
-        'addent' => '',
-        'addlnk' => '',
-        'addobjmark' => '',
-        'addobj' => '',
-        'add' => '',
-        'addtxt' => '',
-        'admin' => '',
-        'cvtaddent' => '',
-        'cvtaddmsg' => '',
-        'cvtadd' => '',
-        'cvtent' => '',
+        'addent' => 'b598ec9eae41c186e554662d13cb5ad8b82b7a73d11742b6b475d0ba5078cda764ce.none.272',
+        'addlnk' => 'ec42055c52ae0c4600795871b04851f3d2e8bc5338d886200e928b92344f0db535e5.none.272',
+        'addobjmark' => '0ff35e73a0c3b4d016f4fe1413443d2b9e012cf05fb402eb4f7fe8d6090b57cae1c0.none.272',
+        'addobj' => '7a68bad2fa5574bbd11efe3aeb9a53728f2972823fc6617fb7cc0bef5098423cfc50.none.272',
+        'add' => '0aef8b0aaabc961b91b69d22baef98fea1eeadc644ee69d5684b4b15ba89cee24c8b.none.272',
+        'addtxt' => '72132e670d69a0a30f9d472406fe36aa602072b834d514c222cb55d02a9c8738fe13.none.272',
+        'admin' => '8f492951bb321c4cfc6f1b9408c8deb6a2e9718b42c3e894a05596a696549e29d509.none.272',
+        'cvtaddent' => 'acc604c01d9d1625079e104b2ba13812dfbac0ab90e2ed2f7eec5dce08f35621ab47.none.272',
+        'cvtaddmsg' => '6ef161a696f280325801dd0cfbbbc0c3257a88b3b7752bc39c8e3e563456cf38eb3b.none.272',
+        'cvtadd' => '2d10b86ac5aee3bf2a0c05217adc7cf8022fce77d9f79cb1a1b262c36dc5d6cd4eb7.none.272',
+        'cvtent' => '64d671b1f98080dfa670a856899e4ac137b0804c6f68ef188636c3983cd017435d5f.none.272',
         'cvtobj' => '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272',
-        'cvt' => '',
-        'en-en' => '',
-        'entlock' => '',
+        'cvt' => '8c44dc720b87faad1de2a8b3277f088018e0fdb2e4949498de35e319fd681725b3f2.none.272',
+        'en-en' => 'c2c08f6388cea006a353ab729f9a34b42d9d3f72567a8f6a38e61bc1110fed9904e4.none.272',
+        'entlock' => 'b7ec3cd132dfeabad7e21bcf11584d3b2e35e85b725c8118360b7dc8d656bb87447b.none.272',
         'err' => '69636f6e206572726f72000000000000000000000000000000000000000000000000.none.272',
-        'es-co' => '',
-        'flush' => '',
-        'fr-fr' => '',
-        'grpentadd' => '',
-        'grpent' => '',
-        'grpobjadd' => '',
+        'es-co' => 'ab8e732269d84630f63aab84579f10811db4cee79d3ce1aa5b33b70d8d6c1ba7c175.none.272',
+        'flush' => '4e44ef17842462a37fb054c05a10bd3ee5fd084c2f299fd7b6e43337a44ae1167c0a.none.272',
+        'fr-fr' => '38c9509d24daf0fced78434d355893538cb4b6b9a01b923934bb0d79cd20f1b60a22.none.272',
+        'grpentadd' => 'f610c4f79eb49b69b4a6ea67ca148664db7d1b0496e879540963820fe70a118a97af.none.272',
+        'grpent' => '425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272',
+        'grpobjadd' => '44e1a60f923a373fada778d4b21ecb7dd0fc5c2833882169ff602d3c8928ec65a335.none.272',
         'grpobj' => '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272',
-        'idownload' => '',
-        'ihlp' => '',
-        'imenu545454' => '',
-        'imenu' => '',
-        'imetrolog' => '',
-        'imodify' => '',
+        'idownload' => 'b2c6815e74b1c99804dfa8a5a7af758b15edeba56ea09e7782871fdf97e219db7be8.none.272',
+        'ihlp' => '5b3afdf2eb971ce185930ad4accda23942d4495a638c2bdf27ae3e8e4537c1434697.none.272',
+        'imenu545454' => '18c9c7940b481be103d3e63db4e3124be61ebe3c0067908fde361872f16908de97c4.none.272',
+        'imenu' => '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272',
+        'imetrolog' => 'b9d58eaa11ff4e27b5b34fdc165ffdbf11675aa4a8845e3a6a00af53a832cffee9ac.none.272',
+        'imodify' => '7a27e831c81d717949bf87ab496d723e236bddfca0b317fcfb5568a95d08808507e7.none.272',
         'info' => '69636f6e20696e666f726d6174696f6e000000000000000000000000000000000000.none.272',
         'key' => 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272',
-        'klicty' => '',
+        'klicty' => '3c2ce4b7bd11456851882ce76151f03c9fc57ff9de1175e19b03c80b52b1de70a43c.none.272',
         'lc' => '6e6562756c652f6c69656e2f6c630000000000000000000000000000000000000000.none.272',
         'ld' => '6e6562756c652f6c69656e2f6c640000000000000000000000000000000000000000.none.272',
         'le' => '6e6562756c652f6c69656e2f6c650000000000000000000000000000000000000000.none.272',
@@ -3413,37 +3413,37 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
         'll' => '6e6562756c652f6c69656e2f6c6c0000000000000000000000000000000000000000.none.272',
         'lo' => '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272',
         'ls' => '6e6562756c652f6c69656e2f6c730000000000000000000000000000000000000000.none.272',
-        'lstent' => '',
-        'lstobj' => '',
+        'lstent' => '6dfeb9cc79e880d2ab770b202f50404a1862eb1079752cccd9a909ad881cd614d997.none.272',
+        'lstobj' => '34479c85e509a3e68556d00ee42c244affd3046fce4a7b58a470d11487e0e1158795.none.272',
         'lu' => '6e6562756c652f6c69656e2f6c750000000000000000000000000000000000000000.none.272',
         'lx' => '6e6562756c652f6c69656e2f6c780000000000000000000000000000000000000000.none.272',
-        'mark' => '',
-        'mchr' => '',
-        'ment' => '',
-        'mmsg' => '',
-        'mobj' => '',
-        'module2' => '',
-        'modulegray' => '',
-        'module' => '',
-        'msglist' => '',
-        'msgsent' => '',
-        'msgtrans' => '',
-        'nebfs' => '',
-        'nebulegray' => '',
-        'null256' => '',
-        'null' => '',
+        'mark' => '8a3125504481cf438d1cd2583f99c9e8b9125386e3668119291daf82e94f67243194.none.272',
+        'mchr' => 'bded64b18b85b47aa04caa2c0f8c63670556a0098b5f5d57fed028d36661365f4688.none.272',
+        'ment' => 'e8eb1df99af2b3f25a489aff093b113192527b444b12934ce186715897a786614064.none.272',
+        'mmsg' => '9e5b57b79c0ac5f879c7dcae141124d73fd658b521dadf7e59dd90a0065aea87332f.none.272',
+        'mobj' => '838642115a436722f46a0e988e85e57ab144089c2fd375bae09de49e7946baa5f103.none.272',
+        'module2' => '4a176dc406c84e84e5c882842a7c9e142a7d58c39584c02080433143d59274c4dc69.none.272',
+        'modulegray' => '46a62e81e8126de65191596beece7ad3ee407fe19156452e0e500c7da6a9b88fc62d.none.272',
+        'module' => '309c822aef3cd06665289afea6ca6cbbc0a76bc7405a35c83d085fa9f6f3beb0cccb.none.272',
+        'msglist' => '2ba931511f78ff064feb5e8ab4d2076156f2f4e717001ac989622e3e82ce406db3ea.none.272',
+        'msgsent' => 'a12ac3582d2ea078d83dff4195f4d092b28087d4b21ba4e956adf33f42baf634385d.none.272',
+        'msgtrans' => 'f26d7bfe6daa2ae3d3c31468ea6dad9cc34390367035cb4101266e1dd17bef1a0caf.none.272',
+        'nebfs' => '4a7746c75d40e47dc6e84dee95b2f41afca99d65476e532e4bac3da9faf3005a199e.none.272',
+        'nebulegray' => '4194bc549b46f0a9807bdbd5d9e64cb0817d0c37866682fa815c8ec56bb98ff61926.none.272',
+        'null256' => 'b9cb4ef943d36ea34afcc3d027b69f0ed291f3d800b7bf6f6a3393db0559825eb4dd.none.272',
+        'null' => '0e65bb135f63ab98a4ca2c12b0c98f90b78fb8619b752be69e213b9cb15c2b17eccd.none.272',
         'oent' => '6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272',
         'ok' => '69636f6e206f6b000000000000000000000000000000000000000000000000000000.none.272',
-        'reference' => '',
-        'synent' => '',
-        'synlnk' => '',
-        'synobjgray' => '',
-        'synobj' => '',
-        'time' => '',
-        'unmarkall' => '',
-        'unmark' => '',
+        'reference' => 'ad33396426cfbc1048b33251327473af65968bd3339a281284aa12246d75f3abf0fb.none.272',
+        'synent' => 'f75724b43291c2b60fce6219be762d383075f21a9223317354b2b4c523aed72f3b6f.none.272',
+        'synlnk' => '5c269a5cdb4cade1832b39bd642af96bced4b7b8b7963542844721d2d4f9d85747f3.none.272',
+        'synobjgray' => 'aefde628b18bafd8a6044c8070d7ed5c809df76bfd32baf399d0b5e4ccd55e147623.none.272',
+        'synobj' => 'c4c5278a7d00545eb3d0584e18344086561be96112d86b2d28cd71654846ac9be51e.none.272',
+        'time' => 'baeb47425661eb00b7aab75f325184c8484d90534c7b7a5ceafda14cbe65e38da3f3.none.272',
+        'unmarkall' => '09538bf27b38e1f1310af1d631fdc319a1d31b03658182e26fd2673c4748f56a801d.none.272',
+        'unmark' => 'f8781e6d70df781771d4c96a63f4c2b295be699aa30beaf253d5cda50191ff692fda.none.272',
         'warn' => '69636f6e207761726e696e6700000000000000000000000000000000000000000000.none.272',
-        'world' => '',
+        'world' => 'a951c9e429715d0e30823dfe8c62fcaed79f3365d6a9945759b77260a334f921b44b.none.272',
         '1joie0' => '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000000.none.272',
         '1joie1' => '6f6a6569656e7562656c6f2f6a627465652f6f6d69746e6f0a2f0000000000000001.none.272',
         '2confiance0' => '6f63666e6169636e65656e7562656c6f2f6a627465652f6f6d69746e6f0a2f000000.none.272',
@@ -3465,17 +3465,10 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
         'query' => '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272',
     );
 
-    /**
-     * Create many contents needed on installation.
-     *
-     * @param $nebuleInstance
-     * @return bool
-     */
-    static public function installation($nebuleInstance): bool
+    static public function createNodeReferences($nebuleInstance): bool
     {
         $ok = true;
         echo 'o: ';
-        // Generate objects for icons.
         foreach ( self::OBJ_IMG as $name => $content) {
             $instanceNode = new \Nebule\Library\Node($nebuleInstance, '0');
             $instanceRef = new \Nebule\Library\Node($nebuleInstance, '0');
@@ -3497,21 +3490,42 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
                 echo 'E';
                 $ok = false;
             }
-            /*if (self::REF_IMG[$name] != '') {
-                $instanceBL = new \Nebule\Library\BlocLink($nebuleInstance, 'new');
-                $nebuleInstance->getMetrologyInstance()->addLog('create ref icon link l>' . self::REF_IMG[$name] . '>' . $instanceNode->getID() . '>' . $instanceRef->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6818e04c');
-                $instanceBL->addLink('l>' . self::REF_IMG[$name] . '>' . $instanceNode->getID() . '>' . $instanceRef->getID());
-                if ($instanceBL->signWrite())
-                    echo 'l';
-                else {
+        }
+        echo '<br />';
+        return $ok;
+    }
+
+    static public function createLinkReferences($nebuleInstance): bool
+    {
+        $ok = true;
+        echo 'l: ';
+        foreach ( References::OBJ_IMG as $name => $content) {
+            $instance = new Node($nebuleInstance, '0');
+            $decoded = (string)base64_decode($content, false);
+            if (!$instance->setContent($decoded))
+                $ok = false;
+
+            $reference = $nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
+            if (References::REF_IMG[$name] != '') {
+                $nebuleInstance->getMetrologyInstance()->addLog('sign ref icon ' . 'l>' . References::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '08d23b22');
+
+                $newLink = \Nebule\Bootstrap\blk_generateSign('',
+                    'l',
+                    References::REF_IMG[$name],
+                    $instance->getID(),
+                    $reference
+                );
+                if (\Nebule\Bootstrap\blk_write($newLink)) {
+                    $nebuleInstance->getMetrologyInstance()->addLog('ok ref icon link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2618d5b0');
+                    echo '+';
+                } else {
                     echo 'E';
                     $ok = false;
                 }
             }
-            echo ' ';*/
         }
+        echo '<br />';
         return $ok;
     }
 
-    // TODO get Functions::signReferences() here
 }
