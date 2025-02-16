@@ -2965,7 +2965,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Try to find an update NID for the current NID.
+     * Try to find an update NID for the current NID. Empty if not found.
      *
      * @param boolean $present
      * @param boolean $synchro

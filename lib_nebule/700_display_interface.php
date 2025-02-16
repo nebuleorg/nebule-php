@@ -127,6 +127,12 @@ abstract class DisplayItem implements DisplayInterface
                 break;
         }
     }
+
+    protected function _getIsRID(Node $nid): bool {
+        if (str_contains($nid->getID(), '.none'))
+            return true;
+        return false;
+    }
 }
 
 abstract class DisplayItemCSS extends DisplayItem
@@ -209,8 +215,11 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_iconUpdate) {
-            //$updateIcon = $nid->getUpdateNID(true, false, $this->_social); // FIXME TODO ERROR
-            $updateIcon = '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256'; // FIXME
+            $updateIcon = $nid->getUpdateNID(true, false, $this->_social);
+            if ($updateIcon == '')
+                $updateIcon = $nid->getID();
+            if ($this->_getIsRID($nid))
+                $updateIcon = Displays::DEFAULT_ICON_LO;
             return $updateIcon;
         }
         else
