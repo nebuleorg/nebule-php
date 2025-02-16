@@ -129,9 +129,7 @@ abstract class DisplayItem implements DisplayInterface
     }
 
     protected function _getIsRID(Node $nid): bool {
-        if (str_contains($nid->getID(), '.none'))
-            return true;
-        return false;
+        return str_contains($nid->getID(), '.none');
     }
 }
 
@@ -235,7 +233,8 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
         if ($alt == '')
             $alt = $oid->getID();
-        $alt = $this->_translateInstance->getTranslate($alt);
+        else
+            $alt = $this->_translateInstance->getTranslate($alt);
         $result .= ' alt="' . $alt . '" title="' . $alt . '"';
 
         if ($class != '')

@@ -3112,7 +3112,7 @@ class Node extends Functions implements nodeInterface
 
         $links = $this->getReferencedObjectListID($reference, $socialClass);
         $link = end($links);
-        if (!is_a($link, 'Nebule\Library\LinkRegister'))
+        if (!is_a($link, '\Nebule\Library\LinkRegister'))
             return '';
         return $link->getParsed()['bl/rl/nid2'];
     }
@@ -3133,7 +3133,7 @@ class Node extends Functions implements nodeInterface
 
         $links = $this->getReferencedLinks($reference, $socialClass);
         $link = end($links);
-        if (!is_a($link, 'Nebule\Library\LinkRegister'))
+        if (!is_a($link, '\Nebule\Library\LinkRegister'))
             return '';
         return $link->getParsed()['bs/rs1/eid'];
     }
@@ -3146,7 +3146,7 @@ class Node extends Functions implements nodeInterface
         $link = end($links);
         $list = array();
         $listOK = array();
-        if (!is_a($link, 'Nebule\Library\LinkRegister'))
+        if (!is_a($link, '\Nebule\Library\LinkRegister'))
             return array();
         foreach ($links as $link) {
             if (!isset($listOK[$link->getParsed()['bs/rs1/eid']])) {
@@ -3168,6 +3168,7 @@ class Node extends Functions implements nodeInterface
      */
     public function getReferencedObjectInstance(string $reference = '', string $socialClass = ''): Node
     {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ref=' . $reference, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getTypedInstanceFromNID($this->getReferencedOrSelfNID($reference, $socialClass));
     }
 
