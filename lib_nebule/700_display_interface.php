@@ -57,7 +57,7 @@ abstract class DisplayItem implements DisplayInterface
             Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
         $this->_init();
     }
-    protected function _init(): void { $this->setSocial(''); } // Should be overridden by children classes.
+    protected function _init(): void { $this->setSocial('authority'); } // Should be overridden by children classes.
 
     public static function displayCSS(): void {} // Must be overridden by children classes.
 
@@ -71,23 +71,17 @@ abstract class DisplayItem implements DisplayInterface
         echo $this->getHTML();
     }
 
-    public function setSocial(string $social = ''): void // Should not be overridden by children classes.
+    public function setSocial(string $social = 'authority'): void // Should not be overridden by children classes.
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set social ' . $social, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($social == '')
-        {
-            $this->_social = 'all';
-            return;
-        }
-        $socialList = $this->_nebuleInstance->getSocialInstance()->getSocialNames();
-        foreach ($socialList as $s) {
+        foreach ($this->_nebuleInstance->getSocialInstance()->getSocialNames() as $s) {
             if ($social == $s) {
                 $this->_social = $social;
                 break;
             }
         }
         if ($this->_social == '')
-            $this->_social = 'all';
+            $this->_social = 'authority';
     }
 
     public function setSize(string $size = ''): void
@@ -166,25 +160,37 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     protected bool $_iconUpdate = true;
     protected string $_iconText = '';
 
-    public function setIcon(?Node $oid, bool $update = true): void
-    {
+    public function setIconRID(string $rid, bool $update = true): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($oid === null)
+        $nid = $this->_cacheInstance->newNode($rid);
+        if ($this->_getIsRID($nid)) {
+            $oid = $nid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+        } else
+            $oid = $nid;
+        $this->setIcon($oid, $update);
+    }
+
+    public function setIcon(?Node $oid, bool $update = true): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($oid === null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING null icon', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $this->_icon = null;
-        elseif ($oid->getID() != '0' && is_a($oid, 'Nebule\Library\Node') && $oid->checkPresent())
+        }
+        elseif ($oid->getID() != '0'
+            && is_a($oid, 'Nebule\Library\Node')
+            && $oid->checkPresent()
+        )
             $this->_icon = $oid;
 
         $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING interface icon=' . (string)$this->_icon, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_iconUpdate = $update;
     }
 
-    public function setIconText(String $text): void
-    {
+    public function setIconText(String $text): void {
         $this->_iconText = $this->_translateInstance->getTranslate($text);
     }
 
-    protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string
-    {
+    protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null
             || $icon === null
@@ -340,6 +346,9 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
         }
         $rid = $this->_cacheInstance->newNode($icon);
         $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING _type=' . $this->_type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING _iconText=' . $this->_iconText, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING _icon=' . $this->_icon->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 }
 

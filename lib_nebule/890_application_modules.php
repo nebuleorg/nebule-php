@@ -71,7 +71,7 @@ class ApplicationModules
             $this->_metrologyInstance->addLog('do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
-        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2bc7fc3');
 
         foreach ($this->_applicationInstance::LIST_MODULES_INTERNAL as $moduleName) {
             if (str_starts_with($moduleName, 'DModuleTranslate')) // TODO check interface too.

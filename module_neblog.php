@@ -970,10 +970,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayTitle(string $title, string $icon): void {
-        $iconNID = $this->_cacheInstance->newNode($icon);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle($title);
-        $instance->setIcon($iconNID);
+        $instance->setIconRID($icon);
         $instance->display();
     }
 

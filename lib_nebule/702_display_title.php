@@ -49,7 +49,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 
     private function _getIconHTML(&$result): void
     {
-        if ($this->_icon === null)
+        if ($this->_icon === null || $this->_icon->getID() == '0')
             return;
 
         $result .= '<div class="titleContentIcon">';

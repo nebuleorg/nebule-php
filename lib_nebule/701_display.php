@@ -2520,7 +2520,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $nid = $oid->getID();
 
-        if ($oid->getID() == '0')
+        if ($nid == '0')
             return '';
 
         $uid = $this->_getImageUpdate($oid);

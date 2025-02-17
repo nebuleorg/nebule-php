@@ -465,8 +465,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRC(string &$rc): bool
     {
-        $this->_metrologyInstance->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION,
-            __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rc) > 27)
         {
