@@ -202,7 +202,7 @@ class Node extends Functions implements nodeInterface
             if ($obfuscated)
                 $date = '0';
             $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $meta = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
             $this->_writeLink('l>' . $this->_id . '>' . $target . '>' . $meta, $obfuscated, $date);
 
             // Création du lien d'annulation de suppression.
@@ -293,7 +293,7 @@ class Node extends Functions implements nodeInterface
     public function getHashAlgo(): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $algo = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HASH, 'all');
+        $algo = $this->getProperty(References::REFERENCE_NEBULE_OBJET_HASH, 'all');
         $this->_metrologyInstance->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($algo != '')
@@ -629,10 +629,10 @@ class Node extends Functions implements nodeInterface
 
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '')
-            $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // Extraction des entités signataires.
-        $links = $this->getPropertiesLinks(nebule::REFERENCE_NEBULE_OBJET_TYPE, 'all');
+        $links = $this->getPropertiesLinks(References::REFERENCE_NEBULE_OBJET_TYPE, 'all');
 
         foreach ($links as $link) {
             if ($type == ''
@@ -660,14 +660,14 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '')
-            $type = $this->_nebuleInstance->getNIDfromData($type, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // extrait l'ID de l'entité si c'est un objet.
         if (is_a($entity, 'Node'))
             $entity = $entity->getID();
 
         // Extraction des entités signataires.
-        $links = $this->getPropertiesLinks(nebule::REFERENCE_NEBULE_OBJET_TYPE, 'all');
+        $links = $this->getPropertiesLinks(References::REFERENCE_NEBULE_OBJET_TYPE, 'all');
 
         foreach ($links as $link) {
             if ($type == ''
@@ -702,6 +702,7 @@ class Node extends Functions implements nodeInterface
 
         $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
         $this->_ioInstance->setObject($propertyOID, $property);
+
         $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
@@ -741,7 +742,7 @@ class Node extends Functions implements nodeInterface
     public function getTypeID(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getPropertyID(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
+        return $this->getPropertyID(References::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
 
     /**
@@ -753,8 +754,7 @@ class Node extends Functions implements nodeInterface
     public function getType(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING extract type=' . $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
 
     /**
@@ -767,7 +767,7 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, $type);
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $type);
     }
 
     /**
@@ -780,7 +780,7 @@ class Node extends Functions implements nodeInterface
     public function getSize(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return filter_var($this->getProperty(nebule::REFERENCE_NEBULE_OBJET_TAILLE, $socialClass), FILTER_SANITIZE_NUMBER_INT);
+        return filter_var($this->getProperty(References::REFERENCE_NEBULE_OBJET_TAILLE, $socialClass), FILTER_SANITIZE_NUMBER_INT);
     }
 
     /**
@@ -792,7 +792,7 @@ class Node extends Functions implements nodeInterface
     public function getHomomorphe(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_HOMOMORPHE, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_HOMOMORPHE, $socialClass);
     }
 
     /**
@@ -804,7 +804,7 @@ class Node extends Functions implements nodeInterface
     public function getDate(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_DATE, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_DATE, $socialClass);
     }
 
     /**
@@ -816,7 +816,7 @@ class Node extends Functions implements nodeInterface
     public function getName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $name = $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
+        $name = $this->getProperty(References::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
         if ($name == '')
             $name = $this->_id;
         return $name;
@@ -831,7 +831,7 @@ class Node extends Functions implements nodeInterface
     public function setName(string $name): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_NOM, $name, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_NOM, $name, $this->_getMarkProtected());
     }
 
     /**
@@ -843,7 +843,7 @@ class Node extends Functions implements nodeInterface
     public function getPrefixName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_PREFIX, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $socialClass);
     }
 
     /**
@@ -855,7 +855,7 @@ class Node extends Functions implements nodeInterface
     public function setPrefix(string $prefix): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_PREFIX, $prefix, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $prefix, $this->_getMarkProtected());
     }
 
     /**
@@ -867,7 +867,7 @@ class Node extends Functions implements nodeInterface
     public function getSuffixName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_SUFFIX, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $socialClass);
     }
 
     /**
@@ -879,7 +879,7 @@ class Node extends Functions implements nodeInterface
     public function setSuffix(string $suffix): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_SUFFIX, $suffix, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $suffix, $this->_getMarkProtected());
     }
 
     /**
@@ -891,7 +891,7 @@ class Node extends Functions implements nodeInterface
     public function getFirstname(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_PRENOM, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $socialClass);
     }
 
     /**
@@ -903,7 +903,7 @@ class Node extends Functions implements nodeInterface
     public function setFirstname(string $firstname): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_SUFFIX, $firstname, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $firstname, $this->_getMarkProtected());
     }
 
     /**
@@ -915,7 +915,7 @@ class Node extends Functions implements nodeInterface
     public function getSurname(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $socialClass);
     }
 
     /**
@@ -927,7 +927,7 @@ class Node extends Functions implements nodeInterface
     public function setSurname(string $surname): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM, $surname, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $surname, $this->_getMarkProtected());
     }
 
     /**
@@ -975,7 +975,7 @@ class Node extends Functions implements nodeInterface
     public function getLocalisations(string $socialClass = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperties(nebule::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
+        return $this->getProperties(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
     }
 
     /**
@@ -987,7 +987,7 @@ class Node extends Functions implements nodeInterface
     public function getLocalisation(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
     }
 
     /**
@@ -999,7 +999,7 @@ class Node extends Functions implements nodeInterface
     public function setLocalisation(string $localisation): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(nebule::REFERENCE_NEBULE_OBJET_LOCALISATION, $localisation);
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $localisation);
     }
 
 
@@ -1024,7 +1024,7 @@ class Node extends Functions implements nodeInterface
 
         $type = $this->getType($socialClass);
         $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $this->_isEntity = ($type == nebule::REFERENCE_OBJECT_ENTITY && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        $this->_isEntity = ($type == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         unset($objHead);
         return $this->_isEntity;
@@ -1050,7 +1050,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isGroup)
             return true;
 
-        $this->_isGroup = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_GROUPE, $socialClass);
+        $this->_isGroup = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_GROUPE, $socialClass);
 
         return $this->_isGroup;
     }
@@ -1147,7 +1147,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isConversation)
             return true;
 
-        $this->_isConversation = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_CONVERSATION, $socialClass);
+        $this->_isConversation = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_CONVERSATION, $socialClass);
 
         return $this->_isConversation;
     }
@@ -1246,7 +1246,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isCurrency)
             return true;
 
-        $this->_isCurrency = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE, $socialClass);
+        $this->_isCurrency = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_MONNAIE, $socialClass);
 
         return $this->_isCurrency;
     }
@@ -1271,7 +1271,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isTokenPool)
             return true;
 
-        $this->_isTokenPool = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC, $socialClass);
+        $this->_isTokenPool = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC, $socialClass);
 
         return $this->_isTokenPool;
     }
@@ -1296,7 +1296,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isToken)
             return true;
 
-        $this->_isToken = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON, $socialClass);
+        $this->_isToken = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON, $socialClass);
 
         return $this->_isToken;
     }
@@ -1321,7 +1321,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_isWallet)
             return true;
 
-        $this->_isWallet = $this->getHaveProperty(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE, $socialClass);
+        $this->_isWallet = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE, $socialClass);
 
         return $this->_isWallet;
     }
@@ -1343,7 +1343,7 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER),
+            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_DANGER),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1383,7 +1383,7 @@ class Node extends Functions implements nodeInterface
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_DANGER);
+        $target = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_DANGER);
         $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkDanger = true;
@@ -1406,7 +1406,7 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING),
+            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_WARNING),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1446,7 +1446,7 @@ class Node extends Functions implements nodeInterface
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_WARNING);
+        $target = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_WARNING);
         $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkWarning = true;
@@ -2215,14 +2215,14 @@ class Node extends Functions implements nodeInterface
             $context = '';
 
         // Vérifie que l'émotion existe.
-        if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
+        if ($emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
         )
             return $list;
 
@@ -2286,14 +2286,14 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = array();
 
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE, $socialClass, $context);
-        $result[nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET] = $this->getMarkEmotion(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE, $socialClass, $context);
+        $result[References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET] = $this->getMarkEmotion(References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET, $socialClass, $context);
 
         return $result;
     }
@@ -2324,14 +2324,14 @@ class Node extends Functions implements nodeInterface
 
         /*$this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'émotion existe.
-        if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
+        if ($emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
         ) {
             return false;
         }
@@ -2385,14 +2385,14 @@ class Node extends Functions implements nodeInterface
 
         /*$this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'émotion existe.
-        if ($emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
-            && $emotion != nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
+        if ($emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE
+            && $emotion != References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET
         )
             return false;
 
@@ -3039,19 +3039,19 @@ class Node extends Functions implements nodeInterface
 
 
 
-    private function _getReferencedByLinks(string $reference = ''): array
+    private function _getReferencedByLinks(string $reference = '', string $action = 'l'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($reference == '')
-            $reference = nebule::REFERENCE_NEBULE_REFERENCE;
+            $reference = References::REFERENCE_NEBULE_REFERENCE;
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
         $list = array();
         $filter = array(
-            'bl/rl/req' => 'f',
+            'bl/rl/req' => $action,
             'bl/rl/nid1' => $this->_id,
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
@@ -3061,19 +3061,19 @@ class Node extends Functions implements nodeInterface
         return $list;
     }
 
-    private function _getReferenceToLinks(string $reference = ''): array
+    private function _getReferenceToLinks(string $reference = '', string $action = 'l'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($reference == '')
-            $reference = nebule::REFERENCE_NEBULE_REFERENCE;
+            $reference = References::REFERENCE_NEBULE_REFERENCE;
 
         if (!self::checkNID($reference))
             $reference = $this->_nebuleInstance->getNIDfromData($reference);
 
         $list = array();
         $filter = array(
-            'bl/rl/req' => 'f',
+            'bl/rl/req' => $action,
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
@@ -3092,25 +3092,15 @@ class Node extends Functions implements nodeInterface
         return $links;
     }
 
-    public function getReferencedObjectListID(string $reference = '', string $socialClass = ''): array
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $links = $this->getReferencedLinks($reference, $socialClass);
-
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
-
-        if (sizeof($links) == 0)
-            return array($this->_id);
-
-        return $links;
-    }
-
     public function getByReferencedNID(string $reference = '', string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $links = $this->getReferencedObjectListID($reference, $socialClass);
+        $links = $this->getReferencedLinks($reference, $socialClass);
+        if (sizeof($links) == 0) {
+            return '';
+        }
+
         $link = end($links);
         if (!is_a($link, '\Nebule\Library\LinkRegister'))
             return '';
@@ -3160,7 +3150,7 @@ class Node extends Functions implements nodeInterface
     /**
      * Cherche l'instance de l'objet par référence.
      * Si pas trouvé, retourne l'instance de l'objet sur lequel s'effectue la recherche.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
+     * Si le type de référence $reference n'est pas précisée, utilise References::REFERENCE_NEBULE_REFERENCE.
      *
      * @param string $reference
      * @param string $socialClass
@@ -3174,7 +3164,7 @@ class Node extends Functions implements nodeInterface
 
     /**
      * Cherche si l'objet est une référence.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
+     * Si le type de référence $reference n'est pas précisée, utilise References::REFERENCE_NEBULE_REFERENCE.
      * Les références sont converties en hash en hexadécimal.
      * Si la référence est un texte en hexadécimal, c'est à dire un ID d'objet, alors c'est utilisé directement.
      *
@@ -3200,7 +3190,7 @@ class Node extends Functions implements nodeInterface
 
     /**
      * Cherche si l'objet est référencé par une autre objet.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
+     * Si le type de référence $reference n'est pas précisée, utilise References::REFERENCE_NEBULE_REFERENCE.
      * Les références sont converties en hash en hexadécimal.
      * Si la référence est un texte en hexadécimal, c'est à dire un ID d'objet, alors c'est utilisé directement.
      *
@@ -3228,7 +3218,7 @@ class Node extends Functions implements nodeInterface
     /**
      * Cherche l'ID de l'objet qui référence l'objet courant.
      * Si pas trouvé, retourne l'ID de l'objet sur lequel s'effectue la recherche.
-     * Si le type de référence $reference n'est pas précisée, utilise nebule::REFERENCE_NEBULE_REFERENCE.
+     * Si le type de référence $reference n'est pas précisée, utilise References::REFERENCE_NEBULE_REFERENCE.
      *
      * @param string $reference
      * @param string $socialClass
@@ -3282,7 +3272,7 @@ class Node extends Functions implements nodeInterface
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid3' =>  $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
+            'bl/rl/nid3' =>  $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, false);
@@ -3754,7 +3744,7 @@ class Node extends Functions implements nodeInterface
         <p>Les différents objets réservés pour les besoins de la bibliothèque nebule :</p>
         <ul>
             <?php
-            $list = nebule::RESERVED_OBJECTS_LIST;
+            $list = References::RESERVED_OBJECTS_LIST;
             foreach ($list as $item) {
                 echo "\t<li><code>$item</code></li>\n";
             }

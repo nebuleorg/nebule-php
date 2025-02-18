@@ -27,205 +27,6 @@ class nebule
     const SECURITY_MASTER_URL = 'http://security.master.nebule.org';
     const CODE_MASTER_URL = 'http://code.master.nebule.org';
 
-    // Les commandes.
-    const COMMAND_SWITCH_APPLICATION = 'a';
-    const COMMAND_FLUSH = 'f';
-    const COMMAND_RESCUE = 'r';
-    const COMMAND_AUTH_ENTITY_MOD = 'auth';
-    const COMMAND_AUTH_ENTITY_INFO = 'info';
-    const COMMAND_AUTH_ENTITY_LOGIN = 'login';
-    const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
-    const COMMAND_SWITCH_TO_ENTITY = 'switch';
-    const COMMAND_SELECT_OBJECT = 'obj';
-    const COMMAND_SELECT_LINK = 'lnk';
-    const COMMAND_SELECT_ENTITY = 'ent';
-    const COMMAND_SELECT_GROUP = 'grp';
-    const COMMAND_SELECT_CONVERSATION = 'cvt';
-    const COMMAND_SELECT_CURRENCY = 'cur';
-    const COMMAND_SELECT_TOKENPOOL = 'tkp';
-    const COMMAND_SELECT_TOKEN = 'tkn';
-    const COMMAND_SELECT_WALLET = 'wal';
-    const COMMAND_SELECT_TRANSACTION = 'trs';
-    const COMMAND_SELECT_PASSWORD = 'pwd';
-    const COMMAND_SELECT_TICKET = 'tkt';
-
-    // Les références.
-    const REFERENCE_OBJECT_TEXT = 'text/plain';
-    const REFERENCE_OBJECT_HTML = 'text/html';
-    const REFERENCE_OBJECT_CSS = 'text/css';
-    const REFERENCE_OBJECT_PHP = 'text/x-php';
-    const REFERENCE_OBJECT_APP_PHP = 'application/x-php';
-    const REFERENCE_OBJECT_PNG = 'image/png';
-    const REFERENCE_OBJECT_JPEG = 'image/jpeg';
-    const REFERENCE_OBJECT_MP3 = 'audio/mpeg';
-    const REFERENCE_OBJECT_OGG = 'audio/x-vorbis+ogg';
-    const REFERENCE_OBJECT_CRYPT_RSA = 'application/x-encrypted/rsa';
-    const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
-    const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
-    const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
-    const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
-    const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
-    const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
-    const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
-
-    // Les objets références de nebule.
-    const REFERENCE_NEBULE_OBJET = 'nebule/objet';
-    const REFERENCE_NEBULE_OBJET_HASH = 'nebule/objet/hash';
-    const REFERENCE_NEBULE_OBJET_HOMOMORPHE = 'nebule/objet/homomorphe';
-    const REFERENCE_NEBULE_OBJET_TYPE = 'nebule/objet/type';
-    const REFERENCE_NEBULE_OBJET_LOCALISATION = 'nebule/objet/localisation';
-    const REFERENCE_NEBULE_OBJET_TAILLE = 'nebule/objet/taille';
-    const REFERENCE_NEBULE_OBJET_PRENOM = 'nebule/objet/prenom';
-    const REFERENCE_NEBULE_OBJET_NOM = 'nebule/objet/nom';
-    const REFERENCE_NEBULE_OBJET_SURNOM = 'nebule/objet/surnom';
-    const REFERENCE_NEBULE_OBJET_PREFIX = 'nebule/objet/prefix';
-    const REFERENCE_NEBULE_OBJET_SUFFIX = 'nebule/objet/suffix';
-    const REFERENCE_NEBULE_OBJET_LIEN = 'nebule/objet/lien';
-    const REFERENCE_NEBULE_OBJET_DATE = 'nebule/objet/date';
-    const REFERENCE_NEBULE_OBJET_DATE_ANNEE = 'nebule/objet/date/annee';
-    const REFERENCE_NEBULE_OBJET_DATE_MOIS = 'nebule/objet/date/mois';
-    const REFERENCE_NEBULE_OBJET_DATE_JOUR = 'nebule/objet/date/jour';
-    const REFERENCE_NEBULE_OBJET_DATE_HEURE = 'nebule/objet/date/heure';
-    const REFERENCE_NEBULE_OBJET_DATE_MINUTE = 'nebule/objet/date/minute';
-    const REFERENCE_NEBULE_OBJET_DATE_SECONDE = 'nebule/objet/date/seconde';
-    const REFERENCE_NEBULE_OBJET_DATE_ZONE = 'nebule/objet/date/zone';
-    const REFERENCE_NEBULE_OBJET_ENTITE = 'nebule/objet/entite';
-    const REFERENCE_NEBULE_OBJET_ENTITE_TYPE = 'nebule/objet/entite/type';
-    const REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION = 'nebule/objet/entite/localisation';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI = 'nebule/objet/entite/suivi';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SECONDE = 'nebule/objet/entite/suivi/seconde';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MINUTE = 'nebule/objet/entite/suivi/minute';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_HEURE = 'nebule/objet/entite/suivi/heure';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_JOUR = 'nebule/objet/entite/suivi/jour';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SEMAINE = 'nebule/objet/entite/suivi/semaine';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MOIS = 'nebule/objet/entite/suivi/mois';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_ANNEE = 'nebule/objet/entite/suivi/annee';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE = 'nebule/objet/entite/maitre';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE = 'nebule/objet/entite/maitre/securite';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE = 'nebule/objet/entite/maitre/code';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE = 'nebule/objet/entite/maitre/annuaire';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS = 'nebule/objet/entite/maitre/temps';
-    const REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE = 'nebule/objet/entite/autorite/locale';
-    const REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT = 'nebule/objet/entite/recouvrement';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP = 'nebule/objet/interface/web/php/bootstrap';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE = 'nebule/objet/interface/web/php/bibliotheque';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
-    const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
-    const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';
-    const REFERENCE_NEBULE_OBJET_EMOTION = 'nebule/objet/emotion';
-    const REFERENCE_NEBULE_OBJET_EMOTION_JOIE = 'nebule/objet/emotion/joie';
-    const REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE = 'nebule/objet/emotion/confiance';
-    const REFERENCE_NEBULE_OBJET_EMOTION_PEUR = 'nebule/objet/emotion/peur';
-    const REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE = 'nebule/objet/emotion/surprise';
-    const REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE = 'nebule/objet/emotion/tristesse';
-    const REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT = 'nebule/objet/emotion/degout';
-    const REFERENCE_NEBULE_OBJET_EMOTION_COLERE = 'nebule/objet/emotion/colere';
-    const REFERENCE_NEBULE_OBJET_EMOTION_INTERET = 'nebule/objet/emotion/interet';
-    const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
-    const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
-    const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';
-    const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';
-    const REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE = 'nebule/objet/groupe/dissimule';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION = 'nebule/objet/conversation';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE = 'nebule/objet/conversation/suivie';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE = 'nebule/objet/conversation/fermee';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE = 'nebule/objet/conversation/protegee';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE = 'nebule/objet/conversation/dissimulee';
-    const REFERENCE_NEBULE_OBJET_ARBORESCENCE = 'nebule/objet/arborescence';
-    const REFERENCE_NEBULE_OBJET_MONNAIE = 'nebule/objet/monnaie';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_JETON = 'nebule/objet/monnaie/jeton';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_SAC = 'nebule/objet/monnaie/sac';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE = 'nebule/objet/monnaie/portefeuille';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION = 'nebule/objet/monnaie/transaction';
-    const REFERENCE_NEBULE_OPTION = 'nebule/option';
-    const REFERENCE_NEBULE_DANGER = 'nebule/danger';
-    const REFERENCE_NEBULE_WARNING = 'nebule/warning';
-    const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
-
-    /**
-     * Liste des objets à usage réservé.
-     */
-    const RESERVED_OBJECTS_LIST = array(
-        'nebule/objet',
-        'nebule/objet/hash',
-        'nebule/objet/homomorphe',
-        'nebule/objet/type',
-        'nebule/objet/localisation',
-        'nebule/objet/taille',
-        'nebule/objet/prenom',
-        'nebule/objet/nom',
-        'nebule/objet/surnom',
-        'nebule/objet/prefix',
-        'nebule/objet/suffix',
-        'nebule/objet/lien',
-        'nebule/objet/date',
-        'nebule/objet/date/annee',
-        'nebule/objet/date/mois',
-        'nebule/objet/date/jour',
-        'nebule/objet/date/heure',
-        'nebule/objet/date/minute',
-        'nebule/objet/date/seconde',
-        'nebule/objet/date/zone',
-        'nebule/objet/entite',
-        'nebule/objet/entite/type',
-        'nebule/objet/entite/localisation',
-        'nebule/objet/entite/suivi',
-        'nebule/objet/entite/suivi/seconde',
-        'nebule/objet/entite/suivi/minute',
-        'nebule/objet/entite/suivi/heure',
-        'nebule/objet/entite/suivi/jour',
-        'nebule/objet/entite/suivi/mois',
-        'nebule/objet/entite/suivi/annee',
-        'nebule/objet/entite/maitre',
-        'nebule/objet/entite/maitre/securite',
-        'nebule/objet/entite/maitre/code',
-        'nebule/objet/entite/maitre/annuaire',
-        'nebule/objet/entite/maitre/temps',
-        'nebule/objet/entite/autorite/locale',
-        'nebule/objet/entite/recouvrement',
-        'nebule/objet/interface/web/php/bootstrap',
-        'nebule/objet/interface/web/php/bibliotheque',
-        'nebule/objet/interface/web/php/applications',
-        'nebule/objet/interface/web/php/applications/direct',
-        'nebule/objet/interface/web/php/applications/active',
-        'nebule/objet/interface/web/php/applications/modules',
-        'nebule/objet/interface/web/php/applications/modules/traduction',
-        'nebule/objet/interface/web/php/applications/modules/active',
-        'nebule/objet/noeud',
-        'nebule/objet/image/reference',
-        'nebule/objet/emotion',
-        'nebule/objet/emotion/joie',
-        'nebule/objet/emotion/confiance',
-        'nebule/objet/emotion/peur',
-        'nebule/objet/emotion/surprise',
-        'nebule/objet/emotion/tristesse',
-        'nebule/objet/emotion/degout',
-        'nebule/objet/emotion/colere',
-        'nebule/objet/emotion/interet',
-        'nebule/objet/groupe',
-        'nebule/objet/groupe/suivi',
-        'nebule/objet/groupe/ferme',
-        'nebule/objet/groupe/protege',
-        'nebule/objet/groupe/dissimule',
-        'nebule/objet/conversation',
-        'nebule/objet/conversation/suivie',
-        'nebule/objet/conversation/fermee',
-        'nebule/objet/conversation/protegee',
-        'nebule/objet/conversation/dissimulee',
-        'nebule/objet/arborescence',
-        'nebule/objet/monnaie',
-        'nebule/objet/monnaie/jeton',
-        'nebule/objet/monnaie/sac',
-        'nebule/objet/monnaie/portefeuille',
-        'nebule/objet/monnaie/transaction',
-        'nebule/option',
-        'nebule/danger',
-        'nebule/warning',
-        'nebule/reference',
-    );
-
     const SESSION_SAVED_VARS = array(
         '_authoritiesInstance',
         '_entitiesInstance',
@@ -497,7 +298,7 @@ class nebule
      *
      * @return void
      */
-    private function _getSubordinationEntity()
+    private function _getSubordinationEntity(): void
     {
         //$this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentUntypedStatic('subordinationEntity'));
         $this->_subordinationEntity = new Entity($this->_nebuleInstance, $this->_configurationInstance->getOptionFromEnvironmentAsString('subordinationEntity'));
@@ -508,7 +309,7 @@ class nebule
      * Retourne l'entité de subordination si défini.
      * Retourne une chaine vide sinon.
      *
-     * @return node
+     * @return node|null
      */
     public function getSubordinationEntity(): ?node
     {
@@ -609,8 +410,8 @@ class nebule
     private function _findCurrentObjet()
     {
         // Lit et nettoye le contenu de la variable GET.
-        $arg_obj = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        $this->_metrologyInstance->addLog('user input ' . self::COMMAND_SELECT_OBJECT . '=' . $arg_obj, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8eb05394');
+        $arg_obj = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_OBJECT . '=' . $arg_obj, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8eb05394');
 
         // Si la variable est un objet avec ou sans liens.
         if (Node::checkNID($arg_obj, false, true)
@@ -697,10 +498,10 @@ class nebule
 
     private function _findCurrentGroup(): void
     {
-        if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_GROUP))
-            $arg_grp = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_GROUP))
+            $arg_grp = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg_grp = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg_grp = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg_grp, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg_grp)
@@ -746,10 +547,10 @@ class nebule
 
     private function _findCurrentConversation(): void
     {
-        if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_CONVERSATION))
-            $arg_cvt = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_CONVERSATION))
+            $arg_cvt = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg_cvt = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg_cvt = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg_cvt, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg_cvt)
@@ -801,10 +602,10 @@ class nebule
             return;
         }
 
-        if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_CURRENCY))
-            $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_CURRENCY))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg)
@@ -856,10 +657,10 @@ class nebule
             return;
         }
 
-        if (filter_has_var(INPUT_GET, self::COMMAND_SELECT_TOKENPOOL))
-            $arg = trim(' ' . filter_input(INPUT_GET, self::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKENPOOL))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg = trim(' ' . filter_input(INPUT_POST, self::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg, false, true)
             && ($this->getIoInstance()->checkObjectPresent($arg)
@@ -1034,7 +835,7 @@ class nebule
             if (Node::checkNID($type))
                 $hashType = $type;
             else
-                $hashType = $this->getNIDfromData($type, self::REFERENCE_CRYPTO_HASH_ALGORITHM);
+                $hashType = $this->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
             // $type doit être une instance d'objet au final.
             $type =$this->_cacheInstance->newNode($hashType);
         }
@@ -1065,7 +866,7 @@ class nebule
             'l',
             '',
             $hashType,
-            $this->getNIDfromData(self::REFERENCE_NEBULE_OBJET_TYPE, self::REFERENCE_CRYPTO_HASH_ALGORITHM)
+            $this->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM)
         );
 
         // Fait un tri par pertinence sociale.
@@ -1110,7 +911,7 @@ class nebule
      */
     public function getListGroupsLinks(Entity $entity, string $socialClass = ''): array
     {
-        return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
+        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
 
     /**
@@ -1123,7 +924,7 @@ class nebule
      */
     public function getListGroupsID(Entity $entity, string $socialClass = ''): array
     {
-        return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
+        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
 
     /**
@@ -1140,7 +941,7 @@ class nebule
      */
     public function getListConversationsLinks(Entity $entity, string $socialClass = ''): array
     {
-        return $this->getListLinksByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
+        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
 
     /**
@@ -1154,7 +955,7 @@ class nebule
      */
     public function getListConversationsID(Entity $entity, string $socialClass = ''): array
     {
-        return $this->getListIdByType(self::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
+        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
 
 

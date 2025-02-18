@@ -453,7 +453,7 @@ class Entities extends Functions
 
     public function getListEntitiesInstances(): array
     {
-        $hashType = $this->getNidFromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $hashEntity = $this->getNidFromData('application/x-pem-file');
         $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 

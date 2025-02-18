@@ -49,7 +49,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250207';
+    const APPLICATION_VERSION = '020250218';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -1481,7 +1481,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Détermine si c'est une entité.
         $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');

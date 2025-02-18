@@ -492,7 +492,7 @@ abstract class Applications extends Functions implements applicationInterface
         $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
 
         // Recherche les liens de validation.
-        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
         $object = $this->_cacheInstance->newNode($hashRef);
         $links = $object->getLinksOnFields('', '', 'f', $hashRef, $hash, $hashRef);
 

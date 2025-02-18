@@ -95,13 +95,13 @@ class Group extends Node implements nodeInterface
 
             $signer = $this->_entitiesInstance->getCurrentEntityID();
             $date = date(DATE_ATOM);
-            $hashGroup = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+            $hashGroup = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             // Création lien de hash.
             $action = 'l';
             $source = $this->_id; // FIXME
             $target = $this->_cryptoInstance->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+            $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_HASH);
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new BlocLink($this->_nebuleInstance, $link);
             $newLink->signWrite();
@@ -110,7 +110,7 @@ class Group extends Node implements nodeInterface
             $action = 'l';
             $source = $this->_id; // FIXME
             $target = $hashGroup;
-            $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new BlocLink($this->_nebuleInstance, $link);
             $newLink->signWrite();
@@ -307,7 +307,7 @@ class Group extends Node implements nodeInterface
         $action = 'x';
         $source = $this->_id;
         $target = $this->getReferenceObject();
-        $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->signWrite();
@@ -1004,7 +1004,7 @@ class Group extends Node implements nodeInterface
             'l',
             $id,
             $this->_id,
-            $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinance sociale.
@@ -1052,7 +1052,7 @@ class Group extends Node implements nodeInterface
         $action = 'l';
         $source = $id;
         $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
+        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
@@ -1102,7 +1102,7 @@ class Group extends Node implements nodeInterface
         $action = 'x';
         $source = $id;
         $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
+        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new LinkRegister($this->_nebuleInstance, $link);
         $newLink->sign();
@@ -1127,7 +1127,7 @@ class Group extends Node implements nodeInterface
      */
     public function getListFollowersLinks(string $socialClass = '', array $socialListID = array()): array
     {
-        return $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
+        return $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
     }
 
     /**
@@ -1173,7 +1173,7 @@ class Group extends Node implements nodeInterface
     public function getListFollowersID(string $socialClass = '', array $socialListID = array()): array
     {
         // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
+        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
 
         // Extraction des ID cibles.
         $list = array();
@@ -1192,7 +1192,7 @@ class Group extends Node implements nodeInterface
      */
     public function getCountFollowers(string $socialClass = '', array $socialListID = array()): float
     {
-        return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID));
+        return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID));
     }
 
     /**
@@ -1206,7 +1206,7 @@ class Group extends Node implements nodeInterface
     public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', array $socialListID = array()): array
     {
         // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
+        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
 
         // Extraction des ID cibles.
         $list = array();
@@ -1234,7 +1234,7 @@ class Group extends Node implements nodeInterface
     public function getReferenceObject(): string
     {
         if ($this->_referenceObject == '')
-            $this->_referenceObject = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObject = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         return $this->_referenceObject;
     }
 
@@ -1253,7 +1253,7 @@ class Group extends Node implements nodeInterface
     public function getReferenceObjectClosed(): string
     {
         if ($this->_referenceObjectClosed == '')
-            $this->_referenceObjectClosed = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectClosed = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         return $this->_referenceObjectClosed;
     }
 
@@ -1272,7 +1272,7 @@ class Group extends Node implements nodeInterface
     public function getReferenceObjectProtected(): string
     {
         if ($this->_referenceObjectProtected == '')
-            $this->_referenceObjectProtected = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectProtected = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         return $this->_referenceObjectProtected;
     }
 
@@ -1291,7 +1291,7 @@ class Group extends Node implements nodeInterface
     public function getReferenceObjectObfuscated(): string
     {
         if ($this->_referenceObjectObfuscated == '')
-            $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         return $this->_referenceObjectObfuscated;
     }
 

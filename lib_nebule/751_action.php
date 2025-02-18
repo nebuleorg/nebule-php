@@ -1479,7 +1479,7 @@ abstract class Actions extends Functions
                 if ($argType != '')
                     $this->_actionUploadTextType = $argType;
                 else
-                    $this->_actionUploadTextType = nebule::REFERENCE_OBJECT_TEXT;
+                    $this->_actionUploadTextType = References::REFERENCE_OBJECT_TEXT;
 
                 if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
                     $this->_actionUploadTextProtect = $argPrt;

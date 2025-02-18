@@ -132,9 +132,88 @@ class References //extends Functions
     const REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE = 'nebule/objet/monnaie/portefeuille';
     const REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION = 'nebule/objet/monnaie/transaction';
     const REFERENCE_NEBULE_OPTION = 'nebule/option';
+    const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
     const REFERENCE_NEBULE_DANGER = 'nebule/danger';
     const REFERENCE_NEBULE_WARNING = 'nebule/warning';
-    const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
+
+    const RESERVED_OBJECTS_LIST = array(
+        self::REFERENCE_NEBULE_OBJET,
+        self::REFERENCE_NEBULE_OBJET_HASH,
+        self::REFERENCE_NEBULE_OBJET_HOMOMORPHE,
+        self::REFERENCE_NEBULE_OBJET_TYPE,
+        self::REFERENCE_NEBULE_OBJET_LOCALISATION,
+        self::REFERENCE_NEBULE_OBJET_TAILLE,
+        self::REFERENCE_NEBULE_OBJET_PRENOM,
+        self::REFERENCE_NEBULE_OBJET_NOM,
+        self::REFERENCE_NEBULE_OBJET_SURNOM,
+        self::REFERENCE_NEBULE_OBJET_PREFIX,
+        self::REFERENCE_NEBULE_OBJET_SUFFIX,
+        self::REFERENCE_NEBULE_OBJET_LIEN,
+        self::REFERENCE_NEBULE_OBJET_DATE,
+        self::REFERENCE_NEBULE_OBJET_DATE_ANNEE,
+        self::REFERENCE_NEBULE_OBJET_DATE_MOIS,
+        self::REFERENCE_NEBULE_OBJET_DATE_JOUR,
+        self::REFERENCE_NEBULE_OBJET_DATE_HEURE,
+        self::REFERENCE_NEBULE_OBJET_DATE_MINUTE,
+        self::REFERENCE_NEBULE_OBJET_DATE_SECONDE,
+        self::REFERENCE_NEBULE_OBJET_DATE_ZONE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_TYPE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SECONDE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MINUTE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_HEURE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_JOUR,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MOIS,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_ANNEE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE,
+        self::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE,
+        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE,
+        self::REFERENCE_NEBULE_OBJET_NOEUD,
+        self::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+        self::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+        self::REFERENCE_NEBULE_OBJET_GROUPE,
+        self::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI,
+        self::REFERENCE_NEBULE_OBJET_GROUPE_FERME,
+        self::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE,
+        self::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE,
+        self::REFERENCE_NEBULE_OBJET_CONVERSATION,
+        self::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE,
+        self::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE,
+        self::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE,
+        self::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE,
+        self::REFERENCE_NEBULE_OBJET_ARBORESCENCE,
+        self::REFERENCE_NEBULE_OBJET_MONNAIE,
+        self::REFERENCE_NEBULE_OBJET_MONNAIE_JETON,
+        self::REFERENCE_NEBULE_OBJET_MONNAIE_SAC,
+        self::REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE,
+        self::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION,
+        self::REFERENCE_NEBULE_OPTION,
+        self::REFERENCE_NEBULE_REFERENCE,
+        self::REFERENCE_NEBULE_DANGER,
+        self::REFERENCE_NEBULE_WARNING,
+    );
 
     const ACTIVE_APPLICATIONS_WHITELIST = array(
         '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.none.296',
@@ -3469,11 +3548,8 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
     {
         $ok = true;
         echo 'o: ';
-        foreach ( self::OBJ_IMG as $name => $content) {
+        foreach ( References::OBJ_IMG as $name => $content) {
             $instanceNode = new \Nebule\Library\Node($nebuleInstance, '0');
-            $instanceRef = new \Nebule\Library\Node($nebuleInstance, '0');
-            $ref = nebule::REFERENCE_NEBULE_REFERENCE;
-            $instanceRef->setContent($ref);
             $instanceNode->setEnvironmentLibrary($nebuleInstance);
             $decoded = (string)base64_decode($content, false);
             $nebuleInstance->getMetrologyInstance()->addLog('create ref icon node ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '07a97058');
@@ -3481,6 +3557,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
                 if ($instanceNode->write()) {
                     $nebuleInstance->getMetrologyInstance()->addLog('ok ref icon node nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ea79ccf9');
                     echo '+';
+                    $instanceNode->setName($name);
                 }
                 else {
                     echo 'E';

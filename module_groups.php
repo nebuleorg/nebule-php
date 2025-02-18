@@ -25,7 +25,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250218';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -60,9 +60,9 @@ class ModuleGroups extends \Nebule\Library\Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-        $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+        $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
-        $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+        $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
         $this->_hashGroupClosedObject = $this->_cacheInstance->newNode($this->_hashGroupClosed);
     }
 
@@ -425,7 +425,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $instance = $this->_cacheInstance->newGroup($group);
 
             // Extraction des entités signataires.
-            $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+            $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])) {
                 $list[$i]['object'] = $instance;
@@ -498,7 +498,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $instance = $this->_cacheInstance->newGroup($group);
 
             // Extraction des entités signataires.
-            $signers = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+            $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
                 && !isset($signers[$this->_applicationInstance->getCurrentEntityID()])
@@ -768,7 +768,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             'enableDisplaySelfHook' => true,
             'enableDisplayTypeHook' => false,
         );
-        $param['objectRefs'] = $instance->getPropertySigners(nebule::REFERENCE_NEBULE_OBJET_GROUPE);
+        $param['objectRefs'] = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
         echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
         unset($instance);
 
@@ -834,7 +834,7 @@ class ModuleGroups extends \Nebule\Library\Modules
 
                 //Prépare l'affichage.
                 if (sizeof($groupListLinks) != 0) {
-                    $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                    $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                     $list = array();
                     $listOkItems = array();
                     $i = 0;
@@ -900,7 +900,7 @@ class ModuleGroups extends \Nebule\Library\Modules
 
             //Prépare l'affichage.
             if (sizeof($groupListLinks) != 0) {
-                $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                 $list = array();
                 $listOkItems = array();
                 $i = 0;

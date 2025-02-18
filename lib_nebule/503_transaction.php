@@ -116,7 +116,7 @@ class Transaction extends LinkRegister implements linkInterface
     private function _extractByMode_disabled(): void
     {
         // Si transaction en mode LNS.
-        $hashLNS = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
+        $hashLNS = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
         if ($this->_hashMeta == $hashLNS) {
             $this->_extractModeLNS_disabled();
         } else {

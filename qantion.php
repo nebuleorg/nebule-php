@@ -44,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250207';
+    const APPLICATION_VERSION = '020250218';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -1407,7 +1407,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Détermine si c'est une entité.
         $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Library\nebule;
+use Nebule\Library\References;
 
 /**
  * Ce module permet la traduction en français FR-FR.
@@ -17,7 +18,7 @@ class ModuleTranslateFRFR extends \Nebule\Library\ModuleTranslates
     const MODULE_NAME = '::translateModule:fr-fr:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:fr-fr:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250218';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -63,7 +64,7 @@ class ModuleTranslateFRFR extends \Nebule\Library\ModuleTranslates
             'nebule/objet/entite/maitre/code' => 'Maître du code',
             'nebule/objet/entite/maitre/annuaire' => "Maître de l'annuaire",
             'nebule/objet/entite/maitre/temps' => 'Maître du temps',
-            nebule::REFERENCE_OBJECT_TEXT => 'Texte brute',
+            References::REFERENCE_OBJECT_TEXT => 'Texte brute',
             'application/x-pem-file' => 'Entité',
             'image/jpeg' => 'Image JPEG',
             'image/png' => 'Image PNG',

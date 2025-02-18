@@ -46,7 +46,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250207';
+    const APPLICATION_VERSION = '020250218';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1818,7 +1818,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '<div class="layoutObjectsList">' . "\n";
         echo '<div class="objectsListContent">' . "\n";
 
-        $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
         $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
         $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
@@ -2365,8 +2365,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             //Prépare l'affichage.
             if (sizeof($groupListID) != 0) {
                 $list = array();
-                $listOkItems = array($this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE) => true,
-                    $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true);
+                $listOkItems = array($this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE) => true,
+                    $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true);
                 $i = 0;
                 foreach ($groupListID as $item) {
                     if (!isset($listOkItems[$item])) {
@@ -3076,7 +3076,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($listGroups, $group);
             }
 
-            $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+            $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
             $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
@@ -3581,7 +3581,7 @@ private function _displayContentAbout()
 
         // Détermine si c'est une entité.
         $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == nebule::REFERENCE_OBJECT_ENTITY && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false);
+        $isEntity = ($typemime == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');

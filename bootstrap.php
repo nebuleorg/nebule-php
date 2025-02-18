@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250213';
+const BOOTSTRAP_VERSION = '020250218';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -4313,57 +4313,6 @@ function bootstrap_setPermitOpenFileCode(): void {
  ------------------------------------------------------------------------------------------
  */
 
-/*function bootstrap_checkSessionLibraryPOO():void { // FIXME TEST TO REMOVE
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    if (isset($_SESSION['bootstrapLibraryIID'])) {
-        log_add('DEBUGGING session bootstrapLibraryIID=' . $_SESSION['bootstrapLibraryIID'],
-            'info', __FUNCTION__, '00000000');
-        if (nod_checkNID($_SESSION['bootstrapLibraryIID']))
-            log_add('DEBUGGING session bootstrapLibraryIID NID OK',
-                'info', __FUNCTION__, '00000000');
-        if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryIID']))
-            log_add('DEBUGGING session bootstrapLibraryIID I/O have link',
-                'info', __FUNCTION__, '00000000');
-        if (obj_checkContent($_SESSION['bootstrapLibraryIID']))
-            log_add('DEBUGGING session bootstrapLibraryIID I/O have content',
-                'info', __FUNCTION__, '00000000');
-    }
-    else
-        log_add('DEBUGGING session bootstrapLibraryIID=null', 'info', __FUNCTION__, '00000000');
-
-    if (isset($_SESSION['bootstrapLibraryOID'])) {
-        log_add('DEBUGGING session bootstrapLibraryOID=' . $_SESSION['bootstrapLibraryOID'],
-            'info', __FUNCTION__, '00000000');
-        if (nod_checkNID($_SESSION['bootstrapLibraryOID']))
-            log_add('DEBUGGING session bootstrapLibraryOID NID OK',
-                'info', __FUNCTION__, '00000000');
-        if (io_checkNodeHaveLink($_SESSION['bootstrapLibraryOID']))
-            log_add('DEBUGGING session bootstrapLibraryOID I/O have link',
-                'info', __FUNCTION__, '00000000');
-        if (obj_checkContent($_SESSION['bootstrapLibraryOID']))
-            log_add('DEBUGGING session bootstrapLibraryOID I/O have content',
-                'info', __FUNCTION__, '00000000');
-    }
-    else
-        log_add('DEBUGGING session bootstrapLibraryOID=null',
-            'info', __FUNCTION__, '00000000');
-
-    if (isset($_SESSION['bootstrapLibrarySID']))
-        log_add('DEBUGGING session bootstrapLibrarySID=' . $_SESSION['bootstrapLibrarySID'],
-            'info', __FUNCTION__, '00000000');
-    else
-        log_add('DEBUGGING session bootstrapLibrarySID=null',
-            'info', __FUNCTION__, '00000000');
-
-    if (isset($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']]))
-        log_add('DEBUGGING session bootstrapLibraryInstanceSleep='
-            . substr($_SESSION['bootstrapLibraryInstances'][$_SESSION['bootstrapLibraryIID']],0,256),
-            'info', __FUNCTION__, '00000000');
-    else
-        log_add('DEBUGGING session bootstrapLibraryInstanceSleep=null',
-            'info', __FUNCTION__, '00000000');
-}*/
-
 /**
  * Try to find nebule Lib POO.
  *
@@ -6359,6 +6308,7 @@ chmod 755 <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></pre>
  * @return bool
  */
 function bootstrap_firstDisplay3ReservedObjects(): bool {
+    global $nebuleInstance;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6380,17 +6330,34 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
             }
         }
     }
-    foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
-        $hash = obj_getNID($data, lib_getOption('cryptoHashAlgorithm'));
-        if (io_checkNodeHaveContent($hash))
-            echo '.';
-        else {
-            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
-            if (io_objectWrite($data, $hash))
-                echo '+';
+    if ($nebuleInstance instanceof \Nebule\Library\nebule) {
+        foreach (\Nebule\Library\References::RESERVED_OBJECTS_LIST as $data) {
+            $hash = obj_getNID($data, lib_getOption('cryptoHashAlgorithm'));
+            if (io_checkNodeHaveContent($hash))
+                echo '.';
             else {
-                $ok = false;
-                echo 'E';
+                log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca99e341');
+                if (io_objectWrite($data, $hash))
+                    echo '+';
+                else {
+                    $ok = false;
+                    echo 'E';
+                }
+            }
+        }
+    } else {
+        foreach (LIB_FIRST_RESERVED_OBJECTS as $data) {
+            $hash = obj_getNID($data, lib_getOption('cryptoHashAlgorithm'));
+            if (io_checkNodeHaveContent($hash))
+                echo '.';
+            else {
+                log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+                if (io_objectWrite($data, $hash))
+                    echo '+';
+                else {
+                    $ok = false;
+                    echo 'E';
+                }
             }
         }
     }

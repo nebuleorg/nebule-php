@@ -931,7 +931,6 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         else {
             $iconInstance = new DisplayIcon($this->_applicationInstance);
             $iconInstance->setNID($this->_nid);
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING object icon=' . (string)$this->_icon, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $iconInstance->setIcon($this->_icon);
         }
         if ($this->_name != '')
@@ -1033,34 +1032,34 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $result = '';
 
         $listEmotions = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
         );
         $listEmotions0 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
         );
         $listEmotions1 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
         );
 
         foreach ($listEmotions as $emotion) {
@@ -1537,10 +1536,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private function _setTypeHookName(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (is_a($this->_nid, 'Nebule\Library\Entity')) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING is entity ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        if (is_a($this->_nid, 'Nebule\Library\Entity'))
             $this->_typeHookName = 'typeMenuEntity';
-        }
         elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
             $this->_typeHookName = 'typeMenuConversation';
         elseif (is_a($this->_nid, 'Nebule\Library\Group'))
@@ -1555,10 +1552,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_typeHookName = 'typeMenuTokenPool';
         elseif (is_a($this->_nid, 'Nebule\Library\Currency'))
             $this->_typeHookName = 'typeMenuCurrency';
-        else {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING is node ' . $this->_nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        else
             $this->_typeHookName = 'typeMenuObject';
-        }
     }
 
     public function setTypeHookName(string $name): void

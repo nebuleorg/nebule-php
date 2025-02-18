@@ -147,14 +147,14 @@ class Entity extends Node implements nodeInterface
                 // Création lien 1.
                 $source = $this->_id;
                 $target = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-                $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_HASH);
+                $meta = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
                 // Création lien 2.
                 $source = $this->_id;
                 $target = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
-                $meta = $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+                $meta = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
                 $link = '_' . $this->_id . '_' . $date . '_l_' . $source . '_' . $target . '_' . $meta;
                 $this->_createNewEntityWriteLink($link, $source, $target, $meta);
 
@@ -227,7 +227,7 @@ class Entity extends Node implements nodeInterface
     {
         if ($this->_id == '0')
             return '';
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, 'all');
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, 'all');
     }
 
     public function getTypeVerify(): bool
@@ -571,28 +571,28 @@ class Entity extends Node implements nodeInterface
     {
         if ($this->_id == '0')
             return array();
-        return $this->getProperties(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getProperties(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
     public function getLocalisationsID(string $socialClass = ''): array
     {
         if ($this->_id == '0')
             return array();
-        return $this->getPropertiesID(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getPropertiesID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
     public function getLocalisation(string $socialClass = ''): string
     {
         if ($this->_id == '0')
             return '';
-        return $this->getProperty(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
     public function getLocalisationID(string $socialClass = ''): string
     {
         if ($this->_id == '0')
             return '';
-        return $this->getPropertyID(nebule::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getPropertyID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
     /**
@@ -836,7 +836,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinence sociale.
@@ -871,7 +871,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinence sociale.
@@ -905,7 +905,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
+            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
         // Fait un tri par pertinence sociale.

@@ -122,7 +122,7 @@ class Conversation extends Group implements nodeInterface
                 $action = 'l';
                 $source = $this->_id;
                 $target = $this->_cryptoInstance->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-                $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_HASH);
+                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_HASH);
                 $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->signWrite();
@@ -131,7 +131,7 @@ class Conversation extends Group implements nodeInterface
                 $action = 'l';
                 $source = $this->_id;
                 $target = $hashconversation;
-                $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->sign();
@@ -190,7 +190,7 @@ class Conversation extends Group implements nodeInterface
                 $action = 'l';
                 $source = $signer;
                 $target = $this->_id;
-                $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
+                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
                 $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                 $newLink = $this->_cacheInstance->newBlockLink($link);
                 $newLink->sign();
@@ -332,7 +332,7 @@ class Conversation extends Group implements nodeInterface
             'l',
             $id,
             $this->_id,
-            $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
+            $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
         // Fait un tri par pertinance sociale.
@@ -384,7 +384,7 @@ class Conversation extends Group implements nodeInterface
         $action = 'l';
         $source = $id;
         $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
+        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
@@ -438,7 +438,7 @@ class Conversation extends Group implements nodeInterface
         $action = 'x';
         $source = $id;
         $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
+        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, $link);
         $newLink->sign();
@@ -462,7 +462,7 @@ class Conversation extends Group implements nodeInterface
      */
     public function getListFollowersLinks(string $socialClass = '', $socialListID = null): array
     {
-        return $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
+        return $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
     }
 
     /**
@@ -475,7 +475,7 @@ class Conversation extends Group implements nodeInterface
     public function getListFollowersID(string $socialClass = '', $socialListID = null): array
     {
         // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
+        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
 
         // Extraction des ID cibles.
         $list = array();
@@ -495,7 +495,7 @@ class Conversation extends Group implements nodeInterface
      */
     public function getCountFollowers(string $socialClass = '', $socialListID = null): float
     {
-        return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID));
+        return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID));
     }
 
     /**
@@ -509,7 +509,7 @@ class Conversation extends Group implements nodeInterface
     public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', $socialListID = null): array
     {
         // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
+        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
 
         // Extraction des ID cibles.
         $list = array();
@@ -538,7 +538,7 @@ class Conversation extends Group implements nodeInterface
     public function getReferenceObject(): string
     {
         if ($this->_referenceObject == '') {
-            $this->_referenceObject = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObject = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
         return $this->_referenceObject;
     }
@@ -558,7 +558,7 @@ class Conversation extends Group implements nodeInterface
     public function getReferenceObjectClosed(): string
     {
         if ($this->_referenceObjectClosed == '') {
-            $this->_referenceObjectClosed = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectClosed = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
         return $this->_referenceObjectClosed;
     }
@@ -578,7 +578,7 @@ class Conversation extends Group implements nodeInterface
     public function getReferenceObjectProtected(): string
     {
         if ($this->_referenceObjectProtected == '') {
-            $this->_referenceObjectProtected = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectProtected = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
         return $this->_referenceObjectProtected;
     }
@@ -598,7 +598,7 @@ class Conversation extends Group implements nodeInterface
     public function getReferenceObjectObfuscated(): string
     {
         if ($this->_referenceObjectObfuscated == '') {
-            $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(nebule::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE, nebule::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         }
         return $this->_referenceObjectObfuscated;
     }

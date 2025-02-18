@@ -318,8 +318,8 @@ class Token extends TokenPool implements nodeInterface
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Crée les liens associés au sac de jetons.
@@ -340,12 +340,12 @@ class Token extends TokenPool implements nodeInterface
                         $value = 'false';
                     }
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 } elseif ($property['type'] == 'number') {
                     $value = (string)$param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 } elseif ($property['type'] == 'hexadecimal') {
                     $value = $param[$name];
@@ -353,7 +353,7 @@ class Token extends TokenPool implements nodeInterface
                 } else {
                     $value = $param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 }
 

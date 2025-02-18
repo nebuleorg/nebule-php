@@ -690,8 +690,8 @@ class Currency extends Node implements nodeInterface
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Le lien de nommage si le nom est présent.
@@ -718,12 +718,12 @@ class Currency extends Node implements nodeInterface
                         $value = 'false';
                     }
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 } elseif ($property['type'] == 'number') {
                     $value = (string)$param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 } elseif ($property['type'] == 'hexadecimal') {
                     $value = $param[$name];
@@ -731,7 +731,7 @@ class Currency extends Node implements nodeInterface
                 } else {
                     $value = $param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
-                    $object->setType(nebule::REFERENCE_OBJECT_TEXT);
+                    $object->setType(References::REFERENCE_OBJECT_TEXT);
                     $target = $object->getID();
                 }
 
@@ -806,11 +806,11 @@ class Currency extends Node implements nodeInterface
 
         // Prépare la recherche des monnaies.
         $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash($type);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_TYPE);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
         if ($type == 'CID') {
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
         } elseif ($type == 'PID') {
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+            $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
         } else {
             return $list;
         }

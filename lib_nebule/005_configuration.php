@@ -1095,7 +1095,7 @@ class Configuration extends Functions
 
         // Si une entité de subordination est défini, lit l'option forcée par cette entité.
         $value = '';
-        $rid = \Nebule\Library\nebule::REFERENCE_NEBULE_OPTION . '/' . $name;
+        $rid = \Nebule\Library\References::REFERENCE_NEBULE_OPTION . '/' . $name;
         if ($this->_nebuleInstance->getSubordinationEntity() != '') {
             $instance = $this->_nebuleInstance->getSubordinationEntity();
             $value = trim($instance->getProperty($rid));
@@ -1181,11 +1181,11 @@ class Configuration extends Functions
             $this->_metrologyInstance->addLog('object cannot be created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e064cd5c');
             return false;
         }
-        $instance->setType(nebule::REFERENCE_OBJECT_TEXT);
+        $instance->setType(References::REFERENCE_OBJECT_TEXT);
 
         $signer = $this->_entitiesInstance->getCurrentEntityID();
         $source = $entity;
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OPTION . '/' . $name);
+        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 

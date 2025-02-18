@@ -2012,8 +2012,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Détermine si c'est une entité.
         $type = $object->getType('all');
         $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($type == nebule::REFERENCE_OBJECT_ENTITY
-            && strpos($objHead, nebule::REFERENCE_ENTITY_HEADER) !== false
+        $isEntity = ($type == References::REFERENCE_OBJECT_ENTITY
+            && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false
         );
 
         // Affiche l'objet suivant son type.
@@ -2244,8 +2244,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $divOpen = "<div class=\"textcontent" . $size . "\">\n\t";
             $divClose = "\n</div>\n";
             switch ($typemime) {
-                case nebule::REFERENCE_OBJECT_PNG :
-                case nebule::REFERENCE_OBJECT_JPEG :
+                case References::REFERENCE_OBJECT_PNG :
+                case References::REFERENCE_OBJECT_JPEG :
                     $content = $object->getContent(0);
                     if ($content != null)
                         $result = $result . $divOpen . '<img src="?o=' . $nid
@@ -2264,7 +2264,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         }
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_TEXT :
+                case References::REFERENCE_OBJECT_TEXT :
                     $content = htmlspecialchars($object->getContent(0));
                     if ($content != null)
                         $result = $result . $divOpen . '<p>' . $content . '</p>' . $divClose;
@@ -2283,9 +2283,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     unset($content);
                     break;
-                case nebule::REFERENCE_OBJECT_ENTITY :
-                case nebule::REFERENCE_OBJECT_HTML :
-                case nebule::REFERENCE_OBJECT_CSS :
+                case References::REFERENCE_OBJECT_ENTITY :
+                case References::REFERENCE_OBJECT_HTML :
+                case References::REFERENCE_OBJECT_CSS :
                 case References::REFERENCE_OBJECT_APP_PHP :
                 case References::REFERENCE_OBJECT_PHP :
                     $content = htmlspecialchars($object->getContent(0));
@@ -2306,7 +2306,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     unset($content);
                     break;
-                case nebule::REFERENCE_OBJECT_MP3 :
+                case References::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/mp3" />' . $this->_translateInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
@@ -2325,7 +2325,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         }
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_OGG :
+                case References::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/ogg" />' . $this->_translateInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
@@ -2343,7 +2343,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         }
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_CRYPT_RSA :
+                case References::REFERENCE_OBJECT_CRYPT_RSA :
                     $notify = new DisplayNotify($this->_applicationInstance);
                     $notify->setMessage('::::display:content:warningObjectProctected');
                     $notify->setType(DisplayItemIconMessage::TYPE_WARN);
@@ -2837,11 +2837,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($useBuffer && isset($this->_cacheIconByReference[$rid->getID()]))
             return new Node($this->_nebuleInstance, $this->_cacheIconByReference[$rid->getID()]);
 
-        $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
+        $uid = $rid->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'myself');
         if ($uid == $rid->getID())
-            $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+            $uid = $rid->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         if ($uid == $rid->getID())
-            $uid = $rid->getReferencedOrSelfNID(nebule::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
+            $uid = $rid->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'all'); // FIXME peut-être trop...
 
         if ($useBuffer)
             $this->_cacheIconByReference[$rid->getID()] = $uid;
@@ -3489,34 +3489,34 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result = '';
 
         $listEmotions = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
         );
         $listEmotions0 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
         );
         $listEmotions1 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
         );
 
         foreach ($listEmotions as $emotion) {
@@ -4331,8 +4331,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             $object = $this->_cacheInstance->newNode($object);
             $id = $object->getID();
-            if ($object->getType('all') == nebule::REFERENCE_OBJECT_ENTITY
-                && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), nebule::REFERENCE_ENTITY_HEADER) !== false
+            if ($object->getType('all') == References::REFERENCE_OBJECT_ENTITY
+                && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER) !== false
             )
                 $object = $this->_cacheInstance->newEntity($id);
             elseif ($object->getIsGroup('all'))
@@ -4487,8 +4487,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
 
             switch ($typemime) {
-                case nebule::REFERENCE_OBJECT_PNG :
-                case nebule::REFERENCE_OBJECT_JPEG :
+                case References::REFERENCE_OBJECT_PNG :
+                case References::REFERENCE_OBJECT_JPEG :
                     $content = $object->getContent(0);
                     if ($content != null) {
                         $result .= '<div class="objectContentObject objectContentImage"><img src="?o=' . $id
@@ -4498,7 +4498,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_TEXT :
+                case References::REFERENCE_OBJECT_TEXT :
                     $content = htmlspecialchars($object->getContent(0));
                     if ($content != null) {
                         $result .= '<div class="objectContentObject objectContentText"><p>' . $content . '</p></div>' . "\n";
@@ -4508,14 +4508,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     unset($content);
                     break;
-                case nebule::REFERENCE_OBJECT_ENTITY :
-                case nebule::REFERENCE_OBJECT_HTML :
-                case nebule::REFERENCE_OBJECT_CSS :
+                case References::REFERENCE_OBJECT_ENTITY :
+                case References::REFERENCE_OBJECT_HTML :
+                case References::REFERENCE_OBJECT_CSS :
                 case References::REFERENCE_OBJECT_APP_PHP :
                 case References::REFERENCE_OBJECT_PHP :
-                case nebule::REFERENCE_NEBULE_OBJET_MONNAIE :
-                case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_SAC :
-                case nebule::REFERENCE_NEBULE_OBJET_MONNAIE_JETON :
+                case References::REFERENCE_NEBULE_OBJET_MONNAIE :
+                case References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC :
+                case References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON :
                     $content = htmlspecialchars($object->getContent(0));
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentCode"><pre>' . $content . '</pre></div>' . "\n";
@@ -4525,7 +4525,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     unset($content);
                     break;
-                case nebule::REFERENCE_OBJECT_MP3 :
+                case References::REFERENCE_OBJECT_MP3 :
                     $content = $object->getContent(0);
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_translateInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
@@ -4534,7 +4534,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_OGG :
+                case References::REFERENCE_OBJECT_OGG :
                     $content = $object->getContent(0);
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_translateInstance->getTranslate(':::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
@@ -4543,7 +4543,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:errorNotDisplayable', $param);
                     }
                     break;
-                case nebule::REFERENCE_OBJECT_CRYPT_RSA :
+                case References::REFERENCE_OBJECT_CRYPT_RSA :
                     $param['informationType'] = 'warn';
                     $result .= $this->getDisplayInformation_DEPRECATED('::::display:content:ObjectProctected', $param);
                     break;
@@ -5656,34 +5656,34 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $result = "\n<div class=\"inlineemotions\">\n\t<p>\n\t\t";
 
         $listEmotions = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
         );
         $listEmotions0 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE0,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET0,
         );
         $listEmotions1 = array(
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
-            nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+            References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
         );
 
         foreach ($listEmotions as $emotion) {

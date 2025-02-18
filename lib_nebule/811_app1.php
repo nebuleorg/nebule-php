@@ -66,18 +66,18 @@ class App1
         foreach ($appList as $application) {
             $instance = new Node($nebuleInstance, $application);
             $color = '#' . substr($application . '000000', 0, 6);
-            $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'authority');
+            $title = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_NOM,'authority');
             if ($title == '')
-                $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'self');
+                $title = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_NOM,'self');
             if ($title == '')
-                $title = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_NOM,'all');
+                $title = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_NOM,'all');
             if ($title == '')
                 $title = $instance->getID();
-            $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'authority');
+            $shortName = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM,'authority');
             if ($shortName == '')
-                $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'self');
+                $shortName = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM,'self');
             if ($shortName == '')
-                $shortName = $instance->getProperty(nebule::REFERENCE_NEBULE_OBJET_SURNOM,'all');
+                $shortName = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM,'all');
             $shortName = substr($shortName . '--', 0, 2);
             $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
             \Nebule\Bootstrap\log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');

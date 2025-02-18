@@ -74,10 +74,14 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null)
             return;
-        if ($type == '')
+        if ($type == '') {
             $this->_type = $this->_nid->getType($this->_social);
-        else
+            $this->setIconRID($this->_nid::DEFAULT_ICON_RID);
+        }
+        else {
             $this->_type = $type;
+            $this->setIconRID(Node::DEFAULT_ICON_RID); // FIXME
+        }
     }
 
     public function setName(string $name = ''): void
@@ -108,7 +112,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
         $this->_displayActions = $enable;
     }
 
-    public function setActionsID(string $id = '')
+    public function setActionsID(string $id = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($id == '')

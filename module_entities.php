@@ -27,7 +27,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250212';
+    const MODULE_VERSION = '020250218';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -1657,25 +1657,25 @@ class ModuleEntities extends \Nebule\Library\Modules
         foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
-            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
+            $masters[] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
             $signers[] = $this->_authoritiesInstance->getSecuritySignersInstance()[$instance->getID()];
         }
         foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
-            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
+            $masters[] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
             $signers[] = $this->_authoritiesInstance->getCodeSignersInstance()[$instance->getID()];
         }
         foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
-            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
+            $masters[] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
             $signers[] = $this->_authoritiesInstance->getDirectorySignersInstance()[$instance->getID()];
         }
         foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)
         {
             $entities[] = $instance;
-            $masters[] = nebule::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
+            $masters[] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
             $signers[] = $this->_authoritiesInstance->getTimeSignersInstance()[$instance->getID()];
         }
         $entities[] = $this->_entitiesInstance->getServerEntityInstance();
@@ -1710,7 +1710,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             var_dump($signers[$i]); echo "<br /><br />\n"; ob_flush();
             foreach ($signers[$i] as $j => $eid)
             {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid='.$eid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                 $e = $this->_nebuleInstance->getCacheInstance()->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
                 $signers[$i][$j] = $e;
             }*/
@@ -2118,26 +2117,26 @@ class ModuleEntities extends \Nebule\Library\Modules
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
             $bg = 1;
-            $attribList = nebule::RESERVED_OBJECTS_LIST;
+            $attribList = References::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
             );
             $emotionsIcons = array(
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Display::REFERENCE_ICON_EMOTION_JOIE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Display::REFERENCE_ICON_EMOTION_CONFIANCE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Display::REFERENCE_ICON_EMOTION_PEUR1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Display::REFERENCE_ICON_EMOTION_SURPRISE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Display::REFERENCE_ICON_EMOTION_TRISTESSE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Display::REFERENCE_ICON_EMOTION_DEGOUT1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Display::REFERENCE_ICON_EMOTION_COLERE1,
-                nebule::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Display::REFERENCE_ICON_EMOTION_INTERET1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
+                References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
             );
 
             foreach ($links as $i => $link) {
