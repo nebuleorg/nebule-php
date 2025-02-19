@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Application\Klicty\Translate;
+use Nebule\Application\Sylabe\Application;
 use Nebule\Library\nebule;
+use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
 /**
  * Classe Displays
@@ -60,6 +62,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_INLINE_CONTENT_COMMAND = 'incontent';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
+    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
 
     // Les icônes.
     // Icône transparente.
@@ -220,10 +223,32 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     protected function _initialisation(): void
     {
-        global $applicationName;
-
         $this->_metrologyInstance->addLog('initialisation display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+
+        $this->_initUrlLinks();
+
+        $this->_findLogoApplication();
+        $this->_findLogoApplicationLink();
+        $this->_findLogoApplicationName();
+        $this->_findCurrentDisplayMode();
+        $this->_findCurrentModule();
+        $this->_findCurrentDisplayView();
+        $this->_findInlineContentID();
+        $this->_findCurrentApplication();
+
+        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
+        if ($this->_translateInstance !== null) {
+            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
+            $this->_currentDisplayLanguageInstance = $this->_translateInstance->getCurrentLanguageInstance();
+            $this->_displayLanguageList = $this->_translateInstance->getLanguageList();
+            $this->_displayLanguageInstanceList = $this->_translateInstance->getLanguageModuleInstanceList();
+        }
+    }
+
+    protected function _initUrlLinks(): void
+    {
+        global $applicationName; // FIXME
 
         $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
@@ -261,12 +286,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-
-        $this->_findCurrentApplication();
-        $this->_findCurrentDisplayMode();
-        $this->_findCurrentModule();
-        $this->_findCurrentDisplayView();
-        $this->_findInlineContentID();
     }
 
 
@@ -315,7 +334,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
         // If we don't use modules, list of modes must not be empty.
-        if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
+        if (! $this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
             $this->_metrologyInstance->addLog('search mode, no module and no mode', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ddcc0850');
             return;
         }
@@ -345,9 +364,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($modeARG == $name)
                 $okModeARG = true;
         }
-        if ($okModeARG)
+        if ($okModeARG) {
+            $this->_metrologyInstance->addLog('ask mode : ' . $modeARG, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '43714573');
             $this->_currentDisplayMode = $modeARG;
-        else {
+        } else {
             $cache = $this->_sessionInstance->getSessionStore($applicationName . 'DisplayMode');
             if ($cache !== false
                 && $cache != '')
@@ -355,8 +375,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else
                 $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
         }
+
+        // Verify mode
+        $okMode = false;
+        foreach ($this->_listDisplayModes as $name) {
+            if ($modeARG == $name)
+                $okMode = true;
+        }
+        if (! $okMode)
+            $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
+
         $this->_sessionInstance->setSessionStore($applicationName . 'DisplayMode', $this->_currentDisplayMode);
-        $this->_metrologyInstance->addLog('current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bda64a7b');
+        $this->_metrologyInstance->addLog('current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'bda64a7b');
     }
 
     /**
@@ -1608,7 +1638,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayScripts(): void
     {
-        // Nothing to do. This function must be rewritten on apps if needed.
+        $this->commonScripts();
+
+        // Ajout de la partie script JS du module en cours d'utilisation, si présent.
+        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
+                $module->headerScript();
+                echo "\n";
+            }
+        }
     }
 
     /**
@@ -1769,7 +1807,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Display full page.
      */
-    protected function _displayFull(): void
+    /*protected function _displayFull(): void
     {
         global $applicationVersion,
                $applicationLicence,
@@ -1838,6 +1876,68 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         </body>
         </html>
         <?php
+    }*/
+    /**
+     * Display full page.
+     */
+    protected function _displayFull(): void
+    {
+        $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c3cdf3de');
+        ?>
+        <!DOCTYPE html>
+        <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
+        <head>
+            <meta charset="utf-8"/>
+            <title><?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
+            <link rel="icon" type="image/png" href="favicon.png"/>
+            <meta name="keywords" content="<?php echo $this->_applicationInstance::APPLICATION_SURNAME; ?>"/>
+            <meta name="description" content="<?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ';
+            echo $this->_translateInstance->getTranslate('::::HtmlHeadDescription'); ?>"/>
+            <meta name="author" content="<?php echo $this->_applicationInstance::APPLICATION_AUTHOR . ' - ' . $this->_applicationInstance::APPLICATION_WEBSITE; ?>"/>
+            <meta name="licence" content="<?php echo $this->_applicationInstance::APPLICATION_LICENCE; ?>"/>
+            <?php
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
+            $this->commonCSS();
+            $this->displayCSS();
+
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
+            $this->_displayScripts();
+            ?>
+
+        </head>
+        <body>
+        <?php
+        $this->_metrologyInstance->addLog('Display actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fac72c30');
+        $this->_displayActions();
+
+        $this->_metrologyInstance->addLog('Display header', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5d4eb6f0');
+        $this->_displayHeader();
+
+        $this->_metrologyInstance->addLog('Display menu apps', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '89f37a59');
+        $this->_displayMenuApplications();
+        ?>
+
+        <div class="layout-main">
+            <div class="layout-content">
+                <div id="curseur" class="infobulle"></div>
+                <div class="content">
+                    <?php
+                    $this->_metrologyInstance->addLog('Display checks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '28feadb6');
+                    $this->displaySecurityAlert('small', false);
+
+                    $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
+                    $this->_displayModuleContent();
+
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
+                    $this->_displayMetrology();
+                    ?>
+
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->_metrologyInstance->addLog('Display footer', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b1d7feb6');
+        $this->_displayFooter();
     }
 
     /**
@@ -1857,6 +1957,391 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         }
     }
+
+    protected function _displayActions(): void
+    {
+        ?>
+
+        <div class="layout-footer footer<?php if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+            echo 'Unlock';
+        } ?>">
+            <p>
+                <?php
+                $this->_actionInstance->getDisplayActions();
+                ?>
+
+            </p>
+        </div>
+        <?php
+    }
+
+    protected string $_logoApplication = '';
+    protected function _findLogoApplication(): void
+    {
+        $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
+        // @todo
+    }
+
+    protected string $_logoApplicationLink = '';
+    protected function _findLogoApplicationLink(): void
+    {
+        $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
+        // @todo
+    }
+
+    protected string $_logoApplicationName = '';
+    protected function _findLogoApplicationName(): void
+    {
+        $this->_logoApplicationName = $this->_applicationInstance::APPLICATION_NAME;
+        // @todo
+    }
+
+
+    /**
+     * Display information on top.
+     * On left the current entity.
+     * On right security checks, empty if all OK.
+     */
+    protected function _displayHeader(): void
+    {
+        ?>
+
+        <div class="layout-header header<?php if ($this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+            echo 'Unlock';
+        } ?>">
+            <div class="header-left">
+                <?php
+                if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
+                    ?>
+                    <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
+                         title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
+                         onclick="display_menu('layout-menu-applications');"/>
+                    <?php
+                } else {
+                    ?>
+                    <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
+                        <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
+                             title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"/>
+                    </a>
+                    <?php
+                }
+                ?>
+            </div>
+            <?php
+            $this->_displayCurentEntityOnHeader(false);
+            ?>
+
+            <div class="header-right">
+                <?php $this->_displayHeaderRight(); ?>
+
+            </div>
+
+            <div class="header-center">
+                <?php $this->_displayHeaderCenter(); ?>
+
+            </div>
+        </div>
+        <?php
+    }
+
+    protected function _displayHeaderRight(): void {}
+    protected function _displayHeaderCenter(): void {}
+
+    protected function _displayMenuApplications(): void
+    {
+        $linkApplicationWebsite = $this->_applicationInstance::APPLICATION_WEBSITE;
+        if (strpos($this->_applicationInstance::APPLICATION_WEBSITE, '://') === false)
+            $linkApplicationWebsite = 'http://' . $this->_applicationInstance::APPLICATION_WEBSITE;
+        ?>
+
+        <div class="layout-menu-applications" id="layout-menu-applications">
+            <div class="menu-applications-sign">
+                <img alt="<?php echo $this->_applicationInstance::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
+                <?php echo $this->_applicationInstance::APPLICATION_NAME; ?><br/>
+                (c) <?php echo $this->_applicationInstance::APPLICATION_LICENCE . ' ' . $this->_applicationInstance::APPLICATION_AUTHOR; ?><br/>
+                <?php echo $this->_translateInstance->getTranslate(':::version');
+                echo ' : ' . $this->_applicationInstance::APPLICATION_VERSION; ?><br/>
+                <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $this->_applicationInstance::APPLICATION_WEBSITE; ?></a>
+            </div>
+            <div class="menu-applications-logo">
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
+                     title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
+                     onclick="display_menu('layout-menu-applications');"/>
+            </div>
+            <div class="menu-applications">
+                <?php
+                $this->_displayInternalMenuApplications();
+                ?>
+
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Affiche le menu des applications.
+     */
+    protected function _displayInternalMenuApplications(): void
+    {
+        //$modules = $this->_applicationInstance->getModulesListInstances();
+        $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
+        $list = array();
+        $j = 0;
+        $currentModuleName = 'noModuleFind-';
+
+        // Appelle les actions du module concerné par le mode d'affichage.
+        foreach ($modules as $module) {
+            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
+                // Extrait le nom du module.
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+
+                // Mémorise le nom du module trouvé.
+                $currentModuleName = $module::MODULE_MENU_NAME;
+
+                // Affiche le lien du menu seul (sans JS).
+                if ($this->_currentDisplayView != 'menu') {
+                    $list[$j]['icon'] = self::DEFAULT_LOGO_MODULE;
+                    $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu', $this->_translateInstance->getCurrentLanguage());
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
+                    $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc', $this->_translateInstance->getCurrentLanguage());
+                    $list[$j]['ref'] = $this->_applicationInstance::APPLICATION_NAME;
+                    $list[$j]['class'] = 'neblogMenuListContentActionModules';
+                    $j++;
+                }
+
+                // Liste les points d'ancrages à afficher.
+                $appHookList = $module->getHookList('selfMenu');
+                if (sizeof($appHookList) != 0) {
+                    foreach ($appHookList as $appHook) {
+                        if ($appHook['name'] != '') {
+                            $icon = $appHook['icon'];
+                            if ($icon == '') {
+                                $icon = $module::MODULE_LOGO;
+                            }
+                            if ($icon == '') {
+                                $icon = self::DEFAULT_ICON_IMLOG;
+                            }
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                            if ($desc == '') {
+                                $desc = '&nbsp;';
+                            }
+
+                            $list[$j]['icon'] = $icon;
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                            $list[$j]['htlink'] = $appHook['link'];
+                            $list[$j]['desc'] = $desc;
+                            $list[$j]['ref'] = $moduleName;
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                            $j++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Appelle les actions d'autres modules pour le module concerné par le mode d'affichage.
+        foreach ($modules as $module) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
+                // Extrait le nom du module.
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+
+                // Liste les points d'ancrages à afficher.
+                $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
+                if (sizeof($appHookList) != 0) {
+                    foreach ($appHookList as $appHook) {
+                        if ($appHook['name'] != '') {
+                            $icon = $appHook['icon'];
+                            if ($icon == '') {
+                                $icon = $module::MODULE_LOGO;
+                            }
+                            if ($icon == '') {
+                                $icon = self::DEFAULT_ICON_IMLOG;
+                            }
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                            if ($desc == '') {
+                                $desc = '&nbsp;';
+                            }
+
+                            $list[$j]['icon'] = $icon;
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                            $list[$j]['htlink'] = $appHook['link'];
+                            $list[$j]['desc'] = $desc;
+                            $list[$j]['ref'] = $moduleName;
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                            $j++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Appelle les actions d'autres modules pour le mode d'affichage.
+        foreach ($modules as $module) {
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
+                // Extrait le nom du module.
+                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+
+                // Liste les points d'ancrages à afficher.
+                $appHookList = $module->getHookList('menu');
+                if (sizeof($appHookList) != 0) {
+                    foreach ($appHookList as $appHook) {
+                        if ($appHook['name'] != '') {
+                            $icon = $appHook['icon'];
+                            if ($icon == '') {
+                                $icon = $module::MODULE_LOGO;
+                            }
+                            if ($icon == '') {
+                                $icon = self::DEFAULT_ICON_IMLOG;
+                            }
+                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                            if ($desc == '') {
+                                $desc = '&nbsp;';
+                            }
+
+                            $list[$j]['icon'] = $icon;
+                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                            $list[$j]['htlink'] = $appHook['link'];
+                            $list[$j]['desc'] = $desc;
+                            $list[$j]['ref'] = $moduleName;
+                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                            $j++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Appelle la liste des modules.
+        foreach ($modules as $module) {
+            // Extrait le nom du module.
+            $moduleName = $module->getTranslateInstance($module::MODULE_NAME, $this->_translateInstance->getCurrentLanguage());
+
+            // Liste les options à afficher.
+            $appTitleList = $module::MODULE_APP_TITLE_LIST;
+            if (sizeof($appTitleList) != 0) {
+                $appIconList = $module::MODULE_APP_ICON_LIST;
+                $appDescList = $module::MODULE_APP_DESC_LIST;
+                $appViewList = $module::MODULE_APP_VIEW_LIST;
+                for ($i = 0; $i < sizeof($appTitleList); $i++) {
+                    $icon = $appIconList[$i];
+                    if ($icon == '') {
+                        $icon = $module::MODULE_LOGO;
+                    }
+                    if ($icon == '') {
+                        $icon = self::DEFAULT_ICON_LSTOBJ;
+                    }
+                    $desc = $module->getTranslateInstance($appDescList[$i], $this->_translateInstance->getCurrentLanguage());
+                    if ($desc == '') {
+                        $desc = '&nbsp;';
+                    }
+
+                    $list[$j]['icon'] = $icon;
+                    $list[$j]['title'] = $module->getTranslateInstance($appTitleList[$i], $this->_translateInstance->getCurrentLanguage());
+                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
+                    $list[$j]['desc'] = $desc;
+                    $list[$j]['ref'] = $moduleName;
+                    $list[$j]['class'] = 'neblogMenuListContentActionModules';
+                    $j++;
+                }
+            }
+        }
+
+        // Add application 1
+        $list[$j]['icon'] = Displays::DEFAULT_APPLICATION_LOGO;
+        $list[$j]['title'] = BOOTSTRAP_NAME;
+        $list[$j]['htlink'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
+        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::appSwitch', $this->_translateInstance->getCurrentLanguage());
+        $list[$j]['ref'] = 'nebule';
+        $list[$j]['class'] = 'neblogMenuListContentActionModules';
+
+        echo $this->getDisplayMenuList($list, 'Medium');
+    }
+
+    protected function _displayModuleContent(): void
+    {
+        if ($this->_currentDisplayView == 'menu') {
+            $this->_displayInternalMenuApplications();
+        } else {
+            $ok = false;
+            foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
+                if ($module !== null && $module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
+                    $this->_metrologyInstance->addLog('call module ' . $module::MODULE_COMMAND_NAME . ' display content', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '253cd7cf');
+                    try {
+                        $module->displayModule();
+                        $ok = true;
+                    } catch (\Exception $e) {
+                        $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                            . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                            . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'fa838cce');
+                    }
+                }
+            }
+            if (! $ok)
+                $this->_displayErrorModuleContent();
+        }
+        $this->_displayInlineContentID();
+    }
+
+    private function _displayErrorModuleContent(): void
+    {
+        $instance = new DisplayInformation($this->_applicationInstance);
+        $instance->setMessage('::progress');
+        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setSize(DisplayItem::SIZE_MEDIUM);
+        $instance->display();
+    }
+
+    private function _displayMetrology(): void
+    {
+        /*if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {
+            ?>
+
+            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <div class="text">
+                <p>
+                    <?php
+                    echo 'Lib nebule : ';
+                    echo $this->_translateInstance->getTranslate('%01.0f liens lus,', (string)$this->_metrologyInstance->getLinkRead());
+                    echo ' ';
+                    echo $this->_translateInstance->getTranslate('%01.0f liens vérifiés,', (string)$this->_metrologyInstance->getLinkVerify());
+                    echo ' ';
+                    echo $this->_translateInstance->getTranslate('%01.0f objets lus.', (string)$this->_metrologyInstance->getObjectRead());
+                    echo ' ';
+                    echo $this->_translateInstance->getTranslate('%01.0f objets vérifiés.', (string)$this->_metrologyInstance->getObjectVerify());
+                    echo "<br />\n";
+                    $this->_metrologyInstance->addTime();
+                    $sylabeTimeList = $this->_metrologyInstance->getTimeArray();
+                    $sylabe_time_total = 0;
+                    foreach ($sylabeTimeList as $time) {
+                        $sylabe_time_total = $sylabe_time_total + $time;
+                    }
+                    echo $this->_translateInstance->getTranslate('Le serveur à pris %01.4fs pour calculer la page.', $sylabe_time_total);
+                    echo ' (';
+                    foreach ($sylabeTimeList as $time) {
+                        echo sprintf(" %1.4fs", $time);
+                    }
+                    echo " )\n";
+                    ?>
+
+                </p>
+            </div>
+            <?php
+        }*/
+    }
+
+    // Affiche la fin de page.
+    protected function _displayFooter(): void
+    {
+        ?>
+
+        </body>
+        </html>
+        <?php
+    }
+
 
 
     public function setUrlLinkObjectPrefix(string $htlink): void

@@ -17,6 +17,8 @@ abstract class Translates extends Functions
 {
     const DEFAULT_COMMAND_LANGUAGE = 'lang';
     const DEFAULT_LANGUAGE = 'en-en';
+    const MODULE_LOGO = '25a0ea1b1d88d7a659ff0fa3d1b70d0cf7ae788023f897da845b1ce8d1cc7e00.sha2.256';
+    const MODULE_NAME = '/';
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::::Welcome' => 'Bienvenue',

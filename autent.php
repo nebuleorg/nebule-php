@@ -118,7 +118,7 @@ class Display extends Displays
             <div class="layout-content">
                 <?php
                 $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
-                $this->_displayContent();
+                $this->_displayModuleContent();
                 ?>
 
             </div>
@@ -183,7 +183,7 @@ class Display extends Displays
         }
     }
 
-    private function _displayHeader(): void
+    protected function _displayHeader(): void
     {
         ?>
 
@@ -212,17 +212,11 @@ class Display extends Displays
         <?php
     }
 
-    private function _displayMenuApplications()
-    {
+    protected function _displayMenuApplications(): void {}
 
-    }
+    protected function _displayInternalMenuApplications(): void {}
 
-    private function _displayInternalMenuApplications()
-    {
-
-    }
-
-    private function _displayContent(): void
+    protected function _displayModuleContent(): void
     {
         $module = $this->_applicationInstance->getModule('ModuleAutent');
 
@@ -239,7 +233,7 @@ class Display extends Displays
     }
 
     // Affiche la fin de page.
-    private function _displayFooter()
+    protected function _displayFooter(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)

@@ -629,61 +629,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 	 * --------------------------------------------------------------------------------
 	 * La personnalisation.
 	 * --------------------------------------------------------------------------------
-	 *
-	 * Pour l'instant, rien n'est personnalisable dans le style, mais ça viendra...
-	 */
-    /**
-     * Variable du logo de l'application.
-     * @var string
-     */
-    private $_logoApplication = '';
-
-    /**
-     * Variable du logo de l'application.
-     * @var string
-     */
-    private $_logoApplicationWelcome = '';
-
-    /**
-     * Recherche le logo de l'application.
-     */
-    private function _findLogoApplication()
-    {
-        $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
-        $this->_logoApplicationWelcome = self::DEFAULT_LOGO_WELCOME;
-        // A faire...
-    }
-
-    /**
-     * Variable du lien du logo de l'application.
-     * @var string
-     */
-    private $_logoApplicationLink = '';
-
-    /**
-     * Recherche le lien du logo de l'application.
-     */
-    private function _findLogoApplicationLink()
-    {
-        $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
-        // A faire...
-    }
-
-    /**
-     * Variable du nom de l'application.
-     * @var string
-     */
-    private $_logoApplicationName = '';
-
-    /**
-     * Recherche le nom de l'application.
-     */
-    private function _findLogoApplicationName()
-    {
-        $this->_logoApplicationName = Application::APPLICATION_LICENCE_NAME;
-        // A faire...
-    }
-
 
     /**
      * Liste des vues disponibles.
@@ -703,16 +648,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         self::DEFAULT_ENTITY_SYNC_COMMAND,
         self::DEFAULT_AUTH_COMMAND,
         self::DEFAULT_PROTEC_COMMAND);
-
-
-    /**
-     * Vérifie que toutes les icônes déclarées soient présentes.
-     * Sinon les synchronises.
-     */
-    private function _checkDefinedIcons()
-    {
-
-    }
 
 
 
@@ -769,7 +704,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $this->_displayChecks();
 
                     $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
-                    $this->_displayContent();
+                    $this->_displayModuleContent();
 
                     $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
                     $this->_displayMetrology();
@@ -1516,7 +1451,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * Chaque page peut faire appel à des contenus en ligne gérés par _displayInlineContent.
      */
-    private function _displayContent()
+    private function _displayModuleContent()
     {
         switch ($this->_currentDisplayView) {
 //            case self::DEFAULT_ABOUT_COMMAND :

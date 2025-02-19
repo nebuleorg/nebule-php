@@ -31,42 +31,12 @@ abstract class Modules extends Functions implements ModuleInterface
     const MODULE_APP_DESC_LIST = array();
     const MODULE_APP_VIEW_LIST = array();
 
-    /*protected string $MODULE_TYPE = 'None'; // None | Application | Traduction
-    protected string $MODULE_NAME = 'None';
-    protected string $MODULE_MENU_NAME = 'None';
-    protected string $MODULE_COMMAND_NAME = 'none';
-    protected string $MODULE_DEFAULT_VIEW = 'disp';
-    protected string $MODULE_DESCRIPTION = 'Description';
-    protected string $MODULE_VERSION = '020250111';
-    protected string $MODULE_AUTHOR = 'Projet nebule';
-    protected string $MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
-    protected string $MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
-    protected string $MODULE_HELP = 'Help';
-    protected string $MODULE_INTERFACE = '2.0';
-
-    protected array $MODULE_REGISTERED_VIEWS = array('disp');
-    protected array $MODULE_REGISTERED_ICONS = array();
-    protected array $MODULE_APP_TITLE_LIST = array();
-    protected array $MODULE_APP_ICON_LIST = array();
-    protected array $MODULE_APP_DESC_LIST = array();
-    protected array $MODULE_APP_VIEW_LIST = array();*/
-
     const DEFAULT_COMMAND_ACTION_DISPLAY_MODULE = 'name';
 
     protected ?Applications $_applicationInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
-
-
-    /*public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->setEnvironmentLibrary($this->_nebuleInstance);
-        Parent::__construct($this->_nebuleInstance);
-        $this->_initialisation();
-    }*/
 
     public function __toString(): string
     {
@@ -82,93 +52,6 @@ abstract class Modules extends Functions implements ModuleInterface
     {
         return static::class;
     }
-
-    /*public function getType(): string
-    {
-        return strtolower($this::MODULE_TYPE);
-    }
-
-    public function getName(): string
-    {
-        return $this::MODULE_NAME;
-    }
-
-    public function getMenuName(): string
-    {
-        return $this::MODULE_MENU_NAME;
-    }
-
-    public function getRegisteredViews(): array
-    {
-        return $this::MODULE_REGISTERED_VIEWS;
-    }
-
-    public function getCommandName(): string
-    {
-        return $this::MODULE_COMMAND_NAME;
-    }
-
-    public function getDefaultView(): string
-    {
-        return $this::MODULE_DEFAULT_VIEW;
-    }
-
-    public function getDescription(): string
-    {
-        return $this::MODULE_DESCRIPTION;
-    }
-
-    public function getVersion(): string
-    {
-        return $this::MODULE_VERSION;
-    }
-
-    public function getAuthor(): string
-    {
-        return $this::MODULE_AUTHOR;
-    }
-
-    public function getLicence(): string
-    {
-        return $this::MODULE_LICENCE;
-    }
-
-    public function getLogo(): string
-    {
-        return $this::MODULE_LOGO;
-    }
-
-    public function getHelp(): string
-    {
-        return $this::MODULE_HELP;
-    }
-
-    public function getInterface(): string
-    {
-        return $this::MODULE_INTERFACE;
-    }
-
-    // Gestion de la présence dans le menu des applications.
-    public function getAppTitleList(): array
-    {
-        return $this::MODULE_APP_TITLE_LIST;
-    }
-
-    public function getAppIconList(): array
-    {
-        return $this::MODULE_APP_ICON_LIST;
-    }
-
-    public function getAppDescList(): array
-    {
-        return $this::MODULE_APP_DESC_LIST;
-    }
-
-    public function getAppViewList(): array
-    {
-        return $this::MODULE_APP_VIEW_LIST;
-    }*/
-
 
     /**
      * Add functionalities on hooks.

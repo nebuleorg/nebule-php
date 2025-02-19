@@ -86,10 +86,14 @@ class ApplicationModules
             }
             if (! is_array($classImplement))
                 $classImplement = array();
-            if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement))
+            if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement)) {
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' have translate interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fde052bb');
-            if (! in_array('Nebule\Library\ModuleInterface', $classImplement))
+                continue;
+            }
+            if (! in_array('Nebule\Library\ModuleInterface', $classImplement)) {
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' do not have module interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e242b56a');
+                continue;
+            }
             $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4879c453');
             try {
                 //$instance = new $moduleFullName($this->_applicationInstance);
@@ -100,10 +104,13 @@ class ApplicationModules
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
                 continue;
             }
-            if (! $instance instanceof \Nebule\Library\ModuleInterface)
-                return;
+            if (! $instance instanceof \Nebule\Library\ModuleInterface) {
+                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' do not have module interface, cannot init', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b9742fd8');
+                continue;
+            }
             $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->setEnvironmentApplication($this->_applicationInstance);
+            $this->_metrologyInstance->addLog('init internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a6c894e7');
             try {
                 $instance->initialisation();
             } catch (\Error $e) {
