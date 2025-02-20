@@ -38,68 +38,38 @@ abstract class Modules extends Functions implements ModuleInterface
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
 
-    public function __toString(): string
-    {
-        return $this::MODULE_NAME;
-    }
+    public function __toString(): string { return $this::MODULE_NAME; }
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
     }
 
-    public function getClassName(): string
-    {
-        return static::class;
-    }
+    public function getClassName(): string { return static::class; }
 
     /**
-     * Add functionalities on hooks.
+     * Add functionalities by hooks on menu (by module) and nodes (by type).
+     * On menu:
+     *  - selfMenu: inside menu on current module, in white;
+     *  - selfMenu<View>: inside menu on current module only on 'View', in white;
+     *  - <Module>SelfMenu: inside menu on another module with the name 'Module', in white;
+     *  - menu: inside menu on every module, on the end of list, in dark;
+     * On node:
+     *  - typeMenu<Type>: inside menu on node with the 'Type', in white;
+     *  - FIXME
      *
      * @param string    $hookName
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array
-    {
-        return array();
-    }
+    public function getHookList(string $hookName, ?Node $nid = null): array { return array(); }
 
 
-    /**
-     * Affichage de la page par défaut. FIXME à vider
-     */
-    public function displayModule(): void
-    {
-        // Lit si la variable GET existe.
-        /*if (filter_has_var(INPUT_GET, Displays::DEFAULT_INLINE_COMMAND))
-            $this->_displayInline();
-        else
-            $this->_displayFull();*/
-    }
 
-    /**
-     * Affichage en ligne comme élément inserré dans une page web.
-     *
-     * @return void
-     */
-    public function displayModuleInline(): void
-    {
-        // N'affiche rien par défaut.
-    }
+    public function displayModule(): void {}
+    public function displayModuleInline(): void {}
 
-    /**
-     * Cache de la lecture de la commande d'action d'affichage du module.
-     *
-     * @var ?string
-     */
     private ?string $_commandActionDisplayModuleCache = null;
 
-    /**
-     * Extrait en vue d'un affichage dans le module un texte/objet à afficher.
-     *
-     * @return string
-     */
     public function getExtractCommandDisplayModule(): string
     {
         $return = '';
@@ -128,23 +98,13 @@ abstract class Modules extends Functions implements ModuleInterface
         echo '</style>' . "\n";
     }
 
-    public function headerStyle(): void
-    {
-        // N'affiche rien par défaut.
-    }
+    public function headerStyle(): void {}
 
-    public function headerScript(): void
-    {
-        // Nothing by default.
-    }
+    public function headerScript(): void {}
 
-    public function actions(): void
-    {
-        // Nothing by default.
-    }
+    public function actions(): void {}
 
-    public function getTranslateInstance(string $text, string $lang = ''): string
-    {
+    public function getTranslateInstance(string $text, string $lang = ''): string {
         $result = $text;
         if ($this->_translateInstance === null)
             $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();

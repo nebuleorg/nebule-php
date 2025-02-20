@@ -42,17 +42,9 @@ class ModuleLang extends \Nebule\Library\Modules
     const MODULE_APP_DESC_LIST = array('::sylabe:module:lang:AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
-    private string $_hashGroup;
 
 
-
-    protected function _initialisation(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-    }
+    protected function _initialisation(): void {}
 
 
 
@@ -66,14 +58,7 @@ class ModuleLang extends \Nebule\Library\Modules
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                 $hookArray[0]['desc'] = '::sylabe:module:lang:AppDesc1';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
-                break;
-            case 'selfMenu':
-                $hookArray[1]['name'] = '::sylabe:module:lang:AppTitle1';
-                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[1]['desc'] = '::sylabe:module:lang:AppDesc1';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::MODULE_DEFAULT_VIEW;
                 break;
         }
 

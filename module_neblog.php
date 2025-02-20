@@ -327,6 +327,13 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         . '&' . self::COMMAND_ACTION_SYNC_PAGE;
                 }
                 break;
+            case 'menu':
+                $hookArray[0]['name'] = '::neblog:module:blog:list';
+                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
+                $hookArray[0]['desc'] = '';
+                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
+                break;
         }
         return $hookArray;
     }
