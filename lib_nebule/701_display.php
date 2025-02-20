@@ -5285,25 +5285,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $this->getDisplayMenuList($list, $size);
     }
 
-    /**
-     * Affiche un titre de paragraphe.
-     * La variable $displayEntity et l'option 'forceDisplayEntityOnTitle' forcent l'affichage de l'entité en cours.
-     * Use DisplayTitle()
-     *
-     * @param string    $title
-     * @param Node|null $icon
-     * @param boolean   $displayEntity
-     * @return string
-     */
-    public function getDisplayTitle_DEPRECATED(string $title, ?Node $icon = null, bool $displayEntity = false): string
-    {
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle($title);
-        $instance->setIcon($icon);
-        $instance->setEnableEntity($displayEntity);
-        return $instance->getHTML();
-    }
-
 
 
     /**

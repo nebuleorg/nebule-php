@@ -59,7 +59,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -85,7 +85,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         'delpage', // 15
         'about',   // 16
     );
-
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
         Displays::DEFAULT_ICON_LSTOBJ,
@@ -95,10 +94,10 @@ class ModuleNeblog extends \Nebule\Library\Modules
         Displays::DEFAULT_ICON_HELP,
         Displays::DEFAULT_ICON_LL,
     );
-    const MODULE_APP_TITLE_LIST = array();
-    const MODULE_APP_ICON_LIST = array();
-    const MODULE_APP_DESC_LIST = array();
-    const MODULE_APP_VIEW_LIST = array();
+    const MODULE_APP_TITLE_LIST = array('::neblog:module:objects:ModuleName');
+    const MODULE_APP_ICON_LIST = array('26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256');
+    const MODULE_APP_DESC_LIST = array('::neblog:module:objects:ModuleDescription');
+    const MODULE_APP_VIEW_LIST = array('blog');
 
     const COMMAND_SELECT_BLOG = 'blog';
     const COMMAND_SELECT_POST = 'post';

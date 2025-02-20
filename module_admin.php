@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Application;
+use Nebule\Library\Configuration;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -23,7 +25,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    const MODULE_VERSION = '020250209';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -214,9 +216,11 @@ class ModuleAdmin extends \Nebule\Library\Modules
      */
     private function _displayAppOptions(): void
     {
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:AppOptions', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:admin:display:AppOptions');
+        $instance->setIcon($icon);
+        $instance->display();
 
         if ($this->_unlocked) {
             $listOptions = $this->_listOptions;
@@ -273,19 +277,21 @@ class ModuleAdmin extends \Nebule\Library\Modules
      */
     private function _displayNebOptions(): void
     {
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:NebOptions', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:admin:display:NebOptions');
+        $instance->setIcon($icon);
+        $instance->display();
 
         if ($this->_unlocked) {
-            $listOptions = nebule::getListOptions();
-            $listCategoriesOptions = nebule::getListCategoriesOptions();
-            $listOptionsCategory = nebule::getListOptionsCategory();
-            $listOptionsType = nebule::getListOptionsType();
-            $listOptionsWritable = nebule::getListOptionsWritable();
-            $listOptionsDefaultValue = nebule::getListOptionsDefaultValue();
-            $listOptionsCriticality = nebule::getListOptionsCriticality();
-            $listOptionsDescription = nebule::getListOptionsDescription();
+            $listOptions = Configuration::OPTIONS_LIST;
+            $listCategoriesOptions = Configuration::OPTIONS_CATEGORIES;
+            $listOptionsCategory = Configuration::OPTIONS_CATEGORY;
+            $listOptionsType = Configuration::OPTIONS_TYPE;
+            $listOptionsWritable = Configuration::OPTIONS_WRITABLE;
+            $listOptionsDefaultValue = Configuration::OPTIONS_DEFAULT_VALUE;
+            $listOptionsCriticality = Configuration::OPTIONS_CRITICALITY;
+            $listOptionsDescription = Configuration::OPTIONS_DESCRIPTION;
 
             // Prépare le rendu des options.
             $param = array(
@@ -340,9 +346,11 @@ class ModuleAdmin extends \Nebule\Library\Modules
      */
     private function _displayAdmins(): void
     {
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeAdmins', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:admin:display:seeAdmins');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('adminlist');
     }
@@ -410,9 +418,11 @@ class ModuleAdmin extends \Nebule\Library\Modules
      */
     private function _displayRecoveryEntities(): void
     {
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:admin:display:seeRecovery', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:admin:display:seeRecovery');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('recoverylist');
     }

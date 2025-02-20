@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Application\Klicty;
 use DateTime;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\nebule;
 use Nebule\Library\Metrology;
 use Nebule\Library\Entity;
@@ -46,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250218';
+    const APPLICATION_VERSION = '020250220';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1543,9 +1544,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentObjectList()
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTOBJ);
-        echo $this->getDisplayTitle_DEPRECATED('::ObjectList', $icon);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::ObjectList');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('objectlist');
@@ -1740,9 +1743,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntityList()
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTENT);
-        echo $this->getDisplayTitle_DEPRECATED('::EntitiesList', $icon);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::EntitiesList');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listentities');
@@ -1829,9 +1834,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntityGroupList()
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
-        echo $this->getDisplayTitle_DEPRECATED('::EntitiesGroupList', $icon);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::EntitiesGroupList');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Appel l'affichage en ligne.
         $this->registerInlineContentID('listgroups');
@@ -1917,9 +1924,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (!$createGroupError
                 && is_a($createGroupInstance, 'Group') // FIXME la classe
             ) {
-                // Affiche le titre.
                 $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
-                echo $this->getDisplayTitle_DEPRECATED('::CreatedGroup', $icon);
+                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance->setTitle('::CreatedGroup');
+                $instance->setIcon($icon);
+                $instance->display();
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -1953,9 +1962,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo $this->getDisplayInformation_DEPRECATED('::NOKCreateGroup', $param);
             }
         } else {
-            // Affiche le titre.
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENTADD);
-            echo $this->getDisplayTitle_DEPRECATED('::EntitiesGroupAdd', $icon);
+            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('::EntitiesGroupAdd');
+            $instance->setIcon($icon);
+            $instance->display();
 
             // Si autorisé à créer un groupe.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2587,9 +2598,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (!$createEntityError
                 && is_a($createEntityInstance, 'Entity') // FIXME la classe
             ) {
-                // Affiche le titre.
                 $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
-                echo $this->getDisplayTitle_DEPRECATED('::NewEntityCreated', $icon);
+                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance->setTitle('::NewEntityCreated');
+                $instance->setIcon($icon);
+                $instance->display();
 
                 // Affiche la nouvelle entité.
                 echo '<div class="layoutObjectsList">' . "\n";
@@ -2633,9 +2646,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo $this->getDisplayInformation_DEPRECATED('::EntityAddError', $param);
             }
         } else {
-            // Affiche le titre.
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
-            echo $this->getDisplayTitle_DEPRECATED('::CreateEntity', $icon);
+            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('::CreateEntity');
+            $instance->setIcon($icon);
+            $instance->display();
 
             // Si autorisé à créer une entité.
             if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2723,9 +2738,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntitySync()
     {
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_SYNENT);
-        echo $this->getDisplayTitle_DEPRECATED('::EntitySync', $icon);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::EntitySync');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Si autorisé à synchroniser une entité.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -3107,10 +3124,16 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             )
         ) {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_KEY);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::::entity:unlocked', $icon);
+            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('::::entity:unlocked');
+            $instance->setIcon($icon);
+            $instance->display();
         } else {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENTITY_LOCK);
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayTitle_DEPRECATED('::::entity:locked', $icon);
+            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('::::entity:locked');
+            $instance->setIcon($icon);
+            $instance->display();
         }
 
         // Extrait les états de tests en warning ou en erreur.
@@ -3317,7 +3340,10 @@ private function _displayContentAbout()
     <div class="sequence" id="lang"></div>
     <?php
     $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD);
-    echo $this->getDisplayTitle_DEPRECATED(':::SelectLanguage', $icon);
+    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance->setTitle(':::SelectLanguage');
+    $instance->setIcon($icon);
+    $instance->display();
     $i = 0;
     foreach ($this->_translateInstance->getLanguageList() as $lang) {
         $actionList[$i]['title'] = $this->_translateInstance->getTranslate(':::Language:' . $lang);
@@ -3334,7 +3360,11 @@ private function _displayContentAbout()
     ?>
 
     <div class="sequence" id="help"></div>
-    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_HELP); echo $this->getDisplayTitle_DEPRECATED('::Help', $icon); ?>
+    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_HELP);
+    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance->setTitle('::Help');
+    $instance->setIcon($icon);
+    $instance->display(); ?>
 
     <?php
     $param = array(
@@ -3347,7 +3377,11 @@ private function _displayContentAbout()
     ?>
 
     <div class="sequence" id="recovery"></div>
-    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LC); echo $this->getDisplayTitle_DEPRECATED('::ProtectionRecovery', $icon); ?>
+    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LC);
+    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance->setTitle('::ProtectionRecovery');
+    $instance->setIcon($icon);
+    $instance->display(); ?>
     <?php $this->registerInlineContentID('listrecovery'); ?>
 
     <?php

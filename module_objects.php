@@ -5,6 +5,7 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -26,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250218';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1160,9 +1161,11 @@ class ModuleObjects extends \Nebule\Library\Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
-                // Affiche le titre.
                 $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-                echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:objects:ShareObjectProtection', $icon, false);
+                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance->setTitle('::sylabe:module:objects:ShareObjectProtection');
+                $instance->setIcon($icon);
+                $instance->display();
 
                 // Affiche en ligne les entités pour qui c'est partagé.
                 $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objectprotectionshareto');

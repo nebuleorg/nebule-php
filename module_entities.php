@@ -5,6 +5,7 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Entity;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
@@ -27,7 +28,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250218';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -880,17 +881,20 @@ class ModuleEntities extends \Nebule\Library\Modules
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
+        $instance = new DisplayTitle($this->_applicationInstance);
         if ($this->_displayEntityInstance->isSetPrivateKeyPassword()
             || ($this->_displayEntity == $this->_entitiesInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
         ) {
             $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[9]);
-            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:unlocked', $icon, false);
+            $instance->setTitle('::::entity:unlocked');
         } else {
             $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[11]);
-            echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::::entity:locked', $icon, false);
+            $instance->setTitle('::::entity:locked');
         }
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Extrait les états de tests en warning ou en erreur.
         $idCheck = 'Error';
@@ -1020,9 +1024,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[7]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle1', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:ObjectTitle1');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -1228,9 +1234,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[8]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:ObjectTitle2', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:ObjectTitle2');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -1336,7 +1344,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayMyEntitiesList(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:MyEntities', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:MyEntities');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_displayInstance->registerInlineContentID('myentities');
     }
@@ -1399,7 +1410,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayKnownEntitiesList(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownEntities', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:KnownEntities');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -1465,7 +1479,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayKnownByEntitiesList(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:KnownByEntities', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:KnownByEntities');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
@@ -1534,7 +1551,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayUnknownEntitiesList(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:UnknownEntities', $icon, true);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:UnknownEntities');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_displayInstance->registerInlineContentID('unknownentities');
     }
@@ -1640,7 +1660,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displaySpecialEntitiesList(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:SpecialEntities', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:SpecialEntities');
+        $instance->setIcon($icon);
+        $instance->display();
 
         $this->_displayInstance->registerInlineContentID('specialentities');
     }
@@ -1801,9 +1824,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             unset($list);
         }
 
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[5]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:CreateEntity', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:CreateEntity');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Vérifie que la création soit authorisée.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -2073,9 +2098,11 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityProp(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:entities:Desc:AttribsTitle', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:Desc:AttribsTitle');
+        $instance->setIcon($icon);
+        $instance->display();
 
-        // Affiche les propriétés.
         $this->_displayInstance->registerInlineContentID('properties');
     }
 

@@ -4,6 +4,7 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -25,7 +26,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250218';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -399,9 +400,11 @@ class ModuleGroups extends \Nebule\Library\Modules
             }
         }
 
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:MyGroups', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:groups:display:MyGroups');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('groups');
@@ -470,9 +473,11 @@ class ModuleGroups extends \Nebule\Library\Modules
      */
     private function _displayAllGroups(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:otherGroups', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:groups:display:otherGroups');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affiche le contenu.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
@@ -664,9 +669,11 @@ class ModuleGroups extends \Nebule\Library\Modules
      */
     private function _displayCreateGroup(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:groups:display:createGroup', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:groups:display:createGroup');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Si autorisé à créer un groupe.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Messae;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
@@ -47,7 +48,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250219';
+    const APPLICATION_VERSION = '020250220';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
@@ -1102,8 +1103,11 @@ class ModuleHelp extends \Nebule\Library\Modules
      */
     private function _displayHlpFirst(): void
     {
-        // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::SelectUser'), $this::MODULE_REGISTERED_ICONS[4]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::SelectUser');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Liste des entités déjà affichées.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
@@ -1178,8 +1182,11 @@ class ModuleHelp extends \Nebule\Library\Modules
         );
         echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTranslateInstance($module::MODULE_LOGO), $param);
 
-        // Affiche le titre.
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $this::MODULE_REGISTERED_ICONS[3]);
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::ChangeLanguage');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');*/

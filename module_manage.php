@@ -4,6 +4,7 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Displays;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
@@ -29,7 +30,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020250218';
+    const MODULE_VERSION = '020250220';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -424,9 +425,11 @@ class ModuleManage extends \Nebule\Library\Modules
      */
     private function _displayModules(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Modules', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:manage:Modules');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affichage la liste des modules.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('modlist');
@@ -570,9 +573,11 @@ class ModuleManage extends \Nebule\Library\Modules
      */
     private function _displayModule(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:Module', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:manage:Module');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affichage du module avec transmission de la variable d'affichage.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('moddisp', self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule());
@@ -928,9 +933,11 @@ class ModuleManage extends \Nebule\Library\Modules
      */
     private function _displayCreateModule(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:createModule', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:manage:create:createModule');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Si autorisé à créer des liens.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -979,9 +986,11 @@ class ModuleManage extends \Nebule\Library\Modules
      */
     private function _displayChangeCode(): void
     {
-        // Titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED('::sylabe:module:manage:create:addModuleCode', $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:manage:create:addModuleCode');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));

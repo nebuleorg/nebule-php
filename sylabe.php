@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
 use Nebule\Library\applicationInterface;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
@@ -50,7 +51,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250219';
+    const APPLICATION_VERSION = '020250220';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -1216,9 +1217,11 @@ class ModuleHelp extends \Nebule\Library\Modules
         );
 //        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTranslateInstance($module::MODULE_NAME), $param);
 
-        // Affiche le titre.
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-        echo $this->_displayInstance->getDisplayTitle_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::ChangeLanguage'), $icon, false);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::ChangeLanguage');
+        $instance->setIcon($icon);
+        $instance->display();
 
         // Affiche la liste des langues.
         echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');

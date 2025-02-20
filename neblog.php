@@ -54,7 +54,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250209';
+    const APPLICATION_VERSION = '020250220';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -62,7 +62,7 @@ class Application extends Applications
     const USE_MODULES = true;
     const USE_MODULES_TRANSLATE = true;
     const USE_MODULES_EXTERNAL = false;
-    const LIST_MODULES_INTERNAL = array('ModuleNeblog', 'ModuleTranslateFRFR');
+    const LIST_MODULES_INTERNAL = array('ModuleNeblog', 'ModuleLang', 'ModuleTranslateFRFR');
     const LIST_MODULES_EXTERNAL = array();
 
     /**
