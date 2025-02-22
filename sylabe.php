@@ -1043,7 +1043,6 @@ Chacun peut devenir individuellement actif.<br />
 Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet sylabe disparaîtra.
 Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
 Il sera vu comme bizarrerie symptomatique d’une époque.",
-            '::module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.sylabe.org/">Le blog du projet sylabe</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
             '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
@@ -1094,14 +1093,13 @@ Each individual can become active.<br />
 Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project sylabe will disappear.
 He will have served its purpose: to allow a smooth transition to nebule.<br />
 It will be seen as symptomatic of an era oddity.',
-            '::module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.sylabe.org/">The blog of sylabe projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
-            '::module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
-1. the top banner that contains the application menu and the current entity.<br />
-2. <br />
-3. <br />
+            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+1. The top banner, which contains the application menu and the current entity.<br />
+2. The central part, which contains the content to display, objects, actions, etc...<br />
+3. The bottom banner, which appears when an action is performed.<br />
 <br />
-<br />
-',
+From a general point of view, everything on a light background relates to an ongoing action or the object currently in use. And everything on a dark background relates to the global interface or other actions unrelated to what you're doing.<br />
+The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
             '::module:help:ModuleName' => 'Módulo de ayuda',
@@ -1143,14 +1141,13 @@ Cada individuo puede llegar a ser activo.<br />
 Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto sylabe desaparecer.
 Él habrá cumplido su propósito: permitir una transición suave a nebule.
 Se verá como un síntoma de una rareza era.',
-            '::module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.sylabe.org/">El blog del proyecto sylabe</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
-            '::module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
-1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
-2. <br />
-3. <br />
+            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
+2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
+3. La banda inferior, que aparece cuando se realiza una acción.<br />
 <br />
-<br />
-',
+Desde un punto de vista general, todo lo que está sobre un fondo claro está relacionado con una acción en curso o el objeto que se está utilizando. Y todo lo que está sobre un fondo oscuro se refiere a la interfaz global u otras acciones no relacionadas con lo que se está haciendo.<br />
+El menú en la parte superior izquierda es la mejor manera de navegar por la interfaz.",
         ],
     ];
 }

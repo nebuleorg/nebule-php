@@ -1468,7 +1468,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($status == '')
             $this->_status = $this->_translateInstance->getTranslate($this->_type);
         else
-            $this->_status = trim((string)filter_var($status, FILTER_SANITIZE_STRING));
+            $this->_status = $this->_translateInstance->getTranslate(trim((string)filter_var($status, FILTER_SANITIZE_STRING)));
         
         if ($this->_status == '')
                 $this->_displayStatus = false;

@@ -782,36 +782,8 @@ class ModuleHelp extends \Nebule\Library\ModelModuleHelp
             '::module:help:Demarrage' => 'Démarrage',
             '::module:help:AideGenerale' => 'Aide générale',
             '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>weblog</i> est une implémentation logicielle basée sur le projet nebule.<br />
-Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.<br />
-<br />
-Le projet <i>nebule</i> crée un réseau. Non un réseau de machines mais un réseau de données.<br />
-<br />
-Les systèmes informatiques actuels sont incapables de gérer directement les objets et les liens. Il n’est donc pas possible d’utiliser nebule nativement.
-Le projet weblog permet un accès à cette nouvelle façon de gérer nos informations sans remettre en question fondamentalement l’organisation et notamment les systèmes d’exploitation de notre système d’information.<br />
-<br />
-L’interface weblog est une page web destinée à être mise en place sur un serveur pour manipuler des objets et des liens.
-Cela s’apparente tout à fait à ce qui se fait déjà communément : Google (et sa galaxie de sites), Facebook, Twitter, Outlook, Yahoo et leurs innombrables concurrents et prétendants…
-Tous ces sites sont globalement plus concurrents que complémentaires, et tous sans exception sont fermés à leurs concurrents.
-Cela se traduit pour l’utilisateur par la nécessité de, soit disposer d’un compte sur chaque site, soit de ne fréquenter que certains d’entre eux, voir un seul.
-Cela se traduit aussi par l’impossibilité d’échanger directement des données et informations d’un site à l’autre.<br />
-<br />
-Le projet weblog reproduit la concentration des données vers des serveurs sur l’Internet.
-Il est nativement prévu pour pouvoir être implanté sur n’importe quel serveur web.
-Et, se basant sur les principes de nebule, tout serveur hébergeant weblog peut nativement :<br />
- 1. gérer les identités générées par les autres serveurs, que ce soit un utilisateur ou un robot ;<br />
- 2. échanger des données et des informations avec tous les autres serveurs implémentant nebule ;<br />
- 3. relayer les données et les informations d’autres serveurs ;<br />
- 4. permettre à tout utilisateur (connu du serveur) de s’y connecter.<br />
-<br />
-Grâce à IPv6, nous avons la possibilité de réellement connecter toutes les machines sur l’Internet.
-Chacun peut ainsi mettre en place simplement weblog chez lui, ou continuer à l’utiliser sur un autre serveur de l’Internet.
-Chacun peut devenir individuellement actif.<br />
-<br />
-Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet weblog disparaîtra.
-Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
-Il sera vu comme bizarrerie symptomatique d’une époque.",
-            '::module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.weblog.org/">Le blog du projet weblog</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
+            '::module:help:APropos:Text' => "Le projet <i>neblog</i> est une implémentation logicielle de weblog (blog) basée sur le projet nebule.<br />
+Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
             '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
@@ -833,43 +805,15 @@ Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface
             '::module:help:Demarrage' => 'Start',
             '::module:help:AideGenerale' => 'General help',
             '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>weblog</i> project is a software implementation based on nebule project.<br />
-This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.<br />
+            '::module:help:APropos:Text' => 'The <i>neblog</i> project is a software implementation of a weblog (blog) based on the nebule project.<br />
+This PHP implementation is intended to serve as a reference for the possibilities offered by objects and links as defined in nebule.',
+            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+1. The top banner, which contains the application menu and the current entity.<br />
+2. The central part, which contains the content to display, objects, actions, etc...<br />
+3. The bottom banner, which appears when an action is performed.<br />
 <br />
-The <i>nebule</i> project create a network. Not a network of computers but a network of datas.<br />
-<br />
-Current computer systems are unable to directly manage objects and links. It is thus not possible to use native nebule.
-The weblog project provides access to this new way of managing our information without questioning fundamentally the organization including the operating system of our information systems.<br />
-<br />
-The weblog interface is a web page to be set up on a server to handle objects and links.
-This all sounds a lot to what is already commonly exist: Google (and its galaxy of sites), Facebook, Twitter, Outlook, Yahoo and countless competitors and pretenders…
-All these sites are generally more competitive than complementary, and all without exception are closed to competitors.
-This means to the user by the need to either have an account on each site, or attend only some of them, to see one.
-This also results in the inability to directly exchange data and information from one site to another.<br />
-<br />
-The project weblog reproduced concentration data to servers on the Internet.
-It is expected to be natively installed on any web server.
-And, based on the principles of nebule, any server hosting weblog can natively:<br />
- 1. manage the identities generated by the other server, whether a user or a robot;<br />
- 2. exchange data and information with all other servers implementing nebule;<br />
- 3. relaying the data and the other data servers;<br />
- 4. allow any user (known to the server) to connect to it.<br />
-<br />
-With IPv6, we have the ability to actually connect all the machines on the Internet.
-Everyone can simply set up weblog at home, or continue using another Internet server.
-Each individual can become active.<br />
-<br />
-Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project weblog will disappear.
-He will have served its purpose: to allow a smooth transition to nebule.<br />
-It will be seen as symptomatic of an era oddity.',
-            '::module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.weblog.org/">The blog of weblog projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
-            '::module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
-1. the top banner that contains the application menu and the current entity.<br />
-2. <br />
-3. <br />
-<br />
-<br />
-',
+From a general point of view, everything on a light background relates to an ongoing action or the object currently in use. And everything on a dark background relates to the global interface or other actions unrelated to what you're doing.<br />
+The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
             '::module:help:ModuleName' => 'Módulo de ayuda',
@@ -884,41 +828,15 @@ It will be seen as symptomatic of an era oddity.',
             '::module:help:Demarrage' => 'Comienzo',
             '::module:help:AideGenerale' => 'Ayuda general',
             '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>weblog</i> es un proyecto basado nebule implementación de software.<br />
-Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.<br />
+            '::module:help:APropos:Text' => 'El proyecto <i>neblog</i> es una implementación de software de un weblog (blog) basado en el proyecto nebule.<br />
+Esta implementación en PHP está diseñada como una referencia de las posibilidades que ofrecen los objetos y los enlaces tal como se definen en nebule.',
+            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
+2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
+3. La banda inferior, que aparece cuando se realiza una acción.<br />
 <br />
-Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible utilizar nebule nativo.
-El proyecto weblog proporciona acceso a esta nueva forma de gestionar nuestra información sin cuestionar en profundidad la organización incluyendo el sistema operativo de nuestros sistemas de información.<br />
-<br />
-La interfaz weblog es una página web que se creará en el servidor para manejar objetos y enlaces.
-Todo esto suena muy parecido a lo que ya es común: Google (y su galaxia de sitios), Facebook, Twitter, Outlook, Yahoo e innumerables competidores y pretendientes…
-Todos estos sitios son generalmente más competitivas que complementarias, y todo sin excepción están cerrados a la competencia.
-Esto se traduce en el usuario por la necesidad, ya sea tener una cuenta en cada sitio, o asistir sólo a algunos de ellos, para ver uno.
-Esto también resulta en la incapacidad para intercambiar directamente datos y la información de un sitio a otro.<br />
-<br />
-El weblog proyecto reproduce datos de concentración a los servidores de Internet.
-Se espera que esté instalado de forma nativa en cualquier servidor web.
-Y, en base a los principios de nebule, cualquier servidor de alojamiento weblog puede nativa:<br />
- 1. gestionar las identidades generadas por el otro servidor, si un usuario o un robot;<br />
- 2. el intercambio de datos e información con el resto de servidores de aplicación nebule;<br />
- 3. la retransmisión de los datos y los otros servidores de datos;<br />
- 4. permitir a cualquier usuario (conocidos por el servidor) para conectarse a él.<br />
-<br />
-Con IPv6, tenemos la capacidad de conectarse en realidad todas las máquinas en Internet.
-Todo el mundo puede simplemente configurar weblog casa, o continuar utilizando otro servidor de Internet.
-Cada individuo puede llegar a ser activo.<br />
-<br />
-Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto weblog desaparecer.
-Él habrá cumplido su propósito: permitir una transición suave a nebule.
-Se verá como un síntoma de una rareza era.',
-            '::module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.weblog.org/">El blog del proyecto weblog</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
-            '::module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
-1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
-2. <br />
-3. <br />
-<br />
-<br />
-',
+Desde un punto de vista general, todo lo que está sobre un fondo claro está relacionado con una acción en curso o el objeto que se está utilizando. Y todo lo que está sobre un fondo oscuro se refiere a la interfaz global u otras acciones no relacionadas con lo que se está haciendo.<br />
+El menú en la parte superior izquierda es la mejor manera de navegar por la interfaz.",
         ],
     ];
 }

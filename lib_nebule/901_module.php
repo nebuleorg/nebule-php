@@ -48,14 +48,14 @@ abstract class Modules extends Functions implements ModuleInterface
 
     /**
      * Add functionalities by hooks on menu (by module) and nodes (by type).
-     * On menu:
-     *  - selfMenu: inside menu on current module, in white;
-     *  - selfMenu<View>: inside menu on current module only on 'View', in white;
-     *  - <Module>SelfMenu: inside menu on another module with the name 'Module', in white;
-     *  - menu: inside menu on every module, on the end of list, in dark;
-     * On node:
-     *  - typeMenu<Type>: inside menu on node with the 'Type', in white;
-     *  - FIXME
+     *  - On menu:
+     *    - selfMenu: inside menu on current module, in white;
+     *    - selfMenu<View>: inside menu on current module only on 'View', in white;
+     *    - <Module>SelfMenu: inside menu on another module with the name 'Module', in white;
+     *    - menu: inside menu on every module, on the end of list, in dark;
+     *  - On node:
+     *    - typeMenu<Type>: inside menu on node with the 'Type', in white;
+     *    - ... FIXME
      *
      * @param string    $hookName
      * @param Node|null $nid
@@ -64,8 +64,16 @@ abstract class Modules extends Functions implements ModuleInterface
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
 
 
-
+    /**
+     * Part from this module to display on browser.
+     * @return void
+     */
     public function displayModule(): void {}
+
+    /**
+     * Inline part from this module to display on browser, called by primary page on displayModule().
+     * @return void
+     */
     public function displayModuleInline(): void {}
 
     private ?string $_commandActionDisplayModuleCache = null;
@@ -98,10 +106,22 @@ abstract class Modules extends Functions implements ModuleInterface
         echo '</style>' . "\n";
     }
 
+    /**
+     * Part of CSS from this module to display on browser.
+     * @return void
+     */
     public function headerStyle(): void {}
 
+    /**
+     * Part of JS script from this module to display on browser.
+     * @return void
+     */
     public function headerScript(): void {}
 
+    /**
+     * Part of actions from this module to run before display.
+     * @return void
+     */
     public function actions(): void {}
 
     public function getTranslateInstance(string $text, string $lang = ''): string {

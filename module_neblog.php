@@ -83,7 +83,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         'newpage', // 13
         'modpage', // 14
         'delpage', // 15
-        'about',   // 16
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -389,9 +388,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
             case $this::MODULE_REGISTERED_VIEWS[15]:
                 $this->_displayDelPage();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[16]:
-                $this->_displayAbout();
-                break;
             default:
                 $this->_displayBlogs();
                 break;
@@ -654,7 +650,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _display_InlinePost(): void {
-        $this->_displayContentObject($this->_instanceCurrentBlogPost, 'selfMenuPost');
+        $this->_displayContentPost($this->_instanceCurrentBlogPost, 'selfMenuPost');
         $this->_displayContentAnswers($this->_instanceCurrentBlogPost);
     }
 
@@ -707,7 +703,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private function _displayPage(): void {
         $this->_displaySimpleTitle('::neblog:module:page:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
-        $this->_displayContentObject($this->_instanceCurrentBlogPage, 'selfMenuPage');
+        $this->_displayContentPost($this->_instanceCurrentBlogPage, 'selfMenuPage');
     }
 
     private function _displayPages(): void {
@@ -813,15 +809,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_displaySimpleTitle('::neblog:module:page:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
         $this->_displayNotImplemented(); // TODO
-    }
-
-    private function _displayAbout(): void {
-        $this->_displaySimpleTitle('::neblog:module:about:title', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1], true);
-
-        echo '<div>';
-        echo '<p>' . $this->_translateInstance->getTranslate('::neblog:module:about:desc') . '</p>';
-        echo '</div>';
     }
 
 
@@ -1012,7 +999,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceList->addItem($instance);
     }
 
-    private function _displayContentObject(Node $nid, string $hook): void {
+    private function _displayContentPost(Node $nid, string $hook): void {
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setEnableColor(true);
@@ -1022,7 +1009,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setEnableNID(false);
         $instance->setEnableFlags(true);
         $instance->setEnableFlagProtection(false);
-        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagObfuscate(true);
         $instance->setEnableFlagState(false);
         $instance->setEnableFlagEmotions(false);
         $instance->setEnableStatus(true);
@@ -1043,24 +1030,38 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setEnableRefs(false);
         $instance->setEnableNID(false);
         $instance->setEnableFlags(true);
-        $instance->setEnableFlagProtection(false);
-        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagProtection(true);
+        $instance->setEnableFlagObfuscate(true);
         $instance->setEnableFlagState(true);
         $instance->setEnableFlagEmotions(false);
         $instance->setEnableStatus(true);
         $instance->setStatus('::content');
-        $instance->setEnableContent(true);
+        $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->display();
-        /*$content = $contentOID->getContent();
-        ?>
 
-        <div>
-            <p><?php echo $content; ?></p>
-        </div>
-        <?php*/
+        switch ($contentOID->getType()) {
+            case References::REFERENCE_OBJECT_TEXT:
+                $this->_displayContentText($contentOID);
+                break;
+            case References::REFERENCE_OBJECT_PNG:
+            case References::REFERENCE_OBJECT_JPEG:
+                $this->_displayContentImage($contentOID);
+                break;
+        }
+    }
+
+    private function _displayContentText(Node $nid): void {
+        $content = $nid->getContent();
+        echo '<div class="text"><p>' . "\n";
+        echo $content;
+        echo '</p></div>' . "\n";
+    }
+
+    private function _displayContentImage(Node $nid): void {
+        $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayContentAnswers(Node $nid): void {
@@ -1330,7 +1331,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::neblog:module:page:sync' => 'Synchronise la page',
             '::neblog:module:answ:list' => 'Liste des réponses',
             '::neblog:module:about:title' => 'A propos',
-            '::neblog:module:about:desc' => 'Ceci est un gestionnaire/afficheur de weblog basé sur nebule.',
         ],
         'en-en' => [
             '::neblog:module:login' => 'Connecting',
@@ -1366,7 +1366,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::neblog:module:page:sync' => 'Synchronize page',
             '::neblog:module:answ:list' => 'List answers',
             '::neblog:module:about:title' => 'About',
-            '::neblog:module:about:desc' => 'This is a manager/reader for weblog based on nebule.',
         ],
         'es-co' => [
             '::neblog:module:login' => 'Connecting',
@@ -1402,7 +1401,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::neblog:module:page:sync' => 'Synchronize page',
             '::neblog:module:answ:list' => 'List answers',
             '::neblog:module:about:title' => 'About',
-            '::neblog:module:about:desc' => 'This is a manager/reader for weblog based on nebule.',
         ],
     ];
 }

@@ -3,9 +3,6 @@ declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Application\Neblog\Application;
 use Nebule\Application\Neblog\Display;
-use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
-use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
-use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /**
  * This module is a model for modules manage the help pages and default first vue.
@@ -42,6 +39,10 @@ class ModelModuleHelp extends \Nebule\Library\Modules
 
 
 
+    /**
+     * {@inheritDoc}
+     * @see Modules::getHookList()
+     */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
         $hookArray = array();
         switch ($hookName) {
@@ -71,6 +72,10 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         return $hookArray;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see Modules::displayModule()
+     */
     public function displayModule(): void {
         $this->_displayHlpHeader();
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -86,8 +91,16 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @see Modules::displayModuleInline()
+     */
     public function displayModuleInline(): void {}
 
+    /**
+     * {@inheritDoc}
+     * @see Modules::headerStyle()
+     */
     public function headerStyle(): void {
         echo ".moduleHelpText1stI1 { position:absolute; left:50%; top:33%; margin-left:-32px; }\n";
         echo ".moduleHelpText1stI2 { position:absolute; left:50%; top:50%; margin-left:-32px; }\n";
@@ -116,44 +129,72 @@ class ModelModuleHelp extends \Nebule\Library\Modules
      */
     private function _displayHlpAbout(): void {
         $linkApplicationWebsite = $this->_applicationInstance::APPLICATION_WEBSITE;
-        if (strpos($this->_applicationInstance::APPLICATION_WEBSITE, '://') === false)
-            $linkApplicationWebsite = 'http://' . $this->_applicationInstance::APPLICATION_WEBSITE;
+        if (!str_contains($this->_applicationInstance::APPLICATION_WEBSITE, '://'))
+            $linkApplicationWebsite = 'https://' . $this->_applicationInstance::APPLICATION_WEBSITE;
 
-        // Affiche les informations de l'application.
-        $param = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => false,
-            'informationType' => 'information',
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-        );
-        $list = array();
-        $list[0]['information'] = $this->_applicationInstance::APPLICATION_SURNAME;
-        $list[0]['param'] = $param;
-        $list[0]['param']['icon'] = $this->_displayInstance::DEFAULT_APPLICATION_LOGO;
-        //$list[0]['object'] = '1';
-        $list[1]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . $this->_applicationInstance::APPLICATION_WEBSITE . '</a>';
-        $list[1]['param'] = $param;
-        $list[2]['information'] = $this->_translateInstance->getTranslate('::Version') . ' : ' . $this->_applicationInstance::APPLICATION_VERSION;
-        $list[2]['param'] = $param;
-        $list[3]['information'] = $this->_applicationInstance::APPLICATION_LICENCE . ' ' . $this->_applicationInstance::APPLICATION_AUTHOR;
-        $list[3]['param'] = $param;
-        $param['informationType'] = 'information';
-        $list[4]['information'] = BOOTSTRAP_SURNAME;
-        $list[4]['param'] = $param;
-        $list[4]['param']['icon'] = LIB_BOOTSTRAP_ICON;
-        //$list[4]['object'] = '1';
-        $list[5]['information'] = '<a href="http://' . BOOTSTRAP_WEBSITE . '" target="_blank">' . BOOTSTRAP_WEBSITE . '</a>';
-        $list[5]['param'] = $param;
-        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'Medium', false);
+        $linkBootstrapWebsite = \Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
+        if (!str_contains(\Nebule\Bootstrap\BOOTSTRAP_WEBSITE, '://'))
+            $linkBootstrapWebsite = 'https://' . \Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($this->_applicationInstance::APPLICATION_SURNAME);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText($this->_applicationInstance::APPLICATION_NAME);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($this->_applicationInstance::APPLICATION_WEBSITE);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText($this->_applicationInstance::APPLICATION_NAME);
+        $instance->setLink($linkApplicationWebsite);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($this->_translateInstance->getTranslate('::Version') . ' : ' . $this->_applicationInstance::APPLICATION_VERSION);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText($this->_applicationInstance::APPLICATION_NAME);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($this->_applicationInstance::APPLICATION_LICENCE . ' (c) ' . $this->_applicationInstance::APPLICATION_AUTHOR);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText($this->_applicationInstance::APPLICATION_NAME);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage(\Nebule\Bootstrap\BOOTSTRAP_SURNAME);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage(\Nebule\Bootstrap\BOOTSTRAP_WEBSITE);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+        $instance->setLink($linkBootstrapWebsite);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage($this->_translateInstance->getTranslate('::Version') . ' : ' . \Nebule\Bootstrap\BOOTSTRAP_VERSION);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage(\Nebule\Bootstrap\BOOTSTRAP_LICENCE . ' (c) ' . \Nebule\Bootstrap\BOOTSTRAP_AUTHOR);
+        $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+        $instance->setIconText(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+        $instanceList->addItem($instance);
+
+        $instanceList->display();
 
         ?>
         <div class="text">
             <p>
                 <?php echo $this->_translateInstance->getTranslate('::module:help:APropos:Text') ?>
-            </p>
-            <p>
-                <?php echo $this->_translateInstance->getTranslate('::module:help:APropos:Liens') ?>
             </p>
         </div>
         <?php

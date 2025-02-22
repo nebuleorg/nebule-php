@@ -11,10 +11,11 @@ echo ' > start'
 
 export PUBSPACE=~/code.master.nebule.org
 export WORKSPACE=~/workspace/nebule-php
+export TESTINSTANCE="${WORKSPACE}/test_instance"
 export password_entity=3968761168fe7f4b9df6f6964fb23f5db1a9531569cf78c230c4b6877b7cb0ea
 
-cd $PUBSPACE || return 1
-cd $PUBSPACE || exit 1
+cd "${PUBSPACE}" || return 1
+cd "${PUBSPACE}" || exit 1
 
 export LIB_RID_SECURITY_AUTHORITY='a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
 export LIB_RID_CODE_AUTHORITY='2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
@@ -454,6 +455,16 @@ EOF
   sudo chmod 664 o/*
 }
 
+function copy_to_test_instance()
+{
+  echo ' > copy to test instance'
+  mkdir -p "${TESTINSTANCE}"
+  cp -r "${PUBSPACE}/index.php" "${PUBSPACE}/o" "${PUBSPACE}/l" "${PUBSPACE}/c" "${TESTINSTANCE}/"
+  cd "${TESTINSTANCE}" || return
+  git add o/* l/*
+  cd "${PUBSPACE}" || return
+}
+
 function sign_write_link()
 {
   link="${1}"
@@ -533,8 +544,8 @@ function mode_loop
   cd $PUBSPACE || exit 1
   
   case "${loop_type}" in
-    f) work_full_reinit; work_dev_deploy; work_refresh;;
-    d) work_dev_deploy; work_refresh;;
+    f) work_full_reinit; work_dev_deploy; work_refresh; copy_to_test_instance;;
+    d) work_dev_deploy; work_refresh; copy_to_test_instance;;
     e) work_export;;
     q) echo ' > quit'; break;;
     *) work_dev_deploy;;
@@ -548,8 +559,8 @@ function mode_once
 {
   echo ' > mode once'
   case "${1}" in
-    f) work_full_reinit; work_dev_deploy; work_refresh;;
-    d) work_dev_deploy; work_refresh;;
+    f) work_full_reinit; work_dev_deploy; work_refresh; copy_to_test_instance;;
+    d) work_dev_deploy; work_refresh; copy_to_test_instance;;
     e) work_export;;
     r) work_refresh;;
   esac
