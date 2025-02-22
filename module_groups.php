@@ -26,7 +26,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -75,7 +75,7 @@ class ModuleGroups extends \Nebule\Library\Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null):array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
@@ -387,7 +387,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                 );
 
                 // Affiche la liste de l'objet et du message.
-                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
                 unset($list);
             } else {
                 $param = array(
@@ -460,7 +460,7 @@ class ModuleGroups extends \Nebule\Library\Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
 
         unset($list, $links, $listOkGroups);
     }
@@ -538,7 +538,7 @@ class ModuleGroups extends \Nebule\Library\Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
 
         unset($list, $links, $listOkGroups);
 

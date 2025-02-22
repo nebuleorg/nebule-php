@@ -56,7 +56,6 @@ class DisplayMenu extends DisplayItem implements DisplayInterface
             }
 
             .menuListContentAction {
-                background: #ababab;
                 height: 64px;
                 margin-bottom: 5px;
                 margin-right: 5px;
@@ -105,6 +104,15 @@ class DisplayMenu extends DisplayItem implements DisplayInterface
                 font-size: 0.8rem;
                 overflow: hidden;
                 white-space: nowrap;
+            }
+
+            .menuListContentActionModules {
+                background: rgba(0, 0, 0, 0.5);
+                color: #ffffff;
+            }
+
+            .menuListContentActionHooks {
+                background: rgba(255, 255, 255, 0.66);
             }
         </style>
         <?php

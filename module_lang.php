@@ -11,7 +11,7 @@ use Nebule\Library\Node;
 use Nebule\Library\References;
 
 /**
- * Ce module permet de gérer les groupes.
+ * Ce module permet de gérer les languages.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -26,7 +26,7 @@ class ModuleLang extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'lang';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::sylabe:module:lang:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2025-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
@@ -48,7 +48,7 @@ class ModuleLang extends \Nebule\Library\Modules
 
 
 
-    public function getHookList(string $hookName, ?Node $nid = null):array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array
     {
         $hookArray = array();
 
@@ -92,12 +92,9 @@ class ModuleLang extends \Nebule\Library\Modules
 
     private function _displayLanguages(): void
     {
-        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('Current language');
-        $instance->setIconRID($this::MODULE_LOGO);
-        $instance->display();
+        $this->_displaySimpleTitle('::sylabe:module:lang:display:Current', $this::MODULE_LOGO);
 
-        // TODO
+        $this->_displayNotImplemented(); // TODO
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('langs');
     }
@@ -109,19 +106,42 @@ class ModuleLang extends \Nebule\Library\Modules
      */
     private function _display_InlineLanguages(): void
     {
-        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('Available languages');
-        $instance->setIconRID($this::MODULE_LOGO);
-        $instance->display();
+        $this->_displaySimpleTitle('::sylabe:module:lang:display:List', $this::MODULE_LOGO);
 
-        // TODO
-    }
+        $this->_displayNotImplemented(); // TODO
 
-    private function _displayTitle(string $title, string $icon): void {
-        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle($title);
-        $instance->setIconRID($icon);
-        $instance->display();
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $list = $this->_applicationInstance->getModulesListInstances();
+        foreach ($list as $moduleInstance) {
+            $blogInstance = $moduleInstance::MODULE_LANGUAGE;
+            $name = $moduleInstance;
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($blogInstance); // FIXME
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                . '&' . References::COMMAND_SELECT_LANG . '=' . $name);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableRefs(true);
+            //$instance->setRefs(array($blogSID));
+            $instance->setSelfHookName('selfMenuBlogs');
+            $instance->setEnableStatus(true);
+            /*$instance->setStatus(
+                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountBlogPages($blogInstance)
+                . ' '
+                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountBlogPosts($blogInstance)
+            );*/
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
     }
 
 
@@ -134,32 +154,8 @@ class ModuleLang extends \Nebule\Library\Modules
             '::sylabe:module:lang:ModuleHelp' => "Ce module permet de sélectionner une langue pour les applications.",
             '::sylabe:module:lang:AppTitle1' => 'Langues',
             '::sylabe:module:lang:AppDesc1' => 'Gestion des langues.',
-            '::sylabe:module:lang:display:Groups' => 'Les groupes',
-            '::sylabe:module:lang:display:MyGroups' => 'Mes groupes',
-            '::sylabe:module:lang:display:seeAsGroup' => 'Voir comme groupe',
-            '::sylabe:module:lang:display:seenFromOthers' => 'Vu depuis les autres entités',
-            '::sylabe:module:lang:display:otherGroups' => 'Les groupes des autres entités',
-            '::sylabe:module:lang:display:createGroup' => 'Créer un groupe',
-            '::sylabe:module:lang:display:AddMarkedObjects' => 'Ajouter les objets marqués',
-            '::sylabe:module:lang:display:deleteGroup' => 'Supprimer le groupe',
-            '::sylabe:module:lang:display:createTheGroup' => 'Créer le groupe',
-            '::sylabe:module:lang:display:nom' => 'Nom',
-            '::sylabe:module:lang:display:OKCreateGroup' => 'Le groupe a été créé.',
-            '::sylabe:module:lang:display:notOKCreateGroup' => "Le groupe n'a pas été créé ! %s",
-            '::sylabe:module:lang:display:noGroup' => 'Pas de groupe.',
-            '::sylabe:module:lang:display:noGroupMember' => 'Pas de membre.',
-            '::sylabe:module:lang:display:makeGroup' => 'Faire de cet objet un groupe',
-            '::sylabe:module:lang:display:makeGroupMe' => 'Faire de cet objet un groupe pour moi aussi',
-            '::sylabe:module:lang:display:unmakeGroup' => 'Ne plus faire de cet objet un groupe',
-            '::sylabe:module:lang:display:useAsGroupOpened' => 'Utiliser comme groupe ouvert',
-            '::sylabe:module:lang:display:useAsGroupClosed' => 'Utiliser comme groupe fermé',
-            '::sylabe:module:lang:display:refuseGroup' => 'Refuser cet objet comme un groupe',
-            '::sylabe:module:lang:display:removeFromGroup' => 'Retirer du groupe',
-            '::sylabe:module:lang:display:isGroup' => 'est un groupe.',
-            '::sylabe:module:lang:display:isGroupToOther' => 'est un groupe de',
-            '::sylabe:module:lang:display:isNotGroup' => "n'est pas un groupe.",
-            '::sylabe:module:lang:display:thisIsGroup' => "C'est un groupe.",
-            '::sylabe:module:lang:display:thisIsNotGroup' => "Ce n'est pas un groupe.",
+            '::sylabe:module:lang:display:Current' => 'Language sélectionné',
+            '::sylabe:module:lang:display:List' => 'Liste des langues',
         ],
         'en-en' => [
             '::sylabe:module:lang:ModuleName' => 'Groups module',
@@ -168,32 +164,8 @@ class ModuleLang extends \Nebule\Library\Modules
             '::sylabe:module:lang:ModuleHelp' => 'This module permit to see and manage groups.',
             '::sylabe:module:lang:AppTitle1' => 'Groups',
             '::sylabe:module:lang:AppDesc1' => 'Manage groups.',
-            '::sylabe:module:lang:display:Groups' => 'The groups',
-            '::sylabe:module:lang:display:MyGroups' => 'My groups',
-            '::sylabe:module:lang:display:seeAsGroup' => 'See as group',
-            '::sylabe:module:lang:display:seenFromOthers' => 'Seen from others entities',
-            '::sylabe:module:lang:display:otherGroups' => 'Groups of other entities',
-            '::sylabe:module:lang:display:createGroup' => 'Create a group',
-            '::sylabe:module:lang:display:AddMarkedObjects' => 'Add marked objects',
-            '::sylabe:module:lang:display:deleteGroup' => 'Delete group',
-            '::sylabe:module:lang:display:createTheGroup' => 'Create the group',
-            '::sylabe:module:lang:display:nom' => 'Name',
-            '::sylabe:module:lang:display:OKCreateGroup' => 'The group have been created.',
-            '::sylabe:module:lang:display:notOKCreateGroup' => 'The group have not been created! %s',
-            '::sylabe:module:lang:display:noGroup' => 'No group.',
-            '::sylabe:module:lang:display:noGroupMember' => 'No member.',
-            '::sylabe:module:lang:display:makeGroup' => 'Make this object a group',
-            '::sylabe:module:lang:display:makeGroupMe' => 'Make this object a group for me too',
-            '::sylabe:module:lang:display:unmakeGroup' => 'Unmake this object a group',
-            '::sylabe:module:lang:display:useAsGroupOpened' => 'Use as group opened',
-            '::sylabe:module:lang:display:useAsGroupClosed' => 'Use as group closed',
-            '::sylabe:module:lang:display:refuseGroup' => 'Refuse this object as group',
-            '::sylabe:module:lang:display:removeFromGroup' => 'Remove from group',
-            '::sylabe:module:lang:display:isGroup' => 'is a group.',
-            '::sylabe:module:lang:display:isGroupToOther' => 'is a group of',
-            '::sylabe:module:lang:display:isNotGroup' => 'is not a group.',
-            '::sylabe:module:lang:display:thisIsGroup' => 'This is a group.',
-            '::sylabe:module:lang:display:thisIsNotGroup' => 'This is not a group.',
+            '::sylabe:module:lang:display:Current' => 'Selected language',
+            '::sylabe:module:lang:display:List' => 'List of languages',
         ],
         'es-co' => [
             '::sylabe:module:lang:ModuleName' => 'Groups module',
@@ -202,32 +174,8 @@ class ModuleLang extends \Nebule\Library\Modules
             '::sylabe:module:lang:ModuleHelp' => 'This module permit to see and manage groups.',
             '::sylabe:module:lang:AppTitle1' => 'Groups',
             '::sylabe:module:lang:AppDesc1' => 'Manage groups.',
-            '::sylabe:module:lang:display:Groups' => 'The groups',
-            '::sylabe:module:lang:display:MyGroups' => 'My groups',
-            '::sylabe:module:lang:display:seeAsGroup' => 'See as group',
-            '::sylabe:module:lang:display:seenFromOthers' => 'Seen from others entities',
-            '::sylabe:module:lang:display:otherGroups' => 'Groups of other entities',
-            '::sylabe:module:lang:display:createGroup' => 'Create a group',
-            '::sylabe:module:lang:display:AddMarkedObjects' => 'Add marked objects',
-            '::sylabe:module:lang:display:deleteGroup' => 'Delete group',
-            '::sylabe:module:lang:display:createTheGroup' => 'Create the group',
-            '::sylabe:module:lang:display:nom' => 'Name',
-            '::sylabe:module:lang:display:OKCreateGroup' => 'The group have been created.',
-            '::sylabe:module:lang:display:notOKCreateGroup' => 'The group have not been created! %s',
-            '::sylabe:module:lang:display:noGroup' => 'No group.',
-            '::sylabe:module:lang:display:noGroupMember' => 'No member.',
-            '::sylabe:module:lang:display:makeGroup' => 'Make this object a group',
-            '::sylabe:module:lang:display:makeGroupMe' => 'Make this object a group for me too',
-            '::sylabe:module:lang:display:unmakeGroup' => 'Unmake this object a group',
-            '::sylabe:module:lang:display:useAsGroupOpened' => 'Use as group opened',
-            '::sylabe:module:lang:display:useAsGroupClosed' => 'Use as group closed',
-            '::sylabe:module:lang:display:refuseGroup' => 'Refuse this object as group',
-            '::sylabe:module:lang:display:removeFromGroup' => 'Remove from group',
-            '::sylabe:module:lang:display:isGroup' => 'is a group.',
-            '::sylabe:module:lang:display:isGroupToOther' => 'is a group of',
-            '::sylabe:module:lang:display:isNotGroup' => 'is not a group.',
-            '::sylabe:module:lang:display:thisIsGroup' => 'This is a group.',
-            '::sylabe:module:lang:display:thisIsNotGroup' => 'This is not a group.',
+            '::sylabe:module:lang:display:Current' => 'Selected language',
+            '::sylabe:module:lang:display:List' => 'List of languages',
         ],
     ];
 }

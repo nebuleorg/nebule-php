@@ -977,4 +977,8 @@ class nebule
             return $arg;
         return '';
     }
+
+    public function getIsRID(Node $nid): bool {
+        return str_contains($nid->getID(), '.none');
+    }
 }

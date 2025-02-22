@@ -30,7 +30,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -80,7 +80,7 @@ class ModuleManage extends \Nebule\Library\Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)

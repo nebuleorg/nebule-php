@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'login';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250213';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -50,7 +50,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
     private string $_comebackAppId = '';
 
-    public function getHookList(string $hookName, ?Node $nid = null): array {
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();

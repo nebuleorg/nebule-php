@@ -51,7 +51,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250220';
+    const APPLICATION_VERSION = '020250222';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -60,6 +60,7 @@ class Application extends Applications implements applicationInterface
     const USE_MODULES_TRANSLATE = true;
     const USE_MODULES_EXTERNAL = true;
     const LIST_MODULES_INTERNAL = array(
+        'ModuleHelp',
         'ModuleManage',
         'ModuleAdmin',
         'ModuleObjects',
@@ -245,8 +246,6 @@ Ply02Qy7TRSCaIoounp6ed3795d1rxFBiEEYrHYhsViyZ09e7aNIAhc6z0fDAZfjI6OLtdTQ6i7Sywej
 BXmeFx4+fPjryMjI/NLSkiJ1imarLFDprbF9zdJdDMOYj0yz9JfsMLfLawLgH07nKL4w8XnJK5/Pl/P5/KEIoZsvTTUBNAE0ATQBHGX7G6N1Cds7Fc/AAAAAAElFTkSuQmC";
     const DEFAULT_APPLICATION_LOGO_LINK = '?mod=hlp&view=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
-    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
-    //const DEFAULT_CSS_BACKGROUND			= '9fd9fd946bde32cc53e5d2f800f9f01a3957349ad50785b0521ed38408bd2c0e.sha2.256';
     const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
     // Icônes de marquage.
@@ -313,8 +312,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /**
      * Affichage du style CSS.
      */
-    public function displayCSS(): void
-    {
+    public function displayCSS(): void {
         // Recherche l'image de fond.
         $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
         $background = $bgobj->getUpdateNID(true, false);
@@ -457,20 +455,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
             .text a {
                 color: #000000;
-            }
-
-            .menuListContentAction {
-                background: rgba(255, 255, 255, 0.5);
-                color: #000000;
-            }
-
-            .sylabeMenuListContentActionModules {
-                background: rgba(0, 0, 0, 0.5);
-                color: #ffffff;
-            }
-
-            .sylabeMenuListContentActionHooks {
-                background: rgba(255, 255, 255, 0.66);
             }
 
             /* Liserets de verrouillage. */
@@ -988,10 +972,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Action extends Actions
-{
-    // Tout par défaut.
-}
+class Action extends Actions {}
 
 
 /**
@@ -1002,313 +983,38 @@ class Action extends Actions
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Translate extends Translates
-{
-    // Tout par défaut.
-}
+class Translate extends Translates {}
+
 
 
 /**
- * Ce module permet d'afficher l'aide et la page par défaut.
+ * This module manage the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleHelp extends \Nebule\Library\Modules
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::sylabe:module:help:ModuleName';
-    const MODULE_MENU_NAME = '::sylabe:module:help:MenuName';
-    const MODULE_COMMAND_NAME = 'hlp';
-    const MODULE_DEFAULT_VIEW = '1st';
-    const MODULE_DESCRIPTION = '::sylabe:module:help:ModuleDescription';
-    const MODULE_VERSION = '020250111';
-    const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
-    const MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256';
-    const MODULE_HELP = '::sylabe:module:help:ModuleHelp';
-    const MODULE_INTERFACE = '3.0';
-
-    const MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
-    const MODULE_REGISTERED_ICONS = array(
-        '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256',    // 0 : icône d'aide.
-        '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256',    // 1 : module
-        'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b.sha2.256',    // 2 : bootstrap (metrologie)
-        '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256',    // 3 : world
-    );
-    const MODULE_APP_TITLE_LIST = array('::sylabe:module:help:AppTitle1');
-    const MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d.sha2.256');
-    const MODULE_APP_DESC_LIST = array('::sylabe:module:help:AppDesc1');
-    const MODULE_APP_VIEW_LIST = array('hlp');
-
-
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
-    public function getHookList(string $hookName, ?Node $nid = null): array
-    {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
-
-        $hookArray = array();
-        switch ($hookName) {
-            case 'menu':
-                $hookArray[0]['name'] = '::sylabe:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::sylabe:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
-                break;
-            case 'selfMenu':
-                // Affiche l'aide.
-                $hookArray[0]['name'] = '::sylabe:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::sylabe:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
-
-                // Choix de la langue.
-                $hookArray[1]['name'] = '::sylabe:module:help:Langue';
-                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
-                $hookArray[1]['desc'] = '::sylabe:module:help:ChangerLangue';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
-
-                // A propos.
-                $hookArray[2]['name'] = '::sylabe:module:help:About';
-                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                $hookArray[2]['desc'] = '';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
-                break;
-        }
-        return $hookArray;
-    }
-
-
-    /**
-     * Affichage principale.
-     *
-     * @return void
-     */
-    public function displayModule(): void
-    {
-        $this->_displayHlpHeader();
-        switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case '1st':
-                $this->_displayHlpFirst();
-                break;
-            case 'hlp':
-                $this->_displayHlpHelp();
-                break;
-            case 'lang':
-                $this->_displayHlpLang();
-                break;
-            case 'about':
-                $this->_displayHlpAbout();
-                break;
-            default:
-                $this->_displayHlpFirst();
-                break;
-        }
-    }
-
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
-    public function displayModuleInline(): void
-    {
-        // Rien à faire.
-    }
-
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * @return void
-     */
-    public function headerStyle(): void
-    {
-        echo ".sylabeModuleHelpText1stI1 { position:absolute; left:50%; top:33%; margin-left:-32px; }\n";
-        echo ".sylabeModuleHelpText1stI2 { position:absolute; left:50%; top:50%; margin-left:-32px; }\n";
-        echo ".sylabeModuleHelpText1stI3 { position:absolute; left:50%; top:67%; margin-left:-32px; }\n";
-        echo ".sylabeModuleHelpText1stT { position:absolute; right:33%; bottom:0; height:54px; min-width:33%; padding:5px; background:rgba(0,0,0,0.1); background-origin:border-box; }\n";
-        echo ".sylabeModuleHelpText1stT p { position:relative; top:30%; color:#ffffff; text-align:center; font-size:1.5em; }\n";
-    }
-
-
-    /**
-     * Affichage de l'entête des pages.
-     */
-    private function _displayHlpHeader(): void
-    {
-    }
-
-
-    /**
-     * Affichage de la page par défaut.
-     */
-    private function _displayHlpFirst(): void
-    {
-        ?>
-        <div class="sylabeModuleHelpText1stI1">
-            <?php
-            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
-                $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_cacheInstance->newNode(Display::DEFAULT_ICON_LSTENT),
-                    $this->_translateInstance->getTranslate('Entités')),
-                '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=list'); ?>
-
-        </div>
-        <div class="sylabeModuleHelpText1stI2">
-            <?php
-            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
-                $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_cacheInstance->newNode($this::MODULE_LOGO),
-                    $this->_translateInstance->getTranslate('::sylabe:module:help:AideGenerale')),
-                '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=hlp'); ?>
-
-        </div>
-        <div class="sylabeModuleHelpText1stI3">
-            <?php
-            $this->_applicationInstance->getDisplayInstance()->displayHypertextLink(
-                $this->_applicationInstance->getDisplayInstance()->convertUpdateImage(
-                    $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]),
-                    $this->_translateInstance->getTranslate('::sylabe:module:help:ChangerLangue')),
-                '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=lang'); ?>
-
-        </div>
-        <div class="sylabeModuleHelpText1stT">
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:Bienvenue') ?>
-                <br/>
-            </p>
-        </div>
-        <?php
-    }
-
-
-    /**
-     * Affichage de la page de choix de la langue.
-     */
-    private function _displayHlpLang(): void
-    {
-        $module = $this->_applicationInstance->getTranslateInstance()->getCurrentLanguageInstance();
-
-        // Affiche la langue en cours.
-        $param = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => true,
-            'informationType' => 'information',
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'icon' => $module::MODULE_LOGO,
-        );
-//        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTranslateInstance($module::MODULE_NAME), $param);
-
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::ChangeLanguage');
-        $instance->setIcon($icon);
-        $instance->display();
-
-        // Affiche la liste des langues.
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');
-    }
-
-
-    /**
-     * Affichage de l'aide générale.
-     */
-    private function _displayHlpHelp(): void
-    {
-        ?>
-        <div class="text">
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:AideGenerale:Text') ?>
-            </p>
-        </div>
-        <?php
-    }
-
-
-    /**
-     * Affichage de la page à propos.
-     */
-    private function _displayHlpAbout(): void
-    {
-        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
-            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
-
-        // Affiche les informations de l'application.
-        $param = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => false,
-            'informationType' => 'information',
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-        );
-        $list = array();
-        $list[0]['information'] = Application::APPLICATION_SURNAME;
-        $list[0]['param'] = $param;
-        $list[0]['param']['icon'] = Display::DEFAULT_APPLICATION_LOGO;
-        //$list[0]['object'] = '1';
-        $list[1]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . Application::APPLICATION_WEBSITE . '</a>';
-        $list[1]['param'] = $param;
-        $list[2]['information'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version') . ' : ' . Application::APPLICATION_VERSION;
-        $list[2]['param'] = $param;
-        $list[3]['information'] = Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR;
-        $list[3]['param'] = $param;
-        $param['informationType'] = 'information';
-        $list[4]['information'] = BOOTSTRAP_SURNAME;
-        $list[4]['param'] = $param;
-        $list[4]['param']['icon'] = LIB_BOOTSTRAP_ICON;
-        //$list[4]['object'] = '1';
-        $list[5]['information'] = '<a href="http://' . BOOTSTRAP_WEBSITE . '" target="_blank">' . BOOTSTRAP_WEBSITE . '</a>';
-        $list[5]['param'] = $param;
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium', false);
-
-        ?>
-        <div class="text">
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:APropos:Text') ?>
-            </p>
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::sylabe:module:help:APropos:Liens') ?>
-            </p>
-        </div>
-        <?php
-    }
+    const MODULE_VERSION = '020250222';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::sylabe:module:help:ModuleName' => "Module d'aide",
-            '::sylabe:module:help:MenuName' => 'Aide',
-            '::sylabe:module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::sylabe:module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::sylabe:module:help:AppTitle1' => 'Aide',
-            '::sylabe:module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::sylabe:module:help:Bienvenue' => 'Bienvenue sur <b>sylabe</b>.',
-            '::sylabe:module:help:Langue' => 'Langue',
-            '::sylabe:module:help:ChangerLangue' => 'Changer de langue',
-            '::sylabe:module:help:About' => 'A propos',
-            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
-            '::sylabe:module:help:Demarrage' => 'Démarrage',
-            '::sylabe:module:help:AideGenerale' => 'Aide générale',
-            '::sylabe:module:help:APropos' => 'A propos',
-            '::sylabe:module:help:APropos:Text' => "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
+            '::module:help:ModuleName' => "Module d'aide",
+            '::module:help:MenuName' => 'Aide',
+            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
+            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::module:help:AppTitle1' => 'Aide',
+            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
+            '::module:help:Bienvenue' => 'Bienvenue sur <b>sylabe</b>.',
+            '::module:help:About' => 'A propos',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Démarrage',
+            '::module:help:AideGenerale' => 'Aide générale',
+            '::module:help:APropos' => 'A propos',
+            '::module:help:APropos:Text' => "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.<br />
 <br />
 Le projet <i>nebule</i> crée un réseau. Non un réseau de machines mais un réseau de données.<br />
@@ -1337,8 +1043,8 @@ Chacun peut devenir individuellement actif.<br />
 Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet sylabe disparaîtra.
 Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
 Il sera vu comme bizarrerie symptomatique d’une époque.",
-            '::sylabe:module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.sylabe.org/">Le blog du projet sylabe</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
-            '::sylabe:module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.sylabe.org/">Le blog du projet sylabe</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
+            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
@@ -1347,21 +1053,19 @@ D'un point de vue général, tout ce qui est sur fond clair concerne une action 
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::sylabe:module:help:ModuleName' => 'Help module',
-            '::sylabe:module:help:MenuName' => 'Help',
-            '::sylabe:module:help:ModuleDescription' => 'Online help module.',
-            '::sylabe:module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::sylabe:module:help:AppTitle1' => 'Help',
-            '::sylabe:module:help:AppDesc1' => 'Display online help.',
-            '::sylabe:module:help:Bienvenue' => 'Welcome to <b>sylabe</b>.',
-            '::sylabe:module:help:Langue' => 'Language',
-            '::sylabe:module:help:ChangerLangue' => 'Change language',
-            '::sylabe:module:help:About' => 'About',
-            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
-            '::sylabe:module:help:Demarrage' => 'Start',
-            '::sylabe:module:help:AideGenerale' => 'General help',
-            '::sylabe:module:help:APropos' => 'About',
-            '::sylabe:module:help:APropos:Text' => 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
+            '::module:help:ModuleName' => 'Help module',
+            '::module:help:MenuName' => 'Help',
+            '::module:help:ModuleDescription' => 'Online help module.',
+            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::module:help:AppTitle1' => 'Help',
+            '::module:help:AppDesc1' => 'Display online help.',
+            '::module:help:Bienvenue' => 'Welcome to <b>sylabe</b>.',
+            '::module:help:About' => 'About',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Start',
+            '::module:help:AideGenerale' => 'General help',
+            '::module:help:APropos' => 'About',
+            '::module:help:APropos:Text' => 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.<br />
 <br />
 The <i>nebule</i> project create a network. Not a network of computers but a network of datas.<br />
@@ -1390,8 +1094,8 @@ Each individual can become active.<br />
 Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project sylabe will disappear.
 He will have served its purpose: to allow a smooth transition to nebule.<br />
 It will be seen as symptomatic of an era oddity.',
-            '::sylabe:module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.sylabe.org/">The blog of sylabe projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
-            '::sylabe:module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
+            '::module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.sylabe.org/">The blog of sylabe projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
+            '::module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
 1. the top banner that contains the application menu and the current entity.<br />
 2. <br />
 3. <br />
@@ -1400,21 +1104,19 @@ It will be seen as symptomatic of an era oddity.',
 ',
         ],
         'es-co' => [
-            '::sylabe:module:help:ModuleName' => 'Módulo de ayuda',
-            '::sylabe:module:help:MenuName' => 'Ayuda',
-            '::sylabe:module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::sylabe:module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::sylabe:module:help:AppTitle1' => 'Ayuda',
-            '::sylabe:module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::sylabe:module:help:Bienvenue' => 'Bienviedo en <b>sylabe</b>.',
-            '::sylabe:module:help:Langue' => 'Idioma',
-            '::sylabe:module:help:ChangerLangue' => 'Cambio de idioma',
-            '::sylabe:module:help:About' => 'About',
-            '::sylabe:module:help:Bootstrap' => 'Bootstrap',
-            '::sylabe:module:help:Demarrage' => 'Comienzo',
-            '::sylabe:module:help:AideGenerale' => 'Ayuda general',
-            '::sylabe:module:help:APropos' => 'Acerca',
-            '::sylabe:module:help:APropos:Text' => 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
+            '::module:help:ModuleName' => 'Módulo de ayuda',
+            '::module:help:MenuName' => 'Ayuda',
+            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::module:help:AppTitle1' => 'Ayuda',
+            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
+            '::module:help:Bienvenue' => 'Bienviedo en <b>sylabe</b>.',
+            '::module:help:About' => 'About',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Comienzo',
+            '::module:help:AideGenerale' => 'Ayuda general',
+            '::module:help:APropos' => 'Acerca',
+            '::module:help:APropos:Text' => 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
 Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.<br />
 <br />
 Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible utilizar nebule nativo.
@@ -1441,8 +1143,8 @@ Cada individuo puede llegar a ser activo.<br />
 Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto sylabe desaparecer.
 Él habrá cumplido su propósito: permitir una transición suave a nebule.
 Se verá como un síntoma de una rareza era.',
-            '::sylabe:module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.sylabe.org/">El blog del proyecto sylabe</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
-            '::sylabe:module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
+            '::module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.sylabe.org/">El blog del proyecto sylabe</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
+            '::module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
 1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
 2. <br />
 3. <br />

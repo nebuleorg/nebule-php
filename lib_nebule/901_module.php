@@ -12,7 +12,7 @@ namespace Nebule\Library;
  */
 abstract class Modules extends Functions implements ModuleInterface
 {
-    const MODULE_TYPE = 'None'; // None | Application | Traduction
+    const MODULE_TYPE = 'Model'; // Model | Application | Traduction
     const MODULE_NAME = 'None';
     const MODULE_MENU_NAME = 'None';
     const MODULE_COMMAND_NAME = 'none';
@@ -61,7 +61,7 @@ abstract class Modules extends Functions implements ModuleInterface
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array { return array(); }
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
 
 
 
@@ -146,6 +146,22 @@ abstract class Modules extends Functions implements ModuleInterface
 
         // Ecrit le lien.
         $newLink->write();*/
+    }
+
+    protected function _displaySimpleTitle(string $title, string $icon): void {
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+        $instance->setTitle($title);
+        $instance->setIconRID($icon);
+        $instance->display();
+    }
+
+    protected function _displayNotImplemented(): void {
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage('::notImplemented');
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instance->display();
     }
 
     CONST TRANSLATE_TABLE = [

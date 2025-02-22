@@ -28,7 +28,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -123,7 +123,7 @@ class ModuleEntities extends \Nebule\Library\Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
@@ -928,7 +928,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 elseif ($check[$i] == 'WARN')
                     $list[$i]['param']['informationType'] = 'warn';
             }
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'small');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'small');
         } else {
             $param = array(
                 'enableDisplayIcon' => true,
@@ -1397,7 +1397,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
 
         // Affiche les entités.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
         unset($list);
     }
 
@@ -1467,7 +1467,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
 
         // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
     }
 
 
@@ -1537,7 +1537,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         unset($link, $instance);
 
         // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
 
         unset($list, $links, $listOkEntities);
     }
@@ -1640,7 +1640,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             unset($link, $instance, $id);
             // Affichage
             if (sizeof($list) != 0) {
-                echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+                echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
             }
             unset($list);
         } else {
@@ -1743,7 +1743,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
 
         // Affiche les entités.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
     }
 
 
@@ -1820,7 +1820,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             }
 
             // Affiche le message et les objets créés.
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
             unset($list);
         }
 

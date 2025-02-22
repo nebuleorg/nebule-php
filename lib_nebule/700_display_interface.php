@@ -53,7 +53,7 @@ abstract class DisplayItem implements DisplayInterface
         $this->_displayInstance = $applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('init instance ' . get_class($this),
+        $this->_metrologyInstance->addLog('init instance ' . get_class($this),
             Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
         $this->_init();
     }
@@ -62,18 +62,18 @@ abstract class DisplayItem implements DisplayInterface
     public static function displayCSS(): void {} // Must be overridden by children classes.
 
     public function getHTML(): string { // Must be overridden by children classes.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return '';
     }
 
     public function display(): void { // Should not be overridden by children classes.
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('display HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('display HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo $this->getHTML();
     }
 
     public function setSocial(string $social = 'authority'): void // Should not be overridden by children classes.
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set social ' . $social, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set social ' . $social, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($this->_nebuleInstance->getSocialInstance()->getSocialNames() as $s) {
             if ($social == $s) {
                 $this->_social = $social;
@@ -86,7 +86,7 @@ abstract class DisplayItem implements DisplayInterface
 
     public function setSize(string $size = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($size)) {
             case DisplayItem::SIZE_TINY:
                 $this->_sizeCSS = 'Tiny';
@@ -108,7 +108,7 @@ abstract class DisplayItem implements DisplayInterface
 
     public function setRatio(string $ratio = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($ratio)) {
             case DisplayItem::RATIO_SQUARE:
                 $this->_ratioCSS = 'Square';
@@ -121,10 +121,6 @@ abstract class DisplayItem implements DisplayInterface
                 break;
         }
     }
-
-    protected function _getIsRID(Node $nid): bool {
-        return str_contains($nid->getID(), '.none');
-    }
 }
 
 abstract class DisplayItemCSS extends DisplayItem
@@ -135,19 +131,19 @@ abstract class DisplayItemCSS extends DisplayItem
 
     public function setClassCSS(string $class = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set class CSS ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set class CSS ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_classCSS = trim((string)filter_var($class, FILTER_SANITIZE_STRING));
     }
 
     public function setIdCSS(string $id = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set id CSS ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set id CSS ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_idCSS = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
     }
 
     public function setStyleCSS(string $style = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_styleCSS = ' style="'
             . trim((string)filter_var($style, FILTER_SANITIZE_STRING))
             . ';"';
@@ -161,17 +157,17 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     protected string $_iconText = '';
 
     public function setIconRID(string $rid, bool $update = true): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->_cacheInstance->newNode($rid);
-        if ($this->_getIsRID($nid)) {
+        if ($this->_nebuleInstance->getIsRID($nid))
             $oid = $nid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
-        } else
+        else
             $oid = $nid;
         $this->setIcon($oid, $update);
     }
 
     public function setIcon(?Node $oid, bool $update = true): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($oid === null)
             $this->_icon = null;
         elseif ($oid->getID() != '0'
@@ -188,7 +184,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     }
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null
             || $icon === null
             || !$icon->checkPresent()
@@ -204,7 +200,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     protected function _getNidDefaultIcon(?Node $rid): Node
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
@@ -214,12 +210,12 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     protected function _getIconUpdate(?Node $nid): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_iconUpdate) {
             $updateIcon = $nid->getUpdateNID(true, false, $this->_social);
             if ($updateIcon == '')
                 $updateIcon = $nid->getID();
-            if ($this->_getIsRID($nid))
+            if ($this->_nebuleInstance->getIsRID($nid))
                 $updateIcon = Displays::DEFAULT_ICON_LO;
             return $updateIcon;
         }
@@ -281,7 +277,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                                string $arg4 = '',
                                string $arg5 = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_message = sprintf($this->_translateInstance->getTranslate($message), $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
@@ -292,7 +288,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                                string $arg4 = '',
                                string $arg5 = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set brut message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set brut message ' . $message, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_message = sprintf($message, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
@@ -303,7 +299,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
 
     public function setType(string $type): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($type)) {
             case self::TYPE_OK:
                 $this->_type = 'Ok';
@@ -353,7 +349,7 @@ abstract class DisplayItemIconMessageSizeable extends DisplayItemIconMessage
 
     public function setSize(string $size = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($size)) {
             case self::SIZE_TINY:
                 $this->_sizeCSS = 'Tiny';
@@ -375,7 +371,7 @@ abstract class DisplayItemIconMessageSizeable extends DisplayItemIconMessage
 
     public function setRatio(string $ratio = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($ratio)) {
             case self::RATIO_SQUARE:
                 $this->_ratioCSS = 'Square';

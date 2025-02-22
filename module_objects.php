@@ -27,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -57,7 +57,7 @@ class ModuleObjects extends \Nebule\Library\Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
@@ -855,7 +855,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 'enableDisplayJS' => true,
                 //'selfHookName' => 'selfMenuObject',
             );
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'long');
             unset($list);
 
             // Affiche en ligne les entités pour qui c'est partagé.
@@ -956,7 +956,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             }
 
             // Affichage.
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
             unset($list);
         }
     }
@@ -1112,7 +1112,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             unset($instance, $typeEntity, $shareTo, $listOkEntities);
 
             // Affichage.
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
 
             unset($list);
         }
@@ -1151,7 +1151,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 'enableDisplayTypeHook' => false,
                 'enableDisplayJS' => true,
             );
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'long');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'long');
 
             // affichage des boutons.
             echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
@@ -1355,7 +1355,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             unset($instance, $link, $typeEntity, $links, $listOkEntities);
 
             // Affichage.
-            echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
+            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
 
             unset($list);
         }

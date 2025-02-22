@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 use Nebule\Application\Klicty\Translate;
 use Nebule\Application\Sylabe\Application;
+use Nebule\Application\Sylabe\Display;
 use Nebule\Library\nebule;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
@@ -62,7 +63,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_INLINE_CONTENT_COMMAND = 'incontent';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
-    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
+    const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
 
     // Les icônes.
     // Icône transparente.
@@ -123,7 +124,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     // Icônes diverses.
     const DEFAULT_ICON_WORLD = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
     const DEFAULT_ICON_TIME = '108033240730a0b19e96c82d85802f53c348e446441525696744f7102070b0ed.sha2.256';
-    const DEFAULT_ICON_APPLICATION = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
+    const DEFAULT_ICON_APPLICATION = 'a061cad04be7fb725d13c13df5c581f52783acea7d605546b808bddcc0c16d2c.sha2.256';
 
     const REFERENCE_ICON_KEY = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
     // Références des icônes des liens.
@@ -1978,14 +1979,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected string $_logoApplication = '';
     protected function _findLogoApplication(): void
     {
-        $this->_logoApplication = self::DEFAULT_APPLICATION_LOGO;
+        $this->_logoApplication = $this->_displayInstance::DEFAULT_APPLICATION_LOGO;
         // @todo
     }
 
     protected string $_logoApplicationLink = '';
     protected function _findLogoApplicationLink(): void
     {
-        $this->_logoApplicationLink = self::DEFAULT_APPLICATION_LOGO_LINK;
+        $this->_logoApplicationLink = $this->_displayInstance::DEFAULT_APPLICATION_LOGO_LINK;
         // @todo
     }
 
@@ -2057,10 +2058,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <div class="layout-menu-applications" id="layout-menu-applications">
             <div class="menu-applications-sign">
                 <img alt="<?php echo $this->_applicationInstance::APPLICATION_NAME; ?>" src="<?php echo $this->_logoApplication; ?>"/><br/>
-                <?php echo $this->_applicationInstance::APPLICATION_NAME; ?><br/>
+                <?php echo $this->_applicationInstance::APPLICATION_NAME; ?><br/><br/>
+                mode=<?php echo $this->_currentDisplayMode; ?><br/>
+                view=<?php echo $this->_currentDisplayView; ?><br/><br/>
                 (c) <?php echo $this->_applicationInstance::APPLICATION_LICENCE . ' ' . $this->_applicationInstance::APPLICATION_AUTHOR; ?><br/>
-                <?php echo $this->_translateInstance->getTranslate(':::version');
-                echo ' : ' . $this->_applicationInstance::APPLICATION_VERSION; ?><br/>
+                <?php echo $this->_translateInstance->getTranslate(':::version') . ' : ' . $this->_applicationInstance::APPLICATION_VERSION; ?><br/>
                 <a href="<?php echo $linkApplicationWebsite; ?>" target="_blank"><?php echo $this->_applicationInstance::APPLICATION_WEBSITE; ?></a>
             </div>
             <div class="menu-applications-logo">
@@ -2083,33 +2085,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _displayInternalMenuApplications(): void
     {
-        //$modules = $this->_applicationInstance->getModulesListInstances();
         $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
         $list = array();
         $j = 0;
         $currentModuleName = 'noModuleFind-';
 
+        // Affiche le lien du menu seul (sans JS).
+        if ($this->_currentDisplayView != 'menu') {
+            $list[$j]['icon'] = '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272';
+            $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu', $this->_translateInstance->getCurrentLanguage());
+            $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
+            $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc', $this->_translateInstance->getCurrentLanguage());
+            $list[$j]['ref'] = $this->_applicationInstance::APPLICATION_NAME;
+            $list[$j]['class'] = 'menuListContentActionModules';
+            $j++;
+        }
+
         // Appelle les actions du module concerné par le mode d'affichage.
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode)
                 continue;
-            // Extrait le nom du module.
             $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
-
-            // Mémorise le nom du module trouvé.
             $currentModuleName = $module::MODULE_MENU_NAME;
-
-            // Affiche le lien du menu seul (sans JS).
-            if ($this->_currentDisplayView != 'menu') {
-                $list[$j]['icon'] = self::DEFAULT_LOGO_MODULE;
-                $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu', $this->_translateInstance->getCurrentLanguage());
-                $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
-                $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc', $this->_translateInstance->getCurrentLanguage());
-                $list[$j]['ref'] = $this->_applicationInstance::APPLICATION_NAME;
-                $list[$j]['class'] = 'neblogMenuListContentActionModules';
-                $j++;
-            }
 
             // Liste les points d'ancrages à afficher.
             $appHookList = $module->getHookList('selfMenu');
@@ -2130,7 +2128,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
-                        $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                        $list[$j]['class'] = 'menuListContentActionHooks';
                         $j++;
                     }
                 }
@@ -2163,7 +2161,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
-                        $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                        $list[$j]['class'] = 'menuListContentActionHooks';
                         $j++;
                     }
                 }
@@ -2195,7 +2193,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
-                            $list[$j]['class'] = 'neblogMenuListContentActionHooks';
+                            $list[$j]['class'] = 'menuListContentActionHooks';
                             $j++;
                         }
                     }
@@ -2231,19 +2229,19 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
                     $list[$j]['ref'] = $moduleName;
-                    $list[$j]['class'] = 'neblogMenuListContentActionModules';
+                    $list[$j]['class'] = 'menuListContentActionModules';
                     $j++;
                 }
             }
         }
 
         // Add application 1
-        $list[$j]['icon'] = Displays::DEFAULT_APPLICATION_LOGO;
+        $list[$j]['icon'] = Displays::REFERENCE_DEFAULT_LOGO;
         $list[$j]['title'] = BOOTSTRAP_NAME;
-        $list[$j]['htlink'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
+        $list[$j]['htlink'] = '?' . Displays::DEFAULT_BOOTSTRAP_LOGO_LINK;
         $list[$j]['desc'] = $this->_translateInstance->getTranslate('::appSwitch', $this->_translateInstance->getCurrentLanguage());
         $list[$j]['ref'] = 'nebule';
-        $list[$j]['class'] = 'neblogMenuListContentActionModules';
+        $list[$j]['class'] = 'menuListContentActionModules';
 
         echo $this->getDisplayMenuList($list, 'Medium');
     }
@@ -2996,6 +2994,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if ($nid == '0')
             return '';
+
+        if ($this->_nebuleInstance->getIsRID($oid))
+            $oid = $oid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
 
         $uid = $this->_getImageUpdate($oid);
 
@@ -5074,7 +5075,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param boolean $displayNoObject
      * @return string
      */
-    public function getDisplayObjectsList(array $list, string $size = 'medium', bool $displayNoObject = false): string
+    public function getDisplayObjectsList_DEPRECATED(array $list, string $size = 'medium', bool $displayNoObject = false): string
     {
         $result = '<div class="layoutObjectsList">' . "\n";
         $result .= '<div class="objectsListContent">' . "\n";
@@ -5101,6 +5102,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($list as $item) {
             $param = $item['param'];
             $param['displaySize'] = $size;
+
+            if (isset($param['icon']) && (is_string($param['icon'])))
+                $param['icon'] = $this->_cacheInstance->newNode($param['icon']);
 
             // Détermine si c'est un objet ou un message à afficher.
             if (isset($item['object'])
@@ -5163,26 +5167,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 || !isset($item['htlink']) || $item['htlink'] == ''
             )
                 unset($list[$i]);
-            if (!isset($item['class']))
-                $list[$i]['class'] = '';
-            if (!isset($item['ref'])
-                || $item['ref'] == ''
-            )
+            if (!isset($item['class']) || $item['class'] == '')
+                $list[$i]['class'] = 'menuListContentActionHooks';
+            if (!isset($item['ref']) || $item['ref'] == '')
                 $list[$i]['ref'] = '&nbsp;';
-            if (!isset($item['desc'])
-                || $item['desc'] == ''
-            )
+            if (!isset($item['desc']) || $item['desc'] == '')
                 $list[$i]['desc'] = '&nbsp;';
         }
 
         if (sizeof($list) == 0)
             return '';
 
-        // Vérification de $size.
-        if ($size != 'Small'
-            && $size != 'Medium'
-            && $size != 'Large'
-        )
+        if ($size != 'Small' && $size != 'Medium' && $size != 'Large')
             $size = 'Medium';
 
         $result .= '<div class="layoutMenuList">' . "\n";
@@ -5192,10 +5188,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '<div class="menuListContentActionDiv">' . "\n";
             $result .= '<a href="' . $item['htlink'] . '">' . "\n";
 
-            $result .= ' <div class="menuListContentAction menuListContentAction' . $size . "\n";
-            if (isset($item['class']))
-                $result .= ' ' . $item['class'];
-            $result .= '">' . "\n";
+            $result .= ' <div class="menuListContentAction menuListContentAction' . $size . ' ' . $item['class'] . '">' . "\n";
             $result .= '  <div class="menuListContentAction-icon">';
             if (is_a($item['icon'], 'Nebule\Library\Node'))
                 $icon = $item['icon'];
@@ -5366,6 +5359,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (isset($param['displayRatio']))
             $instance->setRatio($param['displayRatio']);
         if (isset($param['icon']))
+            if (is_string($param['icon']))
+                $param['icon'] = $this->_cacheInstance->newNode($param['icon']);
             $instance->setIcon($param['icon']);
         if (isset($param['htlink']))
             $instance->setLink($param['htlink']);

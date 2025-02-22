@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250218';
+const BOOTSTRAP_VERSION = '020250222';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -2085,7 +2085,7 @@ function blk_generate(string $rc, string $req, string $nid1, string $nid2 = '', 
  */
 function blk_sign(string $bh_bl): string {
     global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions bh_bl=' . $bh_bl, 'debug', __FUNCTION__, '1111c0de');
 
     if ($bh_bl == '')
         return '';

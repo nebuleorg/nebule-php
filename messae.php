@@ -15,6 +15,9 @@ use Nebule\Library\References;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleTranslates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
+use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
+use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
+use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -48,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250220';
+    const APPLICATION_VERSION = '020250222';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
@@ -58,6 +61,7 @@ class Application extends Applications
     const USE_MODULES_EXTERNAL = false;
     const LIST_MODULES_INTERNAL = array(
         'ModuleHelp',
+        'ModuleMessages',
         'ModuleAdmin',
         'ModuleObjects',
         'ModuleGroups',
@@ -113,14 +117,13 @@ TJeWlr4u9QdbguDw6NEjUldX1/rb3/52UujfRfACIISQq1evLvh8Ps+bb775GsYTcE1DQ0OrzWa7JYbv
 MTExAdVgn+np6dmOjo6h999/fwjVgAB4S319fXp1dfUuo9G4E9V4cVwu143W1tbrH3744RiqAQEIhoKCAi1FUYaCgoLX8ZeDzcEwzGJ/f/9faJp29/f3M6gIBCBo6urq0qqqqrJzcnKylEqlAhX5/wQCgbVr164Nt7e3//Wjjz66iYpAAKJDo9HIGxoaMktLSzMMBsNOqcsgEAisud3uGxcuXBhtbGwcWVlZWceUQACSQKVSyaxWa1pJSUmawWBIkco2gWGYRbfbPd7d3X3TZrPd9Pv9G5gGCEDymM3mhPLy8mSTyZSUnp6+XSwXGnm9Xt/Y2NjU0NDQZFdX14TD4ZhFtyEA8B1UVFRsKy4u/p7BYHg5JSUlUa/XbxXCcXs8nnvj4+PTbrf7bk9Pz53Ozs4ZdBMCAC+ITqdTlpWVbTOZTFvT09N127dvj09ISIgL1daBYZjF2dnZ+ampqftjY2NzQ0ND986fPz+Di3MgABBENBqNPDc3NyYrKysmKSkp
 Wq/XR8XHx0fGxsZGREZGRmg0mpfUarUqPDw8XKlUKhUKhVwmk8llMlkYIYRsbGw82tjYWF9bW1sPBAKB1dXVVZ/P519ZWfn78vKyd2FhwXv//v1lj8fzcHJycml4eHjxypUrizhhBwEAAAQMHgkGAAQAAIAAAAAQAAAAAgAAQAAAAAgAAAABAAAgAAAABAAAgAAAABAAAAACAABAAAAACAAAAAEAACAAAAAEAACAAAAAIeV/ANV+Y0OjQprZAAAAAElFTkSuQmCC";
     const DEFAULT_APPLICATION_LOGO_LINK = '?mod=hlp&view=about';
-    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690';
-    const DEFAULT_LOGO_MODULE = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c';
-    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499';
+    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
     // Icônes de marquage.
-    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0';
-    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2';
-    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859';
+    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
+    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2.sha2.256';
+    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859.sha2.256';
 
     const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAA
 sTAQCanBgAAAAHdElNRQfeDAYWDCX7YSGrAAABn0lEQVRIx62VPU8CQRCGn7toYWKCBRY0FNQe9CZ+dPwAt6AxkmgrJYX2JsaOVgtNTKQYfwCdYGKvUFOYGAooxJiYWHgWd5wL3C0Lc
@@ -325,20 +328,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
             .text a {
                 color: #000000;
-            }
-
-            .menuListContentAction {
-                background: rgba(255, 255, 255, 0.5);
-                color: #000000;
-            }
-
-            .messaeMenuListContentActionModules {
-                background: rgba(0, 0, 0, 0.5);
-                color: #ffffff;
-            }
-
-            .messaeMenuListContentActionHooks {
-                background: rgba(255, 255, 255, 0.66);
             }
 
             /* Liserets de verrouillage. */
@@ -941,357 +930,38 @@ class Translate extends Translates
 }
 
 
+
 /**
- * Cette application permet d'afficher l'aide et la page par défaut de messae.
+ * This module manage the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleHelp extends \Nebule\Library\Modules
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::messae:module:help:ModuleName';
-    const MODULE_MENU_NAME = '::messae:module:help:MenuName';
-    const MODULE_COMMAND_NAME = 'hlp';
-    const MODULE_DEFAULT_VIEW = '1st';
-    const MODULE_DESCRIPTION = '::messae:module:help:ModuleDescription';
-    const MODULE_VERSION = '020250111';
-    const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2016-2025';
-    const MODULE_LOGO = '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d';
-    const MODULE_HELP = '::messae:module:help:ModuleHelp';
-    const MODULE_INTERFACE = '3.0';
-
-    const MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'lang', 'about');
-    const MODULE_REGISTERED_ICONS = array(
-        '1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d',    // 0 : icône d'aide.
-        '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c',    // 1 : module
-        'd7f68db0a1d0977fb8e521fd038b18cd601946aa0e26071ff8c02c160549633b',    // 2 : bootstrap (metrologie)
-        '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6',    // 3 : world
-        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1',    // 4 : lister entités
-    );
-    const MODULE_APP_TITLE_LIST = array('::messae:module:help:AppTitle1');
-    const MODULE_APP_ICON_LIST = array('1543e2549dc52d2972a5b444a4d935360a97c125b72c6946ae9dc980077b8b7d');
-    const MODULE_APP_DESC_LIST = array('::messae:module:help:AppDesc1');
-    const MODULE_APP_VIEW_LIST = array('hlp');
-
-
-    /**
-     * Configuration spécifique au module.
-     */
-    protected function _initialisation(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-    }
-
-
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
-    public function getHookList(string $hookName, ?Node $nid = null): array
-    {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
-
-        $hookArray = array();
-        switch ($hookName) {
-            case 'menu':
-                $hookArray[0]['name'] = '::messae:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::messae:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
-                break;
-            case 'selfMenu':
-                // Affiche l'aide.
-                $hookArray[0]['name'] = '::messae:module:help:AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::messae:module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
-
-                // Choix de la langue.
-                $hookArray[1]['name'] = '::messae:module:help:Langue';
-                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
-                $hookArray[1]['desc'] = '::messae:module:help:ChangerLangue';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
-
-                // A propos.
-                $hookArray[2]['name'] = '::messae:module:help:About';
-                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                $hookArray[2]['desc'] = '';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
-
-                // Bootstrap.
-                $hookArray[3]['name'] = '::messae:module:help:Bootstrap';
-                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                $hookArray[3]['desc'] = '';
-                $hookArray[3]['link'] = '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP;
-                break;
-        }
-        return $hookArray;
-    }
-
-
-    /**
-     * Affichage principale.
-     */
-    public function displayModule(): void
-    {
-        $this->_displayHlpHeader();
-        switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case '1st':
-                $this->_displayHlpFirst();
-                break;
-            case 'hlp':
-                $this->_displayHlpHelp();
-                break;
-            case 'lang':
-                $this->_displayHlpLang();
-                break;
-            case 'about':
-                $this->_displayHlpAbout();
-                break;
-            default:
-                $this->_displayHlpFirst();
-                break;
-        }
-    }
-
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     */
-    public function displayModuleInline(): void
-    {
-        // Rien à faire.
-    }
-
-    /**
-     * Affichage de surcharges CSS.
-     */
-    public function headerStyle(): void
-    {
-        ?>
-
-        .messaeModuleHelpText1st { margin:10%; }
-        <?php
-    }
-
-
-    /**
-     * Affichage de l'entête des pages.
-     */
-    private function _displayHlpHeader(): void
-    {
-    }
-
-
-    /**
-     * Affichage de la page par défaut.
-     */
-    private function _displayHlpFirst(): void
-    {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::SelectUser');
-        $instance->setIcon($icon);
-        $instance->display();
-
-        // Liste des entités déjà affichées.
-        $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
-
-        // Liste les entités marquées comme connu.
-        $links = $this->_applicationInstance->getCurrentEntityInstance()->getLinksOnFields(
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            'f',
-            $this->_applicationInstance->getCurrentEntityID(),
-            '',
-            '');
-
-        // Prépare l'affichage.
-        $list = array();
-        $i = 0;
-        foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
-            if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
-                && $instance->getType('all') == Entity::ENTITY_TYPE
-                && $instance->getIsPublicKey()
-            ) {
-                $list[$i]['object'] = $instance;
-                $list[$i]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => false,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => true,
-                    'enableDisplayFlagState' => true,
-                    'enableDisplayFlagEmotions' => true,
-                    'enableDisplayStatus' => false,
-                    'enableDisplayContent' => false,
-                    'enableDisplayJS' => false,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                );
-
-                // Marque comme vu.
-                $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
-                $i++;
-            }
-        }
-        unset($link, $instance);
-
-        // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'medium');
-
-        unset($list, $links, $listOkEntities);
-    }
-
-
-    /**
-     * Affichage de la page de choix de la langue.
-     */
-    private function _displayHlpLang(): void
-    {
-        /*$module = $this->_applicationInstance->getTranslateInstance()->getCurrentLanguageInstance();
-
-        // Affiche la langue en cours.
-        $param = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => true,
-            'informationType' => 'information',
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-            'icon' => $module::MODULE_LOGO,
-        );
-        echo $this->_displayInstance->getDisplayInformation_DEPRECATED($module->getTranslateInstance($module::MODULE_LOGO), $param);
-
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::ChangeLanguage');
-        $instance->setIcon($icon);
-        $instance->display();
-
-        // Affiche la liste des langues.
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('helpLanguages', 'Medium');*/
-    }
-
-
-    /**
-     * Affichage de l'aide générale.
-     */
-    private function _displayHlpHelp(): void
-    {
-        ?>
-        <div class="text">
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::messae:module:help:AideGenerale:Text') ?>
-            </p>
-        </div>
-        <?php
-    }
-
-
-    /**
-     * Affichage de la page à propos.
-     */
-    private function _displayHlpAbout(): void
-    {
-        $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-        if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
-            $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
-
-        // Affiche les informations de l'application.
-        $param = array(
-            'enableDisplayIcon' => true,
-            'enableDisplayAlone' => false,
-            'informationType' => 'information',
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-        );
-        $list = array();
-        $list[0]['information'] = Application::APPLICATION_NAME;
-        $list[0]['param'] = $param;
-        $list[0]['param']['icon'] = Displays::DEFAULT_APPLICATION_LOGO;
-        $list[0]['object'] = '1';
-        $list[1]['information'] = $this->_applicationInstance->getTranslateInstance()->getTranslate('::Version') . ' : ' . Application::APPLICATION_VERSION;
-        $list[1]['param'] = $param;
-        $list[2]['information'] = Application::APPLICATION_LICENCE . ' ' . Application::APPLICATION_AUTHOR;
-        $list[2]['param'] = $param;
-        $list[3]['information'] = '<a href="' . $linkApplicationWebsite . '" target="_blank">' . Application::APPLICATION_WEBSITE . '</a>';
-        $list[3]['param'] = $param;
-        echo $this->_displayInstance->getDisplayObjectsList($list, 'Medium');
-
-        ?>
-        <div class="text">
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::messae:module:help:APropos:Text') ?>
-            </p>
-            <p>
-                <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::messae:module:help:APropos:Liens') ?>
-            </p>
-        </div>
-        <?php
-        if ($this->_unlocked && $this->_configurationInstance->getOptionUntyped('messaeDisplayOnlineOptions')) {
-            ?>
-            <div class="text">
-                <p>
-                    <b>messae :</b><br/>
-                    <?php
-                    $options = array('messaeDisplayOnlineHelp', 'messaeDisplayOnlineOptions',
-                        'messaeDisplayMetrology', 'messaeDisplayUnsecureURL',
-                        'messaeDisplayUnverifyLargeContent', 'messaeDisplayNameSize',
-                        'messaeIOReadMaxDataPHP', 'messaePermitUploadObject', 'messaePermitUploadLinks',
-                        'messaePermitPublicUploadObject', 'messaePermitPublicUploadLinks', 'messaeLogUnlockEntity',
-                        'messaeLogLockEntity', 'messaeLoadModules', 'default',
-                    );
-                    foreach ($options as $option) {
-                        echo $option . ' : ';
-                        var_dump($this->_configurationInstance->getOptionUntyped($option));
-                        echo "<br />\n";
-                    }
-                    ?>
-                </p>
-            </div>
-            <?php
-        }
-    }
-
+    const MODULE_VERSION = '020250222';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::messae:module:help:ModuleName' => "Module d'aide",
-            '::messae:module:help:MenuName' => 'Aide',
-            '::messae:module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::messae:module:help:ModuleHelp' => "Cette application permet d'afficher de l'aide générale sur l'interface.",
-            '::messae:module:help:AppTitle1' => 'Aide',
-            '::messae:module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::messae:module:help:Bienvenue' => 'Bienvenue sur <b>messae</b>.',
-            '::messae:module:help:Langue' => 'Langue',
-            '::messae:module:help:ChangerLangue' => 'Changer de langue',
-            '::messae:module:help:About' => 'A propos',
-            '::messae:module:help:Bootstrap' => 'Bootstrap',
-            '::messae:module:help:Demarrage' => 'Démarrage',
-            '::messae:module:help:AideGenerale' => 'Aide générale',
-            '::messae:module:help:APropos' => 'A propos',
-            '::messae:module:help:APropos:Text' => "Le projet messae est une implémentation logicielle basée sur le projet nebule.<br />
+            '::module:help:ModuleName' => "Module d'aide",
+            '::module:help:MenuName' => 'Aide',
+            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
+            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::module:help:AppTitle1' => 'Aide',
+            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
+            '::module:help:Bienvenue' => 'Bienvenue sur <b>messae</b>.',
+            '::module:help:About' => 'A propos',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Démarrage',
+            '::module:help:AideGenerale' => 'Aide générale',
+            '::module:help:APropos' => 'A propos',
+            '::module:help:APropos:Text' => "Le projet <i>messae</i> est une implémentation logicielle basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.<br />
+<br />
+Le projet <i>nebule</i> crée un réseau. Non un réseau de machines mais un réseau de données.<br />
 <br />
 Les systèmes informatiques actuels sont incapables de gérer directement les objets et les liens. Il n’est donc pas possible d’utiliser nebule nativement.
 Le projet messae permet un accès à cette nouvelle façon de gérer nos informations sans remettre en question fondamentalement l’organisation et notamment les systèmes d’exploitation de notre système d’information.<br />
@@ -1317,32 +987,32 @@ Chacun peut devenir individuellement actif.<br />
 Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet messae disparaîtra.
 Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
 Il sera vu comme bizarrerie symptomatique d’une époque.",
-            '::messae:module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.messae.org/">Le blog du projet messae</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
-            '::messae:module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::module:help:APropos:Liens' => 'Voir aussi :<br /><a href="http://blog.messae.org/">Le blog du projet messae</a><br /><a href="http://blog.nebule.org/">Le blog du projet nebule</a>',
+            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
 <br />
 D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on fait.<br />
-Le menu est le meilleur moyen de se déplacer dans l'interface.",
+Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::messae:module:help:ModuleName' => 'Help module',
-            '::messae:module:help:MenuName' => 'Help',
-            '::messae:module:help:ModuleDescription' => 'Online help module.',
-            '::messae:module:help:ModuleHelp' => 'This application permit to display general help about the interface.',
-            '::messae:module:help:AppTitle1' => 'Help',
-            '::messae:module:help:AppDesc1' => 'Display online help.',
-            '::messae:module:help:Bienvenue' => 'Welcome to <b>messae</b>.',
-            '::messae:module:help:Langue' => 'Language',
-            '::messae:module:help:ChangerLangue' => 'Change language',
-            '::messae:module:help:About' => 'About',
-            '::messae:module:help:Bootstrap' => 'Bootstrap',
-            '::messae:module:help:Demarrage' => 'Start',
-            '::messae:module:help:AideGenerale' => 'General help',
-            '::messae:module:help:APropos' => 'About',
-            '::messae:module:help:APropos:Text' => 'The messae project is a software implementation based on nebule project.<br />
+            '::module:help:ModuleName' => 'Help module',
+            '::module:help:MenuName' => 'Help',
+            '::module:help:ModuleDescription' => 'Online help module.',
+            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::module:help:AppTitle1' => 'Help',
+            '::module:help:AppDesc1' => 'Display online help.',
+            '::module:help:Bienvenue' => 'Welcome to <b>messae</b>.',
+            '::module:help:About' => 'About',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Start',
+            '::module:help:AideGenerale' => 'General help',
+            '::module:help:APropos' => 'About',
+            '::module:help:APropos:Text' => 'The <i>messae</i> project is a software implementation based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.<br />
+<br />
+The <i>nebule</i> project create a network. Not a network of computers but a network of datas.<br />
 <br />
 Current computer systems are unable to directly manage objects and links. It is thus not possible to use native nebule.
 The messae project provides access to this new way of managing our information without questioning fundamentally the organization including the operating system of our information systems.<br />
@@ -1368,9 +1038,9 @@ Each individual can become active.<br />
 Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project messae will disappear.
 He will have served its purpose: to allow a smooth transition to nebule.<br />
 It will be seen as symptomatic of an era oddity.',
-            '::messae:module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.messae.org/">The blog of messae projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
-            '::messae:module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
-1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
+            '::module:help:APropos:Liens' => 'See also :<br /><a href="http://blog.messae.org/">The blog of messae projet</a><br /><a href="http://blog.nebule.org/">the blog of nebule projet</a>',
+            '::module:help:AideGenerale:Text' => 'The software is composed of three parts:<br />
+1. the top banner that contains the application menu and the current entity.<br />
 2. <br />
 3. <br />
 <br />
@@ -1378,21 +1048,19 @@ It will be seen as symptomatic of an era oddity.',
 ',
         ],
         'es-co' => [
-            '::messae:module:help:ModuleName' => 'Módulo de ayuda',
-            '::messae:module:help:MenuName' => 'Ayuda',
-            '::messae:module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::messae:module:help:ModuleHelp' => 'Esta aplicatión te permite ver la ayuda general sobre la interfaz.',
-            '::messae:module:help:AppTitle1' => 'Ayuda',
-            '::messae:module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::messae:module:help:Bienvenue' => 'Bienviedo en <b>messae</b>.',
-            '::messae:module:help:Langue' => 'Idioma',
-            '::messae:module:help:ChangerLangue' => 'Cambio de idioma',
-            '::messae:module:help:About' => 'About',
-            '::messae:module:help:Bootstrap' => 'Bootstrap',
-            '::messae:module:help:Demarrage' => 'Comienzo',
-            '::messae:module:help:AideGenerale' => 'Ayuda general',
-            '::messae:module:help:APropos' => 'Acerca',
-            '::messae:module:help:APropos:Text' => 'Sylabe El proyecto es un proyecto basado nebule implementación de software.<br />
+            '::module:help:ModuleName' => 'Módulo de ayuda',
+            '::module:help:MenuName' => 'Ayuda',
+            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::module:help:AppTitle1' => 'Ayuda',
+            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
+            '::module:help:Bienvenue' => 'Bienviedo en <b>messae</b>.',
+            '::module:help:About' => 'About',
+            '::module:help:Bootstrap' => 'Bootstrap',
+            '::module:help:Demarrage' => 'Comienzo',
+            '::module:help:AideGenerale' => 'Ayuda general',
+            '::module:help:APropos' => 'Acerca',
+            '::module:help:APropos:Text' => 'El proyecto <i>messae</i> es un proyecto basado nebule implementación de software.<br />
 Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.<br />
 <br />
 Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible utilizar nebule nativo.
@@ -1419,8 +1087,8 @@ Cada individuo puede llegar a ser activo.<br />
 Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto messae desaparecer.
 Él habrá cumplido su propósito: permitir una transición suave a nebule.
 Se verá como un síntoma de una rareza era.',
-            '::messae:module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.messae.org/">El blog del proyecto messae</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
-            '::messae:module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
+            '::module:help:APropos:Liens' => 'Ver también :<br /><a href="http://blog.messae.org/">El blog del proyecto messae</a><br /><a href="http://blog.nebule.org/">El blog del proyecto nebule</a>',
+            '::module:help:AideGenerale:Text' => 'El software se compone de tres partes:<br />
 1. el banner superior que contiene el menu de la aplicacion y la entidad actual.<br />
 2. <br />
 3. <br />
@@ -1429,5 +1097,4 @@ Se verá como un síntoma de una rareza era.',
 ',
         ],
     ];
-
 }

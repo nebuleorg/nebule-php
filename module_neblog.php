@@ -59,7 +59,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250220';
+    const MODULE_VERSION = '020250222';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -185,7 +185,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
 
-    public function getHookList(string $hookName, ?Node $nid = null): array {
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
         $hookArray = array();
         switch ($hookName) {
             case 'selfMenu':
@@ -437,7 +437,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
     private function _displayBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:disp', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_displaySimpleTitle('::neblog:module:blog:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $instanceObject = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instanceObject->setNID($this->_instanceCurrentBlog);
         $instanceObject->setEnableColor(true);
@@ -464,7 +464,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private function _display_InlineBlog(): void {
         // TODO sync blog with arg self::COMMAND_ACTION_SYNC_BLOG
 
-        $this->_displayTitle('::posts', $this::MODULE_REGISTERED_ICONS[1]);
+        $this->_displaySimpleTitle('::posts', $this::MODULE_REGISTERED_ICONS[1]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $list = $this->_getListBlogPostLinks($this->_instanceCurrentBlog);
@@ -499,7 +499,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayBlogs(): void {
-        $this->_displayTitle('::neblog:module:blog:list', $this::MODULE_REGISTERED_ICONS[1]);
+        $this->_displaySimpleTitle('::neblog:module:blog:list', $this::MODULE_REGISTERED_ICONS[1]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
@@ -571,7 +571,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayNewBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:new', $this::MODULE_REGISTERED_ICONS[2]);
+        $this->_displaySimpleTitle('::neblog:module:blog:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -598,19 +598,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:mod', $this::MODULE_REGISTERED_ICONS[3]);
+        $this->_displaySimpleTitle('::neblog:module:blog:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:blog:disp', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:del', $this::MODULE_REGISTERED_ICONS[4]);
+        $this->_displaySimpleTitle('::neblog:module:blog:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:blog:disp', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayGetBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:get', $this::MODULE_REGISTERED_ICONS[6]);
+        $this->_displaySimpleTitle('::neblog:module:blog:get', $this::MODULE_REGISTERED_ICONS[6]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -642,13 +642,13 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displaySyncBlog(): void {
-        $this->_displayTitle('::neblog:module:blog:sync', $this::MODULE_REGISTERED_ICONS[2]);
+        $this->_displaySimpleTitle('::neblog:module:blog:sync', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayPost(): void {
-        $this->_displayTitle('::neblog:module:post:disp', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_displaySimpleTitle('::neblog:module:post:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post');
     }
@@ -659,7 +659,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayNewPost(): void {
-        $this->_displayTitle('::neblog:module:post:new', $this::MODULE_REGISTERED_ICONS[2]);
+        $this->_displaySimpleTitle('::neblog:module:post:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:post:list', $this::MODULE_REGISTERED_VIEWS[0], true);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -693,25 +693,25 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModPost(): void {
-        $this->_displayTitle('::neblog:module:post:mod', $this::MODULE_REGISTERED_ICONS[3]);
+        $this->_displaySimpleTitle('::neblog:module:post:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[7], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPost(): void {
-        $this->_displayTitle('::neblog:module:post:del', $this::MODULE_REGISTERED_ICONS[4]);
+        $this->_displaySimpleTitle('::neblog:module:post:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayPage(): void {
-        $this->_displayTitle('::neblog:module:page:disp', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_displaySimpleTitle('::neblog:module:page:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayContentObject($this->_instanceCurrentBlogPage, 'selfMenuPage');
     }
 
     private function _displayPages(): void {
-        $this->_displayTitle('::neblog:module:page:list', $this::MODULE_REGISTERED_ICONS[4]);
+        $this->_displaySimpleTitle('::neblog:module:page:list', $this::MODULE_REGISTERED_ICONS[4]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
@@ -771,7 +771,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayNewPage(): void {
-        $this->_displayTitle('::neblog:module:page:new', $this::MODULE_REGISTERED_ICONS[2]);
+        $this->_displaySimpleTitle('::neblog:module:page:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -804,19 +804,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModPage(): void {
-        $this->_displayTitle('::neblog:module:page:mod', $this::MODULE_REGISTERED_ICONS[3]);
+        $this->_displaySimpleTitle('::neblog:module:page:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPage(): void {
-        $this->_displayTitle('::neblog:module:page:del', $this::MODULE_REGISTERED_ICONS[4]);
+        $this->_displaySimpleTitle('::neblog:module:page:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayAbout(): void {
-        $this->_displayTitle('::neblog:module:about:title', $this::MODULE_REGISTERED_ICONS[4]);
+        $this->_displaySimpleTitle('::neblog:module:about:title', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1], true);
 
         echo '<div>';
@@ -975,22 +975,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         return $this->_cacheInstance->newNode($oid);
     }
 
-    private function _displayTitle(string $title, string $icon): void {
-        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle($title);
-        $instance->setIconRID($icon);
-        $instance->display();
-    }
-
-    private function _displayNotImplemented(): void { // TODO remove when all have been added
-        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-        $instance->setMessage('::notImplemented');
-        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
-        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-        $instance->display();
-    }
-
     private function _displayBackOrLogin(string $backMessage, string $backView, bool $addBlog = false): void
     {
         $addURL = '';
@@ -1080,7 +1064,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayContentAnswers(Node $nid): void {
-        $this->_displayTitle('::neblog:module:answ:list', $this::MODULE_REGISTERED_ICONS[1]);
+        $this->_displaySimpleTitle('::neblog:module:answ:list', $this::MODULE_REGISTERED_ICONS[1]);
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) { // FIXME add inside the list
             // Add answer query
             ?>

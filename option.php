@@ -946,7 +946,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             }
 
             // Affichage
-            echo $this->getDisplayObjectsList($list, 'medium');
+            echo $this->getDisplayObjectsList_DEPRECATED($list, 'medium');
             unset($list, $listEntities, $listSigners);
         }
 
@@ -1574,7 +1574,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             $list[$i]['param']['informationType'] = 'information';
 
             // Affichage
-            echo $this->getDisplayObjectsList($list, 'medium');
+            echo $this->getDisplayObjectsList_DEPRECATED($list, 'medium');
             unset($list);
         }
 
