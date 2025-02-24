@@ -36,7 +36,7 @@ class ApplicationModules
     protected array $_listModulesOID = array();
     protected array $_listModulesTranslateRID = array();
     protected array $_listModulesTranslateOID = array();
-    protected array $_listModulesTranslateInstance = array();
+    protected array $_listModulesTranslateName = array();
     protected array $_listModulesValid = array();
     protected array $_listModulesEnabled = array();
     protected ?Modules $_currentModuleInstance = null;
@@ -59,8 +59,9 @@ class ApplicationModules
         $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
 
         $this->_initInternalModules();
+        $this->_initInternalDeadModules();
         $this->_initExternalModules();
-        $this->_initTranslateModules();
+        $this->_initExternalTranslateModules();
         //$this->_findCurrentModule();
     }
 
@@ -71,62 +72,83 @@ class ApplicationModules
             $this->_metrologyInstance->addLog('do not load modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bcc98872');
             return;
         }
-        $this->_metrologyInstance->addLog('load default modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2bc7fc3');
+        $this->_metrologyInstance->addLog('loading internal modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b2bc7fc3');
 
         foreach ($this->_applicationInstance::LIST_MODULES_INTERNAL as $moduleName) {
-            if (str_starts_with($moduleName, 'DModuleTranslate')) // TODO check interface too.
-                continue;
             $this->_metrologyInstance->addTime();
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             try {
                 $classImplement = class_implements($moduleFullName);
             } catch (\Exception $e) {
-                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' lost', Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
+                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' (' . $moduleName . ')' . ' lost', Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
                 $classImplement = array();
             }
             if (! is_array($classImplement))
                 $classImplement = array();
-            if (in_array('Nebule\Library\ModuleTranslateInterface', $classImplement)) {
-                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' have translate interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fde052bb');
-                continue;
-            }
-            if (! in_array('Nebule\Library\ModuleInterface', $classImplement)) {
-                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' do not have module interface, not loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e242b56a');
-                continue;
-            }
-            $this->_metrologyInstance->addLog('loaded internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4879c453');
-            try {
-                //$instance = new $moduleFullName($this->_applicationInstance);
-                $instance = new $moduleFullName($this->_nebuleInstance);
-            } catch (\Error $e) {
-                $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
-                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
-                continue;
-            }
-            if (! $instance instanceof \Nebule\Library\ModuleInterface) {
-                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' do not have module interface, cannot init', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b9742fd8');
-                continue;
-            }
-            $instance->setEnvironmentLibrary($this->_nebuleInstance);
-            $instance->setEnvironmentApplication($this->_applicationInstance);
-            $this->_metrologyInstance->addLog('init internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a6c894e7');
-            try {
-                $instance->initialisation();
-            } catch (\Error $e) {
-                $this->_metrologyInstance->addLog('error initialisation class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
-                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '0d36b043');
-                continue;
-            }
-            $this->_listModulesName[$moduleName] = $moduleFullName;
-            $this->_listModulesInstance[$moduleFullName] = $instance;
-            $this->_listModulesInitRID[$moduleFullName] = '0';
-            $this->_listModulesOID[$moduleFullName] = '0';
-            $this->_listModulesSignerRID[$moduleFullName] = '0';
-            $this->_listModulesValid[$moduleFullName] = true;
+
+            if (str_starts_with($moduleName, 'ModuleTranslate') && in_array('Nebule\Library\ModuleTranslateInterface', $classImplement))
+                $this->_initInternalModuleTranslate($moduleName, $moduleFullName);
+            elseif (str_starts_with($moduleName, 'Module') && in_array('Nebule\Library\ModuleInterface', $classImplement))
+                $this->_initInternalModuleApplication($moduleName, $moduleFullName);
+            else
+                $this->_metrologyInstance->addLog('unsupported module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e8543fd4');
         }
         $this->_metrologyInstance->addLog('internal modules loaded', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '050783df');
+    }
+
+    protected function _initInternalDeadModules(): void {
+        $list = get_declared_classes();
+        foreach ($list as $class) {
+            if (str_starts_with($class, 'Module') && $class != 'Module') {
+                $this->_metrologyInstance->addLog('dead module ' . $class, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '050783df');
+                $this->_listModulesName[$class::MODULE_LANGUAGE] = $class;
+            }
+        }
+    }
+
+    protected function _initInternalModuleTranslate(string $moduleName, string $moduleFullName): void {
+        $this->_metrologyInstance->addLog('loading internal translate modules ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0b396e08');
+        try {
+            $lang = $moduleFullName::MODULE_LANGUAGE;
+            $this->_listModulesName[$moduleName] = $moduleFullName;
+            $this->_listModulesTranslateName[$lang] = $moduleFullName;
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('translate module ' . $moduleFullName . ' (' . $moduleName . ')' . ' cannot been loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57947e3f');
+        }
+    }
+
+    protected function _initInternalModuleApplication(string $moduleName, string $moduleFullName): void {
+        $this->_metrologyInstance->addLog('loading internal modules ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4879c453');
+        try {
+            //$instance = new $moduleFullName($this->_applicationInstance);
+            $instance = new $moduleFullName($this->_nebuleInstance);
+        } catch (\Error $e) {
+            $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
+            return;
+        }
+        if (! $instance instanceof \Nebule\Library\ModuleInterface) {
+            $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' (' . $moduleName . ')' . ' do not have module interface, cannot init', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b9742fd8');
+            return;
+        }
+        $instance->setEnvironmentLibrary($this->_nebuleInstance);
+        $instance->setEnvironmentApplication($this->_applicationInstance);
+        $this->_metrologyInstance->addLog('init internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a6c894e7');
+        try {
+            $instance->initialisation();
+        } catch (\Error $e) {
+            $this->_metrologyInstance->addLog('error initialisation class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '0d36b043');
+            return;
+        }
+        $this->_listModulesName[$moduleName] = $moduleFullName;
+        $this->_listModulesInstance[$moduleFullName] = $instance;
+        $this->_listModulesInitRID[$moduleFullName] = '0';
+        $this->_listModulesOID[$moduleFullName] = '0';
+        $this->_listModulesSignerRID[$moduleFullName] = '0';
+        $this->_listModulesValid[$moduleFullName] = true;
     }
 
     protected function _initExternalModules(): void {
@@ -157,7 +179,7 @@ class ApplicationModules
         $this->_metrologyInstance->addLog('external modules loaded', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a95de198');
     }
 
-    protected function _initTranslateModules(): void {
+    protected function _initExternalTranslateModules(): void {
         if (!$this->_applicationInstance::USE_MODULES
             || !$this->_applicationInstance::USE_MODULES_TRANSLATE
             || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
@@ -293,7 +315,7 @@ class ApplicationModules
             // @todo Vérifier le contenu.
             // A faire, DANGEREUX !!!
 
-            // Enregirstre le module.
+            // Enregistre le module.
             if ($okValid
                 && $okNotListed
             ) {
@@ -394,7 +416,7 @@ class ApplicationModules
                     $this->_listModulesEnabled[$moduleFullName] = true; // @todo à revoir...
                     if ($instance::MODULE_TYPE == 'Traduction') {
                         $this->_metrologyInstance->addLog('add translate module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6770ac3f');
-                        $this->_listModulesTranslateInstance[$moduleFullName] = $instance;
+                        //$this->_listModulesTranslateInstance[$moduleFullName] = $instance; // FIXME do no load translate module as instance
                     }
                 }
             }
@@ -425,9 +447,9 @@ class ApplicationModules
         return $this->_listModulesInstance;
     }
 
-    public function getModulesTranslateListInstances(): array
+    public function getModulesTranslateListName(): array
     {
-        return $this->_listModulesTranslateInstance;
+        return $this->_listModulesTranslateName;
     }
 
     public function getModulesListOID(): array

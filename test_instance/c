@@ -4,7 +4,7 @@
 # http://www.nebule.org
 
 # nebule php
-puppetmaster = 8dd45861f768443738a3625c6a2f1a090d90839755994b7c891045df5fbc420c.sha2.256
+puppetmaster = c487ddf1543e3c4bbb9e0a42da48bbfc9002910880bb53e73039f38f6a39c41a.sha2.256
 hostURL = bachue.developpement.nebule.org
 #permitWrite = true
 #permitWriteObject = true
