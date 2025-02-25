@@ -13,6 +13,7 @@ use Nebule\Library\References;
 
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
+ * .
  * Definition of new blog with 'BlogNID' NID:
  *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
  * BlogNID should not have content.

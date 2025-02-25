@@ -11,7 +11,7 @@ use Nebule\Library\Node;
 use Nebule\Library\References;
 
 /**
- * Ce module permet de gérer les groupes.
+ * This module can manage groups of everything.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -26,7 +26,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250225';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
