@@ -229,9 +229,6 @@ abstract class Translates extends Functions
     protected ?Translates $_currentLanguageInstance = null;
     protected ?Translates $_defaultLanguageInstance = null;
 
-    /*public function __construct(Applications $applicationInstance) {
-        $this->_applicationInstance = $applicationInstance;
-    }*/
     public function __toString() { return 'Traduction'; }
     public function __sleep() { return array(); } // TODO do not cache
 
@@ -386,76 +383,6 @@ abstract class Translates extends Functions
                 $this->_metrologyInstance->addLog('find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
             }
         }
-        return $result;
-    }
-
-    private function _getTranslateFromDisplayModules(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
-            return '';
-        $result = $this->_applicationModulesInstance->getCurrentModuleInstance()->getTranslateInstance($text, $lang);
-        $this->_metrologyInstance->addLog('module 2 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8811cb6a');
-        if ($result == $text)
-            $result = '';
-        return $result;
-    }
-
-    private function _getTranslateFromModulesWithDefault(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($lang == $this->_defaultLanguage)
-            return '';
-        $result = '';
-        foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
-            if ($module::MODULE_LANGUAGE == $this->_defaultLanguage) {
-                $result = $module->getTraduction($text, $this->_defaultLanguage);
-                $this->_metrologyInstance->addLog('module 3 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'de331d22');
-            }
-        }
-        if ($result == $text)
-            $result = '';
-        return $result;
-    }
-
-    private function _getTranslateFromDisplayModulesWithDefault(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($lang == $this->_defaultLanguage)
-            return '';
-        if (!is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules'))
-            return '';
-        $result = $this->_applicationModulesInstance->getCurrentModuleInstance()->getTranslateInstance($text, $this->_defaultLanguage);
-        $this->_metrologyInstance->addLog('module 4 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c9a49d75');
-        if ($result == $text)
-            $result = '';
-        return $result;
-    }
-
-    private function _getTranslateFromAllModules(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $result = '';
-        foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
-            $result = $module->getTranslateInstance($text, $lang);
-            $this->_metrologyInstance->addLog('module 5 find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e25be65f');
-            if ($result != $text)
-                break;
-        }
-        if ($result == $text)
-            $result = '';
-        return $result;
-    }
-
-    private function _getTranslateFromAllModulesWithDefault(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($lang == $this->_defaultLanguage)
-            return '';
-        $result = '';
-        foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
-            $result = $module->getTranslateInstance($text, $this->_defaultLanguage);
-            $this->_metrologyInstance->addLog('module 6 find translate : "' . $result . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5b607293');
-            if ($result != $text)
-                break;
-        }
-        if ($result == $text)
-            $result = '';
         return $result;
     }
 }

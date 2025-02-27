@@ -504,7 +504,7 @@ class ModuleManage extends \Nebule\Library\Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
-                            'objectName' => $instance->getTranslateInstance($name, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
+                            'objectName' => $instance->getTranslate($name, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
                             'objectRefs' => array(),
                             'objectIcon' => $instance::MODULE_LOGO,
                             'displaySize' => 'medium',

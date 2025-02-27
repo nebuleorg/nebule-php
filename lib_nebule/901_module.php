@@ -124,7 +124,7 @@ abstract class Modules extends Functions implements ModuleInterface
      */
     public function actions(): void {}
 
-    public function getTranslateInstance(string $text, string $lang = ''): string {
+    public function getTranslate(string $text, string $lang = ''): string {
         $result = $text;
         if ($this->_translateInstance === null)
             $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();

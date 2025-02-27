@@ -2093,10 +2093,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Affiche le lien du menu seul (sans JS).
         if ($this->_currentDisplayView != 'menu') {
             $list[$j]['icon'] = '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272';
-            $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu', $this->_translateInstance->getCurrentLanguage());
+            $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu');
             $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
-            $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc', $this->_translateInstance->getCurrentLanguage());
+            $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc');
             $list[$j]['ref'] = $this->_applicationInstance::APPLICATION_NAME;
             $list[$j]['class'] = 'menuListContentActionModules';
             $j++;
@@ -2106,7 +2106,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode)
                 continue;
-            $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+            $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
             $currentModuleName = $module::MODULE_MENU_NAME;
 
             // Liste les points d'ancrages à afficher.
@@ -2119,12 +2119,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $icon = $module::MODULE_LOGO;
                         if ($icon == '')
                             $icon = self::DEFAULT_ICON_IMLOG;
-                        $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                        $desc = $module->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
 
                         $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                        $list[$j]['title'] = $module->getTranslate($appHook['name']);
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
@@ -2140,7 +2140,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode)
                 continue;
             // Extrait le nom du module.
-            $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+            $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
 
             // Liste les points d'ancrages à afficher.
             $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
@@ -2152,12 +2152,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $icon = $module::MODULE_LOGO;
                         if ($icon == '')
                             $icon = self::DEFAULT_ICON_IMLOG;
-                        $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                        $desc = $module->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
 
                         $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                        $list[$j]['title'] = $module->getTranslate($appHook['name']);
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
@@ -2172,7 +2172,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 // Extrait le nom du module.
-                $moduleName = $module->getTranslateInstance($module::MODULE_MENU_NAME, $this->_translateInstance->getCurrentLanguage());
+                $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
 
                 // Liste les points d'ancrages à afficher.
                 $appHookList = $module->getHookList('menu');
@@ -2184,12 +2184,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $module::MODULE_LOGO;
                             if ($icon == '')
                                 $icon = self::DEFAULT_ICON_IMLOG;
-                            $desc = $module->getTranslateInstance($appHook['desc'], $this->_translateInstance->getCurrentLanguage());
+                            $desc = $module->getTranslate($appHook['desc']);
                             if ($desc == '')
                                 $desc = '&nbsp;';
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTranslateInstance($appHook['name'], $this->_translateInstance->getCurrentLanguage());
+                            $list[$j]['title'] = $module->getTranslate($appHook['name']);
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
@@ -2204,7 +2204,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Appelle la liste des modules.
         foreach ($modules as $module) {
             // Extrait le nom du module.
-            $moduleName = $module->getTranslateInstance($module::MODULE_NAME, $this->_translateInstance->getCurrentLanguage());
+            $moduleName = $module->getTranslate($module::MODULE_NAME);
 
             // Liste les options à afficher.
             $appTitleList = $module::MODULE_APP_TITLE_LIST;
@@ -2219,12 +2219,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($icon == '')
                         $icon = self::DEFAULT_ICON_LSTOBJ;
 
-                    $desc = $module->getTranslateInstance($appDescList[$i], $this->_translateInstance->getCurrentLanguage());
+                    $desc = $module->getTranslate($appDescList[$i]);
                     if ($desc == '')
                         $desc = '&nbsp;';
 
                     $list[$j]['icon'] = $icon;
-                    $list[$j]['title'] = $module->getTranslateInstance($appTitleList[$i], $this->_translateInstance->getCurrentLanguage());
+                    $list[$j]['title'] = $module->getTranslate($appTitleList[$i]);
                     $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
                     $list[$j]['desc'] = $desc;
@@ -2239,7 +2239,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $list[$j]['icon'] = Displays::REFERENCE_DEFAULT_LOGO;
         $list[$j]['title'] = BOOTSTRAP_NAME;
         $list[$j]['htlink'] = '?' . Displays::DEFAULT_BOOTSTRAP_LOGO_LINK;
-        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::appSwitch', $this->_translateInstance->getCurrentLanguage());
+        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::appSwitch');
         $list[$j]['ref'] = 'nebule';
         $list[$j]['class'] = 'menuListContentActionModules';
 
@@ -5049,7 +5049,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             $result .= '<div class="objectContent">' . "\n";
             $result .= $this->getDisplayInformation_DEPRECATED(
-                $this->_applicationInstance->getTranslateInstance()->getTranslate('::::display:content:ObjectHaveUpdate')
+                $this->_applicationInstance->getTranslate()->getTranslate('::::display:content:ObjectHaveUpdate')
                 . '<br />' . $this->getDisplayObject_DEPRECATED($UpdateID, $param2),
                 $param
             );
@@ -6580,14 +6580,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Si authorisé à afficher l'aide.
         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
+            $txt = $this->_applicationInstance->getTranslate()->getTranslate($help);
             $txt = str_replace('&', '&amp;', $txt);
             $txt = str_replace('"', '&quot;', $txt);
             $txt = str_replace("'", '&acute;', $txt);
             //$txt = str_replace('<','&lt;',$txt);
             $txt = str_replace("\n", ' ', $txt);
             // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
+            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslate()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
             unset($txt);
             // Affiche la bulle et le texte.
             ?>
@@ -6635,13 +6635,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <div class="textTitle">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
+                $title = $this->_applicationInstance->getTranslate()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
+                $desc = $this->_applicationInstance->getTranslate()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp_DEPRECATED($help);
@@ -6674,13 +6674,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <div class="textTitle2">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
+                $title = $this->_applicationInstance->getTranslate()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
+                $desc = $this->_applicationInstance->getTranslate()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp_DEPRECATED($help);
