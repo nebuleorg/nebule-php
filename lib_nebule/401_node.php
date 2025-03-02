@@ -246,11 +246,11 @@ class Node extends Functions implements nodeInterface
         if ($permitNull && $nid == '') return true;
         if ($permitZero && $nid == '0') return true;
 
-        // Check hash value.
+        // Check hash value. Hash size = (size value / 4) .
         $hash = strtok($nid, '.');
         if ($hash === false) return false;
-        if (strlen($hash) < BlocLink::NID_MIN_HASH_SIZE) return false;
-        if (strlen($hash) > BlocLink::NID_MAX_HASH_SIZE) return false;
+        if ((strlen($hash) * 4) < BlocLink::NID_MIN_HASH_SIZE) return false;
+        if ((strlen($hash) * 4) > BlocLink::NID_MAX_HASH_SIZE) return false;
         if (!ctype_xdigit($hash)) return false;
 
         // Check algo value.

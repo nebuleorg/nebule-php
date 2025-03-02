@@ -13,40 +13,38 @@ use Nebule\Library\References;
 
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
- * .
- * Definition of new blog with 'BlogNID' NID:
- *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
+ *
+ *  - Definition of new blog with 'BlogNID' NID:
+ *    - f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE :
  * BlogNID should not have content.
  * BlogNID should have name.
  * BlogNID must not have update.
- *.
- * On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'PostOID' OID:
- *  -  f>BlogNID>PostNID>RID_BLOG_POST
+ *  - On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
+ *    - f>BlogNID>PostNID>RID_BLOG_POST :
  * PostNID should not have content.
  * PostNID can have name.
  * PostNID can have update.
- *  -  l>PostNID>PostOID>RID_BLOG_CONTENT
- * PostOID must have content.
- * PostOID should not have name.
- * PostOID can have update.
- *.
- * On an post 'PostOID', definition of a new answer with 'AnswerOID' OID:
- *  -  f>PostOID>AnswerOID>RID_BLOG_ANSWER
+ *    - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID :
+ * ContentOID must have content.
+ * ContentOID should not have name.
+ * ContentOID can have update.
+ * OrderNID reflect the order of a content on the list of contents to display.
+ *  - On an post 'PostNID', definition of a new answer with 'AnswerOID' OID:
+ *    - f>PostNID>AnswerOID>RID_BLOG_ANSWER :
  * AnswerOID must have content.
  * AnswerOID should not have name.
  * AnswerOID can have update.
  * Only one level of answer for now. TODO
- *.
- * On a blog 'BlogNID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
- *  -  f>BlogNID>PageNID>RID_BLOG_PAGE
+ *  - On a blog 'BlogNID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
+ *    - f>BlogNID>PageNID>RID_BLOG_PAGE :
  * PageNID should not have content.
  * PageNID can have name.
  * PageNID can have update.
- *  -  l>PageNID>PageOID>RID_BLOG_CONTENT
+ *    -  l>PageNID>PageOID>RID_BLOG_CONTENT : FIXME add OrderNID
  * PageOID must have content.
  * PageOID should not have name.
  * PageOID can have update.
- *.
+ *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -60,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250224';
+    const MODULE_VERSION = '020250302';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -154,7 +152,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlog');
         if ($nid == '') { // Default is first blog
-            $list = $this->_getListBlogs();
+            $list = $this->_getListBlogNID();
             if (sizeof($list) != 0) {
                 reset($list);
                 $nid = current($list);
@@ -464,7 +462,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_displaySimpleTitle('::posts', $this::MODULE_REGISTERED_ICONS[1]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $list = $this->_getListBlogPostLinks($this->_instanceCurrentBlog);
+        $list = $this->_getLinksPostNID($this->_instanceCurrentBlog);
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
             $blogPostNID = $parsedLink['bl/rl/nid2'];
@@ -487,7 +485,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setEnableRefs(true);
             $instance->setRefs(array($blogPostSID));
             $instance->setEnableStatus(true);
-            $instance->setStatus($this->_translateInstance->getTranslate('::answers') . ':' . $this->_getCountPostAnswers($blogInstance));
+            $instance->setStatus($this->_translateInstance->getTranslate('::answers') . ':' . $this->_getCountAnswerOID($blogInstance));
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty();
@@ -533,7 +531,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private function _display_InlineBlogs(): void {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $list = $this->_getListBlogLinks();
+        $list = $this->_getLinksBlogNID();
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
             $blogNID = $parsedLink['bl/rl/nid2'];
@@ -557,9 +555,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setSelfHookName('selfMenuBlogs');
             $instance->setEnableStatus(true);
             $instance->setStatus(
-                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountBlogPages($blogInstance)
+                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountPageNID($blogInstance)
                 . ' '
-                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountBlogPosts($blogInstance)
+                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountPostNID($blogInstance)
             );
             $instanceList->addItem($instance);
         }
@@ -743,7 +741,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
-        $list = $this->_getListBlogPages($this->_instanceCurrentBlog);
+        $list = $this->_getListPageNID($this->_instanceCurrentBlog);
         foreach ($list as $blogPageNID) {
             $blogInstance = $this->_cacheInstance->newNode($blogPageNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -816,17 +814,17 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
     public function actions(): void {
         if ($this->_extractActionAddBlog())
-            $this->_setNewBlog($this->_actionAddBlogName);
+            $this->_setNewBlogNID($this->_actionAddBlogName);
         if ($this->_extractActionGetBlog())
-            $this->_getBlog($this->_actionGetBlogNID, $this->_actionGetBlogURL);
+            $this->_getBlogNID($this->_actionGetBlogNID, $this->_actionGetBlogURL);
         if ($this->_extractActionSyncBlog())
-            $this->_setSyncBlog($this->_actionSyncBlogNID);
+            $this->_setSyncBlogNID($this->_actionSyncBlogNID);
         if ($this->_extractActionAddPost())
             $this->_setNewBlogPost($this->_actionAddPostName, $this->_actionAddPostContent);
         if ($this->_extractActionAddAnswer())
-            $this->_setNewPostAnswer($this->_actionAddAnswerContent);
+            $this->_setNewAnswerOID($this->_actionAddAnswerContent);
         if ($this->_extractActionAddPage())
-            $this->_setNewBlogPage($this->_actionAddPageName, $this->_actionAddPageContent);
+            $this->_setNewPageNID($this->_actionAddPageName, $this->_actionAddPageContent);
     }
 
     private function _extractActionAddBlog(): bool {
@@ -912,13 +910,17 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
     // Common functions
-    private function _getLinksF(array &$links, Node $nid1, string $nid3): void {
+    private function _getLinksF(array &$links, Node $nid1, string $nid3, bool $withOrder = false): void {
         $filter = array(
             'bl/rl/req' => 'f',
             'bl/rl/nid1' => $nid1->getID(),
             'bl/rl/nid3' => $nid3,
             'bl/rl/nid4' => '',
         );
+        if ($withOrder) {
+            unset($filter['bl/rl/nid4']);
+            $filter['bl/rl/nid5'] = '';
+        }
         $nid1->getLinks($links, $filter);
     }
 
@@ -941,9 +943,11 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private function _getOnLinksNID2(array &$links): array {
         $list = array();
         foreach ($links as $link) {
-            $parsedLink = $link->getParsed();
-            $oid = $parsedLink['bl/rl/nid2'];
-            $list[$oid] = $oid;
+            $oid = $link->getParsed()['bl/rl/nid2'];
+            $nid = $oid;
+            if (isset($link->getParsed()['bl/rl/nid4']))
+                $nid = $link->getParsed()['bl/rl/nid4'];
+            $list[$nid] = $oid;
         }
         return $list;
     }
@@ -1022,7 +1026,15 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->display();
 
-        $contentOID = $this->_getContentNID($nid);
+        $list = $this->_getListPostContentOID($nid);
+        foreach ($list as $i => $oid) {
+            $instance = $this->_cacheInstance->newNode($oid);
+            $this->_displayContentPostBlock($instance);
+        }
+    }
+
+    private function _displayContentPostBlock(Node $oid): void {
+        $contentOID = $this->_getContentNID($oid);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($contentOID);
         $instance->setEnableColor(true);
@@ -1051,6 +1063,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
             case References::REFERENCE_OBJECT_JPEG:
                 $this->_displayContentImage($contentOID);
                 break;
+            default:
+                $this->_displayNotImplemented(); // TODO
         }
     }
 
@@ -1097,7 +1111,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
-        $list = $this->_getListPostAnswerLinks($nid);
+        $list = $this->_getLinksAnswerOID($nid);
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
             $blogAnswerNID = $parsedLink['bl/rl/nid2'];
@@ -1135,19 +1149,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
      * BlogNID should have name.
      * BlogNID must not have update.
      */
-    private function _getListBlogLinks(): array {
+    private function _getLinksBlogNID(): array {
         $links = array();
         $this->_getLinksF($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
         return $links;
     }
-    private function _getListBlogs(): array {
-        $links = $this->_getListBlogLinks();
+    private function _getListBlogNID(): array {
+        $links = $this->_getLinksBlogNID();
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountBlogs(): int {
-        return sizeof($this->_getListBlogLinks());
+    private function _getCountBlogNID(): int {
+        return sizeof($this->_getLinksBlogNID());
     }
-    private function _setNewBlog(string $name): void {
+    private function _setNewBlogNID(string $name): void {
         $instanceNode = $this->_cacheInstance->newVirtualNode();
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
         $this->_metrologyInstance->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '24eb5b6b');
@@ -1155,10 +1169,10 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceBL->signWrite();
         $instanceNode->setName($name);
     }
-    private function _getBlog(string $nid, string $url): void {
+    private function _getBlogNID(string $nid, string $url): void {
         // TODO
     }
-    private function _setSyncBlog(string $nid): void {
+    private function _setSyncBlogNID(string $nid): void {
         // TODO
     }
 
@@ -1167,27 +1181,39 @@ class ModuleNeblog extends \Nebule\Library\Modules
     /*
      * Posts on blogs
      *
-     * On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'PostOID' OID:
-     *  -  f>BlogNID>PostNID>RID_BLOG_POST
+     * On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
+     *  - f>BlogNID>PostNID>RID_BLOG_POST :
      * PostNID should not have content.
      * PostNID can have name.
      * PostNID can have update.
-     *  -  l>PostNID>PostOID>RID_BLOG_CONTENT
-     * PostOID must have content.
-     * PostOID should not have name.
-     * PostOID can have update.
+     *  - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID :
+     * ContentOID must have content.
+     * ContentOID should not have name.
+     * ContentOID can have update.
+     * OrderNID reflect the order of a content on the list of contents to display.
      */
-    private function _getListBlogPostLinks(Node $blog): array {
+    private function _getLinksPostNID(Node $blog): array {
         $links = array();
-        $this->_getLinksF($links, $blog, self::RID_BLOG_POST);
+        $this->_getLinksF($links, $blog, self::RID_BLOG_POST, true);
+        $this->_metrologyInstance->addLog('size of post list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b81aeb71');
         return $links;
     }
-    private function _getListBlogPosts(Node $blog): array {
-        $links = $this->_getListBlogPostLinks($blog);
+    private function _getLinksPostContentOID(Node $post): array {
+        $links = array();
+        $this->_getLinksF($links, $post, self::RID_BLOG_POST, true);
+        $this->_metrologyInstance->addLog('size of post content list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1ce94445');
+        return $links;
+    }
+    private function _getListPostNID(Node $blog): array {
+        $links = $this->_getLinksPostNID($blog);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountBlogPosts(Node $blog): int {
-        return sizeof($this->_getListBlogPostLinks($blog));
+    private function _getListPostContentOID(Node $post): array {
+        $links = $this->_getLinksPostContentOID($post);
+        return $this->_getOnLinksNID2($links);
+    }
+    private function _getCountPostNID(Node $blog): int {
+        return sizeof($this->_getLinksPostNID($blog));
     }
     private function _setNewBlogPost(string $name, string $content): void {
         // Create PostNID
@@ -1203,11 +1229,11 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceObject->setWriteContent($content);
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
         $this->_metrologyInstance->addLog('new blog post nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fd1f9a24');
-        $instanceBL->addLink('l>' . $instanceNode->getID() . '>' . $instanceObject->getID() . '>' . self::RID_BLOG_CONTENT);
+        $instanceBL->addLink('f>' . $instanceNode->getID() . '>' . $instanceObject->getID() . '>' . self::RID_BLOG_CONTENT . '>0010000000000000.none.64');
         $instanceBL->signWrite();
         $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _getBlogPost(Node $blog, Node $post): void {
+    private function _getPostNID(Node $blog, Node $post): void {
         // TODO
     }
 
@@ -1216,26 +1242,26 @@ class ModuleNeblog extends \Nebule\Library\Modules
     /*
      * Answers of posts on blogs
      *
-     * On an post 'PostOID', definition of a new answer with 'AnswerOID' OID:
-     *  -  f>PostOID>AnswerOID>RID_BLOG_ANSWER
+     * On an post 'PostNID', definition of a new answer with 'AnswerOID' OID:
+     *  -  f>PostNID>AnswerOID>RID_BLOG_ANSWER
      * AnswerOID must have content.
      * AnswerOID should not have name.
      * AnswerOID can have update.
      * Only one level of answer for now. TODO
      */
-    private function _getListPostAnswerLinks(Node $post): array {
+    private function _getLinksAnswerOID(Node $post): array {
         $links = array();
         $this->_getLinksF($links, $post, self::RID_BLOG_ANSWER);
         return $links;
     }
-    private function _getListPostAnswers(Node $post): array {
-        $links = $this->_getListPostAnswerLinks($post);
+    private function _getListAnswerNID(Node $post): array {
+        $links = $this->_getLinksAnswerOID($post);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountPostAnswers(Node $post): int {
-        return sizeof($this->_getListPostAnswerLinks($post));
+    private function _getCountAnswerOID(Node $post): int {
+        return sizeof($this->_getLinksAnswerOID($post));
     }
-    private function _setNewPostAnswer(string $content): void {
+    private function _setNewAnswerOID(string $content): void {
         $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
         $instanceNode->setWriteContent($content);
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
@@ -1244,7 +1270,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceBL->signWrite();
         $instanceNode->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _getBlogAnswer(Node $blog, Node $post): void {
+    private function _getAnswerOID(Node $blog, Node $post): void {
         // TODO
     }
 
@@ -1263,17 +1289,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
      * PageOID should not have name.
      * PageOID can have update.
      */
-    private function _getListBlogPages(Node $blog): array {
+    private function _getLinksPageNID(Node $blog): array {
         $links = array();
-        $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE);
+        $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE, true);
+        return $links;
+    }
+    private function _getListPageNID(Node $blog): array {
+        $links = $this->_getLinksPageNID($blog);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountBlogPages(Node $blog): int {
-        $links = array();
-        $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE);
-        return sizeof($links);
+    private function _getCountPageNID(Node $blog): int {
+        return sizeof($this->_getLinksPageNID($blog));
     }
-    private function _setNewBlogPage(string $name, string $content): void {
+    private function _setNewPageNID(string $name, string $content): void {
         // Create PageNID
         $instanceNode = $this->_cacheInstance->newVirtualNode();
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
@@ -1291,7 +1319,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instanceBL->signWrite();
         $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _setGetBlogPage(Node $blog, Node $page): void {
+    private function _getPageNID(Node $blog, Node $page): void {
         // TODO
     }
 

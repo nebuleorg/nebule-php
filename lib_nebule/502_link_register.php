@@ -92,40 +92,43 @@ class LinkRegister extends Functions implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE)
-        {
-            $this->_metrologyInstance->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+',
-                Metrology::LOG_LEVEL_ERROR, __METHOD__, '8d33e123');
+        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE) {
+            $this->_metrologyInstance->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8d33e123');
             return false;
         }
 
         // Extract items from RL : REQ>NID>NID>NID>NID...
         $req = strtok($rl, '>');
-        if (is_bool($req)) return false;
-        if (!$this->_checkREQ($req)) return false;
+        if (is_bool($req)) {
+            $this->_metrologyInstance->addLog('invalid REQ', Metrology::LOG_LEVEL_ERROR, __METHOD__, '380638fc');
+            return false;
+        }
+        if (!$this->_checkREQ($req))
+            return false;
         $this->_parsedLink['bl/rl/req'] = $req;
 
         $rl1nid = strtok('>');
-        if (is_bool($rl1nid)) return false;
+        if (is_bool($rl1nid)) {
+            $this->_metrologyInstance->addLog('null NID1', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f4f0eb13');
+            return false;
+        }
 
         $list = array();
         $j = 0;
-        while (!is_bool($rl1nid))
-        {
+        while (!is_bool($rl1nid)) {
             $list[$j] = $rl1nid;
             $j++;
-            if ($j > $this->_maxRLUID)
-            {
-                $this->_metrologyInstance->addLog('BL/RL overflow ' . substr($rl, 0, 200)
-                    . '+ maxRLUID='
-                    . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
+            if ($j > $this->_maxRLUID) {
+                $this->_metrologyInstance->addLog('BL/RL overflow ' . substr($rl, 0, 200) . '+ maxRLUID=' . $this->_maxRLUID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '72920c39');
                 return false;
             }
             $rl1nid = strtok('>');
         }
-        foreach ($list as $j => $nid)
-        {
-            if (!Node::checkNID($nid, $j > 0)) return false;
+        foreach ($list as $j => $nid) {
+            if (!Node::checkNID($nid, $j > 0)) {
+                $this->_metrologyInstance->addLog('invalid NID ' . $nid, Metrology::LOG_LEVEL_ERROR, __METHOD__, '40b3486e');
+                return false;
+            }
             $this->_parsedLink['bl/rl/nid'.($j+1)] = $nid;
         }
 
@@ -153,8 +156,10 @@ class LinkRegister extends Functions implements linkInterface
             && $req != 'k'
             && $req != 's'
             && $req != 'x'
-        )
+        ) {
+            $this->_metrologyInstance->addLog('invalid REQ value', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f0deaee8');
             return false;
+        }
 
         return true;
     }
@@ -229,6 +234,9 @@ class LinkRegister extends Functions implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
+        if (! $this->_validStructure)
+            $this->_metrologyInstance->addLog('get valid is false', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ecbbd1de');
+
         return ( $this->_blocLink->getValid() || !$this->_blocLink->getCheckCompleted() ) && $this->_valid;
     }
 
@@ -241,6 +249,9 @@ class LinkRegister extends Functions implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
+        if (! $this->_validStructure)
+            $this->_metrologyInstance->addLog('get valid structure is false', Metrology::LOG_LEVEL_ERROR, __METHOD__, '73233c1c');
+
         return $this->_validStructure;
     }
 
@@ -251,6 +262,9 @@ class LinkRegister extends Functions implements linkInterface
     public function getSigned(): bool
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        if (! $this->_validStructure)
+            $this->_metrologyInstance->addLog('get signed is false', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84c305e5');
 
         return $this->_blocLink->getSigned();
     }
