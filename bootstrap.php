@@ -3059,8 +3059,8 @@ function nod_checkNID(string $nid, bool $permitNull = false): bool {
     // Check hash value.
     $hash = strtok($nid, '.');
     if ($hash === false) return false;
-    if (strlen($hash) < LIB_NID_MIN_HASH_SIZE) return false;
-    if (strlen($hash) > LIB_NID_MAX_HASH_SIZE) return false;
+    if ((strlen($hash) * 4) < LIB_NID_MIN_HASH_SIZE) return false;
+    if ((strlen($hash) * 4) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($hash)) return false;
 
     // Check algo value.
