@@ -859,13 +859,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_cacheInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_cacheInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_cacheInstance->newConversation($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
         }
 
         $name = $object->getFullName('all');

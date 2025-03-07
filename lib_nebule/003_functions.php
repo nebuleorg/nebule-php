@@ -147,27 +147,27 @@ class Functions
         )
             $instance = $this->_cacheInstance->newNode('0');
         else {
-            $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_NODE);
+            $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_NODE);
             if ($instance->getIsEntity($social))
-                $instance = $this->_cacheInstance->newEntity($nid);
-            elseif ($instance->getIsWallet($social))
-                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_WALLET);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+            /*elseif ($instance->getIsWallet($social))
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_WALLET);
             elseif ($instance->getIsToken($social))
-                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKEN);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_TOKEN);
             elseif ($instance->getIsTokenPool($social))
-                $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_TOKENPOOL);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_TOKENPOOL);
             elseif ($instance->getIsCurrency($social))
-                $instance = $this->_cacheInstance->newCurrency($nid);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_CURRENCY);*/
             elseif ($instance->getIsConversation($social))
-                $instance = $this->_cacheInstance->newConversation($nid);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_CONVERSATION);
             elseif ($instance->getIsGroup($social))
-                $instance = $this->_cacheInstance->newGroup($nid);
+                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             else {
                 $protected = $instance->getMarkProtected();
                 if ($protected)
-                    $instance = $this->_cacheInstance->newNode($instance->getID(), Cache::TYPE_NODE);
+                    $instance = $this->_cacheInstance->newNode($instance->getID(), \Nebule\Library\Cache::TYPE_NODE);
                 if ($instance->getType('all') == References::REFERENCE_OBJECT_ENTITY)
-                    $instance = $this->_cacheInstance->newNode($nid, Cache::TYPE_ENTITY);
+                    $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
             }
         }
 

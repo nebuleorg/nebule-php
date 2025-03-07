@@ -715,8 +715,8 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7ee74');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
-        foreach ($group->getListMembersID('myself', null) as $id) {
+        $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupOpened, \Nebule\Library\Cache::TYPE_GROUP);
+        foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
         unset($group, $id);
@@ -740,8 +740,8 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b217dcb1');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
-        foreach ($group->getListMembersID('myself', null) as $id) {
+        $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupClosed, \Nebule\Library\Cache::TYPE_GROUP);
+        foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
         unset($group, $id);
@@ -810,7 +810,7 @@ abstract class Actions extends Functions
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
-            $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newEntity($arg);
+            $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
     }
     protected function _actionSynchronizeEntity(): void
     {
@@ -1009,7 +1009,7 @@ abstract class Actions extends Functions
         // Ecriture de l'objet.
         $this->_ioInstance->setObject($this->_actionSynchronizeNewEntityID, $data);
 
-        $this->_actionSynchronizeNewEntityInstance = $this->_cacheInstance->newEntity($this->_actionSynchronizeNewEntityID);
+        $this->_actionSynchronizeNewEntityInstance = $this->_cacheInstance->newNode($this->_actionSynchronizeNewEntityID, \Nebule\Library\Cache::TYPE_ENTITY);
 
         if (!$this->_actionSynchronizeNewEntityInstance->getTypeVerify()) {
             $this->_metrologyInstance->addLog('action synchronize new entity - Not entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
@@ -1722,7 +1722,7 @@ abstract class Actions extends Functions
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
 
             // Recrée l'instance de l'objet.
-            $this->_actionCreateEntityInstance = $this->_cacheInstance->newEntity($this->_actionCreateEntityID);
+            $this->_actionCreateEntityInstance = $this->_cacheInstance->newNode($this->_actionCreateEntityID, \Nebule\Library\Cache::TYPE_ENTITY);
         } else {
             // Si ce n'est pas bon.
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
@@ -1849,7 +1849,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instance = $this->_cacheInstance->newGroup($this->_actionDeleteGroupID);
+        $instance = $this->_cacheInstance->newNode($this->_actionDeleteGroupID, \Nebule\Library\Cache::TYPE_GROUP);
 
         // Vérification.
         if ($instance->getID() == '0'
@@ -1897,7 +1897,7 @@ abstract class Actions extends Functions
     protected function _actionAddToGroup(): void
     {
         $this->_metrologyInstance->addLog('action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
-        $instanceGroupe = $this->_cacheInstance->newGroup($this->_actionAddToGroup);
+        $instanceGroupe = $this->_cacheInstance->newNode($this->_actionAddToGroup, \Nebule\Library\Cache::TYPE_GROUP);
         $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
 
@@ -1921,7 +1921,7 @@ abstract class Actions extends Functions
     protected function _actionRemoveFromGroup(): void
     {
         $this->_metrologyInstance->addLog('action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
-        $instanceGroupe = $this->_cacheInstance->newGroup($this->_actionRemoveFromGroup);
+        $instanceGroupe = $this->_cacheInstance->newNode($this->_actionRemoveFromGroup, \Nebule\Library\Cache::TYPE_GROUP);
         $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
 
@@ -2101,7 +2101,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action delete conversation ' . $this->_actionDeleteConversationID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Suppression.
-        $instance = $this->_cacheInstance->newConversation($this->_actionDeleteConversationID);
+        $instance = $this->_cacheInstance->newNode($this->_actionDeleteConversationID, \Nebule\Library\Cache::TYPE_CONVERSATION);
         if (!is_a($instance, 'Nebule\Library\Conversation')
             || $instance->getID() == '0'
             || !$instance->getIsConversation('myself')
@@ -2151,7 +2151,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instanceConversation = $this->_cacheInstance->newConversation($this->_actionAddMessageOnConversation);
+        $instanceConversation = $this->_cacheInstance->newNode($this->_actionAddMessageOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
         $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
     }
 
@@ -2176,7 +2176,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instanceConversation = $this->_cacheInstance->newConversation($this->_actionRemoveMessageOnConversation);
+        $instanceConversation = $this->_cacheInstance->newNode($this->_actionRemoveMessageOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
         $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
     }
 
@@ -2201,7 +2201,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instanceConversation = $this->_cacheInstance->newConversation($this->_actionAddMemberOnConversation);
+        $instanceConversation = $this->_cacheInstance->newNode($this->_actionAddMemberOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
         $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
     }
 
@@ -2226,7 +2226,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instanceConversation = $this->_cacheInstance->newConversation($this->_actionRemoveMemberOnConversation);
+        $instanceConversation = $this->_cacheInstance->newNode($this->_actionRemoveMemberOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
         $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
     }
 

@@ -41,7 +41,7 @@ class Authorities extends Functions
     );
 
     private string $_puppetmasterID = '';
-    private ?Entity $_puppetmasterInstance = null;
+    private ?Node $_puppetmasterInstance = null;
     private array $_securityAuthoritiesID = array();
     private array $_securityAuthoritiesInstance = array();
     private array $_securitySignersInstance = array();
@@ -85,7 +85,7 @@ class Authorities extends Functions
     private function _findPuppetmaster(): void
     {
         $this->_puppetmasterID = $this->_configurationInstance->getOptionUntyped('puppetmaster');
-        $this->_puppetmasterInstance = $this->_cacheInstance->newEntity($this->_puppetmasterID);
+        $this->_puppetmasterInstance = $this->_cacheInstance->newNode($this->_puppetmasterID, \Nebule\Library\Cache::TYPE_ENTITY);
         $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmasterID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88848d09');
     }
 
@@ -154,7 +154,7 @@ class Authorities extends Functions
         foreach ($links as $link)
         {
             $eid = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->_cacheInstance->newEntity($eid);
+            $instance = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
             $listEID[$eid] = $eid;
             $listInstances[$eid] = $instance;
             $signersInstances[$eid] = $link->getSignersEID();
@@ -363,7 +363,7 @@ class Authorities extends Functions
 
         foreach ($list as $link) {
             $eid = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newEntity($eid);
+            $instance = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
             $this->_addAsLocalAuthority($instance, $eid, $link->getParsed()['bs/rs1/eid']);
             $this->_metrologyInstance->addLog('add as local authority EID=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0074f2c6');
         }

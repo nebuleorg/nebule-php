@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250222';
+    const APPLICATION_VERSION = '020250307';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -756,7 +756,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = '')
+    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = ''): void
     {
         $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
@@ -777,13 +777,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_cacheInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_cacheInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_cacheInstance->newConversation($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
         }
 
         $name = $object->getFullName('all');

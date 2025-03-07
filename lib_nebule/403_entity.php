@@ -844,7 +844,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
             if (!$instance->getIsGroup('all')) {
                 unset($links[$i]);
             }
@@ -879,7 +879,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getIsGroup('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
@@ -913,7 +913,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if (!$instance->getIsConversation('all')) {
                 unset($links[$i]);
             }
@@ -939,7 +939,7 @@ class Entity extends Node implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if ($instance->getIsConversation('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }

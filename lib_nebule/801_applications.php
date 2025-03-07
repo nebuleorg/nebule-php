@@ -189,17 +189,17 @@ abstract class Applications extends Functions implements applicationInterface
             )
         ) {
             $this->_currentEntityOID = $arg_ent;
-            $this->_currentEntityInstance = $this->_cacheInstance->newEntity($arg_ent);
+            $this->_currentEntityInstance = $this->_cacheInstance->newNode($arg_ent, \Nebule\Library\Cache::TYPE_ENTITY);
             $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('sylabeSelectedEntity');
             if ($cache !== false && $cache != '') {
                 $this->_currentEntityOID = $cache;
-                $this->_currentEntityInstance = $this->_cacheInstance->newEntity($cache);
+                $this->_currentEntityInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_ENTITY);
             } else
             {
                 $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
-                $this->_currentEntityInstance = $this->_cacheInstance->newEntity($this->_entitiesInstance->getCurrentEntityID());
+                $this->_currentEntityInstance = $this->_cacheInstance->newNode($this->_entitiesInstance->getCurrentEntityID(), \Nebule\Library\Cache::TYPE_ENTITY);
                 $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $this->_entitiesInstance->getCurrentEntityID());
             }
             unset($cache);

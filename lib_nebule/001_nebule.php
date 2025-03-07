@@ -510,17 +510,17 @@ class nebule
             )
         ) {
             $this->_currentGroupID = $arg_grp;
-            $this->_currentGroupInstance = $this->_cacheInstance->newGroup($arg_grp);
+            $this->_currentGroupInstance = $this->_cacheInstance->newNode($arg_grp, \Nebule\Library\Cache::TYPE_GROUP);
             $this->_sessionInstance->setSessionStore('nebuleSelectedGroup', $arg_grp);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedGroup');
             if ($cache !== false && $cache != '') {
                 $this->_currentGroupID = $cache;
-                $this->_currentGroupInstance = $this->_cacheInstance->newGroup($cache);
+                $this->_currentGroupInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_GROUP);
             } else
             {
                 $this->_currentGroupID = '0';
-                $this->_currentGroupInstance = $this->_cacheInstance->newGroup('0');
+                $this->_currentGroupInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_GROUP);
                 $this->_sessionInstance->setSessionStore('nebuleSelectedGroup', $this->_currentGroupID);
             }
             unset($cache);
@@ -559,16 +559,16 @@ class nebule
             )
         ) {
             $this->_currentConversationID = $arg_cvt;
-            $this->_currentConversationInstance = $this->_cacheInstance->newConversation($arg_cvt);
+            $this->_currentConversationInstance = $this->_cacheInstance->newNode($arg_cvt, \Nebule\Library\Cache::TYPE_CONVERSATION);
             $this->_sessionInstance->setSessionStore('nebuleSelectedConversation', $arg_cvt);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedConversation');
             if ($cache !== false && $cache != '') {
                 $this->_currentConversationID = $cache;
-                $this->_currentConversationInstance = $this->_cacheInstance->newConversation($cache);
+                $this->_currentConversationInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_CONVERSATION);
             } else {
                 $this->_currentConversationID = '0';
-                $this->_currentConversationInstance = $this->_cacheInstance->newConversation('0');
+                $this->_currentConversationInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CONVERSATION);
                 $this->_sessionInstance->setSessionStore('nebuleSelectedConversation', $this->_currentConversationID);
             }
             unset($cache);
@@ -597,7 +597,7 @@ class nebule
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrencyID = '0';
-            $this->_currentCurrencyInstance = $this->_cacheInstance->newCurrency('0');
+            $this->_currentCurrencyInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CURRENCY);
             $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
             return;
         }
@@ -614,16 +614,16 @@ class nebule
             )
         ) {
             $this->_currentCurrencyID = $arg;
-            $this->_currentCurrencyInstance = $this->_cacheInstance->newCurrency($arg);
+            $this->_currentCurrencyInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_CURRENCY);
             $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedCurrency');
             if ($cache !== false && $cache != '') {
                 $this->_currentCurrencyID = $cache;
-                $this->_currentCurrencyInstance = $this->_cacheInstance->newCurrency($cache);
+                $this->_currentCurrencyInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_CURRENCY);
             } else {
                 $this->_currentCurrencyID = '0';
-                $this->_currentCurrencyInstance = $this->_cacheInstance->newCurrency('0');
+                $this->_currentCurrencyInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CURRENCY);
                 $this->_sessionInstance->setSessionStore('nebuleSelectedCurrency', $this->_currentCurrencyID);
             }
             unset($cache);
@@ -652,7 +652,7 @@ class nebule
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
-            $this->_currentTokenPoolInstance = $this->_cacheInstance->newTokenPool('0');
+            $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKENPOOL);
             $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             return;
         }
@@ -669,16 +669,16 @@ class nebule
             )
         ) {
             $this->_currentTokenPool = $arg;
-            $this->_currentTokenPoolInstance = $this->_cacheInstance->newTokenPool($arg);
+            $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_TOKENPOOL);
             $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedTokenPool');
             if ($cache !== false && $cache != '') {
                 $this->_currentTokenPool = $cache;
-                $this->_currentTokenPoolInstance = $this->_cacheInstance->newTokenPool($cache);
+                $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_TOKENPOOL);
             } else {
                 $this->_currentTokenPool = '0';
-                $this->_currentTokenPoolInstance = $this->_cacheInstance->newTokenPool('0');
+                $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKENPOOL);
                 $this->_sessionInstance->setSessionStore('nebuleSelectedTokenPool', $this->_currentTokenPool);
             }
             unset($cache);
@@ -707,7 +707,7 @@ class nebule
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenID = '0';
-            $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
+            $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
             $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
             return;
         }
@@ -724,16 +724,16 @@ class nebule
             )
         ) {
             $this->_currentTokenID = $arg;
-            $this->_currentTokenInstance = $this->_cacheInstance->newToken($arg);
+            $this->_currentTokenInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_TOKEN);
             $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStore('nebuleSelectedToken');
             if ($cache !== false  && $cache != '') {
                 $this->_currentTokenID = $cache;
-                $this->_currentTokenInstance = $this->_cacheInstance->newToken($cache);
+                $this->_currentTokenInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_TOKEN);
             } else {
                 $this->_currentTokenID = '0';
-                $this->_currentTokenInstance = $this->_cacheInstance->newToken('0');
+                $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
                 $this->_sessionInstance->setSessionStore('nebuleSelectedToken', $this->_currentTokenID);
             }
             unset($cache);

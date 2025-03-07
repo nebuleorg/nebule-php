@@ -32,19 +32,16 @@ class Cache extends Functions
     const TYPE_LINK = 'link';
     const TYPE_TRANSACTION = 'transaction';
 
-    const KNOWN_TYPE = array(
-        self::TYPE_NODE,
-        self::TYPE_GROUP,
-        self::TYPE_ENTITY,
-        self::TYPE_LOCATION,
-        self::TYPE_CONVERSATION,
-        self::TYPE_CURRENCY,
-        self::TYPE_TOKENPOOL,
-        self::TYPE_TOKEN,
-        self::TYPE_WALLET,
-        self::TYPE_BLOCLINK,
-        self::TYPE_LINK,
-        self::TYPE_TRANSACTION,
+    private array $_knownNodeType = array(
+        self::TYPE_NODE => '\Nebule\Library\Node',
+        self::TYPE_GROUP => '\Nebule\Library\Group',
+        self::TYPE_ENTITY => '\Nebule\Library\Entity',
+        self::TYPE_LOCATION => '\Nebule\Library\Localisation',
+        self::TYPE_CONVERSATION => '\Nebule\Library\Conversation',
+        self::TYPE_CURRENCY => '\Nebule\Library\Currency',
+        self::TYPE_TOKENPOOL => '\Nebule\Library\TokenPool',
+        self::TYPE_TOKEN => '\Nebule\Library\Token',
+        self::TYPE_WALLET => '\Nebule\Library\Wallet',
     );
 
     private array $_cache = array();
@@ -222,7 +219,7 @@ class Cache extends Functions
 
     private function _checkKnownNodeType(string &$type): bool
     {
-        if (in_array($type, self::KNOWN_TYPE))
+        if (array_key_exists($type, $this->_knownNodeType))
             return true;
         return false;
     }
@@ -238,7 +235,7 @@ class Cache extends Functions
         if ($this->_flushCache || $nid == '' || $nid == '0') return false;
 
         if ($type == '') {
-            foreach (self::KNOWN_TYPE as $known) {
+            foreach ($this->_knownNodeType as $known => $item) {
                 if (isset($this->_cache[$known][$nid])) return true;
             }
         } else {
@@ -259,117 +256,53 @@ class Cache extends Functions
         return $instance;
     }
 
-    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node
+    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_filterNodeType($type);
 
         if ($this->getIsOnCache($nid, $type)) {
             $instance = $this->_cache[$type][$nid];
             $this->_writeCacheTimestamp($nid, $type);
         } else {
-            switch ($type)
+            $instance = null;
+            foreach ($this->_knownNodeType as $known => $item) {
+                if ($type == $known) {
+                    $instance = new $item($this->_nebuleInstance, $nid);
+                    break;
+                }
+            }
+            /*switch ($type)
             {
                 case self::TYPE_GROUP:
-                    $instance = new Group($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Group($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_ENTITY:
-                    $instance = new Entity($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Entity($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_LOCATION:
-                    $instance = new Localisation($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Localisation($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_CONVERSATION:
-                    $instance = new Conversation($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Conversation($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_CURRENCY:
-                    $instance = new Currency($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Currency($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_TOKENPOOL:
-                    $instance = new TokenPool($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\TokenPool($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_TOKEN:
-                    $instance = new Token($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Token($this->_nebuleInstance, $nid);
                     break;
                 case self::TYPE_WALLET:
-                    $instance = new Wallet($this->_nebuleInstance, $nid);
+                    $instance = new \Nebule\Library\Wallet($this->_nebuleInstance, $nid);
                     break;
                 default:
                     $type = self::TYPE_NODE;
-                    $instance = new Node($this->_nebuleInstance, $nid);
-            }
+                    $instance = new \Nebule\Library\Node($this->_nebuleInstance, $nid);
+            }*/
             $this->_writeCacheNodes($instance, $type);
-        }
-        return $instance;
-    }
-
-    public function newEntity(string $nid): Entity
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_ENTITY)) {
-            $instance = $this->_cache[Cache::TYPE_ENTITY][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_ENTITY);
-        } else {
-            $instance = new Entity($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_ENTITY);
-        }
-        return $instance;
-    }
-
-    public function newGroup(string $nid): Group
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_GROUP)) {
-            $instance = $this->_cache[Cache::TYPE_GROUP][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_GROUP);
-        } else {
-            $instance = new Group($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_GROUP);
-        }
-        return $instance;
-    }
-
-    public function newConversation(string $nid): Conversation
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_CONVERSATION)) {
-            $instance = $this->_cache[Cache::TYPE_CONVERSATION][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_CONVERSATION);
-        } else {
-            $instance = new Conversation($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_CONVERSATION);
-        }
-        return $instance;
-    }
-
-    public function newCurrency(string $nid): Currency
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_CURRENCY)) {
-            $instance = $this->_cache[Cache::TYPE_CURRENCY][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_CURRENCY);
-        } else {
-            $instance = new Currency($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_CURRENCY);
-        }
-        return $instance;
-    }
-
-    public function newTokenPool(string $nid): TokenPool
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_TOKENPOOL)) {
-            $instance = $this->_cache[Cache::TYPE_TOKENPOOL][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_TOKENPOOL);
-        } else {
-            $instance = new TokenPool($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_TOKENPOOL);
-        }
-        return $instance;
-    }
-
-    public function newToken(string $nid): Token
-    {
-        if ($this->getIsOnCache($nid, Cache::TYPE_TOKEN)) {
-            $instance = $this->_cache[Cache::TYPE_TOKEN][$nid];
-            $this->_writeCacheTimestamp($nid, Cache::TYPE_TOKEN);
-        } else {
-            $instance = new Token($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, Cache::TYPE_TOKEN);
         }
         return $instance;
     }
@@ -383,7 +316,7 @@ class Cache extends Functions
             $this->_cacheDateInsertion[$type][$link] = microtime(true);
             $instance = $this->_cache[$type][$link];
         } else {
-            $instance = new BlocLink($this->_nebuleInstance, $link, $type);
+            $instance = new \Nebule\Library\BlocLink($this->_nebuleInstance, $link, $type);
             $this->_writeCacheBlockLinks($instance, Cache::TYPE_BLOCLINK);
         }
         return $instance;
@@ -564,5 +497,13 @@ class Cache extends Functions
             return sizeof($this->_cache[self::TYPE_LINK]);
         else
             return 0;
+    }
+
+    public function setNewNodeType(string $type, string $class): bool {
+        if (! isset($this->_knownNodeType[$type])) {
+            $this->_knownNodeType[$type] = $class;
+            return true;
+        }
+        return false;
     }
 }

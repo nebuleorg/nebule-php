@@ -6914,7 +6914,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
             blk_write($newLink);
 
             // Load entity on library.
-            $instance = $nebuleInstance->getCacheInstance()->newEntity('0');
+            $instance = $nebuleInstance->getCacheInstance()->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
             $instance->setContent($nebulePrivateEntity);
             $nebuleInstance->getEntitiesInstance()->setCurrentEntity($instance);
 

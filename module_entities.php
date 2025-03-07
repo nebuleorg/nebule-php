@@ -28,7 +28,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250307';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -1253,7 +1253,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $dispWarn = false;
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
-                    $entity = $this->_cacheInstance->newEntity($id);
+                    $entity = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::sylabe:module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
@@ -1435,7 +1435,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1504,7 +1504,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $list = array();
         $i = 0;
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid2']])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1607,7 +1607,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $i = 0;
             foreach ($links as $link) {
                 $id = $link->getParsed()['bl/rl/nid1'];
-                $instance = $this->_cacheInstance->newEntity($id);
+                $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
                 if (!isset($listOkEntities[$id])
                     && $instance->getType('all') == Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()

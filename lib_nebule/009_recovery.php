@@ -47,7 +47,7 @@ class Recovery extends Functions
         }
     }
 
-    private function _addAsLocalRecovery(Entity $instance, string $signer='0'): void
+    private function _addAsLocalRecovery(Node $instance, string $signer='0'): void
     {
         $eid = $instance->getID();
         if ($eid == '0')
@@ -94,7 +94,7 @@ class Recovery extends Functions
         }
 
         foreach ($list as $link) {
-            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             $this->_addAsLocalRecovery($instance, $link->getParsed()['bs/rs1/eid']);
         }
         unset($list);

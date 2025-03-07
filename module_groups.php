@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
+use Nebule\Library\Cache;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Modules;
@@ -26,7 +27,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250225';
+    const MODULE_VERSION = '020250307';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -425,7 +426,7 @@ class ModuleGroups extends \Nebule\Library\Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_cacheInstance->newGroup($group);
+            $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -500,7 +501,7 @@ class ModuleGroups extends \Nebule\Library\Modules
         $listOkGroups = array();
         $i = 0;
         foreach ($listGroups as $group) {
-            $instance = $this->_cacheInstance->newGroup($group);
+            $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
             // Extraction des entités signataires.
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
@@ -554,7 +555,7 @@ class ModuleGroups extends \Nebule\Library\Modules
 				if ( $link->getParsed()['bs/rs1/eid'] != $this->_nebuleInstance->getCurrentEntity() )
 				{
 					$instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);   erreur de fonction !!!
-					$instanceEntity = $this->_nebuleInstance->newEntity($link->getParsed()['bs/rs1/eid']);
+					$instanceEntity = $this->_nebuleInstance->newNode($link->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
 					$closed = '::GroupeOuvert';
 					if ( $instance->getMarkClosed() )
 						$closed = '::GroupeFerme';
@@ -852,7 +853,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntityID()
                         ) {
                             $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
-                            $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
+                            $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
                             $closed = '::GroupeOuvert';
                             if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                                 $closed = '::GroupeFerme';
@@ -915,7 +916,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                     // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                     if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])) {
                         $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
-                        $instanceSigner = $this->_cacheInstance->newEntity($item->getParsed()['bs/rs1/eid']);
+                        $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
                         $closed = '::GroupeOuvert';
                         if ($item->getParsed()['bl/rl/nid3'] == $hashGroupPriv)
                             $closed = '::GroupeFerme';

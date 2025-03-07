@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250220';
+    const APPLICATION_VERSION = '020250307';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1783,7 +1783,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche les entités.
         foreach ($links as $link) {
             $id = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newEntity($id);
+            $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkEntities[$id])
                 && $instance->getType('all') == Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1859,7 +1859,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche les groupes.
         foreach ($listGroups as $id) {
-            $instance = $this->_cacheInstance->newEntity($id);
+            $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkGroups[$id])) {
                 $param = array(
                     'enableDisplayColor' => true,
@@ -2075,10 +2075,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) { // FIXME la classe
-            $object = $this->_cacheInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if ($isGroup && !is_a($object, 'Group')) { // FIXME la classe
-            $object = $this->_cacheInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
         }
 
         // Détermine si l'objet est protégé.
@@ -2243,7 +2243,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 class="klictyModuleEntityInput">
                             <?php
                             foreach ($listGroupsMember as $group) {
-                                $instance = $this->_cacheInstance->newGroup($group);
+                                $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
                                 echo '<option value="' . $group . '">' . $instance->getFullName('myself') . "</option>\n";
                             }
                             unset($instance);
@@ -2261,7 +2261,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list = array();
                 foreach ($listGroupsMember as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newGroup($group);
+                        $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
                         // Si c'est un grupe, l'affiche.
                         if ($instance->getIsGroup('myself')) {
@@ -2888,7 +2888,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list = array();
                 $i = 0;
                 foreach ($shareTo as $entity) {
-                    $instance = $this->_cacheInstance->newEntity($entity);
+                    $instance = $this->_cacheInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
                     $type = $instance->getIsEntity('all');
                     if (!isset($listOkEntities[$entity]) && $type) {
                         $list[$i]['object'] = $instance;
@@ -2991,7 +2991,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $listOkGroups = array();
                 foreach ($listGroups as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newGroup($group);
+                        $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
                         // Si c'est un groupe fermé.
                         $typeClosed = $instance->getMarkClosed();
@@ -3057,7 +3057,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             //Prépare l'affichage des entités.
             if (sizeof($links) != 0) {
                 foreach ($links as $link) {
-                    $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid1']);
+                    $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
                     $type = $instance->getIsEntity('all');
                     if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']]) && $type) {
                         $list[$i]['object'] = $instance;
@@ -3559,9 +3559,9 @@ private function _displayContentAbout()
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) // FIXME la classe
-            $object = $this->_cacheInstance->newEntity($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if ($isGroup && !is_a($object, 'Group')) // FIXME la classe
-            $object = $this->_cacheInstance->newGroup($object->getID());
+            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
 
         // Vérifie si il est protégé
         $protected = $object->getMarkProtected();
@@ -3727,7 +3727,7 @@ private function _displayContentAbout()
             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
         ) {
-            $entity = $this->_cacheInstance->newEntity($item['entity']);
+            $entity = $this->_cacheInstance->newNode($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entityID = $entity->getID();
         }
 

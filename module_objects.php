@@ -27,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250307';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1043,7 +1043,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             $instance = null;
             $typeEntity = false;
             foreach ($shareTo as $entity) {
-                $instance = $this->_cacheInstance->newEntity($entity);
+                $instance = $this->_cacheInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$entity])
                     && $typeEntity
@@ -1223,7 +1223,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 'displayRatio' => 'short',
             );
 
-            // Liste et enlève les entités pour lequelles la protection est déjà faite.
+            // Liste et enlève les entités pour lesquelles la protection est déjà faite.
             $sharedTo = $object->getProtectedTo();
             foreach ($sharedTo as $entity) {
                 $listOkEntities[$entity] = true;
@@ -1236,7 +1236,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             foreach ($listGroups as $group) {
                 // @todo vérifier que le groupe ne contient pas juste des entités pour lesquelles le partage est effectif.
 
-                $instance = $this->_cacheInstance->newGroup($group);
+                $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
                 $typeGroup = $instance->getIsEntity('all');
                 if (!isset($listOkGroups[$group])
                     && $typeGroup
@@ -1308,7 +1308,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             $typeEntity = false;
             $link = null;
             foreach ($links as $link) {
-                $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid1']);
+                $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']])
                     && $typeEntity

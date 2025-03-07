@@ -2493,7 +2493,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->checkPresent()) {
                 if ($size = 'half' || $size = 'full') {
                     if (!is_a($object, 'Nebule\Library\Entity')) {
-                        $object = $this->_cacheInstance->newEntity($object->getID());
+                        $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
                     }
 
                     $result = '<div class="text">' . "\n\t<p>"
@@ -2528,7 +2528,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
-                $object = $this->_cacheInstance->newGroup($object->getID());
+                $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -2543,7 +2543,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             unset($isOpened, $isClosed);
         } elseif ($isConversation) {
             if (!is_a($object, 'Conversation'))
-                $object = $this->_cacheInstance->newConversation($object->getID());
+                $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -4809,11 +4809,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->getType('all') == References::REFERENCE_OBJECT_ENTITY
                 && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER) !== false
             )
-                $object = $this->_cacheInstance->newEntity($id);
+                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
             elseif ($object->getIsGroup('all'))
-                $object = $this->_cacheInstance->newGroup($id);
+                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_GROUP);
             elseif ($object->getIsConversation('all'))
-                $object = $this->_cacheInstance->newConversation($id);
+                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_CONVERSATION);
         }
 
         $type = $object->getType('all');
@@ -5901,7 +5901,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Prépare le contenu à afficher.
         $return = '';
         foreach ($link->getSignersEID() as $signer)
-            $return .= $this->convertInlineObjectColor($this->_cacheInstance->newEntity($signer));
+            $return .= $this->convertInlineObjectColor($this->_cacheInstance->newNode($signer), \Nebule\Library\Cache::TYPE_ENTITY);
         $return .= $colorDate;
         $return .= $iconUpdate;
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
@@ -6273,7 +6273,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $entity = $item['entity'];
             $entityID = $entity->getID();
         } elseif (Node::checkNID($item['entity'], false, false)) {
-            $entity = $this->_cacheInstance->newEntity($item['entity']);
+            $entity = $this->_cacheInstance->newNode($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entityID = $entity->getID();
         }
 

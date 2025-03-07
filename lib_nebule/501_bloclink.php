@@ -794,7 +794,7 @@ class BlocLink extends Functions implements blocLinkInterface
             $publicKeyInstance = $this->_entitiesInstance->getCurrentEntityInstance();
             $publicKeyID = $publicKey;
         } else {
-            $publicKeyInstance = $this->_cacheInstance->newEntity($publicKey);
+            $publicKeyInstance = $this->_cacheInstance->newNode($publicKey, \Nebule\Library\Cache::TYPE_ENTITY);
             $publicKeyID = $publicKey;
         }
         $this->_metrologyInstance->addLog('sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');

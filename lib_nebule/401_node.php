@@ -1083,7 +1083,7 @@ class Node extends Functions implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -1119,7 +1119,7 @@ class Node extends Functions implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getIsGroup('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -1181,7 +1181,7 @@ class Node extends Functions implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
         }
@@ -1218,7 +1218,7 @@ class Node extends Functions implements nodeInterface
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newConversation($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if ($instance->getIsConversation('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -1979,10 +1979,10 @@ class Node extends Functions implements nodeInterface
         return false; // FIXME disabled!
 
         /*if (is_string($entity)) {
-            $entity = $this->_nebuleInstance->newEntity($entity);
+            $entity = $this->_nebuleInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if (!is_a($entity, 'entity'))
-            $entity = $this->_nebuleInstance->newEntity($entity->getID());
+            $entity = $this->_nebuleInstance->newNode($entity->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$entity->getIsEntity('all'))
             return false;
 
@@ -2084,9 +2084,9 @@ class Node extends Functions implements nodeInterface
         return false; // FIXME disabled!
 
         /*if (is_string($entity))
-            $entity = $this->_nebuleInstance->newEntity($entity);
+            $entity = $this->_nebuleInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
         if (!is_a($entity, 'entity'))
-            $entity = $this->_nebuleInstance->newEntity($entity->getID());
+            $entity = $this->_nebuleInstance->newNode($entity->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$entity->getIsEntity('all'))
             return false;
 
