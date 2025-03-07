@@ -65,17 +65,13 @@ class App4
                     echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
                     echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
                     \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
-                    if ($parsedBloc['bl/rl/nid2'] != '') {
+                    $i = 2;
+                    while ($parsedBloc['bl/rl/nid'.$i] != '') {
                         echo '>';
-                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid2'], substr($parsedBloc['bl/rl/nid2'], 0, 16));
-                    }
-                    if ($parsedBloc['bl/rl/nid3'] != '') {
-                        echo '>';
-                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid3'], substr($parsedBloc['bl/rl/nid3'], 0, 16));
-                    }
-                    if ($parsedBloc['bl/rl/nid4'] != '') {
-                        echo '>';
-                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid4'], substr($parsedBloc['bl/rl/nid4'], 0, 16));
+                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid'.$i], substr($parsedBloc['bl/rl/nid'.$i], 0, 16));
+                        $i++;
+                        if ($i > \Nebule\Bootstrap\lib_getOption('linkMaxRLUID'))
+                            break;
                     }
                     echo "<br />\n";
                     echo 'BS / EID=';
