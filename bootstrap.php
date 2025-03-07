@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250222';
+const BOOTSTRAP_VERSION = '020250307';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -673,7 +673,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'forceDisplayEntityOnTitle' => 'false',
     'linkMaxFollowedUpdates' => '100',
     'linkMaxRL' => '1',
-    'linkMaxRLUID' => '4',
+    'linkMaxRLUID' => '5',
     'linkMaxRS' => '1',
     'permitSessionOptions' => 'true',
     'permitSessionBuffer' => 'true',
@@ -2565,29 +2565,22 @@ function lnk_checkRC(string &$rc): bool {
  */
 function lnk_checkRL(string &$rl): bool {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    $linkMaxRLUID = lib_getOption('linkMaxRLUID');
     if (strlen($rl) > 4096) return false; // TODO à revoir.
 
-    // Extract items from RL 1 : REQ>NID>NID>NID>NID
+    // Extract items from RL 1 : REQ>NID>NID>NID>...
     $req = strtok($rl, '>');
-    $rl1nid1 = strtok('>');
-    if ($rl1nid1 === false) $rl1nid1 = '';
-    $rl1nid2 = strtok('>');
-    if ($rl1nid2 === false) $rl1nid2 = '';
-    $rl1nid3 = strtok('>');
-    if ($rl1nid3 === false) $rl1nid3 = '';
-    $rl1nid4 = strtok('>');
-    if ($rl1nid4 === false) $rl1nid4 = '';
-
-    // Check registry overflow
-    if (strtok('>') !== false) return false;
-
-    // --- --- --- --- --- --- --- --- ---
-    // Check REQ, NID1, NID2, NID3 and NID4.
     if (!lnk_checkREQ($req)) return false;
-    if (!nod_checkNID($rl1nid1, false)) return false;
-    if (!nod_checkNID($rl1nid2, true)) return false;
-    if (!nod_checkNID($rl1nid3, true)) return false;
-    if (!nod_checkNID($rl1nid4, true)) return false;
+
+    $rl1nid = strtok('>');
+    if ($rl1nid === false) $rl1nid = '';
+    if (!nod_checkNID($rl1nid, false)) return false;
+    $i = 1;
+    while (($rl1nid = strtok('>')) !== false) {
+        $i++;
+        if ($i > $linkMaxRLUID) return false;
+        if (!nod_checkNID($rl1nid, true)) return false;
+    }
 
     return true;
 }

@@ -472,7 +472,7 @@ class Configuration extends Functions
         'forceDisplayEntityOnTitle' => 'false',
         'linkMaxFollowedUpdates' => '100',
         'linkMaxRL' => '1',
-        'linkMaxRLUID' => '4',
+        'linkMaxRLUID' => '5',
         'linkMaxRS' => '1',
         'permitSessionOptions' => 'true',
         'permitSessionBuffer' => 'true',
