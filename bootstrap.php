@@ -5771,7 +5771,7 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
         bootstrap_echoLineTitle($title);
 
         $name = $eid;
-        if (is_a($listInstance[$eid], 'Nebule\Library\Entity'))
+        if (isset($listInstance[$eid]) && is_a($listInstance[$eid], 'Nebule\Library\Entity'))
             $name = $listInstance[$eid]->getName();
 
         if ($ok)
@@ -5782,7 +5782,7 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
                 echo ' (local authority)';
             if ($nebuleInstance->getAuthoritiesInstance()->getIsGlobalAuthorityEID($eid))
                 echo ' (global authority)';
-            if (is_a($listInstance[$eid], 'Nebule\Library\Entity') && $listInstance[$eid]->isSetPrivateKeyPassword())
+            if (isset($listInstance[$eid]) && is_a($listInstance[$eid], 'Nebule\Library\Entity') && $listInstance[$eid]->isSetPrivateKeyPassword())
                 echo ' (unlocked)';
         } else
             echo '<span class="error">ERROR!</span>';

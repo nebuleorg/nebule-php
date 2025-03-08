@@ -97,8 +97,7 @@ class ApplicationModules
     }
 
     protected function _initInternalDeadModules(): void {
-        $list = get_declared_classes();
-        foreach ($list as $class) {
+        foreach (get_declared_classes() as $class) {
             if (str_starts_with($class, 'Module') && $class != 'Module') {
                 $this->_metrologyInstance->addLog('dead module ' . $class, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '050783df');
                 $this->_listModulesName[$class::MODULE_LANGUAGE] = $class;
