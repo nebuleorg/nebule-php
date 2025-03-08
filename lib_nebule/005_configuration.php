@@ -356,7 +356,7 @@ class Configuration extends Functions
         'permitLogs' => false,
         'permitLogsOnDebugFile' => false,
         'permitJavaScript' => false,
-        'permitApplicationModules' => false,
+        'permitApplicationModules' => true,
         'permitApplicationModulesExternal' => false,
         'permitApplicationModulesTranslate' => false,
         'permitActionWithoutTicket' => false,
@@ -791,7 +791,7 @@ class Configuration extends Functions
 
     /**
      * Get content of an option as a string.
-     * An unknown option, if resolve, return a value too.
+     * An unknown option, if solved, return a value too.
      *
      * @param string $name
      * @return string
