@@ -461,6 +461,7 @@ EOF
 function copy_to_test_instance()
 {
   echo ' > copy to test instance'
+  [ -d "${TESTINSTANCE}" ] && rm -rf "${TESTINSTANCE}"
   mkdir -p "${TESTINSTANCE}"
   cp -r "${PUBSPACE}/index.php" "${PUBSPACE}/o" "${PUBSPACE}/l" "${PUBSPACE}/c" "${TESTINSTANCE}/"
   cd "${TESTINSTANCE}" || return

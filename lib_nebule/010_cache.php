@@ -258,7 +258,7 @@ class Cache extends Functions
 
     public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('new nod NID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_filterNodeType($type);
 
         if ($this->getIsOnCache($nid, $type)) {
@@ -272,36 +272,6 @@ class Cache extends Functions
                     break;
                 }
             }
-            /*switch ($type)
-            {
-                case self::TYPE_GROUP:
-                    $instance = new \Nebule\Library\Group($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_ENTITY:
-                    $instance = new \Nebule\Library\Entity($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_LOCATION:
-                    $instance = new \Nebule\Library\Localisation($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_CONVERSATION:
-                    $instance = new \Nebule\Library\Conversation($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_CURRENCY:
-                    $instance = new \Nebule\Library\Currency($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_TOKENPOOL:
-                    $instance = new \Nebule\Library\TokenPool($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_TOKEN:
-                    $instance = new \Nebule\Library\Token($this->_nebuleInstance, $nid);
-                    break;
-                case self::TYPE_WALLET:
-                    $instance = new \Nebule\Library\Wallet($this->_nebuleInstance, $nid);
-                    break;
-                default:
-                    $type = self::TYPE_NODE;
-                    $instance = new \Nebule\Library\Node($this->_nebuleInstance, $nid);
-            }*/
             $this->_writeCacheNodes($instance, $type);
         }
         return $instance;
