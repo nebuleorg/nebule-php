@@ -2697,7 +2697,7 @@ class Node extends Functions implements nodeInterface
         }
 
 //		if ( $limit == 0 )
-//			$limit = $this->_configuration->getOption('ioReadMaxData');
+//			$limit = $this->_configuration->getOptionAsString('ioReadMaxData');
 
         $permitTroncate = false; // @todo à retirer.
 

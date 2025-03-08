@@ -30,7 +30,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250308';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -890,13 +890,13 @@ class ModuleManage extends \Nebule\Library\Modules
                 echo $this->_displayInstance->getDisplayInformation_DEPRECATED($instance->getDevelopper() . ' <br />' . $instance::MODULE_LICENCE, $param);
 
                 // Synchronisation de l'application.
-                /*		if ( $this->_configuration->getOption('permitWrite')
-				&& $this->_configuration->getOption('permitWriteObject')
-				&& $this->_configuration->getOption('permitWriteLink')
-				&& $this->_configuration->getOption('permitSynchronizeObject')
-				&& $this->_configuration->getOption('permitSynchronizeLink')
-				&& $this->_configuration->getOption('permitSynchronizeApplication')
-				&& ( $this->_configuration->getOption('permitPublicSynchronizeApplication')
+                /*		if ( $this->_configuration->getOptionAsString('permitWrite')
+				&& $this->_configuration->getOptionAsString('permitWriteObject')
+				&& $this->_configuration->getOptionAsString('permitWriteLink')
+				&& $this->_configuration->getOptionAsString('permitSynchronizeObject')
+				&& $this->_configuration->getOptionAsString('permitSynchronizeLink')
+				&& $this->_configuration->getOptionAsString('permitSynchronizeApplication')
+				&& ( $this->_configuration->getOptionAsString('permitPublicSynchronizeApplication')
 						|| $this->_unlocked
 					)
 				&& $rid != '0'

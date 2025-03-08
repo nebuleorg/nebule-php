@@ -748,16 +748,7 @@ class Configuration extends Functions
      */
     public function getOptionUntyped(string $name): bool|int|string // TODO suppress untyped vars on all the class Configuration.
     {
-        return self::_changeTypeValueFromString($name, $this->_getOption($name));
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getOptionAsString(string $name): string
-    {
-        return $this->_getOption($name);
+        return self::_changeTypeValueFromString($name, $this->getOptionAsString($name));
     }
 
     /**
@@ -770,7 +761,7 @@ class Configuration extends Functions
             $this->_metrologyInstance->addLog('get option ' . $name . ' as bool but not bool', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
             return false;
         }
-        if ($this->_getOption($name) == 'true')
+        if ($this->getOptionAsString($name) == 'true')
             return true;
         else
             return false;
@@ -786,7 +777,7 @@ class Configuration extends Functions
             $this->_metrologyInstance->addLog('get option ' . $name . ' as int but not int', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
             return 0;
         }
-        return (int)$this->_getOption($name);
+        return (int)$this->getOptionAsString($name);
     }
 
     /**
@@ -796,7 +787,7 @@ class Configuration extends Functions
      * @param string $name
      * @return string
      */
-    private function _getOption(string $name): string
+    public function getOptionAsString(string $name): string
     {
         if ($name == '')
             return '';

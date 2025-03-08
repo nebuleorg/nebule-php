@@ -222,7 +222,7 @@ class Session extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 /*        if ($name == ''
             || $this->_flushCache
-            || !$this->_configuration->getOption('permitSessionBuffer')
+            || !$this->_configuration->getOptionAsString('permitSessionBuffer')
         )
             return false;
 
