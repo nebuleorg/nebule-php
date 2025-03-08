@@ -55,8 +55,6 @@ class ModuleManage extends \Nebule\Library\Modules
     const DEFAULT_COMMAND_ACTION_ID = 'actaddid';
 
 
-    private ?string $_hashModule = null;
-
 
     /**
      * Configuration spécifique au module.
@@ -69,7 +67,6 @@ class ModuleManage extends \Nebule\Library\Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
-        $this->_hashModule = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
     }
 
 
@@ -364,7 +361,7 @@ class ModuleManage extends \Nebule\Library\Modules
             $instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
 
             // Création du type mime.
-            $instance->setType($this->_hashModule);
+            $instance->setType(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
 
             // Crée le lien de hash.
             $date = date(DATE_ATOM);
@@ -380,9 +377,9 @@ class ModuleManage extends \Nebule\Library\Modules
 
             // Crée le lien de référence.
             $action = 'f';
-            $source = $this->_hashModule;
+            $source = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
             $target = $this->_actionAddModuleRID;
-            $meta = $this->_hashModule;
+            $meta = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
             // Crée le lien d'activation dans l'application.
@@ -409,7 +406,7 @@ class ModuleManage extends \Nebule\Library\Modules
             $action = 'f';
             $source = $this->_actionAddModuleRID;
             $target = $this->_actionAddModuleID;
-            $meta = $this->_hashModule;
+            $meta = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
             // Flush le cache de l'objet du module pour que les changements soient pris en compte tout de suite.
@@ -740,7 +737,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     {
                         $param['link2Object'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME . '=' . $this->_hashModule
+                            . '&' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME . '=' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid;
                         $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')::MODULE_LOGO;
                     }
@@ -808,7 +805,6 @@ class ModuleManage extends \Nebule\Library\Modules
                     )
                     && $rid != '0'
                 ) {
-                    $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
                     $dispHook = array(
                         'hookType' => 'Self',
                         'cssid' => '',
@@ -820,7 +816,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $rid . '_' . $hashActivation . '_' . $rid
+                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $rid . '_' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IOK;
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnabled');
@@ -829,7 +825,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $rid . '_' . $hashActivation . '_' . $rid
+                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $rid . '_' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '_' . $rid
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IERR;
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisabled');

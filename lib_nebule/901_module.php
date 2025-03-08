@@ -232,7 +232,7 @@ abstract class Modules extends Functions implements ModuleInterface
                 <li><a href="#oamu">OAMU / Mise à Jour</a></li>
                 <li><a href="#oams">OAMS / Stockage</a></li>
                 <li><a href="#oamt">OAMT / Transfert</a></li>
-                <li><a href="#oamr">OAMR / Réservation</a></li>
+                <li><a href="#oamr">OAMR / Réservation et références</a></li>
             </ul>
         </li>
 
@@ -305,11 +305,13 @@ abstract class Modules extends Functions implements ModuleInterface
         <h4 id="oamt">OAMT / Transfert</h4>
         <p>A faire...</p>
 
-        <h4 id="oamr">OAMR / Réservation</h4>
-        <p>Les objets réservés spécifiquement pour les modules d'applications :</p>
+        <h4 id="oamr">OAMR / Réservation et références</h4>
+        <p>Pas d'objet réservé spécifiquement pour les modules d'applications.</p>
+        <p>Les références :</p>
         <ul>
-            <li>nebule/objet/interface/web/php/applications/modules</li>
-            <li>nebule/objet/interface/web/php/applications/modules/active</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES; ?> : Référence pour retrouver les modules d'une application.</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE; ?> : Référence pour retrouver les modules de traduction d'une application.</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE; ?> : Référence pour retrouver les modules activés.</li>
         </ul>
 
         <?php

@@ -760,7 +760,7 @@ abstract class Applications extends Functions implements applicationInterface
                 <li><a href="#oac">OAC / Création</a></li>
                 <li><a href="#oas">OAS / Stockage</a></li>
                 <li><a href="#oat">OAT / Transfert</a></li>
-                <li><a href="#oar">OAR / Réservation</a></li>
+                <li><a href="#oar">OAR / Réservation et références</a></li>
                 <li><a href="#oai">OAI / Interface</a>
                     <ul>
                         <li><a href="#oain">OAIN / Nommage</a></li>
@@ -777,7 +777,7 @@ abstract class Applications extends Functions implements applicationInterface
                         <li><a href="#oaiu">OAIU / Mise à Jour</a></li>
                         <li><a href="#oais">OAIS / Stockage</a></li>
                         <li><a href="#oait">OAIT / Transfert</a></li>
-                        <li><a href="#oair">OAIR / Réservation</a></li>
+                        <li><a href="#oair">OAIR / Réservation et références</a></li>
                         <li><a href="#oaig">OAIG / Applications d'Interfaçage Génériques</a>
                             <ul>
                                 <li><a href="#oaigb">OAIGB / Nb - bootstrap</a></li>
@@ -913,11 +913,8 @@ abstract class Applications extends Functions implements applicationInterface
         <?php Displays::docDispTitle(3, 'oat', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <?php Displays::docDispTitle(3, 'oar', 'Réservation'); ?>
-        <p>Les objets réservés spécifiquement pour les applications :</p>
-        <ul>
-            <li>nebule/objet/applications</li>
-        </ul>
+        <?php Displays::docDispTitle(3, 'oar', 'Réservation et références'); ?>
+        <p>Pas d'objet réservé spécifiquement pour les applications. Cependant, les applications d'interface en ont, CF <a href="#oair">OAIR</a>.</p>
 
         <?php Displays::docDispTitle(3, 'oai', 'Interface'); ?>
         <p>Une interface est un programme dédié aux interactions entre deux milieux différents.</p>
@@ -1284,14 +1281,23 @@ class Traduction extends Traductions
         <?php Displays::docDispTitle(4, 'oait', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <?php Displays::docDispTitle(4, 'oair', 'Réservation'); ?>
+        <?php Displays::docDispTitle(4, 'oair', 'Réservation et références'); ?>
         <p>Les objets réservés spécifiquement pour les applications :</p>
+        <p style="color: red; font-weight: bold">Objets réservés obsolètes !</p>
         <ul>
             <li>nebule/objet/interface/web/php/bootstrap</li>
             <li>nebule/objet/interface/web/php/bibliotheque</li>
             <li>nebule/objet/interface/web/php/applications</li>
             <li>nebule/objet/interface/web/php/applications/direct</li>
             <li>nebule/objet/interface/web/php/applications/active</li>
+        </ul>
+        <p>Les références :</p>
+        <ul>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP; ?> : Référence pour retrouver le bootstrap.</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE; ?> : Référence pour retrouver la bibliothèque (libPOO).</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS; ?> : Référence pour retrouver les applications.</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT; ?> : Référence pour désigner les applications sans pré-chargement.</li>
+            <li>REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE=<?php echo References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE; ?> : Référence pour désigner les applications activées.</li>
         </ul>
 
         <?php Displays::docDispTitle(4, 'oaig', "Applications d'Interfaçage Génériques"); ?>

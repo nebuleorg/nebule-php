@@ -163,9 +163,12 @@ class ApplicationModules
         $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
         foreach ($links as $link) {
             $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+$this->_metrologyInstance->addLog('DEBUGGING external module RID=' . $moduleInstanceRID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if ($moduleInstanceRID->getID() == '0')
+                continue;
             $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
-            if ($moduleInstanceRID->getID() == '0'
-                || $moduleInstanceOID->getID() == '0'
+$this->_metrologyInstance->addLog('DEBUGGING external module OID=' . $moduleInstanceOID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if ($moduleInstanceOID->getID() == '0'
                 || !$moduleInstanceOID->checkPresent()
             )
                 continue;
@@ -220,8 +223,7 @@ class ApplicationModules
         $this->_metrologyInstance->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
 
         $object = $this->_cacheInstance->newNode($bootstrapApplicationIID);
-        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
-        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', $hashRef);
+        $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
 
         foreach ($links as $link) {
             $ok = false;
@@ -426,10 +428,7 @@ class ApplicationModules
 
     public function getIsModuleActivated(Node $module): bool
     {
-        $hashActivation = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE);
-
-        // Liste les modules reconnue par une entité locale.
-        $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), $hashActivation, $module->getID());
+        $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE, $module->getID());
         foreach ($linksList as $link)
             if ($this->_authoritiesInstance->getIsLocalAuthorityEID($link->getParsed()['bs/rs1/eid']))
                 return true;

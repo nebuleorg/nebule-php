@@ -102,9 +102,9 @@ class References //extends Functions
     const REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
     const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'nebule/objet/interface/web/php/applications/modules';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE = 'nebule/objet/interface/web/php/applications/modules/traduction';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE = 'nebule/objet/interface/web/php/applications/modules/active';
+    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'; // Web PHP
+    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE = '4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'; // Web PHP
+    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE = '1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'; // Web PHP
     const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
     const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';
     const REFERENCE_NEBULE_OBJET_EMOTION = 'nebule/objet/emotion';
@@ -180,9 +180,6 @@ class References //extends Functions
         self::REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS,
         self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT,
         self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE,
-        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES,
-        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE,
-        self::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MOD_ACTIVE,
         self::REFERENCE_NEBULE_OBJET_NOEUD,
         self::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE,
         self::REFERENCE_NEBULE_OBJET_EMOTION,

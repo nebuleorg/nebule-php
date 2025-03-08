@@ -38,6 +38,9 @@ export IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba
 export IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_DIRECT='f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
+export LIB_RID_INTERFACE_MODULES='fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'
+export LIB_RID_INTERFACE_MODULES_TRANSLATE='4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'
+export LIB_RID_INTERFACE_MODULES_ACTIVE='1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'
 export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
 export INIT_DATE='020250111'
 
@@ -350,6 +353,15 @@ EOF
   echo " > new belzbu : ${belzbu_hash}"
   cp "${WORKSPACE}/belzbu.php" "o/${belzbu_hash}"
 
+  for module in module_admin module_autent module_entities module_groups module_manage module_messages module_neblog module_objects module_qantion module_lang_en-en module_lang_es-co module_lang_fr-fr
+  do
+    module_hash=$(sha256sum "${WORKSPACE}/${module}.php" | cut -d' ' -f1)'.sha2.256'
+    varName=$(echo "${module}" | tr '-' '_')
+    declare "${varName}"_hash="${module_hash}"
+    echo " > new ${module} : ${module_hash}"
+    cp "${WORKSPACE}/${module}.php" "o/${module_hash}"
+  done
+
   echo ' > links'
   links=(
     # nodes
@@ -363,6 +375,18 @@ EOF
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_QANTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_OPTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_UPLOAD}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_admin_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_autent_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_entities_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_groups_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_manage_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_messages_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_neblog_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_objects_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_qantion_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_en_en_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_co_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_fr_fr_hash}>${phpOID}>${NID_CODE_BRANCH}"
     # type mime = application/x-httpd-php
     "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
@@ -374,6 +398,18 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${qantion_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${option_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${upload_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_admin_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_autent_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_entities_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_groups_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_manage_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_messages_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_neblog_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_objects_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_qantion_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_lang_en_en_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_lang_es_co_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_lang_fr_fr_hash}>${phpOID}>${typeRID}"
     # nebule/objet/interface/web/php/bootstrap in develop branch
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
@@ -393,6 +429,18 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_admin_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_autent_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_entities_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_groups_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_manage_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_messages_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_neblog_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_objects_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_qantion_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_lang_en_en_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_lang_es_co_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${module_lang_fr_fr_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     # names
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
