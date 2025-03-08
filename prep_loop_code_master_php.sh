@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020250222
+# Version 020250307
 
 echo ' > start'
 
@@ -79,6 +79,9 @@ function work_full_reinit()
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' c
   sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' c
   sed -i 's/^#permitLogsOnDebugFile = .*$/permitLogsOnDebugFile = true/' c
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' c
+  sed -i 's/^#permitApplicationModulesExternal = .*$/permitApplicationModulesExternal = true/' c
+  sed -i 's/^#permitApplicationModulesTranslate = .*$/permitApplicationModulesTranslate = true/' c
 
   echo ' > obj'
   echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"
