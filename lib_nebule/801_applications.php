@@ -1260,15 +1260,88 @@ class Traduction extends Traductions
 </pre>
 
         <?php Displays::docDispTitle(5, 'oaice', 'Enregistrement'); ?>
-        <p>Le lien d'enregistrement de l'application :</p>
+        <p>Enregistrement d'une application :</p>
         <ul>
-            <li>Signature du lien</li>
-            <li>Identifiant du signataire</li>
-            <li>Horodatage</li>
-            <li>action : <code>l</code></li>
-            <li>source :</li>
-            <li>cible :</li>
-            <li>méta :</li>
+            <li>Enregistrement de la référence de l'application :
+                <ul>
+                    <li>action : <code>f</code></li>
+                    <li>nid1 : RID applications</li>
+                    <li>nid2 : IID application</li>
+                    <li>nid3 : OID type PHP</li>
+                    <li>nid4 : NID code branch</li>
+                </ul>
+            </li>
+            <li>Lien entre la référence de l'application et l'objet contenant le code :
+                <ul>
+                    <li>action : <code>f</code></li>
+                    <li>nid1 : IID application</li>
+                    <li>nid2 : OID application</li>
+                    <li>nid3 : NID code branch</li>
+                </ul>
+            </li>
+            <li>Type de l'objet contenant le code :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : OID application</li>
+                    <li>nid2 : OID type PHP</li>
+                    <li>nid3 : RID type mime</li>
+                </ul>
+            </li>
+            <li>Activation de l'application :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : IID application</li>
+                    <li>nid2 : RID activation application</li>
+                </ul>
+            </li>
+            <li>Nom long de l'application :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : IID application</li>
+                    <li>nid2 : OID nom long</li>
+                    <li>nid3 : RID nommage long</li>
+                </ul>
+            </li>
+            <li>Type de l'objet contenant le nom long de l'application :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : OID nom long</li>
+                    <li>nid2 : OID type texte</li>
+                    <li>nid3 : RID type mime</li>
+                </ul>
+            </li>
+            <li>Nom court de l'application :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : IID application</li>
+                    <li>nid2 : OID nom court</li>
+                    <li>nid3 : RID nommage court</li>
+                </ul>
+            </li>
+            <li>Type de l'objet contenant le nom raccourci de l'application :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : OID nom court</li>
+                    <li>nid2 : OID type texte</li>
+                    <li>nid3 : RID type mime</li>
+                </ul>
+            </li>
+            <li>Légende :
+                <ul>
+                    <li>RID applications : référence commune pour retrouver les applications.</li>
+                    <li>IID applications : référence interne, unique, de l'application.</li>
+                    <li>OID applications : objet contenant le code de l'application.</li>
+                    <li>OID type PHP : objet contenant le type mime du code (<code>application/x-httpd-php</code>).</li>
+                    <li>OID type texte : objet contenant le type mime du code (<code>text/plain</code>).</li>
+                    <li>RID type mime : objet de référence du type mime (<code>nebule/objet/type</code>).</li>
+                    <li>NID code branch : référence unique du niveau de développement, la branche, du code.</li>
+                    <li>RID activation application : référence pour l'activation de l'application.</li>
+                    <li>OID nom long : objet contenant le nom long de l'application.</li>
+                    <li>OID nom court : objet contenant le nom raccourci (deux caractères) de l'application.</li>
+                    <li>RID nommage long : objet de référence du nommage long des objets (<code>nebule/objet/nom</code>).</li>
+                    <li>RID nommage court : objet de référence du nommage raccourci des objets (<code>nebule/objet/surnom</code>).</li>
+                </ul>
+            </li>
         </ul>
         <p style="color: red; font-weight: bold">A revoir...</p>
 

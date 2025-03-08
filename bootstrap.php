@@ -3882,29 +3882,29 @@ function app_checkOID(string $oid): bool {
 /**
  * Application - Get if an application is activated.
  *
- * @param string $oid
+ * @param string $nid
  * @return bool
  */
-function app_getActivate(string $oid): bool {
+function app_getActivate(string $nid): bool {
     global $nebuleLocalAuthorities;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     // Check for defaults app.
-    if (strlen($oid) == '1'
-        || $oid == lib_getOption('defaultApplication')
+    if (strlen($nid) == '1'
+        || $nid == lib_getOption('defaultApplication')
     )
         return true;
 
     // Check with links.
     $links = array();
     $filter = array(
-        'bl/rl/req' => 'f',
-        'bl/rl/nid1' => $oid,
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $nid,
         'bl/rl/nid2' => LIB_RID_INTERFACE_APPLICATIONS_ACTIVE,
         'bl/rl/nid3' => '',
         'bl/rl/nid4' => '',
     );
-    lnk_getList($oid, $links, $filter);
+    lnk_getList($nid, $links, $filter);
     foreach ($links as $link) {
         if (in_array($link['bs/rs1/eid'], $nebuleLocalAuthorities))
             return true;
@@ -3930,7 +3930,7 @@ function app_getPreload(string $oid): bool {
     // Check with links.
     $links = array();
     $filter = array(
-        'bl/rl/req' => 'f',
+        'bl/rl/req' => 'l',
         'bl/rl/nid1' => $oid,
         'bl/rl/nid2' => LIB_RID_INTERFACE_APPLICATIONS_DIRECT,
         'bl/rl/nid3' => '',
