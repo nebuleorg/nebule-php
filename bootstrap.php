@@ -4095,6 +4095,7 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
         if (!isset($link['bl/rl/nid2']) || $link['bl/rl/nid2'] == '')
             continue;
         $oid = $link['bl/rl/nid2'];
+        log_add('oid=' . $oid, 'info', __FUNCTION__, 'e5edd766');
         if (!$activated || app_getActivate($oid))
             $resultLinks[$oid] = $oid;
     }

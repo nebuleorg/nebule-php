@@ -64,6 +64,7 @@ class App1
 
         // List all applications.
         foreach ($appList as $application) {
+            $nebuleInstance->getMetrologyInstance()->addLog('show application nid=' . $application, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b4f17c9d');
             $instance = new Node($nebuleInstance, $application);
             $color = '#' . substr($application . '000000', 0, 6);
             $title = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_NOM,'authority');
@@ -80,7 +81,7 @@ class App1
                 $shortName = $instance->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM,'all');
             $shortName = substr($shortName . '--', 0, 2);
             $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
-            \Nebule\Bootstrap\log_add('app=' . $application . ' name=' . $title . ' sname=' . $shortName, 'debug', __FUNCTION__, '9715d88e');
+            $nebuleInstance->getMetrologyInstance()->addLog('app=' . $application . ' name=' . $title . ' sname=' . $shortName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9715d88e');
             echo '<a href="/?' . \Nebule\Bootstrap\LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
             echo '<div class="apps" style="background:' . $color . ';">';
             echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';

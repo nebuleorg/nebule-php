@@ -378,20 +378,30 @@ class Node extends Functions implements nodeInterface
             return array();
 
         // Trie la liste, pour les liens venants de plusieurs objets.
-        $date = array();
+        /*$date = array();
         foreach ($links as $k => $r)
             $date[$k] = $r->getDate();
-        array_multisort($date, SORT_STRING, SORT_ASC, $links);
+        array_multisort($date, SORT_ASC, SORT_STRING, $links);*/
+
+        $sortedLinks = array();
+        foreach ($links as $r) {
+            $date = $r->getDate();
+            if (isset($sortedLinks[$date]))
+                $date = $date . bin2hex($this->_cryptoInstance->getRandom(4, Crypto::RANDOM_PSEUDO));
+            $sortedLinks[$date] = $r;
+        }
+        unset($links);
+        krsort($sortedLinks, SORT_STRING);
 
         // Fait un tri par pertinence sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
+        $this->_socialInstance->arraySocialFilter($sortedLinks, $socialClass);
 
         // Mémorise le résultat dans le cache.
         //if ($this->_permitBuffer)
         //    $this->_cachePropertiesLinks[$type][$socialClass] = $links;
 
         // Résultat.
-        return $links;
+        return $sortedLinks;
     }
 
     /**
@@ -420,9 +430,9 @@ class Node extends Functions implements nodeInterface
             return null;
 
         // Extrait le dernier de la liste.
-        //$link = end($links);
+        $link = end($links);
         //$link = $links[count($links)-1];
-        $link = $links[0];
+        //$link = $links[0];
 
         // Mémorise le résultat dans le cache.
         //if ($this->_permitBuffer)
@@ -536,6 +546,7 @@ class Node extends Functions implements nodeInterface
 
         if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1db85b71');
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
