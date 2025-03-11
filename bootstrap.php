@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250308';
+const BOOTSTRAP_VERSION = '020250311';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -4095,7 +4095,7 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
         if (!isset($link['bl/rl/nid2']) || $link['bl/rl/nid2'] == '')
             continue;
         $oid = $link['bl/rl/nid2'];
-        log_add('oid=' . $oid, 'info', __FUNCTION__, 'e5edd766');
+        log_add('oid=' . $oid, 'debug', __FUNCTION__, 'e5edd766');
         if (!$activated || app_getActivate($oid))
             $resultLinks[$oid] = $oid;
     }

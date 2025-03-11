@@ -347,6 +347,9 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, false);
+
+        foreach ($links as $link)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4bee4d85');
     }
 
     /**
@@ -366,11 +369,6 @@ class Node extends Functions implements nodeInterface
         if (!$this->checkNID($type))
             $type = $this->_nebuleInstance->getNIDfromData($type);
 
-        // Si déjà recherché, donne le résultat en cache.
-//        if (isset($this->_cachePropertiesLinks[$type][$socialClass]))
-//            return $this->_cachePropertiesLinks[$type][$socialClass];
-
-        // Liste les liens à la recherche de la propriété.
         $links = array();
         $this->_getLinksByNID3($links, $type);
 
@@ -396,11 +394,6 @@ class Node extends Functions implements nodeInterface
         // Fait un tri par pertinence sociale.
         $this->_socialInstance->arraySocialFilter($sortedLinks, $socialClass);
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cachePropertiesLinks[$type][$socialClass] = $links;
-
-        // Résultat.
         return $sortedLinks;
     }
 
@@ -419,26 +412,19 @@ class Node extends Functions implements nodeInterface
         if ($type == '')
             return null;
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertyLink[$type][$socialClass]))
-            return $this->_cachePropertyLink[$type][$socialClass];
-
-        // Liste les liens à la recherche de la propriété.
         $links = $this->getPropertiesLinks($type, $socialClass);
 
         if (sizeof($links) == 0)
             return null;
+
+        foreach ($links as $link)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27390a71');
 
         // Extrait le dernier de la liste.
         $link = end($links);
         //$link = $links[count($links)-1];
         //$link = $links[0];
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cachePropertyLink[$type][$socialClass] = $link;
-
-        // Résultat.
         return $link;
     }
 
@@ -456,13 +442,6 @@ class Node extends Functions implements nodeInterface
         if ($type == '')
             return '';
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertyID[$type][$socialClass]))
-            return $this->_cachePropertyID[$type][$socialClass];
-
-        $property = '';
-
-        // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
         if (!is_a($link, 'Link'))
@@ -472,11 +451,6 @@ class Node extends Functions implements nodeInterface
         $property = $link->getParsed()['bl/rl/nid2'];
         unset($link);
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cachePropertyID[$type][$socialClass] = $property;
-
-        // Résultat.
         return $property;
     }
 
@@ -494,13 +468,8 @@ class Node extends Functions implements nodeInterface
         if ($type == '')
             return array();
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cachePropertiesID[$type][$socialClass]))
-            return $this->_cachePropertiesID[$type][$socialClass];
-
         $properties = array();
 
-        // Liste les liens à la recherche de la propriété.
         $list = array();
         $this->_getLinksByNID3($list, $type);
 
@@ -515,11 +484,6 @@ class Node extends Functions implements nodeInterface
             $properties[$i] = $l->getParsed()['bl/rl/nid2'];
         unset($list);
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cachePropertiesID[$type][$socialClass] = $properties;
-
-        // Résultat.
         return $properties;
     }
 
@@ -537,11 +501,6 @@ class Node extends Functions implements nodeInterface
         if ($type == '')
             return '';
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cacheProperty[$type][$socialClass]))
-            return $this->_cacheProperty[$type][$socialClass];
-
-        // Liste les liens à la recherche de la propriété.
         $link = $this->getPropertyLink($type, $socialClass);
 
         if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
@@ -551,11 +510,6 @@ class Node extends Functions implements nodeInterface
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cacheProperty[$type][$socialClass] = $property;
-
-        // Résultat.
         return $property;
     }
 
@@ -573,13 +527,8 @@ class Node extends Functions implements nodeInterface
         if ($type == '')
             return array();
 
-        // Si déjà recherché, donne le résultat en cache.
-        if (isset($this->_cacheProperties[$type][$socialClass]))
-            return $this->_cacheProperties[$type][$socialClass];
-
         $properties = array();
 
-        // Liste les liens à la recherche de la propriété.
         $links = array();
         $this->_getLinksByNID3($links, $type);
 
@@ -594,11 +543,6 @@ class Node extends Functions implements nodeInterface
             $properties[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
         unset($links);
 
-        // Mémorise le résultat dans le cache.
-        //if ($this->_permitBuffer)
-        //    $this->_cacheProperties[$type][$socialClass] = $properties;
-
-        // Résultat.
         return $properties;
     }
 
@@ -613,16 +557,13 @@ class Node extends Functions implements nodeInterface
     public function getHaveProperty(string $type, string $property, string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Extrait la liste des propriétés.
         $list = $this->getProperties($type, $socialClass);
 
-        // Cherche dans la liste la propriété de groupe.
         foreach ($list as $item) {
             if ($item == $property)
                 return true;
         }
 
-        // Si la propriété n'est pas trouvée.
         return false;
     }
 
@@ -2881,6 +2822,7 @@ class Node extends Functions implements nodeInterface
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             ) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $line, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ba71d58e');
                 $newLinks = $bloc->getLinks(); // FIXME
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
@@ -2930,6 +2872,7 @@ class Node extends Functions implements nodeInterface
                     return false;
             }
         }
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
         return true;
     }
 
