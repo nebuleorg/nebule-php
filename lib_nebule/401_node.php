@@ -349,7 +349,7 @@ class Node extends Functions implements nodeInterface
         $this->getLinks($links, $filter, false);
 
         foreach ($links as $link)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4bee4d85');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4bee4d85');
     }
 
     /**
@@ -418,7 +418,7 @@ class Node extends Functions implements nodeInterface
             return null;
 
         foreach ($links as $link)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27390a71');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27390a71');
 
         // Extrait le dernier de la liste.
         $link = end($links);
@@ -505,7 +505,7 @@ class Node extends Functions implements nodeInterface
 
         if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1db85b71');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1db85b71');
 
         // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
@@ -2822,7 +2822,7 @@ class Node extends Functions implements nodeInterface
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             ) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $line, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ba71d58e');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING link=' . $line, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ba71d58e');
                 $newLinks = $bloc->getLinks(); // FIXME
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
@@ -2868,11 +2868,13 @@ class Node extends Functions implements nodeInterface
                 $a = array($f);
             foreach ($a as $v)
             {
-                if (isset($parsedLink[$n]) && ($parsedLink[$n] != $v || $v == ''))
+                if (isset($parsedLink[$n]) && ($parsedLink[$n] != $v || $v == '')) {
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING filter NOK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
                     return false;
+                }
             }
         }
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING filter OK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
         return true;
     }
 
