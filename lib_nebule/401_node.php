@@ -2822,7 +2822,6 @@ class Node extends Functions implements nodeInterface
             if ($bloc->getValidStructure()
                 && ( $bloc->getValid() || $withInvalidLinks )
             ) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING link=' . $line, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ba71d58e');
                 $newLinks = $bloc->getLinks(); // FIXME
                 $this->_filterLinksByStructure($newLinks, $filter);
                 $links = array_merge($links, $newLinks);
@@ -2861,20 +2860,31 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $parsedLink = $link->getParsed();
 
-        foreach ($filter as $n => $f)
+        foreach ($filter as $fieldName => $filterValue)
         {
-            $a = $f;
-            if (is_string($f))
-                $a = array($f);
-            foreach ($a as $v)
+            $fieldValue = '';
+            if (isset($parsedLink[$fieldName]))
+                $fieldValue = $parsedLink[$fieldName];
+
+            if (is_array($filterValue))
+                $listFilterValues = $filterValue;
+            elseif (is_string($filterValue))
+                $listFilterValues = array($filterValue);
+            else
+                continue;
+
+            $onList = false;
+            foreach ($listFilterValues as $value)
             {
-                if (isset($parsedLink[$n]) && ($parsedLink[$n] != $v || $v == '')) {
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING filter NOK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
-                    return false;
+                if ($fieldValue == $value) {
+                    $onList = true;
+                    break;
                 }
             }
+            if (! $onList)
+                return false;
         }
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING filter OK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
+        //$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING filter OK link=' . $link, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92ae7bb3');
         return true;
     }
 
