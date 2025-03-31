@@ -290,12 +290,7 @@ class Entity extends Node implements nodeInterface
     public function getPrivateKeyID(): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Vérifie la présence d'un ID de clé privée. La recherche au besoin.
-        if (!isset($this->_privateKeyID)
-            || !$this->_privateKeyID != '0'
-        )
-            $this->_findPrivateKeyID();
-        // Retourne l'ID.
+        $this->_findPrivateKeyID();
         return $this->_privateKeyID;
     }
 
@@ -306,18 +301,18 @@ class Entity extends Node implements nodeInterface
 
         $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
 
-        if (isset($this->_privateKeyID)
-            && $this->_privateKeyID != '0'
-        )
+        if ($this->_privateKeyID != '0')
             return true;
 
         $list = $this->getLinksOnFields($this->_id, '', 'f', $this->_id, '', $oidPKey);
-        if (sizeof($list) == 0)
+        if (sizeof($list) == 0) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGING no link priv key for eid=' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             return true;
+        }
 
         $refDate = '0';
         foreach ($list as $link) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
             /*if (!$link->getValid()) FIXME
                 continue;*/
 
@@ -335,14 +330,12 @@ class Entity extends Node implements nodeInterface
             ) {
                 $this->_privateKeyID = $nid2;
                 $refDate = $link->getDate();
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('OK private key ' . $nid2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('ok private key ' . $nid2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
             } else
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Invalid private key ' . $nid2, Metrology::LOG_LEVEL_ERROR, __METHOD__, '293d8170');
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('invalid private key ' . $nid2, Metrology::LOG_LEVEL_ERROR, __METHOD__, '293d8170');
         }
 
-        if (isset($this->_privateKeyID)
-            && $this->_privateKeyID != '0'
-        )
+        if ($this->_privateKeyID != '0')
             return true;
         return false;
     }
@@ -351,24 +344,21 @@ class Entity extends Node implements nodeInterface
     private function _findPrivateKey(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Vérifie la présence d'une clé privée.
         if (isset($this->_privateKey) && $this->_privateKey != '')
             return true;
-        // Vérifie la présence d'un ID de clé privée. La recherche au besoin.
-        if (!isset($this->_privateKeyID) || !$this->_privateKeyID != '0')
-            $this->_findPrivateKeyID();
-        // Extrait le contenu de l'objet.
-        $this->_privateKey = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
+        if ($this->_findPrivateKeyID())
+            $this->_privateKey = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
         return true;
-        // A faire... vérifier que c'est bien une clé privée _pour_ cette clé publique.
+        // TODO vérifier que c'est bien une clé privée _pour_ cette clé publique.
     }
 
     // Définit le mot de passe de la clé privée.
     public function setPrivateKeyPassword(string $passwd): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_findPrivateKey();
-        if (!$this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd))
+        if (! $this->_findPrivateKey())
+            return false;
+        if (! $this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd))
             return false;
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         // TODO le chiffrement du mot de passe avec le sel et l'ID de session php...
