@@ -162,7 +162,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $publicKey): string
+    public function encryptTo(string $data, ?string $publicKey): string
     {
         return $this->_defaultInstance->encryptTo($data, $publicKey);
     }
@@ -171,7 +171,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $privateKey, string $password): string
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
     {
         return $this->_defaultInstance->decryptTo($code, $privateKey, $password);
     }
@@ -189,7 +189,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
     {
         return $this->_defaultInstance->checkPrivateKeyPassword($privateKey, $password);
     }
@@ -198,7 +198,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
     {
         return $this->_defaultInstance->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
     }

@@ -256,7 +256,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $publicKey): string
+    public function encryptTo(string $data, ?string $publicKey): string
     {
         return '';
     }
@@ -265,7 +265,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $privateKey, string $password): string
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
     {
         return '';
     }
@@ -283,7 +283,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
     {
         return false;
     }
@@ -292,7 +292,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
     {
         return '';
     }

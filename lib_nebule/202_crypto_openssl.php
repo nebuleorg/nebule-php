@@ -381,8 +381,11 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, string $publicKey): string
+    public function encryptTo(string $data, ?string $publicKey): string
     {
+        if ($publicKey === null)
+            return '';
+
         $ressource = openssl_pkey_get_public($publicKey);
         if ($ressource === false)
             return '';
@@ -397,8 +400,11 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, string $privateKey, string $password): string
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
     {
+        if ($privateKey === null || $password === null)
+            return '';
+
         $ressource = openssl_pkey_get_private($privateKey, $password);
         if ($ressource === false)
             return '';
@@ -460,8 +466,11 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
     {
+        if ($privateKey === null || $password === null)
+            return false;
+
         $pkey = openssl_pkey_get_private($privateKey, $password);
         if ($pkey === false)
             return false;
@@ -473,8 +482,11 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
     {
+        if ($privateKey === null || $oldPassword === null || $newPassword === null)
+            return '';
+
         $pkey = openssl_pkey_get_private($privateKey, $oldPassword);
         if ($pkey === false)
             return '';

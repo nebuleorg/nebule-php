@@ -57,9 +57,9 @@ class Entity extends Node implements nodeInterface
 
     private string $_publicKey = '';
     private string $_privateKeyID = '0';
-    private string $_privateKey = '';
+    private ?string $_privateKey = null;
     private bool $_newPrivateKey = false;
-    private string $_privateKeyPassword = '';
+    private ?string $_privateKeyPassword = null;
     private string $_privateKeyPasswordSalt = '';
     private bool $_isSetPrivateKeyPassword = false;
     private array $_faceCache = array();
@@ -344,10 +344,12 @@ class Entity extends Node implements nodeInterface
     private function _findPrivateKey(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (isset($this->_privateKey) && $this->_privateKey != '')
+        if ($this->_privateKey !== null)
             return true;
-        if ($this->_findPrivateKeyID())
-            $this->_privateKey = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
+        $this->_findPrivateKeyID();
+        $content = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
+        if ($content !== false)
+            $this->_privateKey = $content;
         return true;
         // TODO vérifier que c'est bien une clé privée _pour_ cette clé publique.
     }
@@ -381,7 +383,7 @@ class Entity extends Node implements nodeInterface
             return false;
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_privateKeyPassword = $this->_privateKeyPasswordSalt;
-        $this->_privateKeyPassword = '';
+        $this->_privateKeyPassword = null;
         $this->_privateKeyPasswordSalt = '';
         $this->_isSetPrivateKeyPassword = false;
         $this->_nebuleInstance->removeListEntitiesUnlocked($this);
@@ -473,11 +475,11 @@ class Entity extends Node implements nodeInterface
     public function signLink(string $link, string $algo = ''): ?string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_privateKey == '') {
+        if ($this->_privateKey === null) {
             $this->_metrologyInstance->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '91353b7d');
             return null;
         }
-        if ($this->_privateKeyPassword == '') {
+        if ($this->_privateKeyPassword === null) {
             $this->_metrologyInstance->addLog('ERROR entity no password for private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '63de2900');
             return null;
         }

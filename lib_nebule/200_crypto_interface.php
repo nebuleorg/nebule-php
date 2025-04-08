@@ -146,10 +146,10 @@ interface CryptoInterface
      * If problem, return empty string.
      *
      * @param string $data
-     * @param string $publicKey
+     * @param ?string $publicKey
      * @return string
      */
-    public function encryptTo(string $data, string $publicKey): string;
+    public function encryptTo(string $data, ?string $publicKey): string;
 
     /**
      * Decode $data with private key (not EID).
@@ -157,11 +157,11 @@ interface CryptoInterface
      * If problem, return empty string.
      *
      * @param string $code
-     * @param string $privateKey
-     * @param string $password
+     * @param ?string $privateKey
+     * @param ?string $password
      * @return string
      */
-    public function decryptTo(string $code, string $privateKey, string $password): string;
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string;
 
     /**
      * Generate a new asymmetric cryptographic bi-key.
@@ -175,20 +175,20 @@ interface CryptoInterface
     /**
      * Check password on a private key (not EID).
      *
-     * @param string $privateKey
-     * @param string $password
+     * @param ?string $privateKey
+     * @param ?string $password
      * @return bool
      */
-    public function checkPrivateKeyPassword(string $privateKey, string $password): bool;
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool;
 
     /**
      * Change password on a private key (not EID).
      * If problem, return empty string.
      *
-     * @param string $privateKey
-     * @param string $oldPassword
-     * @param string $newPassword
+     * @param ?string $privateKey
+     * @param ?string $oldPassword
+     * @param ?string $newPassword
      * @return string
      */
-    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string;
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string;
 }

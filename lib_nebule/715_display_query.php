@@ -101,7 +101,7 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
         $result = $this->_message;
         $result .= '<form method="post" action="' . $this->_link . '">';
         $result .= '<input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '">';
-        $result .= '<label><input ' . $this->_displayPassword . 'name="' . References::COMMAND_SELECT_PASSWORD . '"></label>';
+        $result .= '<label><input ' . $this->_displayPassword . ' name="' . References::COMMAND_SELECT_PASSWORD . '"></label>';
         $result .= '<input type="submit" value="&gt;">';
         $result .= '</form>';
         return $result;
