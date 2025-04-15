@@ -51,7 +51,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250222';
+    const APPLICATION_VERSION = '020250415';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -72,11 +72,9 @@ class Application extends Applications implements applicationInterface
         'ModuleNeblog'
     );
 
-    const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS = false;
     const APPLICATION_DEFAULT_DISPLAY_METROLOGY = false;
-    const APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL = true;
     const APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT = false;
     const APPLICATION_DEFAULT_DISPLAY_NAME_SIZE = 128;
     const APPLICATION_DEFAULT_IO_READ_MAX_DATA = 1000000;
@@ -84,135 +82,9 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS = false;
     const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT = false;
     const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS = false;
-    const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
-    const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
     const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb.sha2.256';
-
-
-    private $_listOptions = array(
-        'sylabeDisplayOnlineHelp',
-        'sylabeDisplayOnlineOptions',
-        'sylabeDisplayMetrology',
-//			'sylabeDisplayUnsecureURL',
-        'sylabeDisplayUnverifyLargeContent',
-        'sylabeDisplayNameSize',
-        'sylabeIOReadMaxDataPHP',
-        'sylabePermitUploadObject',
-        'sylabePermitUploadLinks',
-        'sylabePermitPublicUploadObject',
-        'sylabePermitPublicUploadLinks',
-//			'sylabeLogUnlockEntity',
-//			'sylabeLogLockEntity',
-//			'sylabeLoadModules',
-    );
-    private $_listOptionsType = array(
-        'sylabeDisplayOnlineHelp' => 'b',        // Booléen
-        'sylabeDisplayOnlineOptions' => 'b',        // Booléen
-        'sylabeDisplayMetrology' => 'b',        // Booléen
-//			'sylabeDisplayUnsecureURL'			=> 'b',		// Booléen
-        'sylabeDisplayUnverifyLargeContent' => 'b',        // Booléen
-        'sylabeDisplayNameSize' => 'i',        // Entier
-        'sylabeIOReadMaxDataPHP' => 'i',        // Entier
-        'sylabePermitUploadObject' => 'b',        // Booléen
-        'sylabePermitUploadLinks' => 'b',        // Booléen
-        'sylabePermitPublicUploadObject' => 'b',        // Booléen
-        'sylabePermitPublicUploadLinks' => 'b',        // Booléen
-//			'sylabeLogUnlockEntity'				=> 'b',		// Booléen
-//			'sylabeLogLockEntity'				=> 'b',		// Booléen
-//			'sylabeLoadModules'					=> 't',		// Texte
-    );
-    private $_listOptionsDefault = array(
-        'sylabeDisplayOnlineHelp' => self::APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP,
-        'sylabeDisplayOnlineOptions' => self::APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS,
-        'sylabeDisplayMetrology' => self::APPLICATION_DEFAULT_DISPLAY_METROLOGY,
-//			'sylabeDisplayUnsecureURL'			=> self::APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL,
-        'sylabeDisplayUnverifyLargeContent' => self::APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT,
-        'sylabeDisplayNameSize' => self::APPLICATION_DEFAULT_DISPLAY_NAME_SIZE,
-        'sylabeIOReadMaxDataPHP' => self::APPLICATION_DEFAULT_IO_READ_MAX_DATA,
-        'sylabePermitUploadObject' => self::APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT,
-        'sylabePermitUploadLinks' => self::APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS,
-        'sylabePermitPublicUploadObject' => self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT,
-        'sylabePermitPublicUploadLinks' => self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS,
-//			'sylabeLogUnlockEntity'				=> self::APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY,
-//			'sylabeLogLockEntity'				=> self::APPLICATION_DEFAULT_LOG_LOCK_ENTITY,
-//			'sylabeLoadModules'					=> self::APPLICATION_DEFAULT_LOAD_MODULES,
-    );
-
-
-    public static function getOption($name)
-    {
-        if ($name == ''
-            || !is_string($name)
-        ) {
-            return false;
-        }
-
-        // Va contenir le résultat à retourner.
-        $r = '';
-        $t = '';
-
-        // Lit le fichier d'environnement.
-        if (file_exists(self::APPLICATION_ENVIRONMENT_FILE)) {
-            $f = file(self::APPLICATION_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-            foreach ($f as $o) {
-                $l = trim($o);
-
-                // Si commentaire, passe à la ligne suivante.
-                if ($l[0] == "#")
-                    continue;
-
-                // Recherche l'option demandée.
-                if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
-                    $t = filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING);
-                    break;
-                }
-            }
-            unset($f, $o, $l);
-        }
-
-        // Vérifie que c'est une option connue et qu'elle a une valeur.
-        switch ($name) {
-            case 'sylabeDisplayOnlineHelp' :
-                if ($t == 'false') $r = false; else $r = self::APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP;
-                break;
-            case 'sylabeDisplayOnlineOptions' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS;
-                break;
-            case 'sylabeDisplayMetrology' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_DISPLAY_METROLOGY;
-                break;
-//			case 'sylabeDisplayUnsecureURL' :			if ( $t == 'false' )	$r = false;		else $r = self::APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL;			break;
-            case 'sylabeDisplayUnverifyLargeContent' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT;
-                break;
-            case 'sylabeDisplayNameSize' :
-                if ($t != '') $r = (int)$t; else $r = self::APPLICATION_DEFAULT_DISPLAY_NAME_SIZE;
-                break;
-            case 'sylabeIOReadMaxDataPHP' :
-                if ($t != '') $r = (int)$t; else $r = self::APPLICATION_DEFAULT_IO_READ_MAX_DATA;
-                break;
-            case 'sylabePermitUploadObject' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT;
-                break;
-            case 'sylabePermitUploadLinks' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS;
-                break;
-            case 'sylabePermitPublicUploadObject' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT;
-                break;
-            case 'sylabePermitPublicUploadLinks' :
-                if ($t == 'true') $r = true; else $r = self::APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS;
-                break;
-//			case 'sylabeLogUnlockEntity' :				if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY;				break;
-//			case 'sylabeLogLockEntity' :				if ( $t == 'true' )		$r = true;		else $r = self::APPLICATION_DEFAULT_LOG_LOCK_ENTITY;				break;
-//			case 'sylabeLoadModules' :					if ( $t != '' )			$r = $t;		else $r = self::APPLICATION_DEFAULT_LOAD_MODULES;					break;
-            default :
-                $r = false; // Si l'option est inconnue, retourne false.
-        }
-        unset($t);
-        return $r;
-    }
 }
+
 
 
 /**
