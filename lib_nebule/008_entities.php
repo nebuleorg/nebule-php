@@ -304,7 +304,7 @@ class Entities extends Functions
             return;
         }
 
-        if ($this->_currentEntityInstance->isSetPrivateKeyPassword())
+        if ($this->_currentEntityInstance->getHavePrivateKeyPassword())
             return;
 
         $arg_get_pwd = filter_input(INPUT_GET, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
@@ -346,7 +346,7 @@ class Entities extends Functions
         //$this->_sessionInstance->setSessionStore('nebulePublicKeyEID', $this->_currentEntityID);
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -377,7 +377,7 @@ class Entities extends Functions
         //$this->_sessionInstance->setSessionStore('nebulePublicKeyEID', $this->_currentEntityID);
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -408,7 +408,7 @@ class Entities extends Functions
         //$this->_sessionInstance->setSessionStore('nebulePublicKeyEID', $this->_currentEntityID);
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->isSetPrivateKeyPassword();
+        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;

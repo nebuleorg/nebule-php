@@ -882,7 +882,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         echo '</div>' . "\n";
 
         $instance = new DisplayTitle($this->_applicationInstance);
-        if ($this->_displayEntityInstance->isSetPrivateKeyPassword()
+        if ($this->_displayEntityInstance->getHavePrivateKeyPassword()
             || ($this->_displayEntity == $this->_entitiesInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
@@ -941,7 +941,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
 
         // Affiche le champ de mot de passe.
-        if ($this->_displayEntityInstance->isSetPrivateKeyPassword()
+        if ($this->_displayEntityInstance->getHavePrivateKeyPassword()
             || ($this->_displayEntity == $this->_entitiesInstance->getCurrentEntityID()
                 && $this->_unlocked
             )

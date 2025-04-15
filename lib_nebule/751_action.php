@@ -1622,7 +1622,7 @@ abstract class Actions extends Functions
             unset($instance);
 
             // Modifie le mot de passe de clé privée.
-            $this->_actionCreateEntityInstance->changePrivateKeyPassword($this->_actionCreateEntityPassword);
+            $this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             // Bascule temporairement sur la nouvelle entité.
             $this->_entitiesInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);

@@ -3120,7 +3120,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
-        if ($this->_applicationInstance->getCurrentEntityInstance()->isSetPrivateKeyPassword()
+        if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
             || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
                 && $this->_unlocked
             )
@@ -3187,7 +3187,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->isSetPrivateKeyPassword()
+            if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
                 || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
                     && $this->_unlocked
                 )
@@ -3245,7 +3245,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '</div>' . "\n";
             }
         } else {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->isSetPrivateKeyPassword()
+            if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
                 || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
                     && $this->_unlocked
                 )

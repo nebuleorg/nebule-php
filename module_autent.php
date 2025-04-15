@@ -118,8 +118,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2]
-                . '&' . References::COMMAND_SWITCH_TO_ENTITY;
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
             $type = DisplayItemIconMessage::TYPE_ERROR;
         } else {
