@@ -6,6 +6,7 @@ use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
+use Nebule\Library\DisplayItem;
 use Nebule\Library\Entity;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
@@ -1337,7 +1338,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
     /**
-     * Affiche la liste de entités.
+     * Affiche la liste des entités.
      *
      * @return void
      */
