@@ -56,7 +56,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250416';
+    const APPLICATION_VERSION = '020250417';
     const APPLICATION_LICENCE = 'GNU GPL 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
@@ -72,12 +72,6 @@ class Application extends Applications
     );
     const LIST_MODULES_EXTERNAL = array();
 
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
     public function __construct(nebule $nebuleInstance)
     {
         parent::__construct($nebuleInstance);
@@ -85,6 +79,7 @@ class Application extends Applications
 
     // All default.
 }
+
 
 
 /**
@@ -97,8 +92,8 @@ class Application extends Applications
  */
 class Display extends Displays
 {
-    const DEFAULT_DISPLAY_MODE = 'blog';
-    const DEFAULT_DISPLAY_VIEW = 'blog';
+    const DEFAULT_DISPLAY_MODE = 'ent';
+    const DEFAULT_DISPLAY_VIEW = 'disp';
     const DEFAULT_LINK_COMMAND = 'lnk';
     const DEFAULT_APPLICATION_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9
 kT1Iw0AcxV/TiiIVh2YQcchQnayIijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxdnBSdJES/9cUWsR4cNyPd/ced+8AoV5muh0aB3TDsVKJuJTJrkrdrxAgIoIxhBRmm3OynITv
@@ -176,7 +171,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
         $this->setUrlLinkObjectPrefix('?a=4&l=');
         $this->setUrlLinkGroupPrefix('?a=4&l=');
         $this->setUrlLinkConversationPrefix('?a=4&l=');
-        $this->setUrlLinkEntityPrefix('?a=4&l=');
+        $this->setUrlLinkEntityPrefix('?a=206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288&l=');
         $this->setUrlLinkCurrencyPrefix('?a=4&l=');
         $this->setUrlLinkTokenPoolPrefix('?a=4&l=');
         $this->setUrlLinkTokenPrefix('?a=4&l=');
@@ -720,6 +715,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 }
 
 
+
 /**
  * Classe Action
  *
@@ -729,6 +725,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
  * @link www.nebule.org
  */
 class Action extends Actions {}
+
 
 
 /**

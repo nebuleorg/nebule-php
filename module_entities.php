@@ -4,6 +4,7 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
+use Nebule\Library\Cache;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItem;
@@ -36,7 +37,20 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
-    const MODULE_REGISTERED_VIEWS = array('list', 'disp', 'auth', 'crea', 'srch', 'logs', 'acts', 'prop', 'klst', 'ulst', 'slst', 'kblst');
+    const MODULE_REGISTERED_VIEWS = array(
+        'list',
+        'disp',
+        'auth',
+        'crea',
+        'srch',
+        'logs',
+        'acts',
+        'prop',
+        'klst',
+        'ulst',
+        'slst',
+        'kblst',
+    );
     const MODULE_REGISTERED_ICONS = array(
         '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 entité (personnage)
         '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 1 lien chiffrement/protection
@@ -63,47 +77,14 @@ class ModuleEntities extends \Nebule\Library\Modules
     const DEFAULT_ENTITIES_DISPLAY_NUMBER = 12;
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
-    /**
-     * L'ID de l'entité en cours d'affichage.
-     *
-     * @var string
-     */
     private string $_displayEntity;
-
-    /**
-     * L'instance de l'entité en cours d'affichage.
-     *
-     * @var Entity
-     */
     private Entity $_displayEntityInstance;
-
-    /**
-     * L'ID de l'objet de référence des entités.
-     *
-     * @var string
-     */
     private string $_hashEntity;
-
-    /**
-     * L'instance de l'objet de référence des entités.
-     *
-     * @var Node
-     */
     private Node $_hashEntityObject;
-
-    /**
-     * L'ID de l'objet de référence pour le type d'entité.
-     *
-     * @var string
-     */
     private string $_hashType;
 
 
-    /**
-     * Configuration spécifique au module.
-     *
-     * @return void
-     */
+
     protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
@@ -117,13 +98,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     }
 
 
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
+
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
     {
         $object = $this->_applicationInstance->getCurrentObjectID();
@@ -330,11 +305,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     }
 
 
-    /**
-     * Affichage principale.
-     *
-     * @return void
-     */
+
     public function displayModule(): void
     {
         switch ($this->_displayInstance->getCurrentDisplayView()) {
@@ -380,11 +351,6 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
     }
 
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
     public function displayModuleInline(): void
     {
         switch ($this->_displayInstance->getCurrentDisplayView()) {
@@ -412,13 +378,6 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
     }
 
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * Obsolète !
-     *
-     * @return void
-     */
     public function getCSS(): void
     {
         ?>
@@ -611,22 +570,10 @@ class ModuleEntities extends \Nebule\Library\Modules
         <?php
     }
 
-    /**
-     * Affichage de surcharges CSS.
-     *
-     * Obsolète !
-     *
-     * @return void
-     */
     public function headerStyle(): void
     {
     }
 
-    /**
-     * Action principale.
-     *
-     * @return void
-     */
     public function actions(): void
     {
         $this->_findSynchronizeEntity();
@@ -638,10 +585,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     }
 
 
-    /**
-     * Recherche l'entité en cours d'utilisation.
-     * Utilisé par le constructeur et non comme action.
-     */
+
     private function _findDisplayEntity(): void
     {
         $this->_displayEntity = $this->_applicationInstance->getCurrentEntityID();
@@ -649,11 +593,8 @@ class ModuleEntities extends \Nebule\Library\Modules
     }
 
 
-    /**
-     * Mémorise si l'entité doit être synchronisée.
-     * @var string
-     */
-    private $_synchronizeEntity = false;
+
+    private bool $_synchronizeEntity = false;
 
     /**
      * Détermine si l'entité doit être synchronisée.
@@ -716,9 +657,9 @@ class ModuleEntities extends \Nebule\Library\Modules
     }
 
 
-    private $_searchEntityURL = '';
-
-    private $_searchEntityID = '';
+    private string $_searchEntityURL = '';
+    private string $_searchEntityID = '';
+    private ?Node $_searchEntityInstance = null;
 
     /**
      * Recherche une entité sur ID connu et/ou URL connue.
@@ -727,13 +668,13 @@ class ModuleEntities extends \Nebule\Library\Modules
      */
     private function _findSearchEntity(): void
     {
-        $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
+        $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg_url != ''
             && strlen($arg_url) >= 8
         )
             $this->_searchEntityURL = $arg_url;
 
-        $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW)); // Lit et nettoye le contenu de la variable GET.
+        $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_id)
             && $arg_url != 'http://localhost'
             && $arg_url != 'http://127.0.0.1'
@@ -743,18 +684,15 @@ class ModuleEntities extends \Nebule\Library\Modules
             && $arg_url != 'https://127.0.0.1'
             && $arg_url != 'https://localhost/'
             && $arg_url != 'https://127.0.0.1/'
-        )
+        ) {
             $this->_searchEntityID = $arg_id;
+            $this->_searchEntityInstance = $this->_cacheInstance->newNode($arg_url, Cache::TYPE_ENTITY);
+        }
     }
 
-    private function _actionSearchEntity()
+    private function _actionSearchEntity(): void
     {
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
-            && $this->_unlocked
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked'))
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
             )
@@ -766,13 +704,13 @@ class ModuleEntities extends \Nebule\Library\Modules
                 // Si recherche sur ID et URL.
                 echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
                     . ' ' . $this->_searchEntityURL
-                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityInstance);
             } elseif ($this->_searchEntityID != ''
                 && $this->_searchEntityURL == ''
             ) {
                 // Sinon recherche sur ID.
                 echo $this->_applicationInstance->getTranslateInstance()->getTranslate('Recherche')
-                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityID);
+                    . ' ' . $this->_displayInstance->displayInlineObjectColorIconName($this->_searchEntityInstance);
             } elseif ($this->_searchEntityID == ''
                 && $this->_searchEntityURL != ''
             ) {
@@ -788,15 +726,11 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
     // Crée une entité.
-    private $_createEntityAction = false;
-
-    private $_createEntityID = '0';
-
-    private $_createEntityInstance = '';
-
-    private $_createEntityError = false;
-
-    private $_createEntityErrorMessage = '';
+    private bool $_createEntityAction = false;
+    private string $_createEntityID = '0';
+    private ?Node $_createEntityInstance = Null;
+    private bool $_createEntityError = false;
+    private string $_createEntityErrorMessage = '';
 
     private function _findCreateEntity(): void
     {
@@ -1221,7 +1155,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             }
             unset($link, $bg);
         }
-        unset($links);
     }
 
 
@@ -1333,7 +1266,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             }
             unset($link, $bg);
         }
-        unset($links);
     }
 
 
@@ -1399,7 +1331,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         // Affiche les entités.
         echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-        unset($list);
     }
 
 
@@ -1539,8 +1470,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         // Affichage.
         echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-
-        unset($list, $links, $listOkEntities);
     }
 
 
@@ -1649,7 +1578,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_displayInstance->displayMessageInformation_DEPRECATED(
                 '::sylabe:module:entities:Display:NoEntity');
         }
-        unset($links, $listOkEntities);
     }
 
 
@@ -1832,10 +1760,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->display();
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity'))
             && ($this->_unlocked
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
@@ -2025,13 +1950,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->display();
 
         // Vérifie que la création soit authorisée.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
-            && $this->_unlocked
-        ) {
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked')) ) {
             ?>
             <div class="text">
                 <p>
