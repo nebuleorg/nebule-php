@@ -163,11 +163,9 @@ class ApplicationModules
         $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
         foreach ($links as $link) {
             $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
-$this->_metrologyInstance->addLog('DEBUGGING external module RID=' . $moduleInstanceRID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             if ($moduleInstanceRID->getID() == '0')
                 continue;
             $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
-$this->_metrologyInstance->addLog('DEBUGGING external module OID=' . $moduleInstanceOID->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             if ($moduleInstanceOID->getID() == '0'
                 || !$moduleInstanceOID->checkPresent()
             )

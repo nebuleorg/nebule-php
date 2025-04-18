@@ -118,7 +118,6 @@ abstract class Applications extends Functions implements applicationInterface
     protected function _findEnvironment(): void
     {
         $this->_findURL();
-        $this->_findCurrentEntity();
     }
 
     protected string $_urlProtocol;
@@ -169,94 +168,16 @@ abstract class Applications extends Functions implements applicationInterface
     }
 
 
-    protected string $_currentEntityOID;
-    protected ?Node $_currentEntityInstance;
 
-    /**
-     * Recherche l'entité en cours d'utilisation.
-     */
-    protected function _findCurrentEntity(): void
-    {
-        /*$this->_metrologyInstance->addLog('finding current entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '639622a1');
-        
-        $arg_ent = filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if ($arg_ent === false || $arg_ent === null)
-            $arg_ent = '';
-        $arg_ent = trim($arg_ent);
-        if ($arg_ent != '' && Node::checkNID($arg_ent, false, false)
-            && ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_ent)
-                || $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_ent)
-            )
-        ) {
-            $this->_currentEntityOID = $arg_ent;
-            $this->_currentEntityInstance = $this->_cacheInstance->newNode($arg_ent, \Nebule\Library\Cache::TYPE_ENTITY);
-            $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $arg_ent);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStore('sylabeSelectedEntity');
-            if ($cache !== false && $cache != '') {
-                $this->_currentEntityOID = $cache;
-                $this->_currentEntityInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_ENTITY);
-            } else
-            {
-                $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
-                $this->_currentEntityInstance = $this->_cacheInstance->newNode($this->_entitiesInstance->getCurrentEntityID(), \Nebule\Library\Cache::TYPE_ENTITY);
-                $this->_sessionInstance->setSessionStore('sylabeSelectedEntity', $this->_entitiesInstance->getCurrentEntityID());
-            }
-            unset($cache);
-        }
-        unset($arg_ent);
-        $this->_metrologyInstance->addLog('found current entity EID=' . $this->_currentEntityOID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '59e25e72');*/
-
-        $this->_currentEntityOID = $this->_entitiesInstance->getCurrentEntityID();
-        $this->_currentEntityInstance = $this->_entitiesInstance->getCurrentEntityInstance();
-    }
-
-    public function getCurrentEntityID(): string
-    {
-        return $this->_currentEntityOID;
-    }
-
-    public function getCurrentEntityInstance(): Node
-    {
-        return $this->_currentEntityInstance;
-    }
-
-
-    /**
-     * Un téléchargement est demandé.
-     *
-     * @var boolean
-     */
     protected bool $_askDownload = false;
-    /**
-     * ID de l'objet demandé au téléchargement.
-     *
-     * @var string
-     */
     protected string $_askDownloadObject = '';
-    /**
-     * ID de l'objet dont les liens sont demandés au téléchargement.
-     *
-     * @var string
-     */
     protected string $_askDownloadLinks = '';
 
-    /**
-     * Retourne si la requête web est un téléchargement d'objet ou de lien.
-     * Des accélérations peuvent être prévues dans ce cas.
-     *
-     * @return boolean
-     */
     public function askDownload(): bool
     {
         return $this->_askDownload;
     }
 
-    /**
-     * Gestion des variables pour le téléchargement d'objets et de liens.
-     *
-     * @return boolean
-     */
     protected function _findAskDownload(): bool
     {
         $arg_dwlobj = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));

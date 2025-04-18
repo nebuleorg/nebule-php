@@ -588,8 +588,8 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _findDisplayEntity(): void
     {
-        $this->_displayEntity = $this->_applicationInstance->getCurrentEntityID();
-        $this->_displayEntityInstance = $this->_applicationInstance->getCurrentEntityInstance();
+        $this->_displayEntity = $this->_entitiesInstance->getCurrentEntityID();
+        $this->_displayEntityInstance = $this->_entitiesInstance->getCurrentEntityInstance();
     }
 
 
@@ -609,9 +609,9 @@ class ModuleEntities extends \Nebule\Library\Modules
 		 *  ------------------------------------------------------------------------------------------
 		 */
         // Lit et nettoye le contenu de la variable GET.
-        $arg = filter_has_var(INPUT_GET, Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY);
+        $arg = filter_has_var(INPUT_GET, Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY);
 
-        // Vérifie que la création de liens et d'objets soit authorisée et que l'action soit demandée.
+        // Vérifie que la création de liens et d'objets est authorisée et que l'action soit demandée.
         if ($arg !== false
             && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
@@ -955,7 +955,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityLogs(): void
     {
         // Entité en cours.
-        if ($this->_entitiesInstance->getCurrentEntityID() != $this->_applicationInstance->getCurrentEntityID()) {
+        if ($this->_entitiesInstance->getCurrentEntityID() != $this->_entitiesInstance->getConnectedEntityID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -1164,7 +1164,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityActs(): void
     {
         // Entité en cours.
-        if ($this->_entitiesInstance->getCurrentEntityID() != $this->_applicationInstance->getCurrentEntityID()) {
+        if ($this->_entitiesInstance->getCurrentEntityID() != $this->_entitiesInstance->getConnectedEntityID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
 
@@ -1294,7 +1294,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $list = array();
         $i = 0;
-        $list[$i]['object'] = $this->_applicationInstance->getCurrentEntityInstance();
+        $list[$i]['object'] = $this->_entitiesInstance->getCurrentEntityInstance();
         $list[$i]['param'] = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
@@ -1313,7 +1313,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        $list[$i]['param']['objectRefs'][0] = $this->_applicationInstance->getCurrentEntityInstance();
+        $list[$i]['param']['objectRefs'][0] = $this->_entitiesInstance->getCurrentEntityInstance();
 
         // Marque comme vu.
         //$listOkEntities[$this->_applicationInstance->getCurrentEntity()] = true;
@@ -1359,9 +1359,9 @@ class ModuleEntities extends \Nebule\Library\Modules
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_applicationInstance->getCurrentEntityID(),
+            'bl/rl/nid1' => $this->_entitiesInstance->getCurrentEntityID(),
         );
-        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         $list = array();
@@ -1428,9 +1428,9 @@ class ModuleEntities extends \Nebule\Library\Modules
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid2' => $this->_applicationInstance->getCurrentEntityID(),
+            'bl/rl/nid2' => $this->_entitiesInstance->getCurrentEntityID(),
         );
-        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         $list = array();
@@ -1498,9 +1498,9 @@ class ModuleEntities extends \Nebule\Library\Modules
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_applicationInstance->getCurrentEntityID(),
+            'bl/rl/nid1' => $this->_entitiesInstance->getCurrentEntityID(),
         );
-        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getCurrentEntityInstance()->getLinks($links, $filter);
         if (sizeof($links) != 0) {
             foreach ($links as $link) {
                 $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
@@ -1511,9 +1511,9 @@ class ModuleEntities extends \Nebule\Library\Modules
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid2' => $this->_applicationInstance->getCurrentEntityID(),
+            'bl/rl/nid2' => $this->_entitiesInstance->getCurrentEntityID(),
         );
-        $this->_applicationInstance->getCurrentEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getCurrentEntityInstance()->getLinks($links, $filter);
 
         // Prépare l'affichage.
         if (sizeof($links) != 0) {
@@ -2042,7 +2042,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $i = 0;
 
         // Recherche si l'objet a une mise à jour.
-        $update = $this->_displayEntityInstance->findUpdate(false, false);
+        $update = $this->_displayEntityInstance->getUpdateNID(false, false);
         if ($update != $this->_displayEntity) {
             // A affiner...
             //
@@ -2052,13 +2052,13 @@ class ModuleEntities extends \Nebule\Library\Modules
         unset($update);
 
         // Liste des attributs, càd des liens de type l.
-        $links = $this->_displayEntityInstance->readLinksFilterFull(
-            '',
-            '',
-            '',
-            $this->_displayEntityInstance->getID(),
-            '',
-            '');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_displayEntityInstance->getID(),
+            'bl/rl/nid4' => '',
+        );
+        $this->_displayEntityInstance->getLinks($links, $filter);
 
         // Affichage des attributs de base.
         if (sizeof($links) != 0) {
@@ -2175,7 +2175,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . \Nebule\Library\ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
 
                                 </div>
                                 <?php
@@ -2205,7 +2205,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . \Nebule\Library\ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
 
                                 </div>
                                 <?php
@@ -2236,7 +2236,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . \Nebule\Library\ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
                                     &nbsp;
                                     <?php $this->_displayInstance->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
 
@@ -2275,8 +2275,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
-                    . '&' . Display::DEFAULT_INLINE_COMMAND . '&' . Display::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID()
+                    . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
             }

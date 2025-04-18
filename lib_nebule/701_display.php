@@ -2104,7 +2104,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Appelle les actions du module concerné par le mode d'affichage.
         foreach ($modules as $module) {
-            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode)
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode)
                 continue;
             $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
             $currentModuleName = $module::MODULE_MENU_NAME;
@@ -2129,6 +2129,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
                         $list[$j]['class'] = 'menuListContentActionHooks';
+                        $this->_metrologyInstance->addLog('disp on menu selfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '70704574');
                         $j++;
                     }
                 }
@@ -2162,6 +2163,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
                         $list[$j]['class'] = 'menuListContentActionHooks';
+                        $this->_metrologyInstance->addLog('disp on menu ' . $currentModuleName . 'SelfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c8b9734c');
                         $j++;
                     }
                 }
@@ -2194,6 +2196,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
                             $list[$j]['class'] = 'menuListContentActionHooks';
+                        $this->_metrologyInstance->addLog('disp on menu anywhere ' . $appHook['desc'] . ' - module=' . $moduleName . ' name=' . $appHook['name'], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00fde855');
                             $j++;
                         }
                     }
@@ -2230,6 +2233,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $list[$j]['desc'] = $desc;
                     $list[$j]['ref'] = $moduleName;
                     $list[$j]['class'] = 'menuListContentActionModules';
+                        $this->_metrologyInstance->addLog('disp on menu (module) ' . $appDescList[$i] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1b232fad');
                     $j++;
                 }
             }
@@ -2259,9 +2263,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $module->displayModule();
                         $ok = true;
                     } catch (\Exception $e) {
-                        $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile()
-                            . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                            . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'fa838cce');
+                        $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'fa838cce');
                     }
                 }
             }
@@ -3999,7 +4001,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $httpLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
 
@@ -6141,7 +6143,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
 
@@ -6307,7 +6309,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ?>
 
         <div class="oneActionItem" id="<?php
-        if ($entityID == $this->_applicationInstance->getCurrentEntityID())
+        if ($entityID == $this->_entitiesInstance->getCurrentEntityID())
             echo 'selfEntity';
         else
             echo 'otherEntity';

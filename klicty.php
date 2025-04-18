@@ -1123,7 +1123,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affichage des actions.
      */
-    private function _displayActions(): void
+    protected function _displayActions(): void
     {
         ?>
 
@@ -1165,7 +1165,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      * On left the current entity.
      * On right security checks, empty if all OK.
      */
-    private function _displayHeader()
+    protected function _displayHeader(): void
     {
         ?>
 
@@ -1273,7 +1273,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      * Affiche la partie centrale de l'entête.
      * Non utilisé.
      */
-    private function _displayHeaderCenter()
+    protected function _displayHeaderCenter(): void
     {
         //...
     }
@@ -1282,7 +1282,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     /**
      * Affiche le menu des applications.
      */
-    private function _displayMenuApplications()
+    protected function _displayMenuApplications(): void
     {
         $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
         if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
@@ -1454,7 +1454,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      *
      * Chaque page peut faire appel à des contenus en ligne gérés par _displayInlineContent.
      */
-    private function _displayModuleContent()
+    protected function _displayModuleContent(): void
     {
         switch ($this->_currentDisplayView) {
 //            case self::DEFAULT_ABOUT_COMMAND :
@@ -1564,7 +1564,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Extrait la liste des objets.
         $list = array();
         $DisplayedList = array();
-        $id = $this->_applicationInstance->getCurrentEntityID();
+        $id = $this->_entitiesInstance->getCurrentEntityID();
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_DATE);
         $instance = $this->_cacheInstance->newNode($meta);
 
@@ -1630,9 +1630,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Refait une recherche et un affichage pour les objets protégés partagés.
         $list = array();
-        $id = $this->_applicationInstance->getCurrentEntityID();
+        $id = $this->_entitiesInstance->getCurrentEntityID();
         if ($id != $this->_configurationInstance->getOptionUntyped('defaultCurrentEntity')) {
-            $listK = $this->_applicationInstance->getCurrentEntityInstance()->readLinksFilterFull(
+            $listK = $this->_entitiesInstance->getCurrentEntityInstance()->readLinksFilterFull(
                 '',
                 '',
                 'k',
@@ -1767,7 +1767,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Liste des entités à ne pas afficher.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         if ($this->_unlocked) {
-            $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
         }
 
         // Liste toutes les autres entités.
@@ -1855,7 +1855,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $listOkGroups = array();
 
         // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntityID(), '');
+        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityInstance(), '');
 
         // Affiche les groupes.
         foreach ($listGroups as $id) {
@@ -2219,7 +2219,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche un complément d'information en fonction du type d'objet.
         if ($isEntity) {
             // Liste des groupes fermés dont l'objet est membre.
-            $listGroupsMember = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntityID(), '');
+            $listGroupsMember = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityInstance(), '');
             $listOkGroups = array();
             $i = 0;
 
@@ -2308,7 +2308,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
         if ($isGroup) {
             // Liste tous les groupes.
-            $groupListID = $object->getListMembersID('self', null);
+            $groupListID = $object->getListMembersID('self', array());
 
             //Prépare l'affichage.
             if (sizeof($groupListID) != 0) {
@@ -2469,7 +2469,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <?php $this->displayObjectColorIcon($id, $htlink, self::DEFAULT_ICON_LO); ?>
                                 </div>
                                 <div class="oneAction-entityname">
-                                    <p><?php $this->displayInlineObjectColorIconName($this->_applicationInstance->getCurrentEntityID()); ?></p>
+                                    <p><?php $this->displayInlineObjectColorIconName($this->_entitiesInstance->getCurrentEntityInstance()); ?></p>
                                 </div>
                                 <div class="oneAction-title">
                                     <p><?php $this->displayHypertextLink($name, $htlink); ?></p>
@@ -2982,7 +2982,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
         ) {
             // Liste tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityID(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityInstance(), '');
 
             //Prépare l'affichage des groupes.
             $list = array();
@@ -3035,7 +3035,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
             // Ajoute des entités à ne pas afficher.
-            $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
             $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
@@ -3116,12 +3116,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             'displaySize' => 'medium',
             'displayRatio' => 'short',
         );
-        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentEntityInstance(), $param);
+        echo $this->_applicationInstance->getDisplayInstance()->getDisplayObject_DEPRECATED($this->_entitiesInstance->getCurrentEntityInstance(), $param);
         echo '</div>' . "\n";
         echo '</div>' . "\n";
 
-        if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
-            || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
+        if ($this->_entitiesInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
+            || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getConnectedEntityID()
                 && $this->_unlocked
             )
         ) {
@@ -3187,8 +3187,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
+            if ($this->_entitiesInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
+                || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getConnectedEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -3227,9 +3227,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_applicationInstance->getCurrentEntityID(); ?>">
+                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID(); ?>">
                     <input type="hidden" name="ent"
-                           value="<?php echo $this->_applicationInstance->getCurrentEntityID(); ?>">
+                           value="<?php echo $this->_entitiesInstance->getCurrentEntityID(); ?>">
                     <input type="password" name="pwd">
                     <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
                 </form>
@@ -3245,8 +3245,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '</div>' . "\n";
             }
         } else {
-            if ($this->_applicationInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_applicationInstance->getCurrentEntityID() == $this->_entitiesInstance->getCurrentEntityID()
+            if ($this->_entitiesInstance->getCurrentEntityInstance()->getHavePrivateKeyPassword()
+                || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getConnectedEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -3528,7 +3528,7 @@ private function _displayContentAbout()
     }
 
     // Affiche la fin de page.
-    private function _displayFooter()
+    protected function _displayFooter(): void
     {
         ?>
 
@@ -3766,7 +3766,7 @@ private function _displayContentAbout()
         ?>
 
         <div class="oneActionItem"
-             id="<?php if ($entityID == $this->_applicationInstance->getCurrentEntityID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
+             id="<?php if ($entityID == $this->_entitiesInstance->getCurrentEntityID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
             <div class="oneActionItem-top">
                 <div class="oneAction-icon">
                     <?php $this->displayObjectColorIcon($object, $htlink, $icon); ?>
@@ -4354,7 +4354,7 @@ class Action extends Actions
     /**
      * Extrait pour action si un fichier est téléchargé vers le serveur.
      */
-    protected function _extractActionUploadFile()
+    protected function _extractActionUploadFile(): void
     {
         // Vérifie que la création de liens et l'écriture d'objets soient authorisées.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')

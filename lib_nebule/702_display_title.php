@@ -64,7 +64,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 
     private function _getEntityHTML(&$result): void
     {
-        if ($this->_applicationInstance->getCurrentEntityID() != $this->_entitiesInstance->getCurrentEntityID()
+        if ($this->_entitiesInstance->getCurrentEntityID() != $this->_entitiesInstance->getConnectedEntityID()
             || $this->_configurationInstance->getOptionUntyped('forceDisplayEntityOnTitle')
             || $this->_displayEntity
         ) {
@@ -72,7 +72,7 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
 
             // TODO rewrite this...
             $instance = new DisplayObject($this->_applicationInstance);
-            $instance->setNID($this->_applicationInstance->getCurrentEntityInstance());
+            $instance->setNID($this->_entitiesInstance->getCurrentEntityInstance());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableRefs(false);

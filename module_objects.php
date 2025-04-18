@@ -279,7 +279,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                     . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object;
 
-                $instance = $this->_applicationInstance->getCurrentEntityInstance();
+                $instance = $this->_entitiesInstance->getCurrentEntityInstance();
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
@@ -1197,22 +1197,20 @@ class ModuleObjects extends \Nebule\Library\Modules
             $instance = null;
 
             // Ajoute des entités et groupes à ne pas afficher.
-            $listOkEntities[$this->_applicationInstance->getCurrentEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
             $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
-            $listOkGroups[$this->_applicationInstance->getCurrentEntityID()] = true;
+            $listOkGroups[$this->_entitiesInstance->getCurrentEntityID()] = true;
             $listOkGroups[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkGroups[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkGroups[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkGroups[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkGroups[$this->_entitiesInstance->getCurrentEntityID()] = true;
 
             // Ajout du message de protection.
             $list[0]['information'] = '::WarningSharedProtection';

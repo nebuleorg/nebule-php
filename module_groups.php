@@ -419,7 +419,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     private function _display_InlineGroups(): void
     {
         // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_applicationInstance->getCurrentEntityID(), '');
+        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityInstance(), '');
 
         // Prépare l'affichage.
         $list = array();
@@ -507,7 +507,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_applicationInstance->getCurrentEntityID()])
+                && !isset($signers[$this->_entitiesInstance->getCurrentEntityID()])
             ) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -850,7 +850,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
-                            && $item->getParsed()['bs/rs1/eid'] != $this->_applicationInstance->getCurrentEntityID()
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getCurrentEntityID()
                         ) {
                             $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);

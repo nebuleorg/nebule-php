@@ -164,6 +164,18 @@ class Entities extends Functions
 
 
 
+    public function getConnectedEntityID(): string // FIXME
+    {
+        return $this->_currentEntityID;
+    }
+
+    public function getConnectedEntityInstance(): ?Entity // FIXME
+    {
+        return $this->_currentEntityInstance;
+    }
+
+
+
     /**
      * Try to find current entity from :
      * 1: from command argument;
