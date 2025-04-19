@@ -61,7 +61,7 @@ class ModuleGroups extends \Nebule\Library\Modules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
         $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);

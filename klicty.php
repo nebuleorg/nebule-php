@@ -623,7 +623,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
      */
     public function refreshUnlocked()
     {
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
     }
 
 

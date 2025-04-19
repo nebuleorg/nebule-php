@@ -1292,7 +1292,7 @@ class Configuration extends Functions
         foreach ($list as $name)
         {
             if ($name == 'unlocked') {
-                if (!$this->_entitiesInstance->getCurrentEntityIsUnlocked()) {
+                if (!$this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
                     $this->_metrologyInstance->addLog('not permitted with entity locked', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a6c88b6b');
                     return false;
                 }

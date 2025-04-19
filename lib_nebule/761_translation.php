@@ -304,9 +304,9 @@ abstract class Translates extends Functions
         if ($ok_lang) {
             $this->_currentLanguage = $arg_lang;
             $this->_currentLanguageInstance = $lang_instance;
-            $this->_sessionInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
+            $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
         } else {
-            $cache = $this->_sessionInstance->getSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage');
+            $cache = $this->_sessionInstance->getSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage');
             if ($cache !== false
                 && $cache != ''
             ) {
@@ -315,7 +315,7 @@ abstract class Translates extends Functions
             } else {
                 $this->_currentLanguage = $this->_defaultLanguage;
                 $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListName()[$this->_defaultLanguage];
-                $this->_sessionInstance->setSessionStore($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
+                $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
             }
             unset($cache);
         }

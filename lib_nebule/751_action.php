@@ -106,7 +106,7 @@ abstract class Actions extends Functions
 
     protected function _initialisation(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('initialisation action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4b67de69');
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
     }
 
 

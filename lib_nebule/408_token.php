@@ -70,7 +70,7 @@ class Token extends TokenPool implements nodeInterface
             return;
         }
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
         if ($this->_id != '0')
             $this->_loadToken($this->_id);
@@ -149,7 +149,7 @@ class Token extends TokenPool implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // Génère la nouveau jeton.
             $this->_id = $this->_createToken($param, $protected, $obfuscated);

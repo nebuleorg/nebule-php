@@ -107,7 +107,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $title->setTitle('::::INFO');
         $title->display();
 
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
         if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'

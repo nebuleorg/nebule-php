@@ -70,7 +70,7 @@ class TokenPool extends Currency implements nodeInterface
             return;
         }
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
         if ($this->_id != '0')
             $this->_loadTokenPool($this->_id);
@@ -146,7 +146,7 @@ class TokenPool extends Currency implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteCurrency')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateCurrency')
-            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // Génère la nouveau sac de jetons.
             $this->_id = $this->_createTokenPool($param, $protected, $obfuscated);

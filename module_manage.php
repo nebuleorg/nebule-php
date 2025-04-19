@@ -66,7 +66,7 @@ class ModuleManage extends \Nebule\Library\Modules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
     }
 
 

@@ -153,7 +153,6 @@ class Entities extends Functions
     private ?Entity $_currentEntityInstance = null;
     private string $_currentEntityPrivateKey = '';
     private ?Node $_currentEntityPrivateKeyInstance = null;
-    private bool $_currentEntityIsUnlocked = false;
 
     /**
      * Try to find current entity from :
@@ -311,17 +310,12 @@ class Entities extends Functions
         if ($this->_currentEntityInstance->setPrivateKeyPassword($arg_pwd))
         {
             $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
-            $this->_currentEntityIsUnlocked = true;
+            $this->_connectedEntityIsUnlocked = true;
             $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         } else {
             $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
-            $this->_currentEntityIsUnlocked = false;
+            $this->_connectedEntityIsUnlocked = false;
         }
-    }
-
-    public function getCurrentEntityIsUnlocked(): bool
-    {
-        return $this->_currentEntityIsUnlocked;
     }
 
 
@@ -336,7 +330,7 @@ class Entities extends Functions
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
+        $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -360,13 +354,13 @@ class Entities extends Functions
 
         $this->_cacheInstance->flushBufferStore();
 
-        $this->_sessionInstance->setSessionStore('nebuleTempPublicEntityInstance', serialize($this->_currentEntityInstance));
+        $this->_sessionInstance->setSessionStoreAsEntity('nebuleTempPublicEntityInstance', $this->_currentEntityInstance);
 
         $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
+        $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -384,19 +378,19 @@ class Entities extends Functions
     {
         session_start();
 
-        $entity = $this->_sessionInstance->getSessionStore('nebuleTempPublicEntityInstance');
-        if ($entity === false) {
+        $entity = $this->_sessionInstance->getSessionStoreAsEntity('nebuleTempPublicEntityInstance');
+        if ($entity === null) {
             session_write_close();
             return false;
         }
 
         $this->_cacheInstance->flushBufferStore();
 
-        $this->_currentEntityInstance = unserialize($entity);
+        $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
         $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
-        $this->_currentEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
+        $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
@@ -406,6 +400,7 @@ class Entities extends Functions
 
     private string $_connectedEntityID = '';
     private ?Entity $_connectedEntityInstance = null;
+    private bool $_connectedEntityIsUnlocked = false;
 
     private function _findConnectedEntity(): void
     {
@@ -427,6 +422,27 @@ class Entities extends Functions
     public function getConnectedEntityInstance(): ?Entity
     {
         return $this->_connectedEntityInstance;
+    }
+
+    public function setConnectedEntity(Entity $entity): bool
+    {
+        session_start();
+
+        $this->_cacheInstance->flushBufferStore();
+
+        $this->_currentEntityInstance = $entity;
+        $this->_currentEntityID = $this->_currentEntityInstance->getID();
+        $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
+        $this->_findCurrentEntityPrivateKey();
+        $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
+
+        session_write_close();
+        return true;
+    }
+
+    public function getConnectedEntityIsUnlocked(): bool
+    {
+        return $this->_connectedEntityIsUnlocked;
     }
 
 

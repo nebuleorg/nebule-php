@@ -52,7 +52,7 @@ abstract class DisplayItem implements DisplayInterface
         $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
         $this->_displayInstance = $applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_metrologyInstance->addLog('init instance ' . get_class($this),
             Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
         $this->_init();

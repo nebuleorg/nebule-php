@@ -90,7 +90,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_findDisplayEntity();
         $this->_hashType = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
         $this->_hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');

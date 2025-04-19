@@ -81,7 +81,7 @@ class Group extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // calcul l'ID.
             $this->_id = $this->_nebuleInstance->getCryptoInstance()->hash($this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO)) . self::DEFAULT_SUFFIX_NEW_GROUP;
@@ -293,7 +293,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -381,7 +381,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -437,7 +437,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -532,7 +532,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -588,7 +588,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -692,7 +692,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -752,7 +752,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -833,7 +833,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -883,7 +883,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -1031,7 +1031,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -1081,7 +1081,7 @@ class Group extends Node implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 

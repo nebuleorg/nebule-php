@@ -41,7 +41,7 @@ abstract class Modules extends Functions implements ModuleInterface
     public function __toString(): string { return $this::MODULE_NAME; }
 
     protected function _initialisation(): void {
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
     }
 
     public function getClassName(): string { return static::class; }

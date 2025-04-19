@@ -39,12 +39,12 @@ class Session extends Functions
         if ($name == ''
             || $this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions') // FIXME this->_configurationInstance = null on wake up.
-            || !isset($_SESSION['Option'][$name])
+            || !isset($_SESSION['Options'][$name])
         ) {
             session_write_close();
             return false;
         }
-        $val = $_SESSION['Option'][$name];
+        $val = $_SESSION['Options'][$name];
 
         session_write_close();
 
@@ -59,11 +59,30 @@ class Session extends Functions
         if ($name == ''
             || $this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
-            || !isset($_SESSION['Option'][$name])
+            || !isset($_SESSION['Options'][$name])
         )
             $val = '';
         else
-            $val = $_SESSION['Option'][$name];
+            $val = $_SESSION['Options'][$name];
+
+        session_write_close();
+
+        return $val;
+    }
+
+    public function getSessionStoreAsArray(string $name): array
+    {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        session_start();
+
+        if ($name == ''
+            || $this->_flushCache
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
+            || !isset($_SESSION['Options'][$name])
+        )
+            $val = array();
+        else
+            $val = $_SESSION['Options'][$name];
 
         session_write_close();
 
@@ -87,7 +106,7 @@ class Session extends Functions
             return false;
 
         session_start();
-        $_SESSION['Option'][$name] = $content;
+        $_SESSION['Options'][$name] = $content;
         session_write_close();
         return true;
     }
@@ -102,7 +121,22 @@ class Session extends Functions
             return false;
 
         session_start();
-        $_SESSION['Option'][$name] = $content;
+        $_SESSION['Options'][$name] = $content;
+        session_write_close();
+        return true;
+    }
+
+    public function setSessionStoreAsArray(string $name, array $content): bool
+    {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($name == ''
+            || $this->_flushCache
+            || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
+        )
+            return false;
+
+        session_start();
+        $_SESSION['Options'][$name] = $content;
         session_write_close();
         return true;
     }
@@ -117,7 +151,7 @@ class Session extends Functions
     {
         $this->_metrologyInstance->addLog('Flush session store', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1b83a0d1');
         session_start();
-        unset($_SESSION['Option']);
+        unset($_SESSION['Options']);
         session_write_close();
         return true;
     }
@@ -171,22 +205,22 @@ class Session extends Functions
         return true;
     }
 
-    public function setSessionStoreAsEntity(string $name, ?Node $instance): void {
+    public function setSessionStoreAsEntity(string $name, ?Entity $instance): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($instance !== null)
             $this->setSessionStore($name, serialize($instance));
     }
 
-    public function getSessionStoreAsEntity(string $name): ?Node {
+    public function getSessionStoreAsEntity(string $name): ?Entity {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_getEntityFromSession($name);
-        if ($instance === null || !$instance instanceof Entity)
+        if (!$instance instanceof Entity)
             $instance = new Entity($this->_nebuleInstance, '0');
         $this->_metrologyInstance->addLog('get entity for ' . $name . ' from session EID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '19f3e422');
         return $instance;
     }
 
-    private function _getEntityFromSession(string $name): ?Node {
+    private function _getEntityFromSession(string $name): ?Entity {
         session_start();
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
@@ -197,7 +231,7 @@ class Session extends Functions
             return null;
         }
         try {
-            $instance = unserialize($_SESSION['Option'][$name]);
+            $instance = unserialize($_SESSION['Options'][$name]);
             $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->initialisation();
         } catch (\Exception $e) {

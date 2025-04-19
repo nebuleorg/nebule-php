@@ -596,11 +596,9 @@ abstract class Applications extends Functions implements applicationInterface
      */
     public function setMarkObject(string $object): void
     {
-        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
-        if ($list === false)
-            $list = array();
+        $list = $this->_sessionInstance->getSessionStoreAsArray('objectsMarkList');
         $list[$object] = true;
-        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStoreAsArray('objectsMarkList', $list);
         unset($list);
     }
 
@@ -612,11 +610,9 @@ abstract class Applications extends Functions implements applicationInterface
      */
     public function setUnmarkObject(string $object): void
     {
-        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
-        if ($list === false)
-            return;
+        $list = $this->_sessionInstance->getSessionStoreAsArray('objectsMarkList');
         unset($list[$object]);
-        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStoreAsArray('objectsMarkList', $list);
         unset($list);
     }
 
@@ -628,7 +624,7 @@ abstract class Applications extends Functions implements applicationInterface
     public function setUnmarkAllObjects(): void
     {
         $list = array();
-        $this->_sessionInstance->setSessionStore('objectsMarkList', $list);
+        $this->_sessionInstance->setSessionStoreAsArray('objectsMarkList', $list);
         unset($list);
     }
 
@@ -640,9 +636,7 @@ abstract class Applications extends Functions implements applicationInterface
      */
     public function getMarkObject(string $object): bool
     {
-        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
-        if ($list === false)
-            return false;
+        $list = $this->_sessionInstance->getSessionStoreAsArray('objectsMarkList');
         if (isset($list[$object]))
             return true;
         return false;
@@ -654,9 +648,7 @@ abstract class Applications extends Functions implements applicationInterface
      */
     public function getMarkObjectList(): array
     {
-        $list = $this->_sessionInstance->getSessionStore('objectsMarkList');
-        if ($list === false)
-            $list = array();
+        $list = $this->_sessionInstance->getSessionStoreAsArray('objectsMarkList');
         return $list;
     }
 

@@ -73,7 +73,7 @@ class Entity extends Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         if ($this->_isNew)
             $this->_createNewEntity();
         elseif ($this->_id != '0')
@@ -117,7 +117,7 @@ class Entity extends Node implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
-            && ($this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {

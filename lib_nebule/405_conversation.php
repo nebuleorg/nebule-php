@@ -65,7 +65,7 @@ class Conversation extends Group implements nodeInterface
             return;
         }
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
+            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
         $this->getReferenceObject();
         $this->getReferenceObjectClosed();
@@ -93,7 +93,7 @@ class Conversation extends Group implements nodeInterface
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            && $this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // Génère un contenu aléatoire.
             $data = $this->_cryptoInstance->getRandom(32, Crypto::RANDOM_PSEUDO);
@@ -360,7 +360,7 @@ class Conversation extends Group implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             return false;
         }
@@ -414,7 +414,7 @@ class Conversation extends Group implements nodeInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_entitiesInstance->getCurrentEntityIsUnlocked()
+            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             return false;
         }
