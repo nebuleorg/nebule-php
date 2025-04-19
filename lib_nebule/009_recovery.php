@@ -24,12 +24,12 @@ class Recovery extends Functions
     private array $_recoveryEntitiesSigners = array();
 
 
-    public function setInstanceEntityAsRecovery(Entity $instance): void
+    public function setServerEntityAsRecovery(Entity $instance): void
     {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsRecovery')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsRecovery')) {
             $this->_addAsLocalRecovery($instance);
             $this->_metrologyInstance->addLog('Add server entity as recovery', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fa22c32d');
         }
@@ -69,7 +69,7 @@ class Recovery extends Functions
         $refRecovery = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
 
         $list = array();
-        if ($this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority')) {
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refRecovery,

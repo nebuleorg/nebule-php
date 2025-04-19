@@ -799,7 +799,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && ($this->_entitiesInstance->getCurrentEntityID() == $this->_authoritiesInstance->getCodeMaster()
                         || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getDefaultEntityID()
-                            && $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority') )
+                            && $this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') )
                         || ($this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getDefaultEntityID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
                     )

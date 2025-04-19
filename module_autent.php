@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'login';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250419';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -107,7 +107,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $title->setTitle('::::INFO');
         $title->display();
 
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked(); // FIXME test
+        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();
 
         if (! $this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
@@ -120,7 +120,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
-            $type = DisplayItemIconMessage::TYPE_ERROR;
+            $type = DisplayItemIconMessage::TYPE_PLAY;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId

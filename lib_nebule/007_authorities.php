@@ -36,8 +36,6 @@ class Authorities extends Functions
         '_localPrimaryAuthoritiesInstances',
         '_localAuthoritiesSigners',
         '_specialEntitiesID',
-        '_permitInstanceEntityAsAuthority',
-        '_permitDefaultEntityAsAuthority',
     );
 
     private string $_puppetmasterID = '';
@@ -62,13 +60,9 @@ class Authorities extends Functions
     private array $_localPrimaryAuthoritiesInstances = array();
     private array $_localAuthoritiesSigners = array();
     private array $_specialEntitiesID = array();
-    private bool $_permitInstanceEntityAsAuthority = false;
-    private bool $_permitDefaultEntityAsAuthority = false;
 
     protected function _initialisation(): void
     {
-        $this->_getPermitInstanceAsAuthority();
-        $this->_getPermitDefaultAsAuthority();
         $this->_findPuppetmaster();
         $this->_findGlobalAuthorities();
         $this->_findLocalAuthorities();
@@ -166,7 +160,7 @@ class Authorities extends Functions
     {
         return $this->_puppetmasterID;
     }
-    public function getPuppetmasterInstance(): ?Entity
+    public function getPuppetmasterInstance(): Node
     {
         return $this->_puppetmasterInstance;
     }
@@ -231,32 +225,6 @@ class Authorities extends Functions
         return $this->_timeSignersInstance;
     }
 
-    private function _getPermitInstanceAsAuthority(): void
-    {
-        if ($this->_rescueInstance->getModeRescue())
-            $this->_permitInstanceEntityAsAuthority = false;
-        else
-        $this->_permitInstanceEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitInstanceEntityAsAuthority');
-    }
-
-    public function getPermitInstanceAsAuthority(): bool
-    {
-        return $this->_permitInstanceEntityAsAuthority;
-    }
-
-    private function _getPermitDefaultAsAuthority(): void
-    {
-        if ($this->_rescueInstance->getModeRescue())
-            $this->_permitDefaultEntityAsAuthority = false;
-        else
-        $this->_permitDefaultEntityAsAuthority = $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority');
-    }
-
-    public function getPermitDefaultAsAuthority(): bool
-    {
-        return $this->_permitDefaultEntityAsAuthority;
-    }
-
 
 
     /**
@@ -290,13 +258,13 @@ class Authorities extends Functions
             $this->_specialEntitiesID[$item] = $item;
     }
 
-    public function setInstanceEntityAsAuthorities(Entity $instance): void
+    public function setServerEntityAsAuthorities(Entity $instance): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
-        if ($this->_permitInstanceEntityAsAuthority) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $this->_addAsLocalAuthority($instance, $eid);
-            $this->_metrologyInstance->addLog('Add instance entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
+            $this->_metrologyInstance->addLog('Add server entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
         }
     }
 
@@ -304,7 +272,7 @@ class Authorities extends Functions
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
-        if ($this->_permitDefaultEntityAsAuthority) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $this->_addAsLocalAuthority($instance, $eid);
             $this->_metrologyInstance->addLog('Add default entity as authority', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '95cc6196');
         }
@@ -337,7 +305,7 @@ class Authorities extends Functions
         $refAuthority = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         $list = array();
-        if ($this->_permitInstanceEntityAsAuthority) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,
@@ -349,7 +317,7 @@ class Authorities extends Functions
             $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
 
-        if ($this->_permitDefaultEntityAsAuthority) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,

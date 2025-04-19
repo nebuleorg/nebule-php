@@ -8,7 +8,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250415';
+const BOOTSTRAP_VERSION = '020250419';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
@@ -549,12 +549,12 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'permitCheckObjectHash' => 'boolean',
     'permitListInvalidLinks' => 'boolean',
     'permitHistoryLinksSign' => 'boolean',
-    'permitInstanceEntityAsAuthority' => 'boolean',
+    'permitServerEntityAsAuthority' => 'boolean',
     'permitDefaultEntityAsAuthority' => 'boolean',
     'permitLocalSecondaryAuthorities' => 'boolean',
     'permitRecoveryEntities' => 'boolean',
     'permitRecoveryRemoveEntity' => 'boolean',
-    'permitInstanceEntityAsRecovery' => 'boolean',
+    'permitServerEntityAsRecovery' => 'boolean',
     'permitDefaultEntityAsRecovery' => 'boolean',
     'permitAddLinkToSigner' => 'boolean',
     'permitListOtherHash' => 'boolean',
@@ -639,12 +639,12 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'permitCheckObjectHash' => 'true',
     'permitListInvalidLinks' => 'false',
     'permitHistoryLinksSign' => 'false',
-    'permitInstanceEntityAsAuthority' => 'false',
+    'permitServerEntityAsAuthority' => 'false',
     'permitDefaultEntityAsAuthority' => 'false',
     'permitLocalSecondaryAuthorities' => 'true',
     'permitRecoveryEntities' => 'false',
     'permitRecoveryRemoveEntity' => 'false',
-    'permitInstanceEntityAsRecovery' => 'false',
+    'permitServerEntityAsRecovery' => 'false',
     'permitDefaultEntityAsRecovery' => 'false',
     'permitAddLinkToSigner' => 'true',
     'permitListOtherHash' => 'false',
@@ -1265,7 +1265,7 @@ function lib_setServerEntity(bool $rescueMode): void {
     if ($nebuleServerEntity == '')
         $nebuleServerEntity = lib_getOption('puppetmaster');
 
-    if (lib_getOption('permitInstanceEntityAsAuthority') && !$rescueMode)
+    if (lib_getOption('permitServerEntityAsAuthority') && !$rescueMode)
         $nebuleLocalAuthorities[] = $nebuleServerEntity;
 }
 
