@@ -286,6 +286,7 @@ class Entity extends Node implements nodeInterface
     }
 
 
+
     // Retourne l'identifiant de la clé privée.
     public function getPrivateKeyID(): string
     {
@@ -375,10 +376,10 @@ class Entity extends Node implements nodeInterface
             return false;
         }
         if (! $this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd)) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key failed oid=' . $this->_privateKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bf91c623');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key failed oid=' . $this->_privateKeyID, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bf91c623');
             return false;
         }
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key ok oid=' . $this->_privateKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4ef37f6e');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key ok oid=' . $this->_privateKeyID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4ef37f6e');
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         $this->_privateKeyPassword = $passwd;
         $this->_isSetPrivateKeyPassword = true;

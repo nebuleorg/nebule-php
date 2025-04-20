@@ -250,21 +250,20 @@ class Entities extends Functions
             $this->_currentEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_currentEntityPrivateKey);
             $this->_metrologyInstance->addLog('reuse current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '75e1c757');
         }
-        else {
-            if ($this->_currentEntityInstance instanceof Entity) {
-                $this->_currentEntityPrivateKey = $this->_currentEntityInstance->getPrivateKeyID();
-                if ($this->_currentEntityPrivateKey != '') {
-                    $this->_currentEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_currentEntityPrivateKey);
-                    $this->_metrologyInstance->addLog('find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6be388ca');
-                } else {
-                    $this->_currentEntityPrivateKeyInstance = null;
-                    $this->_metrologyInstance->addLog('cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1e5bed72');
-                }
-                $this->_sessionInstance->setSessionStoreAsString('nebulePrivateKeyOID', $this->_currentEntityPrivateKey);
+        elseif ($this->_currentEntityInstance instanceof Entity) {
+            $this->_currentEntityPrivateKey = $this->_currentEntityInstance->getPrivateKeyID();
+            if ($this->_currentEntityPrivateKey != '0') {
+                $this->_currentEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_currentEntityPrivateKey);
+                $this->_metrologyInstance->addLog('find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6be388ca');
             } else {
                 $this->_currentEntityPrivateKey = '';
                 $this->_currentEntityPrivateKeyInstance = null;
+                $this->_metrologyInstance->addLog('cant find current entity private key ' . $this->_currentEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1e5bed72');
             }
+            $this->_sessionInstance->setSessionStoreAsString('nebulePrivateKeyOID', $this->_currentEntityPrivateKey);
+        } else {
+            $this->_currentEntityPrivateKey = '';
+            $this->_currentEntityPrivateKeyInstance = null;
         }
     }
 
@@ -289,7 +288,6 @@ class Entities extends Functions
             if ($this->_currentEntityInstance instanceof Entity) {
                 $this->_metrologyInstance->addLog('logout ' . $this->_currentEntityID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4efbc71f');
                 $this->_currentEntityInstance->unsetPrivateKeyPassword();
-                $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
             }
             return;
         }
@@ -309,13 +307,14 @@ class Entities extends Functions
 
         if ($this->_currentEntityInstance->setPrivateKeyPassword($arg_pwd))
         {
-            $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
+            $this->_metrologyInstance->addLog('login password for eid=' . $this->_currentEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
+            $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEID', $this->_currentEntityInstance);
+            $this->_connectedEntityID = $this->_currentEntityID;
+            $this->_connectedEntityInstance = $this->_currentEntityInstance;
+            $this->_sessionInstance->setSessionStoreAsEntity('nebuleConnectedEntityInstance', $this->_connectedEntityInstance);
             $this->_connectedEntityIsUnlocked = true;
-            $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
-        } else {
-            $this->_metrologyInstance->addLog('login password ' . $this->_currentEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
-            $this->_connectedEntityIsUnlocked = false;
-        }
+        } else
+            $this->_metrologyInstance->addLog('login password for eid=' . $this->_currentEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
     }
 
 
@@ -328,7 +327,6 @@ class Entities extends Functions
 
         $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
         $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
@@ -358,7 +356,6 @@ class Entities extends Functions
 
         $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
         $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
@@ -388,7 +385,6 @@ class Entities extends Functions
 
         $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
         $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
@@ -432,7 +428,6 @@ class Entities extends Functions
 
         $this->_currentEntityInstance = $entity;
         $this->_currentEntityID = $this->_currentEntityInstance->getID();
-        $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEIDInstance', $this->_currentEntityInstance);
         $this->_findCurrentEntityPrivateKey();
         $this->_connectedEntityIsUnlocked = $this->_currentEntityInstance->getHavePrivateKeyPassword();
 
