@@ -4,14 +4,14 @@ namespace Nebule\Bootstrap;
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
 use Nebule\Library\nebule;
+#use Random\RandomException;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250419';
+const BOOTSTRAP_VERSION = '020250421';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
-const BOOTSTRAP_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256'; // FIXME remove
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
 const BOOTSTRAP_FUNCTION_VERSION = '020241123';
 // ------------------------------------------------------------------------------------------
@@ -23,13 +23,13 @@ const BOOTSTRAP_FUNCTION_VERSION = '020241123';
 | /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
 |------------------------------------------------------------------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
+|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
 |  [EN] Any modification of this code will result in a modification of its hash digest and will therefore automatically result in its invalidation!
 |  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo tanto lugar automáticamente a su anulación!
-|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
 |  [IT] Ogni modifica di questo codice comporterà una modifica della sua impronta e quindi ne causerà automaticamente l'invalidazione!
-|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
 |  [PL] Każda modyfikacja tego kodu spowoduje zmianę jego odcisku i automatycznie doprowadzi do jego unieważnienia!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
 |
 |------------------------------------------------------------------------------------------------------------------------------------------------------
 */
@@ -589,7 +589,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'permitSessionBuffer' => 'boolean',
     'permitBufferIO' => 'boolean',
     'sessionBufferSize' => 'integer',
-    'defaultCurrentEntity' => 'string',
+    'defaultEntity' => 'string',
     'defaultApplication' => 'string',
     'permitApplication1' => 'boolean',
     'permitApplication2' => 'boolean',
@@ -679,7 +679,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'permitSessionBuffer' => 'true',
     'permitBufferIO' => 'true',
     'sessionBufferSize' => '1000',
-    'defaultCurrentEntity' => LIB_DEFAULT_PUPPETMASTER_EID,
+    'defaultEntity' => LIB_DEFAULT_PUPPETMASTER_EID,
     'defaultApplication' => '1',
     'permitApplication1' => 'true',
     'permitApplication2' => 'true',
@@ -864,19 +864,19 @@ $nebuleDefaultEntity = '';
  * ID de l'entité en cours.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$nebulePublicEntity = '';
+$nebuleGhostPublicEntity = '';
 
 /**
  * Clé privée de l'entité en cours.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$nebulePrivateEntity = '';
+$nebuleGhostPrivateEntity = '';
 
 /**
  * Mot de passe de l'entité en cours.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$nebulePasswordEntity = '';
+$nebuleGhostPasswordEntity = '';
 
 /**
  * Liste des entités autorités locale.
@@ -1278,7 +1278,7 @@ function lib_setServerEntity(bool $rescueMode): void {
 function lib_setDefaultEntity(bool $rescueMode): void {
     global $nebuleDefaultEntity, $nebuleServerEntity, $nebuleLocalAuthorities;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    $nebuleDefaultEntity = lib_getOption('defaultCurrentEntity');
+    $nebuleDefaultEntity = lib_getOption('defaultEntity');
     if (!ent_checkIsPublicKey($nebuleDefaultEntity))
         $nebuleDefaultEntity = $nebuleServerEntity;
 
@@ -1287,10 +1287,10 @@ function lib_setDefaultEntity(bool $rescueMode): void {
 }
 
 function lib_setPublicEntity(): void {
-    global $nebulePublicEntity, $nebuleDefaultEntity;
+    global $nebuleGhostPublicEntity, $nebuleDefaultEntity;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    if (!ent_checkIsPublicKey($nebulePublicEntity))
-        $nebulePublicEntity = $nebuleDefaultEntity;
+    if (!ent_checkIsPublicKey($nebuleGhostPublicEntity))
+        $nebuleGhostPublicEntity = $nebuleDefaultEntity;
 }
 
 function lib_getModeRescue(): bool {
@@ -2084,30 +2084,30 @@ function blk_generate(string $rc, string $req, string $nid1, string $nid2 = '', 
  * @return string
  */
 function blk_sign(string $bh_bl): string {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+    global $nebuleGhostPublicEntity, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity;
     log_add('track functions bh_bl=' . $bh_bl, 'debug', __FUNCTION__, '1111c0de');
 
     if ($bh_bl == '')
         return '';
 
-    if (!ent_checkIsPublicKey($nebulePublicEntity)) {
-        log_add('invalid current entity (public) ' . $nebulePublicEntity, 'error', __FUNCTION__, '70e110d7');
+    if (!ent_checkIsPublicKey($nebuleGhostPublicEntity)) {
+        log_add('invalid current entity (public) ' . $nebuleGhostPublicEntity, 'error', __FUNCTION__, '70e110d7');
         return '';
     }
-    if (!ent_checkIsPrivateKey($nebulePrivateEntity)) {
-        log_add('invalid current entity (private) ' . $nebulePrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
+    if (!ent_checkIsPrivateKey($nebuleGhostPrivateEntity)) {
+        log_add('invalid current entity (private) ' . $nebuleGhostPrivateEntity, 'error', __FUNCTION__, 'ca23fd57');
         return '';
     }
-    if ($nebulePasswordEntity == '') {
+    if ($nebuleGhostPasswordEntity == '') {
         log_add('invalid current entity (password)', 'error', __FUNCTION__, '331e1fab');
         return '';
     }
 
-    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, true);
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, true);
     if ($sign == '')
         return '';
 
-    $bs = $nebulePublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
+    $bs = $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
     return $bh_bl . '_' . $bs;
 }
 
@@ -3091,7 +3091,7 @@ function nod_checkNID(string $nid, bool $permitNull = false): bool {
  * @return boolean
  */
 function nod_checkBanned_FIXME(&$nid): bool {
-    global $nebulePublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
+    global $nebuleGhostPublicEntity, $nebuleSecurityAuthorities, $nebuleCacheIsBanned;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     // FIXME
@@ -3477,7 +3477,7 @@ function ent_getFullName(string $nid): string {
  * @return bool
  */
 function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPublicKey, string &$hashPrivateKey, string &$password = ''): bool {
-    global $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+    global $nebuleGhostPublicEntity, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if (!lib_getOption('permitWrite')
@@ -3512,8 +3512,8 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
     $list = array($oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item) {
         $bh_bl = blk_generate('', 'l', $item, $oidText, $oidType);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, false);
+        $link = $bh_bl . '_' . $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
         if (!blk_write($link))
             return false;
     }
@@ -3521,15 +3521,15 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
     $list = array($hashPublicKey, $hashPrivateKey);
     foreach ($list as $item) {
         $bh_bl = blk_generate('', 'l', $item, $oidPem, $oidType);
-        $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-        $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
+        $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, false);
+        $link = $bh_bl . '_' . $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
         if (!blk_write($link))
             return false;
     }
 
     $bh_bl = blk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
-    $sign = crypto_asymmetricEncrypt($bh_bl, $nebulePrivateEntity, $nebulePasswordEntity, false);
-    $link = $bh_bl . '_' . $nebulePublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, false);
+    $link = $bh_bl . '_' . $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOption('cryptoHashAlgorithm');
     if (!blk_write($link))
         return false;
 
@@ -5584,7 +5584,7 @@ function bootstrap_breakDisplay2Bootstrap(): void {
 
 function bootstrap_breakDisplay3LibraryPP(): void {
     global $nebuleSecurityAuthorities, $nebuleCodeAuthorities, $nebuleDirectoryAuthorities, $nebuleTimeAuthorities,
-           $nebuleServerEntity, $nebuleDefaultEntity, $nebulePublicEntity, $codeBranchNID;
+           $nebuleServerEntity, $nebuleDefaultEntity, $nebuleGhostPublicEntity, $codeBranchNID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     log_add('3: library PP', 'info', __FUNCTION__, '76c10058');
@@ -5633,8 +5633,8 @@ function bootstrap_breakDisplay3LibraryPP(): void {
     bootstrap_echoLinkNID($nebuleDefaultEntity);
     echo "<br/>\n";
 
-    bootstrap_echoLineTitle('current entity');
-    bootstrap_echoLinkNID($nebulePublicEntity);
+    bootstrap_echoLineTitle('ghost entity');
+    bootstrap_echoLinkNID($nebuleGhostPublicEntity);
     echo "<br/>\n";
 
     $codeBranchName = lib_getOption('codeBranch');
@@ -5738,9 +5738,14 @@ function bootstrap_breakDisplay41LibraryEntities(): void {
         array($nebuleInstance->getEntitiesInstance()->getDefaultEntityID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityInstance()),
         $nebuleInstanceCheck > 70);
 
-    bootstrap_breakDisplay411DisplayEntity('current entity',
-        array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityID()),
-        array($nebuleInstance->getEntitiesInstance()->getCurrentEntityID() => $nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance()),
+    bootstrap_breakDisplay411DisplayEntity('ghost entity',
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityID()),
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()),
+        $nebuleInstanceCheck > 80);
+
+    bootstrap_breakDisplay411DisplayEntity('connected entity',
+        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityID()),
+        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityInstance()),
         $nebuleInstanceCheck > 80);
 
     $entity = lib_getOption('subordinationEntity');
@@ -5763,7 +5768,7 @@ function bootstrap_breakDisplay41LibraryEntities(): void {
     }
 }
 
-function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, array $listInstance, bool $ok): void {
+function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, array $listInstances, bool $ok): void {
     global $nebuleInstance;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
@@ -5772,8 +5777,8 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
         bootstrap_echoLineTitle($title);
 
         $name = $eid;
-        if (isset($listInstance[$eid]) && is_a($listInstance[$eid], 'Nebule\Library\Entity'))
-            $name = $listInstance[$eid]->getName();
+        if (isset($listInstances[$eid]) && is_a($listInstances[$eid], 'Nebule\Library\Entity'))
+            $name = $listInstances[$eid]->getName();
 
         if ($ok)
         {
@@ -5783,7 +5788,7 @@ function bootstrap_breakDisplay411DisplayEntity(string $title, array $listEID, a
                 echo ' (local authority)';
             if ($nebuleInstance->getAuthoritiesInstance()->getIsGlobalAuthorityEID($eid))
                 echo ' (global authority)';
-            if (isset($listInstance[$eid]) && is_a($listInstance[$eid], 'Nebule\Library\Entity') && $listInstance[$eid]->getHavePrivateKeyPassword())
+            if (isset($listInstances[$eid]) && is_a($listInstances[$eid], 'Nebule\Library\Entity') && $listInstances[$eid]->getHavePrivateKeyPassword())
                 echo ' (unlocked)';
         } else
             echo '<span class="error">ERROR!</span>';
@@ -6816,10 +6821,10 @@ chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
  * Crée le fichier des options par défaut.
  *
  * @return bool
- * @throws RandomException
+ * @throws /Random/RandomException
  */
 function bootstrap_firstDisplay9LocaleEntity(): bool {
-    global $nebuleInstance, $nebulePublicEntity, $nebulePrivateEntity, $nebulePasswordEntity;
+    global $nebuleInstance, $nebuleGhostPublicEntity, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6831,36 +6836,44 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
         if (file_put_contents(LIB_LOCAL_ENTITY_FILE, '0') !== false) {
             echo 'new server entity<br/>' . "\n";
 
-            $nebulePasswordEntity = '';
+            $nebuleGhostPasswordEntity = '';
             try {
                 $newPasswd = random_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
             } catch (\Exception $e) {
                 $newPasswd = 'ERROR GEN RANDOM ';
             }
-            $nebulePasswordEntity .= preg_replace('/[^a-zA-Z0-9,;:*&#+=_-]/', '', $newPasswd);
-            $nebulePasswordEntity = (string)substr($nebulePasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
+            $nebuleGhostPasswordEntity .= preg_replace('/[^a-zA-Z0-9,;:*&#+=_-]/', '', $newPasswd);
+            $nebuleGhostPasswordEntity = (string)substr($nebuleGhostPasswordEntity, 0, LIB_FIRST_GENERATED_PASSWORD_SIZE);
             /** @noinspection PhpUnusedLocalVariableInspection */
             $newPasswd = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
             /** @noinspection PhpUnusedLocalVariableInspection */
             $newPasswd = null;
 
-            $nebulePublicEntity = '0';
-            $nebulePrivateEntity = '0';
+            $nebuleGhostPublicEntity = '0';
+            $nebuleGhostPrivateEntity = '0';
             // Génère une nouvelle entité.
             ent_generate(
                 lib_getOption('cryptoAsymmetricAlgorithm'),
                 lib_getOption('cryptoHashAlgorithm'),
-                $nebulePublicEntity,
-                $nebulePrivateEntity,
-                $nebulePasswordEntity
+                $nebuleGhostPublicEntity,
+                $nebuleGhostPrivateEntity,
+                $nebuleGhostPasswordEntity
             );
-            log_add('switch to new entity ' . $nebulePublicEntity, 'warn', __FUNCTION__, '94c27df0');
+            log_add('switch to new entity ' . $nebuleGhostPublicEntity, 'warn', __FUNCTION__, '94c27df0');
 
             // Définit l'entité comme entité instance du serveur.
-            file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebulePublicEntity);
+            file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebuleGhostPublicEntity);
+            $instancePubKey = $nebuleInstance->getCacheInstance()->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
+            $instancePubKey->setContent($nebuleGhostPublicEntity);
+            $nebuleInstance->getEntitiesInstance()->setGhostEntity($instancePubKey);
+            $nebuleInstance->getEntitiesInstance()->setGhostEntityPassword($nebuleGhostPasswordEntity);
+
+            /*$instancePrivKey = $nebuleInstance->getCacheInstance()->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
+            $instancePrivKey->setContent($nebuleGhostPrivateEntity);
+            $nebuleInstance->getEntitiesInstance()->setGhostEntityPrivateKeyInstance($instancePrivKey);*/
 
             // Calcul le nom.
-            $hexValue = preg_replace('/[[:^xdigit:]]/', '', $nebulePublicEntity);
+            $hexValue = preg_replace('/[[:^xdigit:]]/', '', $nebuleGhostPublicEntity);
             $genName = hex2bin($hexValue . $hexValue);
             $name = '';
             // Filtrage des caractères du nom dans un espace restreint.
@@ -6904,32 +6917,31 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
             }
             $name = substr($name . 'robott', 0, LIB_FIRST_GENERATED_NAME_SIZE);
 
-            // Enregistrement du nom.
             obj_setContentAsText($name);
             $newLink = blk_generateSign('',
                 'l',
-                $nebulePublicEntity,
+                $nebuleGhostPublicEntity,
                 obj_getNID($name),
                 obj_getNID('nebule/objet/nom')
             );
             blk_write($newLink);
 
-            // Load entity on library.
-            $instance = $nebuleInstance->getCacheInstance()->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
-            $instance->setContent($nebulePrivateEntity);
-            $nebuleInstance->getEntitiesInstance()->setCurrentEntity($instance);
-
             bootstrap_echoLineTitle('public ID');
-            echo $nebulePublicEntity . '<br/>' . "\n";
+            echo $nebuleGhostPublicEntity . '<br/>' . "\n";
             bootstrap_echoLineTitle('private ID');
-            echo $nebulePrivateEntity . "\n";
-
+            echo $nebuleGhostPrivateEntity . '<br/>' . "\n";
+/*            bootstrap_echoLineTitle('auto login');
+            echo '<a href="?' . LIB_ARG_SWITCH_APPLICATION . '=' . \Nebule\Library\References::DEFAULT_REDIRECT_AUTH_APP
+                . '&' . \Nebule\Library\References::COMMAND_APPLICATION_BACK . '=1' . '&view=desc'
+                . '&' . \Nebule\Library\References::COMMAND_SELECT_GHOST . '=' . $nebuleGhostPublicEntity
+                . '&pwd=' . bin2hex($nebuleGhostPasswordEntity) . '" target="_blank">&gt;open in new page</a><br/>' . "\n";
+*/
             ?>
 
             <div class="important">
                 name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?php echo $name; ?><br/>
-                public ID : <?php echo $nebulePublicEntity; ?><br/>
-                password &nbsp;: <?php echo htmlspecialchars($nebulePasswordEntity); ?><br/>
+                public ID : <?php echo $nebuleGhostPublicEntity; ?><br/>
+                password &nbsp;: <?php echo htmlspecialchars($nebuleGhostPasswordEntity); ?><br/>
                 Please keep and save securely these private information!
             </div>
             <?php
@@ -6968,7 +6980,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
  * @return bool
  */
 function bootstrap_firstDisplay10NeededObjects(): bool {
-    global $nebuleInstance, $nebulePasswordEntity;
+    global $nebuleInstance, $nebuleGhostPasswordEntity;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6989,8 +7001,8 @@ function bootstrap_firstDisplay10NeededObjects(): bool {
 
     echo "</div>\n";
 
-    $nebulePasswordEntity = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-    $nebulePasswordEntity = null;
+    $nebuleGhostPasswordEntity = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
+    $nebuleGhostPasswordEntity = null;
 
     return $ok;
 }

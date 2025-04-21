@@ -114,6 +114,7 @@ class nebule
         $this->_getSubordinationEntity();
         $this->_checkWriteableIO();
         $this->_findCurrentObjet();
+        $this->_findCurrentEntity();
         $this->_findCurrentGroup();
         $this->_findCurrentConversation();
         $this->_findCurrentCurrency();
@@ -407,39 +408,35 @@ class nebule
     private string $_currentObject = '';
     private ?Node $_currentObjectInstance = null;
 
-    private function _findCurrentObjet()
+    private function _findCurrentObjet(): void
     {
-        // Lit et nettoye le contenu de la variable GET.
-        $arg_obj = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_OBJECT . '=' . $arg_obj, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8eb05394');
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_OBJECT))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_OBJECT . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8eb05394');
 
-        // Si la variable est un objet avec ou sans liens.
-        if (Node::checkNID($arg_obj, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg_obj)
-                || $this->getIoInstance()->checkLinkPresent($arg_obj)
+        if (Node::checkNID($arg, false, true)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
             )
         ) {
-            // Ecrit l'objet dans la variable.
-            $this->_currentObject = $arg_obj;
-            $this->_currentObjectInstance =$this->_cacheInstance->newNode($arg_obj);
-            // Ecrit l'objet dans la session.
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $arg_obj);
+            $this->_currentObject = $arg;
+            $this->_currentObjectInstance =$this->_cacheInstance->newNode($arg);
+            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $arg);
         } else {
-            // Sinon vérifie si une valeur n'est pas mémorisée dans la session.
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedObject');
-            // Si il existe une variable de session pour l'objet en cours, la lit.
             if ($cache != '') {
                 $this->_currentObject = $cache;
                 $this->_currentObjectInstance =$this->_cacheInstance->newNode($cache);
-            } else // Sinon selectionne l'entite courante par défaut.
-            {
-                $this->_currentObject = $this->_entitiesInstance->getCurrentEntityID();
-                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getCurrentEntityID());
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getCurrentEntityID());
+            } else {
+                $this->_currentObject = $this->_entitiesInstance->getGhostEntityID();
+                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityID());
+                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityID());
             }
             unset($cache);
         }
-        unset($arg_obj);
+        unset($arg);
 
         $this->_metrologyInstance->addLog('Find current object ' . $this->_currentObject, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7b4f89ef');
         $this->_currentObjectInstance->getMarkProtected();
@@ -457,40 +454,53 @@ class nebule
 
 
 
-    private array $_listEntitiesUnlocked = array();
-    private array $_listEntitiesUnlockedInstances = array();
+    private string $_currentEntityID = '';
+    private ?Entity $_currentEntityInstance = null;
 
-    public function getListEntitiesUnlocked(): array
+    private function _findCurrentEntity(): void
     {
-        return $this->_listEntitiesUnlocked;
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_ENTITY))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        else
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+
+        if (Node::checkNID($arg, false, true)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
+                || $arg == '0'
+            )
+        ) {
+            $this->_currentEntityID = $arg;
+            $this->_currentEntityInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
+            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedEntity', $arg);
+        } else {
+            $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedEntity');
+            if ($cache != '') {
+                $this->_currentEntityID = $cache;
+                $this->_currentEntityInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_ENTITY);
+            } else
+            {
+                $this->_currentEntityID = '0';
+                $this->_currentEntityInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
+                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedEntity', $this->_currentEntityID);
+            }
+            unset($cache);
+        }
+        unset($arg);
+
+        $this->_metrologyInstance->addLog('find current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
-    public function getListEntitiesUnlockedInstances(): array
+    public function getCurrentEntityID(): string
     {
-        return $this->_listEntitiesUnlockedInstances;
+        return $this->_currentEntityID;
     }
 
-    public function addListEntitiesUnlocked(Entity $entity): void
+    public function getCurrentEntityInstance(): ?Entity
     {
-        if ($entity->getID() == '0')
-            return;
-        $eid = $entity->getID();
-
-        $this->_listEntitiesUnlocked[$eid] = $eid;
-        $this->_listEntitiesUnlockedInstances[$eid] = $entity;
+        return $this->_currentEntityInstance;
     }
 
-    public function removeListEntitiesUnlocked(Entity $entity): void
-    {
-        unset($this->_listEntitiesUnlocked[$entity->getID()]);
-        unset($this->_listEntitiesUnlockedInstances[$entity->getID()]);
-    }
-
-    public function flushListEntitiesUnlocked(): void
-    {
-        $this->_listEntitiesUnlocked = array();
-        $this->_listEntitiesUnlockedInstances = array();
-    }
 
 
     private string $_currentGroupID = '';
@@ -499,19 +509,19 @@ class nebule
     private function _findCurrentGroup(): void
     {
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_GROUP))
-            $arg_grp = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg_grp = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-        if (Node::checkNID($arg_grp, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg_grp)
-                || $this->getIoInstance()->checkLinkPresent($arg_grp)
-                || $arg_grp == '0'
+        if (Node::checkNID($arg, false, true)
+            && ($this->getIoInstance()->checkObjectPresent($arg)
+                || $this->getIoInstance()->checkLinkPresent($arg)
+                || $arg == '0'
             )
         ) {
-            $this->_currentGroupID = $arg_grp;
-            $this->_currentGroupInstance = $this->_cacheInstance->newNode($arg_grp, \Nebule\Library\Cache::TYPE_GROUP);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $arg_grp);
+            $this->_currentGroupID = $arg;
+            $this->_currentGroupInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_GROUP);
+            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedGroup');
             if ($cache != '') {
@@ -525,7 +535,7 @@ class nebule
             }
             unset($cache);
         }
-        unset($arg_grp);
+        unset($arg);
 
         $this->_metrologyInstance->addLog('find current group ' . $this->_currentGroupID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
@@ -800,8 +810,8 @@ class nebule
         if (!$this->_entitiesInstance->getDefaultEntityInstance() instanceof Entity) return 61;
         if ($this->_entitiesInstance->getDefaultEntityInstance()->getID() == '0') return 62;
 
-        if (!$this->_entitiesInstance->getCurrentEntityInstance() instanceof Entity) return 71;
-        if ($this->_entitiesInstance->getCurrentEntityInstance()->getID() == '0') return 72;
+        if (!$this->_entitiesInstance->getGhostEntityInstance() instanceof Entity) return 71;
+        if ($this->_entitiesInstance->getGhostEntityInstance()->getID() == '0') return 72;
 
         return 128;
     }

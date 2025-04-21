@@ -21,19 +21,19 @@ class References //extends Functions
     const COMMAND_RESCUE = 'r';
     const COMMAND_AUTH_ENTITY_LOGIN = 'login';
     const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
-    const COMMAND_SWITCH_TO_ENTITY = 'switch';
     const COMMAND_AUTH_ENTITY_MOD = 'auth';
     const COMMAND_AUTH_ENTITY_INFO = 'info';
     const COMMAND_SELECT_LANG = 'lang';
     const COMMAND_SELECT_OBJECT = 'obj';
-    const COMMAND_SELECT_LINK = 'lnk';
     const COMMAND_SELECT_ENTITY = 'ent';
+    const COMMAND_SELECT_GHOST = 'gho';
     const COMMAND_SELECT_GROUP = 'grp';
     const COMMAND_SELECT_CONVERSATION = 'cvt';
     const COMMAND_SELECT_CURRENCY = 'cur';
     const COMMAND_SELECT_TOKENPOOL = 'tkp';
     const COMMAND_SELECT_TOKEN = 'tkn';
     const COMMAND_SELECT_WALLET = 'wal';
+    const COMMAND_SELECT_LINK = 'lnk';
     const COMMAND_SELECT_TRANSACTION = 'trs';
     const COMMAND_SELECT_PASSWORD = 'pwd';
     const COMMAND_SELECT_TICKET = 'tkt';
@@ -57,6 +57,7 @@ class References //extends Functions
     const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
     const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
     const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
+    const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
 
     // Les objets références de nebule.
     const REFERENCE_NEBULE_OBJET = 'nebule/objet';

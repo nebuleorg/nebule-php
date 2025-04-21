@@ -93,7 +93,7 @@ class Group extends Node implements nodeInterface
             $this->_data = null;
             $this->_haveData = false;
 
-            $signer = $this->_entitiesInstance->getCurrentEntityID();
+            $signer = $this->_entitiesInstance->getGhostEntityID();
             $date = date(DATE_ATOM);
             $hashGroup = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
@@ -302,7 +302,7 @@ class Group extends Node implements nodeInterface
             return true;
 
         // Création lien de suppression de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -338,7 +338,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Liste tous mes liens de définition de groupe fermé.
         $links = $this->getLinksOnFields(
@@ -354,7 +354,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
+        if ($id == $this->_entitiesInstance->getGhostEntityID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkClosed = true;
             else
@@ -393,14 +393,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->getMarkClosed())
             return true;
 
         // Création du lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -416,7 +416,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkClosed = true;
             return true;
         }
@@ -445,14 +445,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if (!$this->getMarkClosed())
             return true;
 
         // Création lien de suppression de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -462,7 +462,7 @@ class Group extends Node implements nodeInterface
         $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkClosed = false;
             return true;
         }
@@ -489,7 +489,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Liste tous mes liens de définition de groupe protégé.
         $links = $this->getLinksOnFields(
@@ -505,7 +505,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
+        if ($id == $this->_entitiesInstance->getGhostEntityID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkProtected = true;
             else
@@ -544,14 +544,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->getMarkProtected())
             return true;
 
         // Création du lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -567,7 +567,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkProtected = true;
             return true;
         }
@@ -596,14 +596,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if (!$this->getMarkProtected())
             return true;
 
         // Création lien de suppression de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -613,7 +613,7 @@ class Group extends Node implements nodeInterface
         $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkProtected = false;
             return true;
         }
@@ -644,7 +644,7 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Liste tous mes liens de définition de groupe dissimulé.
         $links = $this->getLinksOnFields(
@@ -660,7 +660,7 @@ class Group extends Node implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
         // Mémorise le r&sultat.
-        if ($id == $this->_entitiesInstance->getCurrentEntityID()) {
+        if ($id == $this->_entitiesInstance->getGhostEntityID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkObfuscated = true;
             else
@@ -704,14 +704,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->getMarkObfuscated())
             return true;
 
         // Création du lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -727,7 +727,7 @@ class Group extends Node implements nodeInterface
 
         // Ecrit le lien.
         if ($newLink->write()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkObfuscated = true;
             return true;
         }
@@ -760,14 +760,14 @@ class Group extends Node implements nodeInterface
         $id = $this->_checkExtractEntityID($entity);
 
         if ($id == '')
-            $id = $this->_entitiesInstance->getCurrentEntityID();
+            $id = $this->_entitiesInstance->getGhostEntityID();
 
         // Si déjà marqué, donne le résultat tout de suite.
         if (!$this->getMarkObfuscated())
             return true;
 
         // Création lien de suppression de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -777,7 +777,7 @@ class Group extends Node implements nodeInterface
         $newLink = new LinkRegister($this->_nebuleInstance, $link);
 
         if ($newLink->signWrite()) {
-            if ($id == $this->_entitiesInstance->getCurrentEntityID())
+            if ($id == $this->_entitiesInstance->getGhostEntityID())
                 $this->_isMarkObfuscated = false;
             return true;
         }
@@ -849,7 +849,7 @@ class Group extends Node implements nodeInterface
             return false;
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $this->_id;
@@ -899,7 +899,7 @@ class Group extends Node implements nodeInterface
             return false;
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
@@ -1047,7 +1047,7 @@ class Group extends Node implements nodeInterface
             return false;
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $id;
@@ -1097,7 +1097,7 @@ class Group extends Node implements nodeInterface
             return false;
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $id;

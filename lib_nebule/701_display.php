@@ -1889,7 +1889,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
         <head>
             <meta charset="utf-8"/>
-            <title><?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getCurrentEntityInstance()->getFullName('all'); ?></title>
+            <title><?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getGhostEntityInstance()->getFullName('all'); ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo $this->_applicationInstance::APPLICATION_SURNAME; ?>"/>
             <meta name="description" content="<?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ';
@@ -4001,14 +4001,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $httpLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
 
             // Préparation du lien.
             $source = $object->getID();
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
-            $meta = $this->_entitiesInstance->getCurrentEntityID();
+            $meta = $this->_entitiesInstance->getGhostEntityID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
@@ -6143,14 +6143,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
 
             // Préparation du lien.
             $source = $object->getID();
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($emotion);
-            $meta = $this->_entitiesInstance->getCurrentEntityID();
+            $meta = $this->_entitiesInstance->getGhostEntityID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
@@ -6309,7 +6309,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ?>
 
         <div class="oneActionItem" id="<?php
-        if ($entityID == $this->_entitiesInstance->getCurrentEntityID())
+        if ($entityID == $this->_entitiesInstance->getGhostEntityID())
             echo 'selfEntity';
         else
             echo 'otherEntity';
@@ -6535,7 +6535,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected function _displayCurentEntityOnHeader(bool $enableLink = true): void
     {
         $instance = new DisplayObject($this->_applicationInstance);
-        $instance->setNID($this->_entitiesInstance->getCurrentEntityInstance());
+        $instance->setNID($this->_entitiesInstance->getGhostEntityInstance());
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setEnableName(true);

@@ -1402,7 +1402,7 @@ abstract class Actions extends Functions
 
         // Définition de la date et le signataire.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
 
         // Création du type mime.
         $instance->setType($this->_actionUploadFileType);
@@ -1625,8 +1625,8 @@ abstract class Actions extends Functions
             $this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             // Bascule temporairement sur la nouvelle entité.
-            $this->_entitiesInstance->setTempCurrentEntity($this->_actionCreateEntityInstance);
-            $this->_entitiesInstance->getCurrentEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
+            $this->_entitiesInstance->setTempGhostEntity($this->_actionCreateEntityInstance);
+            $this->_entitiesInstance->getGhostEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             // Définition de la date et du signataire.
             $date = date(DATE_ATOM);
@@ -1716,7 +1716,7 @@ abstract class Actions extends Functions
             unset($date, $source, $target, $meta, $link, $newLink, $textID);
 
             // Restaure l'entité d'origine.
-            $this->_entitiesInstance->unsetTempCurrentEntity();
+            $this->_entitiesInstance->unsetTempGhostEntity();
 
             // Efface le cache pour recharger l'entité.
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
@@ -2376,7 +2376,7 @@ abstract class Actions extends Functions
 
         // Création du lien.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $action = 'l';
         $source = $objectID;
         $target = $valueID;

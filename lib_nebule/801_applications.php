@@ -695,9 +695,12 @@ abstract class Applications extends Functions implements applicationInterface
                             <ul>
                                 <li><a href="#oaigb">OAIGB / Nb - bootstrap</a></li>
                                 <li><a href="#oaiga">OAIGA / Au - authen</a></li>
+                                <li><a href="#oaige">OAIGE / En - entity</a></li>
                                 <li><a href="#oaigs">OAIGS / Sy - sylabe</a></li>
                                 <li><a href="#oaigk">OAIGK / Kl - klicty</a></li>
                                 <li><a href="#oaigm">OAIGM / Me - messae</a></li>
+                                <li><a href="#oaign">OAIGN / Ne - neblog</a></li>
+                                <li><a href="#oaigq">OAIGQ / Qa - qantion</a></li>
                                 <li><a href="#oaigo">OAIGO / No - option</a></li>
                                 <li><a href="#oaigu">OAIGU / Nu - upload</a></li>
                             </ul>
@@ -839,6 +842,9 @@ abstract class Applications extends Functions implements applicationInterface
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
             <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+            </li>
+            <li><b>autent</b> : l’application de gestion des entités, <a href="#oaige">OAIGE</a>,
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
             <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>,
@@ -1297,6 +1303,10 @@ class Traduction extends Traductions
 
         <?php Displays::docDispTitle(5, 'oaiga', 'Au - authen'); ?>
         <p>IID=9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <?php Displays::docDispTitle(5, 'oaige', 'En - entity'); ?>
+        <p>IID=206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php Displays::docDispTitle(5, 'oaigs', 'Sy - sylabe'); ?>

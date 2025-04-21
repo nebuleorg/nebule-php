@@ -279,7 +279,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                     . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object;
 
-                $instance = $this->_entitiesInstance->getCurrentEntityInstance();
+                $instance = $this->_entitiesInstance->getGhostEntityInstance();
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
@@ -883,7 +883,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
-                    && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getCurrentEntityID()
+                    && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityID()
                 ) {
                     // Ajout du message d'avertissement.
                     if ($object->getIsEntity('all')) {
@@ -944,7 +944,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getCurrentEntityID()
+                && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityID()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
                 $list[2]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
@@ -1080,7 +1080,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
-                        if ($entity == $this->_entitiesInstance->getCurrentEntityID()) {
+                        if ($entity == $this->_entitiesInstance->getGhostEntityID()) {
                             // Déprotéger l'objet.
                             $list[$i]['param']['selfHookList'][0]['name'] = '::UnprotectObject';
                             $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
@@ -1197,14 +1197,14 @@ class ModuleObjects extends \Nebule\Library\Modules
             $instance = null;
 
             // Ajoute des entités et groupes à ne pas afficher.
-            $listOkEntities[$this->_entitiesInstance->getCurrentEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityID()] = true;
             $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkGroups[$this->_entitiesInstance->getCurrentEntityID()] = true;
+            $listOkGroups[$this->_entitiesInstance->getGhostEntityID()] = true;
             $listOkGroups[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getSecurityMaster()] = true;
@@ -1228,7 +1228,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             }
 
             // Liste et ajoute tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityID(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityID(), '');
             $typeGroup = false;
             $group = null;
             foreach ($listGroups as $group) {

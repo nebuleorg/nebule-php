@@ -231,8 +231,8 @@ class Token extends TokenPool implements nodeInterface
         }
 
         // Détermine le forgeur.
-        $this->_propertiesList['token']['TokenForgeID']['force'] = $this->_entitiesInstance->getCurrentEntityID();
-        $param['TokenForgeID'] = $this->_entitiesInstance->getCurrentEntityID();
+        $this->_propertiesList['token']['TokenForgeID']['force'] = $this->_entitiesInstance->getGhostEntityID();
+        $param['TokenForgeID'] = $this->_entitiesInstance->getGhostEntityID();
 
 
         // Détermine si le jeton doit avoir un contenu.
@@ -311,7 +311,7 @@ class Token extends TokenPool implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

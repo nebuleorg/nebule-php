@@ -48,7 +48,7 @@ class SocialNotself extends SocialMySelf implements SocialInterface
         if (is_a($applicationInstance, 'Applications'))
             $currentEntity = $this->_nebuleInstance->getAuthoritiesInstance()->getCurrentEntity();
         else
-            $currentEntity = $this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityID();
+            $currentEntity = $this->_nebuleInstance->getEntitiesInstance()->getGhostEntityID();
 
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
 

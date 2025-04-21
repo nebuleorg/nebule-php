@@ -788,10 +788,10 @@ class BlocLink extends Functions implements blocLinkInterface
         }
 
         if ($publicKey == '0') {
-            $publicKeyID = $this->_entitiesInstance->getCurrentEntityID();
-            $publicKeyInstance = $this->_entitiesInstance->getCurrentEntityInstance();
-        } elseif ($publicKey == $this->_entitiesInstance->getCurrentEntityID()) {
-            $publicKeyInstance = $this->_entitiesInstance->getCurrentEntityInstance();
+            $publicKeyID = $this->_entitiesInstance->getGhostEntityID();
+            $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
+        } elseif ($publicKey == $this->_entitiesInstance->getGhostEntityID()) {
+            $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
             $publicKeyID = $publicKey;
         } else {
             $publicKeyInstance = $this->_cacheInstance->newNode($publicKey, \Nebule\Library\Cache::TYPE_ENTITY);

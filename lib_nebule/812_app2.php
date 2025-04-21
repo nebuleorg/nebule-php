@@ -15,13 +15,11 @@ class App2
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250421';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
-
-    const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
 
     public function display(): void
     {
@@ -36,16 +34,15 @@ class App2
         }
         else
             $argBack = '1';
-        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_ENTITY)) {
-            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SELECT_ENTITY . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
-        }
-        else
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_GHOST)) {
+            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SELECT_GHOST, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SELECT_GHOST . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
+        } else
             $argEnt = $nebuleServerEntity;
         $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT);
-        $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . self::DEFAULT_REDIRECT_AUTH_APP;
+        $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . References::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
-        $args .= '&' . References::COMMAND_SELECT_ENTITY . '=' . $argEnt;
+        $args .= '&' . References::COMMAND_SELECT_GHOST . '=' . $argEnt;
         $args .= '&mod=auth&view=';
         if ($argLogout)
             $args .= References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT;

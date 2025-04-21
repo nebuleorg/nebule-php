@@ -90,7 +90,7 @@ class Configuration extends Functions
         'permitSessionBuffer',
         'permitBufferIO', //  TODO Need to be used on the library in side of permitSessionBuffer...
         'sessionBufferSize',
-        'defaultCurrentEntity',
+        'defaultEntity',
         'defaultApplication',
         'permitApplication1',
         'permitApplication2',
@@ -199,7 +199,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'I/O',
         'permitBufferIO' => 'I/O',
         'sessionBufferSize' => 'I/O',
-        'defaultCurrentEntity' => 'Entities',
+        'defaultEntity' => 'Entities',
         'defaultApplication' => 'Applications',
         'permitApplication1' => 'Applications',
         'permitApplication2' => 'Applications',
@@ -292,7 +292,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'boolean',
         'permitBufferIO' => 'boolean',
         'sessionBufferSize' => 'integer',
-        'defaultCurrentEntity' => 'string',
+        'defaultEntity' => 'string',
         'defaultApplication' => 'string',
         'permitApplication1' => 'boolean',
         'permitApplication2' => 'boolean',
@@ -385,7 +385,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => true,
         'permitBufferIO' => true,
         'sessionBufferSize' => true,
-        'defaultCurrentEntity' => true,
+        'defaultEntity' => true,
         'defaultApplication' => true,
         'permitApplication1' => true,
         'permitApplication2' => true,
@@ -478,7 +478,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'true',
         'permitBufferIO' => 'true',
         'sessionBufferSize' => '1000',
-        'defaultCurrentEntity' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
+        'defaultEntity' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
         'defaultApplication' => '1',
         'permitApplication1' => 'true',
         'permitApplication2' => 'true',
@@ -571,7 +571,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'careful',
         'permitBufferIO' => 'careful',
         'sessionBufferSize' => 'useful',
-        'defaultCurrentEntity' => 'useful',
+        'defaultEntity' => 'useful',
         'defaultApplication' => 'useful',
         'permitApplication1' => 'useful',
         'permitApplication2' => 'useful',
@@ -664,7 +664,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'Todo description...',
         'permitBufferIO' => 'Todo description...',
         'sessionBufferSize' => 'Todo description...',
-        'defaultCurrentEntity' => 'Todo description...',
+        'defaultEntity' => 'Todo description...',
         'defaultApplication' => 'Todo description...',
         'permitApplication1' => 'The switch to permit the use of application 1 to select application.',
         'permitApplication2' => 'The switch to permit the use of application 2 to authenticate with local entity.',
@@ -1094,9 +1094,9 @@ class Configuration extends Functions
 
         // Si aucune valeur trouvée de l'entité de subordination, lit l'option pour l'entité en cours.
         if ($value == ''
-            && is_a($this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance(), 'Entity')
+            && is_a($this->_nebuleInstance->getEntitiesInstance()->getGhostEntityInstance(), 'Entity')
         )
-            $value = trim($this->_nebuleInstance->getEntitiesInstance()->getCurrentEntityInstance()->getProperty($rid));
+            $value = trim($this->_nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()->getProperty($rid));
 
         $this->_optionsByLinksIsInUse = false;
 
@@ -1154,7 +1154,7 @@ class Configuration extends Functions
         if ($entity = ''
             || $entity == '0'
         )
-            $entity = $this->_entitiesInstance->getCurrentEntityID();
+            $entity = $this->_entitiesInstance->getGhostEntityID();
 
         $this->_metrologyInstance->addLog('set option ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7eea2');
 
@@ -1174,7 +1174,7 @@ class Configuration extends Functions
         }
         $instance->setType(References::REFERENCE_OBJECT_TEXT);
 
-        $signer = $this->_entitiesInstance->getCurrentEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityID();
         $source = $entity;
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;

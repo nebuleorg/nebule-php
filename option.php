@@ -129,8 +129,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         // Récupère l'entité déverrouillée ou l'entité instance du serveur.
         if ($this->_unlocked) {
-            $username = $this->_entitiesInstance->getCurrentEntityInstance()->getFullName();
-            $userID = $this->_entitiesInstance->getCurrentEntityID();
+            $username = $this->_entitiesInstance->getGhostEntityInstance()->getFullName();
+            $userID = $this->_entitiesInstance->getGhostEntityID();
         } else {
             $username = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
             $userID = $this->_entitiesInstance->getServerEntityID();
@@ -151,7 +151,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_entitiesInstance->getCurrentEntityID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
+            if ($this->_entitiesInstance->getGhostEntityID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
         } ?>">
             <div class="header-left">
                 <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
@@ -172,7 +172,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         </div>
         <div class="layout-footer footer<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_entitiesInstance->getCurrentEntityID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
+            if ($this->_entitiesInstance->getGhostEntityID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
         } ?>">
             <div class="footer-center">
                 <p>
@@ -843,7 +843,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -875,7 +875,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_permitAction($this->_entitiesInstance->getCurrentEntityInstance())
+        if ($this->_permitAction($this->_entitiesInstance->getGhostEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
         ) {
             $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
@@ -1075,7 +1075,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
                         $instanceQuery->setMessage('Forced on config file');
                     } elseif ($this->_unlocked
-                        && $this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getServerEntityID() // FIXME doit être dans la liste des entités autorisées
+                        && $this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getServerEntityID() // FIXME doit être dans la liste des entités autorisées
                     ) {
                         $instanceQuery = new DisplayQuery($this->_applicationInstance);
                         $instanceQuery->setType(DisplayQuery::QUERY_STRING);
@@ -1476,7 +1476,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_recoveryInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getCurrentEntityID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -1507,7 +1507,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         }
 
         // Affiche les entités à ajouter.
-        if ($this->_permitAction($this->_entitiesInstance->getCurrentEntityInstance())
+        if ($this->_permitAction($this->_entitiesInstance->getGhostEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
             $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
@@ -1676,7 +1676,7 @@ class Action extends Actions
         $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
         if ($this->_unlocked
-            && $this->_entitiesInstance->getCurrentEntityID() == $this->_entitiesInstance->getServerEntityID()
+            && $this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getServerEntityID()
             && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
         ) {

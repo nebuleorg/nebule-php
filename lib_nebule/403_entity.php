@@ -383,7 +383,6 @@ class Entity extends Node implements nodeInterface
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         $this->_privateKeyPassword = $passwd;
         $this->_isSetPrivateKeyPassword = true;
-        $this->_nebuleInstance->addListEntitiesUnlocked($this);
         return true;
     }
 
@@ -403,7 +402,6 @@ class Entity extends Node implements nodeInterface
         $this->_privateKeyPassword = null;
         $this->_privateKeyPasswordSalt = '';
         $this->_isSetPrivateKeyPassword = false;
-        $this->_nebuleInstance->removeListEntitiesUnlocked($this);
         return true;
     }
 
@@ -969,6 +967,7 @@ class Entity extends Node implements nodeInterface
 
         <li><a href="#oe">OE / Entité</a>
             <ul>
+                <li><a href="#oea">OEA / Types d'entités</a></li>
                 <li><a href="#oen">OEM / Entités Maîtresses</a></li>
                 <li><a href="#oen">OEN / Nommage</a></li>
                 <li><a href="#oep">OEP / Protection</a></li>
@@ -997,20 +996,42 @@ class Entity extends Node implements nodeInterface
         ?>
 
         <h2 id="oe">OE / Entité</h2>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
-        <p>L’entité est un objet caractéristique. Elle dispose d’une clé publique, par laquelle elle est identifiée, et
-            d’une clé privée.</p>
-        <p>L’indication de la fonction de prise d’empreinte (hashage) ainsi que le type de bi-clé sont impératifs. Le
-            lien est identique à celui défini pour un objet.</p>
+        <p>L’entité est un objet caractéristique. Elle dispose de :</p>
+        <ul>
+            <li>une clé cryptographique publique par laquelle elle est identifiée ;</li>
+            <li>une clé cryptographique privée pae laquelle elle peut générer des liens (actions) et manipuler des
+                données chiffrées (encrypted) et dissimulées (obfuscated).</li>
+        </ul>
+        <p>Une entité déverrouillée est appelée entité connectée. Le déverrouillage d'une entité est techniquement le
+            déverrouillage de la valeur de sa clé cryptographique privée.</p>
+        <p>L’indication de la fonction de prise d’empreinte (hashage) ainsi que le type de bi-clé cryptographique sont
+            impératifs. Le lien est identique à celui défini pour un objet.</p>
         <p>Le type mime <code>mime-type:application/x-pem-file</code> est suffisant pour indiquer que cet objet est une
             entité. <i>Des valeurs équivalentes pourront être définies ultérieurement</i>.</p>
         <p>Toutes les autres indications sont optionnelles.</p>
 
+        <h3 id="oea">OEA / Types d'entités</h3>
+        <p>La bibliothèque distingue plusieurs niveaux d'entités :</p>
+        <ol>
+            <li>Objet entité : C'est un objet auquel on donne des caractéristiques de visualisation propres à une
+                entité. Cela permet de manipuler des entités comme des objets, mais avec des actions en plus.</li>
+            <li>Entité courante : Cela désigne l'objet entité que l'on est en train d'observer.</li>
+            <li>Entité serveur : C'est l'entité de l'instance du serveur sur lequel tourne le code.</li>
+            <li>Entité par défaut : Lorsque l'on se connecte sur un serveur, c'est l'entité fantôme qui va être utilisée
+                par défaut en place de l'entité serveur. Elle peut être changée avec l'option <i>defaultEntity</i>.</li>
+            <li>Entité fantôme : Cette façon de désigner une entité permet de voir son empreinte, c'est se mettre à sa
+                place en termes de point de vue. Le fantôme (ghost) est une référence à l'insufflation d'une âme dans
+                une coquille vide pour lui donner vie. Cependant, ce n'est pas encore une entité connectée.</li>
+            <li>Entité connectée : Depuis une entité fantôme, lorsque l'on déverrouille la valeur de sa clé
+                cryptographique privée, généralement avec un mot de passe, on permet à cette entité de générer des liens
+                et manipuler des données chiffrées et dissimulées.</li>
+            <li>Entité maîtresse : C'est une entité spéciale, dite autorité globale ou locale, avec des rôles importants
+                prédéfinis par la bibliothèque.</li>
+        </ol>
+
         <h3 id="oem">OEM / Entités Maîtresses</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La bibliothèque utilise actuellement plusieurs entités spéciales, dites autorités maîtresses, avec des rôles
-            prédéfinis.</p>
+            prédéfinis :</p>
         <ol>
             <li>Maître du tout. L'instance actuelle s'appelle <a href="http://puppetmaster.nebule.org">puppetmaster</a>.
                 Voir <a href="#cam">CAM</a>.
@@ -1028,6 +1049,11 @@ class Entity extends Node implements nodeInterface
                     href="#camt">CAMT</a>.
             </li>
         </ol>
+        <p>Pour chaque catégorie, il peut y avoir plusieurs entités concurrentes reconnues simultanément. Actuellement
+            seul un maître du tout est géré à la fois.</p>
+        <p>Il est possible de déléguer des droits supplémentaires à des entités locales. L'entité serveur peut devenir
+            autorité locale avec l'option <i>permitServerEntityAsAuthority</i>. L'entité par défaut peut devenir
+            autorité locale avec l'option <i>permitDefaultEntityAsAuthority</i>.</p>
 
         <h3 id="oen">OEN / Nommage</h3>
         <p style="color: red; font-weight: bold">A revoir...</p>

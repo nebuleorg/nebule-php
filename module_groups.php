@@ -179,7 +179,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getCurrentEntityID();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID();
                 break;
 
             case 'selfMenuObject':
@@ -419,7 +419,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     private function _display_InlineGroups(): void
     {
         // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getCurrentEntityInstance(), '');
+        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
 
         // Prépare l'affichage.
         $list = array();
@@ -507,7 +507,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_entitiesInstance->getCurrentEntityID()])
+                && !isset($signers[$this->_entitiesInstance->getGhostEntityID()])
             ) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -850,7 +850,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
-                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getCurrentEntityID()
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getGhostEntityID()
                         ) {
                             $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
