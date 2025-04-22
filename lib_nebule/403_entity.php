@@ -46,7 +46,7 @@ class Entity extends Node implements nodeInterface
         '_haveCode',
         '_usedUpdate',
         '_publicKey',
-        '_privateKeyID',
+        '_privateKeyOID',
         '_privateKey',
         '_newPrivateKey',
         '_privateKeyPassword',
@@ -56,14 +56,14 @@ class Entity extends Node implements nodeInterface
     );
 
     private string $_publicKey = '';
-    private string $_privateKeyID = '0';
-    private ?string $_privateKey = null;
+    private string $_privateKeyOID = '0';
+    private string $_privateKey = '';
     private bool $_newPrivateKey = false;
     private ?string $_privateKeyPassword = null;
     private string $_privateKeyPasswordSalt = '';
     private bool $_isSetPrivateKeyPassword = false;
-    private array $_faceCache = array();
-    private bool $_cacheCurrentEntityUnlocked = false;
+    //private array $_faceCache = array();
+    //private bool $_cacheCurrentEntityUnlocked = false;
 
     /**
      * Specific part of constructor for an entity.
@@ -72,8 +72,8 @@ class Entity extends Node implements nodeInterface
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
+        //if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
+        //    $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         if ($this->_isNew)
             $this->_createNewEntity();
         elseif ($this->_id != '0')
@@ -81,7 +81,7 @@ class Entity extends Node implements nodeInterface
     }
 
     /**
-     * Chargement d'une entité existante.
+     * Loading existing entity.
      *
      * @param $id string
      * @return void
@@ -98,8 +98,17 @@ class Entity extends Node implements nodeInterface
 
         $this->_metrologyInstance->addLog('Load entity ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2f5d9e5a');
 
-        // Trouve la clé publique.
-        $this->_findPublicKey();
+        if ($this->_publicKey == '')
+            $this->_findPublicKey();
+
+        /*$this->_metrologyInstance->addLog('DEBUGGING pubkey(' . strlen($this->_publicKey) . ')=' . substr($this->_publicKey, 0, 500), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('DEBUGGING privkeyOID=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('DEBUGGING privkey(' . strlen($this->_privateKey) . ')=' . substr($this->_privateKey, 0, 500), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('DEBUGGING password(' . strlen((string)$this->_privateKeyPassword) . ')=' . substr((string)$this->_privateKeyPassword, 0, 500), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        if ($this->_isSetPrivateKeyPassword)
+            $this->_metrologyInstance->addLog('DEBUGGING isSetPassword=true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        else
+            $this->_metrologyInstance->addLog('DEBUGGING isSetPassword=false', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');*/
     }
 
     /**
@@ -113,10 +122,7 @@ class Entity extends Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie que l'on puisse créer une entité.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
             && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
@@ -133,7 +139,7 @@ class Entity extends Node implements nodeInterface
                 $this->_metrologyInstance->addLog('Generated entity ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b5dacb0d');
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
-                $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($this->_privateKey);
+                $this->_privateKeyOID = $this->_nebuleInstance->getNIDfromData($this->_privateKey);
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
@@ -288,21 +294,21 @@ class Entity extends Node implements nodeInterface
 
 
     // Retourne l'identifiant de la clé privée.
-    public function getPrivateKeyID(): string
+    public function getPrivateKeyOID(): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_findPrivateKeyID();
-        return $this->_privateKeyID;
+        $this->_findPrivateKeyOID();
+        return $this->_privateKeyOID;
     }
 
     // Retrouve l'identifiant de la clé privée.
-    private function _findPrivateKeyID(): void
+    private function _findPrivateKeyOID(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
 
-        if ($this->_privateKeyID != '0')
+        if ($this->_privateKeyOID != '0')
             return;
 
         $list = array();
@@ -324,19 +330,16 @@ class Entity extends Node implements nodeInterface
                 continue;
 
             $nid2 = $link->getParsed()['bl/rl/nid2'];
-            $instance = $this->_cacheInstance->newNode($nid2);
-            $line = $instance->getContent(self::ENTITY_MAX_SIZE);
+            $line = $this->_ioInstance->getObject($nid2, self::ENTITY_MAX_SIZE);
+            $date = $link->getDate();
             if ($link->getBlocLink()->getParsed()['bs/rs1/eid'] == $this->_id
-                && $link->getParsed()['bl/rl/req'] == 'f'
-                && $link->getParsed()['bl/rl/nid1'] == $this->_id
-                && $link->getParsed()['bl/rl/nid3'] == $oidPKey
-                && strlen($nid2) > 0
+                && strlen($nid2) > BlocLink::NID_MIN_HASH_SIZE
                 && $line !== null
                 && strstr($line, self::ENTITY_PRIVATE_HEADER) !== false
-                && strcmp($link->getDate(), $refDate) > 0
+                && strcmp($date, $refDate) > 0
             ) {
-                $this->_privateKeyID = $nid2;
-                $refDate = $link->getDate();
+                $this->_privateKeyOID = $nid2;
+                $refDate = $date;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('ok private key ' . $nid2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '63781bce');
             } else
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('invalid private key ' . $nid2, Metrology::LOG_LEVEL_ERROR, __METHOD__, '293d8170');
@@ -352,10 +355,10 @@ class Entity extends Node implements nodeInterface
     private function _findPrivateKey(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_privateKey !== null)
+        if ($this->_privateKey != '')
             return true;
-        $this->_findPrivateKeyID();
-        $content = $this->_ioInstance->getObject($this->_privateKeyID, self::ENTITY_MAX_SIZE);
+        $this->_findPrivateKeyOID();
+        $content = $this->_ioInstance->getObject($this->_privateKeyOID, self::ENTITY_MAX_SIZE);
         if ($content !== false)
             $this->_privateKey = $content;
         return true;
@@ -376,10 +379,10 @@ class Entity extends Node implements nodeInterface
             return false;
         }
         if (! $this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $passwd)) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key failed oid=' . $this->_privateKeyID, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bf91c623');
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key failed oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bf91c623');
             return false;
         }
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key ok oid=' . $this->_privateKeyID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4ef37f6e');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('check private key ok oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4ef37f6e');
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
         $this->_privateKeyPassword = $passwd;
         $this->_isSetPrivateKeyPassword = true;
@@ -419,8 +422,8 @@ class Entity extends Node implements nodeInterface
         if (!$this->_isSetPrivateKeyPassword)
             return false;
 
-        $this->_metrologyInstance->addLog('change entity password - old ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '38022519');
-        $oldPrivateKeyID = $this->_privateKeyID;
+        $this->_metrologyInstance->addLog('change entity password - old ' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '38022519');
+        $oldPrivateKeyID = $this->_privateKeyOID;
 
         if (!$this->_cryptoInstance->checkPrivateKeyPassword($this->_privateKey, $this->_privateKeyPassword))
             return false;
@@ -433,14 +436,14 @@ class Entity extends Node implements nodeInterface
         // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;
-        $this->_privateKeyID = $this->_nebuleInstance->getNIDfromData($newKey);
+        $this->_privateKeyOID = $this->_nebuleInstance->getNIDfromData($newKey);
         $this->_isSetPrivateKeyPassword = true;
-        $this->_metrologyInstance->addLog('change entity password - new ' . $this->_privateKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd11dc438');
+        $this->_metrologyInstance->addLog('change entity password - new ' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd11dc438');
 
         unset($newKey);
 
         // Ecrit l'objet de la nouvelle clé privée.
-        $this->_ioInstance->setObject($this->_privateKeyID, $this->_privateKey);
+        $this->_ioInstance->setObject($this->_privateKeyOID, $this->_privateKey);
 
         // Définition de la date.
         $date = date(DATE_ATOM);
@@ -452,26 +455,26 @@ class Entity extends Node implements nodeInterface
             $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_id, '0');
 
             // Création lien 2.
-            $link = '_' . $this->_id . '_' . $date . '_u_' . $oldPrivateKeyID . '_' . $this->_privateKeyID . '_0';
-            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_privateKeyID, '0');
+            $link = '_' . $this->_id . '_' . $date . '_u_' . $oldPrivateKeyID . '_' . $this->_privateKeyOID . '_0';
+            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_privateKeyOID, '0');
         }
 
         // Création lien 3.
         $target = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
         $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
+        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyOID . '_' . $target . '_' . $meta;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, $meta);
 
         // Création lien 4.
         $target = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
         $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyID . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, $meta);
+        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyOID . '_' . $target . '_' . $meta;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, $meta);
 
         // Création lien 5.
         $target = $this->_id;
-        $link = '_' . $this->_id . '_' . $date . '_f_' . $this->_privateKeyID . '_' . $target . '_0';
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyID, $target, '0');
+        $link = '_' . $this->_id . '_' . $date . '_f_' . $this->_privateKeyOID . '_' . $target . '_0';
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, '0');
 
         unset($date, $source, $target, $meta, $link);
 
@@ -490,12 +493,12 @@ class Entity extends Node implements nodeInterface
     public function signLink(string $link, string $algo = ''): ?string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_privateKey === null) {
-            $this->_metrologyInstance->addLog('ERROR entity no private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '91353b7d');
+        if ($this->_privateKey == '') {
+            $this->_metrologyInstance->addLog('no private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '91353b7d');
             return null;
         }
         if ($this->_privateKeyPassword === null) {
-            $this->_metrologyInstance->addLog('ERROR entity no password for private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '63de2900');
+            $this->_metrologyInstance->addLog('no password for private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '63de2900');
             return null;
         }
         if ($algo == '')

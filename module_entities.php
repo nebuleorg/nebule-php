@@ -1714,7 +1714,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 );
 
                 // Ajoute l'ID privé de l'entité.
-                $privInstance = $this->_cacheInstance->newNode($this->_createEntityInstance->getPrivateKeyID());
+                $privInstance = $this->_cacheInstance->newNode($this->_createEntityInstance->getPrivateKeyOID());
                 $list[2]['object'] = $privInstance;
                 $list[2]['param'] = array(
                     'enableDisplayColor' => true,

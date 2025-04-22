@@ -243,7 +243,7 @@ class Entities extends Functions
             $this->_metrologyInstance->addLog('reuse ghost entity private key ' . $this->_ghostEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '75e1c757');
         }
         elseif ($this->_ghostEntityInstance instanceof Entity) {
-            $this->_ghostEntityPrivateKey = $this->_ghostEntityInstance->getPrivateKeyID();
+            $this->_ghostEntityPrivateKey = $this->_ghostEntityInstance->getPrivateKeyOID();
             if ($this->_ghostEntityPrivateKey != '0') {
                 $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKey);
                 $this->_metrologyInstance->addLog('find ghost entity private key ' . $this->_ghostEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6be388ca');
