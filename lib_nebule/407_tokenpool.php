@@ -229,8 +229,8 @@ class TokenPool extends Currency implements nodeInterface
         }
 
         // Détermine le forgeur.
-        $this->_propertiesList['tokenpool']['PoolForgeID']['force'] = $this->_entitiesInstance->getGhostEntityID();
-        $param['PoolForgeID'] = $this->_entitiesInstance->getGhostEntityID();
+        $this->_propertiesList['tokenpool']['PoolForgeID']['force'] = $this->_entitiesInstance->getGhostEntityOID();
+        $param['PoolForgeID'] = $this->_entitiesInstance->getGhostEntityOID();
 
 
         // Détermine si le jeton doit avoir un contenu.
@@ -306,7 +306,7 @@ class TokenPool extends Currency implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

@@ -246,7 +246,7 @@ class Functions
         $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscate && !$newLink->setObfuscate())
             return '';
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityOID());
 
         return $textOID;
     }

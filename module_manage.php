@@ -365,7 +365,7 @@ class ModuleManage extends \Nebule\Library\Modules
 
             // Crée le lien de hash.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityID();
+            $signer = $this->_entitiesInstance->getGhostEntityOID();
             $action = 'l';
             $source = $this->_actionAddModuleRID;
             $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
@@ -402,7 +402,7 @@ class ModuleManage extends \Nebule\Library\Modules
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityID();
+            $signer = $this->_entitiesInstance->getGhostEntityOID();
             $action = 'f';
             $source = $this->_actionAddModuleRID;
             $target = $this->_actionAddModuleID;
@@ -797,10 +797,10 @@ class ModuleManage extends \Nebule\Library\Modules
                 if ($this->_unlocked
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && ($this->_entitiesInstance->getGhostEntityID() == $this->_authoritiesInstance->getCodeMaster()
-                        || ($this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getDefaultEntityID()
+                    && ($this->_entitiesInstance->getGhostEntityOID() == $this->_authoritiesInstance->getCodeMaster()
+                        || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getDefaultEntityID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') )
-                        || ($this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getDefaultEntityID()
+                        || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getDefaultEntityID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'

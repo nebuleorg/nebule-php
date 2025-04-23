@@ -1402,7 +1402,7 @@ abstract class Actions extends Functions
 
         // Définition de la date et le signataire.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
 
         // Création du type mime.
         $instance->setType($this->_actionUploadFileType);
@@ -2376,7 +2376,7 @@ abstract class Actions extends Functions
 
         // Création du lien.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
         $action = 'l';
         $source = $objectID;
         $target = $valueID;

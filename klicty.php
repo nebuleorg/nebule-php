@@ -1179,7 +1179,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
             <?php
             // Si l'entité en cours n'est pas l'entité par défaut.
-            if ($this->_entitiesInstance->getGhostEntityID() != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
+            if ($this->_entitiesInstance->getGhostEntityOID() != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
                 $this->_displayCurentEntityOnHeader(true);
             } else {
                 ?>
@@ -1237,7 +1237,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID());
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1324,10 +1324,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                         self::DEFAULT_ICON_ENTITY_LOCK);
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
                         self::DEFAULT_OBJECT_ADD_COMMAND,
                         self::DEFAULT_ENTITY_LIST_COMMAND,
-                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID(),
+                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
@@ -1352,7 +1352,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                     );
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
                         self::DEFAULT_ENTITY_LIST_COMMAND,
                         self::DEFAULT_ENTITY_SYNC_COMMAND,
                         self::DEFAULT_ENTITY_ADD_COMMAND,
@@ -1563,7 +1563,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Extrait la liste des objets.
         $list = array();
         $DisplayedList = array();
-        $id = $this->_entitiesInstance->getGhostEntityID();
+        $id = $this->_entitiesInstance->getGhostEntityOID();
         $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_DATE);
         $instance = $this->_cacheInstance->newNode($meta);
 
@@ -1629,7 +1629,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Refait une recherche et un affichage pour les objets protégés partagés.
         $list = array();
-        $id = $this->_entitiesInstance->getGhostEntityID();
+        $id = $this->_entitiesInstance->getGhostEntityOID();
         if ($id != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
             $listK = $this->_entitiesInstance->getGhostEntityInstance()->readLinksFilterFull(
                 '',
@@ -1766,7 +1766,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Liste des entités à ne pas afficher.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         if ($this->_unlocked) {
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
         }
 
         // Liste toutes les autres entités.
@@ -2103,7 +2103,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
         if ($isEntity) {
             // Se connecter avec l'entité.
-            if (!$this->_unlocked || $id != $this->_entitiesInstance->getGhostEntityID()) {
+            if (!$this->_unlocked || $id != $this->_entitiesInstance->getGhostEntityOID()) {
                 $actionList[1]['name'] = '::ConnectWith';
                 $actionList[1]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[1]['desc'] = '';
@@ -2125,7 +2125,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
 
-            if ($this->_unlocked && $id == $this->_entitiesInstance->getGhostEntityID()) {
+            if ($this->_unlocked && $id == $this->_entitiesInstance->getGhostEntityOID()) {
                 // Verrouiller l'entité.
                 $actionList[3]['name'] = '::::lock';
                 $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
@@ -2901,7 +2901,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                         ) {
-                            if ($entity == $this->_entitiesInstance->getGhostEntityID()) {
+                            if ($entity == $this->_entitiesInstance->getGhostEntityOID()) {
                                 // Déprotéger l'objet.
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
@@ -3032,14 +3032,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
             // Ajoute des entités à ne pas afficher.
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
             $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
 
             // Liste toutes les autres entités.
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
@@ -3118,7 +3118,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '</div>' . "\n";
 
         if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-            || ($this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getConnectedEntityID()
+            || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
                 && $this->_unlocked
             )
         ) {
@@ -3185,7 +3185,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
             if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getConnectedEntityID()
+                || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -3224,9 +3224,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID(); ?>">
+                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(); ?>">
                     <input type="hidden" name="ent"
-                           value="<?php echo $this->_entitiesInstance->getGhostEntityID(); ?>">
+                           value="<?php echo $this->_entitiesInstance->getGhostEntityOID(); ?>">
                     <input type="password" name="pwd">
                     <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
                 </form>
@@ -3243,7 +3243,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_entitiesInstance->getGhostEntityID() == $this->_entitiesInstance->getConnectedEntityID()
+                || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
                     && $this->_unlocked
                 )
             ) {
@@ -3763,7 +3763,7 @@ private function _displayContentAbout()
         ?>
 
         <div class="oneActionItem"
-             id="<?php if ($entityID == $this->_entitiesInstance->getGhostEntityID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
+             id="<?php if ($entityID == $this->_entitiesInstance->getGhostEntityOID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
             <div class="oneActionItem-top">
                 <div class="oneAction-icon">
                     <?php $this->displayObjectColorIcon($object, $htlink, $icon); ?>
@@ -4472,7 +4472,7 @@ class Action extends Actions
 
             // Définition de la date et le signataire.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityID();
+            $signer = $this->_entitiesInstance->getGhostEntityOID();
 
             // Création du type mime.
             if ($this->_actionUploadFileType != '') {

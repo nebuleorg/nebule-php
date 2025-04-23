@@ -5739,8 +5739,8 @@ function bootstrap_breakDisplay41LibraryEntities(): void {
         $nebuleInstanceCheck > 70);
 
     bootstrap_breakDisplay411DisplayEntity('ghost entity',
-        array($nebuleInstance->getEntitiesInstance()->getGhostEntityID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityID()),
-        array($nebuleInstance->getEntitiesInstance()->getGhostEntityID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityOID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityOID()),
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityOID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()),
         $nebuleInstanceCheck > 80);
 
     bootstrap_breakDisplay411DisplayEntity('connected entity',

@@ -29,7 +29,6 @@ class nebule
 
     const SESSION_SAVED_VARS = array(
         '_authoritiesInstance',
-        '_entitiesInstance',
         '_recoveryInstance',
         '_cacheInstance',
         '_sessionInstance',
@@ -171,8 +170,7 @@ class nebule
     }
 
     private function _initEntities(): void {
-        if ($this->_entitiesInstance === null)
-            $this->_entitiesInstance = new Entities($this);
+        $this->_entitiesInstance = new Entities($this);
     }
 
     private function _initTicketing(): void {
@@ -430,9 +428,9 @@ class nebule
                 $this->_currentObject = $cache;
                 $this->_currentObjectInstance =$this->_cacheInstance->newNode($cache);
             } else {
-                $this->_currentObject = $this->_entitiesInstance->getGhostEntityID();
-                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityID());
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityID());
+                $this->_currentObject = $this->_entitiesInstance->getGhostEntityOID();
+                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityOID());
+                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityOID());
             }
             unset($cache);
         }

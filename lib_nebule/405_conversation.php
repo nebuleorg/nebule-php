@@ -110,7 +110,7 @@ class Conversation extends Group implements nodeInterface
                 $this->_haveData = true;
                 $data = null;
 
-                $signer = $this->_entitiesInstance->getGhostEntityID();
+                $signer = $this->_entitiesInstance->getGhostEntityOID();
                 $date = date(DATE_ATOM);
                 $hashconversation = $this->getReferenceObject();
 
@@ -379,7 +379,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
         $date = date(DATE_ATOM);
         $action = 'l';
         $source = $id;
@@ -433,7 +433,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $id;

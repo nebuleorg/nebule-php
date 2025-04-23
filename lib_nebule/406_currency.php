@@ -580,7 +580,7 @@ class Currency extends Node implements nodeInterface
         $param['ForceCurrencySerialID'] = true;
 
         // Force le paramètre AID avec l'entité en cours.
-        $param['CurrencyAutorityID'] = $this->_entitiesInstance->getGhostEntityID();
+        $param['CurrencyAutorityID'] = $this->_entitiesInstance->getGhostEntityOID();
         $param['ForceCurrencyAutorityID'] = true;
         $this->_properties['AID'] = $param['CurrencyAutorityID'];
 
@@ -617,8 +617,8 @@ class Currency extends Node implements nodeInterface
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'] . "\n";
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            $content .= 'AID:' . $this->_entitiesInstance->getGhostEntityID() . "\n";
-            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_entitiesInstance->getGhostEntityID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $content .= 'AID:' . $this->_entitiesInstance->getGhostEntityOID() . "\n";
+            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_entitiesInstance->getGhostEntityOID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -683,7 +683,7 @@ class Currency extends Node implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_entitiesInstance->getGhostEntityID();
+        $signer = $this->_entitiesInstance->getGhostEntityOID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;

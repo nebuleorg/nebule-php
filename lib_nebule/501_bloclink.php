@@ -788,9 +788,9 @@ class BlocLink extends Functions implements blocLinkInterface
         }
 
         if ($publicKey == '0') {
-            $publicKeyID = $this->_entitiesInstance->getGhostEntityID();
+            $publicKeyID = $this->_entitiesInstance->getGhostEntityOID();
             $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
-        } elseif ($publicKey == $this->_entitiesInstance->getGhostEntityID()) {
+        } elseif ($publicKey == $this->_entitiesInstance->getGhostEntityOID()) {
             $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
             $publicKeyID = $publicKey;
         } else {

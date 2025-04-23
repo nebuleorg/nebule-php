@@ -179,7 +179,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityID();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID();
                 break;
 
             case 'selfMenuObject':
@@ -507,7 +507,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_entitiesInstance->getGhostEntityID()])
+                && !isset($signers[$this->_entitiesInstance->getGhostEntityOID()])
             ) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -850,7 +850,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
-                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getGhostEntityID()
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getGhostEntityOID()
                         ) {
                             $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);

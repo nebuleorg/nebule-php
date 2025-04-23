@@ -13,7 +13,7 @@ namespace Nebule\Library;
  * - Connected entity : entity unlocked that can do signed actions and see/change enciphered and obfuscated things.
  * - Unlocked entities : list of inherited entities automatically unlocked with the connected entity. This permit to
  *   switch quickly from one to other to do some actions in other context. FIXME not functional now.
- * Must be serialized on PHP session with nebule class.
+ * Must not be serialized on PHP session with nebule class.
  *
  * @author    Projet nebule
  * @license   GNU GPLv3
@@ -22,11 +22,7 @@ namespace Nebule\Library;
  */
 class Entities extends Functions
 {
-    const SESSION_SAVED_VARS = array(
-        '_currentEntityPrivateKey',
-        '_currentEntityPrivateKeyInstance',
-        '_currentEntityIsUnlocked',
-    );
+    const SESSION_SAVED_VARS = array();
 
     protected function _initialisation(): void
     {
@@ -40,8 +36,8 @@ class Entities extends Functions
         $this->_recoveryInstance->setLinkedRecoveryEntities($this);
         $this->_findGhostEntity();
         $this->_findConnectedEntity();
-        $this->_findGhostEntityPrivateKey();
         $this->_findGhostEntityPassword();
+        $this->_saveEntitiesOnSession();
     }
 
 
@@ -49,64 +45,54 @@ class Entities extends Functions
     private string $_serverEntityID = '';
     private ?Entity $_serverEntityInstance = null;
 
+    public function getServerEntityID(): string { return $this->_serverEntityID; }
+    public function getServerEntityInstance(): ?Entity { return $this->_serverEntityInstance; }
+
     /**
      * Try to find server entity from :
-     * 1: from PHP session;
-     * 2: from file;
-     * 3: last keep puppetmaster instance.
+     * 1: from file;
+     * 2: last keep puppetmaster instance.
      * @return void
      */
     private function _findServerEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleHostEntityInstance');
-        if ($instance->getID() == '0')
-            $instance = $this->_findServerEntityFromFile();
+        $instance = $this->_cacheInstance->newNode($this->_findServerEntityFromFileOID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if ($instance->getID() == '0')
             $instance = $this->_authoritiesInstance->getPuppetmasterInstance();
         $this->_serverEntityInstance = $instance;
         $this->_serverEntityID = $instance->getID();
-        $this->_metrologyInstance->addLog('server entity EID=' . $this->_serverEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cdfd0e02');
-        $this->_sessionInstance->setSessionStoreAsEntity('nebuleHostEntityInstance', $this->_serverEntityInstance);
+        $this->_metrologyInstance->addLog('server entity eid=' . $this->_serverEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cdfd0e02');
     }
 
-    private function _findServerEntityFromFile(): Node
+    private function _findServerEntityFromFileOID(): string
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $filecontent = file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE);
-        if (is_bool($filecontent))
-            $filecontent = '';
-        $filecontent = strtok($filecontent, "\n");
-        if (is_bool($filecontent))
-            $filecontent = '';
-        $arg = filter_var(trim($filecontent), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        if (is_bool($arg) || $arg === null || $arg == '')
-            $arg = '0';
-
-        if (!Node::checkNID($arg, false, false)
-            || !$this->_ioInstance->checkObjectPresent($arg)
-            || !$this->_ioInstance->checkLinkPresent($arg)
+        $content = file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE);
+        if (is_bool($content))
+            return '0';
+        $content = strtok($content, "\n");
+        if (is_bool($content))
+            return '0';
+        $oid = filter_var(trim($content), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (is_bool($oid) || $oid == '')
+            return '0';
+        if (!Node::checkNID($oid, false, false)
+            || !$this->_ioInstance->checkObjectPresent($oid)
+            || !$this->_ioInstance->checkLinkPresent($oid)
         )
-            $arg = '0';
-
-        $this->_metrologyInstance->addLog('find server entity from file EID=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '811a12be');
-        return $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
-    }
-
-    public function getServerEntityID(): string
-    {
-        return $this->_serverEntityID;
-    }
-
-    public function getServerEntityInstance(): ?Entity
-    {
-        return $this->_serverEntityInstance;
+            return '0';
+        $this->_metrologyInstance->addLog('find server entity from file eid=' . $oid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '811a12be');
+        return $oid;
     }
 
 
 
     private string $_defaultEntityID = '';
     private ?Entity $_defaultEntityInstance = null;
+
+    public function getDefaultEntityID(): string { return $this->_defaultEntityID; }
+    public function getDefaultEntityInstance(): ?Entity { return $this->_defaultEntityInstance; }
 
     /**
      * Try to find default entity from :
@@ -119,83 +105,65 @@ class Entities extends Functions
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleDefaultEntityInstance');
-        if ($instance->getID() == '0')
-            $instance = $this->_findDefaultEntityFromOption();
+        if ($instance === null or $instance->getID() == '0')
+            $instance = $this->_cacheInstance->newNode($this->_findDefaultEntityFromOptionOID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if ($instance->getID() == '0')
             $instance = $this->_serverEntityInstance;
         $this->_defaultEntityInstance = $instance;
         $this->_defaultEntityID = $instance->getID();
-        $this->_metrologyInstance->addLog('default entity EID=' . $this->_defaultEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '17bc6adc');
-        $this->_sessionInstance->setSessionStoreAsEntity('nebuleDefaultEntityInstance', $this->_defaultEntityInstance);
+        $this->_metrologyInstance->addLog('default entity eid=' . $this->_defaultEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '17bc6adc');
     }
 
-    private function _findDefaultEntityFromOption(): Node
+    private function _findDefaultEntityFromOptionOID(): String
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity'), \Nebule\Library\Cache::TYPE_ENTITY);
-        $this->_metrologyInstance->addLog('find default entity from config file EID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf459003');
-        return $instance;
+        $content = $this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity');
+        if ($content == '')
+            return '0';
+        $oid = filter_var(trim($content), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        if (is_bool($oid) || $oid == '')
+            return '0';
+        if (!Node::checkNID($oid, false, false)
+            || !$this->_ioInstance->checkObjectPresent($oid)
+            || !$this->_ioInstance->checkLinkPresent($oid)
+        )
+            return '0';
+        $this->_metrologyInstance->addLog('find default entity from config file eid=' . $oid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf459003');
+        return $oid;
     }
 
-    public function getDefaultEntityID(): string
-    {
-        return $this->_defaultEntityID;
-    }
-
-    public function getDefaultEntityInstance(): ?Entity
-    {
-        return $this->_defaultEntityInstance;
-    }
 
 
-
-    private string $_ghostEntityID = '';
+    private string $_ghostEntityOID = '';
     private ?Entity $_ghostEntityInstance = null;
-    private string $_ghostEntityPrivateKey = '';
-    private ?Node $_ghostEntityPrivateKeyInstance = null;
+
+    public function getGhostEntityOID(): string { return $this->_ghostEntityOID; }
+    public function getGhostEntityInstance(): ?Entity { return $this->_ghostEntityInstance; }
 
     /**
      * Try to find ghost entity from :
      * 1: from command argument;
      * 2: from PHP session;
-     * 3: from option defaultEntity (on config file);
-     * 4: last keep server instance.
+     * 3: last keep default instance.
      * If not from PHP session, flush previous private key.
      * @return void
      */
     private function _findGhostEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_findGhostEntityFromArg();
-        if ($instance->getID() == '0') {
-            $eid = $this->_sessionInstance->getSessionStoreAsString('nebulePublicKeyEID');
-            if ($eid != '') {
-                $this->_metrologyInstance->addLog('find ghost entity key from cache EID=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '28ac240d');
-                $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
-            }
-        } else {
-            $this->_ghostEntityPrivateKey = '';
-            $this->_ghostEntityPrivateKeyInstance = null;
-            $this->_sessionInstance->setSessionStoreAsString('nebulePrivateKeyOID', '');
-        }
-        if ($instance->getID() == '0') {
-            $instance = $this->_findDefaultEntityFromOption();
-            $this->_ghostEntityPrivateKey = '';
-            $this->_ghostEntityPrivateKeyInstance = null;
-            $this->_sessionInstance->setSessionStoreAsString('nebulePrivateKeyOID', '');
-        }
+        $instance = $this->_cacheInstance->newNode($this->_findGhostEntityFromArg(), \Nebule\Library\Cache::TYPE_ENTITY);
         if ($instance->getID() == '0')
-            $instance = $this->_serverEntityInstance;
+            $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleGhostEntityInstance');
+        if ($instance === null or $instance->getID() == '0')
+            $instance = $this->_defaultEntityInstance;
         $this->_ghostEntityInstance = $instance;
-        $this->_ghostEntityID = $instance->getID();
-        $this->_metrologyInstance->addLog('ghost entity EID=' . $this->_ghostEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd026d625');
-        $this->_sessionInstance->setSessionStoreAsString('nebulePublicKeyEID', $this->_ghostEntityID);
+        $this->_ghostEntityOID = $instance->getID();
+        $this->_metrologyInstance->addLog('ghost entity eid=' . $this->_ghostEntityOID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd026d625');
     }
 
-    private function _findGhostEntityFromArg(): Node
+    private function _findGhostEntityFromArg(): string
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Extract anf filter
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_GHOST))
             $arg = filter_input(INPUT_GET,
                 References::COMMAND_SELECT_GHOST,
@@ -207,57 +175,22 @@ class Entities extends Functions
                 FILTER_SANITIZE_STRING,
                 FILTER_FLAG_ENCODE_LOW);
         else
-            $arg = '0';
-
-        if ($arg === false || $arg === null)
-            $arg = '0';
-
+            return '0';
+        if (is_bool($arg) || $arg == '')
+            return '0';
         if (!Node::checkNID($arg, false, false)
             || !$this->_ioInstance->checkObjectPresent($arg)
             || !$this->_ioInstance->checkLinkPresent($arg)
         )
-            $arg = '0';
-
-        $this->_metrologyInstance->addLog('find ghost entity key from arg EID=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '811a12be');
-        return $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
+            return '0';
+        $this->_metrologyInstance->addLog('find ghost entity key from arg eid=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '811a12be');
+        return $arg;
     }
 
-    public function getGhostEntityID(): string
-    {
-        return $this->_ghostEntityID;
-    }
-
-    public function getGhostEntityInstance(): ?Entity
-    {
-        return $this->_ghostEntityInstance;
-    }
-
-    private function _findGhostEntityPrivateKey(): void
-    {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $privateKey = $this->_sessionInstance->getSessionStoreAsString('nebulePrivateKeyOID');
-
-        if ($privateKey != '' && $privateKey != '0' ) {
-            $this->_ghostEntityPrivateKey = $privateKey;
-            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKey);
-            $this->_metrologyInstance->addLog('reuse ghost entity private key ' . $this->_ghostEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '75e1c757');
-        }
-        elseif ($this->_ghostEntityInstance instanceof Entity) {
-            $this->_ghostEntityPrivateKey = $this->_ghostEntityInstance->getPrivateKeyOID();
-            if ($this->_ghostEntityPrivateKey != '0') {
-                $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKey);
-                $this->_metrologyInstance->addLog('find ghost entity private key ' . $this->_ghostEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6be388ca');
-            } else {
-                $this->_ghostEntityPrivateKey = '';
-                $this->_ghostEntityPrivateKeyInstance = null;
-                $this->_metrologyInstance->addLog('cant find ghost entity private key ' . $this->_ghostEntityPrivateKey, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1e5bed72');
-            }
-            $this->_sessionInstance->setSessionStoreAsString('nebulePrivateKeyOID', $this->_ghostEntityPrivateKey);
-        } else {
-            $this->_ghostEntityPrivateKey = '';
-            $this->_ghostEntityPrivateKeyInstance = null;
-        }
-    }
+    
+    
+    private string $_ghostEntityPrivateKeyOID = '';
+    private ?Node $_ghostEntityPrivateKeyInstance = null;
 
     public function setGhostEntityPrivateKeyInstance(Node $oid): bool
     {
@@ -267,12 +200,22 @@ class Entities extends Functions
 
     public function getGhostEntityPrivateKeyInstance(): ?Node
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_ghostEntityPrivateKeyOID == '') {
+            $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
+        }
         return $this->_ghostEntityPrivateKeyInstance;
     }
 
-    public function getGhostEntityPrivateKey(): string
+    public function getGhostEntityPrivateKeyOID(): string
     {
-        return $this->_ghostEntityPrivateKey;
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_ghostEntityPrivateKeyOID == '') {
+            $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
+        }
+        return $this->_ghostEntityPrivateKeyOID;
     }
 
     private function _findGhostEntityPassword(): void
@@ -282,7 +225,7 @@ class Entities extends Functions
             || filter_has_var(INPUT_POST, References::COMMAND_AUTH_ENTITY_LOGOUT))
         {
             if ($this->_ghostEntityInstance instanceof Entity) {
-                $this->_metrologyInstance->addLog('logout ' . $this->_ghostEntityID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4efbc71f');
+                $this->_metrologyInstance->addLog('logout ' . $this->_ghostEntityOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '4efbc71f');
                 $this->_ghostEntityInstance->unsetPrivateKeyPassword();
             }
             return;
@@ -309,14 +252,14 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityInstance->setPrivateKeyPassword($password))
         {
-            $this->_metrologyInstance->addLog('login password for eid=' . $this->_ghostEntityID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
-            $this->_sessionInstance->setSessionStoreAsEntity('nebulePublicKeyEID', $this->_ghostEntityInstance);
-            $this->_connectedEntityID = $this->_ghostEntityID;
+            $this->_metrologyInstance->addLog('login password for eid=' . $this->_ghostEntityOID . ' OK', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '99ed783e');
+            $this->_sessionInstance->setSessionStoreAsEntity('nebuleGhostEntityInstance', $this->_ghostEntityInstance);
+            $this->_connectedEntityID = $this->_ghostEntityOID;
             $this->_connectedEntityInstance = $this->_ghostEntityInstance;
             $this->_sessionInstance->setSessionStoreAsEntity('nebuleConnectedEntityInstance', $this->_connectedEntityInstance);
             $this->_connectedEntityIsUnlocked = true;
         } else
-            $this->_metrologyInstance->addLog('login password for eid=' . $this->_ghostEntityID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
+            $this->_metrologyInstance->addLog('login password for eid=' . $this->_ghostEntityOID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
     }
 
     public function setGhostEntity(Entity $entity): bool
@@ -327,8 +270,7 @@ class Entities extends Functions
         $this->_cacheInstance->flushBufferStore();
 
         $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityID = $this->_ghostEntityInstance->getID();
-        $this->_findGhostEntityPrivateKey();
+        $this->_ghostEntityOID = $this->_ghostEntityInstance->getID();
         $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
@@ -357,8 +299,8 @@ class Entities extends Functions
         $this->_sessionInstance->setSessionStoreAsEntity('nebuleTempPublicEntityInstance', $this->_ghostEntityInstance);
 
         $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityID = $this->_ghostEntityInstance->getID();
-        $this->_findGhostEntityPrivateKey();
+        $this->_ghostEntityOID = $this->_ghostEntityInstance->getID();
+        $this->_ghostEntityPrivateKeyOID = '';
         $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
@@ -387,8 +329,8 @@ class Entities extends Functions
         $this->_cacheInstance->flushBufferStore();
 
         $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityID = $this->_ghostEntityInstance->getID();
-        $this->_findGhostEntityPrivateKey();
+        $this->_ghostEntityOID = $this->_ghostEntityInstance->getID();
+        $this->_ghostEntityPrivateKeyOID = '';
         $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
@@ -401,6 +343,10 @@ class Entities extends Functions
     private ?Entity $_connectedEntityInstance = null;
     private bool $_connectedEntityIsUnlocked = false;
 
+    public function getConnectedEntityID(): string { return $this->_connectedEntityID; }
+    public function getConnectedEntityInstance(): ?Entity { return $this->_connectedEntityInstance; }
+    public function getConnectedEntityIsUnlocked(): bool { return $this->_connectedEntityIsUnlocked; }
+
     private function _findConnectedEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -409,18 +355,7 @@ class Entities extends Functions
             $instance = $this->_defaultEntityInstance;
         $this->_connectedEntityInstance = $instance;
         $this->_connectedEntityID = $instance->getID();
-        $this->_metrologyInstance->addLog('connected entity EID=' . $this->_connectedEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
-        $this->_sessionInstance->setSessionStoreAsEntity('nebuleConnectedEntityInstance', $this->_connectedEntityInstance);
-    }
-
-    public function getConnectedEntityID(): string
-    {
-        return $this->_connectedEntityID;
-    }
-
-    public function getConnectedEntityInstance(): ?Entity
-    {
-        return $this->_connectedEntityInstance;
+        $this->_metrologyInstance->addLog('connected entity eid=' . $this->_connectedEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
     }
 
     public function setConnectedEntity(Entity $entity): bool
@@ -431,17 +366,20 @@ class Entities extends Functions
         $this->_cacheInstance->flushBufferStore();
 
         $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityID = $this->_ghostEntityInstance->getID();
-        $this->_findGhostEntityPrivateKey();
+        $this->_ghostEntityOID = $this->_ghostEntityInstance->getID();
         $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
         return true;
     }
 
-    public function getConnectedEntityIsUnlocked(): bool
+    
+    
+    private function _saveEntitiesOnSession(): void
     {
-        return $this->_connectedEntityIsUnlocked;
+        $this->_sessionInstance->setSessionStoreAsEntity('nebuleDefaultEntityInstance', $this->_defaultEntityInstance);
+        $this->_sessionInstance->setSessionStoreAsEntity('nebuleGhostEntityInstance', $this->_ghostEntityInstance);
+        $this->_sessionInstance->setSessionStoreAsEntity('nebuleConnectedEntityInstance', $this->_connectedEntityInstance);
     }
 
 
