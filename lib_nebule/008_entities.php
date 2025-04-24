@@ -192,11 +192,11 @@ class Entities extends Functions
     private string $_ghostEntityPrivateKeyOID = '';
     private ?Node $_ghostEntityPrivateKeyInstance = null;
 
-    public function setGhostEntityPrivateKeyInstance(Node $oid): bool
+    /*public function setGhostEntityPrivateKeyInstance(Node $oid): bool
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return false; // TODO
-    }
+    }*/
 
     public function getGhostEntityPrivateKeyInstance(): ?Node
     {
@@ -347,14 +347,22 @@ class Entities extends Functions
     public function getConnectedEntityInstance(): ?Entity { return $this->_connectedEntityInstance; }
     public function getConnectedEntityIsUnlocked(): bool { return $this->_connectedEntityIsUnlocked; }
 
+    /**
+     * Try to find connected entity from :
+     * 1: from PHP session;
+     * 3: last keep default instance.
+     * If not from PHP session, flush previous private key.
+     * @return void
+     */
     private function _findConnectedEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleConnectedEntityInstance');
         if ($instance->getID() == '0')
-            $instance = $this->_defaultEntityInstance;
+            $instance = $this->_ghostEntityInstance;
         $this->_connectedEntityInstance = $instance;
         $this->_connectedEntityID = $instance->getID();
+        $this->_connectedEntityIsUnlocked = $this->_connectedEntityInstance->getHavePrivateKeyPassword();
         $this->_metrologyInstance->addLog('connected entity eid=' . $this->_connectedEntityID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
     }
 

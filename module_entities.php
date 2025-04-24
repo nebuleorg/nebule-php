@@ -665,13 +665,13 @@ class ModuleEntities extends \Nebule\Library\Modules
      */
     private function _findSearchEntity(): void
     {
-        $arg_url = trim(filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_url = trim((string)filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg_url != ''
             && strlen($arg_url) >= 8
         )
             $this->_searchEntityURL = $arg_url;
 
-        $arg_id = trim(filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW));
+        $arg_id = trim((string)filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_id)
             && $arg_url != 'http://localhost'
             && $arg_url != 'http://127.0.0.1'
