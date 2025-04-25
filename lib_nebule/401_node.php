@@ -246,30 +246,36 @@ class Node extends Functions implements nodeInterface
         if ($permitNull && $nid == '') return true;
         if ($permitZero && $nid == '0') return true;
 
-        // Check hash value. Hash size = (size value / 4) .
         $hash = strtok($nid, '.');
         if ($hash === false) return false;
-        if ((strlen($hash) * 4) < BlocLink::NID_MIN_HASH_SIZE) return false;
+        $algo = strtok('.');
+        if ($algo === false) return false;
+        $size = strtok('.');
+        if ($size === false) return false;
+
+        // Check item overflow
+        if (strtok('.') !== false) return false;
+
+        if ($algo == 'none' || $algo == 'string')
+            $minSize = BlocLink::NID_MIN_NONE_SIZE;
+        else
+            $minSize = BlocLink::NID_MIN_HASH_SIZE;
+
+        // Check hash value. Hash size = (size value / 4) .
+        if ((strlen($hash) * 4) < $minSize) return false;
         if ((strlen($hash) * 4) > BlocLink::NID_MAX_HASH_SIZE) return false;
         if (!ctype_xdigit($hash)) return false;
 
         // Check algo value.
-        $algo = strtok('.');
-        if ($algo === false) return false;
         if (strlen($algo) < BlocLink::NID_MIN_ALGO_SIZE) return false;
         if (strlen($algo) > BlocLink::NID_MAX_ALGO_SIZE) return false;
         if (!ctype_alnum($algo)) return false;
 
         // Check size value.
-        $size = strtok('.');
-        if ($size === false) return false;
         if (!ctype_digit($size)) return false; // Check content before!
-        if ((int)$size < BlocLink::NID_MIN_HASH_SIZE) return false;
+        if ((int)$size < $minSize) return false;
         if ((int)$size > BlocLink::NID_MAX_HASH_SIZE) return false;
         if ((strlen($hash) * 4) != (int)$size) return false;
-
-        // Check item overflow
-        if (strtok('.') !== false) return false;
 
         return true;
     }

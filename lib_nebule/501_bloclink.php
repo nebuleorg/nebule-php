@@ -27,6 +27,7 @@ class BlocLink extends Functions implements blocLinkInterface
 
     const LINK_VERSION = '2:0';
     const NID_MIN_HASH_SIZE = 64;
+    const NID_MIN_NONE_SIZE = 8;
     const NID_MAX_HASH_SIZE = 8192;
     const NID_MIN_ALGO_SIZE = 2;
     const NID_MAX_ALGO_SIZE = 12;

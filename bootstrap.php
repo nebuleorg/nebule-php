@@ -9,7 +9,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250421';
+const BOOTSTRAP_VERSION = '020250425';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -336,6 +336,7 @@ const LIB_LOCAL_OBJECTS_FOLDER = 'o';
 const LIB_LOCAL_HISTORY_FILE = 'h';
 const LIB_LOCAL_DEBUG_FILE = 'debug';
 const LIB_NID_MIN_HASH_SIZE = 64;
+const LIB_NID_MIN_NONE_SIZE = 8;
 const LIB_NID_MAX_HASH_SIZE = 8192;
 const LIB_NID_MIN_ALGO_SIZE = 2;
 const LIB_NID_MAX_ALGO_SIZE = 12;
@@ -1602,7 +1603,7 @@ function io_objectWrite(string &$data, string $oid = '0'): bool {
     )
         return false;
 
-    if (strlen($oid) < LIB_NID_MIN_HASH_SIZE)
+    if (strlen($oid) < LIB_NID_MIN_NONE_SIZE)
         return false;
 
     if (io_checkNodeHaveContent($oid))
@@ -2678,36 +2679,37 @@ function blk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
     if (strlen($sig) > 4096) return false; // TODO à revoir.
 
-    // Check hash value.
     $sign = strtok($sig, '.');
     if (is_bool($sign)) return false;
+    $algo = strtok('.');
+    if (is_bool($algo)) return false;
+    $size = strtok('.');
+    if (is_bool($size)) return false;
+
+    // Check item overflow
+    if (strtok('.') !== false) return false;
+
+    // Check hash value.
     if (strlen($sign) < LIB_NID_MIN_HASH_SIZE) return false;
     if (strlen($sign) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($sign)) return false;
 
     // Check algo value.
-    $algo = strtok('.');
-    if (is_bool($algo)) return false;
     if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
     if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
     if (!ctype_alnum($algo)) return false;
 
     // Check size value.
-    $size = strtok('.');
-    if (is_bool($size)) return false;
     if (!ctype_digit($size)) return false; // Check content before!
     if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
     if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
+    //if ((strlen($sign) * 4) != (int)$size) return false;
     //if (strlen($sign) != (int)$size) return false; // TODO can't be checked ?
-
-    // Check item overflow
-    if (strtok('.') !== false) return false;
 
     if (!lib_getOption('permitCheckSignOnVerify')) return true;
     if (obj_checkContent($nid)) {
         $data = $bh . '_' . $bl;
         $hash = crypto_getDataHash($data, $algo . '.' . $size);
-
         return crypto_asymmetricVerify($sign, $hash, $nid);
     }
 
@@ -3056,30 +3058,36 @@ function nod_checkNID(string $nid, bool $permitNull = false): bool {
     if ($permitNull && $nid == '')
         return true;
 
-    // Check hash value.
     $hash = strtok($nid, '.');
     if ($hash === false) return false;
-    if ((strlen($hash) * 4) < LIB_NID_MIN_HASH_SIZE) return false;
+    $algo = strtok('.');
+    if ($algo === false) return false;
+    $size = strtok('.');
+    if ($size === false) return false;
+
+    // Check item overflow
+    if (strtok('.') !== false) return false;
+
+    if ($algo == 'none' || $algo == 'string')
+        $minSize = LIB_NID_MIN_NONE_SIZE;
+    else
+        $minSize = LIB_NID_MIN_HASH_SIZE;
+
+    // Check hash value.
+    if ((strlen($hash) * 4) < $minSize) return false;
     if ((strlen($hash) * 4) > LIB_NID_MAX_HASH_SIZE) return false;
     if (!ctype_xdigit($hash)) return false;
 
     // Check algo value.
-    $algo = strtok('.');
-    if ($algo === false) return false;
     if (strlen($algo) < LIB_NID_MIN_ALGO_SIZE) return false;
     if (strlen($algo) > LIB_NID_MAX_ALGO_SIZE) return false;
     if (!ctype_alnum($algo)) return false;
 
     // Check size value.
-    $size = strtok('.');
-    if ($size === false) return false;
     if (!ctype_digit($size)) return false; // Check content before!
-    if ((int)$size < LIB_NID_MIN_HASH_SIZE) return false;
+    if ((int)$size < $minSize) return false;
     if ((int)$size > LIB_NID_MAX_HASH_SIZE) return false;
     if ((strlen($hash) * 4) != (int)$size) return false;
-
-    // Check item overflow
-    if (strtok('.') !== false) return false;
 
     return true;
 }
