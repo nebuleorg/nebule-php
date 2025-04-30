@@ -230,11 +230,9 @@ class Entities extends Functions
             }
             return;
         }
-        $this->_metrologyInstance->addLog('DEBUGGING 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($this->_ghostEntityInstance->getHavePrivateKeyPassword())
             return;
-        $this->_metrologyInstance->addLog('DEBUGGING 2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if (filter_has_var(INPUT_POST, References::COMMAND_SELECT_PASSWORD))
             $arg_pwd = filter_input(INPUT_POST, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING);
@@ -242,7 +240,6 @@ class Entities extends Functions
             $arg_pwd = filter_var(hex2bin(filter_input(INPUT_GET, References::COMMAND_SELECT_PASSWORD, FILTER_SANITIZE_STRING)), FILTER_SANITIZE_STRING);
         else
             return;
-        $this->_metrologyInstance->addLog('DEBUGGING 3', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $this->setGhostEntityPassword($arg_pwd);
     }

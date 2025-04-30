@@ -8,6 +8,7 @@ use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItemIconMessage;
 use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplayList;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
@@ -56,7 +57,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250417';
+    const APPLICATION_VERSION = '020250427';
     const APPLICATION_LICENCE = 'GNU GPL 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';

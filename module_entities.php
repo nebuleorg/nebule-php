@@ -5,10 +5,13 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Cache;
+use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayObject;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\Entity;
+use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -30,7 +33,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250307';
+    const MODULE_VERSION = '020250428';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -50,6 +53,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         'ulst',
         'slst',
         'kblst',
+        'alst'
     );
     const MODULE_REGISTERED_ICONS = array(
         '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 entité (personnage)
@@ -163,10 +167,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
                     // Créer une nouvelle entité.
-                    $hookArray[6]['name'] = '::sylabe:module:entities:CreateEntity';
-                    $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[5];
-                    $hookArray[6]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
-                    $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[10]['name'] = '::sylabe:module:entities:CreateEntity';
+                    $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[5];
+                    $hookArray[10]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
+                    $hookArray[10]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID();
                 }
@@ -180,10 +184,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                     && $this->_unlocked
                 ) {
                     // Rechercher une entité.
-                    $hookArray[7]['name'] = '::sylabe:module:entities:SearchEntity';
-                    $hookArray[7]['icon'] = Display::DEFAULT_ICON_LF;
-                    $hookArray[7]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
-                    $hookArray[7]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[20]['name'] = '::sylabe:module:entities:SearchEntity';
+                    $hookArray[20]['icon'] = Display::DEFAULT_ICON_LF;
+                    $hookArray[20]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
+                    $hookArray[20]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID();
                 }
@@ -342,6 +346,9 @@ class ModuleEntities extends \Nebule\Library\Modules
             case $this::MODULE_REGISTERED_VIEWS[11]:
                 $this->_displayKnownByEntitiesList();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[12]:
+                $this->_displayAllEntitiesList();
+                break;
             default:
                 $this->_displayEntityDisp();
                 break;
@@ -371,6 +378,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
             case $this::MODULE_REGISTERED_VIEWS[11]:
                 $this->_display_InlineKnownByEntitiesList();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[12]:
+                $this->_display_InlineAllEntitiesList();
                 break;
         }
     }
@@ -776,6 +786,17 @@ class ModuleEntities extends \Nebule\Library\Modules
             'displayRatio' => 'short',
         );
         echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
+        echo '<br />' . "\n";
+
+        if (!$this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+            $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+            $instance->setMessage('::neblog:module:login');
+            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
+            $instance->display();
+        }
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -1360,6 +1381,21 @@ class ModuleEntities extends \Nebule\Library\Modules
         );
         $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
 
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setEnableWarnIfEmpty(true);
+        foreach ($links as $link) {
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!isset($listOkEntities[$id]))
+                continue;
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($id);
+            $instance->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->addItem($instance);
+            $listOkEntities[$id] = true;
+        }
+        $instanceList->display();
+
         // Prépare l'affichage.
         $list = array();
         $i = 0;
@@ -1428,6 +1464,21 @@ class ModuleEntities extends \Nebule\Library\Modules
             'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityOID(),
         );
         $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
+
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setEnableWarnIfEmpty(true);
+        foreach ($links as $link) {
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!isset($listOkEntities[$id]))
+                continue;
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($id);
+            $instance->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->addItem($instance);
+            $listOkEntities[$id] = true;
+        }
+        $instanceList->display();
 
         // Prépare l'affichage.
         $list = array();
@@ -1528,7 +1579,122 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_hashEntity,
             $this->_hashType);
 
-        //Prépare l'affichage.
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setEnableWarnIfEmpty(true);
+        foreach ($links as $link) {
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!isset($listOkEntities[$id]))
+                continue;
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($id);
+            $instance->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->addItem($instance);
+            $listOkEntities[$id] = true;
+        }
+        $instanceList->display();
+
+        if (sizeof($links) != 0) {
+            $list = array();
+            $i = 0;
+            foreach ($links as $link) {
+                $id = $link->getParsed()['bl/rl/nid1'];
+                $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+                if (!isset($listOkEntities[$id])
+                    && $instance->getType('all') == Entity::ENTITY_TYPE
+                    && $instance->getIsPublicKey()
+                ) {
+                    $list[$i]['object'] = $instance;
+                    $list[$i]['param'] = array(
+                        'enableDisplayColor' => true,
+                        'enableDisplayIcon' => true,
+                        'enableDisplayRefs' => false,
+                        'enableDisplayName' => true,
+                        'enableDisplayID' => false,
+                        'enableDisplayFlags' => true,
+                        'enableDisplayFlagProtection' => false,
+                        'enableDisplayFlagObfuscate' => false,
+                        'enableDisplayFlagUnlocked' => true,
+                        'enableDisplayFlagState' => true,
+                        'enableDisplayFlagEmotions' => true,
+                        'enableDisplayStatus' => false,
+                        'enableDisplayContent' => false,
+                        'enableDisplayJS' => true,
+                        'displaySize' => 'medium',
+                        'displayRatio' => 'short',
+                    );
+
+                    // Marque comme vu.
+                    $listOkEntities[$id] = true;
+                    $i++;
+                }
+            }
+            unset($link, $instance, $id);
+            // Affichage
+            if (sizeof($list) != 0) {
+                echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
+            }
+            unset($list);
+        } else {
+            // Pas d'entité.
+            $this->_displayInstance->displayMessageInformation_DEPRECATED(
+                '::sylabe:module:entities:Display:NoEntity');
+        }
+    }
+
+
+    /**
+     * Affiche la liste des entités inconnues.
+     *
+     * @return void
+     */
+    private function _displayAllEntitiesList(): void
+    {
+        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
+        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance->setTitle('::sylabe:module:entities:AllEntities');
+        $instance->setIcon($icon);
+        $instance->display();
+
+        $this->_displayInstance->registerInlineContentID('allentities');
+    }
+
+    private function _display_InlineAllEntitiesList(): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $listOkEntities = array();
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid2' => $this->_hashEntity,
+            'bl/rl/nid3' => $this->_hashType,
+        );
+        $instanceEntity = $this->_nebuleInstance->getCacheInstance()->newNode($this->_hashEntity);
+        $instanceEntity->getLinks($links, $filter, false);
+
+        /*$links = $this->_hashEntityObject->getLinksOnFields(
+            '',
+            '',
+            'l',
+            '',
+            $this->_hashEntity,
+            $this->_hashType);*/
+
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setEnableWarnIfEmpty(true);
+        foreach ($links as $link) {
+            $id = $link->getParsed()['bl/rl/nid1'];
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING eid=' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!isset($listOkEntities[$id]))
+                continue;
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($id);
+            $instance->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->addItem($instance);
+            $listOkEntities[$id] = true;
+        }
+        $instanceList->display();
+
         if (sizeof($links) != 0) {
             $list = array();
             $i = 0;
@@ -1628,7 +1794,16 @@ class ModuleEntities extends \Nebule\Library\Modules
             $signers[] = $this->_authoritiesInstance->getTimeSignersInstance()[$instance->getID()];
         }
         $entities[] = $this->_entitiesInstance->getServerEntityInstance();
-        $masters[] = 'Hôte';
+        $masters[] = 'Server entity';
+        $signers[] = array();
+        $entities[] = $this->_entitiesInstance->getDefaultEntityInstance();
+        $masters[] = 'Default entity';
+        $signers[] = array();
+        $entities[] = $this->_entitiesInstance->getGhostEntityInstance();
+        $masters[] = 'Ghost entity';
+        $signers[] = array();
+        $entities[] = $this->_entitiesInstance->getConnectedEntityInstance();
+        $masters[] = 'Connected entity';
         $signers[] = array();
 
         // Prépare l'affichage.
