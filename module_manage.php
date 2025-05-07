@@ -30,7 +30,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020250308';
+    const MODULE_VERSION = '020250507';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -365,11 +365,11 @@ class ModuleManage extends \Nebule\Library\Modules
 
             // Crée le lien de hash.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityOID();
+            $signer = $this->_entitiesInstance->getGhostEntityEID();
             $action = 'l';
             $source = $this->_actionAddModuleRID;
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_HASH);
+            $target = $this->getNidFromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_HASH);
             $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
 
             // Crée l'objet du nom.
@@ -402,7 +402,7 @@ class ModuleManage extends \Nebule\Library\Modules
 
             // Crée le lien du code pour l'application.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityOID();
+            $signer = $this->_entitiesInstance->getGhostEntityEID();
             $action = 'f';
             $source = $this->_actionAddModuleRID;
             $target = $this->_actionAddModuleID;
@@ -797,10 +797,10 @@ class ModuleManage extends \Nebule\Library\Modules
                 if ($this->_unlocked
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && ($this->_entitiesInstance->getGhostEntityOID() == $this->_authoritiesInstance->getCodeMaster()
-                        || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getDefaultEntityID()
+                    && ($this->_entitiesInstance->getGhostEntityEID() == $this->_authoritiesInstance->getCodeMaster()
+                        || ($this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getDefaultEntityEID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') )
-                        || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getDefaultEntityID()
+                        || ($this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getDefaultEntityEID()
                             && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority'))
                     )
                     && $rid != '0'

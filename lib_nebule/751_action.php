@@ -822,7 +822,7 @@ abstract class Actions extends Functions
         $this->_actionSynchronizeEntityInstance->syncLinks();
 
         // Liste des liens l pour l'entité en source.
-        $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
+        $links = $this->_actionSynchronizeEntityInstance->getLinksOnFields('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
@@ -833,7 +833,7 @@ abstract class Actions extends Functions
             $object->syncObject();
         }
         // Liste des liens l pour l'entité en cible.
-        $links = $this->_actionSynchronizeEntityInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
+        $links = $this->_actionSynchronizeEntityInstance->getLinksOnFields('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
@@ -903,7 +903,7 @@ abstract class Actions extends Functions
         $this->_actionSynchronizeApplicationInstance->syncLinks();
 
         // Liste des liens l pour l'entité en source.
-        $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', $this->_actionSynchronizeApplicationInstance->getID(), '', '');
+        $links = $this->_actionSynchronizeApplicationInstance->getLinksOnFields('', '', 'l', $this->_actionSynchronizeApplicationInstance->getID(), '', '');
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
@@ -914,7 +914,7 @@ abstract class Actions extends Functions
             $object->syncObject();
         }
         // Liste des liens l pour l'entité en cible.
-        $links = $this->_actionSynchronizeApplicationInstance->readLinksFilterFull('', '', 'l', '', $this->_actionSynchronizeApplicationInstance->getID(), '');
+        $links = $this->_actionSynchronizeApplicationInstance->getLinksOnFields('', '', 'l', '', $this->_actionSynchronizeApplicationInstance->getID(), '');
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
@@ -995,7 +995,7 @@ abstract class Actions extends Functions
         // Lecture de l'objet.
         $data = $this->_ioInstance->getObject($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
         // Calcul de l'empreinte.
-        $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
+        $hash = $this->getNidFromData($data);
         if ($hash != $this->_actionSynchronizeNewEntityID) {
             $this->_metrologyInstance->addLog('action synchronize new entity - Hash error', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
             unset($data);
@@ -1402,7 +1402,7 @@ abstract class Actions extends Functions
 
         // Définition de la date et le signataire.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityOID();
+        $signer = $this->_entitiesInstance->getGhostEntityEID();
 
         // Création du type mime.
         $instance->setType($this->_actionUploadFileType);
@@ -1647,7 +1647,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
+                    $meta = $this->getNidFromData('nebule/objet/nom');
                     //$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks); FIXME
                 }
             }
@@ -1659,7 +1659,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prenom');
+                    $meta = $this->getNidFromData('nebule/objet/prenom');
                     //$this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks); FIXME
                 }
             }
@@ -1671,7 +1671,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/surnom');
+                    $meta = $this->getNidFromData('nebule/objet/surnom');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
             }
@@ -1684,7 +1684,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/prefix');
+                    $meta = $this->getNidFromData('nebule/objet/prefix');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
             }
@@ -1696,7 +1696,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
+                    $meta = $this->getNidFromData('nebule/objet/suffix');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
             }
@@ -1708,7 +1708,7 @@ abstract class Actions extends Functions
                     $action = 'l';
                     $source = $this->_actionCreateEntityID;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/entite/type');
+                    $meta = $this->getNidFromData('nebule/objet/entite/type');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionCreateEntityObfuscateLinks);
                 }
             }
@@ -2351,12 +2351,12 @@ abstract class Actions extends Functions
     protected function _actionAddProperty(): void
     {
         $prop = $this->_actionAddProperty;
-        $propID = $this->_nebuleInstance->getCryptoInstance()->hash($prop);
+        $propID = $this->getNidFromData($prop);
         $this->_metrologyInstance->addLog('action add property ' . $prop, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $objectID = $this->_actionAddPropertyObject;
         $this->_metrologyInstance->addLog('action add property for ' . $objectID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $value = $this->_actionAddPropertyValue;
-        $valueID = $this->_nebuleInstance->getCryptoInstance()->hash($value);
+        $valueID = $this->getNidFromData($value);
         $this->_metrologyInstance->addLog('action add property value : ' . $value, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $protected = $this->_actionAddPropertyProtected;
         if ($protected) {
@@ -2376,7 +2376,7 @@ abstract class Actions extends Functions
 
         // Création du lien.
         $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityOID();
+        $signer = $this->_entitiesInstance->getGhostEntityEID();
         $action = 'l';
         $source = $objectID;
         $target = $valueID;

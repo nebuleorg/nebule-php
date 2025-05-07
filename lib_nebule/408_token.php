@@ -231,8 +231,8 @@ class Token extends TokenPool implements nodeInterface
         }
 
         // Détermine le forgeur.
-        $this->_propertiesList['token']['TokenForgeID']['force'] = $this->_entitiesInstance->getGhostEntityOID();
-        $param['TokenForgeID'] = $this->_entitiesInstance->getGhostEntityOID();
+        $this->_propertiesList['token']['TokenForgeID']['force'] = $this->_entitiesInstance->getGhostEntityEID();
+        $param['TokenForgeID'] = $this->_entitiesInstance->getGhostEntityEID();
 
 
         // Détermine si le jeton doit avoir un contenu.
@@ -311,15 +311,15 @@ class Token extends TokenPool implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_entitiesInstance->getGhostEntityOID();
+        $signer = $this->_entitiesInstance->getGhostEntityEID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Crée les liens associés au sac de jetons.
@@ -359,7 +359,7 @@ class Token extends TokenPool implements nodeInterface
 
                 if ($value != null) {
                     $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
+                    $meta = $this->getNidFromData($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
                     $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }

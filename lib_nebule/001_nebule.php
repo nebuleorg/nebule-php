@@ -428,9 +428,9 @@ class nebule
                 $this->_currentObject = $cache;
                 $this->_currentObjectInstance =$this->_cacheInstance->newNode($cache);
             } else {
-                $this->_currentObject = $this->_entitiesInstance->getGhostEntityOID();
-                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityOID());
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityOID());
+                $this->_currentObject = $this->_entitiesInstance->getGhostEntityEID();
+                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityEID());
+                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityEID());
             }
             unset($cache);
         }
@@ -803,7 +803,7 @@ class nebule
         }
 
         if (!$this->_entitiesInstance->getServerEntityInstance() instanceof Entity) return 51;
-        if ($this->_entitiesInstance->getServerEntityID() == '0') return 52;
+        if ($this->_entitiesInstance->getServerEntityEID() == '0') return 52;
 
         if (!$this->_entitiesInstance->getDefaultEntityInstance() instanceof Entity) return 61;
         if ($this->_entitiesInstance->getDefaultEntityInstance()->getID() == '0') return 62;

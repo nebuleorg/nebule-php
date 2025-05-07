@@ -27,7 +27,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250307';
+    const MODULE_VERSION = '020250507';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -62,9 +62,9 @@ class ModuleGroups extends \Nebule\Library\Modules
         $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
-        $this->_hashGroup = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE);
+        $this->_hashGroup = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
-        $this->_hashGroupClosed = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+        $this->_hashGroupClosed = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
         $this->_hashGroupClosedObject = $this->_cacheInstance->newNode($this->_hashGroupClosed);
     }
 
@@ -179,7 +179,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID();
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID();
                 break;
 
             case 'selfMenuObject':
@@ -507,7 +507,7 @@ class ModuleGroups extends \Nebule\Library\Modules
             $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
             if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_entitiesInstance->getGhostEntityOID()])
+                && !isset($signers[$this->_entitiesInstance->getGhostEntityEID()])
             ) {
                 $list[$i]['object'] = $instance;
                 $list[$i]['param'] = array(
@@ -842,7 +842,7 @@ class ModuleGroups extends \Nebule\Library\Modules
 
                 //Prépare l'affichage.
                 if (sizeof($groupListLinks) != 0) {
-                    $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                    $hashGroupPriv = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                     $list = array();
                     $listOkItems = array();
                     $i = 0;
@@ -850,7 +850,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                         // Vérifie si le couple membre/signataire n'est pas déjà pris en compte.
                         // Vérifie si le signataire n'est pas l'entité en cours.
                         if (!isset($listOkItems[$item->getParsed()['bl/rl/nid1'] . $item->getParsed()['bs/rs1/eid']])
-                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getGhostEntityOID()
+                            && $item->getParsed()['bs/rs1/eid'] != $this->_entitiesInstance->getGhostEntityEID()
                         ) {
                             $instance = $this->_applicationInstance->getTypedInstanceFromNID($item->getParsed()['bl/rl/nid1']);
                             $instanceSigner = $this->_cacheInstance->newNode($item->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
@@ -908,7 +908,7 @@ class ModuleGroups extends \Nebule\Library\Modules
 
             //Prépare l'affichage.
             if (sizeof($groupListLinks) != 0) {
-                $hashGroupPriv = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
+                $hashGroupPriv = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
                 $list = array();
                 $listOkItems = array();
                 $i = 0;

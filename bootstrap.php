@@ -5737,23 +5737,23 @@ function bootstrap_breakDisplay41LibraryEntities(): void {
         $nebuleInstanceCheck > 50);
 
     bootstrap_breakDisplay411DisplayEntity('server entity',
-        array($nebuleInstance->getEntitiesInstance()->getServerEntityID() => $nebuleInstance->getEntitiesInstance()->getServerEntityID()),
-        array($nebuleInstance->getEntitiesInstance()->getServerEntityID() => $nebuleInstance->getEntitiesInstance()->getServerEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getServerEntityEID() => $nebuleInstance->getEntitiesInstance()->getServerEntityEID()),
+        array($nebuleInstance->getEntitiesInstance()->getServerEntityEID() => $nebuleInstance->getEntitiesInstance()->getServerEntityInstance()),
         $nebuleInstanceCheck > 60);
 
     bootstrap_breakDisplay411DisplayEntity('default entity',
-        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityID()),
-        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityEID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityEID()),
+        array($nebuleInstance->getEntitiesInstance()->getDefaultEntityEID() => $nebuleInstance->getEntitiesInstance()->getDefaultEntityInstance()),
         $nebuleInstanceCheck > 70);
 
     bootstrap_breakDisplay411DisplayEntity('ghost entity',
-        array($nebuleInstance->getEntitiesInstance()->getGhostEntityOID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityOID()),
-        array($nebuleInstance->getEntitiesInstance()->getGhostEntityOID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityEID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityEID()),
+        array($nebuleInstance->getEntitiesInstance()->getGhostEntityEID() => $nebuleInstance->getEntitiesInstance()->getGhostEntityInstance()),
         $nebuleInstanceCheck > 80);
 
     bootstrap_breakDisplay411DisplayEntity('connected entity',
-        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityID()),
-        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityInstance()),
+        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityEID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityEID()),
+        array($nebuleInstance->getEntitiesInstance()->getConnectedEntityEID() => $nebuleInstance->getEntitiesInstance()->getConnectedEntityInstance()),
         $nebuleInstanceCheck > 80);
 
     $entity = lib_getOption('subordinationEntity');

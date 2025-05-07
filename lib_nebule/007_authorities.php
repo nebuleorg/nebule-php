@@ -309,10 +309,10 @@ class Authorities extends Functions
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityEID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $entitiesInstance->getServerEntityID(),
+                'bs/rs1/eid' => $entitiesInstance->getServerEntityEID(),
             );
             $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }
@@ -321,10 +321,10 @@ class Authorities extends Functions
             $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $refAuthority,
-                'bl/rl/nid2' => $entitiesInstance->getServerEntityID(),
+                'bl/rl/nid2' => $entitiesInstance->getServerEntityEID(),
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
-                'bs/rs1/eid' => $entitiesInstance->getDefaultEntityID(),
+                'bs/rs1/eid' => $entitiesInstance->getDefaultEntityEID(),
             );
             $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
         }

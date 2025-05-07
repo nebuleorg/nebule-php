@@ -660,7 +660,7 @@ class Node extends Functions implements nodeInterface
         $newBlockLink->addLink($link);
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityOID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID());
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
@@ -3356,7 +3356,7 @@ class Node extends Functions implements nodeInterface
         // Lit les liens.
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_entitiesInstance->getGhostEntityOID();
+        $entity = $this->_entitiesInstance->getGhostEntityEID();
         foreach ($links as $link) {
             // Vérifie si l'entité signataire du lien est l'entité courante.
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3385,7 +3385,7 @@ class Node extends Functions implements nodeInterface
             // Lit les liens.
             $links = array();
             $this->getLinks($links, array(), false);
-            $entity = $this->_entitiesInstance->getGhostEntityOID();
+            $entity = $this->_entitiesInstance->getGhostEntityEID();
             foreach ($links as $link) {
                 // Vérifie si l'entité signataire du lien est l'entité courante.
                 if ($link->getParsed()['bs/rs1/eid'] != $entity) {
@@ -3422,7 +3422,7 @@ class Node extends Functions implements nodeInterface
 
         $links = array();
         $this->getLinks($links, array(), false);
-        $entity = $this->_entitiesInstance->getGhostEntityOID();
+        $entity = $this->_entitiesInstance->getGhostEntityEID();
         foreach ($links as $link) {
             if ($link->getParsed()['bs/rs1/eid'] != $entity) {
                 unset($links, $entity, $link);
@@ -3547,7 +3547,7 @@ class Node extends Functions implements nodeInterface
         $newBlockLink->addLink($rl);
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
-        return $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityOID(), $date);
+        return $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID(), $date);
     }
 
 

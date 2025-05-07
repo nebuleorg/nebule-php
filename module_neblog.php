@@ -58,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250302';
+    const MODULE_VERSION = '020250426';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -498,8 +498,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::neblog:module:blog:new');
@@ -513,15 +513,13 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setMessage('::neblog:module:blog:get');
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]);
-            $instanceList->addItem($instance);
-        } elseif ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject'))) {
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        } else {
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
             $instance->setMessage('::neblog:module:login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
-            $instanceList->addItem($instance);
         }
+        $instanceList->addItem($instance);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 

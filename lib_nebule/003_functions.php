@@ -246,7 +246,7 @@ class Functions
         $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscate && !$newLink->setObfuscate())
             return '';
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityOID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID());
 
         return $textOID;
     }
@@ -295,5 +295,9 @@ class Functions
         if ($arg != '')
             $this->_metrologyInstance->addLog("get filtered input '$name' type $type result=$arg", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cf05e78e');
         return $arg;
+    }
+
+    public function getIsRID(Node $nid): bool {
+        return str_contains($nid->getID(), '.none');
     }
 }

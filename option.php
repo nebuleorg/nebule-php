@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250419';
+    const APPLICATION_VERSION = '020250507';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -130,10 +130,10 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         // Récupère l'entité déverrouillée ou l'entité instance du serveur.
         if ($this->_unlocked) {
             $username = $this->_entitiesInstance->getGhostEntityInstance()->getFullName();
-            $userID = $this->_entitiesInstance->getGhostEntityOID();
+            $userID = $this->_entitiesInstance->getGhostEntityEID();
         } else {
             $username = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
-            $userID = $this->_entitiesInstance->getServerEntityID();
+            $userID = $this->_entitiesInstance->getServerEntityEID();
         }
         ?>
         <!DOCTYPE html>
@@ -151,7 +151,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_entitiesInstance->getGhostEntityOID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
+            if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getServerEntityEID()) echo 'other';
         } ?>">
             <div class="header-left">
                 <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
@@ -172,7 +172,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         </div>
         <div class="layout-footer footer<?php if ($this->_unlocked) {
             echo 'unlock';
-            if ($this->_entitiesInstance->getGhostEntityOID() != $this->_entitiesInstance->getServerEntityID()) echo 'other';
+            if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getServerEntityEID()) echo 'other';
         } ?>">
             <div class="footer-center">
                 <p>
@@ -648,7 +648,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    private function _displayActions(): void
+    protected function _displayActions(): void
     {
         ?>
 
@@ -770,9 +770,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
     private function _getIsInstanceOrDefault(Entity $eid): string {
         $message = '';
-        if ($eid->getID() == $this->_entitiesInstance->getServerEntityID())
+        if ($eid->getID() == $this->_entitiesInstance->getServerEntityEID())
             $message = 'Instance entity';
-        if ($eid->getID() == $this->_entitiesInstance->getDefaultEntityID()) {
+        if ($eid->getID() == $this->_entitiesInstance->getDefaultEntityEID()) {
             if ($message != '')
                 $message .= ', ';
             $message .= 'Default entity';
@@ -790,7 +790,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      */
     private function _displayLocalAuthorities(): void
     {
-        $refAuthority = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+        $refAuthority = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // Primary local authorities
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
@@ -843,12 +843,12 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityOID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityEID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityID() . '_' . $instance->getID() . '_' . $refAuthority
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refAuthority
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -927,7 +927,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityID() . '_' . $id . '_' . $refAuthority
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refAuthority
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -983,11 +983,11 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     private function _permitAction(Entity $eid): bool {
         if ($this->_unlocked
             && (
-                ($eid->getID() == $this->_entitiesInstance->getServerEntityID()
+                ($eid->getID() == $this->_entitiesInstance->getServerEntityEID()
                     && $this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority')
                 )
                 ||
-                ($eid->getID() == $this->_entitiesInstance->getDefaultEntityID()
+                ($eid->getID() == $this->_entitiesInstance->getDefaultEntityEID()
                     && $this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
                 )
             )
@@ -1075,7 +1075,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
                         $instanceQuery->setMessage('Forced on config file');
                     } elseif ($this->_unlocked
-                        && $this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getServerEntityID() // FIXME doit être dans la liste des entités autorisées
+                        && $this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getServerEntityEID() // FIXME doit être dans la liste des entités autorisées
                     ) {
                         $instanceQuery = new DisplayQuery($this->_applicationInstance);
                         $instanceQuery->setType(DisplayQuery::QUERY_STRING);
@@ -1232,9 +1232,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
     private function _displayApplications(): void
     {
-        $referencePHP = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_OBJECT_APP_PHP, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
-        $this->_referenceNoPreload = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
-        $this->_referenceActivated = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+        $referencePHP = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+        $this->_referenceNoPreload = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+        $this->_referenceActivated = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         
         $instanceTitle = new DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Applications');
@@ -1299,7 +1299,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority')
             && !$this->_rescueInstance->getModeRescue()
         ) {
-            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityEID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             foreach ($linksList as $link) {
                 $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1323,7 +1323,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
 
                 $instanceList->addItem($this->_addInfoShort(
                     DisplayItemIconMessage::TYPE_MESSAGE,
-                    $this->_entitiesInstance->getServerEntityID(),
+                    $this->_entitiesInstance->getServerEntityEID(),
                     DisplayItem::RATIO_SHORT,
                     'Signer EID'));
                 $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
@@ -1338,7 +1338,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
             && !$this->_rescueInstance->getModeRescue()
         ) {
-            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityEID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             foreach ($linksList as $link) {
                 $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1362,7 +1362,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
 
                 $instanceList->addItem($this->_addInfoShort(
                     DisplayItemIconMessage::TYPE_MESSAGE,
-                    $this->_entitiesInstance->getDefaultEntityID(),
+                    $this->_entitiesInstance->getDefaultEntityEID(),
                     DisplayItem::RATIO_SHORT,
                     'Signer EID'));
                 $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
@@ -1462,7 +1462,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             $listOkEntities[$eid] = true;
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
-            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+            $refRecovery = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
             $instanceList = new DisplayList($this->_applicationInstance);
             foreach ($this->_recoveryInstance->getRecoveryEntitiesInstance() as $instance) {
@@ -1476,12 +1476,12 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                     $instanceEntity->setEnableRefs(true);
                     $instanceEntity->setRefs($this->_recoveryInstance->getRecoveryEntitiesSigners()[$instance->getID()]);
                     if ($this->_permitAction($instance)
-                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityOID()
+                        && $this->_authoritiesInstance->getLocalAuthoritiesSigners()[$instance->getID()] == $this->_entitiesInstance->getGhostEntityEID()
                     ) {
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityID() . '_' . $instance->getID() . '_' . $refRecovery
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refRecovery
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -1520,7 +1520,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             $listEntities = $this->_entitiesInstance->getListEntitiesInstances();
 
             // Affiche les entités.
-            $refRecovery = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM) . '.' . References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+            $refRecovery = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
             $list = array();
             $i = 0;
 
@@ -1557,7 +1557,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityID() . '_' . $id . '_' . $refRecovery
+                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refRecovery
                             . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                     }
 
@@ -1676,7 +1676,7 @@ class Action extends Actions
         $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
         if ($this->_unlocked
-            && $this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getServerEntityID()
+            && $this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getServerEntityEID()
             && $this->_nebuleInstance->getTicketingInstance()->checkActionTicket()
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
         ) {

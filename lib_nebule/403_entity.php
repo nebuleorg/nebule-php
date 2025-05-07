@@ -52,7 +52,7 @@ class Entity extends Node implements nodeInterface
         '_privateKeyPassword',
         '_privateKeyPasswordSalt',
         '_isSetPrivateKeyPassword',
-        '_faceCache',
+        //'_faceCache',
     );
 
     private string $_publicKey = '';

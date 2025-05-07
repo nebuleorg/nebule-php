@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250421';
+    const APPLICATION_VERSION = '020250507';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1179,7 +1179,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             </div>
             <?php
             // Si l'entité en cours n'est pas l'entité par défaut.
-            if ($this->_entitiesInstance->getGhostEntityOID() != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
+            if ($this->_entitiesInstance->getGhostEntityEID() != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
                 $this->_displayCurentEntityOnHeader(true);
             } else {
                 ?>
@@ -1237,7 +1237,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     'name="ico_lock"'),
                                 '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID());
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
                         }
                     } // Sinon affiche le warning.
                     else {
@@ -1324,10 +1324,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                         self::DEFAULT_ICON_ENTITY_LOCK);
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                         self::DEFAULT_OBJECT_ADD_COMMAND,
                         self::DEFAULT_ENTITY_LIST_COMMAND,
-                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
+                        self::DEFAULT_GROUP_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
@@ -1352,7 +1352,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ICON_WORLD,
                     );
                     $modulesLink = array(
-                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(),
+                        self::DEFAULT_OBJECT_LIST_COMMAND . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                         self::DEFAULT_ENTITY_LIST_COMMAND,
                         self::DEFAULT_ENTITY_SYNC_COMMAND,
                         self::DEFAULT_ENTITY_ADD_COMMAND,
@@ -1563,8 +1563,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Extrait la liste des objets.
         $list = array();
         $DisplayedList = array();
-        $id = $this->_entitiesInstance->getGhostEntityOID();
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_DATE);
+        $id = $this->_entitiesInstance->getGhostEntityEID();
+        $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
         $instance = $this->_cacheInstance->newNode($meta);
 
         // Si c'est l'entité du serveur, affiche tous les objets.
@@ -1629,9 +1629,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Refait une recherche et un affichage pour les objets protégés partagés.
         $list = array();
-        $id = $this->_entitiesInstance->getGhostEntityOID();
+        $id = $this->_entitiesInstance->getGhostEntityEID();
         if ($id != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
-            $listK = $this->_entitiesInstance->getGhostEntityInstance()->readLinksFilterFull(
+            $listK = $this->_entitiesInstance->getGhostEntityInstance()->getLinksOnFields(
                 '',
                 '',
                 'k',
@@ -1759,14 +1759,14 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '<div class="layoutObjectsList">' . "\n";
         echo '<div class="objectsListContent">' . "\n";
 
-        $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
+        $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $hashEntity = $this->getNidFromData('application/x-pem-file');
         $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
         // Liste des entités à ne pas afficher.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         if ($this->_unlocked) {
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = true;
         }
 
         // Liste toutes les autres entités.
@@ -2103,7 +2103,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
         if ($isEntity) {
             // Se connecter avec l'entité.
-            if (!$this->_unlocked || $id != $this->_entitiesInstance->getGhostEntityOID()) {
+            if (!$this->_unlocked || $id != $this->_entitiesInstance->getGhostEntityEID()) {
                 $actionList[1]['name'] = '::ConnectWith';
                 $actionList[1]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[1]['desc'] = '';
@@ -2125,7 +2125,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
             }
 
-            if ($this->_unlocked && $id == $this->_entitiesInstance->getGhostEntityOID()) {
+            if ($this->_unlocked && $id == $this->_entitiesInstance->getGhostEntityEID()) {
                 // Verrouiller l'entité.
                 $actionList[3]['name'] = '::::lock';
                 $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
@@ -2311,8 +2311,8 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             //Prépare l'affichage.
             if (sizeof($groupListID) != 0) {
                 $list = array();
-                $listOkItems = array($this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE) => true,
-                    $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true);
+                $listOkItems = array($this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE) => true,
+                    $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME) => true);
                 $i = 0;
                 foreach ($groupListID as $item) {
                     if (!isset($listOkItems[$item])) {
@@ -2901,7 +2901,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                         ) {
-                            if ($entity == $this->_entitiesInstance->getGhostEntityOID()) {
+                            if ($entity == $this->_entitiesInstance->getGhostEntityEID()) {
                                 // Déprotéger l'objet.
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
@@ -3027,19 +3027,19 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($listGroups, $group);
             }
 
-            $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
-            $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
+            $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+            $hashEntity = $this->getNidFromData('application/x-pem-file');
             $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
 
             // Ajoute des entités à ne pas afficher.
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
-            $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getServerEntityEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = true;
 
             // Liste toutes les autres entités.
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
@@ -3118,7 +3118,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         echo '</div>' . "\n";
 
         if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-            || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
+            || ($this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getConnectedEntityEID()
                 && $this->_unlocked
             )
         ) {
@@ -3185,7 +3185,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche le champs de mot de passe.
         if ($idCheck != 'Error') {
             if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
+                || ($this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getConnectedEntityEID()
                     && $this->_unlocked
                 )
             ) {
@@ -3224,9 +3224,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityOID(); ?>">
+                          . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(); ?>">
                     <input type="hidden" name="ent"
-                           value="<?php echo $this->_entitiesInstance->getGhostEntityOID(); ?>">
+                           value="<?php echo $this->_entitiesInstance->getGhostEntityEID(); ?>">
                     <input type="password" name="pwd">
                     <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
                 </form>
@@ -3243,7 +3243,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             if ($this->_entitiesInstance->getGhostEntityInstance()->getHavePrivateKeyPassword()
-                || ($this->_entitiesInstance->getGhostEntityOID() == $this->_entitiesInstance->getConnectedEntityID()
+                || ($this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getConnectedEntityEID()
                     && $this->_unlocked
                 )
             ) {
@@ -3763,7 +3763,7 @@ private function _displayContentAbout()
         ?>
 
         <div class="oneActionItem"
-             id="<?php if ($entityID == $this->_entitiesInstance->getGhostEntityOID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
+             id="<?php if ($entityID == $this->_entitiesInstance->getGhostEntityEID()) echo 'selfEntity'; else echo 'otherEntity'; ?>">
             <div class="oneActionItem-top">
                 <div class="oneAction-icon">
                     <?php $this->displayObjectColorIcon($object, $htlink, $icon); ?>
@@ -4472,7 +4472,7 @@ class Action extends Actions
 
             // Définition de la date et le signataire.
             $date = date(DATE_ATOM);
-            $signer = $this->_entitiesInstance->getGhostEntityOID();
+            $signer = $this->_entitiesInstance->getGhostEntityEID();
 
             // Création du type mime.
             if ($this->_actionUploadFileType != '') {
@@ -4483,7 +4483,7 @@ class Action extends Actions
                     $action = 'l';
                     $source = $id;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/type');
+                    $meta = $this->getNidFromData('nebule/objet/type');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
@@ -4497,7 +4497,7 @@ class Action extends Actions
                     $action = 'l';
                     $source = $id;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/nom');
+                    $meta = $this->getNidFromData('nebule/objet/nom');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
@@ -4511,7 +4511,7 @@ class Action extends Actions
                     $action = 'l';
                     $source = $id;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash('nebule/objet/suffix');
+                    $meta = $this->getNidFromData('nebule/objet/suffix');
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
@@ -4526,7 +4526,7 @@ class Action extends Actions
                     $action = 'l';
                     $source = $id;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_DATE);
+                    $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
                 }
             }
@@ -4540,7 +4540,7 @@ class Action extends Actions
                     $action = 'l';
                     $source = $id;
                     $target = $textID;
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash(Application::APPLICATION_EXPIRATION_COUNT);
+                    $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_COUNT);
                     $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
                 }
             }

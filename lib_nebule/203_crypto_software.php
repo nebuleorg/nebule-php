@@ -117,7 +117,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         $algo = 'sha256';
 
         // Génère une graine avec la date pour le compteur interne.
-        $internalCounter = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getEntitiesInstance()->getServerEntityID();
+        $internalCounter = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getEntitiesInstance()->getServerEntityEID();
 
         // Boucle de remplissage.
         while (strlen($result) < $size) {

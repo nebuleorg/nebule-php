@@ -1154,7 +1154,7 @@ class Configuration extends Functions
         if ($entity = ''
             || $entity == '0'
         )
-            $entity = $this->_entitiesInstance->getGhostEntityOID();
+            $entity = $this->_entitiesInstance->getGhostEntityEID();
 
         $this->_metrologyInstance->addLog('set option ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7eea2');
 
@@ -1174,9 +1174,9 @@ class Configuration extends Functions
         }
         $instance->setType(References::REFERENCE_OBJECT_TEXT);
 
-        $signer = $this->_entitiesInstance->getGhostEntityOID();
+        $signer = $this->_entitiesInstance->getGhostEntityEID();
         $source = $entity;
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OPTION . '/' . $name);
+        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 

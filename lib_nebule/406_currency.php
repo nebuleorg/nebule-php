@@ -580,7 +580,7 @@ class Currency extends Node implements nodeInterface
         $param['ForceCurrencySerialID'] = true;
 
         // Force le paramètre AID avec l'entité en cours.
-        $param['CurrencyAutorityID'] = $this->_entitiesInstance->getGhostEntityOID();
+        $param['CurrencyAutorityID'] = $this->_entitiesInstance->getGhostEntityEID();
         $param['ForceCurrencyAutorityID'] = true;
         $this->_properties['AID'] = $param['CurrencyAutorityID'];
 
@@ -617,8 +617,8 @@ class Currency extends Node implements nodeInterface
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' CAP:' . $this->_propertiesList['currency']['CurrencyCapacities']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
             $content .= 'MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'] . "\n";
             $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' MOD:' . $this->_propertiesList['currency']['CurrencyExploitationMode']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-            $content .= 'AID:' . $this->_entitiesInstance->getGhostEntityOID() . "\n";
-            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_entitiesInstance->getGhostEntityOID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $content .= 'AID:' . $this->_entitiesInstance->getGhostEntityEID() . "\n";
+            $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' AID:' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -683,15 +683,15 @@ class Currency extends Node implements nodeInterface
 
 
         // Prépare la génération des liens.
-        $signer = $this->_entitiesInstance->getGhostEntityOID();
+        $signer = $this->_entitiesInstance->getGhostEntityEID();
         $date = date(DATE_ATOM);
         $source = $this->_id;
         $argObf = $obfuscated;
 
         // Le lien de type.
         $action = 'l';
-        $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE);
+        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
 
         // Le lien de nommage si le nom est présent.
@@ -737,7 +737,7 @@ class Currency extends Node implements nodeInterface
 
                 if ($value != null) {
                     $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
-                    $meta = $this->_nebuleInstance->getCryptoInstance()->hash($property['key']);
+                    $meta = $this->getNidFromData($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
                     $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
                 }
@@ -805,12 +805,12 @@ class Currency extends Node implements nodeInterface
         $list = array();
 
         // Prépare la recherche des monnaies.
-        $referenceType = $this->_nebuleInstance->getCryptoInstance()->hash($type);
-        $meta = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $referenceType = $this->getNidFromData($type);
+        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         if ($type == 'CID') {
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
+            $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
         } elseif ($type == 'PID') {
-            $target = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+            $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
         } else {
             return $list;
         }

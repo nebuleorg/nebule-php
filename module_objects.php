@@ -27,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250307';
+    const MODULE_VERSION = '020250507';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -546,14 +546,14 @@ class ModuleObjects extends \Nebule\Library\Modules
             $bg = 1;
             $attribList = References::RESERVED_OBJECTS_LIST;
             $emotionsList = array(
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-                $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
+                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
             );
             $emotionsIcons = array(
                 References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
@@ -883,7 +883,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             ) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
-                    && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityOID()
+                    && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityEID()
                 ) {
                     // Ajout du message d'avertissement.
                     if ($object->getIsEntity('all')) {
@@ -944,7 +944,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityOID()
+                && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityEID()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
                 $list[2]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
@@ -1080,7 +1080,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
-                        if ($entity == $this->_entitiesInstance->getGhostEntityOID()) {
+                        if ($entity == $this->_entitiesInstance->getGhostEntityEID()) {
                             // Déprotéger l'objet.
                             $list[$i]['param']['selfHookList'][0]['name'] = '::UnprotectObject';
                             $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
@@ -1197,15 +1197,15 @@ class ModuleObjects extends \Nebule\Library\Modules
             $instance = null;
 
             // Ajoute des entités et groupes à ne pas afficher.
-            $listOkEntities[$this->_entitiesInstance->getGhostEntityOID()] = true;
-            $listOkEntities[$this->_entitiesInstance->getServerEntityID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = true;
+            $listOkEntities[$this->_entitiesInstance->getServerEntityEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkEntities[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getCodeMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getDirectoryMaster()] = true;
             $listOkEntities[$this->_authoritiesInstance->getTimeMaster()] = true;
-            $listOkGroups[$this->_entitiesInstance->getGhostEntityOID()] = true;
-            $listOkGroups[$this->_entitiesInstance->getServerEntityID()] = true;
+            $listOkGroups[$this->_entitiesInstance->getGhostEntityEID()] = true;
+            $listOkGroups[$this->_entitiesInstance->getServerEntityEID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getPuppetmasterEID()] = true;
             $listOkGroups[$this->_authoritiesInstance->getSecurityMaster()] = true;
             $listOkGroups[$this->_authoritiesInstance->getCodeMaster()] = true;
@@ -1228,7 +1228,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             }
 
             // Liste et ajoute tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityOID(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityEID(), '');
             $typeGroup = false;
             $group = null;
             foreach ($listGroups as $group) {
@@ -1298,8 +1298,8 @@ class ModuleObjects extends \Nebule\Library\Modules
             unset($listGroups, $group, $listOkGroups, $typeGroup, $sharedTo);
 
             // Liste toutes les autres entités.
-            $hashType = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
-            $hashEntity = $this->_nebuleInstance->getCryptoInstance()->hash('application/x-pem-file');
+            $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+            $hashEntity = $this->getNidFromData('application/x-pem-file');
             $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
 

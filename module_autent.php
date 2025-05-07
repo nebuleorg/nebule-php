@@ -165,7 +165,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getServerEntityID());
+                . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getServerEntityEID());
         else
             $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
@@ -258,7 +258,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instance->setType($type);
         $instance->setLink($link);
         $instance->setHiddenName('id');
-        $instance->setHiddenValue($this->_entitiesInstance->getServerEntityID());
+        $instance->setHiddenValue($this->_entitiesInstance->getServerEntityEID());
         $instanceList->addItem($instance);
     }
 

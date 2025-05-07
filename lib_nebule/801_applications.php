@@ -410,10 +410,10 @@ abstract class Applications extends Functions implements applicationInterface
 
 /*        $this->_checkSecurityBootstrap = 'ERROR';
         $data = file_get_contents(nebule::NEBULE_BOOTSTRAP_FILE);
-        $hash = $this->_nebuleInstance->getCryptoInstance()->hash($data);
+        $hash = $this->getNidFromData($data);
 
         // Recherche les liens de validation.
-        $hashRef = $this->_nebuleInstance->getCryptoInstance()->hash(References::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
+        $hashRef = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP);
         $object = $this->_cacheInstance->newNode($hashRef);
         $links = $object->getLinksOnFields('', '', 'f', $hashRef, $hash, $hashRef);
 

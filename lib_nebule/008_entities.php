@@ -23,6 +23,8 @@ namespace Nebule\Library;
 class Entities extends Functions
 {
     const SESSION_SAVED_VARS = array();
+    private string $hashType;
+    private string $hashEntity;
 
     protected function _initialisation(): void
     {
@@ -38,6 +40,8 @@ class Entities extends Functions
         $this->_findConnectedEntity();
         $this->_findGhostEntityPassword();
         $this->_saveEntitiesOnSession();
+        $this->hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->hashEntity = $this->getNidFromData('application/x-pem-file');
     }
 
 
@@ -45,7 +49,7 @@ class Entities extends Functions
     private string $_serverEntityID = '';
     private ?Entity $_serverEntityInstance = null;
 
-    public function getServerEntityID(): string { return $this->_serverEntityID; }
+    public function getServerEntityEID(): string { return $this->_serverEntityID; }
     public function getServerEntityInstance(): ?Entity { return $this->_serverEntityInstance; }
 
     /**
@@ -91,7 +95,7 @@ class Entities extends Functions
     private string $_defaultEntityID = '';
     private ?Entity $_defaultEntityInstance = null;
 
-    public function getDefaultEntityID(): string { return $this->_defaultEntityID; }
+    public function getDefaultEntityEID(): string { return $this->_defaultEntityID; }
     public function getDefaultEntityInstance(): ?Entity { return $this->_defaultEntityInstance; }
 
     /**
@@ -137,7 +141,7 @@ class Entities extends Functions
     private string $_ghostEntityOID = '';
     private ?Entity $_ghostEntityInstance = null;
 
-    public function getGhostEntityOID(): string { return $this->_ghostEntityOID; }
+    public function getGhostEntityEID(): string { return $this->_ghostEntityOID; }
     public function getGhostEntityInstance(): ?Entity { return $this->_ghostEntityInstance; }
 
     /**
@@ -343,7 +347,7 @@ class Entities extends Functions
     private ?Entity $_connectedEntityInstance = null;
     private bool $_connectedEntityIsUnlocked = false;
 
-    public function getConnectedEntityID(): string { return $this->_connectedEntityID; }
+    public function getConnectedEntityEID(): string { return $this->_connectedEntityID; }
     public function getConnectedEntityInstance(): ?Entity { return $this->_connectedEntityInstance; }
     public function getConnectedEntityIsUnlocked(): bool { return $this->_connectedEntityIsUnlocked; }
 
@@ -428,39 +432,36 @@ class Entities extends Functions
         $this->_listEntitiesUnlocked = array();
         $this->_listEntitiesUnlockedInstances = array();
     }
-
-
-
-    public function getListEntitiesInstances(): array
-    {
-        $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $hashEntity = $this->getNidFromData('application/x-pem-file');
-        $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
-
-        $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
-
-        $result = array();
-        foreach ($links as $link) {
-            $id = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
-            if ($instance->getIsPublicKey())
-                $result[$id] = $instance;
-        }
-        return $result;
-    }
-
-    public function getListEntitiesID(): array
-    {
-        $list = $this->getListEntitiesInstances();
-        $result = array();
-
-        foreach ($list as $instance) {
-            $id = $instance->getID();
-            $result[$id] = $id;
-        }
-
-        unset($list, $instance);
-        return $result;
-    }
 */
+
+
+
+    public function getListEntitiesLinks(string $eid=''): array
+    {
+        $hashEntityObject = $this->_cacheInstance->newNode($this->hashEntity);
+        return $hashEntityObject->getLinksOnFields($eid, '', 'l', '', $this->hashEntity, $this->hashType);
+    }
+
+    public function getListEntitiesInstances(string $eid=''): array
+    {
+        $result = array();
+        foreach ($this->getListEntitiesLinks($eid) as $link) {
+            $nid = $link->getParsed()['bl/rl/nid1'];
+            $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+            if ($instance->getIsPublicKey())
+                $result[$nid] = $instance;
+        }
+        return $result;
+    }
+
+    public function getListEntitiesID(string $eid): array
+    {
+        $result = array();
+        foreach ($this->getListEntitiesLinks($eid) as $link) {
+            $nid = $link->getParsed()['bl/rl/nid1'];
+            if (Node::checkNID($nid))
+                $result[$nid] = $nid;
+        }
+        return $result;
+    }
 }

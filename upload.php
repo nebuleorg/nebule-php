@@ -128,11 +128,11 @@ class Display extends Displays
                 <p>
                     <?php
                     $name = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
-                    if ($name != $this->_entitiesInstance->getServerEntityID())
+                    if ($name != $this->_entitiesInstance->getServerEntityEID())
                         echo $name;
                     else
                         echo '/';
-                    echo '<br />' . $this->_entitiesInstance->getServerEntityID();
+                    echo '<br />' . $this->_entitiesInstance->getServerEntityEID();
                     ?>
                 </p>
             </div>
