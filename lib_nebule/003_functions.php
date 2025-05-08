@@ -246,7 +246,7 @@ class Functions
         $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
         if ($obfuscate && !$newLink->setObfuscate())
             return '';
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityInstance());
 
         return $textOID;
     }
@@ -258,7 +258,9 @@ class Functions
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
     }
 
-    public function getFilterInput(string $name, int $flag=0): string {
+    public function getFilterInput(string $name, int $flag=0, bool $logContent=true): string {
+        if ($name == '')
+            return '';
         $arg = '';
         $type = 'POST';
         try {
@@ -267,8 +269,7 @@ class Functions
                 if ($arg === false || $arg === null)
                     $arg = '';
                 $arg = trim($arg);
-            } else
-                $this->_metrologyInstance->addLog("get input '$name' type $type not present", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd15e6dba');
+            }
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog("error reading '$name' on POST "
                 . ' ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -283,8 +284,7 @@ class Functions
                     if ($arg === false || $arg === null)
                         $arg = '';
                     $arg = trim($arg);
-                } else
-                    $this->_metrologyInstance->addLog("get input '$name' type $type not present", Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3f409bc1');
+                }
             } catch (\Exception $e) {
                 $this->_metrologyInstance->addLog("error reading '$name' on GET "
                     . ' ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -292,9 +292,23 @@ class Functions
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '40aeb7cd');
             }
         }
-        if ($arg != '')
-            $this->_metrologyInstance->addLog("get filtered input '$name' type $type result=$arg", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cf05e78e');
+        if ($arg == '')
+            $this->_metrologyInstance->addLog("get filtered input '$name' not present", Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd15e6dba');
+        else {
+            $argContent = $arg;
+            if (!$logContent)
+                $argContent = '-censored-';
+            $this->_metrologyInstance->addLog("get filtered input '$name' type $type result=$argContent", Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf05e78e');
+        }
         return $arg;
+    }
+    public function getHaveInput(string $name): bool
+    {
+        if ($name == '')
+            return false;
+        if (filter_has_var(INPUT_GET, $name) || filter_has_var(INPUT_POST, $name))
+            return true;
+        return false;
     }
 
     public function getIsRID(Node $nid): bool {

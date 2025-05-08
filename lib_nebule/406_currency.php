@@ -1439,7 +1439,8 @@ class Currency extends Node implements nodeInterface
         $newLink = new BlocLink($this->_nebuleInstance, $link);
 
         // Signe le lien.
-        $newLink->sign($signer);
+        $instance = $this->_cacheInstance->newNode($signer, Cache::TYPE_ENTITY);
+        $newLink->sign($instance);
 
         // Si besoin, obfuscation du lien.
         if ($obfuscate

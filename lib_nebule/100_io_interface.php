@@ -211,7 +211,7 @@ interface ioInterface
     // Fonctions d'écriture.
 
     /**
-     * Ecrit un lien de l'objet. Retourne le nombre d'octets écrits ou false si erreur.
+     * Write link to one object.
      *
      * @param string $oid
      * @param string $link

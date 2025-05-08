@@ -755,11 +755,11 @@ class BlocLink extends Functions implements blocLinkInterface
     /**
      * {@inheritDoc}
      * @see blocLinkInterface::sign()
-     * @param string $publicKey
+     * @param ?Entity $publicKey
      * @param string $date
      * @return boolean
      */
-    public function sign(string $publicKey = '0', string $date = ''): bool
+    public function sign(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
         $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'b6e89674');
 
@@ -788,21 +788,18 @@ class BlocLink extends Functions implements blocLinkInterface
             return false;
         }
 
-        if ($publicKey == '0') {
-            $publicKeyID = $this->_entitiesInstance->getGhostEntityEID();
-            $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
-        } elseif ($publicKey == $this->_entitiesInstance->getGhostEntityEID()) {
-            $publicKeyInstance = $this->_entitiesInstance->getGhostEntityInstance();
-            $publicKeyID = $publicKey;
-        } else {
-            $publicKeyInstance = $this->_cacheInstance->newNode($publicKey, \Nebule\Library\Cache::TYPE_ENTITY);
-            $publicKeyID = $publicKey;
-        }
+        if ($publicKey === null || $publicKey->getID() == '0')
+            $publicKey = $this->_entitiesInstance->getConnectedEntityInstance();
+        if ($publicKey === null)
+            return false;
+        $publicKeyID = $publicKey->getID();
+        if ($publicKeyID == '0')
+            return false;
         $this->_metrologyInstance->addLog('sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
 
         $hashAlgo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
 
-        $sign = $publicKeyInstance->signLink($this->_rawBlocLink, $hashAlgo);
+        $sign = $publicKey->signLink($this->_rawBlocLink, $hashAlgo, $privateKey, $password);
         if ($sign !== null) {
             $bs = $publicKeyID . '>' . $sign;
             $this->_parsedLink['bs'] = $bs;
@@ -815,7 +812,6 @@ class BlocLink extends Functions implements blocLinkInterface
             $this->_lid = $this->_cryptoInstance->hash($this->_rawBlocLink);
             return true;
         }
-
         return false;
     }
 
@@ -876,15 +872,15 @@ class BlocLink extends Functions implements blocLinkInterface
     /**
      * {@inheritDoc}
      * @see blocLinkInterface::signWrite()
-     * @param string $publicKey
+     * @param ?Entity $publicKey
      * @param string $date
      * @return boolean
      */
-    public function signWrite(string $publicKey = '0', string $date = ''): bool
+    public function signWrite(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
         $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51a338d4');
 
-        if ($this->sign($publicKey, $date))
+        if ($this->sign($publicKey, $date, $privateKey, $password))
             return $this->write();
         return false;
     }

@@ -1174,14 +1174,13 @@ class Configuration extends Functions
         }
         $instance->setType(References::REFERENCE_OBJECT_TEXT);
 
-        $signer = $this->_entitiesInstance->getGhostEntityEID();
         $source = $entity;
         $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OPTION . '/' . $name);
         $link = '_l>' . $source . '>' . $id . '>' . $meta;
         $newLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 
         if ($newLink->addLink($link)
-            && $newLink->sign($signer)
+            && $newLink->sign($this->_entitiesInstance->getConnectedEntityInstance())
             && $newLink->write()
         ) {
             $this->_optionCache[$name] = $value;
@@ -1311,4 +1310,56 @@ class Configuration extends Functions
         }
         return true;
     }
+
+    public function checkGroupedBooleanOptions($name): bool
+    {
+        if (!isset(self::GROUP_ACTIONS_PERMIT[$name]))
+        {
+            $this->_metrologyInstance->addLog('unknown group action ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__,'5edb0ddf');
+            return false;
+        }
+        return $this->_configurationInstance->checkBooleanOptions(self::GROUP_ACTIONS_PERMIT[$name]);
+    }
+
+    const GROUP_ACTIONS_PERMIT = array(
+        'GroupCreateObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateLink' => ['unlocked','permitWrite','permitCreateLink'],
+        'GroupDeleteObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupProtectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupUnprotectObject' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToGroupOpened' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupShareProtectObjectToGroupClosed' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCancelShareProtectObjectToEntity' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupSynchronizeObject' => ['permitWrite','permitWriteObject'],
+        'GroupSynchronizeEntity' => ['permitWrite','permitWriteObject'],
+        'GroupSynchronizeObjectLinks' => ['permitWrite','permitWriteLink'],
+        'GroupSynchronizeApplication' => ['permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink','permitSynchronizeApplication'],
+        'GroupSynchronizeNewEntity' => ['permitWrite','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
+        'GroupUploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'GroupUploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupUploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity'],
+        'GroupCreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'],
+        'GroupSignLink' => ['unlocked','permitWrite','permitWriteLink','permitCreateLink'],
+        'GroupUploadLink' => ['permitWrite','permitWriteLink','permitUploadLink'],
+        'GroupObfuscateLink' => ['unlocked','permitWrite','permitWriteLink','permitObfuscatedLink'],
+        'GroupDeleteGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupAddToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupRemoveFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupAddItemToGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupRemoveItemFromGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteGroup'],
+        'GroupCreateConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'GroupDeleteConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupAddMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupRemoveMessageOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupAddMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupRemoveMemberOnConversation' => ['unlocked','permitWrite','permitWriteLink','permitWriteConversation'],
+        'GroupCreateMessage' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteConversation'],
+        'GroupAddProperty' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
+        'GroupCreateCurrency' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'GroupCreateTokenPool' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+        'GroupCreateTokens' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitCurrency','permitWriteCurrency','permitCreateCurrency'],
+    );
+
 }

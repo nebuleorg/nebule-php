@@ -114,10 +114,10 @@ interface blocLinkInterface
     /**
      * Sign the link.
      *
-     * @param string $publicKey
+     * @param Entity|null $publicKey
      * @return boolean
      */
-    public function sign(string $publicKey = '0'): bool;
+    public function sign(?Entity $publicKey = null): bool;
 
     /**
      * Write the link.
@@ -129,10 +129,10 @@ interface blocLinkInterface
     /**
      * Sign and write the link.
      *
-     * @param string $publicKey
+     * @param Entity|null $publicKey
      * @return boolean
      */
-    public function signWrite(string $publicKey = '0'): bool;
+    public function signWrite(?Entity $publicKey = null): bool;
 }
 
 /**

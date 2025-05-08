@@ -97,15 +97,12 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      */
     public function checkFunction(string $algo, int $type): bool
     {
-        switch ($type) {
-            case (Crypto::TYPE_HASH):
-                return $this->_checkHashFunction($algo);
-            case (Crypto::TYPE_SYMMETRIC):
-                return $this->_checkSymmetricFunction($algo);
-            case (Crypto::TYPE_ASYMMETRIC):
-                return $this->_checkAsymmetricFunction();
-        }
-        return false;
+        return match ($type) {
+            Crypto::TYPE_HASH => $this->_checkHashFunction($algo),
+            Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricFunction($algo),
+            Crypto::TYPE_ASYMMETRIC => $this->_checkAsymmetricFunction(),
+            default => false,
+        };
     }
 
     /**
@@ -114,26 +111,23 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      */
     public function checkValidAlgorithm(string $algo, int $type): bool
     {
-        switch ($type) {
-            case (Crypto::TYPE_HASH):
-                return $this->_checkHashAlgorithm($algo);
-            case (Crypto::TYPE_SYMMETRIC):
-                return $this->_checkSymmetricAlgorithm($algo);
-            case (Crypto::TYPE_ASYMMETRIC):
-                return $this->_checkAsymmetricAlgorithm($algo);
-        }
-        return false;
+        return match ($type) {
+            Crypto::TYPE_HASH => $this->_checkHashAlgorithm($algo),
+            Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricAlgorithm($algo),
+            Crypto::TYPE_ASYMMETRIC => $this->_checkAsymmetricAlgorithm($algo),
+            default => false,
+        };
     }
 
-    private function _getAlgorithmName(string $algo): int
+    private function _getAlgorithmName(string $algo): string
     {
-        $v = preg_split('/\./', $algo); // aes.256.ctr
-        return (int)$v[0];
+        $v = preg_split('/\./', $algo); // aes.256.ctr rsa.2048
+        return $v[0];
     }
 
     private function _getAlgorithmSize(string $algo): int
     {
-        $v = preg_split('/\./', $algo); // aes.256.ctr
+        $v = preg_split('/\./', $algo); // aes.256.ctr rsa.2048
         return (int)$v[1];
     }
 
@@ -425,7 +419,6 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         if (!$this->_checkAsymmetricAlgorithm($algo))
             return array();
 
-        // Prepare configuration for OpenSSL.
         $config = array(
             'digest_alg' => $this->_translateHashAlgorithm($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm')),
             'private_key_bits' => $this->_getAlgorithmSize($algo),
@@ -441,15 +434,12 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
                 return array();
         }
 
-        // Generate new Pkey.
         $pkey = openssl_pkey_new($config);
 
-        // Get public key.
         $pkeyDetail = openssl_pkey_get_details($pkey);
         if ($pkeyDetail === false)
             return array();
 
-        // Get private key with password.
         if ($password == '')
             $password = null;
         if (openssl_pkey_export($pkey, $privateKey, $password) !== true)

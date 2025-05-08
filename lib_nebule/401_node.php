@@ -4,23 +4,21 @@ namespace Nebule\Library;
 
 /**
  * ------------------------------------------------------------------------------------------
- * La classe Object.
+ * Object class.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
  *          To open a node as object, create instance with :
  *          - nebule instance;
- *          - node ID.
- *
+ *          - valid node ID.
  *          To create a new object with specific content, create a instance with :
  *          - nebule instance;
  *          - node ID = '0'
- *          On the node instance, call setContent() with :
- *          - data of the object.
+ *          - call setContent() with data of the object.
  *          Don't forget to call write() if you want a persistant object on database /o.
+ *          On error, return instance with ID = '0'.
  * ------------------------------------------------------------------------------------------
  */
 class Node extends Functions implements nodeInterface
@@ -660,7 +658,7 @@ class Node extends Functions implements nodeInterface
         $newBlockLink->addLink($link);
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID());
+        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityInstance());
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
@@ -958,7 +956,7 @@ class Node extends Functions implements nodeInterface
      * Variable si l'objet est marqué comme une entité.
      * @var boolean
      */
-    protected $_isEntity = false;
+    protected bool $_isEntity = false;
 
     /**
      * Lit si l'objet est une entité.
@@ -986,7 +984,7 @@ class Node extends Functions implements nodeInterface
      * Variable si l'objet est marqué comme un groupe.
      * @var boolean
      */
-    protected $_isGroup = false;
+    protected bool $_isGroup = false;
 
     /**
      * Lit si l'objet est un groupe.
@@ -3547,7 +3545,7 @@ class Node extends Functions implements nodeInterface
         $newBlockLink->addLink($rl);
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
-        return $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityEID(), $date);
+        return $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityInstance(), $date);
     }
 
 
