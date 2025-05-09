@@ -1521,6 +1521,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setEnableLink(true);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
+                $instance->setEnableFlagUnlocked(true);
+                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['oent']); // FIXME
+                $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+                $instance->setIcon($instanceIcon2);
                 $instanceList->addItem($instance);
 
                 $instance = new DisplayObject($this->_applicationInstance);
@@ -1541,6 +1545,13 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setEnableLink(true);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
+                $instance->setEnableFlagUnlocked(false);
+                $instance->setName($this->_translateInstance->getTranslate('::privateKey'));
+                $instance->setType(References::REFERENCE_OBJECT_TEXT);
+                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['key']); // FIXME
+                $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+                $instance->setIcon($instanceIcon2);
+                $instanceList->addItem($instance);
             } else {
                 $instance = new DisplayInformation($this->_applicationInstance);
                 $instance->setMessage('::sylabe:module:entities:EntityNotCreated');

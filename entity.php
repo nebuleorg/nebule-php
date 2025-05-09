@@ -4,6 +4,7 @@ namespace Nebule\Application\Entity;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\applicationInterface;
 use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayList;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItemIconMessage;
