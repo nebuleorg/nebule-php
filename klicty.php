@@ -4484,7 +4484,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->getNidFromData('nebule/objet/type');
-                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4498,7 +4498,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->getNidFromData('nebule/objet/nom');
-                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4512,7 +4512,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->getNidFromData('nebule/objet/suffix');
-                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4527,7 +4527,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
-                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
                 }
             }
             // Crée l'objet du nombre de vues.
@@ -4541,7 +4541,7 @@ class Action extends Actions
                     $source = $id;
                     $target = $textID;
                     $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_COUNT);
-                    $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, false);
+                    $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
                 }
             }
 
@@ -4552,7 +4552,7 @@ class Action extends Actions
                 $source = $this->_applicationInstance->getCurrentObjectID();
                 $target = $id;
                 $meta = '0';
-                $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                $this->_createLink($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
             }
 
             unset($date, $signer, $source, $target, $meta, $link, $newLink, $textID);

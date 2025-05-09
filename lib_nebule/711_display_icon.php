@@ -25,7 +25,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     private string $_actionsID = '';
     private bool $_displayJS = true;
 
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setSocial();
         $this->setEnableJS();

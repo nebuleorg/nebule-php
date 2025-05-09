@@ -28,7 +28,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
     private $_actionsID = '';
     private $_displayJS = true;
 
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setSocial();
         $this->setEnableJS();

@@ -79,7 +79,7 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
 {
     private bool $_displayAlone = false;
 
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setType(self::TYPE_INFORMATION);
         $this->setSize();

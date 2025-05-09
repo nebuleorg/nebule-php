@@ -5,6 +5,10 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\Cache;
+use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayObject;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItem;
@@ -31,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250508';
+    const MODULE_VERSION = '020250509';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -585,7 +589,6 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_actionSynchronizeEntity();
         $this->_findSearchEntity();
         $this->_actionSearchEntity();
-        $this->_findCreateEntity();
         $this->_actionCreateEntity();
     }
 
@@ -701,27 +704,17 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
     private bool $_createEntityAction = false;
-    private string $_createEntityID = '0';
     private ?Node $_createEntityInstance = Null;
+    private ?Node $_createEntityKeyInstance = Null;
     private bool $_createEntityError = false;
     private string $_createEntityErrorMessage = '';
-
-    private function _findCreateEntity(): void
-    {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
-        $this->_createEntityID = $this->_applicationInstance->getActionInstance()->getCreateEntityID();
-        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityInstance();
-        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getCreateEntityError();
-        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
-    }
 
     private function _actionCreateEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
-        $this->_createEntityID = $this->_applicationInstance->getActionInstance()->getCreateEntityID();
         $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityInstance();
+        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityKeyInstance();
         $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getCreateEntityError();
         $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
     }
@@ -1500,7 +1493,65 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_createEntityAction) {
-            $list = array();
+            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instance = new DisplayInformation($this->_applicationInstance);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            if (!$this->_createEntityError) {
+                $instance->setMessage('::sylabe:module:entities:EntityCreated');
+                $instance->setType(DisplayItemIconMessage::TYPE_OK);
+                $instance->setIconText('::::OK');
+                $instanceList->addItem($instance);
+
+                $instance = new DisplayObject($this->_applicationInstance);
+                $instance->setNID($this->_createEntityInstance);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableRefs(false);
+                $instance->setEnableNID(false);
+                $instance->setEnableFlags(true);
+                $instance->setEnableFlagProtection(false);
+                $instance->setEnableFlagObfuscate(false);
+                $instance->setEnableFlagState(true);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(true);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableLink(true);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setStatus('');
+                $instanceList->addItem($instance);
+
+                $instance = new DisplayObject($this->_applicationInstance);
+                $instance->setNID($this->_createEntityKeyInstance);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableRefs(false);
+                $instance->setEnableNID(false);
+                $instance->setEnableFlags(true);
+                $instance->setEnableFlagProtection(false);
+                $instance->setEnableFlagObfuscate(false);
+                $instance->setEnableFlagState(true);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(true);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableLink(true);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setStatus('');
+            } else {
+                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::sylabe:module:entities:EntityNotCreated');
+                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setIconText('::::ERROR');
+            }
+            $instanceList->addItem($instance);
+
+
+            /*$list = array();
 
             if (!$this->_createEntityError && is_a($this->_createEntityInstance, 'Nebule\Library\Entity')) {
                 $list[0]['information'] = '::sylabe:module:entities:EntityCreated';
@@ -1561,7 +1612,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             }
 
             echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-            unset($list);
+            unset($list);*/
+
+            $instanceList->setOnePerLine();
+            $instanceList->display();
         }
 
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[5]);

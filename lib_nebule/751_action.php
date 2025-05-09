@@ -467,7 +467,7 @@ abstract class Actions extends Functions
             $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
     }
 
-    protected ?LinkRegister $_actionUploadLinkInstance = null;
+    protected ?BlocLink $_actionUploadLinkInstance = null;
     protected function _extractActionUploadLink(): void
     {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
@@ -480,18 +480,14 @@ abstract class Actions extends Functions
 
             $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK);
 
-            // Vérifie si restriction des liens au maître du code. Non par défaut.
             $permitNotCodeMaster = false;
             if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_unlocked
             )
                 $permitNotCodeMaster = true;
 
-            // Extraction du lien et stockage pour traitement.
-            if ($arg != ''
-                && strlen($arg) != 0
-            ) {
-                $instance = $this->flatLinkExtractAsInstance_DISABLED($arg);
+            if ($arg != '') {
+                $instance = $this->_cacheInstance->newBlockLink($arg);
                 if ($instance->getValid()
                     && $instance->getSigned()
                     && ($instance->getSignersEID() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
@@ -504,7 +500,7 @@ abstract class Actions extends Functions
         }
     }
 
-    protected ?LinkRegister $_actionObfuscateLinkInstance = null;
+    protected ?BlocLink $_actionObfuscateLinkInstance = null;
     protected function _extractActionObfuscateLink(): void
     {
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupObfuscateLink'))
@@ -514,8 +510,8 @@ abstract class Actions extends Functions
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK);
 
-        if (strlen($arg) != 0)
-            $this->_actionObfuscateLinkInstance = $this->flatLinkExtractAsInstance_DISABLED($arg);
+        if ($arg != '')
+            $this->_actionObfuscateLinkInstance = $this->_cacheInstance->newBlockLink($arg);
     }
     protected function _actionObfuscateLink(): void
     {
@@ -1364,12 +1360,9 @@ abstract class Actions extends Functions
 
         // Si mise à jour de l'objet en cours.
         if ($this->_actionUploadFileUpdate) {
-            // Crée le lien.
-            $action = 'u';
-            $source = $this->_applicationInstance->getCurrentObjectID();
-            $target = $id;
-            $meta = '0';
-            $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+            $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+            $instanceBL->addLink('u>' . $this->_applicationInstance->getCurrentObjectID() . '>' . $id);
+            $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
         }
     }
 
@@ -1479,8 +1472,10 @@ abstract class Actions extends Functions
     protected string $_actionCreateEntityPassword = '';
     protected string $_actionCreateEntityType = '';
     protected string $_actionCreateEntityID = '0';
+    protected string $_actionCreateEntityKeyID = '0';
     protected bool $_actionCreateEntityObfuscateLinks = false;
     protected ?Entity $_actionCreateEntityInstance = null;
+    protected ?Node $_actionCreateEntityKeyInstance = null;
     protected bool $_actionCreateEntityError = false;
     protected string $_actionCreateEntityErrorMessage = 'Initialisation de la création.';
     public function getCreateEntity(): bool
@@ -1491,9 +1486,17 @@ abstract class Actions extends Functions
     {
         return $this->_actionCreateEntityID;
     }
+    public function getCreateEntityKeyID(): string
+    {
+        return $this->_actionCreateEntityKeyID;
+    }
     public function getCreateEntityInstance(): ?Entity
     {
         return $this->_actionCreateEntityInstance;
+    }
+    public function getCreateEntityKeyInstance(): ?Node
+    {
+        return $this->_actionCreateEntityKeyInstance;
     }
     public function getCreateEntityError(): bool
     {
@@ -1556,88 +1559,34 @@ abstract class Actions extends Functions
 
         if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
             $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ea998a6d');
+            $instance->setCreatePassword($this->_actionCreateEntityPassword);
+            $instance->setCreateWrite();
             $this->_actionCreateEntityError = false;
 
             $this->_actionCreateEntityInstance = $instance;
             $this->_actionCreateEntityID = $instance->getID();
-            unset($instance);
 
-            $this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
+            //$this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
-            $this->_entitiesInstance->setTempGhostEntity($this->_actionCreateEntityInstance);
-            $this->_entitiesInstance->getGhostEntityInstance()->setPrivateKeyPassword($this->_actionCreateEntityPassword);
-
-            $date = date(DATE_ATOM);
-            $signer = $this->_actionCreateEntityID;
+            //$instance->setPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
                 $this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
                 $this->_actionCreateEntityFirstname = '';
             }
 
-            if ($this->_actionCreateEntityName != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntityName);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/nom');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-            if ($this->_actionCreateEntityFirstname != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntityFirstname);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/prenom');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-            if ($this->_actionCreateEntityNikename != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntityNikename);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/surnom');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-
-            if ($this->_actionCreateEntityPrefix != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntityPrefix);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/prefix');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-            if ($this->_actionCreateEntitySuffix != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntitySuffix);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/suffix');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-            if ($this->_actionCreateEntityType != '') {
-                $textID = $this->createTextAsObject($this->_actionCreateEntityType);
-                if ($textID != '') {
-                    $req = 'l';
-                    $nid1 = $this->_actionCreateEntityID;
-                    $nid2 = $textID;
-                    $nid3 = $this->getNidFromData('nebule/objet/entite/type');
-                    $this->_createLink_DISABLED($signer, $date, $req, $nid1, $nid2, $nid3, $this->_actionCreateEntityObfuscateLinks);
-                }
-            }
-
-            $this->_entitiesInstance->unsetTempGhostEntity();
+            if ($this->_actionCreateEntityName != '')
+                $instance->setName($this->_actionCreateEntityName);
+            if ($this->_actionCreateEntityFirstname != '')
+                $instance->setFirstname($this->_actionCreateEntityFirstname);
+            if ($this->_actionCreateEntityNikename != '')
+                $instance->setSurname($this->_actionCreateEntityNikename);
+            if ($this->_actionCreateEntityPrefix != '')
+                $instance->setPrefix($this->_actionCreateEntityPrefix);
+            if ($this->_actionCreateEntitySuffix != '')
+                $instance->setSuffix($this->_actionCreateEntitySuffix);
+            if ($this->_actionCreateEntityType != '')
+                $instance->setType($this->_actionCreateEntityType);
 
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
 
@@ -2284,7 +2233,6 @@ abstract class Actions extends Functions
             $this->_metrologyInstance->addLog('action add property with obfuscated links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         }
 
-        // Création des objets si besoin.
         if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
             $this->createTextAsObject($prop);
         }
@@ -2292,14 +2240,9 @@ abstract class Actions extends Functions
             $this->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
         }
 
-        // Création du lien.
-        $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityEID();
-        $action = 'l';
-        $source = $objectID;
-        $target = $valueID;
-        $meta = $propID;
-        $this->_createLink_DISABLED($signer, $date, $action, $source, $target, $meta, $this->_actionAddPropertyObfuscateLinks);
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $instanceBL->addLink('l>' . $objectID . '>' . $valueID . '>' . $propID);
+        $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
     }
 
     protected bool $_actionCreateCurrency = false;
@@ -2712,141 +2655,20 @@ abstract class Actions extends Functions
 
 
     /**
-     * Crée un lien.
+     * Create new link.
      *
-     * @param      $signer
-     * @param      $date
-     * @param      $action
-     * @param      $source
-     * @param      $target
-     * @param      $meta
-     * @param bool $obfuscate
+     * @param Entity $eid1
+     * @param string $req
+     * @param string $nid1
+     * @param string $nid2
+     * @param string $nid3
+     * @param bool   $obfuscate
      * @return boolean
      */
-    protected function _createLink_DISABLED($signer, $date, $action, $source, $target, $meta, bool $obfuscate = false): bool
+    protected function _createLink(Entity $eid1, string $req, string $nid1, string $nid2, string $nid3, bool $obfuscate = false): bool
     {
-        return false; // FIXME
-
-        /*$link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new LinkRegister($this->_nebuleInstance, $link);
-
-        // Signe le lien.
-        $newLink->sign($signer);
-
-        // Si besoin, obfuscation du lien.
-        if ($obfuscate
-            && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
-        ) {
-            $newLink->setObfuscate();
-        }
-
-        // Ecrit le lien.
-        return $newLink->write();*/
-    }
-
-
-
-
-    /**
-     * Extrait et analyse un lien.
-     * Accepte une chaine de caractère représentant un lien.
-     * En fonction du nombre de champs, c'est interprété :
-     * 2 champs : 0_0_0_action_source_0_0
-     * 3 champs : 0_0_0_action_source_target_0
-     * 4 champs : 0_0_0_action_source_target_meta
-     * 5 champs : 0_0_date_action_source_target_meta
-     * 6 champs : 0_signer_date_action_source_target_meta
-     * 7 champs : signe_signer_date_action_source_target_meta
-     * Sinon    : 0_0_0_0_0_0_0
-     * Retourne un tableau des constituants du lien :
-     * [signature, signataire, date, action, source, destination, méta]
-     * Les champs non renseignés sont à '0'.
-     *
-     * @param string $link : lien à extraire.
-     * @return array:string : un tableau des champs (signature, signataire, date, action, source, destination, méta).
-     */
-    public function flatLinkExtractAsArray_DISABLED(string $link): array
-    {
-        return array('0', '0', '0', '0', '0', '0', '0');
-        /*    // Variables.
-            $list = array();
-            $date = date(DATE_ATOM);
-            $ent = $this->_currentEntity;
-    
-            // Extraction du lien.
-            $arg1 = strtok($link, '_');
-            $arg2 = strtok('_');
-            $arg3 = strtok('_');
-            $arg4 = strtok('_');
-            $arg5 = strtok('_');
-            $arg6 = strtok('_');
-            $arg7 = strtok('_');
-    
-            // Nettoyage du lien.
-            if ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 != '') {
-                // Forme : signe_signer_date_action_source_target_meta
-                $list = array($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
-            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 != '' && $arg7 == '') {
-                // Forme : 0_signer_date_action_source_target_meta
-                $list = array('0', $arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
-            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 != '' && $arg6 == '' && $arg7 == '') {
-                // Forme : 0_0_date_action_source_target_meta
-                $list = array('0', $ent, $arg1, $arg2, $arg3, $arg4, $arg5);
-            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 != '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-                // Forme : 0_0_0_action_source_target_meta
-                $list = array('0', $ent, $date, $arg1, $arg2, $arg3, $arg4);
-            } elseif ($arg1 != '' && $arg2 != '' && $arg3 != '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-                // Forme : 0_0_0_action_source_target_0
-                $list = array('0', $ent, $date, $arg1, $arg2, $arg3, '0');
-            } elseif ($arg1 != '' && $arg2 != '' && $arg3 == '' && $arg4 == '' && $arg5 == '' && $arg6 == '' && $arg7 == '') {
-                // Forme : 0_0_0_action_source_0_0 : le minimum !
-                $list = array('0', $ent, $date, $arg1, $arg2, '0', '0');
-            } else {
-                $list = array('0', '0', '0', '0', '0', '0', '0');
-            }
-    
-            unset($date, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
-            return $list;*/
-    }
-
-    public function flatLinkExtractAsArray(string $link): array {
-        $list = array();
-
-        $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
-        $blockLinkInstance->addLink($link);
-
-        return $list;
-    }
-
-    /**
-     * Extrait et analyse un lien.
-     *
-     * @param string $link : lien à extraire.
-     * @return ?LinkRegister : une instance de lien.
-     *                     Accepte une chaine de caractère représentant un lien.
-     * En fonction du nombre de champs, c'est interprété :
-     * 2 champs : 0_0_0_action_source_0_0
-     * 3 champs : 0_0_0_action_source_target_0
-     * 4 champs : 0_0_0_action_source_target_meta
-     * 5 champs : 0_0_date_action_source_target_meta
-     * 6 champs : 0_signer_date_action_source_target_meta
-     * 7 champs : signe_signer_date_action_source_target_meta
-     * Sinon    : 0_0_0_0_0_0_0
-     * Retourne une instance du lien.
-     */
-    public function flatLinkExtractAsInstance_DISABLED(string $link): ?LinkRegister
-    {
-        return null; // FIXME
-        /*// Vérifier compatibilité avec liens incomplets...
-
-        // Extrait le lien.
-        $linkArray = $this->flatLinkExtractAsArray_DISABLED($link);
-
-        // Création du lien.
-        $flatLink = $linkArray[0] . '_' . $linkArray[1] . '_' . $linkArray[2] . '_' . $linkArray[3] . '_' . $linkArray[4] . '_' . $linkArray[5] . '_' . $linkArray[6];
-        $linkInstance = $this->newLink($flatLink);
-
-        unset($linkArray, $flatLink);
-        return $linkInstance;*/
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $instanceBL->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
+        return $instanceBL->signWrite($eid1, '');
     }
 }

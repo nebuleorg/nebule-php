@@ -430,7 +430,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private string $_typeHookName = '';
     private array $_selfHookList = array();
 
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setSocial('');
         $this->setSize();
@@ -1089,7 +1089,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $icon = $this->_displayInstance->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.
-            if ($this->_unlocked
+            if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             )
@@ -1167,7 +1167,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_displayActions = $enable;
     }
 
-    public function setActionsID(string $id = '')
+    public function setActionsID(string $id = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($id == '')

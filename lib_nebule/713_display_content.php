@@ -20,7 +20,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
 {
     private ?Node $_nid = null;
     
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setSize();
         $this->setRatio();

@@ -729,9 +729,10 @@ class BlocLink extends Functions implements blocLinkInterface
      * Add a link (RL) on new bloc of links (BL).
      *
      * @param string $rl
+     * @param bool   $obfuscate
      * @return bool
      */
-    public function addLink(string $rl): bool
+    public function addLink(string $rl, bool $obfuscate = false): bool
     {
         if (!$this->_newLink || $rl == '')
             return false;
@@ -744,6 +745,8 @@ class BlocLink extends Functions implements blocLinkInterface
         $instance = new LinkRegister($this->_nebuleInstance, $rl, $this);
         if ($instance->getValidStructure())
         {
+            if ($obfuscate)
+                $instance->setObfuscate();
             $this->_newBL .= '/' . $rl;
             $this->_newLinkCount++;
         }

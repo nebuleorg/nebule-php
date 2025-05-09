@@ -54,7 +54,7 @@ namespace Nebule\Library;
  */
 class DisplayNotify extends DisplayItemIconMessage implements DisplayInterface
 {
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setType(self::TYPE_INFORMATION);
         $this->setIconText('[I]');

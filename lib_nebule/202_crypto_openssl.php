@@ -365,8 +365,10 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
 
         $signBin = pack('H*', $sign);
         $decodeOK = openssl_public_decrypt($signBin, $decrypted, $ressource, OPENSSL_PKCS1_PADDING);
+        if (!$decodeOK)
+            return false;
         $decrypted = substr(bin2hex($decrypted), -strlen($data), strlen($data));
-        if ($decodeOK && $decrypted == $data)
+        if ($decrypted == $data)
             return true;
         return false;
     }

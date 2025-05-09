@@ -298,7 +298,7 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $algo = $this->getProperty(References::REFERENCE_NEBULE_OBJET_HASH, 'all');
-        $this->_metrologyInstance->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Object ' . $this->_id . ' hash = ' . $algo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '09c0ab8c');
 
         if ($algo != '')
             return $algo;
@@ -1489,9 +1489,9 @@ class Node extends Functions implements nodeInterface
             && $this->_entitiesInstance->getCurrentEntityIsUnlocked() === $this->_nebuleInstance->getCurrentEntityUnlocked()
         ) {
             if ($this->_cacheMarkProtected === true) {
-                $this->_metrology->addLog('Object protected - cache - protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $this->_metrology->addLog('Object protected - cache - protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '83445a74');
             } else {
-                $this->_metrology->addLog('Object protected - cache - not protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $this->_metrology->addLog('Object protected - cache - not protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f4fa20bd');
             }
             return $this->_cacheMarkProtected;
         }
@@ -1540,7 +1540,7 @@ class Node extends Functions implements nodeInterface
             $this->_idUnprotected = $this->_id;
             $this->_idProtectedKey = '0';
             $this->_idUnprotectedKey = '0';
-            $this->_metrology->addLog('Object protected - not protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Object protected - not protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1913eb68');
             return false;
         }
 
@@ -1549,7 +1549,7 @@ class Node extends Functions implements nodeInterface
         $result = false;
 
         if (sizeof($listS) == 0) {
-            $this->_metrology->addLog('Object protected - id protected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Object protected - id protected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'be8d3098');
             $this->_idProtected = $this->_id;
 
             // Recherche la clé utilisée pour l'entité en cours.
@@ -1572,7 +1572,7 @@ class Node extends Functions implements nodeInterface
                         ) {
                             $result = true;
                             $this->_idUnprotected = $linkSym->getParsed()['bl/rl/nid1'];
-                            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bf78846c');
                             $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
                             if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
@@ -1585,7 +1585,7 @@ class Node extends Functions implements nodeInterface
             }
             unset($listT, $linkSym);
         } else {
-            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5c979fa2');
             $this->_idUnprotected = $this->_id;
 
             // Recherche la clé utilisée pour l'entité en cours.
@@ -1611,7 +1611,7 @@ class Node extends Functions implements nodeInterface
                         ) {
                             $result = true;
                             $this->_idProtected = $targetS;
-                            $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                            $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cd9c4b1b');
                             $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
                             if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
                                 $this->_idProtectedKey = $targetA;
@@ -1677,7 +1677,7 @@ class Node extends Functions implements nodeInterface
         if ($this->_getMarkProtected())
             return true;
 
-        $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrology->addLog('Ask protect object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4f637f32');
 
         // Vérifie que l'écriture d'objets et de liens est permise.
         if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
@@ -1690,7 +1690,7 @@ class Node extends Functions implements nodeInterface
             if (strlen($key) != $keySize)
                 return false;
             $keyID = $this->_nebuleInstance->getNIDfromData($key);
-            $this->_metrology->addLog('Protect object, key : ' . $keyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Protect object, key : ' . $keyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '585b4766');
 
             // Si des donnnées sont disponibles, on les lit.
             if ($this->_haveData)
@@ -1740,7 +1740,7 @@ class Node extends Functions implements nodeInterface
             $codeInstance = new Node($this->_nebuleInstance, '0');
             $codeInstance->setContent($code, false);
             $codeID = $codeInstance->getID();
-            $this->_metrology->addLog('Protect object, code : ' . $codeID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Protect object, code : ' . $codeID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '13ac7fd6');
 
             // Vérification de bonne écriture.
             if ($codeID == '0')
@@ -1750,7 +1750,7 @@ class Node extends Functions implements nodeInterface
             $codeKeyInstance = new Node($this->_nebuleInstance, '0');
             $codeKeyInstance->setContent($codeKey, false);
             $codeKeyID = $codeKeyInstance->getID();
-            $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b17970cf');
 
             // Vérification de bonne écriture.
             if ($codeKeyID == '0')
@@ -1788,7 +1788,7 @@ class Node extends Functions implements nodeInterface
             $this->writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $signer, $obfuscated);
 
             // Supprime l'objet qui a été marqué protégé.
-            $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrology->addLog('Delete unprotected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0db13a8a');
             $deleteObject = true;
 
             // Création lien.
@@ -1837,7 +1837,7 @@ class Node extends Functions implements nodeInterface
 
                         // Vérification de bon chiffrement.
                         if ($codeKey === false) {
-                            $this->_metrology->addLog('Error (1) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+                            $this->_metrology->addLog('Error (1) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '89f1011d');
                             continue;
                         }
 
@@ -1845,11 +1845,11 @@ class Node extends Functions implements nodeInterface
                         $codeKeyInstance = new Node($this->_nebuleInstance, '0');
                         $codeKeyInstance->setContent($codeKey, false);
                         $codeKeyID = $codeKeyInstance->getID();
-                        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9aa7e372');
 
                         // Vérification de bonne écriture.
                         if ($codeKeyID == '0') {
-                            $this->_metrology->addLog('Error (2) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+                            $this->_metrology->addLog('Error (2) share protection to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ee87339f');
                             continue;
                         }
 
@@ -1865,7 +1865,7 @@ class Node extends Functions implements nodeInterface
                         // Création du lien de chiffrement asymétrique.
                         $this->writeLink('k>' . $keyID . '>' . $codekeyID . '>' . $entity->getID(), $obfuscated);
 
-                        $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                        $this->_metrology->addLog('Set protection shared to recovery ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '38f8aab6');
                     }
                 }
             }
@@ -1893,7 +1893,7 @@ class Node extends Functions implements nodeInterface
         )
             return false;
 
-        $this->_metrology->addLog('Set unprotected ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrology->addLog('Set unprotected ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '229b08c9');
 
         // TODO
 
@@ -1944,7 +1944,7 @@ class Node extends Functions implements nodeInterface
         )
             return false;
 
-        $this->_metrology->addLog('Set protected to ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrology->addLog('Set protected to ' . $entity->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'eb194721');
 
         // Lit la clé chiffrée. @todo à remplacer par getContent ...
         $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
@@ -1952,8 +1952,8 @@ class Node extends Functions implements nodeInterface
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
-            $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-            $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ac1493b0');
+            $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0f7aa932');
             return false;
         }
 
@@ -1962,8 +1962,8 @@ class Node extends Functions implements nodeInterface
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
-            $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-            $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'eda92267');
+            $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '11b0f733');
             return false;
         }
 
@@ -1978,7 +1978,7 @@ class Node extends Functions implements nodeInterface
         $codeKeyInstance = new Node($this->_nebuleInstance, '0');
         $codeKeyInstance->setContent($codeKey, false);
         $codeKeyID = $codeKeyInstance->getID();
-        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrology->addLog('Protect object, code key : ' . $codeKeyID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '80048058');
 
         // Vérification de bonne écriture.
         if ($codeKeyID == '0')
@@ -2057,7 +2057,7 @@ class Node extends Functions implements nodeInterface
         )
             return false;
 
-        $this->_metrology->addLog('Cancel share protection to ' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrology->addLog('Cancel share protection to ' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2bb8215d');
 
         // Recherche l'objet de clé de chiffrement pour l'entité.
         $links = array();
@@ -2454,7 +2454,7 @@ class Node extends Functions implements nodeInterface
         // Si c'est l'objet 0, le supprime.
         if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
-            $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2644d3a7');
             $nid = '0';
             $this->_ioInstance->unsetObject($nid);
             return false;
@@ -2472,12 +2472,12 @@ class Node extends Functions implements nodeInterface
         $this->_metrologyInstance->addObjectRead(); // Metrologie.
         $this->_data = $this->_ioInstance->getObject($this->_id);
         if ($this->_data === false) {
-            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4f299627');
             $this->_data = null;
             return false;
         }
         $limit = $this->_configurationInstance->getOptionUntyped('DEFAULT_IO_READ_MAX_DATA');
-        $this->_metrologyInstance->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Object size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $limit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1239f93e');
 
         // Vérifie la taille.
         if (strlen($this->_data) > $limit) {
@@ -2496,14 +2496,14 @@ class Node extends Functions implements nodeInterface
 
         // Si la vérification est désactivée, quitte.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fddb0694');
             $this->_haveData = true;
             return true;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '928d8203');
         $this->_ioInstance->unsetObject($this->_id);
         return false;
     }
@@ -3498,21 +3498,21 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite','permitWriteObject'))) {
-            $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f5869664');
             return false;
         } // @TODO
 
         // Si protégé.
         if ($this->_cacheMarkProtected) {
             $this->_metrologyInstance->addAction('addobj', $this->_id, false);
-            $this->_metrologyInstance->addLog('Write objet error, protected.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Write objet error, protected.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3b3255d5');
             return false;
         }
 
         // Si pas de données.
         if (!$this->_haveData) {
             $this->_metrologyInstance->addAction('addobj', '0', false);
-            $this->_metrologyInstance->addLog('Write objet error, no data.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Write objet error, no data.', Metrology::LOG_LEVEL_ERROR, __METHOD__, '41f84b7f');
             return false;
         }
 
@@ -3526,7 +3526,7 @@ class Node extends Functions implements nodeInterface
         }
 
         $this->_metrologyInstance->addAction('addobj', $this->_id, $ok);
-        $this->_metrologyInstance->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cddb5083');
 
         return $ok;
     }
@@ -3535,7 +3535,7 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink'))) {
-            $this->_metrologyInstance->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '48b7be4e');
             return false;
         }
 

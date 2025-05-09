@@ -16,7 +16,7 @@ interface DisplayInterface
     public static function displayCSS(): void;
 }
 
-abstract class DisplayItem implements DisplayInterface
+abstract class DisplayItem extends Functions implements DisplayInterface
 {
     public const SIZE_SMALL = 'small';
     public const SIZE_LARGE = 'large';
@@ -27,37 +27,18 @@ abstract class DisplayItem implements DisplayInterface
     public const RATIO_SHORT = 'short';
     public const RATIO_LONG = 'long';
 
-    protected ?nebule $_nebuleInstance = null;
-    protected ?Configuration $_configurationInstance = null;
-    protected ?Rescue $_rescueInstance = null;
-    protected ?Metrology $_metrologyInstance = null;
-    protected ?Cache $_cacheInstance = null;
-    protected ?Entities $_entitiesInstance = null;
-    protected ?Applications $_applicationInstance = null;
-    protected ?Translates $_translateInstance = null;
-    protected ?Displays $_displayInstance = null;
-    protected bool $_unlocked = false;
     protected string $_social = '';
     protected string $_sizeCSS = '';
     protected string $_ratioCSS = '';
 
     public function __construct(Applications $applicationInstance) // Should not be overridden by children classes.
     {
-        $this->_applicationInstance = $applicationInstance;
-        $this->_nebuleInstance = $applicationInstance->getNebuleInstance();
-        $this->_configurationInstance = $applicationInstance->getNebuleInstance()->getConfigurationInstance();
-        $this->_rescueInstance = $this->_nebuleInstance->getRescueInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
-        $this->_entitiesInstance = $this->_nebuleInstance->getEntitiesInstance();
-        $this->_displayInstance = $applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
-        $this->_metrologyInstance->addLog('init instance ' . get_class($this),
-            Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f631657');
-        $this->_init();
+        parent::__construct($applicationInstance->getNebuleInstance());
+        $this->setEnvironmentLibrary($applicationInstance->getNebuleInstance());
+        $this->setEnvironmentApplication($applicationInstance);
+        $this->initialisation();
     }
-    protected function _init(): void { $this->setSocial('authority'); } // Should be overridden by children classes.
+    protected function _initialisation(): void { $this->setSocial('authority'); } // Should be overridden by children classes.
 
     public static function displayCSS(): void {} // Must be overridden by children classes.
 
@@ -87,39 +68,23 @@ abstract class DisplayItem implements DisplayInterface
     public function setSize(string $size = ''): void
     {
         $this->_metrologyInstance->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($size)) {
-            case DisplayItem::SIZE_TINY:
-                $this->_sizeCSS = 'Tiny';
-                break;
-            case DisplayItem::SIZE_SMALL:
-                $this->_sizeCSS = 'Small';
-                break;
-            case DisplayItem::SIZE_LARGE:
-                $this->_sizeCSS = 'Large';
-                break;
-            case DisplayItem::SIZE_FULL:
-                $this->_sizeCSS = 'Full';
-                break;
-            default:
-                $this->_sizeCSS = 'Medium';
-                break;
-        }
+        $this->_sizeCSS = match (strtolower($size)) {
+            DisplayItem::SIZE_TINY => 'Tiny',
+            DisplayItem::SIZE_SMALL => 'Small',
+            DisplayItem::SIZE_LARGE => 'Large',
+            DisplayItem::SIZE_FULL => 'Full',
+            default => 'Medium',
+        };
     }
 
     public function setRatio(string $ratio = ''): void
     {
         $this->_metrologyInstance->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($ratio)) {
-            case DisplayItem::RATIO_SQUARE:
-                $this->_ratioCSS = 'Square';
-                break;
-            case DisplayItem::RATIO_LONG:
-                $this->_ratioCSS = 'Long';
-                break;
-            default:
-                $this->_ratioCSS = 'Short';
-                break;
-        }
+        $this->_ratioCSS = match (strtolower($ratio)) {
+            DisplayItem::RATIO_SQUARE => 'Square',
+            DisplayItem::RATIO_LONG => 'Long',
+            default => 'Short',
+        };
     }
 }
 
@@ -350,38 +315,22 @@ abstract class DisplayItemIconMessageSizeable extends DisplayItemIconMessage
     public function setSize(string $size = ''): void
     {
         $this->_metrologyInstance->addLog('set size ' . $size, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($size)) {
-            case self::SIZE_TINY:
-                $this->_sizeCSS = 'Tiny';
-                break;
-            case self::SIZE_SMALL:
-                $this->_sizeCSS = 'Small';
-                break;
-            case self::SIZE_LARGE:
-                $this->_sizeCSS = 'Large';
-                break;
-            case self::SIZE_FULL:
-                $this->_sizeCSS = 'Full';
-                break;
-            default:
-                $this->_sizeCSS = 'Medium';
-                break;
-        }
+        $this->_sizeCSS = match (strtolower($size)) {
+            self::SIZE_TINY => 'Tiny',
+            self::SIZE_SMALL => 'Small',
+            self::SIZE_LARGE => 'Large',
+            self::SIZE_FULL => 'Full',
+            default => 'Medium',
+        };
     }
 
     public function setRatio(string $ratio = ''): void
     {
         $this->_metrologyInstance->addLog('Set ratio ' . $ratio, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch (strtolower($ratio)) {
-            case self::RATIO_SQUARE:
-                $this->_ratioCSS = 'Square';
-                break;
-            case self::RATIO_LONG:
-                $this->_ratioCSS = 'Long';
-                break;
-            default:
-                $this->_ratioCSS = 'Short';
-                break;
-        }
+        $this->_ratioCSS = match (strtolower($ratio)) {
+            self::RATIO_SQUARE => 'Square',
+            self::RATIO_LONG => 'Long',
+            default => 'Short',
+        };
     }
 }

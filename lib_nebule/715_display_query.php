@@ -32,7 +32,7 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
     private string $_hiddenName = 'id';
     private string $_hiddenValue = 'none';
 
-    protected function _init(): void
+    protected function _initialisation(): void
     {
         $this->setType(self::QUERY_STRING);
         $this->setSize();

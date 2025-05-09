@@ -97,7 +97,7 @@ class Entity extends Node implements nodeInterface
     private function _createNewEntity(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
             && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
@@ -117,22 +117,6 @@ class Entity extends Node implements nodeInterface
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
-                $this->write();
-                $instance = new Entity($this->_nebuleInstance, $this->_id);
-
-                $nid1 = $this->_id;
-                $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-                $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
-                $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-                $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-                $instanceBL->signWrite($instance, '', $this->_privateKey, $this->_privateKeyPassword);
-
-                $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
-                $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-                $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-                $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-                $instanceBL->signWrite($instance, '', $this->_privateKey, $this->_privateKeyPassword);
-
                 // TODO effacement sécurisé...
                 unset($newPkey);
             } else {
@@ -144,6 +128,41 @@ class Entity extends Node implements nodeInterface
             $this->_id = '0';
         } else
             $this->_id = '0';
+    }
+
+    public function setCreatePassword(string $password = ''): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_isNew || $this->_id == '0')
+            return;
+
+    }
+
+    public function setCreateWrite(): void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_isNew || $this->_id == '0')
+            return;
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')) {
+            $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ca6f5f59');
+            return;
+        }
+
+        $this->_ioInstance->setObject($this->_id, $this->_publicKey);
+        $this->_ioInstance->setObject($this->_id, $this->_privateKey);
+
+        $nid1 = $this->_id;
+        $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
+        $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
+        $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
+
+        $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
+        $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
+        $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
     }
 
     // Ecrit le lien pour les objets concernés.
@@ -415,38 +434,32 @@ class Entity extends Node implements nodeInterface
         // Ecrit l'objet de la nouvelle clé privée.
         $this->_ioInstance->setObject($this->_privateKeyOID, $this->_privateKey);
 
-        // Définition de la date.
-        $date = date(DATE_ATOM);
-
         // Si ce n'est pas une création d'entité, fait les liens de mises à jour de clés privées.
         if (!$this->_newPrivateKey) {
             // Création lien 1.
-            $link = '_' . $this->_id . '_' . $date . '_x_' . $oldPrivateKeyID . '_' . $this->_id . '_0';
+            $link = 'x>' . $oldPrivateKeyID . '>' . $this->_id;
             $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_id, '0');
 
             // Création lien 2.
-            $link = '_' . $this->_id . '_' . $date . '_u_' . $oldPrivateKeyID . '_' . $this->_privateKeyOID . '_0';
+            $link = 'u>' . $oldPrivateKeyID . '>' . $this->_privateKeyOID;
             $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_privateKeyOID, '0');
         }
 
         // Création lien 3.
-        $target = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-        $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyOID . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, $meta);
+        $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
+        $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
+        $link = 'l>' . $this->_privateKeyOID . '>' . $nid2 . '>' . $nid3;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $nid2, $nid3);
 
         // Création lien 4.
-        $target = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
-        $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-        $link = '_' . $this->_id . '_' . $date . '_l_' . $this->_privateKeyOID . '_' . $target . '_' . $meta;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, $meta);
+        $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
+        $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
+        $link = 'l>' . $this->_privateKeyOID . '>' . $nid2 . '>' . $nid3;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $nid2, $nid3);
 
         // Création lien 5.
-        $target = $this->_id;
-        $link = '_' . $this->_id . '_' . $date . '_f_' . $this->_privateKeyOID . '_' . $target . '_0';
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $target, '0');
-
-        unset($date, $source, $target, $meta, $link);
+        $link = 'f>' . $this->_privateKeyOID . '>' . $this->_id;
+        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $this->_id, '0');
 
         $this->_newPrivateKey = false;
         return true;
@@ -712,6 +725,11 @@ class Entity extends Node implements nodeInterface
     public function write(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite','permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))) {
+            $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ca6f5f59');
+            return false;
+        }
+
         $ok = $this->_ioInstance->setObject($this->_id, $this->_publicKey);
         $this->_metrologyInstance->addAction('addent', $this->_id, $ok);
 
