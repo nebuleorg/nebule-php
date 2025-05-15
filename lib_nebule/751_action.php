@@ -1356,7 +1356,7 @@ abstract class Actions extends Functions
         $instance->setName($this->_actionUploadFileName);
 
         // Crée l'objet de l'extension.
-        $instance->setSuffix($this->_actionUploadFileExtension);
+        $instance->setSuffixName($this->_actionUploadFileExtension);
 
         // Si mise à jour de l'objet en cours.
         if ($this->_actionUploadFileUpdate) {
@@ -1477,7 +1477,7 @@ abstract class Actions extends Functions
     protected ?Entity $_actionCreateEntityInstance = null;
     protected ?Node $_actionCreateEntityKeyInstance = null;
     protected bool $_actionCreateEntityError = false;
-    protected string $_actionCreateEntityErrorMessage = 'Initialisation de la création.';
+    protected string $_actionCreateEntityErrorMessage = 'initialisation creation';
     public function getCreateEntity(): bool
     {
         return $this->_actionCreateEntity;
@@ -1540,7 +1540,7 @@ abstract class Actions extends Functions
             else {
                 $this->_metrologyInstance->addLog('passwords not match', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9d57a71d');
                 $this->_actionCreateEntityError = true;
-                $this->_actionCreateEntityErrorMessage = 'Les mots de passes ne sont pas identiques.';
+                $this->_actionCreateEntityErrorMessage = 'passwords not match';
             }
 
             if ($argType == 'human' || $argType == 'robot')
@@ -1564,7 +1564,24 @@ abstract class Actions extends Functions
             $this->_actionCreateEntityError = false;
 
             $this->_actionCreateEntityInstance = $instance;
+            if ($this->_actionCreateEntityInstance === null) {
+                $this->_actionCreateEntityError = true;
+                $this->_actionCreateEntityErrorMessage = 'invalid entity created';
+                $this->_metrologyInstance->addLog('invalid entity created', Metrology::LOG_LEVEL_ERROR, __METHOD__, '232b5823');
+            }
             $this->_actionCreateEntityID = $instance->getID();
+            if ($this->_actionCreateEntityID == '0') {
+                $this->_actionCreateEntityError = true;
+                $this->_actionCreateEntityErrorMessage = 'null entity created';
+                $this->_metrologyInstance->addLog('null entity created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd8d70c0f');
+            }
+            $this->_actionCreateEntityKeyID = $instance->getPrivateKeyOID();
+            if ($this->_actionCreateEntityKeyID == '0') {
+                $this->_actionCreateEntityError = true;
+                $this->_actionCreateEntityErrorMessage = 'null entity key created';
+                $this->_metrologyInstance->addLog('null entity key created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f0a3c2f6');
+            }
+            $this->_actionCreateEntityKeyInstance = new Node($this->_nebuleInstance, $this->_actionCreateEntityKeyID);
 
             //$this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
@@ -1576,26 +1593,26 @@ abstract class Actions extends Functions
             }
 
             if ($this->_actionCreateEntityName != '')
-                $instance->setName($this->_actionCreateEntityName);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $this->_actionCreateEntityName);
             if ($this->_actionCreateEntityFirstname != '')
-                $instance->setFirstname($this->_actionCreateEntityFirstname);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $this->_actionCreateEntityName);
             if ($this->_actionCreateEntityNikename != '')
-                $instance->setSurname($this->_actionCreateEntityNikename);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityName);
             if ($this->_actionCreateEntityPrefix != '')
-                $instance->setPrefix($this->_actionCreateEntityPrefix);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $this->_actionCreateEntityName);
             if ($this->_actionCreateEntitySuffix != '')
-                $instance->setSuffix($this->_actionCreateEntitySuffix);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $this->_actionCreateEntityName);
             if ($this->_actionCreateEntityType != '')
-                $instance->setType($this->_actionCreateEntityType);
+                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $this->_actionCreateEntityName);
 
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
 
             $this->_actionCreateEntityInstance = $this->_cacheInstance->newNode($this->_actionCreateEntityID, \Nebule\Library\Cache::TYPE_ENTITY);
         } else {
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
-            $this->_metrologyInstance->addLog('action cannot generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'eec8ce0b');
+            $this->_metrologyInstance->addLog('fail to generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'eec8ce0b');
             $this->_actionCreateEntityError = true;
-            $this->_actionCreateEntityErrorMessage = 'Echec de la génération.';
+            $this->_actionCreateEntityErrorMessage = 'fail to generate';
         }
     }
 
@@ -1606,7 +1623,7 @@ abstract class Actions extends Functions
     protected bool $_actionCreateGroupObfuscateLinks = false;
     protected ?Group $_actionCreateGroupInstance = null;
     protected bool $_actionCreateGroupError = false;
-    protected string $_actionCreateGroupErrorMessage = 'Initialisation de la création.';
+    protected string $_actionCreateGroupErrorMessage = 'initialisation creation';
     public function getCreateGroup(): bool
     {
         return $this->_actionCreateGroup;

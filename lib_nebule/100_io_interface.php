@@ -67,7 +67,7 @@ interface ioInterface
      *
      * @return string
      */
-    public function getLocalisation(): string;
+    public function getLocation(): string;
 
     /**
      * Initialise la clé de transcodage des fichiers de liens dissimulés.

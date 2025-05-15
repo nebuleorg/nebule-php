@@ -96,10 +96,13 @@ class Entity extends Node implements nodeInterface
 
     private function _createNewEntity(): void
     {
+        global $needFirstSynchronization;
+
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
             && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
+                || $needFirstSynchronization
             )
         ) {
             $this->_metrologyInstance->addLog('create entity algo=' . $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7344db13');
@@ -123,11 +126,10 @@ class Entity extends Node implements nodeInterface
                 $this->_metrologyInstance->addLog('Create entity error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '98b648b1');
                 $this->_id = '0';
             }
-        } elseif ($this->_id != '0') {
+        } else {
             $this->_metrologyInstance->addLog('Create entity error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '6fcb7d18');
             $this->_id = '0';
-        } else
-            $this->_id = '0';
+        }
     }
 
     public function setCreatePassword(string $password = ''): void
@@ -163,6 +165,19 @@ class Entity extends Node implements nodeInterface
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
         $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
         $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
+    }
+
+    public function setSelfProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false):void
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_isNew || $this->_id == '0')
+            return;
+        $signer = array(
+            'eid' => $this,
+            'key' => $this->_privateKey,
+            'pwd' => $this->_privateKeyPassword,
+        );
+        $this->setProperty($type, $property, $protect, $obfuscated, $signer);
     }
 
     // Ecrit le lien pour les objets concernés.
@@ -565,7 +580,7 @@ class Entity extends Node implements nodeInterface
     }
 
     // Retourne les localisations de l'entité.
-    public function getLocalisations(string $socialClass = ''): array
+    public function getLocations(string $socialClass = ''): array
     {
         if ($this->_id == '0')
             return array();
@@ -579,7 +594,7 @@ class Entity extends Node implements nodeInterface
         return $this->getPropertiesID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisation(string $socialClass = ''): string
+    public function getLocation(string $socialClass = ''): string
     {
         if ($this->_id == '0')
             return '';

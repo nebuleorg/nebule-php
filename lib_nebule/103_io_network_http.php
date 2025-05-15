@@ -69,9 +69,9 @@ class ioNetworkHTTP extends io implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getLocalisation()
+     * @see ioInterface::getLocation()
      */
-    public function getLocalisation(): string
+    public function getLocation(): string
     {
         //return self::LOCALISATION;
         return $this->_defaultLocalisation;

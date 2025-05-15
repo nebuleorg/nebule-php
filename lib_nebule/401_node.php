@@ -632,15 +632,17 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Ecrit la propriété de l'objet correspondant au type.
+     * Write a property to an object depending to the type of property.
      * TODO protection et vidage cache
-     * @param string $type
-     * @param string $property
+     *
+     * @param string  $type
+     * @param string  $property
      * @param boolean $protect
      * @param boolean $obfuscated
+     * @param array   $signer
      * @return boolean
      */
-    public function setProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false): bool
+    public function setProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($type == ''
@@ -648,6 +650,18 @@ class Node extends Functions implements nodeInterface
             || $protect // TODO
         )
             return false;
+
+        $privateKey = '';
+        $password = '';
+        if (sizeof($signer) != 0) {
+            $signerInstance = $signer['eid'];
+            if (isset($signer['key']))
+                $privateKey = $signer['key'];
+            if (isset($signer['pwd']))
+                $password = $signer['pwd'];
+        } else {
+            $signerInstance = $this->_entitiesInstance->getGhostEntityInstance();
+        }
 
         $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
         $this->_ioInstance->setObject($propertyOID, $property);
@@ -658,7 +672,7 @@ class Node extends Functions implements nodeInterface
         $newBlockLink->addLink($link);
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
-        $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityInstance());
+        $newBlockLink->signwrite($signerInstance, '', $privateKey, $password);
 
         // Supprime le résultat dans le cache.
         /*		if ( isset($this->_cacheProperty[$type]) )
@@ -682,86 +696,41 @@ class Node extends Functions implements nodeInterface
         return true;
     }
 
-    /**
-     * Lit l'ID du type mime.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getTypeID(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getPropertyID(References::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
 
-    /**
-     * Lit le type mime.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getType(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $socialClass);
     }
-
-    /**
-     * Écriture du type mime.
-     *
-     * @param string $type
-     * @return boolean
-     */
-    public function setType(string $type): bool
+    public function setType(string $type, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $type);
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $type, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lit la taille.
-     * FIXME get from file on last solution
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getSize(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return filter_var($this->getProperty(References::REFERENCE_NEBULE_OBJET_TAILLE, $socialClass), FILTER_SANITIZE_NUMBER_INT);
     }
 
-    /**
-     * Lit l'empreinte homomorphe.
-     *
-     * @param string $socialClass
-     * @return string
-     */
-    public function getHomomorphe(string $socialClass = ''): string
+    public function getHomomorpheFingerprint(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_HOMOMORPHE, $socialClass);
     }
 
-    /**
-     * Lit la date de création.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getDate(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_DATE, $socialClass);
     }
 
-    /**
-     * Lecture du nom.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -770,121 +739,56 @@ class Node extends Functions implements nodeInterface
             $name = $this->_id;
         return $name;
     }
-
-    /**
-     * Ecriture du nom.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function setName(string $name): bool
+    public function setName(string $name, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_NOM, $name, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_NOM, $name, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lecture du préfix.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getPrefixName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $socialClass);
     }
-
-    /**
-     * Ecriture du préfix.
-     *
-     * @param string $prefix
-     * @return boolean
-     */
-    public function setPrefix(string $prefix): bool
+    public function setPrefixName(string $prefix, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $prefix, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $prefix, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lecture du suffix.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getSuffixName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $socialClass);
     }
-
-    /**
-     * Ecriture du suffix.
-     *
-     * @param string $suffix
-     * @return boolean
-     */
-    public function setSuffix(string $suffix): bool
+    public function setSuffixName(string $suffix, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $suffix, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $suffix, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lecture du prénom.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getFirstname(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $socialClass);
     }
-
-    /**
-     * Ecriture du prénom.
-     *
-     * @param string $firstname
-     * @return boolean
-     */
-    public function setFirstname(string $firstname): bool
+    public function setFirstname(string $firstname, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $firstname, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $firstname, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lecture du surnom.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getSurname(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $socialClass);
     }
-
-    /**
-     * Ecriture du surnom.
-     *
-     * @param string $surname
-     * @return boolean
-     */
-    public function setSurname(string $surname): bool
+    public function setSurname(string $surname, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $surname, $this->_getMarkProtected());
+        return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $surname, $protect, $obfuscated, $signer);
     }
 
-    /**
-     * Lecture du nom complet.
-     *
-     * @param string $socialClass
-     * @return string
-     */
     public function getFullName(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -915,59 +819,28 @@ class Node extends Functions implements nodeInterface
         return $fullname;
     }
 
-    /**
-     * Lecture des multiples localisations.
-     *
-     * @param string $socialClass
-     * @return array
-     */
-    public function getLocalisations(string $socialClass = ''): array
+    public function getLocations(string $socialClass = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperties(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
     }
-
-    /**
-     * Lecture de la localisation.
-     *
-     * @param string $socialClass
-     * @return string
-     */
-    public function getLocalisation(string $socialClass = ''): string
+    public function getLocation(string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $socialClass);
     }
-
-    /**
-     * Ecriture de la localisation.
-     *
-     * @param string $localisation
-     * @return boolean
-     */
-    public function setLocalisation(string $localisation): bool
+    public function setLocation(string $localisation): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->setProperty(References::REFERENCE_NEBULE_OBJET_LOCALISATION, $localisation);
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme une entité.
-     * @var boolean
-     */
-    protected bool $_isEntity = false;
 
-    /**
-     * Lit si l'objet est une entité.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isEntity = false;
     public function getIsEntity(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Si déjà marqué, donne le résultat tout de suite.
         if ($this->_isEntity)
             return true;
 
@@ -980,18 +853,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme un groupe.
-     * @var boolean
-     */
-    protected bool $_isGroup = false;
 
-    /**
-     * Lit si l'objet est un groupe.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isGroup = false;
     public function getIsGroup(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1004,12 +867,6 @@ class Node extends Functions implements nodeInterface
         return $this->_isGroup;
     }
 
-    /**
-     * Retourne la liste des liens vers les groupes dont l'objet est membre.
-     *
-     * @param string $socialClass
-     * @return array:Link
-     */
     public function getListIsMemberOnGroupLinks(string $socialClass = 'myself'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1040,12 +897,6 @@ class Node extends Functions implements nodeInterface
         return $links;
     }
 
-    /**
-     * Retourne la liste des ID vers les groupes dont l'objet est membre.
-     *
-     * @param string $socialClass
-     * @return array:string
-     */
     public function getListIsMemberOnGroupID(string $socialClass = 'myself'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1067,6 +918,7 @@ class Node extends Functions implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
+        $list = array();
         foreach ($links as $i => $link) {
             $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getIsGroup('all'))
@@ -1077,18 +929,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme une conversation.
-     * @var boolean
-     */
-    protected $_isConversation = false;
 
-    /**
-     * Lit si l'objet est une conversation.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isConversation = false;
     public function getIsConversation(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1101,13 +943,6 @@ class Node extends Functions implements nodeInterface
         return $this->_isConversation;
     }
 
-    /**
-     * Retourne la liste des liens vers les conversations dont l'objet est membre.
-     * S'appuie sur la fonction dédiée aux groupes.
-     *
-     * @param string $socialClass
-     * @return array:Link
-     */
     public function getListIsMemberOnConversationLinks(string $socialClass = 'myself'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1138,13 +973,6 @@ class Node extends Functions implements nodeInterface
         return $links;
     }
 
-    /**
-     * Retourne la liste des ID vers les conversations dont l'objet est membre.
-     * S'appuie sur la fonction dédiée aux groupes.
-     *
-     * @param string $socialClass
-     * @return array:string
-     */
     public function getListIsMemberOnConversationID(string $socialClass = 'myself'): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1166,6 +994,7 @@ class Node extends Functions implements nodeInterface
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
+        $list = array();
         foreach ($links as $i => $link) {
             $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if ($instance->getIsConversation('all'))
@@ -1176,18 +1005,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme une monnaie.
-     * @var boolean
-     */
-    protected $_isCurrency = false;
 
-    /**
-     * Lit si l'objet est une monnaie.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isCurrency = false;
     public function getIsCurrency(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1201,18 +1020,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme un sac de jetons.
-     * @var boolean
-     */
-    protected $_isTokenPool = false;
 
-    /**
-     * Lit si l'objet est un sac de jetons.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isTokenPool = false;
     public function getIsTokenPool(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1226,18 +1035,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme un jeton.
-     * @var boolean
-     */
-    protected $_isToken = false;
 
-    /**
-     * Lit si l'objet est un jeton.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isToken = false;
     public function getIsToken(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1251,18 +1050,8 @@ class Node extends Functions implements nodeInterface
     }
 
 
-    /**
-     * Variable si l'objet est marqué comme un portefeuille.
-     * @var boolean
-     */
-    protected $_isWallet = false;
 
-    /**
-     * Lit si l'objet est un portefeuille.
-     *
-     * @param string $socialClass
-     * @return boolean
-     */
+    protected bool $_isWallet = false;
     public function getIsWallet(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');

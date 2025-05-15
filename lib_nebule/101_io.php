@@ -59,7 +59,7 @@ class io extends Functions implements ioInterface
                 $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b8f416f7');
                 $instance = $this->_initSubInstance($class);
                 $filterString = $instance->getFilterString();
-                $url = $instance->getLocalisation();
+                $url = $instance->getLocation();
                 $mode = $instance->getMode();
                 $this->_listLocalisations[$url] = $instance;
                 $this->_listFilterStrings[$instance::TYPE] = $filterString;
@@ -82,12 +82,12 @@ class io extends Functions implements ioInterface
 
     /**
      * {@inheritDoc}
-     * @see ioInterface::getLocalisation()
+     * @see ioInterface::getLocation()
      */
-    public function getLocalisation(): string
+    public function getLocation(): string
     {
         if (get_class($this)::LOCALISATION == '' && ! is_null($this->_defaultInstance))
-            return $this->_defaultInstance->getLocalisation();
+            return $this->_defaultInstance->getLocation();
         return get_class($this)::LOCALISATION;
     }
 
