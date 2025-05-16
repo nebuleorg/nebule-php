@@ -96,13 +96,10 @@ class Entity extends Node implements nodeInterface
 
     private function _createNewEntity(): void
     {
-        global $needFirstSynchronization;
-
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
             && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
-                || $needFirstSynchronization
             )
         ) {
             $this->_metrologyInstance->addLog('create entity algo=' . $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7344db13');

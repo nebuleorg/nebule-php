@@ -687,10 +687,20 @@ class Configuration extends Functions
 
 
 
-    /*protected function _initialisation(): void
+    protected function _initialisation(): void
     {
+        global $needFirstSynchronization;
         $this->_metrologyInstance->addLog('instancing class Configuration', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'fbaec5ee');
-    }*/
+
+        // Needed on first run to create server entity.
+        if ($needFirstSynchronization) {
+            $this->_optionCache['permitWrite'] = true;
+            $this->_optionCache['permitWriteLink'] = true;
+            $this->_optionCache['permitWriteObject'] = true;
+            $this->_optionCache['permitWriteEntity'] = true;
+            $this->_optionCache['permitPublicCreateEntity'] = true;
+        }
+    }
 
     public static function getListOptionsName(): array
     {
