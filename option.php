@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250507';
+    const APPLICATION_VERSION = '020250517';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -1724,16 +1724,8 @@ class Action extends Actions
         ) {
             $this->_metrologyInstance->addLog('extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
 
-            $argName = '';
-            if (filter_has_var(INPUT_GET, self::COMMAND_OPTION_NAME)) {
-                $argName = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_NAME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                $this->_metrologyInstance->addLog('input ' . self::COMMAND_OPTION_NAME . ' ask change option name=' . $argName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64c852fb');
-            }
-            $argValue = '';
-            if (filter_has_var(INPUT_GET, self::COMMAND_OPTION_VALUE)) {
-                $argValue = trim(filter_input(INPUT_GET, self::COMMAND_OPTION_VALUE, FILTER_SANITIZE_STRING));
-                $this->_metrologyInstance->addLog('input ' . self::COMMAND_OPTION_NAME . ' ask change option value=' . $argValue, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cfebc367');
-            }
+            $argName = $this->getFilterInput(self::COMMAND_OPTION_NAME);
+            $argValue = $this->getFilterInput(self::COMMAND_OPTION_VALUE);
 
             $okOption = false;
             foreach (Configuration::OPTIONS_LIST as $option) {
@@ -1757,40 +1749,33 @@ class Action extends Actions
 
     protected function _actionChangeOption():void
     {
-        // Vérifie que la création de liens et l'écriture d'objets soient authorisés.
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_actionOptionName != ''
             && $this->_unlocked
         ) {
-            $this->_metrologyInstance->addLog('Action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae2be3f7');
 
-            // Vérifie que l'option est du bon type.
             $listOptionsType = $this->_configurationInstance->getListOptionsType();
             $okOption = false;
-            $value = null;
+            $okValue = '';
             $type = $listOptionsType[$this->_actionOptionName];
             if ($type == 'string') {
-                $value = $this->_actionOptionValue;
+                $okValue = $this->_actionOptionValue;
                 $okOption = true;
             } elseif ($type == 'boolean') {
-                $value = false;
+                $okValue = 'false';
                 if ($this->_actionOptionValue == 'true')
-                    $value = true;
+                    $okValue = 'true';
                 $okOption = true;
-            } elseif ($type == 'integer') {
-                $value = (int)$this->_actionOptionValue;
+            } elseif ($type == 'integer' && is_numeric($this->_actionOptionValue)) {
+                $okValue = (string)$this->_actionOptionValue;
                 $okOption = true;
-            }
+            } else
+                $this->_metrologyInstance->addLog('action unknown option type', Metrology::LOG_LEVEL_ERROR, __METHOD__, '0db1fc8f');
 
-            // Change l'option.
-            if ($okOption
-                && $value !== null
-            ) {
-                $this->_configurationInstance->setOptionEnvironment($this->_actionOptionName, $value);
-
+            if ($okOption && $okValue != '') {
+            $this->_metrologyInstance->addLog('action change option ' . $this->_actionOptionName . ' = ' . $this->_actionOptionValue, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae2be3f7');
+                $this->_configurationInstance->setOptionEnvironment($this->_actionOptionName, $okValue);
                 $this->_displayInstance->displayInlineAllActions();
-
-                $this->_metrologyInstance->addLog('Action change option ok', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0db1fc8f');
             }
 
             // Affichage des actions.

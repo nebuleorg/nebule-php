@@ -25,7 +25,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::sylabe:module:admin:ModuleDescription';
-    const MODULE_VERSION = '020250507';
+    const MODULE_VERSION = '020250517';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -317,7 +317,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 $optionDefaultDisplay = (string)$optionDefaultValue;
                 $optionCriticality = $listOptionsCriticality[$optionName];
                 $optionDescription = $listOptionsDescription[$optionName];
-                $optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
+                //$optionLocked = ($this->_configurationInstance->getOptionFromEnvironmentUntyped($optionName) !== null);
 
                 $list[$i]['information'] = $optionName . ' = ' . $optionValueDisplay . '<br />' . $optionDescription;
                 $list[$i]['param'] = $param;

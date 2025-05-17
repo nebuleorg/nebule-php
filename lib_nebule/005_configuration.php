@@ -694,11 +694,11 @@ class Configuration extends Functions
 
         // Needed on first run to create server entity.
         if ($needFirstSynchronization) {
-            $this->_optionCache['permitWrite'] = true;
-            $this->_optionCache['permitWriteLink'] = true;
-            $this->_optionCache['permitWriteObject'] = true;
-            $this->_optionCache['permitWriteEntity'] = true;
-            $this->_optionCache['permitPublicCreateEntity'] = true;
+            $this->_optionCache['permitWrite'] = 'true';
+            $this->_optionCache['permitWriteLink'] = 'true';
+            $this->_optionCache['permitWriteObject'] = 'true';
+            $this->_optionCache['permitWriteEntity'] = 'true';
+            $this->_optionCache['permitPublicCreateEntity'] = 'true';
         }
     }
 
@@ -762,15 +762,20 @@ class Configuration extends Functions
     }
 
     /**
+     * Get content of an option as a boolean.
+     * An unknown option return a value too.
+     * Try to find in this order :
+     * - cache
+     * - config file
+     * - links
+     * - default value
+     * - or false
+     *
      * @param string $name
      * @return bool
      */
     public function getOptionAsBoolean(string $name): bool
     {
-        if (self::OPTIONS_TYPE[$name] != 'boolean') {
-            $this->_metrologyInstance->addLog('get option ' . $name . ' as bool but not bool', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
-            return false;
-        }
         if ($this->getOptionAsString($name) == 'true')
             return true;
         else
@@ -778,21 +783,35 @@ class Configuration extends Functions
     }
 
     /**
+     * Get content of an option as a integer.
+     * An unknown option return a value too.
+     * Try to find in this order :
+     * - cache
+     * - config file
+     * - links
+     * - default value
+     * - or 0
+     *
      * @param string $name
      * @return int
      */
     public function getOptionAsInteger(string $name): int
     {
-        if (self::OPTIONS_TYPE[$name] != 'integer') {
-            $this->_metrologyInstance->addLog('get option ' . $name . ' as int but not int', Metrology::LOG_LEVEL_ERROR, __METHOD__, '1adaf6d4');
-            return 0;
-        }
-        return (int)$this->getOptionAsString($name);
+        $value = $this->getOptionAsString($name);
+        if (! is_numeric($value))
+            $value = '0';
+        return (int)$value;
     }
 
     /**
      * Get content of an option as a string.
-     * An unknown option, if solved, return a value too.
+     * An unknown option return a value too.
+     * Try to find in this order :
+     * - cache
+     * - config file
+     * - links
+     * - default value
+     * - or ''
      *
      * @param string $name
      * @return string
@@ -806,26 +825,17 @@ class Configuration extends Functions
             $this->_metrologyInstance->addLog('get option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '56a98331');
 
         if (! isset(self::OPTIONS_TYPE[$name]))
-            $this->_metrologyInstance->addLog('ask unknown option "' . $name . '"', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cbf78f11');
+            $this->_metrologyInstance->addLog('ask unknown option "' . $name . '"', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cbf78f11');
 
-        // Read on cache.
-        if (isset($this->_optionCache[$name]))
+        if (isset($this->_optionCache[$name]) && is_string($this->_optionCache[$name]))
             return $this->_optionCache[$name];
 
-        // Read from config file.
         $result = $this->_getOptionFromEnvironmentStatic($name);
 
-        // If empty, read from links.
-        if ($result == ''
-            && isset(self::OPTIONS_WRITABLE[$name])
-            && self::OPTIONS_WRITABLE[$name]
-        )
+        if ($result == '' && isset(self::OPTIONS_WRITABLE[$name]) && self::OPTIONS_WRITABLE[$name])
             $result = $this->_getOptionFromLinks($name);
 
-        // If empty, read default value.
-        if ($result == ''
-            && isset(self::OPTIONS_DEFAULT_VALUE[$name])
-        ) {
+        if ($result == '' && isset(self::OPTIONS_DEFAULT_VALUE[$name])) {
             $result = self::OPTIONS_DEFAULT_VALUE[$name];
             if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology')) {
                 $this->_metrologyInstance->addLog('get default value for option ' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3e39271b');
@@ -833,82 +843,34 @@ class Configuration extends Functions
         }
 
         if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
-            $this->_metrologyInstance->addLog('return option ' . $name . ' = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd2fd4284');
+            $this->_metrologyInstance->addLog('return option ' . $name . ' = ' . $result, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd2fd4284');
 
-        // Write on cache.
-        if ($result != ''
-            && !$this->_overwriteOptionCacheLock
-        )
+        if ($result != '' && !$this->_overwriteOptionCacheLock)
             $this->_optionCache[$name] = $result;
 
         return $result;
     }
 
-    /**
-     * Donne la liste des valeurs par défaut des options disponibles.
-     *
-     * @param string $name
-     * @return string|bool|int|null
-     */
-    public static function getOptionDefaultValue(string $name): bool|int|string|null
+    public static function getOptionDefaultValueAsString(string $name): string
     {
-        return self::_changeTypeValueFromString($name, self::OPTIONS_DEFAULT_VALUE[$name]);
+        return self::OPTIONS_DEFAULT_VALUE[$name];
     }
 
-    /**
-     * @param string $name
-     * @return string|bool|int|null
-     */
-    static public function getOptionFromEnvironmentUntypedStatic(string $name): bool|int|string|null
-    {
-        return self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
-    }
-
-    /**
-     * @param string $name
-     * @return string|bool|int|null
-     */
-    public function getOptionFromEnvironmentUntyped(string $name): bool|int|string|null
-    {
-        $result = self::_changeTypeValueFromString($name, self::_getOptionFromEnvironmentStatic($name));
-
-        if (is_a($this->_metrologyInstance, '\Nebule\Library\Metrology'))
-            $this->_metrologyInstance->addLog('return option env = ' . (string)$result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52ac2506');
-
-        return $result;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getOptionFromEnvironmentAsString(string $name): string
+    static public function getOptionFromEnvironmentAsString(string $name): string
     {
         return self::_getOptionFromEnvironmentStatic($name);
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     static public function getOptionFromEnvironmentAsStringStatic(string $name): string
     {
         return self::_getOptionFromEnvironmentStatic($name);
     }
 
-    /**
-     * @param string $name
-     * @return boolean
-     */
     public function getOptionFromEnvironmentAsBoolean(string $name): bool
     {
         return self::getOptionFromEnvironmentAsBooleanStatic($name);
     }
 
-    /**
-     * @param string $name
-     * @return boolean
-     */
     static public function getOptionFromEnvironmentAsBooleanStatic(string $name): bool
     {
         if (self::_getOptionFromEnvironmentStatic($name) == 'true')
@@ -917,29 +879,16 @@ class Configuration extends Functions
             return false;
     }
 
-    /**
-     * @param string $name
-     * @return integer
-     */
     public function getOptionFromEnvironmentAsInteger(string $name): int
     {
         return (int)self::_getOptionFromEnvironmentStatic($name);
     }
 
-    /**
-     * @param string $name
-     * @return integer
-     */
     static public function getOptionFromEnvironmentAsIntegerStatic(string $name): int
     {
         return (int)self::_getOptionFromEnvironmentStatic($name);
     }
 
-    /**
-     * Read option from config file.
-     * @param string $name
-     * @return string
-     */
     static private function _getOptionFromEnvironmentStatic(string $name): string
     {
         if ($name == '' )
@@ -1123,13 +1072,14 @@ class Configuration extends Functions
      *   de modification des options directement en cache.
      * Le verrouillage n'est pas annulable.
      *
-     * @param string          $name
-     * @param bool|int|string $value
+     * @param string $name
+     * @param string $value
      * @return boolean
      */
-    public function setOptionCache(string $name, bool|int|string $value): bool
+    public function setOptionCache(string $name, string $value): bool
     {
         if ($name == ''
+            || $value == ''
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
             || $this->_overwriteOptionCacheLock
@@ -1145,53 +1095,36 @@ class Configuration extends Functions
     /**
      * Write an option as link for an entity if this option is not protected.
      *
-     * @param string          $name
-     * @param bool|int|string $value
-     * @param string          $entity
+     * @param string      $name
+     * @param string      $value
+     * @param Entity|null $eidInstance
      * @return boolean
      */
-    public function setOptionEnvironment(string $name, bool|int|string $value, string $entity = ''): bool
+    public function setOptionEnvironment(string $name, string $value, ?Entity $eidInstance = null): bool
     {
-        // Vérifie le nom.
         if ($name == ''
+            || $value == ''
             || !isset(self::OPTIONS_TYPE[$name])
             || !self::OPTIONS_WRITABLE[$name]
-            || $this->getOptionFromEnvironmentUntyped($name) !== null
         )
             return false;
+        $this->_metrologyInstance->addLog('set option ' . $name . ' = ' . $value, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7eea2');
 
-        // Détermine l'entité ciblée par l'option.
-        if ($entity = ''
-            || $entity == '0'
-        )
-            $entity = $this->_entitiesInstance->getGhostEntityEID();
+        if (! is_a($eidInstance, 'Nebule\Library\Entity') || $eidInstance->getID() == '0')
+            $eidInstance = $this->_entitiesInstance->getConnectedEntityInstance();
 
-        $this->_metrologyInstance->addLog('set option ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7eea2');
-
-        // Prépare la valeur.
-        $writeValue = $this->_changeTypeValueFromString($name, $value);
-        if (is_null($writeValue))
-            return false;
-
-        $this->_metrologyInstance->addLog('set option value = ' . $writeValue, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'aa699a23');
-
-        // Crée l'instance de l'objet de la valeur.
-        $instance = new Node($this->_nebuleInstance, 'new'); // $writeValue
-        $id = $instance->getID();
-        if ($id == '0') {
-            $this->_metrologyInstance->addLog('object cannot be created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e064cd5c');
+        $instance = new Node($this->_nebuleInstance, '0');
+        if (!$instance->setWriteContent($value) || $instance->getID() == '0') {
+            $this->_metrologyInstance->addLog('content of option cannot be created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e064cd5c');
             return false;
         }
         $instance->setType(References::REFERENCE_OBJECT_TEXT);
 
-        $source = $entity;
-        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OPTION . '/' . $name);
-        $link = '_l>' . $source . '>' . $id . '>' . $meta;
-        $newLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
+        $link = 'l>' . $eidInstance->getID() . '>' . $instance->getID() . '>' . $this->getNidFromData(References::REFERENCE_NEBULE_OPTION . '/' . $name);
+        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new', Cache::TYPE_LINK);
 
-        if ($newLink->addLink($link)
-            && $newLink->sign($this->_entitiesInstance->getConnectedEntityInstance())
-            && $newLink->write()
+        if ($newBlockLink->addLink($link)
+            && $newBlockLink->signWrite($eidInstance)
         ) {
             $this->_optionCache[$name] = $value;
             return true;
@@ -1207,7 +1140,7 @@ class Configuration extends Functions
      */
     public function lockPermitWrite(): void
     {
-        $this->_optionCache['permitWrite'] = false;
+        $this->_optionCache['permitWrite'] = 'false';
     }
 
     /**
@@ -1216,7 +1149,7 @@ class Configuration extends Functions
      */
     public function lockPermitWriteObject(): void
     {
-        $this->_optionCache['permitWriteObject'] = false;
+        $this->_optionCache['permitWriteObject'] = 'false';
     }
 
     /**
@@ -1225,7 +1158,7 @@ class Configuration extends Functions
      */
     public function lockPermitWriteLink(): void
     {
-        $this->_optionCache['permitWriteLink'] = false;
+        $this->_optionCache['permitWriteLink'] = 'false';
     }
 
     /**
