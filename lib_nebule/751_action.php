@@ -1559,8 +1559,8 @@ abstract class Actions extends Functions
 
         if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
             $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ea998a6d');
-            $instance->setCreatePassword($this->_actionCreateEntityPassword);
             $instance->setCreateWrite();
+            $instance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
             $this->_actionCreateEntityError = false;
 
             $this->_actionCreateEntityInstance = $instance;

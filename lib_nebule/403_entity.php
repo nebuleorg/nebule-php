@@ -129,18 +129,10 @@ class Entity extends Node implements nodeInterface
         }
     }
 
-    public function setCreatePassword(string $password = ''): void
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_isNew || $this->_id == '0')
-            return;
-
-    }
-
     public function setCreateWrite(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_isNew || $this->_id == '0')
+        if (!$this->_isNew || !$this->_newPrivateKey || $this->_id == '0')
             return;
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')) {
             $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ca6f5f59');
@@ -148,19 +140,34 @@ class Entity extends Node implements nodeInterface
         }
 
         $this->_ioInstance->setObject($this->_id, $this->_publicKey);
-        $this->_ioInstance->setObject($this->_id, $this->_privateKey);
+        //$this->_ioInstance->setObject($this->_privateKeyOID, $this->_privateKey);
 
         $nid1 = $this->_id;
         $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
         $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-        $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
+        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
 
+        $nid1 = $this->_privateKeyOID;
+        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
+
+        $nid1 = $this->_id;
         $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
         $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
+
+        $nid1 = $this->_privateKeyOID;
+        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
+    }
+
+    private function _setCreateBlocLinkL(string $req,string $nid1,string $nid2 = '',string $nid3 = ''): void
+    {
+        $link = $req . '>' . $nid1;
+        if ($nid2 != '')
+            $link .= '>' . $nid2;
+        if ($nid3 != '')
+            $link .= '>' . $nid3;
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $instanceBL->addLink('l>' . $nid1 . '>' . $nid2 . '>' . $nid3);
+        $instanceBL->addLink($link);
         $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
     }
 
@@ -175,31 +182,6 @@ class Entity extends Node implements nodeInterface
             'pwd' => $this->_privateKeyPassword,
         );
         $this->setProperty($type, $property, $protect, $obfuscated, $signer);
-    }
-
-    // Ecrit le lien pour les objets concernés.
-    // Utilisé pour la création d'une nouvelle entité, càd dont la clé publique n'est pas encore reconnue.
-    private function _createNewEntityWriteLink(string $link, string $source, string $target, string $meta): void
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Signe le lien.
-        $signe = $this->signLink($link);
-        if ($signe === false)
-            return;
-        $signedLink = $signe . '.' . $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm') . $link;
-
-        // Écrit le lien pour l'objet de l'entité signataire.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitAddLinkToSigner'))
-            $this->_ioInstance->setBlockLink($this->_id, $signedLink);
-
-        // Écrit le lien pour l'objet source.
-        $this->_ioInstance->setBlockLink($source, $signedLink);
-
-        // Écrit le lien pour l'objet cible.
-        $this->_ioInstance->setBlockLink($target, $signedLink);
-
-        // Écrit le lien pour l'objet méta.
-        $this->_ioInstance->setBlockLink($meta, $signedLink);
     }
 
 
@@ -449,29 +431,24 @@ class Entity extends Node implements nodeInterface
         // Si ce n'est pas une création d'entité, fait les liens de mises à jour de clés privées.
         if (!$this->_newPrivateKey) {
             // Création lien 1.
-            $link = 'x>' . $oldPrivateKeyID . '>' . $this->_id;
-            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_id, '0');
+            $this->_setCreateBlocLinkL('x', $oldPrivateKeyID, $this->_id);
 
             // Création lien 2.
-            $link = 'u>' . $oldPrivateKeyID . '>' . $this->_privateKeyOID;
-            $this->_createNewEntityWriteLink($link, $oldPrivateKeyID, $this->_privateKeyOID, '0');
+            $this->_setCreateBlocLinkL('u', $oldPrivateKeyID, $this->_privateKeyOID);
         }
 
         // Création lien 3.
         $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
         $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-        $link = 'l>' . $this->_privateKeyOID . '>' . $nid2 . '>' . $nid3;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $nid2, $nid3);
+        $this->_setCreateBlocLinkL('l', $this->_privateKeyOID, $nid2, $nid3);
 
         // Création lien 4.
         $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
         $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-        $link = 'l>' . $this->_privateKeyOID . '>' . $nid2 . '>' . $nid3;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $nid2, $nid3);
+        $this->_setCreateBlocLinkL('l', $this->_privateKeyOID, $nid2, $nid3);
 
         // Création lien 5.
-        $link = 'f>' . $this->_privateKeyOID . '>' . $this->_id;
-        $this->_createNewEntityWriteLink($link, $this->_privateKeyOID, $this->_id, '0');
+        $this->_setCreateBlocLinkL('f', $this->_privateKeyOID, $this->_id);
 
         $this->_newPrivateKey = false;
         return true;
