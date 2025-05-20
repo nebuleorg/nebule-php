@@ -305,11 +305,6 @@ class Node extends Functions implements nodeInterface
         return '';
     }
 
-    /**
-     * Test si l'objet est présent.
-     *
-     * @return boolean
-     */
     public function checkPresent(): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -323,11 +318,6 @@ class Node extends Functions implements nodeInterface
         return $result;
     }
 
-    /**
-     * Test si l'objet a des liens.
-     *
-     * @return boolean
-     */
     public function checkObjectHaveLinks(): bool
     {
         return $this->_ioInstance->checkLinkPresent($this->_id);
