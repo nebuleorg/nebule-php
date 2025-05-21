@@ -72,7 +72,7 @@ class DisplayIcon extends DisplayItemIconable implements DisplayInterface
     public function setType(string $type = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_nid === null)
+        if (! is_a($this->_nid, 'Nebule\Library\Node'))
             return;
         if ($type == '') {
             $this->_type = $this->_nid->getType($this->_social);
