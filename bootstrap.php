@@ -3,13 +3,14 @@ declare(strict_types=1);
 namespace Nebule\Bootstrap;
 use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
+use Nebule\Library\io;
 use Nebule\Library\nebule;
 #use Random\RandomException;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250425';
+const BOOTSTRAP_VERSION = '020250610';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -5851,36 +5852,39 @@ function bootstrap_breakDisplay43LibraryIO(): void {
         foreach ($list as $class) {
             $module = $ioInstance->getModuleByType($class);
             bootstrap_echoLineTitle('i/o');
-            echo get_class($module) . ' (' . $module->getMode() . ') ' . $module->getLocalisation() . ', links ';
-            if (!$module->checkLinksDirectory())
-                echo 'directory <span class="error">ERROR!</span>';
-            else {
-                if (!$module->checkLinksRead())
-                    echo 'read <span class="error">ERROR!</span>';
+            if (is_a($module, 'Nebule\Library\io')) {
+                echo get_class($module) . ' (' . $module->getMode() . ') ' . $module->getLocation() . ', links ';
+                if (!$module->checkLinksDirectory())
+                    echo 'directory <span class="error">ERROR!</span>';
                 else {
-                    if ($module->getMode() == 'RO')
-                        echo 'OK no write.';
-                    elseif ($module->checkLinksWrite())
-                        echo 'OK';
-                    else
-                        echo 'write <span class="error">ERROR!</span>';
+                    if (!$module->checkLinksRead())
+                        echo 'read <span class="error">ERROR!</span>';
+                    else {
+                        if ($module->getMode() == 'RO')
+                            echo 'OK no write.';
+                        elseif ($module->checkLinksWrite())
+                            echo 'OK';
+                        else
+                            echo 'write <span class="error">ERROR!</span>';
+                    }
                 }
-            }
-            echo ', objects ';
-            if (!$module->checkObjectsDirectory())
-                echo 'directory <span class="error">ERROR!</span>';
-            else {
-                if (!$module->checkObjectsRead())
-                    echo 'read <span class="error">ERROR!</span>';
+                echo ', objects ';
+                if (!$module->checkObjectsDirectory())
+                    echo 'directory <span class="error">ERROR!</span>';
                 else {
-                    if ($module->getMode() == 'RO' )
-                        echo 'OK no write.';
-                    elseif ($module->checkObjectsWrite())
-                        echo 'OK';
-                    else
-                        echo 'write <span class="error">ERROR!</span>';
+                    if (!$module->checkObjectsRead())
+                        echo 'read <span class="error">ERROR!</span>';
+                    else {
+                        if ($module->getMode() == 'RO')
+                            echo 'OK no write.';
+                        elseif ($module->checkObjectsWrite())
+                            echo 'OK';
+                        else
+                            echo 'write <span class="error">ERROR!</span>';
+                    }
                 }
-            }
+            } else
+                echo get_class($module) . ' error';
             echo "<br />\n";
         }
     } else

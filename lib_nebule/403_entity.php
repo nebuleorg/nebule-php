@@ -516,6 +516,21 @@ class Entity extends Node implements nodeInterface
     }
 
 
+
+    public function getName(string $socialClass = ''): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($socialClass == '') {
+            $list = array($this->_id);
+            $this->_socialInstance->setList($list);
+            $socialClass = 'onlist';
+        }
+        $name = $this->getProperty(References::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
+        if ($name == '')
+            $name = $this->_id;
+        return $name;
+    }
+
     /**
      * Lecture du nom complet.
      * La construction du nom complet d'une entité est légèrement différente d'un objet.
