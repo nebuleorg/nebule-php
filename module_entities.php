@@ -2182,6 +2182,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $entity->getID());*/
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
+            $instance->setSocial('all'); // FIXME
             $instance->setEnableName(true);
             $instance->setEnableFlags(false);
             $instance->setEnableFlagState(false);

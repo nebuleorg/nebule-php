@@ -521,9 +521,9 @@ class Entity extends Node implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
-            $list = array($this->_id);
-            $this->_socialInstance->setList($list);
-            $socialClass = 'onlist';
+            //$list = array($this->_id);
+            //$this->_socialInstance->setList($list);
+            $socialClass = 'all'; // FIXME
         }
         $name = $this->getProperty(References::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
         if ($name == '')
@@ -547,6 +547,11 @@ class Entity extends Node implements nodeInterface
             && trim($this->_fullName) != ''
         )
             return $this->_fullName;
+        if ($socialClass == '') {
+            //$list = array($this->_id);
+            //$this->_socialInstance->setList($list);
+            $socialClass = 'all'; // FIXME
+        }
 
         $name = $this->getName($socialClass);
         $prefix = $this->getPrefixName($socialClass);
