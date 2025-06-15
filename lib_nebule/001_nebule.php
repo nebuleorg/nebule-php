@@ -17,15 +17,6 @@ class nebule
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2025';
     const NEBULE_FUNCTION_VERSION = '020241123';
-    const NEBULE_ENVIRONMENT_FILE = 'c'; // Into folder /
-    const NEBULE_BOOTSTRAP_FILE = 'index.php'; // Into folder /
-    const NEBULE_LOCAL_ENTITY_FILE = 'e'; // Into folder /
-    const NEBULE_LOCAL_OBJECTS_FOLDER = 'o'; // Into folder /
-    const NEBULE_LOCAL_LINKS_FOLDER = 'l'; // Into folder /
-    const NEBULE_LOCAL_HISTORY_FILE = 'f'; // Into folder /l/
-    const PUPPETMASTER_URL = 'http://puppetmaster.nebule.org';
-    const SECURITY_MASTER_URL = 'http://security.master.nebule.org';
-    const CODE_MASTER_URL = 'http://code.master.nebule.org';
 
     const SESSION_SAVED_VARS = array(
         '_authoritiesInstance',

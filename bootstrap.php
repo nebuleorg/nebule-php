@@ -1757,8 +1757,8 @@ function io_objectInclude(string $nid): bool {
         return false;
 
     $result = true;
+    log_add('include code NID=' . $nid, 'info', __FUNCTION__, 'ec10ca1d');
     try {
-        log_add('include code NID=' . $nid, 'info', __FUNCTION__, 'ec10ca1d');
         include_once(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
     } catch (\Error $e) {
         log_add('error include code NID=' . $nid .' ('  . $e->getCode() . ') : ' . $e->getFile()
@@ -4716,7 +4716,7 @@ function bootstrap_instancingApplication(): void {
         || !class_exists($nameSpaceApplication, false)
     ) {
         log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace,
-            'error', __FUNCTION__, 'ec10ca1d');
+            'error', __FUNCTION__, 'ea9e5908');
         return;
     }
 

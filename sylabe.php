@@ -51,7 +51,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250415';
+    const APPLICATION_VERSION = '020250615';
     const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -163,15 +163,19 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
     protected function _initUrlLinks(): void
     {
-        $this->setUrlLinkObjectPrefix('?');
-        $this->setUrlLinkGroupPrefix('?');
-        $this->setUrlLinkConversationPrefix('?');
-        $this->setUrlLinkEntityPrefix('?');
-        $this->setUrlLinkCurrencyPrefix('?');
-        $this->setUrlLinkTokenPoolPrefix('?');
-        $this->setUrlLinkTokenPrefix('?');
-        $this->setUrlLinkTransactionPrefix('?');
-        $this->setUrlLinkWalletPrefix('?');
+        $this->setUrlLinkPrefix('Nebule\Library\Node',
+            '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        $this->setUrlLinkPrefix('Nebule\Library\Group',
+            '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');
+        $this->setUrlLinkPrefix('Nebule\Library\Entity',
+            '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
+            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . '&' . References::COMMAND_SELECT_ENTITY . '='); // TODO verify
+        // FIXME continue...
     }
 
 

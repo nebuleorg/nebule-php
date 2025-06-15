@@ -200,15 +200,27 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
     protected bool $_unlocked = false;
-    protected string $_urlLinkObjectPrefix = '';
-    protected string $_urlLinkGroupPrefix = '';
-    protected string $_urlLinkConversationPrefix = '';
-    protected string $_urlLinkEntityPrefix = '';
-    protected string $_urlLinkCurrencyPrefix = '';
-    protected string $_urlLinkTokenPoolPrefix = '';
-    protected string $_urlLinkTokenPrefix = '';
-    protected string $_urlLinkTransactionPrefix = '';
-    protected string $_urlLinkWalletPrefix = '';
+    protected array $_urlLinkPrefix = array(
+        'Nebule\Library\Node' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Group' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Conversation' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Entity' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Currency' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\TokenPool' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Token' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Transaction' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'Nebule\Library\Wallet' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+        'default' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
+    );
+    protected string $_urlLinkObjectPrefix = '?a=4&l=';
+    protected string $_urlLinkGroupPrefix = '?a=4&l=';
+    protected string $_urlLinkConversationPrefix = '?a=4&l=';
+    protected string $_urlLinkEntityPrefix = '?a=4&l=';
+    protected string $_urlLinkCurrencyPrefix = '?a=4&l=';
+    protected string $_urlLinkTokenPoolPrefix = '?a=4&l=';
+    protected string $_urlLinkTokenPrefix = '?a=4&l=';
+    protected string $_urlLinkTransactionPrefix = '?a=4&l=';
+    protected string $_urlLinkWalletPrefix = '?a=4&l=';
     protected string $_currentDisplayLanguage = '';
     protected ?Translates $_currentDisplayLanguageInstance = null;
     protected array $_displayLanguageList = array();
@@ -249,7 +261,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     protected function _initUrlLinks(): void
     {
-        global $applicationName; // FIXME
+        /*global $applicationName; // FIXME
 
         $this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
@@ -286,7 +298,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->setUrlLinkWalletPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-            . '&' . References::COMMAND_SELECT_OBJECT . '=');
+            . '&' . References::COMMAND_SELECT_OBJECT . '=');*/
     }
 
 
@@ -1600,11 +1612,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             ico_lock_off = new Image(64, 64);
             ico_lock_off.src = "/<?php    $objet = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENTITY_LOCK);
                 $newobj = $objet->getUpdateNID(true, false);
-                echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $newobj; ?>";
+                echo References::OBJECTS_FOLDER . '/' . $newobj; ?>";
             ico_lock_on = new Image(64, 64);
             ico_lock_on.src = "/<?php    $objet = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENT);
                 $newobj = $objet->getUpdateNID(true, false);
-                echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $newobj; ?>";
+                echo References::OBJECTS_FOLDER . '/' . $newobj; ?>";
 
             function hiLite(imgDocID, imgObjName, comment) {
                 document.images[imgDocID].src = eval(imgObjName + ".src");
@@ -1655,7 +1667,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _configureLinks(): void
     {
-        if (!$this->_applicationInstance::USE_MODULES)
+        /*if (!$this->_applicationInstance::USE_MODULES)
             return;
 
         $namespace = '\\' . __NAMESPACE__ . '\\';
@@ -1723,7 +1735,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         // Prefix currencies. FIXME
-        /*if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleQantion')
+        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleQantion')
             || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleQantion')
         ) {
             $this->setUrlLinkCurrencyPrefix('?'
@@ -1794,7 +1806,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function display(): void
     {
-        $this->_configureLinks();
+        //$this->_configureLinks();
         $this->_preDisplay();
 
         if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
@@ -2333,57 +2345,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
 
-    public function setUrlLinkObjectPrefix(string $htlink): void
+    public function setUrlLinkPrefix(string $type, string $prefixURL): void
     {
-        $this->_urlLinkObjectPrefix = $htlink;
+        if ($type == '')
+            return;
+        $this->_urlLinkPrefix[$type] = $prefixURL;
     }
-
-    public function setUrlLinkGroupPrefix(string $htlink): void
-    {
-        $this->_urlLinkGroupPrefix = $htlink;
-    }
-
-    public function setUrlLinkConversationPrefix(string $htlink): void
-    {
-        $this->_urlLinkConversationPrefix = $htlink;
-    }
-
-    public function setUrlLinkEntityPrefix(string $htlink): void
-    {
-        $this->_urlLinkEntityPrefix = $htlink;
-    }
-
-    public function setUrlLinkCurrencyPrefix(string $htlink): void
-    {
-        $this->_urlLinkCurrencyPrefix = $htlink;
-    }
-
-    public function setUrlLinkTokenPoolPrefix(string $htlink): void
-    {
-        $this->_urlLinkTokenPoolPrefix = $htlink;
-    }
-
-    public function setUrlLinkTokenPrefix(string $htlink): void
-    {
-        $this->_urlLinkTokenPrefix = $htlink;
-    }
-
-    public function setUrlLinkTransactionPrefix(string $htlink): void
-    {
-        $this->_urlLinkTransactionPrefix = $htlink;
-    }
-
-    public function setUrlLinkWalletPrefix(string $htlink): void
-    {
-        $this->_urlLinkWalletPrefix = $htlink;
-    }
-
-
-
-
-
-
-
 
 
 
@@ -2687,7 +2654,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $unprotectedObject = $this->_cacheInstance->newNode($object->getUnprotectedID());
             $unprotectedName = $unprotectedObject->getFullName('all');
             $unprotectedTypemime = $unprotectedObject->getType('all');
-            $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($unprotectedObject);
+            $htlink = $this->_prepareDefaultNodeLinkURL($unprotectedObject);
             $result .= '<div class="textAction">' . "\n";
             $result .= ' <div class="oneActionItem" id="selfEntity">' . "\n";
             $result .= '  <div class="oneActionItem-top">' . "\n";
@@ -2927,7 +2894,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($oid->getID() == '0')
             return '';
 
-        $result = '<img src="/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid->getID() . '"';
+        $result = '<img src="/' . References::OBJECTS_FOLDER . '/' . $oid->getID() . '"';
 
         if ($alt == '')
             $alt = $oid->getID();
@@ -2959,7 +2926,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return '';
 
         $obj = $oid->getID();
-        return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $obj;
+        return References::OBJECTS_FOLDER . '/' . $obj;
     }
 
     /**
@@ -3115,21 +3082,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function prepareDefaultObjectOrGroupOrEntityHtlink(Node $object, string $htlink = ''): string
     {
-        return $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        return $this->_prepareDefaultNodeLinkURL($object, $htlink);
     }
 
     /**
-     * Prépare un lien par défaut pour un objet ou un groupe ou une conversation ou une entité si aucun lien hypertexte n'est donné.
+     * If no URL given, give an URL to node or derivate.
      *
      * @param Node   $object
-     * @param string $htlink
+     * @param string $linkURL
      * @return string
      */
-    private function _prepareDefaultObjectOrGroupOrEntityHtlink(Node $object, string $htlink = ''): string
+    private function _prepareDefaultNodeLinkURL(Node $object, string $linkURL = ''): string
     {
-        if ($htlink != '')
-            return $htlink;
-        if (is_a($object, 'Nebule\Library\Entity')) // TODO switch !
+        if ($linkURL != '')
+            return $linkURL;
+        if (isset($this->_urlLinkPrefix[get_class($object)]))
+            return $this->_urlLinkPrefix[get_class($object)] . $object->getID();
+        return $this->_urlLinkPrefix['default'] . $object->getID();
+
+        /*if (is_a($object, 'Nebule\Library\Entity')) // TODO switch !
             return $this->_urlLinkEntityPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Conversation'))
             return $this->_urlLinkConversationPrefix . $object->getID();
@@ -3145,7 +3116,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return $this->_urlLinkTokenPoolPrefix . $object->getID();
         elseif (is_a($object, 'Nebule\Library\Currency'))
             return $this->_urlLinkCurrencyPrefix . $object->getID();
-        return $this->_urlLinkObjectPrefix . $object->getID();
+
+        return $this->_urlLinkObjectPrefix . $object->getID();*/
     }
 
 
@@ -3338,8 +3310,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     {
         $updateIcon = $this->_getImageUpdate($icon);
         if ($updateIcon == $icon)
-            return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $icon;
-        return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $updateIcon;
+            return References::OBJECTS_FOLDER . '/' . $icon;
+        return '?' . References::OBJECTS_FOLDER . '=' . $updateIcon;
     }
 
     /**
@@ -3901,7 +3873,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         foreach ($list as $object) {
             $object = $this->getTypedInstanceFromNID($object);
-            $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object);
+            $htlink = $this->_prepareDefaultNodeLinkURL($object);
             $color = $this->_prepareObjectColor_DEPRECATED($object);
             $icon = '';
             if ($size < 11)
@@ -4405,7 +4377,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $result .= '<a href="' . $param['link2Object'] . '">';
         else
-            $result .= '<a href="' . $this->_prepareDefaultObjectOrGroupOrEntityHtlink($messageInstance) . '">';
+            $result .= '<a href="' . $this->_prepareDefaultNodeLinkURL($messageInstance) . '">';
 
         // Ajoute la couleur de l'objet.
         if (isset($param['enableDisplayColor']))
@@ -5566,7 +5538,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $image = $this->_prepareObjectColor_DEPRECATED($object, 'iconNormalDisplay');
         return $this->convertHypertextLink($image, $htlink);
     }
@@ -5618,7 +5590,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertObjectIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         if ($icon != '')
             $icon = $this->_prepareObjectIcon_DEPRECATED($object, $icon, 'iconNormalDisplay');
         else
@@ -5650,7 +5622,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertObjectColorIcon(Node $object, string $htlink = '', string $icon = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconNormalDisplay');
         if ($icon != '')
             $icon = $this->_prepareObjectIcon_DEPRECATED($object, $icon, 'iconNormalDisplay');
@@ -5669,7 +5641,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function prepareInlineObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color, $htlink);
     }
@@ -5696,7 +5668,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineObjectColor(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color, $htlink);
     }
@@ -5728,7 +5700,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($text == '')
             $text = $object->getFullName('all');
         $text = $this->_truncateName($text, 0);
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color . $text, $htlink);
     }
@@ -5755,7 +5727,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineObjectColorName(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $name = $this->_truncateName($object->getFullName('all'), 0);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color . $name, $htlink);
@@ -5781,7 +5753,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineObjectColorIcon(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         $icon = $this->_prepareObjectFace($object, 'iconInlineDisplay');
         return $this->convertHypertextLink($color . $icon, $htlink);
@@ -5807,7 +5779,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function convertInlineObjectColorIconName(Node $object, string $htlink = ''): string
     {
         $object = $this->getTypedInstanceFromNID($object->getID());
-        $htlink = $this->_prepareDefaultObjectOrGroupOrEntityHtlink($object, $htlink);
+        $htlink = $this->_prepareDefaultNodeLinkURL($object, $htlink);
         $name = $this->_truncateName($object->getFullName('all'), 0);
         $color = $this->_prepareObjectColor_DEPRECATED($object, 'iconInlineDisplay');
         $icon = $this->_prepareObjectFace($object, 'iconInlineDisplay');

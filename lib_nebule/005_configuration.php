@@ -894,8 +894,8 @@ class Configuration extends Functions
         if ($name == '' )
             return '';
 
-        if (file_exists(nebule::NEBULE_ENVIRONMENT_FILE)) {
-            $file = file(nebule::NEBULE_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
+        if (file_exists(References::CONFIGURATION_FILE)) {
+            $file = file(References::CONFIGURATION_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
             foreach ($file as $line) {
                 $l = trim($line);
 

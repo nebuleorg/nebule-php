@@ -1038,21 +1038,11 @@ class Entity extends Node implements nodeInterface
         <p>La bibliothèque utilise actuellement plusieurs entités spéciales, dites autorités maîtresses, avec des rôles
             prédéfinis :</p>
         <ol>
-            <li>Maître du tout. L'instance actuelle s'appelle <a href="http://puppetmaster.nebule.org">puppetmaster</a>.
-                Voir <a href="#cam">CAM</a>.
-            </li>
-            <li>Maître de la sécurité. L'instance actuelle s'appelle <a href="http://cerberus.nebule.org">cerberus</a>.
-                Voir <a href="#cams">CAMS</a>.
-            </li>
-            <li>Maître du code. L'instance actuelle s'appelle <a href="http://bachue.nebule.org">bachue</a>. Voir <a
-                    href="#camc">CAMC</a>.
-            </li>
-            <li>Maître de l'annuaire. L'instance actuelle s'appelle <a href="http://asabiyya.nebule.org">assabyia</a>.
-                Voir <a href="#cama">CAMA</a>.
-            </li>
-            <li>Maître du temps. L'instance actuelle s'appelle <a href="http://kronos.nebule.org">kronos</a>. Voir <a
-                    href="#camt">CAMT</a>.
-            </li>
+            <li>Maître du tout. L'instance actuelle s'appelle <a href="<?php echo References::PUPPETMASTER_URL; ?>"><?php echo \Nebule\Library\References::PUPPETMASTER_NAME; ?></a>. Voir <a href="#cam">CAM</a>.</li>
+            <li>Maître de la sécurité. L'instance actuelle s'appelle <a href="<?php echo References::SECURITY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::SECURITY_MASTER_NAME; ?></a>.Voir <a href="#cams">CAMS</a>.</li>
+            <li>Maître du code. L'instance actuelle s'appelle <a href="<?php echo References::CODE_MASTER_URL; ?>"><?php echo \Nebule\Library\References::CODE_MASTER_NAME; ?></a>. Voir <a href="#camc">CAMC</a>.</li>
+            <li>Maître de l'annuaire. L'instance actuelle s'appelle <a href="<?php echo References::DIRECTORY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::DIRECTORY_MASTER_NAME; ?></a>. Voir <a href="#cama">CAMA</a>.</li>
+            <li>Maître du temps. L'instance actuelle s'appelle <a href="<?php echo References::TIME_MASTER_URL; ?>"><?php echo \Nebule\Library\References::TIME_MASTER_NAME; ?></a>. Voir <a href="#camt">CAMT</a>.</li>
         </ol>
         <p>Pour chaque catégorie, il peut y avoir plusieurs entités concurrentes reconnues simultanément. Actuellement
             seul un maître du tout est géré à la fois.</p>

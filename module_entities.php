@@ -35,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250515';
+    const MODULE_VERSION = '020250615';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';

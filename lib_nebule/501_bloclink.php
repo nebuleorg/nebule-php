@@ -838,7 +838,7 @@ class BlocLink extends Functions implements blocLinkInterface
 
         // If needed, in history.
         if ($this->_configurationInstance->getOptionAsBoolean('permitHistoryLinksSign'))
-            $this->_ioInstance->setBlockLink(nebule::NEBULE_LOCAL_HISTORY_FILE, $this->_rawBlocLink);
+            $this->_ioInstance->setBlockLink(References::HISTORY_FILE, $this->_rawBlocLink);
 
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {

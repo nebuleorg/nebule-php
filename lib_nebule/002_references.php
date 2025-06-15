@@ -12,133 +12,150 @@ namespace Nebule\Library;
  */
 class References //extends Functions
 {
-    const VIRTUAL_NODE_SIZE = 36;
-    // Les commandes.
-    const COMMAND_SWITCH_APPLICATION = 'a';
-    const COMMAND_APPLICATION_BACK = 'c';
-    const COMMAND_LOCAL_ENTITY_FILE = 'e'; // Into folder /
-    const COMMAND_FLUSH = 'f';
-    const COMMAND_RESCUE = 'r';
-    const COMMAND_AUTH_ENTITY_LOGIN = 'login';
-    const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
-    const COMMAND_AUTH_ENTITY_MOD = 'auth';
-    const COMMAND_AUTH_ENTITY_INFO = 'info';
-    const COMMAND_SELECT_LANG = 'lang';
-    const COMMAND_SELECT_OBJECT = 'obj';
-    const COMMAND_SELECT_ENTITY = 'ent';
-    const COMMAND_SELECT_GHOST = 'gho';
-    const COMMAND_SELECT_GROUP = 'grp';
-    const COMMAND_SELECT_CONVERSATION = 'cvt';
-    const COMMAND_SELECT_CURRENCY = 'cur';
-    const COMMAND_SELECT_TOKENPOOL = 'tkp';
-    const COMMAND_SELECT_TOKEN = 'tkn';
-    const COMMAND_SELECT_WALLET = 'wal';
-    const COMMAND_SELECT_LINK = 'lnk';
-    const COMMAND_SELECT_TRANSACTION = 'trs';
-    const COMMAND_SELECT_PASSWORD = 'pwd';
-    const COMMAND_SELECT_TICKET = 'tkt';
+    public const CONFIGURATION_FILE = 'c'; // Into folder /
+    public const LOCAL_ENTITY_FILE = 'e'; // Into folder /
+    public const HISTORY_FILE = 'f'; // Into folder /l/
+    public const LINKS_FOLDER = 'l'; // Into folder /
+    public const OBJECTS_FOLDER = 'o'; // Into folder /
+    public const BOOTSTRAP_FILE = 'index.php'; // Into folder /
+    public const VIRTUAL_NODE_SIZE = 36;
+    public const PUPPETMASTER_NAME = 'puppetmaster';
+    public const PUPPETMASTER_URL = 'http://puppetmaster.nebule.org';
+    public const SECURITY_MASTER_NAME = 'cerberus';
+    public const SECURITY_MASTER_URL = 'http://security.master.nebule.org';
+    public const CODE_MASTER_NAME = 'bachue';
+    public const CODE_MASTER_URL = 'http://code.master.nebule.org';
+    public const DIRECTORY_MASTER_NAME = 'asabiyya';
+    public const DIRECTORY_MASTER_URL = 'http://directory.master.nebule.org';
+    public const TIME_MASTER_NAME = 'kronos';
+    public const TIME_MASTER_URL = 'http://time.master.nebule.org';
 
+    // Les commandes.
+    public const COMMAND_SWITCH_APPLICATION = 'a';
+    public const COMMAND_APPLICATION_BACK = 'c';
+    public const COMMAND_LOCAL_ENTITY_FILE = 'e'; // Into folder /
+    public const COMMAND_FLUSH = 'f';
+    public const COMMAND_RESCUE = 'r';
+    public const COMMAND_AUTH_ENTITY_LOGIN = 'login';
+    public const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
+    public const COMMAND_AUTH_ENTITY_MOD = 'auth';
+    public const COMMAND_AUTH_ENTITY_INFO = 'info';
+    public const COMMAND_SELECT_LANG = 'lang';
+    public const COMMAND_SELECT_OBJECT = 'obj';
+    public const COMMAND_SELECT_ENTITY = 'ent';
+    public const COMMAND_SELECT_GHOST = 'gho';
+    public const COMMAND_SELECT_GROUP = 'grp';
+    public const COMMAND_SELECT_CONVERSATION = 'cvt';
+    public const COMMAND_SELECT_CURRENCY = 'cur';
+    public const COMMAND_SELECT_TOKENPOOL = 'tkp';
+    public const COMMAND_SELECT_TOKEN = 'tkn';
+    public const COMMAND_SELECT_WALLET = 'wal';
+    public const COMMAND_SELECT_LINK = 'lnk';
+    public const COMMAND_SELECT_TRANSACTION = 'trs';
+    public const COMMAND_SELECT_PASSWORD = 'pwd';
+    public const COMMAND_SELECT_TICKET = 'tkt';
+    
     // Les références.
-    const REFERENCE_OBJECT_TEXT = 'text/plain';
-    const REFERENCE_OBJECT_HTML = 'text/html';
-    const REFERENCE_OBJECT_CSS = 'text/css';
-    const REFERENCE_OBJECT_PHP = 'text/x-php';
-    const REFERENCE_OBJECT_APP_PHP = 'application/x-httpd-php';
-    const REFERENCE_OBJECT_PNG = 'image/png';
-    const REFERENCE_OBJECT_JPEG = 'image/jpeg';
-    const REFERENCE_OBJECT_MP3 = 'audio/mpeg';
-    const REFERENCE_OBJECT_OGG = 'audio/x-vorbis+ogg';
-    const REFERENCE_OBJECT_CRYPT_RSA = 'application/x-encrypted/rsa';
-    const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
-    const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
-    const REFERENCE_PRIVATE_KEY = 'nebule/objet/entite/prive';
-    const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
-    const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
-    const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
-    const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
-    const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
-    const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
+    public const REFERENCE_OBJECT_TEXT = 'text/plain';
+    public const REFERENCE_OBJECT_HTML = 'text/html';
+    public const REFERENCE_OBJECT_CSS = 'text/css';
+    public const REFERENCE_OBJECT_PHP = 'text/x-php';
+    public const REFERENCE_OBJECT_APP_PHP = 'application/x-httpd-php';
+    public const REFERENCE_OBJECT_PNG = 'image/png';
+    public const REFERENCE_OBJECT_JPEG = 'image/jpeg';
+    public const REFERENCE_OBJECT_MP3 = 'audio/mpeg';
+    public const REFERENCE_OBJECT_OGG = 'audio/x-vorbis+ogg';
+    public const REFERENCE_OBJECT_CRYPT_RSA = 'application/x-encrypted/rsa';
+    public const REFERENCE_OBJECT_ENTITY = 'application/x-pem-file';
+    public const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
+    public const REFERENCE_PRIVATE_KEY = 'nebule/objet/entite/prive';
+    public const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
+    public const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
+    public const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
+    public const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
+    public const LIB_RID_DIRECTORY_AUTHORITY = '0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288';
+    public const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
 
     // Les objets références de nebule.
-    const REFERENCE_NEBULE_OBJET = 'nebule/objet';
-    const REFERENCE_NEBULE_OBJET_HASH = 'nebule/objet/hash';
-    const REFERENCE_NEBULE_OBJET_HOMOMORPHE = 'nebule/objet/homomorphe';
-    const REFERENCE_NEBULE_OBJET_TYPE = 'nebule/objet/type';
-    const REFERENCE_NEBULE_OBJET_LOCALISATION = 'nebule/objet/localisation';
-    const REFERENCE_NEBULE_OBJET_TAILLE = 'nebule/objet/taille';
-    const REFERENCE_NEBULE_OBJET_PRENOM = 'nebule/objet/prenom';
-    const REFERENCE_NEBULE_OBJET_NOM = 'nebule/objet/nom';
-    const REFERENCE_NEBULE_OBJET_SURNOM = 'nebule/objet/surnom';
-    const REFERENCE_NEBULE_OBJET_PREFIX = 'nebule/objet/prefix';
-    const REFERENCE_NEBULE_OBJET_SUFFIX = 'nebule/objet/suffix';
-    const REFERENCE_NEBULE_OBJET_LIEN = 'nebule/objet/lien';
-    const REFERENCE_NEBULE_OBJET_DATE = 'nebule/objet/date';
-    const REFERENCE_NEBULE_OBJET_DATE_ANNEE = 'nebule/objet/date/annee';
-    const REFERENCE_NEBULE_OBJET_DATE_MOIS = 'nebule/objet/date/mois';
-    const REFERENCE_NEBULE_OBJET_DATE_JOUR = 'nebule/objet/date/jour';
-    const REFERENCE_NEBULE_OBJET_DATE_HEURE = 'nebule/objet/date/heure';
-    const REFERENCE_NEBULE_OBJET_DATE_MINUTE = 'nebule/objet/date/minute';
-    const REFERENCE_NEBULE_OBJET_DATE_SECONDE = 'nebule/objet/date/seconde';
-    const REFERENCE_NEBULE_OBJET_DATE_ZONE = 'nebule/objet/date/zone';
-    const REFERENCE_NEBULE_OBJET_ENTITE = 'nebule/objet/entite';
-    const REFERENCE_NEBULE_OBJET_ENTITE_TYPE = 'nebule/objet/entite/type';
-    const REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION = 'nebule/objet/entite/localisation';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI = 'nebule/objet/entite/suivi';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SECONDE = 'nebule/objet/entite/suivi/seconde';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MINUTE = 'nebule/objet/entite/suivi/minute';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_HEURE = 'nebule/objet/entite/suivi/heure';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_JOUR = 'nebule/objet/entite/suivi/jour';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SEMAINE = 'nebule/objet/entite/suivi/semaine';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MOIS = 'nebule/objet/entite/suivi/mois';
-    const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_ANNEE = 'nebule/objet/entite/suivi/annee';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE = 'nebule/objet/entite/maitre';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE = 'nebule/objet/entite/maitre/securite';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE = 'nebule/objet/entite/maitre/code';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE = 'nebule/objet/entite/maitre/annuaire';
-    const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS = 'nebule/objet/entite/maitre/temps';
-    const REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE = 'nebule/objet/entite/autorite/locale';
-    const REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT = 'nebule/objet/entite/recouvrement';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP = 'nebule/objet/interface/web/php/bootstrap';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE = 'nebule/objet/interface/web/php/bibliotheque';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'; // Web PHP
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE = '4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'; // Web PHP
-    const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE = '1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'; // Web PHP
-    const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
-    const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';
-    const REFERENCE_NEBULE_OBJET_EMOTION = 'nebule/objet/emotion';
-    const REFERENCE_NEBULE_OBJET_EMOTION_JOIE = 'nebule/objet/emotion/joie';
-    const REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE = 'nebule/objet/emotion/confiance';
-    const REFERENCE_NEBULE_OBJET_EMOTION_PEUR = 'nebule/objet/emotion/peur';
-    const REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE = 'nebule/objet/emotion/surprise';
-    const REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE = 'nebule/objet/emotion/tristesse';
-    const REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT = 'nebule/objet/emotion/degout';
-    const REFERENCE_NEBULE_OBJET_EMOTION_COLERE = 'nebule/objet/emotion/colere';
-    const REFERENCE_NEBULE_OBJET_EMOTION_INTERET = 'nebule/objet/emotion/interet';
-    const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
-    const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
-    const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';
-    const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';
-    const REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE = 'nebule/objet/groupe/dissimule';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION = 'nebule/objet/conversation';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE = 'nebule/objet/conversation/suivie';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE = 'nebule/objet/conversation/fermee';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE = 'nebule/objet/conversation/protegee';
-    const REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE = 'nebule/objet/conversation/dissimulee';
-    const REFERENCE_NEBULE_OBJET_ARBORESCENCE = 'nebule/objet/arborescence';
-    const REFERENCE_NEBULE_OBJET_MONNAIE = 'nebule/objet/monnaie';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_JETON = 'nebule/objet/monnaie/jeton';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_SAC = 'nebule/objet/monnaie/sac';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE = 'nebule/objet/monnaie/portefeuille';
-    const REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION = 'nebule/objet/monnaie/transaction';
-    const REFERENCE_NEBULE_OPTION = 'nebule/option';
-    const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
-    const REFERENCE_NEBULE_DANGER = 'nebule/danger';
-    const REFERENCE_NEBULE_WARNING = 'nebule/warning';
+    public const REFERENCE_NEBULE_OBJET = 'nebule/objet';
+    public const REFERENCE_NEBULE_OBJET_HASH = 'nebule/objet/hash';
+    public const REFERENCE_NEBULE_OBJET_HOMOMORPHE = 'nebule/objet/homomorphe';
+    public const REFERENCE_NEBULE_OBJET_TYPE = 'nebule/objet/type';
+    public const REFERENCE_NEBULE_OBJET_LOCALISATION = 'nebule/objet/localisation';
+    public const REFERENCE_NEBULE_OBJET_TAILLE = 'nebule/objet/taille';
+    public const REFERENCE_NEBULE_OBJET_PRENOM = 'nebule/objet/prenom';
+    public const REFERENCE_NEBULE_OBJET_NOM = 'nebule/objet/nom';
+    public const REFERENCE_NEBULE_OBJET_SURNOM = 'nebule/objet/surnom';
+    public const REFERENCE_NEBULE_OBJET_PREFIX = 'nebule/objet/prefix';
+    public const REFERENCE_NEBULE_OBJET_SUFFIX = 'nebule/objet/suffix';
+    public const REFERENCE_NEBULE_OBJET_LIEN = 'nebule/objet/lien';
+    public const REFERENCE_NEBULE_OBJET_DATE = 'nebule/objet/date';
+    public const REFERENCE_NEBULE_OBJET_DATE_ANNEE = 'nebule/objet/date/annee';
+    public const REFERENCE_NEBULE_OBJET_DATE_MOIS = 'nebule/objet/date/mois';
+    public const REFERENCE_NEBULE_OBJET_DATE_JOUR = 'nebule/objet/date/jour';
+    public const REFERENCE_NEBULE_OBJET_DATE_HEURE = 'nebule/objet/date/heure';
+    public const REFERENCE_NEBULE_OBJET_DATE_MINUTE = 'nebule/objet/date/minute';
+    public const REFERENCE_NEBULE_OBJET_DATE_SECONDE = 'nebule/objet/date/seconde';
+    public const REFERENCE_NEBULE_OBJET_DATE_ZONE = 'nebule/objet/date/zone';
+    public const REFERENCE_NEBULE_OBJET_ENTITE = 'nebule/objet/entite';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_TYPE = 'nebule/objet/entite/type';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION = 'nebule/objet/entite/localisation';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI = 'nebule/objet/entite/suivi';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SECONDE = 'nebule/objet/entite/suivi/seconde';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MINUTE = 'nebule/objet/entite/suivi/minute';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_HEURE = 'nebule/objet/entite/suivi/heure';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_JOUR = 'nebule/objet/entite/suivi/jour';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SEMAINE = 'nebule/objet/entite/suivi/semaine';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_MOIS = 'nebule/objet/entite/suivi/mois';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_ANNEE = 'nebule/objet/entite/suivi/annee';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE = 'nebule/objet/entite/maitre';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE = 'nebule/objet/entite/maitre/securite';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE = 'nebule/objet/entite/maitre/code';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE = 'nebule/objet/entite/maitre/annuaire';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS = 'nebule/objet/entite/maitre/temps';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE = 'nebule/objet/entite/autorite/locale';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT = 'nebule/objet/entite/recouvrement';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_BOOTSTRAP = 'nebule/objet/interface/web/php/bootstrap';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_BIBLIOTHEQUE = 'nebule/objet/interface/web/php/bibliotheque';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APPLICATIONS = 'nebule/objet/interface/web/php/applications';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT = 'nebule/objet/interface/web/php/applications/direct';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE = 'nebule/objet/interface/web/php/applications/active';
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES = 'fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'; // Web PHP
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE = '4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'; // Web PHP
+    public const REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE = '1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'; // Web PHP
+    public const REFERENCE_NEBULE_OBJET_NOEUD = 'nebule/objet/noeud';
+    public const REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE = 'nebule/objet/image/reference';
+    public const REFERENCE_NEBULE_OBJET_EMOTION = 'nebule/objet/emotion';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_JOIE = 'nebule/objet/emotion/joie';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE = 'nebule/objet/emotion/confiance';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_PEUR = 'nebule/objet/emotion/peur';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE = 'nebule/objet/emotion/surprise';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE = 'nebule/objet/emotion/tristesse';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT = 'nebule/objet/emotion/degout';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_COLERE = 'nebule/objet/emotion/colere';
+    public const REFERENCE_NEBULE_OBJET_EMOTION_INTERET = 'nebule/objet/emotion/interet';
+    public const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
+    public const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
+    public const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';
+    public const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';
+    public const REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE = 'nebule/objet/groupe/dissimule';
+    public const REFERENCE_NEBULE_OBJET_CONVERSATION = 'nebule/objet/conversation';
+    public const REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE = 'nebule/objet/conversation/suivie';
+    public const REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE = 'nebule/objet/conversation/fermee';
+    public const REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE = 'nebule/objet/conversation/protegee';
+    public const REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE = 'nebule/objet/conversation/dissimulee';
+    public const REFERENCE_NEBULE_OBJET_ARBORESCENCE = 'nebule/objet/arborescence';
+    public const REFERENCE_NEBULE_OBJET_MONNAIE = 'nebule/objet/monnaie';
+    public const REFERENCE_NEBULE_OBJET_MONNAIE_JETON = 'nebule/objet/monnaie/jeton';
+    public const REFERENCE_NEBULE_OBJET_MONNAIE_SAC = 'nebule/objet/monnaie/sac';
+    public const REFERENCE_NEBULE_OBJET_MONNAIE_PORTEFEUILLE = 'nebule/objet/monnaie/portefeuille';
+    public const REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION = 'nebule/objet/monnaie/transaction';
+    public const REFERENCE_NEBULE_OPTION = 'nebule/option';
+    public const REFERENCE_NEBULE_REFERENCE = 'nebule/reference';
+    public const REFERENCE_NEBULE_DANGER = 'nebule/danger';
+    public const REFERENCE_NEBULE_WARNING = 'nebule/warning';
 
-    const RESERVED_OBJECTS_LIST = array(
+    public const RESERVED_OBJECTS_LIST = array(
         self::REFERENCE_NEBULE_OBJET,
         self::REFERENCE_NEBULE_OBJET_HASH,
         self::REFERENCE_NEBULE_OBJET_HOMOMORPHE,
@@ -214,11 +231,11 @@ class References //extends Functions
         self::REFERENCE_NEBULE_WARNING,
     );
 
-    const ACTIVE_APPLICATIONS_WHITELIST = array(
+    public const ACTIVE_APPLICATIONS_WHITELIST = array(
         '2121510000000000006e6562756c65206170706c69636174696f6e73000000000000212151.none.296',
     );
 
-    const OBJ_IMG = array(
+    public const OBJ_IMG = array(
         'nebule' => 'iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAARoElEQVR42u2dbbCcZX2Hrz1JMBSUAoEECCiVkLAEEgKkSBAwgFg
 GwZFb6NBOSVJn0H5peXXqSwVrdQZF6Cd0RiQ4kiH415ZpOlUECpKABBLewkIAayFAAgRCGxBylJx+2KdDwHCS7Ov9PHtdMzt8IGf32f/ev+v+388riIiIiIi
 IiIiIiIhINalZgvKTUtoTmFy89gUmAXsDewC7F69dgV2AnYGdgLFb/P4jwO+BYeAN4HVgI/AqsAF4BXgRWAc8DzwLrImIV6y+ApDehHx/4LDiVQemAR8G9uz
@@ -3501,7 +3518,7 @@ BGCV4n/mK5qm/ZqrRQEgxojAywB+peCfFtE07Q6uEAWAOMsN8OBTAIgDhYAHnwJAFBKC8wA28eATCgDF
 A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
     );
 
-    const REF_IMG = array(
+    public const REF_IMG = array(
         'nebule' => '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272',
         'addent' => 'b598ec9eae41c186e554662d13cb5ad8b82b7a73d11742b6b475d0ba5078cda764ce.none.272',
         'addlnk' => 'ec42055c52ae0c4600795871b04851f3d2e8bc5338d886200e928b92344f0db535e5.none.272',
@@ -3594,7 +3611,6 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
         'back' => '8ade584d3aa420335a7af82da4438654b891985777cc05bf6cbe86ebe328e31f1cc4.none.272',
         'query' => '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272',
     );
-
     static public function createNodeReferences($nebuleInstance): bool
     {
         $ok = true;

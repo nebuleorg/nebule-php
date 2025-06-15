@@ -180,13 +180,13 @@ abstract class Applications extends Functions implements applicationInterface
 
     protected function _findAskDownload(): bool
     {
-        $arg_dwlobj = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_dwlobj = trim((string)filter_input(INPUT_GET, References::OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_dwlobj)) {
             $this->_askDownload = true;
             $this->_askDownloadObject = trim($arg_dwlobj);
             $this->_metrologyInstance->addLog('ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df913e73');
         }
-        $arg_dwllnk = trim((string)filter_input(INPUT_GET, nebule::NEBULE_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_dwllnk = trim((string)filter_input(INPUT_GET, References::LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if (Node::checkNID($arg_dwllnk)) {
             $this->_askDownload = true;
             $this->_askDownloadLinks = trim($arg_dwllnk);
@@ -1393,14 +1393,14 @@ class Traduction extends Traductions
             <i>nebule</i>.
             Cela va inclure :</p>
         <ul>
-            <li>La création d'un fichier <i><?php echo \Nebule\Library\nebule::NEBULE_ENVIRONMENT_FILE; ?></i> de
+            <li>La création d'un fichier <i><?php echo References::CONFIGURATION_FILE; ?></i> de
                 configuration générique.</li>
-            <li>La création d'un dossier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_OBJECTS_FOLDER; ?></i> pour
+            <li>La création d'un dossier <i><?php echo References::OBJECTS_FOLDER; ?></i> pour
                 stocker les objets.</li>
-            <li>La création d'un dossier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_LINKS_FOLDER; ?></i> pour
+            <li>La création d'un dossier <i><?php echo References::LINKS_FOLDER; ?></i> pour
                 stocker les liens.</li>
             <li>La génération d'une entité locale, dite entité de l'instance.</li>
-            <li>La création d'un fichier <i><?php echo \Nebule\Library\nebule::NEBULE_LOCAL_ENTITY_FILE; ?></i>
+            <li>La création d'un fichier <i><?php echo References::LOCAL_ENTITY_FILE; ?></i>
                 contenant l'empreinte <i>EID</i> de l'entité de l'instance.</li>
             <li>La création de différents objets dans le dossier des objets.</li>
             <li>La création de différents liens dans le dossier des liens.</li>

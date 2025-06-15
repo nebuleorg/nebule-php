@@ -57,7 +57,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250521';
+    const APPLICATION_VERSION = '020250615';
     const APPLICATION_LICENCE = 'GNU GPL 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
@@ -169,15 +169,11 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
     protected function _initUrlLinks(): void
     {
-        $this->setUrlLinkObjectPrefix('?a=4&l=');
-        $this->setUrlLinkGroupPrefix('?a=4&l=');
-        $this->setUrlLinkConversationPrefix('?a=4&l=');
-        $this->setUrlLinkEntityPrefix('?a=206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288&l=');
-        $this->setUrlLinkCurrencyPrefix('?a=4&l=');
-        $this->setUrlLinkTokenPoolPrefix('?a=4&l=');
-        $this->setUrlLinkTokenPrefix('?a=4&l=');
-        $this->setUrlLinkTransactionPrefix('?a=4&l=');
-        $this->setUrlLinkWalletPrefix('?a=4&l=');
+        $this->setUrlLinkPrefix('Nebule\Library\Node', '?a=4&l=');
+        $this->setUrlLinkPrefix('Nebule\Library\Entity', '?a=' . $this->_applicationInstance::APPLICATION_NODE
+            . '&'. self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . ModuleEntities::MODULE_COMMAND_NAME
+            . '&'. self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . ModuleEntities::MODULE_DEFAULT_VIEW
+            . '&' . References::COMMAND_SELECT_ENTITY . '=');
     }
 
 

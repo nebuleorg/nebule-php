@@ -159,8 +159,8 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         $iconOid = $this->_getIconUpdate($icon);
 
         if ($this->_nebuleInstance->getIoInstance()->checkObjectPresent($iconOid))
-            return nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $iconOid;
-        return '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $iconOid;
+            return References::OBJECTS_FOLDER . '/' . $iconOid;
+        return '?' . References::OBJECTS_FOLDER . '=' . $iconOid;
     }
 
     protected function _getNidDefaultIcon(?Node $rid): Node
@@ -193,7 +193,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         if ($oid->getID() == '0')
             return '';
 
-        $result = '<img src="/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid->getID() . '"';
+        $result = '<img src="/' . References::OBJECTS_FOLDER . '/' . $oid->getID() . '"';
 
         if ($alt == '')
             $alt = $oid->getID();

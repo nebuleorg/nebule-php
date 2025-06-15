@@ -10,7 +10,7 @@ namespace Nebule\Library;
  */
 class Crypto extends Functions implements CryptoInterface
 {
-    const SESSION_SAVED_VARS = array(
+    public const SESSION_SAVED_VARS = array(
         '_defaultInstance',
         '_ready',
         '_listClasses',
@@ -18,13 +18,13 @@ class Crypto extends Functions implements CryptoInterface
         '_listTypes',
     );
 
-    const DEFAULT_CLASS = 'openssl';
+    public const DEFAULT_CLASS = 'openssl';
 
-    const RANDOM_PSEUDO = 1;
-    const RANDOM_STRONG = 2;
-    const TYPE_HASH = 1;
-    const TYPE_SYMMETRIC = 2;
-    const TYPE_ASYMMETRIC = 3;
+    public const RANDOM_PSEUDO = 1;
+    public const RANDOM_STRONG = 2;
+    public const TYPE_HASH = 1;
+    public const TYPE_SYMMETRIC = 2;
+    public const TYPE_ASYMMETRIC = 3;
 
     private ?CryptoInterface $_defaultInstance = null;
 
@@ -114,7 +114,7 @@ class Crypto extends Functions implements CryptoInterface
     public function hash(string $data, string $algo = ''): string
     {
         if ($algo == '')
-            $algo = References::REFERENCE_CRYPTO_HASH_ALGORITHM;
+            $algo = \Nebule\Library\References::REFERENCE_CRYPTO_HASH_ALGORITHM;
         return $this->_defaultInstance->hash($data, $algo);
     }
 
@@ -277,7 +277,7 @@ class Crypto extends Functions implements CryptoInterface
      *
      * @return void
      */
-    static public function echoDocumentationCore()
+    static public function echoDocumentationCore(): void
     {
         ?>
 
@@ -301,7 +301,7 @@ class Crypto extends Functions implements CryptoInterface
 
         <h2 id="co">CO / Confiance dans l’Objet</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L’intégrité et la confidentialité des objets est garantie non pas par une <i>méta-donnée</i> mais par les mathématiques qui animent les algorithmes cryptographiques.</p>
+        <p>L’intégrité et la confidentialité des objets est garantie non pas par une <i>méta-donnée,</i> mais par les mathématiques qui animent les algorithmes cryptographiques.</p>
         <p>Un objet numérique est identifié par une empreinte ou condensat (hash) numérique. Cette empreinte doit avoir des caractéristiques propres fortes correspondant à des fonctions de prise d’empreinte cryptographiques. C’est à dire :</p>
         <ol>
             <li>L’espace des valeurs possibles est suffisamment grand ;</li>
@@ -317,10 +317,10 @@ class Crypto extends Functions implements CryptoInterface
 
         <h2 id="cl">CL / Confiance dans le Lien</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L’intégrité des liens est garantie non pas par une <i>méta-donnée</i> mais par les fonctions mathématiques utilisées par les algorithmes cryptographiques.</p>
+        <p>L’intégrité des liens est garantie non pas par une <i>méta-donnée,</i> mais par les fonctions mathématiques utilisées par les algorithmes cryptographiques.</p>
         <p>La signature du lien est obligatoire. La signature doit être réalisée par le signataire. La signature englobe tout le lien à l’exception d’elle-même. Un lien avec une signature invalide ou non vérifiable doit être ignoré et supprimé.</p>
         <p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
-        <p>L’empreinte du signataire est inclue dans la partie signée, ainsi il ne peut être modifier sans invalider tout le lien. On ne peut ainsi pas usurper une autre entité.</p>
+        <p>L’empreinte du signataire est incluse dans la partie signée, ainsi, il ne peut être modifié sans invalider tout le lien. On ne peut ainsi pas usurper une autre entité.</p>
         <p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être supprimé. Lors de la suppression d’un lien, les autres liens de cet objet ne sont pas supprimés et l'objet n'est pas supprimé. La vérification de la validité des objets est complètement indépendante de celle des liens, et inversement (cf <a href="#lv">LV</a> et <a href="#oov">OOV</a>).</p>
 
         <h3 id="coe">COE / Confiance dans l'Objet Entité</h3>
@@ -336,34 +336,34 @@ class Crypto extends Functions implements CryptoInterface
         <h3 id="cam">CAM / Autorité Maîtresse</h3>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Autrement appelée entité maîtresse du tout, cette entité est la seule déclarée en dur dans le code de la bibliothèque. Toutes les autres entités sont définies par des liens de cette entité.</p>
-        <p>Au besoin elle peut être remplacée par une autre entité via l'option <code>puppetmaster</code> dans le fichier de configuration. Cette option n'est pas utilisable via les liens.</p>
-        <p>L'instance actuelle s'appelle <i>puppetmaster</i> et est localisée en <a href="http://puppetmaster.nebule.org">puppetmaster.nebule.org</a>.</p>
+        <p>Au besoin, elle peut être remplacée par une autre entité via l'option <code>puppetmaster</code> dans le fichier de configuration. Cette option n'est pas utilisable via les liens.</p>
+        <p>L'instance actuelle s'appelle <i><?php echo \Nebule\Library\References::PUPPETMASTER_NAME; ?></i> et est localisée en <a href="<?php echo \Nebule\Library\References::PUPPETMASTER_URL; ?>"><?php echo \Nebule\Library\References::PUPPETMASTER_URL; ?></a>.</p>
         <p>L'identifiant de cette entité est <code>88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea</code>.</p>
 
         <h4 id="cams">CAMS / Autorité Maîtresse de la Sécurité</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de la sécurité. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/securite</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
+        <p>Cette entité est désignée par le puppetmaster par rapport au rôle de maître de la sécurité. Le rôle est défini pas l'objet réservé <code>nebule/objet/entite/maitre/securite</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
-        <p>L'instance actuelle s'appelle <i>cerberus</i> et est localisée en <a href="http://cerberus.nebule.org">cerberus.nebule.org</a>.</p>
+        <p>L'instance actuelle s'appelle <i><?php echo \Nebule\Library\References::SECURITY_MASTER_NAME; ?></i> et est localisée en <a href="<?php echo \Nebule\Library\References::SECURITY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::SECURITY_MASTER_URL; ?></a>.</p>
         <p>Les enfers n'ayant pas encore ouvert, cette entité n'est pas utilisée.</p>
 
         <h4 id="camc">CAMC / Autorité Maîtresse du code</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du code. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/code</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
+        <p>Cette entité est désignée par le puppetmaster par rapport au rôle de maître du code. Le rôle est défini pas l'objet réservé <code>nebule/objet/entite/maitre/code</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
-        <p>L'instance actuelle s'appelle <i>bachue</i> et est localisée en <a href="http://bachue.nebule.org">bachue.nebule.org</a>.</p>
+        <p>L'instance actuelle s'appelle <i><?php echo \Nebule\Library\References::CODE_MASTER_NAME; ?></i> et est localisée en <a href="<?php echo \Nebule\Library\References::CODE_MASTER_URL; ?>"><?php echo \Nebule\Library\References::CODE_MASTER_URL; ?></a>.</p>
 
         <h4 id="cama">CAMA / Autorité Maîtresse de l'annuaire</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître de l'annuaire. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/annuaire</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
+        <p>Cette entité est désignée par le puppetmaster par rapport au rôle de maître de l'annuaire. Le rôle est défini pas l'objet réservé <code>nebule/objet/entite/maitre/annuaire</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
-        <p>L'instance actuelle s'appelle <i>asabiyya</i> et est localisée en <a href="http://asabiyya.nebule.org">asabiyya.nebule.org</a>.</p>
+        <p>L'instance actuelle s'appelle <i><?php echo \Nebule\Library\References::DIRECTORY_MASTER_NAME; ?></i> et est localisée en <a href="<?php echo \Nebule\Library\References::DIRECTORY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::DIRECTORY_MASTER_URL; ?></a>.</p>
 
         <h4 id="camt">CAMT / Autorité Maîtresse du temps</h4>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Cette entité est dédignée par le puppetmaster par rapport au rôle de maître du temps. Le rôle est définit pas l'objet réservé <code>nebule/objet/entite/maitre/temps</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
+        <p>Cette entité est désignée par le puppetmaster par rapport au rôle de maître du temps. Le rôle est défini pas l'objet réservé <code>nebule/objet/entite/maitre/temps</code>. Voir <a href="#oor">OOR</a> et <a href="#oer">OER</a>.</p>
         <p>A faire...</p>
-        <p>L'instance actuelle s'appelle <i>kronos</i> et est localisée en <a href="http://kronos.nebule.org">kronos.nebule.org</a>.</p>
+        <p>L'instance actuelle s'appelle <i><?php echo \Nebule\Library\References::TIME_MASTER_NAME; ?></i> et est localisée en <a href="<?php echo \Nebule\Library\References::TIME_MASTER_URL; ?>"><?php echo \Nebule\Library\References::TIME_MASTER_URL; ?></a>.</p>
 
         <h2 id="cc">CC / Configuration</h2>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -372,9 +372,9 @@ class Crypto extends Functions implements CryptoInterface
         <p>Les options permettent de modifier le comportement du code de la bibliothèque et des applications.</p>
         <p>La sensibilité des options est variable. On compte trois niveaux de sensibilité :</p>
         <ul>
-            <li>utile (useful)</li>
-            <li>important (careful)</li>
-            <li>critique (critical)</li>
+            <li>Utile (useful)</li>
+            <li>Important (careful)</li>
+            <li>Critique (critical)</li>
         </ul>
         <p>Les options sont rangées par catégories, c'est juste de l'affichage :</p>
         <ul>

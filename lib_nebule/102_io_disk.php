@@ -23,10 +23,10 @@ class ioDisk extends io implements ioInterface
 
     protected function _initialisation(): void
     {
-        if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER))
-            mkdir(nebule::NEBULE_LOCAL_LINKS_FOLDER);
-        if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER))
-            mkdir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER);
+        if (!file_exists(References::LINKS_FOLDER))
+            mkdir(References::LINKS_FOLDER);
+        if (!file_exists(References::OBJECTS_FOLDER))
+            mkdir(References::OBJECTS_FOLDER);
 
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
@@ -84,8 +84,8 @@ class ioDisk extends io implements ioInterface
      */
     public function getInstanceEntityID(string $url = ''): string
     {
-        $filesize = filesize(nebule::NEBULE_LOCAL_ENTITY_FILE);
-        return file_get_contents(nebule::NEBULE_LOCAL_ENTITY_FILE, false, null, 0, $filesize);
+        $filesize = filesize(References::LOCAL_ENTITY_FILE);
+        return file_get_contents(References::LOCAL_ENTITY_FILE, false, null, 0, $filesize);
     }
 
     /**
@@ -94,8 +94,8 @@ class ioDisk extends io implements ioInterface
      */
     public function checkLinksDirectory(string $url = ''): bool
     {
-        if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER)
-            || !is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER)
+        if (!file_exists(References::LINKS_FOLDER)
+            || !is_dir(References::LINKS_FOLDER)
         )
             return false;
 
@@ -108,8 +108,8 @@ class ioDisk extends io implements ioInterface
      */
     public function checkObjectsDirectory(string $url = ''): bool
     {
-        if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
-            || !is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER)
+        if (!file_exists(References::OBJECTS_FOLDER)
+            || !is_dir(References::OBJECTS_FOLDER)
         ) {
             return false;
         }
@@ -123,7 +123,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkLinksRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $file = References::LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -140,7 +140,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkLinksWrite(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_LINKS_FOLDER . '/0';
+        $file = References::LINKS_FOLDER . '/0';
         $resultDelete = false;
 
         // Test la création si pas déjà présent.
@@ -167,7 +167,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkObjectsRead(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $file = References::OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -184,7 +184,7 @@ class ioDisk extends io implements ioInterface
      */
     public function checkObjectsWrite(string $url = ''): bool
     {
-        $file = nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/0';
+        $file = References::OBJECTS_FOLDER . '/0';
         $resultDelete = false;
 
         // Test la création si pas déjà présent.
@@ -212,8 +212,8 @@ class ioDisk extends io implements ioInterface
     public function checkLinkPresent(string $oid, string $url = ''): bool
     {
         if (!Node::checkNID($oid, false)
-            || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
+            || !file_exists(References::LINKS_FOLDER . '/' . $oid)
+            || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return false;
 
@@ -227,8 +227,8 @@ class ioDisk extends io implements ioInterface
     public function checkObjectPresent(string $oid, string $url = ''):bool
     {
         if (!Node::checkNID($oid, false)
-            || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
-            || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
+            || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
+            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
         )
             return false;
 
@@ -253,8 +253,8 @@ class ioDisk extends io implements ioInterface
         $linkList = array();
 
         if (!Node::checkNID($oid, false)
-            || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
+            || !file_exists(References::LINKS_FOLDER . '/' . $oid)
+            || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return array();
 
@@ -262,7 +262,7 @@ class ioDisk extends io implements ioInterface
          * Descripteur du fichier en cours de lecture.
          * @var finfo $file
          */
-        $file = file(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid);
+        $file = file(References::LINKS_FOLDER . '/' . $oid);
         foreach ($file as $link) {
             $linkList[$linkRead] = $link;
             // Vérifie que le nombre maximum de liens à lire n'est pas dépassé.
@@ -290,22 +290,22 @@ class ioDisk extends io implements ioInterface
 
         // Vérifie l'entité destinataire des liens dissimulés.
         if (!Node::checkNID($entity, false)
-            || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity)
+            || !file_exists(References::LINKS_FOLDER . '/' . $entity)
+            || is_dir(References::LINKS_FOLDER . '/' . $entity)
         )
             return $linksList;
 
         // Vérifie l'entité signataire des liens dissimulés.
         if (!is_string($signer)
             || $signer == ''
-            || !file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $signer)
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $signer)
+            || !file_exists(References::LINKS_FOLDER . '/' . $signer)
+            || is_dir(References::LINKS_FOLDER . '/' . $signer)
         )
             $signer = '0';
 
         if ($signer == '0') {
             // Si aucun signataire particulier n'est demandé, lit tous les fichiers de liens attachés à l'entité destinataire.
-            $fileList = glob(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity . '-*', GLOB_NOSORT);
+            $fileList = glob(References::LINKS_FOLDER . '/' . $entity . '-*', GLOB_NOSORT);
 
             // Vérifie la validité du nom du fichier.
             /* TODO
@@ -314,8 +314,8 @@ class ioDisk extends io implements ioInterface
              * $files[] = $l;
              * }
              */
-        } elseif (file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity . '-' . $signer)
-            && !is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $entity . '-' . $signer)
+        } elseif (file_exists(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
+            && !is_dir(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
         ) {
             // Si un signataire particulier est demandé, lit uniquement le fichier de liens concerné.
             $fileList[0] = $entity . '-' . $signer;
@@ -326,7 +326,7 @@ class ioDisk extends io implements ioInterface
 
         // Pour chaque fichier listé, lit les liens.
         foreach ($fileList as $filename) {
-            $file = file(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $filename);
+            $file = file(References::LINKS_FOLDER . '/' . $filename);
             foreach ($file as $link) {
                 // @todo vérifier regex que le lien est de type c ...
                 if (true)
@@ -348,19 +348,19 @@ class ioDisk extends io implements ioInterface
     public function getObject(string $oid, int $maxsize = 0, string $url = '')
     {
         if (!Node::checkNID($oid, false)
-            || !file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
-            || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
+            || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
+            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
         )
             return false;
 
         if ($maxsize == 0)
             $maxsize = $this->_maxData;
 
-        $filesize = filesize(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid);
+        $filesize = filesize(References::OBJECTS_FOLDER . '/' . $oid);
         if ($filesize > $maxsize)
             $filesize = $maxsize;
 
-        return file_get_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid, false, null, 0, $filesize);
+        return file_get_contents(References::OBJECTS_FOLDER . '/' . $oid, false, null, 0, $filesize);
     }
 
     /**
@@ -376,14 +376,14 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
+            || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return false;
 
-        if (file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)) {
+        if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
             // Si le fichier de lien est présent, teste la présence du lien.
             // Extrait un tableau avec une ligne par élément.
-            $l = file(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid);
+            $l = file(References::LINKS_FOLDER . '/' . $oid);
             foreach ($l as $k) {
                 // Si déjà présent, on quitte.
                 if (trim($k) == trim($link))
@@ -396,7 +396,7 @@ class ioDisk extends io implements ioInterface
                 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");*/
         }
 
-        if (file_put_contents(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid, $link . "\n", FILE_APPEND) !== false)
+        if (file_put_contents(References::LINKS_FOLDER . '/' . $oid, $link . "\n", FILE_APPEND) !== false)
             return true;
 
         $this->_mode = 'RO';
@@ -416,9 +416,9 @@ class ioDisk extends io implements ioInterface
         )
             return false;
 
-        if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid))
+        if (file_exists(References::OBJECTS_FOLDER . '/' . $oid))
             return true;
-        if (file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid, $data) !== false) {
+        if (file_put_contents(References::OBJECTS_FOLDER . '/' . $oid, $data) !== false) {
             $this->_metrologyInstance->addLog('ok write oid=' . $oid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e2f2baa1');
             return true;
         }
@@ -437,17 +437,17 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
-            || is_dir(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)
+            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
         )
             return false;
 
-        if (!file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid))
+        if (!file_exists(References::OBJECTS_FOLDER . '/' . $oid))
             return true;
 
         // Essaye de supprimer le fichier de l'objet.
-        unlink(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid);
+        unlink(References::OBJECTS_FOLDER . '/' . $oid);
 
-        if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid)) {
+        if (file_exists(References::OBJECTS_FOLDER . '/' . $oid)) {
             $this->_mode = 'RO';
             return false;
         }
@@ -466,12 +466,12 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
+            || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return false;
 
         // Prépare le fichier temporaire de travail des liens.
-        if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid . '.rmlnk'))
+        if (!file_exists(References::LINKS_FOLDER . '/' . $oid . '.rmlnk'))
             return true;
 
         // TODO
@@ -489,17 +489,17 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)
+            || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return false;
 
-        if (!file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid))
+        if (!file_exists(References::LINKS_FOLDER . '/' . $oid))
             return true;
 
         // Essaye de supprimer le fichier des liens de l'objet.
-        unlink(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid);
+        unlink(References::LINKS_FOLDER . '/' . $oid);
 
-        if (file_exists(nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid)) {
+        if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
             $this->_mode = 'RO';
             return false;
         }

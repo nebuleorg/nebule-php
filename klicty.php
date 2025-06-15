@@ -576,31 +576,31 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();*/
 
-        $this->setUrlLinkObjectPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Node', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkGroupPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Group', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkConversationPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Conversation', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkEntityPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Entity', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkCurrencyPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Currency', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkTokenPoolPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\TokenPool', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkTokenPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Token', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkTransactionPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Transaction', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        $this->setUrlLinkWalletPrefix('?'
+        $this->setUrlLinkPrefix('Nebule\Library\Wallet', '?'
             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
@@ -2161,7 +2161,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['name'] = '::DownloadObject';
                 $actionList[0]['icon'] = self::DEFAULT_ICON_IDOWNLOAD;
                 $actionList[0]['desc'] = '';
-                $actionList[0]['link'] = '?' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '=' . $id;
+                $actionList[0]['link'] = '?' . References::OBJECTS_FOLDER . '=' . $id;
 
                 // Si l'entité est déverrouillée ou que l'objet est protégé.
                 if ($this->_unlocked

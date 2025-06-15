@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250307';
+    const APPLICATION_VERSION = '020250615';
     const APPLICATION_LICENCE = 'GNU GPL 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -189,17 +189,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_actionInstance = $this->_applicationInstance->getActionInstance();
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();*/
-
-        // Vide, est surchargé juste avant l'affichage.
-        $this->setUrlLinkObjectPrefix('?');
-        $this->setUrlLinkGroupPrefix('?');
-        $this->setUrlLinkConversationPrefix('?');
-        $this->setUrlLinkEntityPrefix('?');
-        $this->setUrlLinkCurrencyPrefix('?');
-        $this->setUrlLinkTokenPoolPrefix('?');
-        $this->setUrlLinkTokenPrefix('?');
-        $this->setUrlLinkTransactionPrefix('?');
-        $this->setUrlLinkWalletPrefix('?');
 
         $this->_findLogoApplication();
         $this->_findLogoApplicationLink();

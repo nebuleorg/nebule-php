@@ -85,7 +85,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_ENTITY_FILE;
+        $url = $url . '/' . References::LOCAL_ENTITY_FILE;
         if ($this->_checkExistOverHTTP($url))
             return file_get_contents($url);
         return '0';
@@ -99,7 +99,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/';
+        $url = $url . '/' . References::LINKS_FOLDER . '/';
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -111,7 +111,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/';
+        $url = $url . '/' . References::OBJECTS_FOLDER . '/';
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -123,7 +123,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $url = $url . '/' . References::LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -144,7 +144,7 @@ class ioNetworkHTTPS extends io implements ioInterface
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $url = $url . '/' . References::OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -167,7 +167,7 @@ class ioNetworkHTTPS extends io implements ioInterface
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false))
             return false;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
+        $url = $url . '/' . References::LINKS_FOLDER . '/' . $oid;
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -181,7 +181,7 @@ class ioNetworkHTTPS extends io implements ioInterface
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false))
             return false;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
+        $url = $url . '/' . References::OBJECTS_FOLDER . '/' . $oid;
         return $this->_checkExistOverHTTP($url);
     }
 
@@ -197,7 +197,7 @@ class ioNetworkHTTPS extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
         )
             return array();
-        $url = $url . '/' . nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid;
+        $url = $url . '/' . References::LINKS_FOLDER . '/' . $oid;
         if (!$this->_checkExistOverHTTP($url))
             return array();
 
@@ -242,7 +242,7 @@ class ioNetworkHTTPS extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
         )
             return false;
-        $url = $url . '/' . nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . $oid;
+        $url = $url . '/' . References::OBJECTS_FOLDER . '/' . $oid;
         if ($this->_checkExistOverHTTP($url))
             return file_get_contents($url);
         return false;

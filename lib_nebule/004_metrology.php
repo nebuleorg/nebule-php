@@ -137,7 +137,7 @@ class Metrology extends Functions
         // If permitted, write debug level logs to debug file.
         if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile'))
         {
-            file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
+            file_put_contents(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
             $this->_permitLogsOnDebugFile = true;
         }
     }
@@ -243,8 +243,8 @@ class Metrology extends Functions
         if ($this->_permitLogsOnDebugFile)
         {
             $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $levelName . '(' . $level . ')" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
-            if (file_exists(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
-                file_put_contents(nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $logM . "\n", FILE_APPEND);
+            if (file_exists(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
+                file_put_contents(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $logM . "\n", FILE_APPEND);
         }
     }
 
@@ -378,7 +378,7 @@ class Metrology extends Functions
 
         <?php Displays::docDispTitle(3, 'mjd', 'Debug'); ?>
         <p>Si l'option <b>permitLogsOnDebugFile</b> est activée, un fichier
-            <i><?php echo nebule::NEBULE_LOCAL_OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE; ?></i>
+            <i><?php echo References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE; ?></i>
             est créé puis alimenté avec toutes les traces générées par le bootstrap et les applications indépendamment
             du niveau de journalisation demandé. Ce fichier est utilisé pour du dépannage uniquement. Et ce fichier est
             systématiquement supprimé à chaque exécution du code, au début, quelque soit l'état de l'option
