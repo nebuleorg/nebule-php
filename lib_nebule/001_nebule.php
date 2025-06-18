@@ -977,6 +977,288 @@ class nebule
         return '';
     }
 
+    // TODO move router from bootstrap to libPOO
+    public function router()
+    {
+
+    }
+
+    private function _findApplication(): void {
+        global $nebuleInstance, $libraryPPCheckOK, $bootstrapApplicationIID, $bootstrapApplicationOID, $bootstrapUpdate;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        $bootstrapApplicationIID = '';
+        $bootstrapApplicationOID = '';
+
+        if (!$libraryPPCheckOK || !is_a($nebuleInstance, 'Nebule\Library\nebule'))
+            return;
+
+        // Get ID of app.
+        $this->_findApplicationAsk($bootstrapApplicationIID);
+        if ($bootstrapApplicationIID == '')
+            $this->_findApplicationSession($bootstrapApplicationIID);
+        if ($bootstrapApplicationIID == '')
+            $this->_findApplicationDefault($bootstrapApplicationIID);
+
+        // Set code ID for internal bootstrap apps.
+        session_start();
+        if (strlen($bootstrapApplicationIID) < 2)
+            $bootstrapApplicationOID = $bootstrapApplicationIID;
+        elseif (!$bootstrapUpdate
+            && isset($_SESSION['bootstrapApplicationIID'][0])
+            && $_SESSION['bootstrapApplicationIID'][0] == $bootstrapApplicationIID
+            && \Nebule\Bootstrap\nod_checkNID($_SESSION['bootstrapApplicationIID'][0])
+            && isset($_SESSION['bootstrapApplicationOID'][0])
+        )
+            $bootstrapApplicationOID = $_SESSION['bootstrapApplicationOID'][0];
+        else
+            $bootstrapApplicationOID = \Nebule\Bootstrap\app_getCode($bootstrapApplicationIID);
+        session_abort();
+
+        // If running bad, use default app.
+        if ($bootstrapApplicationOID == '') {
+            $bootstrapApplicationIID = '0';
+            $bootstrapApplicationOID = '0';
+        }
+
+        \Nebule\Bootstrap\log_add('find application IID=' . $bootstrapApplicationIID . ' OID=' . $bootstrapApplicationOID,
+            'info', __FUNCTION__, '5bb68dab');
+    }
+
+    private function _findApplicationAsk(string &$bootstrapApplicationIID): void {
+        global $bootstrapSwitchApplication, $codeBranchNID;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        $phpNID = \Nebule\Bootstrap\obj_getNID(References::REFERENCE_OBJECT_APP_PHP, \Nebule\Bootstrap\LIB_REF_CODE_ALGO);
+
+        if ($bootstrapSwitchApplication != ''
+            && $bootstrapSwitchApplication != $bootstrapApplicationIID
+        ) {
+            \Nebule\Bootstrap\log_add('ask switch application IID=' . $bootstrapSwitchApplication,
+                'info', __FUNCTION__, '0cbacda8');
+            if ($bootstrapSwitchApplication == '0'
+                || $bootstrapSwitchApplication == '1'
+                || $bootstrapSwitchApplication == '2'
+                || $bootstrapSwitchApplication == '3'
+                || $bootstrapSwitchApplication == '4'
+                || $bootstrapSwitchApplication == '5'
+                || $bootstrapSwitchApplication == '6'
+                || $bootstrapSwitchApplication == '7'
+                || $bootstrapSwitchApplication == '8'
+                || $bootstrapSwitchApplication == '9'
+                || \Nebule\Bootstrap\lnk_checkExist('f',
+                    \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS,
+                    $bootstrapSwitchApplication,
+                    $phpNID,
+                    $codeBranchNID)
+            )
+                $bootstrapApplicationIID = $bootstrapSwitchApplication;
+        }
+    }
+
+    private function _findApplicationSession(string &$bootstrapApplicationIID): void {
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+        session_start();
+        if (isset($_SESSION['bootstrapApplicationIID'][0])
+            && (\Nebule\Bootstrap\nod_checkNID($_SESSION['bootstrapApplicationIID'][0])
+                || strlen($_SESSION['bootstrapApplicationIID'][0]) == 1
+            )
+        )
+        {
+            $bootstrapApplicationIID = $_SESSION['bootstrapApplicationIID'][0];
+            \Nebule\Bootstrap\log_add('application on session IID=' . $bootstrapApplicationIID,
+                'debug', __FUNCTION__, '14e62960');
+        }
+        session_abort();
+    }
+
+    private function _findApplicationDefault(string &$bootstrapApplicationIID): void {
+        global $nebuleInstance;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        //$defaultApplicationID = lib_getConfiguration('defaultApplication');
+        $defaultApplicationID = $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultApplication');
+        if ($defaultApplicationID == '0'
+            || $defaultApplicationID == '1'
+            || $defaultApplicationID == '2'
+            || $defaultApplicationID == '3'
+            || $defaultApplicationID == '4'
+            || $defaultApplicationID == '5'
+            || $defaultApplicationID == '6'
+            || $defaultApplicationID == '7'
+            || $defaultApplicationID == '8'
+            || $defaultApplicationID == '9'
+        )
+            $bootstrapApplicationIID = $defaultApplicationID;
+        elseif (\Nebule\Bootstrap\nod_checkNID($defaultApplicationID)
+            && \Nebule\Bootstrap\io_checkNodeHaveLink($defaultApplicationID)
+        )
+            $bootstrapApplicationIID = $defaultApplicationID;
+        elseif (\Nebule\Bootstrap\lib_getOption('permitApplication1'))
+            $bootstrapApplicationIID = '1';
+        else
+            $bootstrapApplicationIID = '0';
+
+        \Nebule\Bootstrap\log_add('use default application IID=' . $bootstrapApplicationIID,
+            'debug', __FUNCTION__, '423ae49b');
+    }
+
+    function bootstrap_getApplicationPreload(): void {
+        global $bootstrapApplicationIID, $bootstrapApplicationOID, $bootstrapApplicationNoPreload, $libraryPPCheckOK;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        if (!$libraryPPCheckOK)
+            return;
+
+        if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID]))
+            $bootstrapApplicationNoPreload = true;
+        elseif (strlen($bootstrapApplicationIID) < 2)
+            $bootstrapApplicationNoPreload = true;
+        elseif (!$bootstrapApplicationNoPreload) {
+            $bootstrapApplicationNoPreload = \Nebule\Bootstrap\app_getPreload($bootstrapApplicationIID);
+
+            if ($bootstrapApplicationNoPreload)
+                \Nebule\Bootstrap\log_add('do not preload application', 'info', __FUNCTION__, '0ac7d800');
+        }
+        else
+            $bootstrapApplicationNoPreload = false;
+    }
+
+    function bootstrap_includeApplicationFile(): void {
+        global $bootstrapApplicationOID, $libraryPPCheckOK;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        if (!$libraryPPCheckOK)
+            return;
+
+        //log_add('include application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, '8683e195');
+        if ($bootstrapApplicationOID == '' || $bootstrapApplicationOID == '0') {
+            \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+            \Nebule\Bootstrap\bootstrap_setBreak('45', __FUNCTION__);
+        } elseif (!\Nebule\Bootstrap\io_objectInclude($bootstrapApplicationOID)) {
+            \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+            \Nebule\Bootstrap\bootstrap_setBreak('46', __FUNCTION__);
+            $bootstrapApplicationOID = '0';
+        }
+    }
+
+    function bootstrap_getApplicationNamespace(string $oid): string {
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+        $value = '';
+
+        $content = \Nebule\Bootstrap\io_objectRead($oid, 10000);
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $content) as $line) {
+            $l = trim($line);
+
+            if (str_starts_with($l, "#"))
+                continue;
+
+            $fName = trim((string)filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
+            $fValue = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
+            if ($fName == 'namespace') {
+                $value = $fValue;
+                break;
+            }
+        }
+        unset($file);
+
+        return $value;
+    }
+
+    /**
+     * Load the application instance.
+     *
+     * @return void
+     */
+    function bootstrap_instancingApplication(): void {
+        global $nebuleInstance, $libraryPPCheckOK, $applicationInstance, $applicationNameSpace, $bootstrapApplicationOID;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        $nameSpace = \Nebule\Bootstrap\bootstrap_getApplicationNamespace($bootstrapApplicationOID);
+        $nameSpaceApplication = $nameSpace.'\\Application';
+        $applicationNameSpace = $nameSpaceApplication;
+
+        if ($bootstrapApplicationOID == ''
+            || $bootstrapApplicationOID == '0'
+            || !$libraryPPCheckOK
+            || !class_exists($nameSpaceApplication, false)
+        ) {
+            \Nebule\Bootstrap\log_add('cannot find class Application on code NID=' . $bootstrapApplicationOID . ' NS=' . $nameSpace,
+                'error', __FUNCTION__, 'ea9e5908');
+            return;
+        }
+
+        \Nebule\Bootstrap\log_reopen($nameSpace); // . '\\' . Application::APPLICATION_NAME);
+
+        // Get app instances from session if exist.
+        $bootstrapApplicationInstanceSleep = '';
+        session_start();
+        if (isset($_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID])
+            && $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] != '')
+            $bootstrapApplicationInstanceSleep = $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID];
+        session_abort();
+
+        try {
+            if ($bootstrapApplicationInstanceSleep == '') {
+                \Nebule\Bootstrap\log_add('application load new instance', 'debug', __FUNCTION__, '397ce035');
+                $applicationInstance = new $nameSpaceApplication($nebuleInstance);
+            }
+            else {
+                \Nebule\Bootstrap\log_add('application load serialized instance', 'debug', __FUNCTION__, 'b5f2f3f2');
+                $applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
+            }
+        } catch (\Error $e) {
+            \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+            \Nebule\Bootstrap\log_add('application load error ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),
+                'error', __FUNCTION__, '202824cb');
+            \Nebule\Bootstrap\bootstrap_setBreak('47', __FUNCTION__);
+        }
+    }
+
+    function bootstrap_initialisationApplication(bool $run): void {
+        global $nebuleInstance, $applicationInstance;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        if (! is_a($applicationInstance, 'Nebule\Library\Applications')) {
+            \Nebule\Bootstrap\log_addAndDisplay('error init application', 'error', __FUNCTION__, '41ba02a9');
+            return;
+        }
+
+        $applicationInstance->setEnvironmentLibrary($nebuleInstance);
+        $applicationInstance->initialisation();
+
+        if (!$applicationInstance->askDownload()) {
+            $applicationInstance->checkSecurity();
+        }
+
+        if ($run) {
+            try {
+                $applicationInstance->router();
+            } catch (\Exception $e) {
+                \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
+                \Nebule\Bootstrap\log_add('application router error ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),
+                    'error', __FUNCTION__, 'b51282b5');
+            }
+        }
+    }
+
+    function bootstrap_saveApplicationOnSession(): void {
+        global $applicationInstance, $bootstrapApplicationIID, $bootstrapApplicationOID, $bootstrapApplicationSID;
+        \Nebule\Bootstrap\log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+        session_start();
+        $_SESSION['bootstrapApplicationOID'][0] = $bootstrapApplicationOID;
+        $_SESSION['bootstrapApplicationIID'][0] = $bootstrapApplicationIID;
+        $_SESSION['bootstrapApplicationSID'][0] = $bootstrapApplicationSID;
+        $_SESSION['bootstrapApplicationIID'][$bootstrapApplicationOID] = $bootstrapApplicationOID;
+        if (is_a($applicationInstance, 'Nebule\Library\Applications')) {
+            $_SESSION['bootstrapApplicationsInstances'][$bootstrapApplicationOID] = serialize($applicationInstance);
+        }
+        session_write_close();
+    }
+
     public function getIsRID(Node $nid): bool {
         return str_contains($nid->getID(), '.none');
     }
