@@ -15,11 +15,14 @@ class App4
     const APPLICATION_NAME = 'app4';
     const APPLICATION_SURNAME = 'nebule/app4';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250307';
+    const APPLICATION_VERSION = '020250630';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
+
+    const CUT_NID = 16;
+    const CUT_NID3 = 32;
 
     public function display(): void
     {
@@ -50,7 +53,7 @@ class App4
                 echo 'NID=<a href="o/' . $nid . '">' . $nid . '</a>';
             else
                 echo 'NID=' . $nid;
-            echo '<br />hypergraph:<br /><br />' . "\n";
+            echo '<br />hyper-graph:<br /><br />' . "\n";
 
             $blocLinks = array();
             \Nebule\Bootstrap\io_blockLinksRead($nid, $blocLinks);
@@ -64,19 +67,24 @@ class App4
 
                     echo 'BH / RF=' . $parsedBloc['bh/rf'] . ' RV=' . $parsedBloc['bh/rv'] . "<br />\n";
                     echo 'BL / RC=' . $parsedBloc['bl/rc'] . '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RL=' . $parsedBloc['bl/rl/req'] . '>';
-                    \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], substr($parsedBloc['bl/rl/nid1'], 0, 16));
+                    \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid1'], $this->_seqNid($parsedBloc['bl/rl/nid1']));
                     $i = 2;
                     while ($parsedBloc['bl/rl/nid'.$i] != '') {
                         echo '>';
-                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid'.$i], substr($parsedBloc['bl/rl/nid'.$i], 0, 16));
+                        \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid'.$i], $this->_seqNid($parsedBloc['bl/rl/nid'.$i]));
                         $i++;
                         if ($i > \Nebule\Bootstrap\lib_getOption('linkMaxRLUID'))
                             break;
                     }
+
+                    $translate = $this->_translate($parsedBloc);
+                    if ($translate != '')
+                        echo '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $translate . "\n";
+
                     echo "<br />\n";
                     echo 'BS / EID=';
-                    \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], substr($parsedBloc['bs/rs1/eid'], 0, 16));
-                    echo ' SIG=' . substr($parsedBloc['bs/rs1/sig'], 0, 16) . ' ';
+                    \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], $this->_seqNid($parsedBloc['bs/rs1/eid']));
+                    echo ' SIG=' . $this->_seqNid($parsedBloc['bs/rs1/sig']) . ' ';
                     if (\Nebule\Bootstrap\blk_verify($bloc))
                         echo 'OK';
                     else
@@ -91,5 +99,28 @@ class App4
         echo "</div>\n";
 
         \Nebule\Bootstrap\bootstrap_htmlBottom();
+    }
+
+    private function _translate(array $parsedBloc): string
+    {
+        $nid1 = $this->_seqNid($parsedBloc['bl/rl/nid1']);
+        $nid2 = $this->_seqNid($parsedBloc['bl/rl/nid2']);
+        //$nid3 = $this->_seqNid($parsedBloc['bl/rl/nid3']);
+        foreach (References::RESERVED_OBJECTS_LIST as $ref) {
+            $hash = \nebule\bootstrap\crypto_getDataHash($ref, 'sha2.256') . '.sha2.256';
+            $nid3 = $parsedBloc['bl/rl/nid3'];
+            if ($nid3 == $hash) {
+                $val = \nebule\bootstrap\obj_getAsText1line($parsedBloc['bl/rl/nid2'], self::CUT_NID3);
+                if ($val == '')
+                    $val = $nid2;
+                return "> $nid1 have $ref = $val";
+            }
+        }
+        return '';
+    }
+
+    private function _seqNid(string $nid): string
+    {
+        return substr($nid, 0, self::CUT_NID);
     }
 }

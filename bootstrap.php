@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250610';
+const BOOTSTRAP_VERSION = '020250630';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -3156,8 +3156,8 @@ function obj_getAsText1line(string &$oid, int $maxData = 0): string {
     global $nebuleCacheReadObjText1line;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
-    if (isset($nebuleCacheReadObjText1line [$oid]))
-        return $nebuleCacheReadObjText1line [$oid];
+    if (isset($nebuleCacheReadObjText1line[$oid]))
+        return $nebuleCacheReadObjText1line[$oid];
 
     if ($maxData == 0)
         $maxData = lib_getOption('ioReadMaxData');
