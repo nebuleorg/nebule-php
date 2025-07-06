@@ -133,13 +133,13 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     public function setIcon(?Node $oid, bool $update = true): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($oid === null)
-            $this->_icon = null;
-        elseif ($oid->getID() != '0'
-            && is_a($oid, 'Nebule\Library\Node')
+        if (is_a($oid, 'Nebule\Library\Node')
+            && $oid->getID() != '0'
             && $oid->checkPresent()
         )
             $this->_icon = $oid;
+        else
+            $this->_icon = null;
 
         $this->_iconUpdate = $update;
     }

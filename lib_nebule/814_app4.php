@@ -15,7 +15,7 @@ class App4
     const APPLICATION_NAME = 'app4';
     const APPLICATION_SURNAME = 'nebule/app4';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250630';
+    const APPLICATION_VERSION = '020250703';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -79,7 +79,7 @@ class App4
 
                     $translate = $this->_translate($parsedBloc);
                     if ($translate != '')
-                        echo '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $translate . "\n";
+                        echo '<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;> ' . $translate . "\n";
 
                     echo "<br />\n";
                     echo 'BS / EID=';
@@ -113,7 +113,7 @@ class App4
                 $val = \nebule\bootstrap\obj_getAsText1line($parsedBloc['bl/rl/nid2'], self::CUT_NID3);
                 if ($val == '')
                     $val = $nid2;
-                return "> $nid1 have $ref = $val";
+                return "$nid1 have $ref = $val";
             }
         }
         return '';

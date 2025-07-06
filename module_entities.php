@@ -2167,6 +2167,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntitiesList(array $listEntities, string $ratio=\Nebule\Library\DisplayItem::RATIO_SHORT, array $listOkEntities = array(), array $listDesc = array(), array $listSigners = array(), bool $allowDouble=false): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($listEntities as $i => $entity) {
             $eid = $entity->getID();
@@ -2177,12 +2178,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                 continue;
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($entity);
-            /*$instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . self::COMMAND_SELECT_BLOG . '=' . $entity->getID());*/
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setSocial('all'); // FIXME
+            $instance->setIcon($instanceIcon);
             $instance->setEnableName(true);
             $instance->setEnableFlags(false);
             $instance->setEnableFlagState(false);
