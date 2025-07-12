@@ -546,10 +546,34 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $list = $this->getProperties($type, $socialClass);
 
-        foreach ($list as $item) {
-            if ($item == $property)
-                return true;
-        }
+        if (in_array($property, $list))
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Lit si l'objet a une propriété particulière.
+     *
+     * @param string $type
+     * @param string $propertyID
+     * @param string $socialClass
+     * @return boolean
+     */
+    public function getHavePropertyID(string $type, string $propertyID, string $socialClass = 'myself'): bool
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING type=' . $type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING propertyID=' . $propertyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING socialClass=' . $socialClass, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $list = $this->getPropertiesID($type, $socialClass);
+
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING size=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        foreach ($list as $item)
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING item=' . $item, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+
+        if (in_array($propertyID, $list))
+            return true;
 
         return false;
     }
@@ -828,18 +852,49 @@ class Node extends Functions implements nodeInterface
 
 
     protected bool $_isEntity = false;
-    public function getIsEntity(string $socialClass = 'myself'): bool
+    public function getIsEntity(string $socialClass = 'self'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isEntity)
             return true;
 
-        $type = $this->getType($socialClass);
-        $objHead = $this->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $this->_isEntity = ($type == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
+        if ($this->_id == '0') {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('nul nid', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ff1d7167');
+            return false;
+        }
 
-        unset($objHead);
-        return $this->_isEntity;
+        if (!$this->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '983d3318');
+            return false;
+        }
+
+        if (!$this->checkObjectHaveLinks()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9786e672');
+            return false;
+        }
+
+        if (!str_contains($this->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER)) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have header', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0bd80061');
+            return false;
+        }
+
+        $type = $this->getType($socialClass);
+        $typeID = $this->getPropertyID($socialClass);
+        $refEntityID = $this->getNidFromData(References::REFERENCE_OBJECT_ENTITY);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING typeID=' . $typeID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        /*if ($typeID != $refEntityID) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '643a0466');
+            return false;
+        }*/
+
+        if (!$this->getHavePropertyID(References::REFERENCE_NEBULE_OBJET_TYPE, $refEntityID, $socialClass)) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '643a0466');
+            return false;
+        }
+
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_isEntity = true;
+        return true;
     }
 
 

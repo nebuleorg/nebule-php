@@ -61,7 +61,7 @@ class Entities extends Functions
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newNode($this->_findServerEntityFromFileOID(), \Nebule\Library\Cache::TYPE_ENTITY);
-        if ($instance->getID() == '0' || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
+        if (!$instance->getIsEntity())
             $instance = $this->_authoritiesInstance->getPuppetmasterInstance();
         $this->_serverEntityInstance = $instance;
         $this->_serverEntityID = $instance->getID();
