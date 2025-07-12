@@ -303,7 +303,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                 break;
         }
         $rid = $this->_cacheInstance->newNode($icon);
-        $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
+        $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, $this->_social);
     }
 }
 

@@ -33,6 +33,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $result .= '<div class="layoutList"><div class="listContent">';
 
         $instance = new DisplayInformation($this->_applicationInstance);
+        $instance->setSocial($this->_social);
         $instance->setType(DisplayItemIconMessage::TYPE_WARN);
         $instance->setDisplayAlone(false);
         $instance->setRatio($this->_ratioCSS);

@@ -146,7 +146,7 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
                 break;
         }
         $rid = $this->_cacheInstance->newNode($icon);
-        $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
+        $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, $this->_social);
     }
 
     public static function displayCSS(): void

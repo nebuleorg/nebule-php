@@ -2780,7 +2780,7 @@ class Node extends Functions implements nodeInterface
 
 
 
-    private function _getReferencedByLinks(string $reference = '', string $action = 'l'): array
+    private function _getReferencedByLinks(string $reference = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -2792,7 +2792,7 @@ class Node extends Functions implements nodeInterface
 
         $list = array();
         $filter = array(
-            'bl/rl/req' => $action,
+            'bl/rl/req' => 'l',
             'bl/rl/nid1' => $this->_id,
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
@@ -2802,7 +2802,7 @@ class Node extends Functions implements nodeInterface
         return $list;
     }
 
-    private function _getReferenceToLinks(string $reference = '', string $action = 'l'): array
+    private function _getReferenceToLinks(string $reference = ''): array
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -2814,7 +2814,7 @@ class Node extends Functions implements nodeInterface
 
         $list = array();
         $filter = array(
-            'bl/rl/req' => $action,
+            'bl/rl/req' => 'l',
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid3' => $reference,
             'bl/rl/nid4' => '',
@@ -2833,14 +2833,13 @@ class Node extends Functions implements nodeInterface
         return $links;
     }
 
-    public function getByReferencedNID(string $reference = '', string $socialClass = ''): string
+    public function getReferencedNID(string $reference = '', string $socialClass = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $links = $this->getReferencedLinks($reference, $socialClass);
-        if (sizeof($links) == 0) {
+        if (sizeof($links) == 0)
             return '';
-        }
 
         $link = end($links);
         if (!is_a($link, '\Nebule\Library\LinkRegister'))
@@ -2852,7 +2851,7 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $nid = $this->getByReferencedNID($reference, $socialClass);
+        $nid = $this->getReferencedNID($reference, $socialClass);
         if ($nid == '')
             return $this->_id;
         return $nid;

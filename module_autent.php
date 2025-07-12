@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'login';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250421';
+    const MODULE_VERSION = '020250709';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -155,7 +155,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
-        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityPrivateKeyInstance(), true);
         if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
             && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
@@ -200,6 +200,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     }
 
     private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayObject($this->_applicationInstance);
         $instance->setNID($eid);
         $instance->setEnableColor(true);
@@ -225,9 +226,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
             $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['lo']); // FIXME
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
-        }
-        else
-        {
+        } else {
             $instance->setEnableFlagUnlocked(true);
             $instance->setFlagUnlocked($this->_unlocked);
         }
@@ -236,14 +235,17 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
     private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull): void {
         $instance = new DisplaySecurity($this->_applicationInstance);
+        $instance->setSocial('all');
         $instance->setDisplayOK(!$displayFull);
         $instance->setDisplayFull($displayFull);
         $instanceList->addItem($instance);
     }
 
     private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
+        $instance->setSocial('all');
         $instance->setType($type);
         $instance->setRatio(DisplayItem::RATIO_SHORT);
         $instance->setLink($link);
@@ -253,8 +255,10 @@ class ModuleAutent extends \Nebule\Library\Modules {
     }
 
     private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayQuery($this->_applicationInstance);
         $instance->setMessage($message);
+        $instance->setSocial('all'); // FIXME ne marche pas
         $instance->setType($type);
         $instance->setLink($link);
         $instance->setHiddenName('id');
