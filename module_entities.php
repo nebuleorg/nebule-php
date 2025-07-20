@@ -1942,7 +1942,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         if (sizeof($links) != 0) {
             // Indice de fond paire ou impaire.
             $bg = 1;
-            $attribList = References::RESERVED_OBJECTS_LIST;
+            $attribList = References::NODE_REFERENCES;
             $emotionsList = array(
                 $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
                 $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
@@ -2180,7 +2180,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setNID($entity);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
-            $instance->setSocial('all'); // FIXME
+            $instance->setSocial('self');
             $instance->setIcon($instanceIcon);
             $instance->setEnableName(true);
             $instance->setEnableFlags(false);

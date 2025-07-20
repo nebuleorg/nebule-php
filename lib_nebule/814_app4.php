@@ -106,7 +106,7 @@ class App4
         $nid1 = $this->_seqNid($parsedBloc['bl/rl/nid1']);
         $nid2 = $this->_seqNid($parsedBloc['bl/rl/nid2']);
         //$nid3 = $this->_seqNid($parsedBloc['bl/rl/nid3']);
-        foreach (References::RESERVED_OBJECTS_LIST as $ref) {
+        foreach (References::NODE_REFERENCES as $ref) {
             $hash = \nebule\bootstrap\crypto_getDataHash($ref, 'sha2.256') . '.sha2.256';
             $nid3 = $parsedBloc['bl/rl/nid3'];
             if ($nid3 == $hash) {

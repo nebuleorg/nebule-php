@@ -408,10 +408,7 @@ class Node extends Functions implements nodeInterface
         if (sizeof($links) == 0)
             return null;
 
-        // Extrait le dernier de la liste.
         $link = end($links);
-        //$link = $links[count($links)-1];
-        //$link = $links[0];
 
         return $link;
     }
@@ -432,7 +429,7 @@ class Node extends Functions implements nodeInterface
 
         $link = $this->getPropertyLink($type, $socialClass);
 
-        if (!is_a($link, 'Link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
 
         // Extrait l'ID de l'objet de propriété.
@@ -563,14 +560,7 @@ class Node extends Functions implements nodeInterface
     public function getHavePropertyID(string $type, string $propertyID, string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING type=' . $type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING propertyID=' . $propertyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING socialClass=' . $socialClass, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $list = $this->getPropertiesID($type, $socialClass);
-
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING size=' . sizeof($list), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        foreach ($list as $item)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING item=' . $item, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if (in_array($propertyID, $list))
             return true;
@@ -598,11 +588,7 @@ class Node extends Functions implements nodeInterface
         $links = $this->getPropertiesLinks(References::REFERENCE_NEBULE_OBJET_TYPE, 'all');
 
         foreach ($links as $link) {
-            if ($type == ''
-                || ($type != ''
-                    && $link->getParsed()['bl/rl/nid2'] == $type
-                )
-            )
+            if ($type == '' || $link->getParsed()['bl/rl/nid2'] == $type)
                 $signers[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
         }
         unset($links);
@@ -626,7 +612,7 @@ class Node extends Functions implements nodeInterface
             $type = $this->_nebuleInstance->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // extrait l'ID de l'entité si c'est un objet.
-        if (is_a($entity, 'Node'))
+        if (is_a($entity, 'Nebule\Library\Node'))
             $entity = $entity->getID();
 
         // Extraction des entités signataires.
@@ -878,23 +864,11 @@ class Node extends Functions implements nodeInterface
             return false;
         }
 
-        $type = $this->getType($socialClass);
-        $typeID = $this->getPropertyID($socialClass);
+        $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $refEntityID = $this->getNidFromData(References::REFERENCE_OBJECT_ENTITY);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING typeID=' . $typeID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        /*if ($typeID != $refEntityID) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '643a0466');
-            return false;
-        }*/
+        $this->_isEntity = $this->getHavePropertyID($refPropertyID, $refEntityID, $socialClass);
 
-        if (!$this->getHavePropertyID(References::REFERENCE_NEBULE_OBJET_TYPE, $refEntityID, $socialClass)) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '643a0466');
-            return false;
-        }
-
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING have type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_isEntity = true;
-        return true;
+        return $this->_isEntity;
     }
 
 
@@ -903,11 +877,12 @@ class Node extends Functions implements nodeInterface
     public function getIsGroup(string $socialClass = 'myself'): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Si déjà marqué, donne le résultat tout de suite.
         if ($this->_isGroup)
             return true;
 
-        $this->_isGroup = $this->getHaveProperty(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_NEBULE_OBJET_GROUPE, $socialClass);
+        $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $refGroupID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE);
+        $this->_isGroup = $this->getHaveProperty($refPropertyID, $refGroupID, $socialClass);
 
         return $this->_isGroup;
     }
@@ -1661,7 +1636,7 @@ class Node extends Functions implements nodeInterface
             if ($this->_configuration->getOptionAsBoolean('permitRecoveryEntities')) {
                 $listEntities = $this->_nebuleInstance->getRecoveryEntitiesInstance();
                 foreach ($listEntities as $entity) {
-                    if (is_a($entity, 'Entity')
+                    if (is_a($entity, 'Nebule\Library\Entity')
                         && $entity->getID() != '0'
                         && $entity->getIsPublicKey()
                         && $entity != $this->_nebuleInstance->getCurrentEntity()
@@ -1764,7 +1739,7 @@ class Node extends Functions implements nodeInterface
         /*if (is_string($entity)) {
             $entity = $this->_nebuleInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
         }
-        if (!is_a($entity, 'entity'))
+        if (!is_a($entity, 'Nebule\Library\Entity'))
             $entity = $this->_nebuleInstance->newNode($entity->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$entity->getIsEntity('all'))
             return false;
@@ -1868,7 +1843,7 @@ class Node extends Functions implements nodeInterface
 
         /*if (is_string($entity))
             $entity = $this->_nebuleInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!is_a($entity, 'entity'))
+        if (!is_a($entity, 'Nebule\Library\Entity'))
             $entity = $this->_nebuleInstance->newNode($entity->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$entity->getIsEntity('all'))
             return false;
@@ -1985,10 +1960,10 @@ class Node extends Functions implements nodeInterface
         $list = array();
 
         // Nettoyage du contexte.
-        if (is_a($context, 'entity')
-            || is_a($context, 'Node')
-            || is_a($context, 'group')
-            || is_a($context, 'conversation')
+        if (is_a($context, 'Nebule\Library\Entity')
+            || is_a($context, 'Nebule\Library\Node')
+            || is_a($context, 'Nebule\Library\Group')
+            #|| is_a($context, 'Nebule\Library\conversation')
         )
             $context = $context->getID();
         if (!is_string($context)
@@ -2120,10 +2095,10 @@ class Node extends Functions implements nodeInterface
         }
 
         // Nettoyage du contexte.
-        if (is_a($context, 'entity')
-            || is_a($context, 'Node')
-            || is_a($context, 'group')
-            || is_a($context, 'conversation')
+        if (is_a($context, 'Nebule\Library\Entity')
+            || is_a($context, 'Nebule\Library\Node')
+            || is_a($context, 'Nebule\Library\Group')
+            #|| is_a($context, 'Nebule\Library\conversation')
         ) {
             $context = $context->getID();
         }
@@ -2180,10 +2155,10 @@ class Node extends Functions implements nodeInterface
             return false;
 
         // Nettoyage de l'entité demandé.
-        if (is_a($entity, 'entity')
-            || is_a($entity, 'Node')
-            || is_a($entity, 'group')
-            || is_a($entity, 'conversation')
+        if (is_a($context, 'Nebule\Library\Entity')
+            || is_a($context, 'Nebule\Library\Node')
+            || is_a($context, 'Nebule\Library\Group')
+            #|| is_a($context, 'Nebule\Library\conversation')
         )
             $entity = $entity->getID();
         if (!is_string($entity)
@@ -2416,11 +2391,11 @@ class Node extends Functions implements nodeInterface
         $this->_metrologyInstance->addObjectRead(); // Metrologie.
         $this->_data = $this->_ioInstance->getObject($this->_id, $limit);
         if ($this->_data === false) {
-            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa7f02d2');
             $this->_data = null;
             return null;
         }
-        $this->_metrologyInstance->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b1ca0788');
 
         // Vérifie la taille. Si trop grand mais qu'une limite est imposé, quitte sans vérifier l'empreinte.
         if (strlen($this->_data) >= $limit
@@ -2441,14 +2416,14 @@ class Node extends Functions implements nodeInterface
 
         // Si la vérification est désactivée, quitte.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd2e4f3be');
             $this->_haveData = true;
             return $this->_data;
         }
 
         // Sinon l'objet est présent mais invalide, le supprime.
         $this->_data = null;
-        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8f30c4c0');
         $this->_ioInstance->unsetObject($this->_id);
         return null;
     }
@@ -2484,15 +2459,15 @@ class Node extends Functions implements nodeInterface
 
         $permitTroncate = false; // @todo à retirer.
 
-        $this->_metrologyInstance->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('Get protected content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f5b1872d');
 
         // Lit la clé chiffrée.
         $codeKey = $this->_ioInstance->getObject($this->_idProtectedKey, 0);
         // Calcul l'empreinte de la clé chiffrée.
         $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
         if ($hash != $this->_idProtectedKey) {
-            $this->_metrologyInstance->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrologyInstance->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '21d5ead8');
+            $this->_metrologyInstance->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '7f03457f');
             return null;
         }
 
@@ -2501,8 +2476,8 @@ class Node extends Functions implements nodeInterface
         // Calcul l'empreinte de la clé.
         $hash = $this->_nebuleInstance->getNIDfromData($key);
         if ($hash != $this->_idUnprotectedKey) {
-            $this->_metrologyInstance->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrologyInstance->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'daff00e0');
+            $this->_metrologyInstance->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ee98026b');
             return null;
         }
 
@@ -2511,8 +2486,8 @@ class Node extends Functions implements nodeInterface
         // Calcul l'empreinte des données.
         $hash = $this->_nebuleInstance->getNIDfromData($code);
         if ($hash != $this->_idProtected) {
-            $this->_metrologyInstance->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrologyInstance->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13f7b8f9');
+            $this->_metrologyInstance->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3998a68d');
             return null;
         }
 
@@ -2520,8 +2495,8 @@ class Node extends Functions implements nodeInterface
         // Calcul l'empreinte des données.
         $hash = $this->_nebuleInstance->getNIDfromData($data);
         if ($hash != $this->_idUnprotected) {
-            $this->_metrologyInstance->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_metrologyInstance->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f4e5015c');
+            $this->_metrologyInstance->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5737927d');
             return null;
         }
 
@@ -2640,12 +2615,12 @@ class Node extends Functions implements nodeInterface
         )
             return;
 
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitListInvalidLinks'))
-            $withInvalidLinks = false;
-
         $lines = $this->_ioInstance->getBlockLinks($this->_id, '', 0);
         if (sizeof($lines) == 0)
             return;
+
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitListInvalidLinks'))
+            $withInvalidLinks = false;
 
         foreach ($lines as $line)
         {
@@ -2689,6 +2664,7 @@ class Node extends Functions implements nodeInterface
     protected function _filterLinkByStructure(LinkRegister &$link, array $filter): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         $parsedLink = $link->getParsed();
 
         foreach ($filter as $fieldName => $filterValue)
@@ -3035,7 +3011,7 @@ class Node extends Functions implements nodeInterface
         $link = end($links);
         unset($links);
 
-        if (!is_a($link, 'link'))
+        if (!is_a($link, 'Nebule\Library\LinkRegister'))
             return $this->_id;
 
         return $link->getParsed()['bl/rl/nid1'];
@@ -3151,7 +3127,7 @@ class Node extends Functions implements nodeInterface
         // Synchronisation
         foreach ($localisations as $localisation) {
             $links = $this->_ioInstance->getBlockLinks($this->_id, $localisation);
-            $this->_metrologyInstance->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Object links count read ' . $this->_id . ' ' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88e0a52f');
 
             foreach ($links as $link) {
                 $linkInstance = $this->_cacheInstance->newBlockLink($link);
@@ -3208,7 +3184,7 @@ class Node extends Functions implements nodeInterface
 
         // Si protégé.
         if ($protected) {
-            $this->_metrologyInstance->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df362406');
             $id = $this->_idProtected;
 
             $this->writeLink('d>' . $this->_id);
@@ -3539,7 +3515,7 @@ class Node extends Functions implements nodeInterface
         <p>Les différents objets réservés pour les besoins de la bibliothèque nebule :</p>
         <ul>
             <?php
-            $list = References::RESERVED_OBJECTS_LIST;
+            $list = References::NODE_REFERENCES;
             foreach ($list as $item) {
                 echo "\t<li><code>$item</code></li>\n";
             }

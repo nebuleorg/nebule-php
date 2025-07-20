@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250630';
+const BOOTSTRAP_VERSION = '020250719';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -6342,7 +6342,7 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
         }
     }
     if ($nebuleInstance instanceof \Nebule\Library\nebule) {
-        foreach (\Nebule\Library\References::RESERVED_OBJECTS_LIST as $data) {
+        foreach (\Nebule\Library\References::RESERVED_OBJECTS as $data) {
             $hash = obj_getNID($data, lib_getOption('cryptoHashAlgorithm'));
             if (io_checkNodeHaveContent($hash))
                 echo '.';
