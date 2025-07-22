@@ -1113,7 +1113,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($nid === null) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid=null', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_nid = null;
-        } elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node')) {
+        } elseif (is_a($nid, 'Nebule\Library\Node') && $nid->getID() != '0') {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('set ' . get_class($nid) . ' nid=' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $this->_nid = $nid;
             $this->setType();

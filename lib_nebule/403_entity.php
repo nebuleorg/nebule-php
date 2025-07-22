@@ -517,15 +517,15 @@ class Entity extends Node implements nodeInterface
 
 
 
-    public function getName(string $socialClass = ''): string
+    public function getName(string $socialClass = 'self'): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
-            //$list = array($this->_id);
-            //$this->_socialInstance->setList($list);
-            $socialClass = 'all'; // FIXME
+            $socialClass = 'self';
         }
-        $name = $this->getProperty(References::REFERENCE_NEBULE_OBJET_NOM, $socialClass);
+
+        $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_NOM);
+        $name = $this->getProperty($refPropertyID, $socialClass);
         if ($name == '')
             $name = $this->_id;
         return $name;
@@ -543,15 +543,10 @@ class Entity extends Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return '';
-        if (isset($this->_fullName)
-            && trim($this->_fullName) != ''
-        )
+        if (isset($this->_fullName) && trim($this->_fullName) != '')
             return $this->_fullName;
-        if ($socialClass == '') {
-            //$list = array($this->_id);
-            //$this->_socialInstance->setList($list);
-            $socialClass = 'all'; // FIXME
-        }
+        if ($socialClass == '')
+            $socialClass = 'self';
 
         $name = $this->getName($socialClass);
         $prefix = $this->getPrefixName($socialClass);

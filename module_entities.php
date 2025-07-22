@@ -1504,6 +1504,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instanceList->addItem($instance);
 
                 $instance = new DisplayObject($this->_applicationInstance);
+                $instance->setSocial('self');
                 $instance->setNID($this->_createEntityInstance);
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
@@ -1528,6 +1529,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instanceList->addItem($instance);
 
                 $instance = new DisplayObject($this->_applicationInstance);
+                $instance->setSocial('all');
                 $instance->setNID($this->_createEntityKeyInstance);
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
@@ -2177,10 +2179,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             )
                 continue;
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
             $instance->setNID($entity);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
-            $instance->setSocial('self');
             $instance->setIcon($instanceIcon);
             $instance->setEnableName(true);
             $instance->setEnableFlags(false);

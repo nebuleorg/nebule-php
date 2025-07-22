@@ -491,8 +491,8 @@ class Node extends Functions implements nodeInterface
         if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
             return '';
 
-        // Extrait le contenu de l'objet de propriété.
         $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('property=' . $property, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '535b1337');
 
         return $property;
     }
