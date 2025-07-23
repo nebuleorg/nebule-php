@@ -145,20 +145,20 @@ class Entities extends Functions
     public function getGhostEntityInstance(): ?Entity { return $this->_ghostEntityInstance; }
 
     /**
-     * Try to find ghost entity from :
+     * Try to find ghost entity from:
      * 1: from command argument;
      * 2: from PHP session;
      * 3: last keep default instance.
-     * If not from PHP session, flush previous private key.
+     * If not from PHP session, flush a previous private key.
      * @return void
      */
     private function _findGhostEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->getFilterInput(References::COMMAND_SELECT_GHOST), \Nebule\Library\Cache::TYPE_ENTITY);
-        if ($instance->getID() == '0')// || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
+        $instance = $this->_cacheInstance->newNode($this->_findGhostEntityFromArg(), \Nebule\Library\Cache::TYPE_ENTITY);
+        if ($instance->getID() == '0' || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
             $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleGhostEntityInstance');
-        if ($instance === null or $instance->getID() == '0')// || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
+        if ($instance === null or $instance->getID() == '0' || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
             $instance = $this->_defaultEntityInstance;
         $this->_ghostEntityInstance = $instance;
         $this->_ghostEntityOID = $instance->getID();

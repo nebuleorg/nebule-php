@@ -35,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250615';
+    const MODULE_VERSION = '020250723';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -108,6 +108,10 @@ class ModuleEntities extends \Nebule\Library\Modules
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
+        $currentEID = $this->_nebuleInstance->getCurrentEntityEID();
+        $ghostEID = $this->_entitiesInstance->getGhostEntityEID();
+        $connectedEID = $this->_entitiesInstance->getConnectedEntityEID();
+        $connected = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
         $hookArray = array();
         switch ($hookName) {
@@ -196,7 +200,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuObject':
-                $instance = $this->_applicationInstance->getCurrentObjectInstance();
+                $instance = $this->_nebuleInstance->getCurrentObjectInstance();
                 $id = $instance->getID();
                 $protected = $instance->getMarkProtected();
                 if ($protected) {
@@ -204,9 +208,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $instance = $this->_cacheInstance->newNode($id);
                 }
 
-                // Si l'objet est une entité.
                 if ($instance->getType('all') == 'application/x-pem-file') {
-                    // Voir l'entité.
+                    // See as entity.
                     $hookArray[0]['name'] = '::sylabe:module:entities:ShowEntity';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                     $hookArray[0]['desc'] = '';
@@ -217,23 +220,14 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuEntity':
-                if ($object != $this->_entitiesInstance->getGhostEntityEID()) {
-                    // Basculer et se connecter avec cette entité.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
-                } elseif (!$this->_unlocked) {
+                if ($object != $connectedEID || !$connected) {
                     // Se connecter avec l'entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $currentEID;
                 } else {
                     // Se déconnecter de l'entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:Disconnect';
@@ -251,17 +245,19 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $hookArray[2]['desc'] = '';
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
+                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
                 // Voir l'entité.
-                $hookArray[3]['name'] = '::sylabe:module:entities:ShowEntity';
-                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[3]['desc'] = '';
-                $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
+                    $hookArray[3]['name'] = '::sylabe:module:entities:ShowEntity';
+                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
+                    $hookArray[3]['desc'] = '';
+                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                }
 
                 // Recherche si l'objet est marqué.
                 if (!$this->_applicationInstance->getMarkObject($object)) {
@@ -757,6 +753,31 @@ class ModuleEntities extends \Nebule\Library\Modules
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
             $instance->display();
         }
+
+
+        echo '</div>' . "\n";
+
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+        $instance->setSocial('self');
+        $instance->setNID($this->_nebuleInstance->getCurrentEntityInstance());
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setIcon($instanceIcon);
+        $instance->setEnableName(true);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(true);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        $instance->setSelfHookName('selfMenuEntity');
+        $instance->setEnableStatus(false);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_LARGE);
+        $instance->setRatio(DisplayItem::RATIO_LONG);
+        $instance->display();
+
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -2193,7 +2214,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setEnableRefs(true);
             if (isset($listSigners[$i]))
                 $instance->setRefs($listSigners[$i]);
-            $instance->setSelfHookName('selfMenuBlogs');
+            $instance->setSelfHookName('selfMenuEntity');
             if (isset($listDesc[$i])) {
                 $instance->setEnableStatus(true);
                 $instance->setStatus($listDesc[$i]);

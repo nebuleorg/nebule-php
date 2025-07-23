@@ -2036,7 +2036,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action add message to conversation ' . $this->_actionAddMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newNode($this->_actionAddMessageOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
-        $instanceConversation->setMember($this->_nebuleInstance->getCurrentObject(), false);
+        $instanceConversation->setMember($this->_nebuleInstance->getCurrentObjectOID(), false);
     }
 
     protected string $_actionRemoveMessageOnConversation = '';
@@ -2061,7 +2061,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action remove message to conversation ' . $this->_actionRemoveMessageOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newNode($this->_actionRemoveMessageOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
-        $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObject());
+        $instanceConversation->unsetMember($this->_nebuleInstance->getCurrentObjectOID());
     }
 
     protected string $_actionAddMemberOnConversation = '';
@@ -2086,7 +2086,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action add member to conversation ' . $this->_actionAddMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newNode($this->_actionAddMemberOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
-        $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObject());
+        $instanceConversation->setFollower($this->_nebuleInstance->getCurrentObjectOID());
     }
 
     protected string $_actionRemoveMemberOnConversation = '';
@@ -2111,7 +2111,7 @@ abstract class Actions extends Functions
         $this->_metrologyInstance->addLog('action remove member to conversation ' . $this->_actionRemoveMemberOnConversation, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         $instanceConversation = $this->_cacheInstance->newNode($this->_actionRemoveMemberOnConversation, \Nebule\Library\Cache::TYPE_CONVERSATION);
-        $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObject());
+        $instanceConversation->unsetFollower($this->_nebuleInstance->getCurrentObjectOID());
     }
 
     protected bool $_actionCreateMessage = false;
@@ -2217,7 +2217,7 @@ abstract class Actions extends Functions
             // Sauvegarde les valeurs.
             if ($argVal != '') {
                 if ($argObj == '')
-                    $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObject();
+                    $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObjectOID();
                 else
                     $this->_actionAddPropertyObject = $argObj;
                 $this->_actionAddPropertyValue = $argVal;

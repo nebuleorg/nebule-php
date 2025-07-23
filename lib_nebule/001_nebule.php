@@ -431,7 +431,7 @@ class nebule
         $this->_currentObjectInstance->getMarkProtected();
     }
 
-    public function getCurrentObject(): string
+    public function getCurrentObjectOID(): string
     {
         return $this->_currentObject;
     }
@@ -480,7 +480,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
-    public function getCurrentEntityID(): string
+    public function getCurrentEntityEID(): string
     {
         return $this->_currentEntityID;
     }
@@ -529,7 +529,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current group ' . $this->_currentGroupID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
-    public function getCurrentGroupID(): string
+    public function getCurrentGroupOID(): string
     {
         return $this->_currentGroupID;
     }
@@ -577,7 +577,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current conversation ' . $this->_currentConversationID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adf0b5df');
     }
 
-    public function getCurrentConversationID(): string
+    public function getCurrentConversationOID(): string
     {
         return $this->_currentConversationID;
     }
@@ -632,7 +632,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current currency ' . $this->_currentCurrencyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '952d5651');
     }
 
-    public function getCurrentCurrencyID(): string
+    public function getCurrentCurrencyOID(): string
     {
         return $this->_currentCurrencyID;
     }
@@ -687,7 +687,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8485d55');
     }
 
-    public function getCurrentTokenPool(): string
+    public function getCurrentTokenPoolNID(): string
     {
         return $this->_currentTokenPool;
     }
@@ -742,7 +742,7 @@ class nebule
         $this->_metrologyInstance->addLog('find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
     }
 
-    public function getCurrentTokenID(): string
+    public function getCurrentTokenOID(): string
     {
         return $this->_currentTokenID;
     }

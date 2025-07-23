@@ -3974,8 +3974,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
-                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationOID();
 
             // Préparation du lien.
             $source = $object->getID();
@@ -6116,8 +6116,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
-                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationID();
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
+                . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationOID();
 
             // Préparation du lien.
             $source = $object->getID();

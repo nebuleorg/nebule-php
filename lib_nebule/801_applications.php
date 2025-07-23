@@ -112,7 +112,7 @@ abstract class Applications extends Functions implements applicationInterface
     public function getMetrologyInstance(): ?Metrology { return $this->_metrologyInstance; }
     public function getActionInstance(): ?Actions { return $this->_actionInstance; }
     public function getApplicationModulesInstance(): ApplicationModules { return $this->_applicationModulesInstance; }
-    public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObject(); }
+    public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObjectOID(); }
     public function getCurrentObjectInstance(): Node { return $this->_nebuleInstance->getCurrentObjectInstance(); }
 
     protected function _findEnvironment(): void

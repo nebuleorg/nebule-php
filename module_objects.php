@@ -27,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250507';
+    const MODULE_VERSION = '0202505723';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -757,7 +757,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             ) {
                 $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $display->getCurrentDisplayView()
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObject()
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObjectOID()
                     . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=objprop'
                     . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
                 $display->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));

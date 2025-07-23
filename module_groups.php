@@ -27,7 +27,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250507';
+    const MODULE_VERSION = '020250723';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -822,7 +822,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                                . '&' . $this->_nebuleInstance->getCurrentGroupID()
+                                . '&' . $this->_nebuleInstance->getCurrentGroupOID()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
@@ -875,7 +875,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                                 $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
+                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                             }
@@ -937,7 +937,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $list[$i]['actions'][0]['name'] = '::sylabe:module:groups:display:removeFromGroup';
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupID()
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                 . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                         }
