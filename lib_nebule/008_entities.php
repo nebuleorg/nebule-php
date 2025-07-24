@@ -360,7 +360,7 @@ class Entities extends Functions
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleConnectedEntityInstance');
-        if ($instance->getID() == '0')// || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
+        if ($instance->getID() == '0' || !$instance->checkPresent() || !$instance->checkObjectHaveLinks() || !$instance->getIsEntity())
             $instance = $this->_ghostEntityInstance;
         $this->_connectedEntityInstance = $instance;
         $this->_connectedEntityID = $instance->getID();

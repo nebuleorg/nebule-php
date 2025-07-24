@@ -67,22 +67,23 @@ class Entity extends Node implements nodeInterface
     //private array $_faceCache = array();
     //private bool $_cacheCurrentEntityUnlocked = false;
 
+    /**
+     * {@inheritDoc}
+     * @see Node::_initialisation()
+     * @return void
+     */
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        //if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-        //    $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
-        if ($this->_isNew)
-            $this->_createNewEntity();
-        elseif ($this->_id != '0')
-            $this->_loadEntity($this->_id);
+        if ($this->_id != '0')
+            $this->_loadEntity();
     }
 
-    private function _loadEntity(string $id): void
+    private function _loadEntity(): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions id=' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_ioInstance->checkObjectPresent($id)
-            || !$this->_ioInstance->checkLinkPresent($id)
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions id=' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_ioInstance->checkObjectPresent($this->_id)
+            || !$this->_ioInstance->checkLinkPresent($this->_id)
         ) {
             $this->_id = '0';
             return;
@@ -94,8 +95,9 @@ class Entity extends Node implements nodeInterface
             $this->_findPublicKey();
     }
 
-    private function _createNewEntity(): void
+    public function createNewEntity(string $algo='rsa', int $size=2048): void
     {
+        // FIXME use algo and size.
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
             && ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
@@ -117,7 +119,7 @@ class Entity extends Node implements nodeInterface
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
 
-                // TODO effacement sécurisé...
+                // TODO secure clean...
                 unset($newPkey);
             } else {
                 $this->_metrologyInstance->addLog('Create entity error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '98b648b1');

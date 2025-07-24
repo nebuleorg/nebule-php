@@ -1555,7 +1555,10 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
+        $algo = 'rsa'; // FIXME
+        $size = 2048; //FIXME
         $instance = new Entity($this->_nebuleInstance, 'new');
+        $instance->createNewEntity($algo, $size);
 
         if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
             $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ea998a6d');

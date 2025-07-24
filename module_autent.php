@@ -101,7 +101,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      * Display view to describe entity state.
      */
     private function _displayInfo(): void {
-        $this->_metrologyInstance->addLog('display desc ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
+        $this->_metrologyInstance->addLog('display desc ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle('::::INFO');
@@ -133,7 +133,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
-        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
         $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
@@ -145,7 +145,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      * Display view to unlocking entity.
      */
     private function _displayLogin(): void {
-        $this->_metrologyInstance->addLog('Display login ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
+        $this->_metrologyInstance->addLog('Display login ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle(':::login');
@@ -165,7 +165,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getServerEntityEID());
+                . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID());
         else
             $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
@@ -181,7 +181,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      * Display view to locking entity.
      */
     private function _displayLogout(): void {
-        $this->_metrologyInstance->addLog('Display logout ' . $this->_applicationInstance->getCurrentObjectInstance()->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
+        $this->_metrologyInstance->addLog('Display logout ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle(':::logout');
@@ -191,7 +191,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
-        $this->_displayAddEID($instanceList, $this->_applicationInstance->getCurrentObjectInstance(), false);
+        $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         $this->_displayAddButton($instanceList, ':::logout', DisplayItemIconMessage::TYPE_PLAY, '/?f');
         $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);

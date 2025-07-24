@@ -78,7 +78,7 @@ class Node extends Functions implements nodeInterface
     protected bool $_isNew = false;
 
     /**
-     * Create instance of a node or derivative.
+     * Create an instance of a node or derivative.
      * Always give a valid nebule instance.
      * For new node, set $id as '0' or 'new'. This is mandatory to add data (or other) after with dedicated function.
      * If $id is invalid, the instance return getID = '0', even if new but not initialised.
@@ -123,6 +123,11 @@ class Node extends Functions implements nodeInterface
         //$this->_initialisation();
     }
 
+    /**
+     * Local initialisation for a node or derivatives.
+     * Called by function initialisation() but only one time, the first time.
+     * @return void
+     */
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -131,7 +136,7 @@ class Node extends Functions implements nodeInterface
 
     /**
      * On new node (ID='0'), add content and recalculate ID.
-     * Don't forget to write with write().
+     * Remember to write with write().
      *
      * @param string $data
      * @return bool

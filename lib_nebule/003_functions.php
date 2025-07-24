@@ -84,6 +84,10 @@ class Functions
         $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
     }
 
+    /**
+     * Call subfunction _initialisation() but only one time, the first time.
+     * @return void
+     */
     public function initialisation(): void {
         $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
         if ($this->_initialisationSet)

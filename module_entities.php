@@ -220,15 +220,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuEntity':
-                if ($object != $connectedEID || !$connected) {
-                    // Se connecter avec l'entité.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $currentEID;
-                } else {
+                if ($connected) {
                     // Se déconnecter de l'entité.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:Disconnect';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
@@ -237,6 +229,14 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                         . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_FLUSH;
+                } else {
+                    // Se connecter avec l'entité.
+                    $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
                 }
 
                 // Synchroniser l'entité.
@@ -723,7 +723,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         echo '<div class="layout-list">' . "\n";
         echo '<div class="textListObjects">' . "\n";
 
-        $param = array(
+        /*$param = array(
             'enableDisplayColor' => true,
             'enableDisplayIcon' => true,
             'enableDisplayRefs' => false,
@@ -755,7 +755,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         }
 
 
-        echo '</div>' . "\n";
+        echo '</div>' . "\n";*/
 
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
 
