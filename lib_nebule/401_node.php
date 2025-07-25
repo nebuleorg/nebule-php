@@ -843,7 +843,20 @@ class Node extends Functions implements nodeInterface
 
 
     protected bool $_isEntity = false;
-    public function getIsEntity(string $socialClass = 'self'): bool
+
+    /**
+     * Check a node if it can be a valid entity:
+     *  - NID not null;
+     *  - have local links;
+     *  - if $mustHaveContent, check if OID have content;
+     *  - if $mustHaveContent, check if content of OID has a beginning of public cryptographique key;
+     *  - if $type is PEM mimetype, check if we have a valid link to this type (try to find if entity node don't have link).
+     * @param string $socialClass
+     * @param bool   $mustHaveContent
+     * @param string $type
+     * @return bool
+     */
+    public function getIsEntity(string $socialClass = 'self', bool $mustHaveContent = true, string $type = References::REFERENCE_OBJECT_ENTITY): bool
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isEntity)
@@ -854,24 +867,27 @@ class Node extends Functions implements nodeInterface
             return false;
         }
 
-        if (!$this->checkPresent()) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '983d3318');
-            return false;
-        }
-
         if (!$this->checkObjectHaveLinks()) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9786e672');
             return false;
         }
 
-        if (!str_contains($this->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER)) {
+        if ($mustHaveContent && !$this->checkPresent()) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '983d3318');
+            return false;
+        }
+
+        if ($mustHaveContent && !str_contains($this->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER)) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('do not have header', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0bd80061');
             return false;
         }
 
-        $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $refEntityID = $this->getNidFromData(References::REFERENCE_OBJECT_ENTITY);
-        $this->_isEntity = $this->getHavePropertyID($refPropertyID, $refEntityID, $socialClass);
+        if ($type == References::REFERENCE_OBJECT_ENTITY) {
+            $refEntityID = $this->getNidFromData($type);
+            $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+            $this->_isEntity = $this->getHavePropertyID($refPropertyID, $refEntityID, $socialClass);
+        } else
+            $this->_isEntity = true;
 
         return $this->_isEntity;
     }
