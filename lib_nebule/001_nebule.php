@@ -12,7 +12,6 @@ namespace Nebule\Library;
  */
 class nebule
 {
-    // Définition des constantes.
     const NEBULE_LICENCE_NAME = 'nebule';
     const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
     const NEBULE_LICENCE_DATE = '2010-2025';
@@ -44,8 +43,7 @@ class nebule
 
 
 
-    public function __construct()
-    {
+    public function __construct() {
         global $nebuleInstance ,$metrologyStartTime;
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
@@ -54,24 +52,10 @@ class nebule
         $this->_initialisation();
     }
 
-    /*public function __destruct()
-    {
-        $this->_cacheInstance->saveCacheOnSessionBuffer();
-        return true;
-    }*/
+    public function __toString(): string { return self::NEBULE_LICENCE_NAME; }
+    public function __sleep(): array { return self::SESSION_SAVED_VARS; }
 
-    public function __toString()
-    {
-        return self::NEBULE_LICENCE_NAME;
-    }
-
-    public function __sleep()
-    {
-        return self::SESSION_SAVED_VARS;
-    }
-
-    public function __wakeup()
-    {
+    public function __wakeup(): void {
         global $nebuleInstance ,$metrologyStartTime;
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
@@ -80,8 +64,7 @@ class nebule
         $this->_initialisation();
     }
 
-    private function _initialisation(): void
-    {
+    private function _initialisation(): void {
         $this->_initMetrology();
         $this->_metrologyInstance->addLog('first step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
         $this->_initConfiguration();
@@ -115,66 +98,24 @@ class nebule
         $this->_metrologyInstance->addLog('end init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '474676ed');
     }
 
-    private function _initMetrology(): void {
-        $this->_metrologyInstance = new Metrology($this);
-    }
-
-    private function _initConfiguration(): void {
-        $this->_configurationInstance = new Configuration($this);
-    }
-
-    private function _initRescue(): void {
-        $this->_rescueInstance = new Rescue($this);
-    }
-
-    private function _initSession(): void {
-        if ($this->_sessionInstance === null)
-            $this->_sessionInstance = new Session($this);
-    }
-
-    private function _initCache(): void {
-        if ($this->_cacheInstance === null)
-            $this->_cacheInstance = new Cache($this);
-    }
-
-    private function _initIO(): void {
-        $this->_ioInstance = new io($this);
-    }
-
-    private function _initCrypto(): void {
-        if ($this->_cryptoInstance === null)
-            $this->_cryptoInstance = new Crypto($this);
-    }
-
-    private function _initSocial(): void {
-        $this->_socialInstance = new Social($this);
-    }
-
-    private function _initAuthorities(): void {
-        if ($this->_authoritiesInstance === null)
-            $this->_authoritiesInstance = new Authorities($this);
-    }
-
-    private function _initRecovery(): void {
-        if ($this->_recoveryInstance === null)
-            $this->_recoveryInstance = new Recovery($this);
-    }
-
-    private function _initEntities(): void {
-        $this->_entitiesInstance = new Entities($this);
-    }
-
-    private function _initTicketing(): void {
-        if ($this->_ticketingInstance === null)
-            $this->_ticketingInstance = new Ticketing($this);
-    }
+    private function _initMetrology(): void { $this->_metrologyInstance = new Metrology($this); }
+    private function _initConfiguration(): void { $this->_configurationInstance = new Configuration($this); }
+    private function _initRescue(): void { $this->_rescueInstance = new Rescue($this); }
+    private function _initSession(): void { if ($this->_sessionInstance === null) $this->_sessionInstance = new Session($this); }
+    private function _initCache(): void { if ($this->_cacheInstance === null) $this->_cacheInstance = new Cache($this); }
+    private function _initIO(): void { $this->_ioInstance = new io($this); }
+    private function _initCrypto(): void { if ($this->_cryptoInstance === null) $this->_cryptoInstance = new Crypto($this); }
+    private function _initSocial(): void { $this->_socialInstance = new Social($this); }
+    private function _initAuthorities(): void { if ($this->_authoritiesInstance === null) $this->_authoritiesInstance = new Authorities($this); }
+    private function _initRecovery(): void { if ($this->_recoveryInstance === null) $this->_recoveryInstance = new Recovery($this); }
+    private function _initEntities(): void { $this->_entitiesInstance = new Entities($this); }
+    private function _initTicketing(): void { if ($this->_ticketingInstance === null) $this->_ticketingInstance = new Ticketing($this); }
 
     /**
      * Reload all instances in all library components.
      * TODO use vars by address instead for (null) instances.
      */
-    private function _setEnvironmentInstances(): void
-    {
+    private function _setEnvironmentInstances(): void {
         $this->_metrologyInstance->setEnvironmentLibrary($this);
         $this->_configurationInstance->setEnvironmentLibrary($this);
         $this->_rescueInstance->setEnvironmentLibrary($this);
@@ -189,8 +130,7 @@ class nebule
         $this->_ticketingInstance->setEnvironmentLibrary($this);
     }
 
-    private function _initAllInstances(): void
-    {
+    private function _initAllInstances(): void {
         $this->_metrologyInstance->initialisation();
         $this->_configurationInstance->initialisation();
         $this->_rescueInstance->initialisation();
@@ -205,81 +145,31 @@ class nebule
         $this->_ticketingInstance->initialisation();
     }
 
-    public function getLoadingStatus(): bool
-    {
-        return $this->_loadingStatus;
-    }
+    public function getLoadingStatus(): bool { return $this->_loadingStatus; }
+    public function getMetrologyInstance(): ?Metrology { return $this->_metrologyInstance; }
+    public function getConfigurationInstance(): ?Configuration { return $this->_configurationInstance; }
+    public function getRescueInstance(): ?Rescue { return $this->_rescueInstance; }
+    public function getAuthoritiesInstance(): ?Authorities { return $this->_authoritiesInstance; }
+    public function getEntitiesInstance(): ?Entities { return $this->_entitiesInstance; }
+    public function getRecoveryInstance(): ?Recovery { return $this->_recoveryInstance; }
+    public function getCacheInstance(): ?Cache { return $this->_cacheInstance; }
+    public function getSessionInstance(): ?Session { return $this->_sessionInstance; }
+    public function getTicketingInstance(): ?Ticketing { return $this->_ticketingInstance; }
+    public function getIoInstance(): ?ioInterface { return $this->_ioInstance; }
+    public function getCryptoInstance(): ?CryptoInterface { return $this->_cryptoInstance; }
+    public function getSocialInstance(): ?SocialInterface { return $this->_socialInstance; }
 
 
-    public function getMetrologyInstance(): ?Metrology
-    {
-        return $this->_metrologyInstance;
-    }
 
-    public function getConfigurationInstance(): ?Configuration
-    {
-        return $this->_configurationInstance;
-    }
-
-    public function getRescueInstance(): ?Rescue
-    {
-        return $this->_rescueInstance;
-    }
-
-    public function getAuthoritiesInstance(): ?Authorities
-    {
-        return $this->_authoritiesInstance;
-    }
-
-    public function getEntitiesInstance(): ?Entities
-    {
-        return $this->_entitiesInstance;
-    }
-
-    public function getRecoveryInstance(): ?Recovery
-    {
-        return $this->_recoveryInstance;
-    }
-
-    public function getCacheInstance(): ?Cache
-    {
-        return $this->_cacheInstance;
-    }
-
-    public function getSessionInstance(): ?Session
-    {
-        return $this->_sessionInstance;
-    }
-
-    public function getTicketingInstance(): ?Ticketing
-    {
-        return $this->_ticketingInstance;
-    }
-
-    public function getIoInstance(): ?ioInterface
-    {
-        return $this->_ioInstance;
-    }
-
-    public function getCryptoInstance(): ?CryptoInterface
-    {
-        return $this->_cryptoInstance;
-    }
-
-    public function getSocialInstance(): ?SocialInterface
-    {
-        return $this->_socialInstance;
-    }
-
-
+    private ?node $_subordinationEntity = null;
 
     /**
-     * Entité de subordination des options de l'entité en cours.
-     * Par défaut vide.
+     * Retourne l'entité de subordination si définie.
+     * Retourne une chaine vide sinon.
      *
-     * @var node|null
+     * @return node|null
      */
-    private ?node $_subordinationEntity = null;
+    public function getSubordinationEntity(): ?node { return $this->_subordinationEntity; }
 
     /**
      * Extrait l'entité de subordination des options si présente.
@@ -288,22 +178,10 @@ class nebule
      *
      * @return void
      */
-    private function _getSubordinationEntity(): void
-    {
+    private function _getSubordinationEntity(): void {
         //$this->_subordinationEntity = new Entity($this->_nebuleInstance, (string)Configuration::getOptionFromEnvironmentUntypedStatic('subordinationEntity'));
         $this->_subordinationEntity = new Entity($this->_nebuleInstance, $this->_configurationInstance->getOptionFromEnvironmentAsString('subordinationEntity'));
         $this->_metrologyInstance->addLog('get subordination entity = ' . $this->_subordinationEntity, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '2300b439');
-    }
-
-    /**
-     * Retourne l'entité de subordination si défini.
-     * Retourne une chaine vide sinon.
-     *
-     * @return node|null
-     */
-    public function getSubordinationEntity(): ?node
-    {
-        return $this->_subordinationEntity;
     }
 
     /**
@@ -314,8 +192,7 @@ class nebule
      * @todo ne fonctionne pas correctement mais non bloquant.
      *
      */
-    private function _checkWriteableIO(): void
-    {
+    private function _checkWriteableIO(): void {
         if ($this->_ioInstance->getMode() == 'RW') {
             if (!$this->_ioInstance->checkObjectsWrite())
                 $this->_configurationInstance->lockPermitWriteObject();;
@@ -342,8 +219,7 @@ class nebule
      * @param string $algo
      * @return string
      */
-    public function getNIDfromData(string $data, string $algo = ''): string
-    {
+    public function getFromDataNID(string $data, string $algo = ''): string {
         if ($algo == '')
             $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
@@ -351,54 +227,12 @@ class nebule
 
 
 
-
-    // Gestion des modules.
-
-    /**
-     * Liste les modules.
-     *
-     * @param string $name
-     * @return boolean
-     * @todo
-     */
-    public function listModule(string $name): bool
-    {
-        if ($name == '') {
-            return false;
-        }
-
-        // ...
-
-        return true;
-    }
-
-    /**
-     * Charge un module.
-     *
-     * @param string $name
-     * @return boolean|Modules
-     * @todo
-     */
-    public function loadModule(string $name)
-    {
-        if ($name == '') {
-            return false;
-        }
-
-        // ...
-
-        $module = new $name;
-
-        return $module;
-    }
-
-
-
     private string $_currentObject = '';
     private ?Node $_currentObjectInstance = null;
+    public function getCurrentObjectOID(): string { return $this->_currentObject; }
+    public function getCurrentObjectInstance(): ?Node { return $this->_currentObjectInstance; }
 
-    private function _findCurrentObjet(): void
-    {
+    private function _findCurrentObjet(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_OBJECT))
             $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_OBJECT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -431,23 +265,22 @@ class nebule
         $this->_currentObjectInstance->getMarkProtected();
     }
 
-    public function getCurrentObjectOID(): string
-    {
-        return $this->_currentObject;
-    }
-
-    public function getCurrentObjectInstance(): ?Node
-    {
-        return $this->_currentObjectInstance;
-    }
-
 
 
     private string $_currentEntityID = '';
     private ?Entity $_currentEntityInstance = null;
+    public function getCurrentEntityEID(): string { return $this->_currentEntityID; }
+    public function getCurrentEntityInstance(): ?Entity { return $this->_currentEntityInstance; }
+    public function setCurrentEntityInstance(Entity $entity): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-    private function _findCurrentEntity(): void
-    {
+        if ($entity->getIsEntity()) {
+            $this->_currentEntityInstance = $entity;
+            $this->_currentEntityID = $entity->getID();
+            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedEntity', $this->_currentEntityID);
+        }
+    }
+    private function _findCurrentEntity(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_ENTITY))
             $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_ENTITY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -480,23 +313,13 @@ class nebule
         $this->_metrologyInstance->addLog('find current entity ' . $this->_currentEntityID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
-    public function getCurrentEntityEID(): string
-    {
-        return $this->_currentEntityID;
-    }
-
-    public function getCurrentEntityInstance(): ?Entity
-    {
-        return $this->_currentEntityInstance;
-    }
-
 
 
     private string $_currentGroupID = '';
     private ?Group $_currentGroupInstance = null;
-
-    private function _findCurrentGroup(): void
-    {
+    public function getCurrentGroupOID(): string { return $this->_currentGroupID; }
+    public function getCurrentGroupInstance(): ?Group { return $this->_currentGroupInstance; }
+    private function _findCurrentGroup(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_GROUP))
             $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_GROUP, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -529,23 +352,13 @@ class nebule
         $this->_metrologyInstance->addLog('find current group ' . $this->_currentGroupID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adca3827');
     }
 
-    public function getCurrentGroupOID(): string
-    {
-        return $this->_currentGroupID;
-    }
-
-    public function getCurrentGroupInstance(): ?Group
-    {
-        return $this->_currentGroupInstance;
-    }
-
 
 
     private string $_currentConversationID = '';
     private ?Conversation $_currentConversationInstance = null;
-
-    private function _findCurrentConversation(): void
-    {
+    public function getCurrentConversationOID(): string { return $this->_currentConversationID; }
+    public function getCurrentConversationInstance(): ?Conversation { return $this->_currentConversationInstance; }
+    private function _findCurrentConversation(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_CONVERSATION))
             $arg_cvt = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_CONVERSATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -577,23 +390,13 @@ class nebule
         $this->_metrologyInstance->addLog('find current conversation ' . $this->_currentConversationID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adf0b5df');
     }
 
-    public function getCurrentConversationOID(): string
-    {
-        return $this->_currentConversationID;
-    }
-
-    public function getCurrentConversationInstance(): ?Conversation
-    {
-        return $this->_currentConversationInstance;
-    }
-
 
 
     private string $_currentCurrencyID = '';
     private ?Currency $_currentCurrencyInstance = null;
-
-    private function _findCurrentCurrency(): void
-    {
+    public function getCurrentCurrencyOID(): string { return $this->_currentCurrencyID; }
+    public function getCurrentCurrencyInstance(): ?Currency { return $this->_currentCurrencyInstance; }
+    private function _findCurrentCurrency(): void {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentCurrencyID = '0';
             $this->_currentCurrencyInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CURRENCY);
@@ -632,23 +435,13 @@ class nebule
         $this->_metrologyInstance->addLog('find current currency ' . $this->_currentCurrencyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '952d5651');
     }
 
-    public function getCurrentCurrencyOID(): string
-    {
-        return $this->_currentCurrencyID;
-    }
-
-    public function getCurrentCurrencyInstance(): ?Currency
-    {
-        return $this->_currentCurrencyInstance;
-    }
-
 
 
     private string $_currentTokenPool = '';
     private ?TokenPool $_currentTokenPoolInstance = null;
-
-    private function _findCurrentTokenPool(): void
-    {
+    public function getCurrentTokenPoolNID(): string { return $this->_currentTokenPool; }
+    public function getCurrentTokenPoolInstance(): ?TokenPool { return $this->_currentTokenPoolInstance; }
+    private function _findCurrentTokenPool(): void {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenPool = '0';
             $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKENPOOL);
@@ -687,23 +480,13 @@ class nebule
         $this->_metrologyInstance->addLog('find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8485d55');
     }
 
-    public function getCurrentTokenPoolNID(): string
-    {
-        return $this->_currentTokenPool;
-    }
-
-    public function getCurrentTokenPoolInstance(): ?TokenPool
-    {
-        return $this->_currentTokenPoolInstance;
-    }
-
 
 
     private string $_currentTokenID = '';
     private ?Token $_currentTokenInstance = null;
-
-    private function _findCurrentToken(): void
-    {
+    public function getCurrentTokenOID(): string { return $this->_currentTokenID; }
+    public function getCurrentTokenInstance(): ?Token { return $this->_currentTokenInstance; }
+    private function _findCurrentToken(): void {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenID = '0';
             $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
@@ -742,20 +525,10 @@ class nebule
         $this->_metrologyInstance->addLog('find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');
     }
 
-    public function getCurrentTokenOID(): string
-    {
-        return $this->_currentTokenID;
-    }
-
-    public function getCurrentTokenInstance(): ?Token
-    {
-        return $this->_currentTokenInstance;
-    }
-
 
 
     /**
-     * Calculate the level of usability of entities.
+     * Calculate the usability level of entities.
      *
      * @return integer
      */
@@ -766,29 +539,25 @@ class nebule
         if ($this->_authoritiesInstance->getPuppetmasterEID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3;
 
         if (sizeof($this->_authoritiesInstance->getSecurityAuthoritiesInstance()) == 0) return 11;
-        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
-        {
+        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)  {
             if (!$instance instanceof Entity) return 12;
             if ($instance->getID() == '0') return 13;
         }
 
         if (sizeof($this->_authoritiesInstance->getCodeAuthoritiesInstance()) == 0) return 21;
-        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)
-        {
+        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)  {
             if (!$instance instanceof Entity) return 22;
             if ($instance->getID() == '0') return 23;
         }
 
         if (sizeof($this->_authoritiesInstance->getDirectoryAuthoritiesInstance()) == 0) return 31;
-        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)
-        {
+        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)  {
             if (!$instance instanceof Entity) return 32;
             if ($instance->getID() == '0') return 33;
         }
 
         if (sizeof($this->_authoritiesInstance->getTimeAuthoritiesInstance()) == 0) return 41;
-        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)
-        {
+        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)  {
             if (!$instance instanceof Entity) return 42;
             if ($instance->getID() == '0') return 43;
         }
@@ -814,14 +583,13 @@ class nebule
      * Toutes les références et propriétés sont hachées avec un algorithme fixe.
      * $entity Permet de ne sélectionner que les liens générés par une entité.
      *
-     * @param string|Node   $type
+     * @param string|Node   $type // FIXME
      * @param string        $socialClass
-     * @param string|Entity $entity
+     * @param string|Entity $entity // FIXME
      * @return array:Link
-     * @todo ajouter un filtre sur le type mime des objets.
+     * TODO ajouter un filtre sur le type mime des objets.
      */
-    public function getListLinksByType($type, $entity = '', string $socialClass = ''): array
-    {
+    public function getListLinksByType(Node|string $type, string|Entity $entity = '', string $socialClass = ''): array {
         $result = array();
         $hashType = '';
         $hashEntity = '';
@@ -834,7 +602,7 @@ class nebule
             if (Node::checkNID($type))
                 $hashType = $type;
             else
-                $hashType = $this->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+                $hashType = $this->getFromDataNID($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
             // $type doit être une instance d'objet au final.
             $type =$this->_cacheInstance->newNode($hashType);
         }
@@ -865,7 +633,7 @@ class nebule
             'l',
             '',
             $hashType,
-            $this->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM)
+            $this->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM)
         );
 
         // Fait un tri par pertinence sociale.
@@ -884,8 +652,7 @@ class nebule
      * @param string|Entity $entity
      * @return array:Link
      */
-    public function getListIdByType($type = '', $entity = '', string $socialClass = ''): array
-    {
+    public function getListIdByType($type = '', $entity = '', string $socialClass = ''): array {
         /**
          * Résultat de la recherche de liens à retourner.
          * @var array:Link $result
@@ -908,8 +675,7 @@ class nebule
      * @param Entity $entity
      * @return array:Link
      */
-    public function getListGroupsLinks(Entity $entity, string $socialClass = ''): array
-    {
+    public function getListGroupsLinks(Entity $entity, string $socialClass = ''): array {
         return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
 
@@ -921,8 +687,7 @@ class nebule
      * @param string $socialClass
      * @return array
      */
-    public function getListGroupsID(Entity $entity, string $socialClass = ''): array
-    {
+    public function getListGroupsID(Entity $entity, string $socialClass = ''): array {
         return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
     }
 
@@ -938,8 +703,7 @@ class nebule
      * @param string $socialClass
      * @return array
      */
-    public function getListConversationsLinks(Entity $entity, string $socialClass = ''): array
-    {
+    public function getListConversationsLinks(Entity $entity, string $socialClass = ''): array {
         return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
 
@@ -952,8 +716,7 @@ class nebule
      * @param string $socialClass
      * @return array
      */
-    public function getListConversationsID(Entity $entity, string $socialClass = ''): array
-    {
+    public function getListConversationsID(Entity $entity, string $socialClass = ''): array {
         return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
     }
 
@@ -966,8 +729,7 @@ class nebule
      *
      * @return string
      */
-    public function getDisplayNextObject(): string
-    {
+    public function getDisplayNextObject(): string {
         $this->_metrologyInstance->addLog('extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
 
         $arg = trim(' ' . filter_input(INPUT_GET, Displays::DEFAULT_NEXT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -978,8 +740,7 @@ class nebule
     }
 
     // TODO move router from bootstrap to libPOO
-    public function router()
-    {
+    public function router() {
 
     }
 

@@ -66,6 +66,7 @@ class ApplicationModules
     }
 
     protected function _initInternalModules(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES
             || !$this->_configurationInstance->getOptionAsBoolean('permitApplicationModules')
         ) {
@@ -97,6 +98,7 @@ class ApplicationModules
     }
 
     protected function _initInternalDeadModules(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach (get_declared_classes() as $class) {
             if (str_starts_with($class, 'Module') && $class != 'Module') {
                 $this->_metrologyInstance->addLog('dead module ' . $class, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '050783df');
@@ -211,8 +213,8 @@ class ApplicationModules
 
 
 
-    protected function _findModulesRID(): void
-    {
+    protected function _findModulesRID(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         global $bootstrapApplicationIID;
 
         if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
@@ -244,8 +246,8 @@ class ApplicationModules
         }
     }
 
-    protected function _findModulesUpdateID(): void
-    {
+    protected function _findModulesUpdateID(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
 
@@ -358,8 +360,8 @@ class ApplicationModules
      * @param string $id
      * @return null|string
      */
-    protected function _getObjectClassName(string $id): ?string
-    {
+    protected function _getObjectClassName(string $id): ?string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $readValue = $this->_nebuleInstance->getIoInstance()->getObject($id);
         $startValue = strpos($readValue, 'class');
         $trimLine = substr($readValue, $startValue, 128);
@@ -376,8 +378,8 @@ class ApplicationModules
      *
      * @return void
      */
-    protected function _initModules(): void
-    {
+    protected function _initModules(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES || !$this->_applicationInstance::USE_MODULES_EXTERNAL)
             return;
 
@@ -424,8 +426,8 @@ class ApplicationModules
         $this->_metrologyInstance->addLog('Optionals modules loaded', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0237217e');
     }
 
-    public function getIsModuleActivated(Node $module): bool
-    {
+    public function getIsModuleActivated(Node $module): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $linksList = $module->getLinksOnFields('', '', 'f', $module->getID(), References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE, $module->getID());
         foreach ($linksList as $link)
             if ($this->_authoritiesInstance->getIsLocalAuthorityEID($link->getParsed()['bs/rs1/eid']))
@@ -433,45 +435,14 @@ class ApplicationModules
         return false;
     }
 
-    public function getModulesListNames(): array
-    {
-        return $this->_listModulesName;
-    }
-
-    public function getModulesListInstances(): array
-    {
-        return $this->_listModulesInstance;
-    }
-
-    public function getModulesTranslateListName(): array
-    {
-        return $this->_listModulesTranslateName;
-    }
-
-    public function getModulesListOID(): array
-    {
-        return $this->_listModulesOID;
-    }
-
-    public function getModulesListRID(): array
-    {
-        return $this->_listModulesRID;
-    }
-
-    public function getModulesListSignersRID(): array
-    {
-        return $this->_listModulesSignerRID;
-    }
-
-    public function getModulesListValid(): array
-    {
-        return $this->_listModulesValid;
-    }
-
-    public function getModulesListEnabled(): array
-    {
-        return $this->_listModulesEnabled;
-    }
+    public function getModulesListNames(): array { return $this->_listModulesName; }
+    public function getModulesListInstances(): array { return $this->_listModulesInstance; }
+    public function getModulesTranslateListName(): array { return $this->_listModulesTranslateName; }
+    public function getModulesListOID(): array { return $this->_listModulesOID; }
+    public function getModulesListRID(): array { return $this->_listModulesRID; }
+    public function getModulesListSignersRID(): array { return $this->_listModulesSignerRID; }
+    public function getModulesListValid(): array { return $this->_listModulesValid; }
+    public function getModulesListEnabled(): array { return $this->_listModulesEnabled; }
 
     /**
      * Vérifie si le module est chargé. Le module est recherché sur le nom de sa classe.
@@ -480,8 +451,8 @@ class ApplicationModules
      * @param string $name
      * @return boolean
      */
-    public function getIsModuleLoaded(string $name): bool
-    {
+    public function getIsModuleLoaded(string $name): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES)
             return false;
 
@@ -499,8 +470,8 @@ class ApplicationModules
         return false;
     }
 
-    protected function _findCurrentModule(): void
-    {
+    protected function _findCurrentModule(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance::USE_MODULES) { // FIXME verifier
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
                 if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode() && strtolower($module::MODULE_TYPE) == 'application') {
@@ -517,8 +488,8 @@ class ApplicationModules
      *
      * @return Modules|null
      */
-    public function getCurrentModuleInstance(): ?Modules
-    {
+    public function getCurrentModuleInstance(): ?Modules {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES)
             return null;
 
@@ -546,8 +517,8 @@ class ApplicationModules
      * @param string $name
      * @return Modules|null
      */
-    public function getModule(string $name): ?Modules
-    {
+    public function getModule(string $name): ?Modules {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES || $name == '')
             return null;
 

@@ -158,7 +158,7 @@ class Node extends Functions implements nodeInterface
             return false;
         }
 
-        $this->_id = $this->_nebuleInstance->getNIDfromData($data);
+        $this->_id = $this->_nebuleInstance->getFromDataNID($data);
         $this->_data = $data;
         $this->_haveData = true;
         return true;
@@ -190,7 +190,7 @@ class Node extends Functions implements nodeInterface
 
         if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
             // calcul l'ID.
-            $this->_id = $this->_nebuleInstance->getNIDfromData($data);
+            $this->_id = $this->_nebuleInstance->getFromDataNID($data);
             if ($protect)
                 $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1434b3ed');
             else
@@ -204,8 +204,8 @@ class Node extends Functions implements nodeInterface
             $date = '';
             if ($obfuscated)
                 $date = '0';
-            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
+            $target = $this->_nebuleInstance->getFromDataNID($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_HASH);
             $this->_writeLink('l>' . $this->_id . '>' . $target . '>' . $meta, $obfuscated, $date);
 
             // Création du lien d'annulation de suppression.
@@ -363,7 +363,7 @@ class Node extends Functions implements nodeInterface
             return array();
 
         if (!$this->checkNID($type))
-            $type = $this->_nebuleInstance->getNIDfromData($type);
+            $type = $this->_nebuleInstance->getFromDataNID($type);
 
         $links = array();
         $this->_getLinksByNID3($links, $type);
@@ -587,7 +587,7 @@ class Node extends Functions implements nodeInterface
 
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '')
-            $type = $this->_nebuleInstance->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getFromDataNID($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // Extraction des entités signataires.
         $links = $this->getPropertiesLinks(References::REFERENCE_NEBULE_OBJET_TYPE, 'all');
@@ -614,7 +614,7 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Si le type de l'objet est précisé, le converti en ID.
         if ($type != '')
-            $type = $this->_nebuleInstance->getNIDfromData($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+            $type = $this->_nebuleInstance->getFromDataNID($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // extrait l'ID de l'entité si c'est un objet.
         if (is_a($entity, 'Nebule\Library\Node'))
@@ -668,10 +668,10 @@ class Node extends Functions implements nodeInterface
             $signerInstance = $this->_entitiesInstance->getGhostEntityInstance();
         }
 
-        $propertyOID = $this->_nebuleInstance->getNIDfromData($property);
+        $propertyOID = $this->_nebuleInstance->getFromDataNID($property);
         $this->_ioInstance->setObject($propertyOID, $property);
 
-        $propertyRID = $this->_nebuleInstance->getNIDfromData($type);
+        $propertyRID = $this->_nebuleInstance->getFromDataNID($type);
         $link = 'l>' . $this->_id . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
         $newBlockLink->addLink($link);
@@ -1122,7 +1122,7 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_DANGER),
+            'bl/rl/nid1' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1162,7 +1162,7 @@ class Node extends Functions implements nodeInterface
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_DANGER);
+        $target = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER);
         $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkDanger = true;
@@ -1185,7 +1185,7 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_WARNING),
+            'bl/rl/nid1' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING),
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
@@ -1225,7 +1225,7 @@ class Node extends Functions implements nodeInterface
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_WARNING);
+        $target = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING);
         $this->writeLink('l>' . $this->_id . '>' . $target);
 
         $this->_cacheMarkWarning = true;
@@ -1519,7 +1519,7 @@ class Node extends Functions implements nodeInterface
             $key = $this->_crypto->getRandom($keySize, Crypto::RANDOM_STRONG);
             if (strlen($key) != $keySize)
                 return false;
-            $keyID = $this->_nebuleInstance->getNIDfromData($key);
+            $keyID = $this->_nebuleInstance->getFromDataNID($key);
             $this->_metrology->addLog('Protect object, key : ' . $keyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '585b4766');
 
             // Si des donnnées sont disponibles, on les lit.
@@ -1541,7 +1541,7 @@ class Node extends Functions implements nodeInterface
 
                 // Vérification de l'empreinte des données. Doit être identique à l'ID.
                 // A faire pour le cas général.
-                $hash = $this->_nebuleInstance->getNIDfromData($data);
+                $hash = $this->_nebuleInstance->getFromDataNID($data);
                 if ($hash != $this->_id) {
                     unset($data);
                     $this->_haveData = false;
@@ -1589,8 +1589,8 @@ class Node extends Functions implements nodeInterface
             $signer = $this->_nebuleInstance->getCurrentEntity();
 
             // Crée le lien de type d'empreinte de la clé.
-            $target = $this->_nebuleInstance->getNIDfromData($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
+            $target = $this->_nebuleInstance->getFromDataNID($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/hash');
             $this->writeLink('l>' . $keyID . '>' . $target . '>' . $meta);
 
             // Création du type mime des données chiffrées.
@@ -1598,7 +1598,7 @@ class Node extends Functions implements nodeInterface
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
+                $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
                 $this->writeLink('l>' . $codeID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
@@ -1607,7 +1607,7 @@ class Node extends Functions implements nodeInterface
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
+                $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
                 $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
             }
 
@@ -1688,7 +1688,7 @@ class Node extends Functions implements nodeInterface
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
                         if ($textID != '') {
                             // Crée le lien de type d'empreinte.
-                            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
+                            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
                             $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
                         }
 
@@ -1780,7 +1780,7 @@ class Node extends Functions implements nodeInterface
         $limit = $this->_configuration->getOptionUntyped('ioReadMaxData');
         $codeKey = $this->_nebuleInstance->getIoInstance()->getObject($this->_idProtectedKey, $limit);
         // Calcul l'empreinte de la clé chiffrée.
-        $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
+        $hash = $this->_nebuleInstance->getFromDataNID($codeKey);
         if ($hash != $this->_idProtectedKey) {
             $this->_metrology->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ac1493b0');
             $this->_metrology->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0f7aa932');
@@ -1790,7 +1790,7 @@ class Node extends Functions implements nodeInterface
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
         $key = $this->_entitiesInstance->getCurrentEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
-        $hash = $this->_nebuleInstance->getNIDfromData($key);
+        $hash = $this->_nebuleInstance->getFromDataNID($key);
         if ($hash != $this->_idUnprotectedKey) {
             $this->_metrology->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'eda92267');
             $this->_metrology->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '11b0f733');
@@ -1825,7 +1825,7 @@ class Node extends Functions implements nodeInterface
             $action = 'l';
             $source = $codeKeyID;
             $target = $textID;
-            $meta = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
+            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
             $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
             $newLink = new BlocLink($this->_nebuleInstance, $link);
             // Signe le lien.
@@ -2005,7 +2005,7 @@ class Node extends Functions implements nodeInterface
         )
             return $list;
 
-        $hashEmotion = $this->_nebuleInstance->getNIDfromData($emotion);
+        $hashEmotion = $this->_nebuleInstance->getFromDataNID($emotion);
 
         // Liste les liens à la recherche de la propriété.
         $list = array();
@@ -2136,7 +2136,7 @@ class Node extends Functions implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'f';
         $source = $this->_id;
-        $target = $this->_nebuleInstance->getNIDfromData($emotion);
+        $target = $this->_nebuleInstance->getFromDataNID($emotion);
         $meta = $context;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2194,7 +2194,7 @@ class Node extends Functions implements nodeInterface
         $date = date(DATE_ATOM);
         $action = 'x';
         $source = $this->_id;
-        $target = $this->_nebuleInstance->getNIDfromData($emotion);
+        $target = $this->_nebuleInstance->getFromDataNID($emotion);
         $meta = $entity;
         $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
@@ -2316,7 +2316,7 @@ class Node extends Functions implements nodeInterface
         }
 
         // Calcul l'empreinte.
-        $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
+        $hash = $this->_nebuleInstance->getFromDataNID($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
             $this->_metrologyInstance->addObjectVerify(); // Metrologie.
@@ -2427,7 +2427,7 @@ class Node extends Functions implements nodeInterface
         }
 
         // Calcul l'empreinte.
-        $hash = $this->_nebuleInstance->getNIDfromData($this->_data, $hashAlgo);
+        $hash = $this->_nebuleInstance->getFromDataNID($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
             $this->_metrologyInstance->addObjectVerify(); // Metrologie.
@@ -2485,7 +2485,7 @@ class Node extends Functions implements nodeInterface
         // Lit la clé chiffrée.
         $codeKey = $this->_ioInstance->getObject($this->_idProtectedKey, 0);
         // Calcul l'empreinte de la clé chiffrée.
-        $hash = $this->_nebuleInstance->getNIDfromData($codeKey);
+        $hash = $this->_nebuleInstance->getFromDataNID($codeKey);
         if ($hash != $this->_idProtectedKey) {
             $this->_metrologyInstance->addLog('Error get protected key content : ' . $this->_idProtectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, '21d5ead8');
             $this->_metrologyInstance->addLog('Protected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '7f03457f');
@@ -2495,7 +2495,7 @@ class Node extends Functions implements nodeInterface
         // Déchiffrement (asymétrique) de la clé de chiffrement du contenu.
         $key = $this->_entitiesInstance->getGhostEntityInstance()->decrypt($codeKey);
         // Calcul l'empreinte de la clé.
-        $hash = $this->_nebuleInstance->getNIDfromData($key);
+        $hash = $this->_nebuleInstance->getFromDataNID($key);
         if ($hash != $this->_idUnprotectedKey) {
             $this->_metrologyInstance->addLog('Error get unprotected key content : ' . $this->_idUnprotectedKey, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'daff00e0');
             $this->_metrologyInstance->addLog('Unprotected key content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ee98026b');
@@ -2505,7 +2505,7 @@ class Node extends Functions implements nodeInterface
         // Lit l'objet chiffré.
         $code = $this->_ioInstance->getObject($this->_idProtected, $limit);
         // Calcul l'empreinte des données.
-        $hash = $this->_nebuleInstance->getNIDfromData($code);
+        $hash = $this->_nebuleInstance->getFromDataNID($code);
         if ($hash != $this->_idProtected) {
             $this->_metrologyInstance->addLog('Error get protected data content : ' . $this->_idProtected, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13f7b8f9');
             $this->_metrologyInstance->addLog('Protected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3998a68d');
@@ -2514,7 +2514,7 @@ class Node extends Functions implements nodeInterface
 
         $data = $this->_cryptoInstance->decrypt($code, $this->_configurationInstance->getOptionAsString('cryptoSymmetricAlgorithm'), $key);
         // Calcul l'empreinte des données.
-        $hash = $this->_nebuleInstance->getNIDfromData($data);
+        $hash = $this->_nebuleInstance->getFromDataNID($data);
         if ($hash != $this->_idUnprotected) {
             $this->_metrologyInstance->addLog('Error get unprotected data content : ' . $this->_idUnprotected, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f4e5015c');
             $this->_metrologyInstance->addLog('Unprotected data content hash : ' . $hash, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5737927d');
@@ -2840,7 +2840,7 @@ class Node extends Functions implements nodeInterface
             $reference = References::REFERENCE_NEBULE_REFERENCE;
 
         if (!self::checkNID($reference))
-            $reference = $this->_nebuleInstance->getNIDfromData($reference);
+            $reference = $this->_nebuleInstance->getFromDataNID($reference);
 
         $list = array();
         $filter = array(
@@ -2862,7 +2862,7 @@ class Node extends Functions implements nodeInterface
             $reference = References::REFERENCE_NEBULE_REFERENCE;
 
         if (!self::checkNID($reference))
-            $reference = $this->_nebuleInstance->getNIDfromData($reference);
+            $reference = $this->_nebuleInstance->getFromDataNID($reference);
 
         $list = array();
         $filter = array(
@@ -3064,7 +3064,7 @@ class Node extends Functions implements nodeInterface
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid3' =>  $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
+            'bl/rl/nid3' =>  $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION),
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, false);
@@ -3124,7 +3124,7 @@ class Node extends Functions implements nodeInterface
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid3' => $this->_nebuleInstance->getNIDfromData('nebule/objet/entite/localisation'),
+            'bl/rl/nid3' => $this->_nebuleInstance->getFromDataNID('nebule/objet/entite/localisation'),
             'bl/rl/nid4' => '',
         );
         $this->getLinks($links, $filter, false);

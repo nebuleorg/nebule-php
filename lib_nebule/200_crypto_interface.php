@@ -39,7 +39,7 @@ interface CryptoInterface
     public function getReady(): bool;
 
     /**
-     * Check if the cryptographique function have correct return value.
+     * Check if the cryptographique function has the correct return value.
      *
      * @param string $algo
      * @param int $type
@@ -60,8 +60,8 @@ interface CryptoInterface
 
     /**
      * Get $size octets of random string in raw form (strong) or in hexadecimal form (pseudo).
-     * Quality of random sequence can be selected with strong or pseudo random.
-     * But, to save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
+     * The quality of a random sequence can be selected with strong or pseudo random.
+     * But to save precious entropy, you have to use pseudo random in all cases where you do not absolutely need strong random.
      * If problem, return empty string.
      *
      * @param int $size
@@ -71,7 +71,7 @@ interface CryptoInterface
     public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string;
 
     /**
-     * Get a value of the data entropy.
+     * Get the value of the data entropy.
      *
      * @param string $data
      * @return float
@@ -119,7 +119,7 @@ interface CryptoInterface
     // --------------------------------------------------------------------------------
 
     /**
-     * Get sign value of $data with private key (not EID).
+     * Get sign value of $data with a private key (not EID).
      * If problem, return empty string.
      *
      * @param string $data
@@ -130,7 +130,7 @@ interface CryptoInterface
     public function sign(string $data, string $privateKey, string $privatePassword): string;
 
     /**
-     * Verify sign value of data with public key (not EID).
+     * Verify sign value of data with a public key (not EID).
      * If problem, return false.
      *
      * @param string $data
@@ -141,8 +141,8 @@ interface CryptoInterface
     public function verify(string $data, string $sign, string $publicKey): bool;
 
     /**
-     * Encode $data with public key (not EID).
-     * Data have a maximum size minus padding to pass without split.
+     * Encode $data with a public key (not EID).
+     * Data have a maximum size minus padding to pass without a split.
      * If problem, return empty string.
      *
      * @param string $data
@@ -152,8 +152,8 @@ interface CryptoInterface
     public function encryptTo(string $data, ?string $publicKey): string;
 
     /**
-     * Decode $data with private key (not EID).
-     * Data have a maximum size minus padding to pass without split.
+     * Decode $data with a private key (not EID).
+     * Data have a maximum size minus padding to pass without a split.
      * If problem, return empty string.
      *
      * @param string $code
@@ -165,15 +165,17 @@ interface CryptoInterface
 
     /**
      * Generate a new asymmetric cryptographic bi-key.
-     * If problem, return empty array.
+     * If problem, return an empty array.
      *
      * @param string $password
+     * @param string $algo
+     * @param string $size
      * @return array
      */
-    public function newAsymmetricKeys(string $password = ''): array;
+    public function newAsymmetricKeys(string $password = '', string $algo='', string $size=''): array;
 
     /**
-     * Check password on a private key (not EID).
+     * Check the password on a private key (not EID).
      *
      * @param ?string $privateKey
      * @param ?string $password

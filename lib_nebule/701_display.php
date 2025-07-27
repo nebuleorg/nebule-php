@@ -2121,8 +2121,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
             $currentModuleName = $module::MODULE_MENU_NAME;
 
-            // Liste les points d'ancrages à afficher.
-            $appHookList = $module->getHookList('selfMenu');
+            $appHookList = $module->getHookList('selfMenu', $this->_nebuleInstance->getCurrentObjectInstance());
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
@@ -2155,8 +2154,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Extrait le nom du module.
             $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
 
-            // Liste les points d'ancrages à afficher.
-            $appHookList = $module->getHookList($currentModuleName . 'SelfMenu');
+            $appHookList = $module->getHookList($currentModuleName . 'SelfMenu', $this->_nebuleInstance->getCurrentObjectInstance());
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
@@ -2188,8 +2186,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Extrait le nom du module.
                 $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
 
-                // Liste les points d'ancrages à afficher.
-                $appHookList = $module->getHookList('menu');
+                $appHookList = $module->getHookList('menu', $this->_nebuleInstance->getCurrentObjectInstance());
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
                         if ($appHook['name'] != '') {
@@ -4445,26 +4442,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $result;
     }
 
-    public function getDisplayObjectHookList(string $selfHookName, string $typeHookName, Node $object,
-                                             bool $enableDisplayJS, string $size, array $appHookList = array()): string
-    {
-        return $this->_getDisplayObjectHookList($selfHookName, $typeHookName, $object, $enableDisplayJS, $size, $appHookList);
-    }
-
-    /**
-     * Pour la fonction getDisplayObject().
-     * Prépare les actions définies par un point d'ancrage pour un objet.
-     * Le point d'ancrage permet aux modules d'ajouter des actions.
-     *
-     * @param string  $selfHookName
-     * @param string  $typeHookName
-     * @param Node    $object
-     * @param boolean $enableDisplayJS
-     * @param string  $size
-     * @param array   $appHookList
-     * @return string
-     */
-    private function _getDisplayObjectHookList(string $selfHookName, string $typeHookName, Node $object,
+    public function getDisplayObjectHookList(string $selfHookName, string $typeHookName, \Nebule\Library\Node $object,
                                                bool $enableDisplayJS, string $size, array $appHookList = array()): string
     {
         $result = '';
@@ -4475,61 +4453,50 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $iconNoJS = 'NoJS';
         if ($enableDisplayJS)
             $iconNoJS = '';
+        $i = 0;
 
         // Ajoute les actions demandées spécifiquement et individuellement.
-        $i = 0;
-        if (sizeof($appHookList) != 0) {
-            foreach ($appHookList as $appHook) {
-                if ($appHook['name'] != '') {
-                    $dispHookList[$i]['moduleName'] = '&nbsp;';
-                    $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
-                    $dispHookList[$i]['icon'] = $appHook['icon'];
-                    if ($dispHookList[$i]['icon'] == '')
-                        $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                    $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
-                    $dispHookList[$i]['link'] = $appHook['link'];
-                    if (isset($appHook['css'])
-                        && $appHook['css'] != ''
-                    )
-                        $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                    else
-                        $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . '"';
-                    $dispHookList[$i]['hookType'] = 'Self';
-                    $i++;
-                }
+        foreach ($appHookList as $appHook) {
+            if ($appHook['name'] != '') {
+                $dispHookList[$i]['moduleName'] = '&nbsp;';
+                $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
+                $dispHookList[$i]['icon'] = $appHook['icon'];
+                if ($dispHookList[$i]['icon'] == '')
+                    $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
+                $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
+                $dispHookList[$i]['link'] = $appHook['link'];
+                if (isset($appHook['css'])
+                    && $appHook['css'] != ''
+                )
+                    $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
+                else
+                    $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . '"';
+                $dispHookList[$i]['hookType'] = 'Self';
+                $i++;
             }
         }
 
         // Ajoute les actions spécifiques à l'objet pour le module en cours.
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
-                // Liste les points d'ancrages à afficher.
-                if (str_starts_with($module::MODULE_INTERFACE, '1')
-                    || str_starts_with($module::MODULE_INTERFACE, '2')
-                )
-                    $appHookList = $module->getHookList($selfHookName);
-                else
-                    $appHookList = $module->getHookList($selfHookName, $object);
-
-                if (sizeof($appHookList) != 0) {
-                    foreach ($appHookList as $appHook) {
-                        if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
-                            $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
-                            $dispHookList[$i]['icon'] = $appHook['icon'];
-                            if ($dispHookList[$i]['icon'] == '')
-                                $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
-                            $dispHookList[$i]['link'] = $appHook['link'];
-                            if (isset($appHook['css'])
-                                && $appHook['css'] != ''
-                            )
-                                $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                            else
-                                $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
-                            $dispHookList[$i]['hookType'] = 'Self';
-                            $i++;
-                        }
+                $appHookList = $module->getHookList($selfHookName, $object);
+                foreach ($appHookList as $appHook) {
+                    if ($appHook['name'] != '') {
+                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                        $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
+                        $dispHookList[$i]['icon'] = $appHook['icon'];
+                        if ($dispHookList[$i]['icon'] == '')
+                            $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
+                        $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
+                        $dispHookList[$i]['link'] = $appHook['link'];
+                        if (isset($appHook['css'])
+                            && $appHook['css'] != ''
+                        )
+                            $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
+                        else
+                            $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
+                        $dispHookList[$i]['hookType'] = 'Self';
+                        $i++;
                     }
                 }
             }
@@ -4538,33 +4505,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques à l'objet pour tout sauf le module en cours.
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
-                // Liste les points d'encrages à afficher.
-                if (str_starts_with($module::MODULE_INTERFACE, '1')
-                    || str_starts_with($module::MODULE_INTERFACE, '2')
-                )
-                    $appHookList = $module->getHookList($selfHookName);
-                else
-                    $appHookList = $module->getHookList($selfHookName, $object);
-
-                if (sizeof($appHookList) != 0) {
-                    foreach ($appHookList as $appHook) {
-                        if ($appHook['name'] != '') {
-                            $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
-                            $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
-                            $dispHookList[$i]['icon'] = $appHook['icon'];
-                            if ($dispHookList[$i]['icon'] == '')
-                                $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                            $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
-                            $dispHookList[$i]['link'] = $appHook['link'];
-                            if (isset($appHook['css'])
-                                && $appHook['css'] != ''
-                            )
-                                $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                            else
-                                $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
-                            $dispHookList[$i]['hookType'] = 'Self';
-                            $i++;
-                        }
+                $appHookList = $module->getHookList($selfHookName, $object);
+                foreach ($appHookList as $appHook) {
+                    if ($appHook['name'] != '') {
+                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                        $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
+                        $dispHookList[$i]['icon'] = $appHook['icon'];
+                        if ($dispHookList[$i]['icon'] == '')
+                            $dispHookList[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
+                        $dispHookList[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
+                        $dispHookList[$i]['link'] = $appHook['link'];
+                        if (isset($appHook['css'])
+                            && $appHook['css'] != ''
+                        )
+                            $dispHookList[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
+                        else
+                            $dispHookList[$i]['cssid'] = 'id="' . $selfHookName . $i . '"';
+                        $dispHookList[$i]['hookType'] = 'Self';
+                        $i++;
                     }
                 }
             }
@@ -4573,90 +4531,32 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques au type d'objet.
         $i = 0;
         foreach ($modules as $module) {
-            // Liste les points d'encrages à afficher.
-            if ($module::MODULE_INTERFACE == '3.0')
-                $appHookList = $module->getHookList($typeHookName, $object);
-            else
-                $appHookList = $module->getHookList($typeHookName);
-            if (sizeof($appHookList) != 0) {
-                foreach ($appHookList as $appHook) {
-                    if ($appHook['name'] != '') {
-                        $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
-                        $dispHookListT[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
-                        $dispHookListT[$i]['icon'] = $appHook['icon'];
-                        if ($dispHookListT[$i]['icon'] == '')
-                            $dispHookListT[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
-                        $dispHookListT[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
-                        $dispHookListT[$i]['link'] = $appHook['link'];
-                        if (isset($appHook['css'])
-                            && $appHook['css'] != ''
-                        )
-                            $dispHookListT[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
-                        else
-                            $dispHookListT[$i]['cssid'] = 'id="' . $typeHookName . $i . '"';
-                        $dispHookListT[$i]['hookType'] = 'Type';
-                        $i++;
-                    }
+            $appHookList = $module->getHookList($typeHookName, $object);
+            foreach ($appHookList as $appHook) {
+                if ($appHook['name'] != '') {
+                    $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                    $dispHookListT[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
+                    $dispHookListT[$i]['icon'] = $appHook['icon'];
+                    if ($dispHookListT[$i]['icon'] == '')
+                        $dispHookListT[$i]['icon'] = self::DEFAULT_ICON_LSTOBJ;
+                    $dispHookListT[$i]['desc'] = $this->_translateInstance->getTranslate($appHook['desc']);
+                    $dispHookListT[$i]['link'] = $appHook['link'];
+                    if (isset($appHook['css'])
+                        && $appHook['css'] != ''
+                    )
+                        $dispHookListT[$i]['cssid'] = 'id="' . $appHook['css'] . '"';
+                    else
+                        $dispHookListT[$i]['cssid'] = 'id="' . $typeHookName . $i . '"';
+                    $dispHookListT[$i]['hookType'] = 'Type';
+                    $i++;
                 }
             }
         }
-        unset($modules, $module, $appHookList, $appHook);
 
-        // Affiche les points d'encrages.
-        if (sizeof($dispHookList) != 0) {
-            foreach ($dispHookList as $dispHook) {
-                /*	$result .= ' <a href="'.$dispHook['link'].'">'."\n";
-				$result .= '  <div class="objectMenuContentAction'.$iconNoJS.' objectMenuContentAction'.$size.' objectMenuContentAction'.$dispHook['hookType'].'" '.$dispHook['cssid'].'>'."\n";
-				$result .= '   <div class="objectMenuContentAction-icon'.$iconNoJS.'">';
-				$result .= $this->convertUpdateImage($dispHook['icon'], $dispHook['name']);
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-modname">';
-				$result .= '<p>'.$dispHook['moduleName'].'</p>';
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-title">';
-				$result .= '<p>'.$dispHook['name'].'</p>';
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-text">';
-				if ( $enableDisplayJS )
-				{
-					$result .= '<p>'.$dispHook['desc'].'&nbsp;</p>';
-				}
-				$result .= '</div>'."\n";
-				$result .= '  </div>'."\n";
-				$result .= ' </a>'."\n"; */
-
-                $result .= $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
-            }
-        }
-        unset($dispHookList, $dispHook);
-
-        // Affiche les points d'encrages.
-        if (sizeof($dispHookListT) != 0) {
-            foreach ($dispHookListT as $dispHook) {
-                /*	$result .= ' <a href="'.$dispHook['link'].'">'."\n";
-				$result .= '  <div class="objectMenuContentAction'.$iconNoJS.' objectMenuContentAction'.$size.' objectMenuContentAction'.$dispHook['hookType'].'" '.$dispHook['cssid'].'>'."\n";
-				$result .= '   <div class="objectMenuContentAction-icon'.$iconNoJS.'">';
-				$result .= $this->convertUpdateImage($dispHook['icon'], $dispHook['name']);
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-modname">';
-				$result .= '<p>'.$dispHook['moduleName'].'</p>';
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-title">';
-				$result .= '<p>'.$dispHook['name'].'</p>';
-				$result .= '</div>'."\n";
-				$result .= '   <div class="objectMenuContentAction-text">';
-				if ( $enableDisplayJS )
-				{
-					$result .= '<p>'.$dispHook['desc'].'&nbsp;</p>';
-				}
-				$result .= '</div>'."\n";
-				$result .= '  </div>'."\n";
-				$result .= ' </a>'."\n"; */
-
-                $result .= $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
-            }
-        }
-        unset($dispHookListT, $dispHook);
+        foreach ($dispHookList as $dispHook)
+            $result .= $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
+        foreach ($dispHookListT as $dispHook)
+            $result .= $this->_getDisplayHookAction($dispHook, $enableDisplayJS, $size);
 
         return $result;
     }
@@ -5212,7 +5112,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         $modules = $this->_applicationInstance->getModulesListInstances();
         foreach ($modules as $module) {
-            // Liste les points d'ancrages à afficher.
             $appHookList = $module->getHookList($hook, $nid);
             $appHook = null;
             foreach ($appHookList as $appHook) {

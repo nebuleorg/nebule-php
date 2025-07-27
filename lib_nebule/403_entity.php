@@ -72,15 +72,13 @@ class Entity extends Node implements nodeInterface
      * @see Node::_initialisation()
      * @return void
      */
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id != '0')
             $this->_loadEntity();
     }
 
-    private function _loadEntity(): void
-    {
+    private function _loadEntity(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions id=' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_ioInstance->checkObjectPresent($this->_id)
             || !$this->_ioInstance->checkLinkPresent($this->_id)
@@ -95,8 +93,7 @@ class Entity extends Node implements nodeInterface
             $this->_findPublicKey();
     }
 
-    public function createNewEntity(string $algo='rsa', int $size=2048): void
-    {
+    public function createNewEntity(string $algo='rsa', int $size=2048): void {
         // FIXME use algo and size.
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
@@ -110,16 +107,14 @@ class Entity extends Node implements nodeInterface
             $newPkey = $this->_cryptoInstance->newAsymmetricKeys($this->_privateKeyPassword);
             if (sizeof($newPkey) != 0) {
                 $this->_publicKey = $newPkey['public'];
-                $this->_id = $this->_nebuleInstance->getNIDfromData($this->_publicKey);
+                $this->_id = $this->_nebuleInstance->getFromDataNID($this->_publicKey);
                 $this->_metrologyInstance->addLog('create entity pub key oid=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b5dacb0d');
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
-                $this->_privateKeyOID = $this->_nebuleInstance->getNIDfromData($this->_privateKey);
+                $this->_privateKeyOID = $this->_nebuleInstance->getFromDataNID($this->_privateKey);
                 $this->_metrologyInstance->addLog('create entity priv key oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '9afc5da2');
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
-
-                // TODO secure clean...
                 unset($newPkey);
             } else {
                 $this->_metrologyInstance->addLog('Create entity error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '98b648b1');
@@ -131,8 +126,7 @@ class Entity extends Node implements nodeInterface
         }
     }
 
-    public function setCreateWrite(): void
-    {
+    public function setCreateWrite(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_isNew || !$this->_newPrivateKey || $this->_id == '0')
             return;
@@ -142,27 +136,14 @@ class Entity extends Node implements nodeInterface
         }
 
         $this->_ioInstance->setObject($this->_id, $this->_publicKey);
-        //$this->_ioInstance->setObject($this->_privateKeyOID, $this->_privateKey);
 
-        $nid1 = $this->_id;
-        $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-        $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_HASH);
-        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
-
-        $nid1 = $this->_privateKeyOID;
-        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
-
-        $nid1 = $this->_id;
-        $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
-        $nid3 = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
-
-        $nid1 = $this->_privateKeyOID;
-        $this->_setCreateBlocLinkL('l', $nid1, $nid2, $nid3);
+        //$nid1 = $this->_id;
+        $nid2 = $this->_nebuleInstance->getFromDataNID(self::ENTITY_TYPE);
+        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->_setCreateBlocLink('l', $this->_id, $nid2, $nid3);
     }
 
-    private function _setCreateBlocLinkL(string $req,string $nid1,string $nid2 = '',string $nid3 = ''): void
-    {
+    private function _setCreateBlocLink(string $req, string $nid1, string $nid2 = '', string $nid3 = ''): void {
         $link = $req . '>' . $nid1;
         if ($nid2 != '')
             $link .= '>' . $nid2;
@@ -173,8 +154,7 @@ class Entity extends Node implements nodeInterface
         $instanceBL->signWrite($this, '', $this->_privateKey, $this->_privateKeyPassword);
     }
 
-    public function setSelfProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false):void
-    {
+    public function setSelfProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false):void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_isNew || $this->_id == '0')
             return;
@@ -193,8 +173,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return void
      */
-    private function _verifyEntity(): void
-    {
+    private function _verifyEntity(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -214,21 +193,18 @@ class Entity extends Node implements nodeInterface
 
     private bool $_typeVerified = false;
 
-    public function getKeyType(): string
-    {
+    public function getKeyType(): string {
         if ($this->_id == '0')
             return '';
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, 'all');
     }
 
-    public function getTypeVerify(): bool
-    {
+    public function getTypeVerify(): bool {
         $this->_verifyEntity();
         return $this->_typeVerified;
     }
 
-    public function getIsPublicKey(): bool
-    {
+    public function getIsPublicKey(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -240,8 +216,7 @@ class Entity extends Node implements nodeInterface
         return $t;
     }
 
-    public function getIsPrivateKey(): bool
-    {
+    public function getIsPrivateKey(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $t = false;
         // Extrait le contenu de l'objet source.
@@ -254,14 +229,10 @@ class Entity extends Node implements nodeInterface
     }
 
 
-    // Retrouve et retourne la clé publique.
-    public function getPublicKeyID(): string
-    {
-        return $this->_id;
-    }
 
-    public function getPublicKey(): string
-    {
+    public function getPublicKeyID(): string { return $this->_id; }
+
+    public function getPublicKey(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0'
             || $this->_publicKey == ''
@@ -270,28 +241,22 @@ class Entity extends Node implements nodeInterface
         return $this->_publicKey;
     }
 
-    // Retrouve la clé publique.
-    private function _findPublicKey(): void
-    {
-        $this->_publicKey = $this->_ioInstance->getObject($this->_id, self::ENTITY_MAX_SIZE);
-    }
+    private function _findPublicKey(): void { $this->_publicKey = $this->_ioInstance->getObject($this->_id, self::ENTITY_MAX_SIZE); }
 
 
 
     // Retourne l'identifiant de la clé privée.
-    public function getPrivateKeyOID(): string
-    {
+    public function getPrivateKeyOID(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_findPrivateKeyOID();
         return $this->_privateKeyOID;
     }
 
     // Retrouve l'identifiant de la clé privée.
-    private function _findPrivateKeyOID(): void
-    {
+    private function _findPrivateKeyOID(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $oidPKey = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_PRIVATE_KEY);
+        $oidPKey = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_PRIVATE_KEY);
 
         if ($this->_privateKeyOID != '0')
             return;
@@ -319,8 +284,9 @@ class Entity extends Node implements nodeInterface
             $date = $link->getDate();
             if ($link->getBlocLink()->getParsed()['bs/rs1/eid'] == $this->_id
                 && strlen($nid2) > BlocLink::NID_MIN_HASH_SIZE
+                && !is_bool($line)
                 && $line !== null
-                && strstr($line, self::ENTITY_PRIVATE_HEADER) !== false
+                && str_contains($line, self::ENTITY_PRIVATE_HEADER)
                 && strcmp($date, $refDate) > 0
             ) {
                 $this->_privateKeyOID = $nid2;
@@ -337,8 +303,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return bool
      */
-    private function _findPrivateKey(): bool
-    {
+    private function _findPrivateKey(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_privateKey != '')
             return true;
@@ -356,8 +321,7 @@ class Entity extends Node implements nodeInterface
      * @param string $passwd
      * @return bool
      */
-    public function setPrivateKeyPassword(string $passwd): bool
-    {
+    public function setPrivateKeyPassword(string $passwd): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (! $this->_findPrivateKey()) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('no private key', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ed4a39cf');
@@ -380,8 +344,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return boolean
      */
-    public function unsetPrivateKeyPassword(): bool
-    {
+    public function unsetPrivateKeyPassword(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return false;
@@ -393,13 +356,10 @@ class Entity extends Node implements nodeInterface
         return true;
     }
 
-    public function getHavePrivateKeyPassword(): bool
-    {
-        return $this->_isSetPrivateKeyPassword;
-    }
+    public function getHavePrivateKeyPassword(): bool { return $this->_isSetPrivateKeyPassword; }
+    public function getIsUnlocked(): bool { return $this->_isSetPrivateKeyPassword; }
 
-    public function setNewPrivateKeyPassword(string $newPasswd): bool
-    {
+    public function setNewPrivateKeyPassword(string $newPasswd): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return false;
@@ -418,10 +378,10 @@ class Entity extends Node implements nodeInterface
             return false;
 
         $this->_privateKeyPasswordSalt = $this->_cryptoInstance->getRandom(self::ENTITY_PASSWORD_SALT_SIZE, Crypto::RANDOM_STRONG);
-        // A faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
+        // À faire... le chiffrement du mot de passe avec le sel et l'ID de session php...
         $this->_privateKeyPassword = $newPasswd;
         $this->_privateKey = $newKey;
-        $this->_privateKeyOID = $this->_nebuleInstance->getNIDfromData($newKey);
+        $this->_privateKeyOID = $this->_nebuleInstance->getFromDataNID($newKey);
         $this->_isSetPrivateKeyPassword = true;
         $this->_metrologyInstance->addLog('change entity password - new ' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd11dc438');
 
@@ -433,24 +393,20 @@ class Entity extends Node implements nodeInterface
         // Si ce n'est pas une création d'entité, fait les liens de mises à jour de clés privées.
         if (!$this->_newPrivateKey) {
             // Création lien 1.
-            $this->_setCreateBlocLinkL('x', $oldPrivateKeyID, $this->_id);
+            $this->_setCreateBlocLink('x', $oldPrivateKeyID, $this->_id);
 
             // Création lien 2.
-            $this->_setCreateBlocLinkL('u', $oldPrivateKeyID, $this->_privateKeyOID);
+            $this->_setCreateBlocLink('u', $oldPrivateKeyID, $this->_privateKeyOID);
         }
 
         // Création lien 3.
-        $nid2 = $this->_nebuleInstance->getNIDfromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-        $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/hash');
-        $this->_setCreateBlocLinkL('l', $this->_privateKeyOID, $nid2, $nid3);
+        $nid2 = $this->_nebuleInstance->getFromDataNID(self::ENTITY_TYPE);
+        $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
+        $this->_setCreateBlocLink('l', $this->_privateKeyOID, $nid2, $nid3);
 
         // Création lien 4.
-        $nid2 = $this->_nebuleInstance->getNIDfromData(self::ENTITY_TYPE);
-        $nid3 = $this->_nebuleInstance->getNIDfromData('nebule/objet/type');
-        $this->_setCreateBlocLinkL('l', $this->_privateKeyOID, $nid2, $nid3);
-
-        // Création lien 5.
-        $this->_setCreateBlocLinkL('f', $this->_privateKeyOID, $this->_id);
+        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_PRIVATE_KEY);
+        $this->_setCreateBlocLink('f', $this->_id, $this->_privateKeyOID, $nid3);
 
         $this->_newPrivateKey = false;
         return true;
@@ -466,8 +422,7 @@ class Entity extends Node implements nodeInterface
      * @param string $password
      * @return string|null
      */
-    public function signLink(string $link, string $algo = '', string $privateKey = '', string $password = ''): ?string
-    {
+    public function signLink(string $link, string $algo = '', string $privateKey = '', string $password = ''): ?string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($privateKey == '') {
             if ($this->_privateKey == '') {
@@ -493,8 +448,7 @@ class Entity extends Node implements nodeInterface
      * @param string $link
      * @return string|boolean
      */
-    /*public function signWriteLink(string $link)
-    {
+    /*public function signWriteLink(string $link) {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $signe = $this->signLink($link);
         if ($signe === false) {
@@ -512,15 +466,11 @@ class Entity extends Node implements nodeInterface
      * @param string $code
      * @return string
      */
-    public function decrypt(string $code): string
-    {
-        return $this->_cryptoInstance->decryptTo($code, $this->_privateKey, $this->_privateKeyPassword);
-    }
+    public function decrypt(string $code): string { return $this->_cryptoInstance->decryptTo($code, $this->_privateKey, $this->_privateKeyPassword); }
 
 
 
-    public function getName(string $socialClass = 'self'): string
-    {
+    public function getName(string $socialClass = 'self'): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
             $socialClass = 'self';
@@ -540,8 +490,7 @@ class Entity extends Node implements nodeInterface
      * @param string $socialClass
      * @return string
      */
-    public function getFullName(string $socialClass = ''): string
-    {
+    public function getFullName(string $socialClass = ''): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return '';
@@ -571,29 +520,25 @@ class Entity extends Node implements nodeInterface
     }
 
     // Retourne les localisations de l'entité.
-    public function getLocations(string $socialClass = ''): array
-    {
+    public function getLocations(string $socialClass = ''): array {
         if ($this->_id == '0')
             return array();
         return $this->getProperties(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisationsID(string $socialClass = ''): array
-    {
+    public function getLocalisationsID(string $socialClass = ''): array {
         if ($this->_id == '0')
             return array();
         return $this->getPropertiesID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocation(string $socialClass = ''): string
-    {
+    public function getLocation(string $socialClass = ''): string {
         if ($this->_id == '0')
             return '';
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocalisationID(string $socialClass = ''): string
-    {
+    public function getLocalisationID(string $socialClass = ''): string {
         if ($this->_id == '0')
             return '';
         return $this->getPropertyID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
@@ -605,8 +550,7 @@ class Entity extends Node implements nodeInterface
      * @param int $size
      * @return string
      */
-    public function getFaceID(int$size = 400): string
-    {
+    public function getFaceID(int$size = 400): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
             return '';
@@ -727,9 +671,7 @@ class Entity extends Node implements nodeInterface
     }
 
 
-    // Ecrit l'objet si non présent.
-    public function write(): bool
-    {
+    public function write(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite','permitWriteObject', 'permitWriteLink', 'permitWriteEntity'))) {
             $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ca6f5f59');
@@ -751,40 +693,28 @@ class Entity extends Node implements nodeInterface
      *
      * @return boolean
      */
-    public function getMarkProtected(): bool
-    {
-        return false;
-    }
+    public function getMarkProtected(): bool { return false; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
      * @return boolean
      */
-    public function getReloadMarkProtected(): bool
-    {
-        return false;
-    }
+    public function getReloadMarkProtected(): bool { return false; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
      * @return string
      */
-    public function getProtectedID(): string
-    {
-        return '0';
-    }
+    public function getProtectedID(): string { return '0'; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
      * @return string
      */
-    public function getUnprotectedID(): string
-    {
-        return $this->_id;
-    }
+    public function getUnprotectedID(): string { return $this->_id; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
@@ -792,20 +722,14 @@ class Entity extends Node implements nodeInterface
      * @param bool $obfuscated
      * @return boolean
      */
-    public function setProtected(bool $obfuscated = false): bool
-    {
-        return false;
-    }
+    public function setProtected(bool $obfuscated = false): bool { return false; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
      * @return boolean
      */
-    public function setUnprotected(): bool
-    {
-        return false;
-    }
+    public function setUnprotected(): bool { return false; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
@@ -813,20 +737,14 @@ class Entity extends Node implements nodeInterface
      * @param string $entity
      * @return boolean
      */
-    public function setProtectedTo(string $entity): bool
-    {
-        return false;
-    }
+    public function setProtectedTo(string $entity): bool{ return false; }
 
     /**
      * Fonction pour les objets, désactivée pour les groupes.
      *
      * @return array
      */
-    public function getProtectedTo(): array
-    {
-        return array();
-    }
+    public function getProtectedTo(): array { return array(); }
 
 
     /**
@@ -835,8 +753,7 @@ class Entity extends Node implements nodeInterface
      * @param string $socialClass
      * @return array:Link
      */
-    public function getListIsFollowerOfGroupLinks(string $socialClass = 'myself'): array
-    {
+    public function getListIsFollowerOfGroupLinks(string $socialClass = 'myself'): array {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
@@ -845,7 +762,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinence sociale.
@@ -868,8 +785,7 @@ class Entity extends Node implements nodeInterface
      * @param string $socialClass
      * @return array:string
      */
-    public function getListIsFollowerOnGroupID(string $socialClass = 'myself'): array
-    {
+    public function getListIsFollowerOnGroupID(string $socialClass = 'myself'): array {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $list = array();
 
@@ -880,7 +796,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinence sociale.
@@ -904,8 +820,7 @@ class Entity extends Node implements nodeInterface
      * @param string $socialClass
      * @return array:Link
      */
-    public function getListIsFollowerOfConversationLinks(string $socialClass = 'myself'): array
-    {
+    public function getListIsFollowerOfConversationLinks(string $socialClass = 'myself'): array {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
@@ -914,7 +829,7 @@ class Entity extends Node implements nodeInterface
             'l',
             $this->_id,
             '',
-            $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
         // Fait un tri par pertinence sociale.
@@ -938,8 +853,7 @@ class Entity extends Node implements nodeInterface
      * @param string $socialClass
      * @return array:string
      */
-    public function getListIsFollowerOnConversationID(string $socialClass = 'myself'): array
-    {
+    public function getListIsFollowerOnConversationID(string $socialClass = 'myself'): array {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $list = array();
 
@@ -963,8 +877,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return void
      */
-    static public function echoDocumentationTitles(): void
-    {
+    static public function echoDocumentationTitles(): void {
         ?>
 
         <li><a href="#oe">OE / Entité</a>
@@ -993,8 +906,7 @@ class Entity extends Node implements nodeInterface
      *
      * @return void
      */
-    static public function echoDocumentationCore(): void
-    {
+    static public function echoDocumentationCore(): void {
         ?>
 
         <h2 id="oe">OE / Entité</h2>
@@ -1080,67 +992,36 @@ class Entity extends Node implements nodeInterface
 
         <h3 id="oec">OEC / Création</h3>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>La première étape consiste en la génération d’un bi-clé (public/privé) cryptographique. Ce bi-clé peut être
+        <p>La première étape consiste en la génération d’une biclé (public/privé) cryptographique. Cette biclé peut être
             de type RSA ou équivalent. Aujourd’hui, seul RSA est reconnu.</p>
-        <p>On extrait la clé publique du bi-clé. Le calcul de l’empreinte cryptographique de la clé publique donne
+        <p>On extrait la clé publique de la biclé. Le calcul de l’empreinte cryptographique de la clé publique donne
             l’identifiant de l’entité. On écrit dans les objets (o/*) l’objet avec comme contenu la clé publique et
             comme id son empreinte cryptographique.</p>
-        <p>On extrait la clé privée du bi-clé. Il est fortement conseillé lors de l’extraction de protéger tout de suite
-            la clé privée avec un mot de passe. On écrit dans les objets (o/*) l’objet avec comme contenu la clé privée
-            et comme id son empreinte cryptographique (différente de celle de la clé publique).</p>
-        <p>A partir de maintenant, le bi-clé n’est plus nécessaire. Il faut le supprimer avec un effacement
+        <p>On extrait la clé privée de la biclé. Il est fortement conseillé lors de l’extraction de protéger tout de
+            suite la clé privée avec un mot de passe. On écrit dans les objets (o/*) l’objet avec comme contenu la clé
+            privée et comme id son empreinte cryptographique (différente de celle de la clé publique).</p>
+        <p>À partir de maintenant, la biclé n’est plus nécessaire. Il faut le supprimer avec un effacement
             sécurisé.</p>
-        <p>Pour que l’objet soit reconnu comme entité il faut créer les liens correspondants.</p>
+        <p>Pour que l’objet soit reconnu comme entité, il faut créer les liens correspondants.</p>
         <ul>
             <li>Lien 1 :
                 <ul>
-                    <li>Signature du lien par la clé privée de la nouvelle entité</li>
-                    <li>Identifiant de la clé publique</li>
-                    <li>Horodatage</li>
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
-                    <li>Empreinte de l’algorithme de hash utilisé pour le calcul des empreintes</li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_HASH; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
                 </ul>
             </li>
             <li>Lien 2 :
                 <ul>
-                    <li>Signature du lien par la clé privée de la nouvelle entité</li>
-                    <li>Identifiant de la clé publique</li>
-                    <li>Horodatage</li>
                     <li>Lien de type <code>l</code></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
-                    <li>Empreinte de l’algorithme de hash utilisé pour le calcul des empreintes</li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_HASH; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
+                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
                 </ul>
             </li>
             <li>Lien 3 :
                 <ul>
-                    <li>Signature du lien par la clé privée de la nouvelle entité</li>
-                    <li>Identifiant de la clé publique</li>
-                    <li>Horodatage</li>
-                    <li>Lien de type <code>l</code></li>
-                    <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
-                </ul>
-            </li>
-            <li>Lien 4 :
-                <ul>
-                    <li>Signature du lien par la clé privée de la nouvelle entité</li>
-                    <li>Identifiant de la clé publique</li>
-                    <li>Horodatage</li>
-                    <li>Lien de type <code>l</code></li>
-                    <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_OBJECT_ENTITY; ?>’</li>
-                    <li>Empreinte de ‘<?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?>’</li>
-                </ul>
-            </li>
-            <li>Lien 5 :
-                <ul>
-                    <li>Signature du lien par la clé privée de la nouvelle entité</li>
-                    <li>Identifiant de la clé publique</li>
-                    <li>Horodatage</li>
                     <li>Lien de type <code>f</code> ;</li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">privée</span></li>
                     <li>Identifiant de la clé <span style="font-weight:bold;">publique</span></li>
@@ -1149,8 +1030,8 @@ class Entity extends Node implements nodeInterface
             </li>
         </ul>
         <p>C’est le minimum vital pour une entité. Ensuite, d’autres propriétés peuvent être ajoutées à l’entité (id clé
-            publique) comme sont nom, son type, etc…</p>
-        <p>Si le mot de passe de la clé privée est définit par l’utilisateur demandeur de la nouvelle entité, il faut
+            publique) comme son nom, son type, etc…</p>
+        <p>Si le mot de passe de la clé privée est défini par l’utilisateur demandeur de la nouvelle entité, il faut
             supprimer ce mot de passe avec un effacement sécurisé.</p>
         <p>Si le mot de passe de la clé privée a été généré, donc que la nouvelle entité est esclave d’une entité
             maître, le mot de passe doit être stocké dans un objet chiffré pour l’entité maître. Et il faut générer un
@@ -1174,7 +1055,7 @@ class Entity extends Node implements nodeInterface
 
         <h3 id="oeo">OEO / Oubli</h3>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
+        <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté, mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 
         <?php

@@ -66,7 +66,7 @@ class Recovery extends Functions
         if (!$this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities'))
             return;
 
-        $refRecovery = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
+        $refRecovery = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT);
 
         $list = array();
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority')) {

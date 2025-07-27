@@ -68,8 +68,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         '' => '',
     );
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         // Nothing to do.
     }
 
@@ -77,26 +76,19 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstance()
      */
-    public function getCryptoInstance(): CryptoInterface
-    {
-        return $this;
-    }
+    public function getCryptoInstance(): CryptoInterface { return $this; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstanceName()
      */
-    public function getCryptoInstanceName(): string
-    {
-        return get_class($this);
-    }
+    public function getCryptoInstanceName(): string { return get_class($this); }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkFunction()
      */
-    public function checkFunction(string $algo, int $type): bool
-    {
+    public function checkFunction(string $algo, int $type): bool {
         return match ($type) {
             Crypto::TYPE_HASH => $this->_checkHashFunction($algo),
             Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricFunction($algo),
@@ -109,8 +101,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::checkValidAlgorithm()
      */
-    public function checkValidAlgorithm(string $algo, int $type): bool
-    {
+    public function checkValidAlgorithm(string $algo, int $type): bool {
         return match ($type) {
             Crypto::TYPE_HASH => $this->_checkHashAlgorithm($algo),
             Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricAlgorithm($algo),
@@ -119,14 +110,12 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         };
     }
 
-    private function _getAlgorithmName(string $algo): string
-    {
+    private function _getAlgorithmName(string $algo): string {
         $v = preg_split('/\./', $algo); // aes.256.ctr rsa.2048
         return $v[0];
     }
 
-    private function _getAlgorithmSize(string $algo): int
-    {
+    private function _getAlgorithmSize(string $algo): int {
         $v = preg_split('/\./', $algo); // aes.256.ctr rsa.2048
         return (int)$v[1];
     }
@@ -137,8 +126,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
      */
-    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_STRONG): string
-    {
+    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_STRONG): string {
         if ($quality == Crypto::RANDOM_STRONG)
             return $this->_getStrongRandom($size);
         else
@@ -154,8 +142,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * @param int $size
      * @return string
      */
-    private function _getStrongRandom(int $size = 32): string
-    {
+    private function _getStrongRandom(int $size = 32): string {
         if ($size == 0)
             return '';
         $strong = false;
@@ -171,10 +158,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getEntropy()
      */
-    public function getEntropy(string &$data): float
-    {
-        return CryptoSoftware::getEntropyStatic($data);
-    }
+    public function getEntropy(string &$data): float { return CryptoSoftware::getEntropyStatic($data); }
 
     // --------------------------------------------------------------------------------
 
@@ -182,16 +166,14 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::hash()
      */
-    public function hash(string $data, string $algo = ''): string
-    {
+    public function hash(string $data, string $algo = ''): string {
         $algo = $this->_translateHashAlgorithm($algo);
         if ($algo == '')
             return '';
         return hash($algo, $data);
     }
 
-    private function _checkHashFunction(string $algo): bool
-    {
+    private function _checkHashFunction(string $algo): bool {
         if (!$this->_checkHashAlgorithm($algo))
             return false;
         $hash = $this->hash(self::TEST_HASH_ALGORITHM['value'], $algo);
@@ -201,16 +183,14 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         return false;
     }
 
-    private function _checkHashAlgorithm(string $algo): bool
-    {
+    private function _checkHashAlgorithm(string $algo): bool {
         if (isset(self::TRANSLATE_HASH_ALGORITHM[$algo]))
             return true;
         $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '965d71cf');
         return false;
     }
 
-    private function _translateHashAlgorithm(string $name): string
-    {
+    private function _translateHashAlgorithm(string $name): string {
         if (isset(self::TRANSLATE_HASH_ALGORITHM[$name]))
             return self::TRANSLATE_HASH_ALGORITHM[$name];
         $this->_metrologyInstance->addLog('Invalid hash algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '43c10796');
@@ -223,8 +203,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encrypt()
      */
-    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string {
         if ($data == ''
             || $hexKey == ''
             || !$this->_checkSymmetricAlgorithm($algo)
@@ -242,8 +221,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decrypt()
      */
-    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string {
         if ($data == ''
             || $hexKey == ''
             || !$this->_checkSymmetricAlgorithm($algo)
@@ -257,8 +235,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         //return openssl_decrypt($data, $this->_translateSymmetricAlgorithm($algo), $binKey, OPENSSL_RAW_DATA, pack("H*", $binIV));
     }
 
-    private function _checkSymmetricFunction(string $algo): bool
-    {
+    private function _checkSymmetricFunction(string $algo): bool {
         $data = 'Bienvenue dans le projet nebule.';
         $hexKey = "8fdf208b4a79cef62f4e610ef7d409c110cb5d20b0148b9770cad5130106b6a1";
         $hexIV = $this->hash(date(DATE_ATOM) . microtime(false), 'sha1');
@@ -279,16 +256,14 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         return true;
     }
 
-    private function _checkSymmetricAlgorithm(string $algo): bool
-    {
+    private function _checkSymmetricAlgorithm(string $algo): bool {
         if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$algo]))
             return true;
         $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '13fab565');
         return false;
     }
 
-    private function _translateSymmetricAlgorithm(string $name): string
-    {
+    private function _translateSymmetricAlgorithm(string $name): string {
         if (isset(self::TRANSLATE_SYMMETRIC_ALGORITHM[$name]))
             return self::TRANSLATE_SYMMETRIC_ALGORITHM[$name];
         $this->_metrologyInstance->addLog('Invalid symmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '5f83d258');
@@ -301,8 +276,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * @param int $length
      * @return string
      */
-    private function _getNullIV(int $length): string
-    {
+    private function _getNullIV(int $length): string {
         $r = '';
         for ($i = 0; $i < $length; $i++)
             $r = $r . '0';
@@ -316,8 +290,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * @param string $algo
      * @return string
      */
-    private function _getBinIV(string $hexIV, string $algo): string
-    {
+    private function _getBinIV(string $hexIV, string $algo): string {
         if ($hexIV == '')
             $hexIV = $this->_getNullIV($this->_getAlgorithmSize($algo));
         $binIV = pack("H*", $hexIV);
@@ -333,8 +306,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::sign()
      */
-    public function sign(string $data, string $privateKey, string $privatePassword): string
-    {
+    public function sign(string $data, string $privateKey, string $privatePassword): string {
         $signatureBin = '';
         $ressource = openssl_pkey_get_private($privateKey, $privatePassword);
         if ($ressource === false)
@@ -354,8 +326,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $data, string $sign, string $publicKey): bool
-    {
+    public function verify(string $data, string $sign, string $publicKey): bool {
         $ressource = openssl_pkey_get_public($publicKey);
         if ($ressource === false)
             return false;
@@ -377,8 +348,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, ?string $publicKey): string
-    {
+    public function encryptTo(string $data, ?string $publicKey): string {
         if ($publicKey === null)
             return '';
 
@@ -396,8 +366,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
-    {
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string {
         if ($privateKey === null || $password === null)
             return '';
 
@@ -413,11 +382,13 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
 
     /**
      * {@inheritDoc}
+     * @param string $password
+     * @param string $algo
+     * @param string $size
      * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newAsymmetricKeys(string $password = ''): array
-    {
-        $algo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
+    public function newAsymmetricKeys(string $password = '', string $algo = '', string $size = ''): array {
+        $algo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); // FIXME
         if (!$this->_checkAsymmetricAlgorithm($algo))
             return array();
 
@@ -458,8 +429,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
-    {
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool {
         if ($privateKey === null || $password === null)
             return false;
 
@@ -474,8 +444,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
-    {
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string {
         if ($privateKey === null || $oldPassword === null || $newPassword === null)
             return '';
 
@@ -487,8 +456,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         return $privateKey;
     }
 
-    private function _checkAsymmetricFunction(): bool
-    {
+    private function _checkAsymmetricFunction(): bool {
         $private_pem = <<<EOD
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
@@ -542,16 +510,14 @@ EOD;
         return false;
     }
 
-    private function _checkAsymmetricAlgorithm(string $algo): bool
-    {
+    private function _checkAsymmetricAlgorithm(string $algo): bool {
         if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$algo]))
             return true;
         $this->_metrologyInstance->addLog('Unsupported ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a04d29d');
         return false;
     }
 
-    /*private function _translateAsymmetricAlgorithm(string $name): string
-    {
+    /*private function _translateAsymmetricAlgorithm(string $name): string {
         if (isset(self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name]))
             return self::TRANSLATE_ASYMMETRIC_ALGORITHM[$name];
         $this->_metrology->addLog('Invalid asymmetric algorithm ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2b4c9b6b');

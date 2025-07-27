@@ -28,13 +28,9 @@ class Crypto extends Functions implements CryptoInterface
 
     private ?CryptoInterface $_defaultInstance = null;
 
-    public function __toString(): string
-    {
-        return self::TYPE;
-    }
+    public function __toString(): string { return self::TYPE; }
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach (get_declared_classes() as $class) {
             if (str_starts_with($class, get_class($this)) && $class != get_class($this)) {
@@ -49,37 +45,25 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstance()
      */
-    public function getCryptoInstance(): CryptoInterface
-    {
-        return $this->_defaultInstance;
-    }
+    public function getCryptoInstance(): CryptoInterface { return $this->_defaultInstance; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstanceName()
      */
-    public function getCryptoInstanceName(): string
-    {
-        return get_class($this->_defaultInstance);
-    }
+    public function getCryptoInstanceName(): string { return get_class($this->_defaultInstance); }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkFunction()
      */
-    public function checkFunction(string $algo, int $type): bool
-    {
-        return $this->_defaultInstance->checkFunction($algo, $type);
-    }
+    public function checkFunction(string $algo, int $type): bool { return $this->_defaultInstance->checkFunction($algo, $type); }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkValidAlgorithm()
      */
-    public function checkValidAlgorithm(string $algo, int $type): bool
-    {
-        return $this->_defaultInstance->checkValidAlgorithm($algo, $type);
-    }
+    public function checkValidAlgorithm(string $algo, int $type): bool { return $this->_defaultInstance->checkValidAlgorithm($algo, $type); }
 
     // --------------------------------------------------------------------------------
 
@@ -87,8 +71,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
      */
-    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
-    {
+    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string {
         // FIXME refaire un sélecteur plus propre !
         if ($quality == Crypto::RANDOM_STRONG)
             return $this->_listInstances['openssl']->getRandom($size);
@@ -100,10 +83,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getEntropy()
      */
-    public function getEntropy(string &$data): float
-    {
-        return $this->_listInstances['software']->getEntropy($data);
-    }
+    public function getEntropy(string &$data): float { return $this->_listInstances['software']->getEntropy($data); }
 
     // --------------------------------------------------------------------------------
 
@@ -111,8 +91,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::hash()
      */
-    public function hash(string $data, string $algo = ''): string
-    {
+    public function hash(string $data, string $algo = ''): string {
         if ($algo == '')
             $algo = \Nebule\Library\References::REFERENCE_CRYPTO_HASH_ALGORITHM;
         return $this->_defaultInstance->hash($data, $algo);
@@ -124,8 +103,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encrypt()
      */
-    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string {
         return $this->_defaultInstance->encrypt($data, $hexKey, $hexIV);
     }
 
@@ -133,8 +111,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decrypt()
      */
-    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string {
         return $this->_defaultInstance->decrypt($data, $hexKey, $hexIV);
     }
 
@@ -144,8 +121,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::sign()
      */
-    public function sign(string $data, string $privateKey, string $privatePassword): string
-    {
+    public function sign(string $data, string $privateKey, string $privatePassword): string {
         return $this->_defaultInstance->sign($data, $privateKey, $privatePassword);
     }
 
@@ -153,8 +129,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $data, string $sign, string $publicKey): bool
-    {
+    public function verify(string $data, string $sign, string $publicKey): bool {
         return $this->_defaultInstance->verify($data, $sign, $publicKey);
     }
 
@@ -162,8 +137,7 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, ?string $publicKey): string
-    {
+    public function encryptTo(string $data, ?string $publicKey): string {
         return $this->_defaultInstance->encryptTo($data, $publicKey);
     }
 
@@ -171,26 +145,26 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
-    {
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string {
         return $this->_defaultInstance->decryptTo($code, $privateKey, $password);
     }
 
     /**
      * {@inheritDoc}
+     * @param string $password
+     * @param string $algo
+     * @param string $size
      * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newAsymmetricKeys(string $password = ''): array
-    {
-        return $this->_defaultInstance->newAsymmetricKeys($password);
+    public function newAsymmetricKeys(string $password = '', string $algo = '', string $size = ''): array {
+        return $this->_defaultInstance->newAsymmetricKeys($password, $algo, $size);
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
-    {
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool {
         return $this->_defaultInstance->checkPrivateKeyPassword($privateKey, $password);
     }
 
@@ -198,18 +172,11 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
-    {
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string {
         return $this->_defaultInstance->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
     }
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationTitles()
-    {
+    static public function echoDocumentationTitles() {
         ?>
 
         <li><a href="#c">C / Confiance</a>
@@ -272,13 +239,7 @@ class Crypto extends Functions implements CryptoInterface
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationCore(): void
-    {
+    static public function echoDocumentationCore(): void {
         ?>
 
         <h1 id="c">C / Confiance</h1>
@@ -460,8 +421,7 @@ class Crypto extends Functions implements CryptoInterface
 
 # nebule php
 <?php
-foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option )
-{
+foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option ) {
     if ( \Nebule\Library\Configuration::OPTIONS_TYPE[$option] == 'boolean' ) {
         if ( \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$option] == 'true' )
             $value = 'true';

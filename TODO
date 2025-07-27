@@ -2,3 +2,5 @@
   - Move launch application from library and not from bootstrap.
   - Manage types of nodes as modules.
   - Create entity with différent crypto algo.
+  - Sync all on first bootstrap from code entity.
+  - Solve bugg double refresh on flush call.

@@ -105,19 +105,23 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
     {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($nid !== null) {
             $object = $nid->getID();
-        //$currentEID = $this->_nebuleInstance->getCurrentEntityEID();
-        //$ghostEID = $this->_entitiesInstance->getGhostEntityEID();
-        //$connectedEID = $this->_entitiesInstance->getConnectedEntityEID();
-        $connected = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
+            if (!$nid instanceof Entity && $nid->getIsEntity())
+                $nid = $this->_cacheInstance->newNode($object, \Nebule\Library\cache::TYPE_ENTITY);
+        } else
+            $object = $this->_nebuleInstance->getCurrentObjectOID();
+        if ($nid instanceof Entity)
+            $unlocked = $nid->getHavePrivateKeyPassword();
+        else
+            $unlocked = false;
 
         $hookArray = array();
         switch ($hookName) {
             case 'selfMenu':
             case 'typeMenuEntity':
-                // Lister des entités connues.
+                // List entities I know.
                 $hookArray[0]['name'] = '::sylabe:module:entities:KnownEntities';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[0]['desc'] = '::sylabe:module:entities:KnownEntitiesDesc';
@@ -125,7 +129,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // Lister des entités qui me connaissent.
+                // List entities know me.
                 $hookArray[1]['name'] = '::sylabe:module:entities:KnownByEntities';
                 $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[1]['desc'] = '::sylabe:module:entities:KnownByEntitiesDesc';
@@ -133,7 +137,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // Lister de mes entités.
+                // List my entities.
                 $hookArray[2]['name'] = '::sylabe:module:entities:MyEntities';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[2]['desc'] = '::sylabe:module:entities:MyEntitiesDesc';
@@ -141,7 +145,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // Lister des entités inconnues.
+                // List unknown entities.
                 $hookArray[3]['name'] = '::sylabe:module:entities:UnknownEntities';
                 $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[3]['desc'] = '::sylabe:module:entities:UnknownEntitiesDesc';
@@ -149,7 +153,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // Lister des entités spéciales.
+                // List special entities.
                 $hookArray[4]['name'] = '::sylabe:module:entities:SpecialEntities';
                 $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[4]['desc'] = '::sylabe:module:entities:SpecialEntitiesDesc';
@@ -157,7 +161,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // Voir les propriétés de l'entité.
+                // See entity properties.
                 $hookArray[5]['name'] = '::sylabe:module:entities:DescriptionEntity';
                 $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                 $hookArray[5]['desc'] = '::sylabe:module:entities:DescriptionEntityDesc';
@@ -165,14 +169,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
-                // Vérifie que la création soit autorisée.
-                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteEntity')
+                if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'])
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
-                    // Créer une nouvelle entité.
+                    // Create entity.
                     $hookArray[10]['name'] = '::sylabe:module:entities:CreateEntity';
                     $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[5];
                     $hookArray[10]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
@@ -180,15 +180,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
                 }
 
-                // Vérifie que la synchronisation soit autorisée.
-                if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink')
-                    && $this->_unlocked
-                ) {
-                    // Rechercher une entité.
+                if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'])) {
+                    // Search entity.
                     $hookArray[20]['name'] = '::sylabe:module:entities:SearchEntity';
                     $hookArray[20]['icon'] = Displays::DEFAULT_ICON_LF;
                     $hookArray[20]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
@@ -199,46 +192,47 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuObject':
-                $instance = $this->_nebuleInstance->getCurrentObjectInstance();
-                $id = $instance->getID();
-                $protected = $instance->getMarkProtected();
-                if ($protected) {
-                    $id = $instance->getUnprotectedID();
-                    $instance = $this->_cacheInstance->newNode($id);
-                }
-
-                if ($instance->getType('all') == 'application/x-pem-file') {
+                if ($nid instanceof Entity) {
                     // See as entity.
                     $hookArray[0]['name'] = '::sylabe:module:entities:ShowEntity';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 }
                 break;
 
             case 'selfMenuEntity':
-                if ($connected) {
-                    // Se déconnecter de l'entité.
+                if ($unlocked) {
+                    // Lock entity.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:Disconnect';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_FLUSH;
-                } else {
-                    // Se connecter avec l'entité.
+                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=logout';
+                    if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
+                        // Switch to this entity.
+                        $hookArray[1]['name'] = '::sylabe:module:entities:disp:SeeAs';
+                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
+                        $hookArray[1]['desc'] = '';
+                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    }
+                } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
+                    // Unlock entity.
                     $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=login'
                         . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
                 }
 
-                // Synchroniser l'entité.
+                // Synchronise entity.
                 $hookArray[2]['name'] = '::sylabe:module:entities:SynchronizeEntity';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
                 $hookArray[2]['desc'] = '';
@@ -248,7 +242,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
 
-                // Voir l'entité.
+                // See entity.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[3]['name'] = '::sylabe:module:entities:ShowEntity';
                     $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
@@ -258,9 +252,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 }
 
-                // Recherche si l'objet est marqué.
-                if (!$this->_applicationInstance->getMarkObject($object)) {
-                    // Ajouter la marque de l'objet.
+                /*if (!$this->_applicationInstance->getMarkObject($object)) {
+                    // Mark entity.
                     $hookArray[4]['name'] = '::MarkAdd';
                     $hookArray[4]['icon'] = Display::DEFAULT_ICON_MARK;
                     $hookArray[4]['desc'] = '';
@@ -269,7 +262,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
                         . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
-                }
+                }*/
                 break;
 
             case '::sylabe:module:entities:DisplayMyEntities':
@@ -584,7 +577,6 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_actionSynchronizeEntity();
         $this->_findSearchEntity();
         $this->_actionSearchEntity();
-        $this->_actionCreateEntity();
     }
 
 
@@ -698,24 +690,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
-    private bool $_createEntityAction = false;
-    private ?Node $_createEntityInstance = Null;
-    private ?Node $_createEntityKeyInstance = Null;
-    private bool $_createEntityError = false;
-    private string $_createEntityErrorMessage = '';
-
-    private function _actionCreateEntity(): void
-    {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
-        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityInstance();
-        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityKeyInstance();
-        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getCreateEntityError();
-        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
-    }
-
-
-
     private function _displayEntityDisp(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -756,17 +730,18 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         echo '</div>' . "\n";*/
 
+        $entity = $this->_nebuleInstance->getCurrentEntityInstance();
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
-        $instance->setNID($this->_nebuleInstance->getCurrentEntityInstance());
+        $instance->setNID($entity);
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setIcon($instanceIcon);
         $instance->setEnableName(true);
         $instance->setEnableFlags(true);
         $instance->setEnableFlagUnlocked(true);
+        $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
         $instance->setEnableFlagState(true);
         $instance->setEnableFlagEmotions(true);
         $instance->setEnableContent(false);
@@ -1506,12 +1481,39 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
+    private bool $_createEntityAction = false;
+    private ?Entity $_createEntityInstance = Null;
+    private ?Node $_createEntityKeyInstance = Null;
+    private bool $_createEntityError = false;
+    private string $_createEntityErrorMessage = '';
+
     /**
      * Affiche la création d'une entité.
      */
     private function _displayEntityCreate(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
+        if ($this->_createEntityAction)
+            $this->_displayEntityCreateNew();
+
+        if ($this->_createEntityAction && !$this->_createEntityError)
+            $this->_displayEntityDisp();
+        else
+            $this->_displayEntityCreateForm();
+    }
+
+    private function _displayEntityCreateNew(): void
+    {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
+        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityInstance();
+        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityKeyInstance();
+        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getCreateEntityError();
+        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
+
         if ($this->_createEntityAction) {
             $instanceList = new DisplayList($this->_applicationInstance);
             $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -1542,9 +1544,11 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setEnableLink(true);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
-                $instance->setEnableFlagUnlocked(true);
+                $instance->setEnableFlagUnlocked(false);
+                //$instance->setFlagUnlocked($this->_createEntityInstance->getHavePrivateKeyPassword());
                 $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['oent']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+                //$instance->setSelfHookName('selfMenuEntity');
                 $instance->setIcon($instanceIcon2);
                 $instanceList->addItem($instance);
 
@@ -1579,76 +1583,24 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::::ERROR');
+                $instanceList->addItem($instance);
+
+                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::sylabe:module:entities:EntityNotCreated');
+                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setIconText('$this->_createEntityErrorMessage');
             }
             $instanceList->addItem($instance);
-
-
-            /*$list = array();
-
-            if (!$this->_createEntityError && is_a($this->_createEntityInstance, 'Nebule\Library\Entity')) {
-                $list[0]['information'] = '::sylabe:module:entities:EntityCreated';
-                $list[0]['param']['informationType'] = 'ok';
-                $list[0]['param']['displayRatio'] = 'long';
-
-                $list[1]['object'] = $this->_createEntityInstance;
-                $list[1]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => false,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => true,
-                    'enableDisplayFlagState' => true,
-                    'enableDisplayFlagEmotions' => false,
-                    'enableDisplayStatus' => true,
-                    'enableDisplayContent' => false,
-                    //'enableDisplayObjectActions' => false,
-                    'enableDisplayJS' => true,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'long',
-                    'objectIcon' => $this::MODULE_REGISTERED_ICONS[0],
-                    'status' => $this->_translateInstance->getTranslate('ID public'),
-                );
-
-                $privInstance = $this->_cacheInstance->newNode($this->_createEntityInstance->getPrivateKeyOID());
-                $list[2]['object'] = $privInstance;
-                $list[2]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => false,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => true,
-                    'enableDisplayFlagState' => true,
-                    'enableDisplayFlagEmotions' => false,
-                    'enableDisplayStatus' => true,
-                    'enableDisplayContent' => false,
-                    //'enableDisplayObjectActions' => false,
-                    'enableDisplayJS' => true,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'long',
-                    'objectIcon' => $this::MODULE_REGISTERED_ICONS[9],
-                    'status' => $this->_translateInstance->getTranslate('ID prive'),
-                );
-                unset($privInstance);
-            } else {
-                $list[0]['information'] = $this->_translateInstance->getTranslate('::sylabe:module:entities:EntityNotCreated') . ' : "' . $this->_createEntityErrorMessage . '"';
-                $list[0]['param']['informationType'] = 'error';
-                $list[0]['param']['displayRatio'] = 'long';
-            }
-
-            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-            unset($list);*/
-
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
+        echo '<br />' . "\n";
+    }
+
+    private function _displayEntityCreateForm(): void
+    {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[5]);
         $instance = new DisplayTitle($this->_applicationInstance);
@@ -1684,7 +1636,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
                                        size="10" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntryPrefix"/>
@@ -1695,7 +1647,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
                                        size="20" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntryPrenom"/>
@@ -1706,7 +1658,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME; ?>"
                                        size="10" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntrySurnom"/>
@@ -1717,7 +1669,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
                                        size="20" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntryNom"/>
@@ -1727,7 +1679,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX; ?>"
                                        size="10" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntrySuffix"/>
@@ -1741,7 +1693,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="password"
-                                       name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
                                        size="30" value=""
                                        class="sylabeModuleEntityCreatePropertyEntry"
                                        id="sylabeModuleEntityCreatePropertyEntryPWD1"/>
@@ -1772,8 +1724,8 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <select
-                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
-                                    class="sylabeModuleEntityCreatePropertyEntry">
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
+                                        class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="<?php echo $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
                                             selected>
                                         <?php echo $this->_nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>
@@ -1781,12 +1733,11 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     </option>
                                 </select>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
+                            <?php /*                            <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
-
                                 </div>
-                                <select
+                                 <select
                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
                                     class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="undef" selected>
@@ -1802,21 +1753,25 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                     </option>
                                 </select>
-                            </div>
+                            </div> */ ?>
+
+                            <?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) { ?>
                             <div class="sylabeModuleEntityCreateProperty">
                                 <div class="sylabeModuleEntityCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityAutonomy'); ?>
 
                                 </div>
                                 <select
-                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
-                                    class="sylabeModuleEntityCreatePropertyEntry">
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
+                                        class="sylabeModuleEntityCreatePropertyEntry">
                                     <option value="y" selected>
                                         <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
 
                                     </option>
                                 </select>
                             </div>
+                            <?php } ?>
+
                         </div>
                         <div class="sylabeModuleEntityCreateSubmit">
                             <input type="submit"
@@ -1831,6 +1786,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:CreateEntityNotAllowed');
         }
     }
+
 
 
     /**
@@ -2217,6 +2173,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setEnableFlagState($showState);
             $instance->setEnableFlagEmotions($showEmotions);
             $instance->setEnableFlagUnlocked($showState);
+            $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
             $instance->setEnableContent(false);
             $instance->setEnableJS(false);
             $instance->setEnableRefs(true);
@@ -2296,11 +2253,12 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:Submit' => 'Rechercher',
             '::sylabe:module:entities:disp:ConnectWith' => 'Se connecter avec cette entité',
             '::sylabe:module:entities:disp:Disconnect' => "Verrouiller l'entité",
-            '::sylabe:module:entities:puppetmaster' => "l'entité de référence de <i>nebule</i>, le maître des clés.",
-            '::sylabe:module:entities:SecurityMaster' => "l'entité maîtresse de la sécurité.",
-            '::sylabe:module:entities:CodeMaster' => "l'entité maîtresse du code.",
-            '::sylabe:module:entities:DirectoryMaster' => "l'entité maîtresse de l'annuaire.",
-            '::sylabe:module:entities:TimeMaster' => "l'entité maîtresse du temps.",
+            '::sylabe:module:entities:disp:SeeAs' => "Voir en tant que",
+            '::sylabe:module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
+            '::sylabe:module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
+            '::sylabe:module:entities:CodeMaster' => "L'entité maîtresse du code.",
+            '::sylabe:module:entities:DirectoryMaster' => "L'entité maîtresse de l'annuaire.",
+            '::sylabe:module:entities:TimeMaster' => "L'entité maîtresse du temps.",
             '::sylabe:module:entities:From' => 'De',
             '::sylabe:module:entities:To' => 'Pour',
             '::sylabe:module:entities:DisplayEntityMessages' => 'Liste des messages de %s.',
@@ -2376,6 +2334,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:Submit' => 'Submit',
             '::sylabe:module:entities:disp:ConnectWith' => 'Connect with this entity',
             '::sylabe:module:entities:disp:Disconnect' => 'Lock entity',
+            '::sylabe:module:entities:disp:SeeAs' => "See as",
             '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
             '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',
@@ -2456,6 +2415,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:Submit' => 'Submit',
             '::sylabe:module:entities:disp:ConnectWith' => 'Connect with this entity',
             '::sylabe:module:entities:disp:Disconnect' => 'Lock entity',
+            '::sylabe:module:entities:disp:SeeAs' => "See as",
             '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
             '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',

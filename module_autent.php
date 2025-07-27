@@ -156,18 +156,21 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
-        $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityPrivateKeyInstance(), true);
-        if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
-            && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
-            $this->_displayAddButtonQuery($instanceList,
-                '::::Password',
-                DisplayQuery::QUERY_PASSWORD,
-                '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID());
-        else
-            $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+        if ($this->_entitiesInstance->getGhostEntityPrivateKeyOID() != '0') {
+            $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityPrivateKeyInstance(), true);
+            if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
+                && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
+                $this->_displayAddButtonQuery($instanceList,
+                    '::::Password',
+                    DisplayQuery::QUERY_PASSWORD,
+                    '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                    . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID());
+            else
+                $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+        } else
+            $this->_displayAddButton($instanceList, '::::err_NoPrivKey', DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList,
             ':::return',

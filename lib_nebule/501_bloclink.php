@@ -118,13 +118,13 @@ class BlocLink extends Functions implements blocLinkInterface
         // Extract blocs from link L : BH_BL_BS
         $bh = strtok(trim($link), '_');
         if (is_bool($bh)) return false;
-        $this->_metrologyInstance->addLog('check link BH=' . $bh, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '36e5871a');
+        //$this->_metrologyInstance->addLog('check link BH=' . $bh, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '36e5871a');
         $bl = strtok('_');
         if (is_bool($bl)) return false;
-        $this->_metrologyInstance->addLog('check link BL=' . $bl, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dc1eb20f');
+        //$this->_metrologyInstance->addLog('check link BL=' . $bl, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dc1eb20f');
         $bs = strtok('_');
         if (!$this->_newLink && is_bool($bs)) return false;
-        $this->_metrologyInstance->addLog('check link BS=' . $bs, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '41e23a37');
+        //$this->_metrologyInstance->addLog('check link BS=' . $bs, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '41e23a37');
 
         // Check link overflow
         if (strtok('_') !== false) return false;
@@ -798,7 +798,7 @@ class BlocLink extends Functions implements blocLinkInterface
         $publicKeyID = $publicKey->getID();
         if ($publicKeyID == '0')
             return false;
-        $this->_metrologyInstance->addLog('sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
+        //$this->_metrologyInstance->addLog('sign link for ' . $publicKeyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
 
         $hashAlgo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
 
@@ -843,7 +843,7 @@ class BlocLink extends Functions implements blocLinkInterface
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {
             if (isset($this->_parsedLink['bs/rs'.$j.'/eid'])) {
-                $this->_metrologyInstance->addLog('add link on bs/rs' . $j . '/eid' . $j, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8b0aea5');
+                //$this->_metrologyInstance->addLog('add link on bs/rs' . $j . '/eid' . $j, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8b0aea5');
                 $this->_ioInstance->setBlockLink($this->_parsedLink['bs/rs' . $j . '/eid'], $this->_rawBlocLink);
             } else
                 break;
@@ -854,7 +854,7 @@ class BlocLink extends Functions implements blocLinkInterface
                 if ($this->_parsedLink['bl/rl' . $i . '/req'] != 'c') {
                     for ($j = 0; $j < $this->_maxRLUID; $j++) {
                         if (isset($this->_parsedLink['bl/rl' . $i . '/nid' . $j])) {
-                            $this->_metrologyInstance->addLog('add link on bl/rl' . $i . '/nid' . $j, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2b1d5ff');
+                            //$this->_metrologyInstance->addLog('add link on bl/rl' . $i . '/nid' . $j, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2b1d5ff');
                             $this->_ioInstance->setBlockLink($this->_parsedLink['bl/rl' . $i . '/nid' . $j], $this->_rawBlocLink);
                         }
                     }

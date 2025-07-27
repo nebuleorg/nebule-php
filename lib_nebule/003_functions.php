@@ -243,8 +243,8 @@ class Functions
 
         $textOID = $this->getNidFromData($text);
         $this->_ioInstance->setObject($textOID, $text);
-        $propertyOID = $this->_nebuleInstance->getNIDfromData('text/plain');
-        $propertyRID = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $propertyOID = $this->_nebuleInstance->getFromDataNID('text/plain');
+        $propertyRID = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE);
         $link = 'l>' . $textOID . '>' . $propertyOID . '>' . $propertyRID;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
         $newLink = new LinkRegister($this->_nebuleInstance, $link, $newBlockLink);
@@ -262,7 +262,7 @@ class Functions
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
     }
 
-    public function getFilterInput(string $name, int $flag=0, bool $logContent=true): string {
+    public function getFilterInput(string $name, int $flag=0, bool $logContent=true, bool $noTrim = false): string {
         if ($name == '')
             return '';
         $arg = '';
@@ -272,7 +272,8 @@ class Functions
                 $arg = filter_input(INPUT_POST, $name, FILTER_SANITIZE_STRING, $flag);
                 if ($arg === false || $arg === null)
                     $arg = '';
-                $arg = trim($arg);
+                if (! $noTrim)
+                    $arg = trim($arg);
             }
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog("error reading '$name' on POST "
@@ -287,7 +288,8 @@ class Functions
                     $arg = filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING, $flag);
                     if ($arg === false || $arg === null)
                         $arg = '';
-                    $arg = trim($arg);
+                    if (! $noTrim)
+                        $arg = trim($arg);
                 }
             } catch (\Exception $e) {
                 $this->_metrologyInstance->addLog("error reading '$name' on GET "

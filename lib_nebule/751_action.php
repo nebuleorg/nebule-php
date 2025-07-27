@@ -282,19 +282,18 @@ abstract class Actions extends Functions
 
     public function modulesActions():void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('call modules actions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
+        if (!$this->_ticketingInstance->checkActionTicket())
             return;
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode()) {
-                try {
-                    $this->_metrologyInstance->addLog('actions for module ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
-                    $module->actions();
-                } catch (\Exception $e) {
-                    $this->_metrologyInstance->addLog('error actions for module ' . $module::MODULE_COMMAND_NAME
-                        . ' ('  . $e->getCode() . ') : ' . $e->getFile()
-                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c48b1d8c');
-                }
+        $module = $this->_applicationInstance->getApplicationModulesInstance()->getCurrentModuleInstance();
+        if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode()) {
+            try {
+                $this->_metrologyInstance->addLog('actions for module ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
+                $module->actions();
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error actions for module ' . $module::MODULE_COMMAND_NAME
+                    . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c48b1d8c');
             }
         }
     }
@@ -1375,28 +1374,12 @@ abstract class Actions extends Functions
     protected bool $_actionUploadTextObfuscateLinks = false;
     protected bool $_actionUploadTextError = false;
     protected string $_actionUploadTextErrorMessage = 'Initialisation du transfert.';
-    public function getUploadText(): bool
-    {
-        return $this->_actionUploadText;
-    }
-    public function getUploadTextName(): string
-    {
-        return $this->_actionUploadTextName;
-    }
-    public function getUploadTextID(): string
-    {
-        return $this->_actionUploadTextID;
-    }
-    public function getUploadTextError(): bool
-    {
-        return $this->_actionUploadTextError;
-    }
-    public function getUploadTextErrorMessage(): string
-    {
-        return $this->_actionUploadTextErrorMessage;
-    }
-    protected function _extractActionUploadText(): void
-    {
+    public function getUploadText(): bool { return $this->_actionUploadText; }
+    public function getUploadTextName(): string { return $this->_actionUploadTextName; }
+    public function getUploadTextID(): string { return $this->_actionUploadTextID; }
+    public function getUploadTextError(): bool { return $this->_actionUploadTextError; }
+    public function getUploadTextErrorMessage(): string { return $this->_actionUploadTextErrorMessage; }
+    protected function _extractActionUploadText(): void {
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadText'))
             return;
 
@@ -1430,8 +1413,7 @@ abstract class Actions extends Functions
             }
         }
     }
-    protected function _actionUploadText(): void
-    {
+    protected function _actionUploadText(): void {
         $this->_metrologyInstance->addLog('action upload text', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
         // Crée l'instance de l'objet.
@@ -1478,36 +1460,14 @@ abstract class Actions extends Functions
     protected ?Node $_actionCreateEntityKeyInstance = null;
     protected bool $_actionCreateEntityError = false;
     protected string $_actionCreateEntityErrorMessage = 'initialisation creation';
-    public function getCreateEntity(): bool
-    {
-        return $this->_actionCreateEntity;
-    }
-    public function getCreateEntityID(): string
-    {
-        return $this->_actionCreateEntityID;
-    }
-    public function getCreateEntityKeyID(): string
-    {
-        return $this->_actionCreateEntityKeyID;
-    }
-    public function getCreateEntityInstance(): ?Entity
-    {
-        return $this->_actionCreateEntityInstance;
-    }
-    public function getCreateEntityKeyInstance(): ?Node
-    {
-        return $this->_actionCreateEntityKeyInstance;
-    }
-    public function getCreateEntityError(): bool
-    {
-        return $this->_actionCreateEntityError;
-    }
-    public function getCreateEntityErrorMessage(): string
-    {
-        return $this->_actionCreateEntityErrorMessage;
-    }
-    protected function _extractActionCreateEntity(): void
-    {
+    public function getCreateEntity(): bool { return $this->_actionCreateEntity; }
+    public function getCreateEntityID(): string { return $this->_actionCreateEntityID; }
+    public function getCreateEntityKeyID(): string { return $this->_actionCreateEntityKeyID; }
+    public function getCreateEntityInstance(): ?Entity { return $this->_actionCreateEntityInstance; }
+    public function getCreateEntityKeyInstance(): ?Node { return $this->_actionCreateEntityKeyInstance; }
+    public function getCreateEntityError(): bool { return $this->_actionCreateEntityError; }
+    public function getCreateEntityErrorMessage(): string { return $this->_actionCreateEntityErrorMessage; }
+    protected function _extractActionCreateEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ((!$this->_unlocked && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
             || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
@@ -1516,24 +1476,19 @@ abstract class Actions extends Functions
 
         if ($this->getHaveInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY)) {
             $this->_actionCreateEntity = true;
-            $argPrefix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $argSuffix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $argFstnam = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $argNiknam = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $argName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $argPasswd1 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES, false);
-            $argPasswd2 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_FLAG_NO_ENCODE_QUOTES, false);
-            $argType = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityPrefix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntitySuffix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityFirstname = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityNikename = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $argPasswd1 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES, false, true);
+            $argPasswd2 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_FLAG_NO_ENCODE_QUOTES, false, true);
+            $this->_actionCreateEntityType = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-            $argObf = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
-
-            $this->_actionCreateEntityPrefix = $argPrefix;
-            $this->_actionCreateEntitySuffix = $argSuffix;
-            $this->_actionCreateEntityFirstname = $argFstnam;
-            $this->_actionCreateEntityNikename = $argNiknam;
-            $this->_actionCreateEntityName = $argName;
             if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
-                $this->_actionCreateEntityObfuscateLinks = $argObf;
+                $this->_actionCreateEntityObfuscateLinks = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
+            else
+                $this->_actionCreateEntityObfuscateLinks = false;
 
             if ($argPasswd1 == $argPasswd2)
                 $this->_actionCreateEntityPassword = $argPasswd1;
@@ -1543,16 +1498,11 @@ abstract class Actions extends Functions
                 $this->_actionCreateEntityErrorMessage = 'passwords not match';
             }
 
-            if ($argType == 'human' || $argType == 'robot')
-                $this->_actionCreateEntityType = $argType;
-            else
+            if ($this->_actionCreateEntityType != 'human' && $this->_actionCreateEntityType != 'robot')
                 $this->_actionCreateEntityType = '';
-
-            unset($argPrefix, $argSuffix, $argFstnam, $argNiknam, $argName, $argPasswd1, $argPasswd2, $argType);
         }
     }
-    protected function _actionCreateEntity(): void
-    {
+    protected function _actionCreateEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $algo = 'rsa'; // FIXME
@@ -1561,62 +1511,60 @@ abstract class Actions extends Functions
         $instance->createNewEntity($algo, $size);
 
         if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
-            $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ea998a6d');
+            $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ea998a6d');
             $instance->setCreateWrite();
             $instance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
             $this->_actionCreateEntityError = false;
 
-            $this->_actionCreateEntityInstance = $instance;
-            if ($this->_actionCreateEntityInstance === null) {
-                $this->_actionCreateEntityError = true;
-                $this->_actionCreateEntityErrorMessage = 'invalid entity created';
-                $this->_metrologyInstance->addLog('invalid entity created', Metrology::LOG_LEVEL_ERROR, __METHOD__, '232b5823');
-            }
             $this->_actionCreateEntityID = $instance->getID();
             if ($this->_actionCreateEntityID == '0') {
                 $this->_actionCreateEntityError = true;
                 $this->_actionCreateEntityErrorMessage = 'null entity created';
                 $this->_metrologyInstance->addLog('null entity created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd8d70c0f');
+                return;
             }
             $this->_actionCreateEntityKeyID = $instance->getPrivateKeyOID();
             if ($this->_actionCreateEntityKeyID == '0') {
                 $this->_actionCreateEntityError = true;
                 $this->_actionCreateEntityErrorMessage = 'null entity key created';
                 $this->_metrologyInstance->addLog('null entity key created', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f0a3c2f6');
+                return;
             }
+            $this->_actionCreateEntityInstance = $instance;
             $this->_actionCreateEntityKeyInstance = new Node($this->_nebuleInstance, $this->_actionCreateEntityKeyID);
 
             //$this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
             //$instance->setPrivateKeyPassword($this->_actionCreateEntityPassword);
 
-            if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
+            /*if ($this->_actionCreateEntityName == '' && $this->_actionCreateEntityFirstname != '') {
                 $this->_actionCreateEntityName = $this->_actionCreateEntityFirstname;
                 $this->_actionCreateEntityFirstname = '';
-            }
+            }*/
 
-            if ($this->_actionCreateEntityName != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $this->_actionCreateEntityName);
-            if ($this->_actionCreateEntityFirstname != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $this->_actionCreateEntityName);
-            if ($this->_actionCreateEntityNikename != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityName);
-            if ($this->_actionCreateEntityPrefix != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $this->_actionCreateEntityName);
-            if ($this->_actionCreateEntitySuffix != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $this->_actionCreateEntityName);
-            if ($this->_actionCreateEntityType != '')
-                $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_TYPE, $this->_actionCreateEntityName);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_NOM, $this->_actionCreateEntityName);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_PRENOM, $this->_actionCreateEntityFirstname);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityNikename);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_PREFIX, $this->_actionCreateEntityPrefix);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SUFFIX, $this->_actionCreateEntitySuffix);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_TYPE, $this->_actionCreateEntityType);
 
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
-
             $this->_actionCreateEntityInstance = $this->_cacheInstance->newNode($this->_actionCreateEntityID, \Nebule\Library\Cache::TYPE_ENTITY);
+            $this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
+            $this->_nebuleInstance->setCurrentEntityInstance($instance);
         } else {
             $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
             $this->_metrologyInstance->addLog('fail to generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'eec8ce0b');
             $this->_actionCreateEntityError = true;
             $this->_actionCreateEntityErrorMessage = 'fail to generate';
         }
+    }
+    private function _writeEntitySelfProperty(Entity $instance, string $reference, string $content): void {
+        if ($content != '') {
+                $this->_metrologyInstance->addLog('action set entity ' . $reference . '=' . $content, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '81385b9d');
+                $instance->setSelfProperty($reference, $content);
+            }
     }
 
     protected bool $_actionCreateGroup = false;

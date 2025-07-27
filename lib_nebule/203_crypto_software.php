@@ -17,8 +17,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     const TYPE = 'Software';
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         // Nothing to do.
     }
 
@@ -26,52 +25,38 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstance()
      */
-    public function getCryptoInstance(): CryptoInterface
-    {
-        return $this;
-    }
+    public function getCryptoInstance(): CryptoInterface { return $this; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::getCryptoInstanceName()
      */
-    public function getCryptoInstanceName(): string
-    {
-        return get_class($this);
-    }
+    public function getCryptoInstanceName(): string { return get_class($this); }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkFunction()
      */
-    public function checkFunction(string $algo, int $type): bool
-    {
-        switch ($type) {
-            case (Crypto::TYPE_HASH):
-                return $this->_checkHashFunction($algo);
-            case (Crypto::TYPE_SYMMETRIC):
-                return $this->_checkSymmetricFunction($algo);
-            case (Crypto::TYPE_ASYMMETRIC):
-                return $this->_checkAsymmetricFunction($algo);
-        }
-        return false;
+    public function checkFunction(string $algo, int $type): bool {
+        return match ($type) {
+            Crypto::TYPE_HASH => $this->_checkHashFunction($algo),
+            Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricFunction($algo),
+            Crypto::TYPE_ASYMMETRIC => $this->_checkAsymmetricFunction($algo),
+            default => false,
+        };
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkValidAlgorithm()
      */
-    public function checkValidAlgorithm(string $algo, int $type): bool
-    {
-        switch ($type) {
-            case (Crypto::TYPE_HASH):
-                return $this->_checkHashAlgorithm($algo);
-            case (Crypto::TYPE_SYMMETRIC):
-                return $this->_checkSymmetricAlgorithm($algo);
-            case (Crypto::TYPE_ASYMMETRIC):
-                return $this->_checkAsymmetricAlgorithm($algo);
-        }
-        return false;
+    public function checkValidAlgorithm(string $algo, int $type): bool {
+        return match ($type) {
+            Crypto::TYPE_HASH => $this->_checkHashAlgorithm($algo),
+            Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricAlgorithm($algo),
+            Crypto::TYPE_ASYMMETRIC => $this->_checkAsymmetricAlgorithm($algo),
+            default => false,
+        };
     }
 
     // --------------------------------------------------------------------------------
@@ -80,8 +65,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getRandom()
      */
-    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string
-    {
+    public function getRandom(int $size = 32, int $quality = Crypto::RANDOM_PSEUDO): string {
         if ($quality == Crypto::RANDOM_PSEUDO)
             return $this->_getPseudoRandom($size);
         else
@@ -96,18 +80,15 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      *   de l'heure avec une précision de la micro-seconde,
      *   du nom et de la version de la bibliothèque.
      *
-     * Ne doit pas être utilisé pour générer des mots de passes !
+     * Elle ne doit pas être utilisée pour générer des mots de passes !
      *
      * @param int $size
      * @return string
      */
-    private function _getPseudoRandom(int $size = 32): string
-    {
+    private function _getPseudoRandom(int $size = 32): string {
         global $nebuleSurname, $nebuleLibVersion;
 
-        if ($size == 0
-            || !is_int($size)
-        )
+        if ($size == 0 || !is_int($size))
             return '';
 
         // Résultat à remplir.
@@ -150,16 +131,12 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getEntropy()
      */
-    public function getEntropy(string &$data): float
-    {
-        return self::getEntropyStatic($data);
-    }
+    public function getEntropy(string &$data): float { return self::getEntropyStatic($data); }
 
     /**
      * @see CryptoInterface::getEntropy()
      */
-    static public function getEntropyStatic(string &$data): float
-    {
+    static public function getEntropyStatic(string &$data): float {
         $h = 0;
         $s = strlen($data);
         if ($s == 0)
@@ -173,129 +150,84 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     // --------------------------------------------------------------------------------
 
-    private function _checkHashFunction(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkHashFunction(string $algo): bool { return false; }
 
-    private function _checkHashAlgorithm(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkHashAlgorithm(string $algo): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::hash()
      */
-    public function hash(string $data, string $algo = ''): string
-    {
-        return '';
-    }
+    public function hash(string $data, string $algo = ''): string { return ''; }
 
     // --------------------------------------------------------------------------------
 
-    private function _checkSymmetricFunction(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkSymmetricFunction(string $algo): bool { return false; }
 
-    private function _checkSymmetricAlgorithm(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkSymmetricAlgorithm(string $algo): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encrypt()
      */
-    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
-        return '';
-    }
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string { return ''; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decrypt()
      */
-    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
-    {
-        return '';
-    }
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string { return ''; }
 
     // --------------------------------------------------------------------------------
 
-    private function _checkAsymmetricFunction(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkAsymmetricFunction(string $algo): bool { return false; }
 
-    private function _checkAsymmetricAlgorithm(string $algo): bool
-    {
-        return false;
-    }
+    private function _checkAsymmetricAlgorithm(string $algo): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::sign()
      */
-    public function sign(string $data, string $privateKey, string $privatePassword): string
-    {
-        return '';
-    }
+    public function sign(string $data, string $privateKey, string $privatePassword): string { return ''; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $data, string $sign, string $publicKey): bool
-    {
-        return false;
-    }
+    public function verify(string $data, string $sign, string $publicKey): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
      */
-    public function encryptTo(string $data, ?string $publicKey): string
-    {
-        return '';
-    }
+    public function encryptTo(string $data, ?string $publicKey): string { return ''; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
      */
-    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
-    {
-        return '';
-    }
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string { return ''; }
 
     /**
      * {@inheritDoc}
+     * @param string $password
+     * @param string $algo
+     * @param string $size
      * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newAsymmetricKeys(string $password = ''): array
-    {
-        return array();
-    }
+    public function newAsymmetricKeys(string $password = '', string $algo = '', string $size = ''): array { return array(); }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
      */
-    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
-    {
-        return false;
-    }
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
      */
-    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
-    {
-        return '';
-    }
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string { return ''; }
 }
 
 

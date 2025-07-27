@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250507';
+    const APPLICATION_VERSION = '020250726';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -2584,12 +2584,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
     }
 
-    private function _displayContentEntityAdd()
+    private function _displayContentEntityAdd(): void
     {
         // Si une nouvelle entité vient d'être créée par l'instance des actions.
         if ($this->_actionInstance->getCreateEntity()) {
             $createEntityAction = $this->_actionInstance->getCreateEntity();
-            $createEntityID = $this->_actionInstance->getCreateEntityID();
             $createEntityInstance = $this->_actionInstance->getCreateEntityInstance();
             $createEntityError = $this->_actionInstance->getCreateEntityError();
             $createEntityErrorMessage = $this->_actionInstance->getCreateEntityErrorMessage();
@@ -4756,8 +4755,8 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::::display:object:flag:unprotected' => "Cet objet n'est pas protégé.",
             '::::display:object:flag:obfuscated' => 'Cet objet est dissimulé.',
             '::::display:object:flag:unobfuscated' => "Cet objet n'est pas dissimulé.",
-            '::::display:object:flag:locked' => 'Cet entité est déverrouillée.',
-            '::::display:object:flag:unlocked' => 'Cet entité est verrouillée.',
+            '::::display:object:flag:locked' => 'Cet entité est verrouillée.',
+            '::::display:object:flag:unlocked' => 'Cet entité est déverrouillée.',
             Application::REFERENCE_OBJECT_TEXT => 'Texte brute',
             'application/x-pem-file' => 'Entité',
             'image/jpeg' => 'Image JPEG',
@@ -4954,8 +4953,8 @@ All recovery entities are displayed here, none are hidden.",
             '::::display:object:flag:unprotected' => 'This object is not protected.',
             '::::display:object:flag:obfuscated' => 'This object is obfuscated.',
             '::::display:object:flag:unobfuscated' => 'This object is not obfuscated.',
-            '::::display:object:flag:locked' => 'This entity is unlocked.',
-            '::::display:object:flag:unlocked' => 'This entity is locked.',
+            '::::display:object:flag:locked' => 'This entity is locked.',
+            '::::display:object:flag:unlocked' => 'This entity is unlocked.',
             Application::REFERENCE_OBJECT_TEXT => 'RAW text',
             'application/x-pem-file' => 'Entity',
             'image/jpeg' => 'JPEG picture',
@@ -5152,8 +5151,8 @@ All recovery entities are displayed here, none are hidden.",
             '::::display:object:flag:unprotected' => 'Este objeto no está protegido.',
             '::::display:object:flag:obfuscated' => 'Este objeto está oculto.',
             '::::display:object:flag:unobfuscated' => 'Este objeto no está oculto.',
-            '::::display:object:flag:locked' => 'Esta entidad está desbloqueada.',
-            '::::display:object:flag:unlocked' => 'Esta entidad está bloqueada.',
+            '::::display:object:flag:locked' => 'Esta entidad está bloqueada.',
+            '::::display:object:flag:unlocked' => 'Esta entidad está desbloqueada.',
             Application::REFERENCE_OBJECT_TEXT => 'Texto en bruto',
             'application/x-pem-file' => 'Entidad',
             'image/jpeg' => 'JPEG gráfico',

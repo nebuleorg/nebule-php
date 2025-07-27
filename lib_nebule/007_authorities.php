@@ -302,7 +302,7 @@ class Authorities extends Functions
         if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
 
-        $refAuthority = $this->_nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
+        $refAuthority = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE);
 
         $list = array();
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {

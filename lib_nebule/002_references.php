@@ -3737,7 +3737,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
             if (!$instance->setContent($decoded))
                 $ok = false;
 
-            $reference = $nebuleInstance->getNIDfromData(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
+            $reference = $nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE);
             if (References::REF_IMG[$name] != '') {
                 $nebuleInstance->getMetrologyInstance()->addLog('sign ref icon ' . 'l>' . References::REF_IMG[$name] . '>' . $instance->getID() . '>' . $reference, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '08d23b22');
 
