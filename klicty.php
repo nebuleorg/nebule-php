@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250726';
+    const APPLICATION_VERSION = '020250728';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1180,7 +1180,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <?php
             // Si l'entité en cours n'est pas l'entité par défaut.
             if ($this->_entitiesInstance->getGhostEntityEID() != $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
-                $this->_displayCurentEntityOnHeader(true);
+                $this->_displayGhostEntityOnHeader(true);
             } else {
                 ?>
 

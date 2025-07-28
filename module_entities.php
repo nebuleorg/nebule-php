@@ -161,11 +161,19 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
-                // See entity properties.
-                $hookArray[5]['name'] = '::sylabe:module:entities:DescriptionEntity';
-                $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                $hookArray[5]['desc'] = '::sylabe:module:entities:DescriptionEntityDesc';
+                // List all entities.
+                $hookArray[5]['name'] = '::sylabe:module:entities:allEntities';
+                $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                $hookArray[5]['desc'] = '::sylabe:module:entities:allEntitiesDesc';
                 $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+
+                // See entity properties.
+                $hookArray[6]['name'] = '::sylabe:module:entities:DescriptionEntity';
+                $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
+                $hookArray[6]['desc'] = '::sylabe:module:entities:DescriptionEntityDesc';
+                $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
@@ -206,7 +214,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             case 'selfMenuEntity':
                 if ($unlocked) {
                     // Lock entity.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:disp:Disconnect';
+                    $hookArray[0]['name'] = '::sylabe:module:entities:lock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
@@ -214,7 +222,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=logout';
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch to this entity.
-                        $hookArray[1]['name'] = '::sylabe:module:entities:disp:SeeAs';
+                        $hookArray[1]['name'] = '::sylabe:module:entities:seeAs';
                         $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -223,13 +231,22 @@ class ModuleEntities extends \Nebule\Library\Modules
                     }
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
                     // Unlock entity.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:disp:ConnectWith';
+                    $hookArray[0]['name'] = '::sylabe:module:entities:unlock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=login'
                         . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
+                        // Switch and connect to this entity.
+                        $hookArray[1]['name'] = '::sylabe:module:entities:connectWith';
+                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
+                        $hookArray[1]['desc'] = '';
+                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    }
                 }
 
                 // Synchronise entity.
@@ -1382,7 +1399,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:AllEntities');
+        $instance->setTitle('::sylabe:module:entities:allEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -2206,9 +2223,12 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:display:ListEntities' => 'Lister les entités',
             '::sylabe:module:entities:EntityCreated' => 'Nouvelle entité créée',
             '::sylabe:module:entities:EntityNotCreated' => "La nouvelle entité n'a pas pu être créée",
-            '::sylabe:module:entities:ShowEntity' => "L'entité",
+            '::sylabe:module:entities:ShowEntity' => "Voir l'entité",
             '::sylabe:module:entities:DescriptionEntity' => "L'entité",
             '::sylabe:module:entities:DescriptionEntityDesc' => "Description de l'entité.",
+            '::sylabe:module:entities:allEntities' => 'Toutes les entités',
+            '::sylabe:module:entities:allEntitiesDesc' => 'Toutes les entités.',
+            '::sylabe:module:entities:allEntitiesHelp' => 'La liste de toutes less entités.',
             '::sylabe:module:entities:MyEntities' => 'Mes entités',
             '::sylabe:module:entities:MyEntitiesDesc' => 'Toutes les entités sous contrôle.',
             '::sylabe:module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lequelles ont peut instantanément basculer.",
@@ -2251,9 +2271,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:AndOr' => 'et/ou',
             '::sylabe:module:entities:Search:ID' => 'Identifiant',
             '::sylabe:module:entities:Search:Submit' => 'Rechercher',
-            '::sylabe:module:entities:disp:ConnectWith' => 'Se connecter avec cette entité',
-            '::sylabe:module:entities:disp:Disconnect' => "Verrouiller l'entité",
-            '::sylabe:module:entities:disp:SeeAs' => "Voir en tant que",
+            '::sylabe:module:entities:connectWith' => 'Se connecter avec cette entité',
+            '::sylabe:module:entities:unlock' => 'Déverrouiller cette entité',
+            '::sylabe:module:entities:switchTo' => 'Se connecter avec cette entité',
+            '::sylabe:module:entities:lock' => "Verrouiller l'entité",
+            '::sylabe:module:entities:seeAs' => "Voir en tant que",
             '::sylabe:module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
             '::sylabe:module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
             '::sylabe:module:entities:CodeMaster' => "L'entité maîtresse du code.",
@@ -2287,9 +2309,12 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:display:ListEntities' => 'Show list of entities',
             '::sylabe:module:entities:EntityCreated' => 'New entity created',
             '::sylabe:module:entities:EntityNotCreated' => "The new entity can't be created",
-            '::sylabe:module:entities:ShowEntity' => 'The entity',
+            '::sylabe:module:entities:ShowEntity' => 'See the entity',
             '::sylabe:module:entities:DescriptionEntity' => 'This entity',
             '::sylabe:module:entities:DescriptionEntityDesc' => 'About this entity.',
+            '::sylabe:module:entities:allEntities' => 'All entities',
+            '::sylabe:module:entities:allEntitiesDesc' => 'All entities.',
+            '::sylabe:module:entities:allEntitiesHelp' => 'The list of all entities.',
             '::sylabe:module:entities:MyEntities' => 'My entities',
             '::sylabe:module:entities:MyEntitiesDesc' => 'All entities under control.',
             '::sylabe:module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
@@ -2332,9 +2357,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:AndOr' => 'and/or',
             '::sylabe:module:entities:Search:ID' => 'Identifier',
             '::sylabe:module:entities:Search:Submit' => 'Submit',
-            '::sylabe:module:entities:disp:ConnectWith' => 'Connect with this entity',
-            '::sylabe:module:entities:disp:Disconnect' => 'Lock entity',
-            '::sylabe:module:entities:disp:SeeAs' => "See as",
+            '::sylabe:module:entities:connectWith' => 'Connect with this entity',
+            '::sylabe:module:entities:unlock' => 'Unlock the entity',
+            '::sylabe:module:entities:switchTo' => 'Switch to this entity',
+            '::sylabe:module:entities:lock' => 'Lock entity',
+            '::sylabe:module:entities:seeAs' => "See as",
             '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
             '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',
@@ -2368,9 +2395,12 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:display:ListEntities' => 'Show list of entities',
             '::sylabe:module:entities:EntityCreated' => 'New entity created',
             '::sylabe:module:entities:EntityNotCreated' => "The new entity can't be created",
-            '::sylabe:module:entities:ShowEntity' => 'The entity',
+            '::sylabe:module:entities:ShowEntity' => 'See the entity',
             '::sylabe:module:entities:DescriptionEntity' => 'This entity',
             '::sylabe:module:entities:DescriptionEntityDesc' => 'About this entity.',
+            '::sylabe:module:entities:allEntities' => 'All entities',
+            '::sylabe:module:entities:allEntitiesDesc' => 'All entities.',
+            '::sylabe:module:entities:allEntitiesHelp' => 'The list of all entities.',
             '::sylabe:module:entities:MyEntities' => 'My entities',
             '::sylabe:module:entities:MyEntitiesDesc' => 'All entities under control.',
             '::sylabe:module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
@@ -2413,9 +2443,11 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::sylabe:module:entities:Search:AndOr' => 'y/o',
             '::sylabe:module:entities:Search:ID' => 'Identifier',
             '::sylabe:module:entities:Search:Submit' => 'Submit',
-            '::sylabe:module:entities:disp:ConnectWith' => 'Connect with this entity',
-            '::sylabe:module:entities:disp:Disconnect' => 'Lock entity',
-            '::sylabe:module:entities:disp:SeeAs' => "See as",
+            '::sylabe:module:entities:connectWith' => 'Connect with this entity',
+            '::sylabe:module:entities:unlock' => 'Unlock the entity',
+            '::sylabe:module:entities:switchTo' => 'Switch to this entity',
+            '::sylabe:module:entities:lock' => 'Lock entity',
+            '::sylabe:module:entities:seeAs' => "See as",
             '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
             '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',

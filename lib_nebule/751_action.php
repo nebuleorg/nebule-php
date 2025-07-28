@@ -1532,6 +1532,7 @@ abstract class Actions extends Functions
             }
             $this->_actionCreateEntityInstance = $instance;
             $this->_actionCreateEntityKeyInstance = new Node($this->_nebuleInstance, $this->_actionCreateEntityKeyID);
+            $this->_metrologyInstance->addLog('create private key ' . $this->_actionCreateEntityKeyInstance->getID() . ' with password', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6a7c4990');
 
             //$this->_actionCreateEntityInstance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
 
@@ -1566,6 +1567,8 @@ abstract class Actions extends Functions
                 $instance->setSelfProperty($reference, $content);
             }
     }
+
+
 
     protected bool $_actionCreateGroup = false;
     protected string $_actionCreateGroupName = '';

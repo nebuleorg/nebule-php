@@ -2041,7 +2041,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 ?>
             </div>
             <?php
-            $this->_displayCurentEntityOnHeader(false);
+            $this->_displayGhostEntityOnHeader(false);
+            $this->_displayConnectedEntityOnHeader(false);
             ?>
 
             <div class="header-right">
@@ -2092,9 +2093,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <?php
     }
 
-    /**
-     * Affiche le menu des applications.
-     */
     protected function _displayInternalMenuApplications(): void
     {
         $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
@@ -6403,10 +6401,36 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $error;
     }
 
-    protected function _displayCurentEntityOnHeader(bool $enableLink = true): void
+    protected function _displayGhostEntityOnHeader(bool $enableLink = true): void
     {
         $instance = new DisplayObject($this->_applicationInstance);
         $instance->setNID($this->_entitiesInstance->getGhostEntityInstance());
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableRefs(false);
+        $instance->setEnableNID(false);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(false);
+        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableStatus(false);
+        $instance->setEnableContent(false);
+        $instance->setEnableActions(false);
+        $instance->setEnableJS(false);
+        $instance->setEnableLink($enableLink);
+        $instance->setSize(DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setFlagUnlocked($this->_entitiesInstance->getConnectedEntityIsUnlocked());
+        $instance->display();
+    }
+
+    protected function _displayConnectedEntityOnHeader(bool $enableLink = true): void
+    {
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setNID($this->_entitiesInstance->getConnectedEntityInstance());
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setEnableName(true);
