@@ -5,17 +5,23 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020250525
+# Version 020250730
 
 echo ' > start'
 
-export PUBSPACE=~/code.master.nebule.org
+export PUPPETMASTER_SPACE=~/puppetmaster.nebule.org
+export SECURITY_MASTER_SPACE=~/security.master.nebule.org
+export CODE_MASTER_SPACE=~/code.master.nebule.org
+export TIME_MASTER_SPACE=~/time.master.nebule.org
+export DIRECTORY_MASTER_SPACE=~/directory.master.nebule.org
+export TEST_SPACE=~/test.nebule.org
+export ALL_SPACES="${PUPPETMASTER_SPACE} ${SECURITY_MASTER_SPACE} ${CODE_MASTER_SPACE} ${TIME_MASTER_SPACE} ${DIRECTORY_MASTER_SPACE} ${TEST_SPACE}"
 export WORKSPACE=~/workspace/nebule-php
 export TESTINSTANCE="${WORKSPACE}/test_instance"
 export password_entity=3968761168fe7f4b9df6f6964fb23f5db1a9531569cf78c230c4b6877b7cb0ea
 
-cd "${PUBSPACE}" || return 1
-cd "${PUBSPACE}" || exit 1
+cd "${CODE_MASTER_SPACE}" || return 1
+cd "${CODE_MASTER_SPACE}" || exit 1
 
 export LIB_RID_SECURITY_AUTHORITY='a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
 export LIB_RID_CODE_AUTHORITY='2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
@@ -62,42 +68,128 @@ function work_full_reinit()
 {
   echo ' > work reinit full'
 
-  echo ' > prep'
-  sudo rm -rf l o
-  sudo mkdir -p l o
-  [ -f e ] && sudo rm -f e
-  [ -f c ] && sudo rm -f c
+  echo ' > prep masters folders'
+  for SPACE in $ALL_SPACES
+  do
+    echo "   - ${SPACE}"
+    sudo rm -rf "${SPACE}/l" "${SPACE}/o"
+    mkdir -p "${SPACE}/l" "${SPACE}/o"
+    [ -f "${SPACE}/e" ] && sudo rm -f "${SPACE}/e"
+    [ -f "${SPACE}/c" ] && sudo rm -f "${SPACE}/c"
+    [ -f "${SPACE}/index.php" ] && sudo rm -f "${SPACE}/index.php"
 
-  sudo chown 1000:33 l o
-  sudo chmod 775 l o
+    sudo chown 1000:33 "${SPACE}/l" "${SPACE}/o"
+    sudo chmod 775 "${SPACE}/l" "${SPACE}/o"
+    touch "${SPACE}/l/mark" "${SPACE}/o/mark"
+  done
 
-  cat "${WORKSPACE}/nebule.env" > c
-  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' c
-  sed -i 's/^#hostURL = .*$/hostURL = bachue.developpement.nebule.org/' c
-  sed -i 's/^#permitUploadLink = .*$/permitUploadLink = true/' c
-  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' c
-  sed -i 's/^#logsLevel = .*$/logsLevel = DEVELOP/' c
-  sed -i 's/^#permitServerEntityAsAuthority = .*$/permitServerEntityAsAuthority = true/' c
-  sed -i 's/^#permitDefaultEntityAsAuthority = .*$/permitDefaultEntityAsAuthority = true/' c
-  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' c
-  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' c
-  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' c
-  sed -i 's/^#permitLogsOnDebugFile = .*$/permitLogsOnDebugFile = true/' c
-  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' c
-  sed -i 's/^#permitApplicationModulesExternal = .*$/permitApplicationModulesExternal = true/' c
-  sed -i 's/^#permitApplicationModulesTranslate = .*$/permitApplicationModulesTranslate = true/' c
+  echo ' > prep masters configuration'
+  cat "${WORKSPACE}/nebule.env" > "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${PUPPETMASTER_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${PUPPETMASTER_SPACE}/c"
 
-  echo ' > obj'
-  echo -n "${puppetmaster_develop_key}" > "o/${puppetmaster_develop_key_hash}"
-  echo -n "${security_authority_develop_key}" > "o/${security_authority_develop_key_hash}"
-  echo -n "${code_authority_develop_key}" > "o/${code_authority_develop_key_hash}"
-  echo -n "${time_authority_develop_key}" > "o/${time_authority_develop_key_hash}"
-  echo -n "${directory_authority_develop_key}" > "o/${directory_authority_develop_key_hash}"
-  echo -n "${puppetmaster_develop_pem}" > "o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "o/${directory_authority_develop_pem_hash}"
+  cat "${WORKSPACE}/nebule.env" > "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${SECURITY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${SECURITY_MASTER_SPACE}/c"
+
+  cat "${WORKSPACE}/nebule.env" > "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${CODE_MASTER_SPACE}/c"
+
+  cat "${WORKSPACE}/nebule.env" > "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${TIME_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${TIME_MASTER_SPACE}/c"
+
+  cat "${WORKSPACE}/nebule.env" > "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${DIRECTORY_MASTER_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${DIRECTORY_MASTER_SPACE}/c"
+
+  cat "${WORKSPACE}/nebule.env" > "${TEST_SPACE}/c"
+  sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${TEST_SPACE}/c"
+  sed -i 's/^#hostURL = .*$/hostURL = bachue.developpement.nebule.org/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitUploadLink = .*$/permitUploadLink = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${TEST_SPACE}/c"
+  sed -i 's/^#logsLevel = .*$/logsLevel = DEVELOP/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitPublicCreateEntity = .*$/permitPublicCreateEntity = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitServerEntityAsAuthority = .*$/permitServerEntityAsAuthority = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitDefaultEntityAsAuthority = .*$/permitDefaultEntityAsAuthority = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitLogsOnDebugFile = .*$/permitLogsOnDebugFile = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitApplicationModulesExternal = .*$/permitApplicationModulesExternal = true/' "${TEST_SPACE}/c"
+  sed -i 's/^#permitApplicationModulesTranslate = .*$/permitApplicationModulesTranslate = true/' "${TEST_SPACE}/c"
+
+  echo ' > prep masters objects'
+  echo '   - obj puppetmaster'
+  echo -n "${puppetmaster_develop_key}" > "${PUPPETMASTER_SPACE}/o/${puppetmaster_develop_key_hash}"
+  echo -n "${security_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${security_authority_develop_key_hash}"
+  echo -n "${code_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${code_authority_develop_key_hash}"
+  echo -n "${time_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${time_authority_develop_key_hash}"
+  echo -n "${directory_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${directory_authority_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${security_authority_develop_pem_hash}"
+  echo -n "${code_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${code_authority_develop_pem_hash}"
+  echo -n "${time_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${time_authority_develop_pem_hash}"
+  echo -n "${directory_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+
+  echo '   - obj security master'
+  echo -n "${security_authority_develop_key}" > "${SECURITY_MASTER_SPACE}/o/${security_authority_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
+  echo -n "${code_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
+  echo -n "${time_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
+  echo -n "${directory_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+
+  echo '   - obj code master'
+  echo -n "${code_authority_develop_key}" > "${CODE_MASTER_SPACE}/o/${code_authority_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "${CODE_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
+  echo -n "${code_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
+  echo -n "${time_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
+  echo -n "${directory_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+
+  echo '   - obj time master'
+  echo -n "${time_authority_develop_key}" > "${TIME_MASTER_SPACE}/o/${time_authority_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "${TIME_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
+  echo -n "${code_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
+  echo -n "${time_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
+  echo -n "${directory_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+
+  echo '   - obj directory master'
+  echo -n "${directory_authority_develop_key}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority_develop_key_hash}"
+  echo -n "${puppetmaster_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
+  echo -n "${security_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
+  echo -n "${code_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
+  echo -n "${time_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
+  echo -n "${directory_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
 
   pemOID=$(echo -n 'application/x-pem-file' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -109,8 +201,8 @@ function work_full_reinit()
   echo ' > links puppetmaster'
   entityNameOID=$(echo -n 'puppetmaster' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://puppetmaster.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  echo -n 'puppetmaster' > "o/${entityNameOID}"
-  echo -n 'http://puppetmaster.nebule.org' > "o/${localOID}"
+  echo -n 'puppetmaster' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n 'http://puppetmaster.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_key_hash}>${pemOID}>${typeRID}"
@@ -125,14 +217,19 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${PUPPETMASTER_SPACE}"
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${SECURITY_MASTER_SPACE}"
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${TIME_MASTER_SPACE}"
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${DIRECTORY_MASTER_SPACE}"
+    sign_write_link "${link}" "${puppetmaster_develop_key_hash}" "${puppetmaster_develop_pem_hash}" 512 "${TEST_SPACE}"
   done
 
   echo ' > links security authority'
   entityNameOID=$(echo -n 'cerberus' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://cerberus.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  echo -n 'cerberus' > "o/${entityNameOID}"
-  echo -n 'http://cerberus.nebule.org' > "o/${localOID}"
+  echo -n 'cerberus' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n 'http://cerberus.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
@@ -142,14 +239,14 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256
+    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256 "${SECURITY_MASTER_SPACE}"
   done
 
   echo ' > links code authority'
   entityNameOID=$(echo -n 'bachue' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://bachue.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  echo -n 'bachue' > "o/${entityNameOID}"
-  echo -n 'http://bachue.nebule.org' > "o/${localOID}"
+  echo -n 'bachue' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n 'http://bachue.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
@@ -159,14 +256,14 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links time authority'
   entityNameOID=$(echo -n 'kronos' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://kronos.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  echo -n 'kronos' > "o/${entityNameOID}"
-  echo -n 'http://kronos.nebule.org' > "o/${localOID}"
+  echo -n 'kronos' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n 'http://kronos.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
@@ -176,14 +273,14 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256
+    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256 "${TIME_MASTER_SPACE}"
   done
 
   echo ' > links directory authority'
   entityNameOID=$(echo -n 'asabiyya' | sha256sum | cut -d' ' -f1)'.sha2.256'
   localOID=$(echo -n 'http://asabiyya.nebule.org' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  echo -n 'asabiyya' > "o/${entityNameOID}"
-  echo -n 'http://asabiyya.nebule.org' > "o/${localOID}"
+  echo -n 'asabiyya' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n 'http://asabiyya.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
@@ -193,13 +290,16 @@ function work_full_reinit()
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256
+    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
   done
 
-  sudo chown 1000:33 l/*
-  sudo chmod 644 l/*
-  sudo chown 1000:33 o/*
-  sudo chmod 644 o/*
+  echo ' > chmod masters folders'
+  for SPACE in $ALL_SPACES
+  do
+    echo "   - ${SPACE}"
+    sudo chown 1000:33 "${SPACE}/l/"* "${SPACE}/o/"*
+    sudo chmod 644 "${SPACE}/l/"* "${SPACE}/o/"*
+  done
 
   echo ' > flush PHP sessions'
   sudo /usr/bin/rm -f /var/lib/php/sessions/*
@@ -218,7 +318,11 @@ function work_dev_deploy()
   echo " > date : ${current_date}"
 
   echo ' > copy code on test environment'
-  cp "${WORKSPACE}/bootstrap.php" "${PUBSPACE}/index.php"
+  for SPACE in $ALL_SPACES
+  do
+    echo "   - ${SPACE}"
+    cp "${WORKSPACE}/bootstrap.php" "${SPACE}/index.php"
+  done
 
   echo " > RID code branch : ${LIB_RID_CODE_BRANCH}"
   echo " > NID code branch : ${NID_CODE_BRANCH}"
@@ -229,10 +333,10 @@ function work_dev_deploy()
   echo ' > links'
   echo '   - code branch'
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   echo '   - name'
   link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${entityNameOID}>${nameRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
 }
 
 function work_refresh()
@@ -268,7 +372,7 @@ function work_refresh()
 
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
-  cp "${WORKSPACE}/bootstrap.php" "o/${bootstrap_hash}"
+  cp "${WORKSPACE}/bootstrap.php" "${CODE_MASTER_SPACE}/o/${bootstrap_hash}"
 
   cat > "${WORKSPACE}/lib_nebule.php" << EOF
 <?php
@@ -290,7 +394,7 @@ EOF
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new library : ${library_hash}"
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
-  mv "${WORKSPACE}/lib_nebule.php" "o/${library_hash}"
+  mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
 
   cat "${WORKSPACE}/autent.php" > "/tmp/autent.php"
   { tail +4 "${WORKSPACE}/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -298,7 +402,7 @@ EOF
   } >> "/tmp/autent.php"
   autent_hash=$(sha256sum "/tmp/autent.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new autent : ${autent_hash}"
-  cp "/tmp/autent.php" "o/${autent_hash}"
+  cp "/tmp/autent.php" "${CODE_MASTER_SPACE}/o/${autent_hash}"
 
   cat "${WORKSPACE}/entity.php" > "/tmp/entity.php"
   { tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -306,7 +410,7 @@ EOF
   } >> "/tmp/entity.php"
   entity_hash=$(sha256sum "/tmp/entity.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new entity : ${entity_hash}"
-  cp "/tmp/entity.php" "o/${entity_hash}"
+  cp "/tmp/entity.php" "${CODE_MASTER_SPACE}/o/${entity_hash}"
 
   cat "${WORKSPACE}/sylabe.php" > "/tmp/sylabe.php"
   { tail +4 "${WORKSPACE}/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -319,7 +423,7 @@ EOF
   } >> "/tmp/sylabe.php"
   sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
-  cp "/tmp/sylabe.php" "o/${sylabe_hash}"
+  cp "/tmp/sylabe.php" "${CODE_MASTER_SPACE}/o/${sylabe_hash}"
 
   cat "${WORKSPACE}/klicty.php" > "/tmp/klicty.php"
   { tail +4 "${WORKSPACE}/klicty.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -327,7 +431,7 @@ EOF
   } >> "/tmp/klicty.php"
   klicty_hash=$(sha256sum "/tmp/klicty.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new klicty : ${klicty_hash}"
-  cp "/tmp/klicty.php" "o/${klicty_hash}"
+  cp "/tmp/klicty.php" "${CODE_MASTER_SPACE}/o/${klicty_hash}"
 
   cat "${WORKSPACE}/messae.php" > "/tmp/messae.php"
   { tail +4 "${WORKSPACE}/module_messages.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -340,7 +444,7 @@ EOF
   } >> "/tmp/messae.php"
   messae_hash=$(sha256sum "/tmp/messae.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new messae : ${messae_hash}"
-  cp "/tmp/messae.php" "o/${messae_hash}"
+  cp "/tmp/messae.php" "${CODE_MASTER_SPACE}/o/${messae_hash}"
 
   cat "${WORKSPACE}/qantion.php" > "/tmp/qantion.php"
   { tail +4 "${WORKSPACE}/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -350,11 +454,11 @@ EOF
   } >> "/tmp/qantion.php"
   qantion_hash=$(sha256sum "/tmp/qantion.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new qantion : ${qantion_hash}"
-  cp "/tmp/qantion.php" "o/${qantion_hash}"
+  cp "/tmp/qantion.php" "${CODE_MASTER_SPACE}/o/${qantion_hash}"
 
   upload_hash=$(sha256sum "${WORKSPACE}/upload.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new upload : ${upload_hash}"
-  cp "${WORKSPACE}/upload.php" "o/${upload_hash}"
+  cp "${WORKSPACE}/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
 
   cat "${WORKSPACE}/neblog.php" > "/tmp/neblog.php"
   { tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -364,15 +468,15 @@ EOF
   } >> "/tmp/neblog.php"
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
-  cp "/tmp/neblog.php" "o/${neblog_hash}"
+  cp "/tmp/neblog.php" "${CODE_MASTER_SPACE}/o/${neblog_hash}"
 
   option_hash=$(sha256sum "${WORKSPACE}/option.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new option : ${option_hash}"
-  cp "${WORKSPACE}/option.php" "o/${option_hash}"
+  cp "${WORKSPACE}/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
 
   belzbu_hash=$(sha256sum "${WORKSPACE}/belzbu.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new belzbu : ${belzbu_hash}"
-  cp "${WORKSPACE}/belzbu.php" "o/${belzbu_hash}"
+  cp "${WORKSPACE}/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
 
   for module in module_admin module_autent module_entities module_groups module_manage module_messages module_neblog module_objects module_qantion module_lang_en-en module_lang_es-co module_lang_fr-fr
   do
@@ -380,7 +484,7 @@ EOF
     varName=$(echo "${module}" | tr '-' '_')
     declare "${varName}"_hash="${module_hash}"
     echo " > new ${module} : ${module_hash}"
-    cp "${WORKSPACE}/${module}.php" "o/${module_hash}"
+    cp "${WORKSPACE}/${module}.php" "${CODE_MASTER_SPACE}/o/${module_hash}"
   done
 
   echo ' > links'
@@ -508,33 +612,37 @@ EOF
   for link in "${links[@]}"
   do
     echo -n .
-    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256
+    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
   echo
 
-  echo -n "autent" > "o/${autentNameOID}"
-  echo -n "Au" > "o/${autentSurnameOID}"
-  echo -n "entity" > "o/${entityNameOID}"
-  echo -n "En" > "o/${entitySurnameOID}"
-  echo -n "sylabe" > "o/${sylabeNameOID}"
-  echo -n "Sy" > "o/${sylabeSurnameOID}"
-  echo -n "klicty" > "o/${klictyNameOID}"
-  echo -n "Kl" > "o/${klictySurnameOID}"
-  echo -n "messae" > "o/${messaeNameOID}"
-  echo -n "Me" > "o/${messaeSurnameOID}"
-  echo -n "neblog" > "o/${neblogNameOID}"
-  echo -n "Ne" > "o/${neblogSurnameOID}"
-  echo -n "qantion" > "o/${qantionNameOID}"
-  echo -n "Qa" > "o/${qantionSurnameOID}"
-  echo -n "option" > "o/${optionNameOID}"
-  echo -n "Op" > "o/${optionSurnameOID}"
-  echo -n "upload" > "o/${uploadNameOID}"
-  echo -n "Up" > "o/${uploadSurnameOID}"
+  echo -n "autent" > "${CODE_MASTER_SPACE}/o/${autentNameOID}"
+  echo -n "Au" > "${CODE_MASTER_SPACE}/o/${autentSurnameOID}"
+  echo -n "entity" > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
+  echo -n "En" > "${CODE_MASTER_SPACE}/o/${entitySurnameOID}"
+  echo -n "sylabe" > "${CODE_MASTER_SPACE}/o/${sylabeNameOID}"
+  echo -n "Sy" > "${CODE_MASTER_SPACE}/o/${sylabeSurnameOID}"
+  echo -n "klicty" > "${CODE_MASTER_SPACE}/o/${klictyNameOID}"
+  echo -n "Kl" > "${CODE_MASTER_SPACE}/o/${klictySurnameOID}"
+  echo -n "messae" > "${CODE_MASTER_SPACE}/o/${messaeNameOID}"
+  echo -n "Me" > "${CODE_MASTER_SPACE}/o/${messaeSurnameOID}"
+  echo -n "neblog" > "${CODE_MASTER_SPACE}/o/${neblogNameOID}"
+  echo -n "Ne" > "${CODE_MASTER_SPACE}/o/${neblogSurnameOID}"
+  echo -n "qantion" > "${CODE_MASTER_SPACE}/o/${qantionNameOID}"
+  echo -n "Qa" > "${CODE_MASTER_SPACE}/o/${qantionSurnameOID}"
+  echo -n "option" > "${CODE_MASTER_SPACE}/o/${optionNameOID}"
+  echo -n "Op" > "${CODE_MASTER_SPACE}/o/${optionSurnameOID}"
+  echo -n "upload" > "${CODE_MASTER_SPACE}/o/${uploadNameOID}"
+  echo -n "Up" > "${CODE_MASTER_SPACE}/o/${uploadSurnameOID}"
 
-  sudo chown 1000:33 l/*
-  sudo chmod 664 l/*
-  sudo chown 1000:33 o/*
-  sudo chmod 664 o/*
+  echo ' > chmod masters folders'
+  for SPACE in $ALL_SPACES
+  do
+    echo "   - ${SPACE}"
+    sudo chown 1000:33 "${SPACE}/l/"* "${SPACE}/o/"*
+    sudo chmod 644 "${SPACE}/l/"* "${SPACE}/o/"*
+    rm "${SPACE}/l/mark" "${SPACE}/o/mark"
+  done
 }
 
 function copy_to_test_instance()
@@ -542,10 +650,10 @@ function copy_to_test_instance()
   echo ' > copy to test instance'
   [ -d "${TESTINSTANCE}" ] && rm -rf "${TESTINSTANCE}"
   mkdir -p "${TESTINSTANCE}"
-  cp -r "${PUBSPACE}/index.php" "${PUBSPACE}/o" "${PUBSPACE}/l" "${PUBSPACE}/c" "${TESTINSTANCE}/"
+  cp -r "${CODE_MASTER_SPACE}/index.php" "${CODE_MASTER_SPACE}/o" "${CODE_MASTER_SPACE}/l" "${CODE_MASTER_SPACE}/c" "${TESTINSTANCE}/"
   #cd "${TESTINSTANCE}" || return
   #git add o/* l/*
-  #cd "${PUBSPACE}" || return
+  #cd "${CODE_MASTER_SPACE}" || return
 }
 
 function sign_write_link()
@@ -554,18 +662,20 @@ function sign_write_link()
   key="${2}"
   eid="${3}"
   size="${4}"
+  location="${5}"
+  [ "${location}" == '' ] && location=$CODE_MASTER_SPACE
 
   logger "sign_write_link ${link} with ${eid}"
-  slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "o/${key}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
+  slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "${PUPPETMASTER_SPACE}/o/${key}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
   flink="${link}_${eid}>${slink}.sha2.${size}"
   nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
   nid2=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f3)
   nid3=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f4)
   nid4=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f5)
-  [ "${nid1}" != '' ] && touch "l/${nid1}" && [[ $(grep "${flink}" "l/${nid1}") == '' ]] && echo "${flink}" >> "l/${nid1}"
-  [ "${nid2}" != '' ] && touch "l/${nid2}" && [[ $(grep "${flink}" "l/${nid2}") == '' ]] && echo "${flink}" >> "l/${nid2}"
-  [ "${nid3}" != '' ] && touch "l/${nid3}" && [[ $(grep "${flink}" "l/${nid3}") == '' ]] && echo "${flink}" >> "l/${nid3}"
-  [ "${nid4}" != '' ] && touch "l/${nid4}" && [[ $(grep "${flink}" "l/${nid4}") == '' ]] && echo "${flink}" >> "l/${nid4}"
+  [ "${nid1}" != '' ] && touch "${location}/l/${nid1}" && [[ $(grep "${flink}" "${location}/l/${nid1}") == '' ]] && echo "${flink}" >> "${location}/l/${nid1}"
+  [ "${nid2}" != '' ] && touch "${location}/l/${nid2}" && [[ $(grep "${flink}" "${location}/l/${nid2}") == '' ]] && echo "${flink}" >> "${location}/l/${nid2}"
+  [ "${nid3}" != '' ] && touch "${location}/l/${nid3}" && [[ $(grep "${flink}" "${location}/l/${nid3}") == '' ]] && echo "${flink}" >> "${location}/l/${nid3}"
+  [ "${nid4}" != '' ] && touch "${location}/l/${nid4}" && [[ $(grep "${flink}" "${location}/l/${nid4}") == '' ]] && echo "${flink}" >> "${location}/l/${nid4}"
   echo "${flink}" >> "l/h"
 }
 
@@ -623,8 +733,8 @@ function mode_loop
   read -r -n 1 -p '[r] refresh codes / [d] dev deploy codes  / [e] export codes / [f] reinit full / [q] quit : ' loop_type
   echo -e "\n"
   
-  cd $PUBSPACE || return 1
-  cd $PUBSPACE || exit 1
+  cd $CODE_MASTER_SPACE || return 1
+  cd $CODE_MASTER_SPACE || exit 1
   
   case "${loop_type}" in
     f) work_full_reinit; work_dev_deploy; work_refresh; copy_to_test_instance;;
