@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250719';
+const BOOTSTRAP_VERSION = '020250731';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -3364,6 +3364,7 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool {
         $locations = LIB_FIRST_LOCALISATIONS;
 
     foreach ($locations as $location) {
+        log_add('try location ' . $location . ' for ' . $nid, 'debug', __FUNCTION__, '76b5ee5f');
         if (io_objectSynchronize($nid, $location))
             return true;
     }
@@ -6332,11 +6333,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
         if (io_checkNodeHaveContent($hash))
             echo '.';
         else {
-            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca195598');
+            log_add('need create objects ' . $hash . '(' . $data . ')', 'warn', __FUNCTION__, 'ca195598');
             if (io_objectWrite($data, $hash))
                 echo '+';
             else {
                 $ok = false;
+                log_add('error create object ' . $hash . '(' . $data . ')', 'error', __FUNCTION__, 'db5f45c3');
                 echo 'E';
             }
         }
@@ -6347,11 +6349,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
             if (io_checkNodeHaveContent($hash))
                 echo '.';
             else {
-                log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'ca99e341');
+                log_add('need create objects ' . $hash . '(' . $data . ')', 'warn', __FUNCTION__, 'ca99e341');
                 if (io_objectWrite($data, $hash))
                     echo '+';
                 else {
                     $ok = false;
+                    log_add('error create object ' . $hash . '(' . $data . ')', 'error', __FUNCTION__, 'aa35c67b');
                     echo 'E';
                 }
             }
@@ -6362,11 +6365,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
             if (io_checkNodeHaveContent($hash))
                 echo '.';
             else {
-                log_add('need create objects ' . $hash, 'warn', __FUNCTION__, 'fc68d2ff');
+                log_add('need create objects ' . $hash . '(' . $data . ')', 'warn', __FUNCTION__, 'fc68d2ff');
                 if (io_objectWrite($data, $hash))
                     echo '+';
                 else {
                     $ok = false;
+                    log_add('error create object ' . $hash . '(' . $data . ')', 'error', __FUNCTION__, 'ad34de77');
                     echo 'E';
                 }
             }
@@ -6378,11 +6382,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
         if (io_checkNodeHaveContent($hash))
             echo '.';
         else {
-            log_add('need create objects ' . $hash, 'warn', __FUNCTION__, '6a7b99a6');
+            log_add('need create objects ' . $hash . '(' . $data . ')', 'warn', __FUNCTION__, '6a7b99a6');
             if (io_objectWrite($data, $hash))
                 echo '+';
             else {
                 $ok = false;
+                log_add('error create object ' . $hash . '(' . $data . ')', 'error', __FUNCTION__, 'bf5ebfff');
                 echo 'E';
             }
         }
@@ -6394,11 +6399,12 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
             echo '.';
         else {
             $hash = hash(crypto_getTranslatedHashAlgo($algo), $link);
-            log_add('need create link ' . $hash, 'warn', __FUNCTION__, '8d9c24e2');
+            log_add('need create link ' . $hash . '(' . $link . ')', 'warn', __FUNCTION__, '8d9c24e2');
             if (blk_write($link))
                 echo '+';
             else {
                 $ok = false;
+                log_add('error create link ' . $hash . '(' . $link . ')', 'error', __FUNCTION__, '0df95565');
                 echo 'E';
             }
         }

@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020250730
+# Version 020250731
 
 echo ' > start'
 
@@ -86,7 +86,7 @@ function work_full_reinit()
   echo ' > prep masters configuration'
   cat "${WORKSPACE}/nebule.env" > "${PUPPETMASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${PUPPETMASTER_SPACE}/c"
-  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${PUPPETMASTER_SPACE}/c"
+  #sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${PUPPETMASTER_SPACE}/c"
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${PUPPETMASTER_SPACE}/c"
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${PUPPETMASTER_SPACE}/c"
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${PUPPETMASTER_SPACE}/c"
@@ -95,7 +95,7 @@ function work_full_reinit()
 
   cat "${WORKSPACE}/nebule.env" > "${SECURITY_MASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${SECURITY_MASTER_SPACE}/c"
-  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${SECURITY_MASTER_SPACE}/c"
+  #sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${SECURITY_MASTER_SPACE}/c"
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${SECURITY_MASTER_SPACE}/c"
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${SECURITY_MASTER_SPACE}/c"
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${SECURITY_MASTER_SPACE}/c"
@@ -104,7 +104,7 @@ function work_full_reinit()
 
   cat "${WORKSPACE}/nebule.env" > "${CODE_MASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${CODE_MASTER_SPACE}/c"
-  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${CODE_MASTER_SPACE}/c"
+  #sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${CODE_MASTER_SPACE}/c"
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${CODE_MASTER_SPACE}/c"
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${CODE_MASTER_SPACE}/c"
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${CODE_MASTER_SPACE}/c"
@@ -113,7 +113,7 @@ function work_full_reinit()
 
   cat "${WORKSPACE}/nebule.env" > "${TIME_MASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${TIME_MASTER_SPACE}/c"
-  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${TIME_MASTER_SPACE}/c"
+  #sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${TIME_MASTER_SPACE}/c"
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${TIME_MASTER_SPACE}/c"
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${TIME_MASTER_SPACE}/c"
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${TIME_MASTER_SPACE}/c"
@@ -122,7 +122,7 @@ function work_full_reinit()
 
   cat "${WORKSPACE}/nebule.env" > "${DIRECTORY_MASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${DIRECTORY_MASTER_SPACE}/c"
-  sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${DIRECTORY_MASTER_SPACE}/c"
+  #sed -i 's/^#permitWrite = .*$/permitWrite = false/' "${DIRECTORY_MASTER_SPACE}/c"
   sed -i 's/^#codeBranch = .*$/codeBranch = develop/' "${DIRECTORY_MASTER_SPACE}/c"
   sed -i 's/^#displayUnsecureURL = .*$/displayUnsecureURL = false/' "${DIRECTORY_MASTER_SPACE}/c"
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${DIRECTORY_MASTER_SPACE}/c"
@@ -240,6 +240,7 @@ function work_full_reinit()
   for link in "${links[@]}"
   do
     sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256 "${SECURITY_MASTER_SPACE}"
+    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links code authority'
@@ -274,6 +275,7 @@ function work_full_reinit()
   for link in "${links[@]}"
   do
     sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256 "${TIME_MASTER_SPACE}"
+    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links directory authority'
@@ -291,14 +293,16 @@ function work_full_reinit()
   for link in "${links[@]}"
   do
     sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
+    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > chmod masters folders'
   for SPACE in $ALL_SPACES
   do
     echo "   - ${SPACE}"
-    sudo chown 1000:33 "${SPACE}/l/"* "${SPACE}/o/"*
-    sudo chmod 644 "${SPACE}/l/"* "${SPACE}/o/"*
+    sudo chown -R 1000:33 "${SPACE}/l/" "${SPACE}/o/"
+    sudo chmod 775 "${SPACE}/l/" "${SPACE}/o/"
+    sudo chmod 664 "${SPACE}/l/"* "${SPACE}/o/"*
   done
 
   echo ' > flush PHP sessions'
@@ -639,8 +643,9 @@ EOF
   for SPACE in $ALL_SPACES
   do
     echo "   - ${SPACE}"
-    sudo chown 1000:33 "${SPACE}/l/"* "${SPACE}/o/"*
-    sudo chmod 644 "${SPACE}/l/"* "${SPACE}/o/"*
+    sudo chown -R 1000:33 "${SPACE}/l/" "${SPACE}/o/"
+    sudo chmod 775 "${SPACE}/l/" "${SPACE}/o/"
+    sudo chmod 664 "${SPACE}/l/"* "${SPACE}/o/"*
     rm "${SPACE}/l/mark" "${SPACE}/o/mark"
   done
 }
