@@ -873,7 +873,7 @@ class Entity extends Node implements nodeInterface
 
 
     /**
-     * Affiche la partie menu de la documentation.
+     * Affiche la partie du menu de la documentation.
      *
      * @return void
      */
@@ -892,8 +892,12 @@ class Entity extends Node implements nodeInterface
                 <li><a href="#oes">OES / Stockage</a></li>
                 <li><a href="#oet">OET / Transfert</a></li>
                 <li><a href="#oer">OER / Réservation</a></li>
-                <li><a href="#oeio">OEIO / Implémentation des Options</a></li>
-                <li><a href="#oeia">OEIA / Implémentation des Actions</a></li>
+                <li><a href="#oei">OEI / Implémentation</a>
+                    <ul>
+                        <li><a href="#oeio">OEIO / Implémentation des Options</a></li>
+                        <li><a href="#oeia">OEIA / Implémentation des Actions</a></li>
+                    </ul>
+                </li>
                 <li><a href="#oeo">OEO / Oubli</a></li>
             </ul>
         </li>
@@ -909,22 +913,24 @@ class Entity extends Node implements nodeInterface
     static public function echoDocumentationCore(): void {
         ?>
 
-        <h2 id="oe">OE / Entité</h2>
+        <?php Displays::docDispTitle(2, 'oe', 'Entité'); ?>
         <p>L’entité est un objet caractéristique. Elle dispose de :</p>
         <ul>
-            <li>une clé cryptographique publique par laquelle elle est identifiée ;</li>
-            <li>une clé cryptographique privée pae laquelle elle peut générer des liens (actions) et manipuler des
+            <li>Une clé cryptographique publique par laquelle elle est identifiée ;</li>
+            <li>Une clé cryptographique privée pae laquelle elle peut générer des liens (actions) et manipuler des
                 données chiffrées (encrypted) et dissimulées (obfuscated).</li>
         </ul>
         <p>Une entité déverrouillée est appelée entité connectée. Le déverrouillage d'une entité est techniquement le
             déverrouillage de la valeur de sa clé cryptographique privée.</p>
-        <p>L’indication de la fonction de prise d’empreinte (hashage) ainsi que le type de bi-clé cryptographique sont
+        <p>L’indication de la fonction de prise d’empreinte (hash) ainsi que le type de biclé cryptographique sont
             impératifs. Le lien est identique à celui défini pour un objet.</p>
+        <p>Pour l'instant, seul le type RSA est supporté, mais à l'avenir tout mécanisme de chiffrement asymétrique
+            pourra être supporté.</p>
         <p>Le type mime <code>mime-type:application/x-pem-file</code> est suffisant pour indiquer que cet objet est une
             entité. <i>Des valeurs équivalentes pourront être définies ultérieurement</i>.</p>
         <p>Toutes les autres indications sont optionnelles.</p>
 
-        <h3 id="oea">OEA / Types d'entités</h3>
+        <?php Displays::docDispTitle(3, 'oea', "Types d'entités"); ?>
         <p>La bibliothèque distingue plusieurs niveaux d'entités :</p>
         <ol>
             <li>Objet entité : C'est un objet auquel on donne des caractéristiques de visualisation propres à une
@@ -943,7 +949,7 @@ class Entity extends Node implements nodeInterface
                 prédéfinis par la bibliothèque.</li>
         </ol>
 
-        <h3 id="oem">OEM / Entités Maîtresses</h3>
+        <?php Displays::docDispTitle(3, 'oem', 'Entités Maîtresses'); ?>
         <p>La bibliothèque utilise actuellement plusieurs entités spéciales, dites autorités maîtresses, avec des rôles
             prédéfinis :</p>
         <ol>
@@ -959,8 +965,7 @@ class Entity extends Node implements nodeInterface
             autorité locale avec l'option <i>permitServerEntityAsAuthority</i>. L'entité par défaut peut devenir
             autorité locale avec l'option <i>permitDefaultEntityAsAuthority</i>.</p>
 
-        <h3 id="oen">OEN / Nommage</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <?php Displays::docDispTitle(3, 'oen', 'Nommage'); ?>
         <p>Le nommage à l’affichage du nom des entités repose sur plusieurs propriétés :</p>
         <ol>
             <li>nom</li>
@@ -981,16 +986,18 @@ class Entity extends Node implements nodeInterface
         <p>Par convention, voici le nommage des entités :</p>
         <p><code>préfixe prénom "surnom" nom suffixe</code></p>
 
-        <h3 id="oep">OEP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'oep', 'Protection'); ?>
+        <p>La protection d'une entité n'est pas supportée.</p>
+        <p>Cependant, à l'avenir, il serait possible d'avoir une entité fille protégée par une entité principale. Dans
+            ce cas l'entité fille ne pourrait être manipulée qu'une fois l'entité principale déverrouillée.</p>
+
+        <?php Displays::docDispTitle(3, 'oed', 'Dissimulation'); ?>
+        <p>La dissimulation de liens n'est pas supportée.</p>
+
+        <?php Displays::docDispTitle(3, 'oel', 'Liens'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oed">OED / Dissimulation</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
-        <h3 id="oel">OEL / Liens</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
-        <h3 id="oec">OEC / Création</h3>
+        <?php Displays::docDispTitle(3, 'oec', 'Création'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La première étape consiste en la génération d’une biclé (public/privé) cryptographique. Cette biclé peut être
             de type RSA ou équivalent. Aujourd’hui, seul RSA est reconnu.</p>
@@ -1037,23 +1044,25 @@ class Entity extends Node implements nodeInterface
             maître, le mot de passe doit être stocké dans un objet chiffré pour l’entité maître. Et il faut générer un
             lien reliant l’objet de mot de passe à la clé privée de la nouvelle entité.</p>
 
-        <h3 id="oes">OES / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'oes', 'Stockage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h3 id="oet">OET / Transfert</h3>
+        <?php Displays::docDispTitle(3, 'oet', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oer">OER / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'oer', 'Réservation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oeio">OEIO / Implémentation des Options</h4>
+        <?php Displays::docDispTitle(3, 'oei', 'Implémentation'); ?>
+
+        <?php Displays::docDispTitle(4, 'oeio', 'Implémentation des Options'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="oeia">OEIA / Implémentation des Actions</h4>
+        <?php Displays::docDispTitle(4, 'oeia', 'Implémentation des Actions'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="oeo">OEO / Oubli</h3>
+        <?php Displays::docDispTitle(3, 'oeo', 'Oubli'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté, mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>

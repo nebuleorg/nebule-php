@@ -1298,7 +1298,7 @@ class Group extends Node implements nodeInterface
 
 
     /**
-     * Affiche la partie menu de la documentation.
+     * Affiche la partie du menu de la documentation.
      *
      * @return void
      */
@@ -1313,15 +1313,23 @@ class Group extends Node implements nodeInterface
                 <li><a href="#ogp">OGP / Protection</a></li>
                 <li><a href="#ogd">OGD / Dissimulation</a></li>
                 <li><a href="#ogf">OGF / Fermeture</a></li>
-                <li><a href="#ogpm">OGPM / Protection des membres</a></li>
-                <li><a href="#ogdm">OGDM / Dissimulation des membres</a></li>
+                <li><a href="#ogm">OGP / Membres</a>
+                    <ul>
+                <li><a href="#ogmp">OGMP / Protection des membres</a></li>
+                <li><a href="#ogmd">OGMD / Dissimulation des membres</a></li>
+                    </ul>
+                </li>
                 <li><a href="#ogl">OGL / Liens</a></li>
                 <li><a href="#ogc">OGC / Création</a></li>
                 <li><a href="#ogs">OGS / Stockage</a></li>
                 <li><a href="#ogt">OGT / Transfert</a></li>
                 <li><a href="#ogr">OGR / Réservation</a></li>
-                <li><a href="#ogio">OGIO / Implémentation des Options</a></li>
-                <li><a href="#ogia">OGIA / Implémentation des Actions</a></li>
+                <li><a href="#ogi">OGI / Implémentation</a>
+                    <ul>
+                        <li><a href="#ogio">OGIO / Implémentation des Options</a></li>
+                        <li><a href="#ogia">OGIA / Implémentation des Actions</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
 
@@ -1337,23 +1345,23 @@ class Group extends Node implements nodeInterface
     {
         ?>
 
-        <h2 id="og">OG / Groupe</h2>
+        <?php Displays::docDispTitle(2, 'og', 'Groupe'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <p>Le groupe est un objet définit comme tel, c’est à dire qu’il doit avoir un type mime <code>nebule/objet/groupe</code>.
+        <p>Le groupe est un objet définit comme tel, c'est-à-dire qu’il doit avoir un type mime <code>nebule/objet/groupe</code>.
         </p>
-        <p>Fondamentalement, le groupe est un ensemble de plusieurs objets. C’est à dire, c’est le regroupement d’au
+        <p>Fondamentalement, le groupe est un ensemble de plusieurs objets. C'est-à-dire, c’est le regroupement d’au
             moins deux objets. Le lien peut donc à ce titre être vu comme la matérialisation d’un groupe. Mais la
             définition du groupe doit être plus restrictive afin que celui-ci soit utilisable. Pour cela, dans <em>nebule</em>,
-            le groupe n’est reconnu comme tel uniquement si il est marqué de son type mime. Il est cependant possible
+            le groupe n’est reconnu comme tel uniquement s'il est marqué de son type mime. Il est cependant possible
             d’instancier explicitement un objet comme groupe et de l’utiliser comme tel en cas de besoin.</p>
         <p>Le groupe va permettre de regrouper, et donc d’associer et de retrouver, des objets. L’objet du groupe va
             avoir des liens vers d’autres objets afin de les définir comme membres du groupe.</p>
         <p>Un groupe peut avoir des liens de membres vers des objets définis aussi comme groupes. Ces objets peuvent
             être vus comme des sous-groupes. La bibliothèque <em>nebule</em> ne prend en compte qu’un seul niveau de
-            groupe, c’est à dire que les sous-groupes sont gérés simplement comme des objets.</p>
+            groupe, c'est-à-dire que les sous-groupes sont gérés simplement comme des objets.</p>
 
-        <h3 id="ogo">OGO / Objet</h3>
+        <?php Displays::docDispTitle(3, 'ogo', 'Objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet du groupe peut être de deux natures.</p>
         <p>Soit c’est un objet existant qui est en plus définit comme un groupe. L’objet peut avoir un contenu et a
@@ -1365,8 +1373,7 @@ class Group extends Node implements nodeInterface
             (<em>sha256</em>) d’une valeur aléatoire de 128bits et de la chaîne <code>006e6562756c652f6f626a65742f67726f757065</code>.
             Soit un identifiant complet de la taille de 104 caractères.</p>
 
-        <h3 id="ogn">OGN / Nommage</h3>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <?php Displays::docDispTitle(3, 'ogn', 'Nommage'); ?>
         <p>Le nommage à l’affichage du nom des groupes repose sur une seule propriété :</p>
         <ol>
             <li>nom</li>
@@ -1380,34 +1387,34 @@ class Group extends Node implements nodeInterface
             <li><code>nom</code></li>
         </ul>
 
-        <h3 id="ogp">OGP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'ogp', 'Protection'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>En tant que tel le groupe ne nécessite pas de protection puisque soit l’objet du groupe n’a pas de contenu
             soit on n’utilise pas son contenu directement.</p>
         <p>La gestion de la protection est désactivée dans une instance de groupe.</p>
 
-        <h3 id="ogd">OGD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'ogd', 'Dissimulation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le groupe peut en tant que tel être dissimulé, c’est à dire que l’on dissimule l’existence du groupe, donc sa
+        <p>Le groupe peut en tant que tel être dissimulé, c'est-à-dire que l’on dissimule l’existence du groupe, donc sa
             création.</p>
         <p>La dissimulation devrait se faire lors de la création du groupe.</p>
         <p>L’annulation de la dissimulation d’un groupe revient à révéler le lien de création du groupe.</p>
-        <p>La dissimulation peut se (re)faire après la création du groupe mais son efficacité est incertaine si les
+        <p>La dissimulation peut se (re)faire après la création du groupe, mais son efficacité est incertaine si les
             liens de création ont déjà été diffusés. En cas de dissimulation à posteriori, il faut générer un lien de
             suppression du groupe puis générer un nouveau lien dissimulé de création du groupe à une date postérieure au
             lien de suppression.</p>
 
-        <h3 id="ogf">OGF / Fermeture</h3>
+        <?php Displays::docDispTitle(3, 'ogf', 'Fermeture'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
+        <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter le nombre des membres à utiliser dans un groupe en restreignant artificiellement les entités
-            contributrices du groupe. Ainsi on marque le groupe comme fermé et on filtre sur les membres uniquement
+            contributrices du groupe. Ainsi, on marque le groupe comme fermé et on filtre sur les membres uniquement
             ajoutés par des entités définies.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/ferme</code> est dédié à la gestion des groupes
-            fermés. Un groupe est considéré fermé quand on a l’objet réservé en champs méta, l’entité en cours en champs
-            cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs cible on
-            utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé. Dans ce cas
-            c’est une entité contributrice.</p>
+            fermés. Un groupe est considéré comme fermé quand on a l’objet réservé en champs méta, l’entité en cours en
+            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs
+            cible, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
+            Dans ce cas, c’est une entité contributrice.</p>
         <p>C’est uniquement un affichage du groupe que l’on a et non la suppression de membres du groupe.</p>
         <p>Lorsque l’on a marqué un groupe comme fermé, on doit explicitement ajouter des entités que l’on veut voir
             contribuer.</p>
@@ -1422,15 +1429,16 @@ class Group extends Node implements nodeInterface
         <p>Le traitement des liens de fermeture d’un groupe doit être fait exclusivement avec le traitement social <em>self</em>.
         </p>
 
-        <h4 id="ogpm">OGPM / Protection des membres</h4>
+        <?php Displays::docDispTitle(3, 'ogm', 'Membres'); ?>
+        <?php Displays::docDispTitle(4, 'ogmp', 'Protection des membres'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
+        <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter la visibilité du contenu des membres utilisés dans un groupe en restreignant artificiellement les
             entités destinataires qui pourront les consulter.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/protege</code> est dédié à la gestion des groupes
             protégés. Un groupe est considéré protégé quand on a l’objet réservé en champs méta, l’entité en cours en
             champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs
-            cible on utilise une autre entité, cela revient à partager aussi les objets protégés créés pour ce groupe.
+            cible, on utilise une autre entité, cela revient à partager aussi les objets protégés créés pour ce groupe.
             Cela ne repartage pas la protection des objets déjà protégés.</p>
         <p>Dans un groupe marqué protégé, tous les nouveaux membres ajoutés au groupe ont leur contenu protégé. Ce n’est
             valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>
@@ -1445,16 +1453,16 @@ class Group extends Node implements nodeInterface
         <p>Le traitement des liens de protection d’un groupe doit être fait exclusivement avec le traitement social <em>self</em>.
         </p>
 
-        <h4 id="ogdm">OGDM / Dissimulation des membres</h4>
+        <?php Displays::docDispTitle(4, 'ogmd', 'Dissimulation des membres'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le groupe va contenir un certain nombre de membres ajouter par différentes entités. Il est possible de
+        <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter la visibilité de l’appartenance des membres utilisés dans un groupe en restreignant artificiellement
             les entités destinataires qui pourront les voir.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/dissimule</code> est dédié à la gestion des groupes
-            dissimulés. Un groupe est considéré dissimulé quand on a l’objet réservé en champs méta, l’entité en cours
-            en champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs
-            cible on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce groupe.
-            Cela ne repartage pas la dissimulation des objets déjà dissimulés.</p>
+            dissimulés. Un groupe est considéré comme dissimulé quand on a l’objet réservé en champs méta, l’entité en
+            cours en champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le
+            champs cible, on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce
+            groupe. Cela ne repartage pas la dissimulation des objets déjà dissimulés.</p>
         <p>Dans un groupe marqué dissimulé, tous les nouveaux membres ajoutés au groupe sont dissimulés. Ce n’est
             valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>
         <p>Lorsque l’on a marqué un groupe comme dissimulé, on doit explicitement ajouter des entités avec qui on veut
@@ -1468,7 +1476,7 @@ class Group extends Node implements nodeInterface
         <p>Le traitement des liens de dissimulation d’un groupe doit être fait exclusivement avec le traitement social
             <em>self</em>.</p>
 
-        <h3 id="ogl">OGL / Liens</h3>
+        <?php Displays::docDispTitle(3, 'ogl', 'Liens'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une entité doit être déverrouillée pour la création de liens.</p>
         <ul>
@@ -1609,7 +1617,7 @@ class Group extends Node implements nodeInterface
             </li>
         </ul>
 
-        <h3 id="ogc">OGC / Création</h3>
+        <?php Displays::docDispTitle(3, 'ogc', 'Création'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Liste des liens à générer lors de la création d'un groupe :</p>
         <ul>
@@ -1684,14 +1692,14 @@ class Group extends Node implements nodeInterface
             </li>
         </ul>
 
-        <h3 id="ogs">OGS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'ogs', 'Stockage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h3 id="ogt">OGT / Transfert</h3>
+        <?php Displays::docDispTitle(3, 'ogt', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="ogr">OGR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'ogr', 'Réservation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les objets réservés spécifiquement pour les groupes :</p>
         <ul>
@@ -1701,7 +1709,8 @@ class Group extends Node implements nodeInterface
             <li>nebule/objet/groupe/dissimule</li>
         </ul>
 
-        <h4 id="ogio">OGIO / Implémentation des Options</h4>
+        <?php Displays::docDispTitle(3, 'ogi', 'Implémentation'); ?>
+        <?php Displays::docDispTitle(4, 'ogio', 'Implémentation des Options'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les options spécifiques aux groupes :</p>
         <ul>
@@ -1718,7 +1727,7 @@ class Group extends Node implements nodeInterface
         <p>Il est nécessaire à la création d’un groupe de pouvoir écrire des objets comme le nom du groupe, même si
             l’objet du groupe ne sera pas créé.</p>
 
-        <h4 id="ogia">OGIA / Implémentation des Actions</h4>
+        <?php Displays::docDispTitle(4, 'ogia', 'Implémentation des Actions'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Dans les actions, on retrouve les chaînes :</p>
         <ul>

@@ -3380,7 +3380,7 @@ class Node extends Functions implements nodeInterface
 
 
     /**
-     * Affiche la partie menu de la documentation.
+     * Affiche la partie du menu de la documentation.
      *
      * @return void
      */

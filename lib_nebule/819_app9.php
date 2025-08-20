@@ -15,7 +15,7 @@ class App9
     const APPLICATION_NAME = 'app9';
     const APPLICATION_SURNAME = 'nebule/app9';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250820';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -25,14 +25,13 @@ class App9
     {
         global $lastReferenceSID;
 
-        // Initialisation des logs
         \Nebule\Bootstrap\log_reopen('app9');
         \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'df3680d3');
 
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader();
+        \Nebule\Bootstrap\bootstrap_htmlHeader('app 9 - test');
         \Nebule\Bootstrap\bootstrap_htmlTop();
 
         echo '<div class="layout-main">' . "\n";

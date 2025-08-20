@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250731';
+const BOOTSTRAP_VERSION = '020250820';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -54,16 +54,16 @@ const BOOTSTRAP_FUNCTION_VERSION = '020241123';
 
 /*
  ==/ Table /===============================================================================
- PART1 : Initialization of the bootstrap environment.
- PART2 : Procedural PHP library for nebule (Lib PP) restricted for bootstrap usage.
- PART3 : Manage PHP session and arguments.
- PART4 : Find and load object-oriented PHP library for nebule (Lib POO).
- PART5 : Find application code.
- PART6 : Manage and display breaking bootstrap on problem or user ask.
- PART7 : Display of preload application web page.
- PART8 : First synchronization of code and environment.
- PART9 : Display of application 0 default application.
- PART10 : Main display router.
+ PART1: Initialization of the bootstrap environment.
+ PART2: Procedural PHP library for nebule (Lib PP) restricted for bootstrap usage.
+ PART3: Manage PHP session and arguments.
+ PART4: Find and load object-oriented PHP library for nebule (Lib POO).
+ PART5: Find application code.
+ PART6: Manage and display breaking bootstrap on problem or user ask.
+ PART7: Display of preload application web page.
+ PART8: First synchronization of code and environment.
+ PART9: Display of application 0 default application.
+ PART10: Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -89,7 +89,7 @@ ob_start();
  ==/ 1 /===================================================================================
  PART1 - Initialization of the bootstrap environment.
 
- This part include all default values for the procedural library (Lib PP).
+ This part includes all default values for the procedural library (Lib PP).
  ------------------------------------------------------------------------------------------
  */
 
@@ -515,7 +515,7 @@ const BREAK_DESCRIPTIONS = array(
 
 /**
  * List of options types.
- * Supported types :
+ * Supported types:
  * - string
  * - boolean
  * - integer
@@ -608,7 +608,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
 );
 
 /**
- * Default options values if not defined in option file.
+ * Default options values if not defined in the option file.
  */
 const LIB_CONFIGURATIONS_DEFAULT = array(
     'puppetmaster' => LIB_DEFAULT_PUPPETMASTER_EID,
@@ -893,31 +893,31 @@ $nebuleLocalAuthorities = array();
 $codeBranchNID = '';
 
 /**
- * Metrology - Lib PP link read counter.
+ * Metrology - Library PP link read counter.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyLinkRead = 0;
 
 /**
- * Metrology - Lib PP link verify counter.
+ * Metrology - Library PP link verify counter.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyLinkVerify = 0;
 
 /**
- * Metrology - Lib PP object read counter.
+ * Metrology - Library PP object read counter.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyObjectRead = 0;
 
 /**
- * Metrology - Lib PP object verify counter.
+ * Metrology - Library PP object verify counter.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyObjectVerify = 0;
 
 /**
- * Metrology - Lib PP timers.
+ * Metrology - Library PP timers.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $nebuleMetrologyTimers = array();
@@ -926,21 +926,21 @@ $nebuleMetrologyTimers = array();
  * First run - EID of an alternative puppetmaster.
  * @noinspection PhpUnusedLocalVariableInspection
  */
-$firstAlternativePuppetmasterEid = '';
+$firstPuppetmasterEid = '';
 
 /**
- * First run - EID of an optional subordination.
+ * First run - EID of optional subordination.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $firstSubordinationEID = '';
 
 /**
- * Remember on local entity file if we are on the first launch.
+ * Remember on a local entity file if we are on the first launch.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $needFirstSynchronization = false;
 
-// Cache of many search result and content.
+// Cache of many search results and content.
 /** @noinspection PhpUnusedLocalVariableInspection */
 $nebuleCacheReadObjText1line = array();
 /** @noinspection PhpUnusedLocalVariableInspection */
@@ -1550,13 +1550,16 @@ function io_blockLinkSynchronize(string $nid, string $location): bool {
     )
         return false;
 
+    log_add('ressource=' . $location . '/l/' . $nid, 'info', __FUNCTION__, '00000000');
     if (!io_checkExistOverHTTP($location . '/l/' . $nid))
         return false;
 
+    log_add('get ressource', 'info', __FUNCTION__, '00000000');
     $ressource = fopen($location . '/l/' . $nid, 'r');
     if ($ressource !== false) {
         while (feof($ressource) !== false) {
             $line = trim(fgets($ressource));
+            log_add('write bloclink=' . $line, 'info', __FUNCTION__, '00000000');
             blk_write($line);
         }
         fclose($ressource);
@@ -1651,6 +1654,7 @@ function io_objectSynchronize(string $nid, string $location): bool {
                 fputs($localobj, $line);
             fclose($localobj);
             $algo = nod_getAlgo($nid);
+            log_add('nid=' . $nid . ' algo=' . $algo, 'warn', __FUNCTION__, '00000000');
             if ($algo != '')
                 $hash = crypto_getFileHash($tmpIdName, crypto_getTranslatedHashAlgo($algo));
             else
@@ -1788,8 +1792,11 @@ function io_close(): void {
  */
 function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    if ($algo == '')
+    if ($algo == '') {
         $algo = lib_getOption('cryptoHashAlgorithm');
+        log_add('set default algo=' . $algo, 'warn', __FUNCTION__, '00000000');
+    }
+    log_add('algo=' . $algo, 'warn', __FUNCTION__, '00000000');
 
     $translatedAlgo = '';
     switch ($algo) {
@@ -1806,6 +1813,7 @@ function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string {
             $translatedAlgo = 'sha512';
             break;
     }
+    log_add('translate=' . $translatedAlgo, 'warn', __FUNCTION__, '00000000');
 
     if ($translatedAlgo == '') {
         if ($loop) {
@@ -2425,8 +2433,10 @@ function lnk_getDistantOnLocations(string $nid, array $locations = array()): boo
     if (sizeof($locations) == 0)
         $locations = LIB_FIRST_LOCALISATIONS;
 
-    foreach ($locations as $location)
+    foreach ($locations as $location) {
+        log_add('get nid=' . $nid . ' on ' . $location, 'audit', __FUNCTION__, '5bddc746');
         io_blockLinkSynchronize($nid, $location);
+    }
     return true;
 }
 
@@ -3364,7 +3374,7 @@ function obj_getDistantContent(string $nid, array $locations = array()): bool {
         $locations = LIB_FIRST_LOCALISATIONS;
 
     foreach ($locations as $location) {
-        log_add('try location ' . $location . ' for ' . $nid, 'debug', __FUNCTION__, '76b5ee5f');
+        log_add('try location ' . $location . ' for ' . $nid, 'audit', __FUNCTION__, '76b5ee5f');
         if (io_objectSynchronize($nid, $location))
             return true;
     }
@@ -4890,10 +4900,11 @@ function bootstrap_getCheckFingerprint(): void {
 /**
  * Affichage du début de la page HTML.
  *
+ * @param string $title
  * @return void
  */
-function bootstrap_htmlHeader():void {
-    global $libraryRescueMode;
+function bootstrap_htmlHeader(string $title = ''):void {
+    global $bootstrapFlush, $libraryRescueMode;
 log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     ?>
@@ -4902,7 +4913,9 @@ log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title><?php echo BOOTSTRAP_NAME;
-        if ($libraryRescueMode) echo ' - RESCUE' ?></title>
+        if ($title != '') echo ' - ' . $title;
+        if ($bootstrapFlush) echo ' - flush mode';
+        if ($libraryRescueMode) echo ' - rescue mode'; ?></title>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <meta name="author"
           content="<?php echo BOOTSTRAP_AUTHOR . ' - ' . BOOTSTRAP_WEBSITE . ' - ' . BOOTSTRAP_VERSION; ?>"/>
@@ -5494,7 +5507,7 @@ function bootstrap_htmlBottom():void {
  */
 function bootstrap_displayOnBreak(): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    bootstrap_htmlHeader();
+    bootstrap_htmlHeader('break');
     bootstrap_htmlTop();
     bootstrap_breakDisplay1OnError();
     bootstrap_breakDisplay2Bootstrap();
@@ -6050,7 +6063,7 @@ function bootstrap_displayPreloadApplication(): void {
     log_reopen('preload');
     //log_add('Loading library POO', 'info', __FUNCTION__, 'ce5879b0');
 
-    bootstrap_htmlHeader();
+    bootstrap_htmlHeader('preload');
     bootstrap_htmlTop();
 
     echo '<div class="preload">' . "\n";
@@ -6178,7 +6191,7 @@ function bootstrap_partDisplayReloadPage(bool $ok = true, int $delay = 0): void 
 function bootstrap_displayApplicationFirst(): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
     bootstrap_firstInitEnv();
-    bootstrap_htmlHeader();
+    bootstrap_htmlHeader('first');
     bootstrap_htmlTop();
     bootstrap_firstDisplay1Breaks();
     $ok = bootstrap_firstDisplay2Folders();
@@ -6424,11 +6437,16 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
 
 /**
  * Ask for subordination of the puppetmaster.
- *
+ * - If a configuration file is present, extract puppetmaster eid as option.
+ * - Else, if user gives argument with puppetmaster eid, extract and check:
+ *   - If eid already locally present, use eid.
+ *   - Else, if user gives argument with location, try to download eid object and links.
+ *   - Else, use default puppetmaster eid.
+ * - Else, ask user the puppetmaster eid and location by web form.
  * @return bool
  */
 function bootstrap_firstDisplay4Puppetmaster(): bool {
-    global $firstAlternativePuppetmasterEid;
+    global $firstPuppetmasterEid;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6436,59 +6454,82 @@ function bootstrap_firstDisplay4Puppetmaster(): bool {
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#4 puppetmaster</span><br/>' . "\n";
 
-    if (!file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
-        if (!filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID)) {
-            log_add('query puppetmaster eid', 'info', __FUNCTION__, '70a99b83');
-            ?>
-            <form action="" method="get">
-                <div>
-                    <label for="oid">EID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
-                    <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
-                           value="<?php echo LIB_DEFAULT_PUPPETMASTER_EID; ?>"/>
-                </div>
-                <div>
-                    <label for="loc">Location :</label>
-                    <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_LOCATION; ?>"
-                           value="<?php echo LIB_DEFAULT_PUPPETMASTER_LOCATION; ?>"/>
-                </div>
-                <div class="button">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-
-            <?php
-            $ok = false;
-        } else {
-            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_EID . ' ask define alternative puppetmaster eid=' . $argEID, 'warn', __FUNCTION__, '10a0bd6d');
-            $argLocation = LIB_DEFAULT_PUPPETMASTER_LOCATION;
-            if (ent_checkIsPublicKey($argEID))
-                $firstAlternativePuppetmasterEid = $argEID;
-            if (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION)) {
-                echo 'try alternative puppetmaster eid : ' . $argEID . ' ';
-                if (nod_checkNID($argEID, false)) {
-                    $firstAlternativePuppetmasterEid = $argEID;
-                    $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-                    log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_LOCATION . ' ask define alternative puppetmaster location=' . $argLocation, 'info', __FUNCTION__, '6d54e19e');
-                    if (strlen($argLocation) != 0 && filter_var($argLocation, FILTER_VALIDATE_URL) !== false) {
-                        echo 'sync...';
-                        obj_getDistantContent($argEID, array($argLocation));
-                        lnk_getDistantOnLocations($argEID, array($argLocation));
+    if (file_exists(LIB_LOCAL_ENVIRONMENT_FILE)) {
+        $firstPuppetmasterEid = lib_getOption('puppetmaster');
+        bootstrap_echoLineTitle('puppetmaster');
+        echo $firstPuppetmasterEid . "\n";
+        log_add('get puppetmaster by config eid=' . $firstPuppetmasterEid, 'audit', __FUNCTION__, 'bf4b0577');
+    } elseif (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID)) {
+        $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        bootstrap_echoLineTitle('try puppetmaster');
+        echo $argEID;
+        log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_EID . ' ask define alternative puppetmaster eid=' . $argEID, 'audit', __FUNCTION__, '10a0bd6d');
+        if (ent_checkIsPublicKey($argEID)) {
+            echo " ok\n";
+            $firstPuppetmasterEid = $argEID;
+        } elseif (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION)) {
+            echo "<br/>\n";
+            $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            bootstrap_echoLineTitle('try location');
+            echo $argLocation . "<br/>\n";
+            log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_LOCATION . ' ask define alternative puppetmaster location=' . $argLocation, 'audit', __FUNCTION__, '6d54e19e');
+            echo 'verify... ';
+            if (nod_checkNID($argEID, false)) {
+                if (strlen($argLocation) != 0 && filter_var($argLocation, FILTER_VALIDATE_URL) !== false) {
+                    echo 'sync... ';
+                    if (obj_getDistantContent($argEID, array($argLocation))
+                        && lnk_getDistantOnLocations($argEID, array($argLocation))
+                    ) {
+                        echo 'ok ';
+                        log_add('ok sync', 'normal', __FUNCTION__, '549a608d');
                     }
+                    else {
+                        echo '<span class="error">cannot sync!</span> ';
+                        log_add('error sync', 'error', __FUNCTION__, '4f4de95a');
+                    }
+                } else {
+                    echo '<span class="error">not a node!</span> ';
+                    log_add('eid ' . $argEID . ' is not node', 'warn', __FUNCTION__, '00000000');
                 }
-                if (!ent_checkIsPublicKey($argEID)) {
-                    log_add('unable to find alternative puppetmaster eid', 'error', __FUNCTION__, '102c9011');
-                    echo " <span class=\"error\">invalid!</span>\n";
-                    $firstAlternativePuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
-                }
-                echo "<br />\n";
-                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "<br />\n";
-                echo 'location on &nbsp;&nbsp;&nbsp;&nbsp; : ' . $argLocation . "\n";
-            } else
-                echo 'puppetmaster &nbsp;&nbsp;&nbsp;&nbsp;: ' . $firstAlternativePuppetmasterEid . "\n";
+            }
+            if (ent_checkIsPublicKey($argEID)) {
+                $firstPuppetmasterEid = $argEID;
+                echo 'ok';
+                log_add('ok find alternative puppetmaster eid=' . $firstPuppetmasterEid, 'audit', __FUNCTION__, '5592ee60');
+            } else {
+                $firstPuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
+                echo '<span class="error">invalid!</span>';
+                log_add('unable to find alternative puppetmaster eid=' . $firstPuppetmasterEid, 'error', __FUNCTION__, '102c9011');
+            }
+            echo "\n";
+        } else {
+            echo " <span class=\"error\">invalid!</span><br/>\n";
+            bootstrap_echoLineTitle('puppetmaster');
+            echo LIB_ARG_FIRST_PUPPETMASTER_EID . "\n";
+            $firstPuppetmasterEid = LIB_DEFAULT_PUPPETMASTER_EID;
         }
-    } else
-        echo 'forced to ' . lib_getOption('puppetmaster') . "\n";
+    } else {
+        log_add('query puppetmaster eid', 'info', __FUNCTION__, '70a99b83');
+        ?>
+        <form action="" method="get">
+            <div>
+                <label for="oid">EID &nbsp;&nbsp;&nbsp;&nbsp; :</label>
+                <input type="text" id="eid" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
+                       value="<?php echo LIB_DEFAULT_PUPPETMASTER_EID; ?>"/>
+            </div>
+            <div>
+                <label for="loc">Location :</label>
+                <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_LOCATION; ?>"
+                       value="<?php echo LIB_DEFAULT_PUPPETMASTER_LOCATION; ?>"/>
+            </div>
+            <div class="button">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+
+        <?php
+        $ok = false;
+    }
 
     echo "</div>\n";
 
@@ -6697,7 +6738,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool {
  * @return bool
  */
 function bootstrap_firstDisplay7Subordination(): bool {
-    global $firstAlternativePuppetmasterEid, $firstSubordinationEID;
+    global $firstPuppetmasterEid, $firstSubordinationEID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6718,7 +6759,7 @@ function bootstrap_firstDisplay7Subordination(): bool {
                     <label for="loc">Location :</label>
                     <input type="text" id="loc" name="<?php echo LIB_ARG_FIRST_SUBORDINATION_LOCATION; ?>"/>
                     <input type="hidden" id="puppetmaster" name="<?php echo LIB_ARG_FIRST_PUPPETMASTER_EID; ?>"
-                           value="<?php echo $firstAlternativePuppetmasterEid; ?>"/>
+                           value="<?php echo $firstPuppetmasterEid; ?>"/>
                 </div>
                 <div class="button">
                     <button type="submit">Submit</button>
@@ -6767,7 +6808,7 @@ function bootstrap_firstDisplay7Subordination(): bool {
  * @return bool
  */
 function bootstrap_firstDisplay8OptionsFile(): bool {
-    global $firstAlternativePuppetmasterEid, $firstSubordinationEID;
+    global $firstPuppetmasterEid, $firstSubordinationEID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
@@ -6784,8 +6825,8 @@ function bootstrap_firstDisplay8OptionsFile(): bool {
     $defaultOptions .= "# Options written here are write-protected for the library and all applications.\n";
     foreach (LIB_CONFIGURATIONS_DEFAULT as $option => $value) {
         $prefix = '#';
-        if ($option == 'puppetmaster' && $firstAlternativePuppetmasterEid != '') {
-            $value = $firstAlternativePuppetmasterEid;
+        if ($option == 'puppetmaster' && $firstPuppetmasterEid != '') {
+            $value = $firstPuppetmasterEid;
             $prefix = '';
         }
         if ($option == 'subordinationEntity' && $firstSubordinationEID != '') {
@@ -7054,14 +7095,14 @@ function bootstrap_displayLocalEntity(): void {
 
 function bootstrap_displayApplication0(): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    // Initialisation des logs
+
     log_reopen('app0');
     log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
 
     echo 'CHK';
     ob_end_clean();
 
-    bootstrap_htmlHeader();
+    bootstrap_htmlHeader('app 0');
     bootstrap_htmlTop();
 
     echo '<div class="layout-main">' . "\n";
@@ -7128,8 +7169,11 @@ function bootstrap_displayRouter(): void {
 
     log_add('load application code OID=' . $bootstrapApplicationOID, 'info', __FUNCTION__, 'aab236ff');
 
-    if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0')
-        bootstrap_displayApplication0();
+    if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0') {
+        $instance = New \Nebule\Library\App0();
+        $instance->display();
+    }
+    //    bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1' && lib_getOption('permitApplication1')) {
         $instance = New \Nebule\Library\App1();
         $instance->display();
@@ -7166,8 +7210,11 @@ function bootstrap_displayRouter(): void {
         $instance = New \Nebule\Library\App9();
         $instance->display();
     }
-    elseif (strlen($bootstrapApplicationIID) < 2)
-        bootstrap_displayApplication0();
+    elseif (strlen($bootstrapApplicationIID) < 2) {
+        $instance = New \Nebule\Library\App0();
+        $instance->display();
+    }
+    //    bootstrap_displayApplication0();
 //    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
 //        bootstrap_displaySleepingApplication();
     elseif ($bootstrapApplicationNoPreload)

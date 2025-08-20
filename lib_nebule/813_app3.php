@@ -15,7 +15,7 @@ class App3
     const APPLICATION_NAME = 'doctec';
     const APPLICATION_SURNAME = 'nebule/doctec';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250820';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -25,14 +25,13 @@ class App3
     {
         global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
 
-        // Initialisation des logs
         \Nebule\Bootstrap\log_reopen('app3');
         \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'a4e4acfe');
 
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader();
+        \Nebule\Bootstrap\bootstrap_htmlHeader('app 3 - doctec');
         \Nebule\Bootstrap\bootstrap_htmlTop();
 
         // Instancie la classe de la documentation.
