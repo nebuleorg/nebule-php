@@ -62,8 +62,7 @@ const BOOTSTRAP_FUNCTION_VERSION = '020241123';
  PART6: Manage and display breaking bootstrap on problem or user ask.
  PART7: Display of preload application web page.
  PART8: First synchronization of code and environment.
- PART9: Display of application 0 default application.
- PART10: Main display router.
+ PART9: Main display router.
  ------------------------------------------------------------------------------------------
 */
 
@@ -7087,43 +7086,7 @@ function bootstrap_displayLocalEntity(): void {
  *
 
  ==/ 9 /===================================================================================
- PART9 : Display of application 0 default application.
-
- TODO.
- ------------------------------------------------------------------------------------------
- */
-
-function bootstrap_displayApplication0(): void {
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-
-    log_reopen('app0');
-    log_add('Loading', 'info', __FUNCTION__, '3a5c4178');
-
-    echo 'CHK';
-    ob_end_clean();
-
-    bootstrap_htmlHeader('app 0');
-    bootstrap_htmlTop();
-
-    echo '<div class="layout-main">' . "\n";
-    echo ' <div class="layout-content">' . "\n";
-    echo '  <img alt="nebule" id="logo" src="' . LIB_APPLICATION_LOGO_LIGHT . '"/>' . "\n";
-    echo " </div>\n";
-    echo "</div>\n";
-
-    bootstrap_htmlBottom();
-}
-
-
-
-/*
- *
- *
- *
- *
-
- ==/ 10 /==================================================================================
- PART15 : Main display router.
+ PART9 : Main display router.
 
  TODO.
  ------------------------------------------------------------------------------------------
@@ -7173,7 +7136,6 @@ function bootstrap_displayRouter(): void {
         $instance = New \Nebule\Library\App0();
         $instance->display();
     }
-    //    bootstrap_displayApplication0();
     elseif ($bootstrapApplicationIID == '1' && lib_getOption('permitApplication1')) {
         $instance = New \Nebule\Library\App1();
         $instance->display();
@@ -7214,7 +7176,6 @@ function bootstrap_displayRouter(): void {
         $instance = New \Nebule\Library\App0();
         $instance->display();
     }
-    //    bootstrap_displayApplication0();
 //    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
 //        bootstrap_displaySleepingApplication();
     elseif ($bootstrapApplicationNoPreload)
