@@ -59,6 +59,20 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         };
     }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getAlgorithmList()
+     */
+    public function getAlgorithmList(int $type): array {
+        /*return match ($type) {
+            Crypto::TYPE_HASH => self::HASH_ALGORITHM,
+            Crypto::TYPE_SYMMETRIC => self::SYMMETRIC_ALGORITHM,
+            Crypto::TYPE_ASYMMETRIC => self::ASYMMETRIC_ALGORITHM,
+            default => false,
+        };*/
+        return array(); //FIXME
+    }
+
     // --------------------------------------------------------------------------------
 
     /**

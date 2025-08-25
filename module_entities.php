@@ -30,16 +30,16 @@ use Nebule\Library\References;
 class ModuleEntities extends \Nebule\Library\Modules
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::sylabe:module:entities:ModuleName';
-    const MODULE_MENU_NAME = '::sylabe:module:entities:MenuName';
+    const MODULE_NAME = '::module:entities:ModuleName';
+    const MODULE_MENU_NAME = '::module:entities:MenuName';
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
-    const MODULE_DESCRIPTION = '::sylabe:module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250723';
+    const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
+    const MODULE_VERSION = '020250825';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
-    const MODULE_HELP = '::sylabe:module:entities:ModuleHelp';
+    const MODULE_HELP = '::module:entities:ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array(
@@ -58,22 +58,22 @@ class ModuleEntities extends \Nebule\Library\Modules
         'alst',
     );
     const MODULE_REGISTERED_ICONS = array(
-        '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 entité (personnage)
-        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 1 lien chiffrement/protection
-        '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256',    // 2 lien mise à jour
-        'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588.sha2.256',    // 3 lister objets
-        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 4 lister entités
-        'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6.sha2.256',    // 5 ajouter entité
-        '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199.sha2.256',    // 6 sync entité
-        '4de7b15b364506d693ce0cd078398fa38ff941bf58c5f556a68a1dcd7209a2fc.sha2.256',    // 7 messagerie down
-        'a16490f9b25b2d3d055e50a2593ceda10c9d1608505e27acf15a5e2ecc314b52.sha2.256',    // 8 messagerie up
-        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 9 clé
-        '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256',    // 10 entité (objet)
-        'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947.sha2.256',    // 11 verrouillage entité.
+        '94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256',    // 0 : entité (personnage)
+        '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 1 : lien de chiffrement/protection
+        '7e9726b5aec1b2ab45c70f882f56ea0687c27d0739022e907c50feb87dfaf37d.sha2.256',    // 2 : lien de mise à jour
+        'cc2a24b13d8e03a5de238a79a8adda1a9744507b8870d59448a23b8c8eeb5588.sha2.256',    // 3 : lister les objets
+        '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 4 : lister les entités
+        'cba3712128bbdd5243af372884eb647595103bb4c1f1b4d2e2bf62f0eba3d6e6.sha2.256',    // 5 : ajouter une entité
+        '468f2e420371343c58dcdb49c4db9f00b81cce029a5ee1de627b9486994ee199.sha2.256',    // 6 : synchroniser une entité
+        '4de7b15b364506d693ce0cd078398fa38ff941bf58c5f556a68a1dcd7209a2fc.sha2.256',    // 7 : messagerie down
+        'a16490f9b25b2d3d055e50a2593ceda10c9d1608505e27acf15a5e2ecc314b52.sha2.256',    // 8 : messagerie up
+        '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 9 : clé
+        '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256',    // 10 : entité (objet)
+        'de62640d07ac4cb2f50169fa361e062ed3595be1e973c55eb3ef623ed5661947.sha2.256',    // 11 : verrouillage entité.
     );
-    const MODULE_APP_TITLE_LIST = array('::sylabe:module:entities:AppTitle1');
+    const MODULE_APP_TITLE_LIST = array('::module:entities:AppTitle1');
     const MODULE_APP_ICON_LIST = array('94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256');
-    const MODULE_APP_DESC_LIST = array('::sylabe:module:entities:AppDesc1');
+    const MODULE_APP_DESC_LIST = array('::module:entities:AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
     const COMMAND_SYNC_KNOWN_ENTITIES = 'synknownent';
@@ -122,57 +122,57 @@ class ModuleEntities extends \Nebule\Library\Modules
             case 'selfMenu':
             case 'typeMenuEntity':
                 // List entities I know.
-                $hookArray[0]['name'] = '::sylabe:module:entities:KnownEntities';
+                $hookArray[0]['name'] = '::module:entities:KnownEntities';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[0]['desc'] = '::sylabe:module:entities:KnownEntitiesDesc';
+                $hookArray[0]['desc'] = '::module:entities:KnownEntitiesDesc';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List entities know me.
-                $hookArray[1]['name'] = '::sylabe:module:entities:KnownByEntities';
+                $hookArray[1]['name'] = '::module:entities:KnownByEntities';
                 $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[1]['desc'] = '::sylabe:module:entities:KnownByEntitiesDesc';
+                $hookArray[1]['desc'] = '::module:entities:KnownByEntitiesDesc';
                 $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List my entities.
-                $hookArray[2]['name'] = '::sylabe:module:entities:MyEntities';
+                $hookArray[2]['name'] = '::module:entities:MyEntities';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[2]['desc'] = '::sylabe:module:entities:MyEntitiesDesc';
+                $hookArray[2]['desc'] = '::module:entities:MyEntitiesDesc';
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List unknown entities.
-                $hookArray[3]['name'] = '::sylabe:module:entities:UnknownEntities';
+                $hookArray[3]['name'] = '::module:entities:UnknownEntities';
                 $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[3]['desc'] = '::sylabe:module:entities:UnknownEntitiesDesc';
+                $hookArray[3]['desc'] = '::module:entities:UnknownEntitiesDesc';
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List special entities.
-                $hookArray[4]['name'] = '::sylabe:module:entities:SpecialEntities';
+                $hookArray[4]['name'] = '::module:entities:SpecialEntities';
                 $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[4]['desc'] = '::sylabe:module:entities:SpecialEntitiesDesc';
+                $hookArray[4]['desc'] = '::module:entities:SpecialEntitiesDesc';
                 $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List all entities.
-                $hookArray[5]['name'] = '::sylabe:module:entities:allEntities';
+                $hookArray[5]['name'] = '::module:entities:allEntities';
                 $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[5]['desc'] = '::sylabe:module:entities:allEntitiesDesc';
+                $hookArray[5]['desc'] = '::module:entities:allEntitiesDesc';
                 $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // See entity properties.
-                $hookArray[6]['name'] = '::sylabe:module:entities:DescriptionEntity';
+                $hookArray[6]['name'] = '::module:entities:DescriptionEntity';
                 $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                $hookArray[6]['desc'] = '::sylabe:module:entities:DescriptionEntityDesc';
+                $hookArray[6]['desc'] = '::module:entities:DescriptionEntityDesc';
                 $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
@@ -181,18 +181,18 @@ class ModuleEntities extends \Nebule\Library\Modules
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
                     // Create entity.
-                    $hookArray[10]['name'] = '::sylabe:module:entities:CreateEntity';
+                    $hookArray[10]['name'] = '::module:entities:CreateEntity';
                     $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[5];
-                    $hookArray[10]['desc'] = '::sylabe:module:entities:CreateEntityDesc';
+                    $hookArray[10]['desc'] = '::module:entities:CreateEntityDesc';
                     $hookArray[10]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3];
                 }
 
                 if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'])) {
                     // Search entity.
-                    $hookArray[20]['name'] = '::sylabe:module:entities:SearchEntity';
+                    $hookArray[20]['name'] = '::module:entities:SearchEntity';
                     $hookArray[20]['icon'] = Displays::DEFAULT_ICON_LF;
-                    $hookArray[20]['desc'] = '::sylabe:module:entities:SearchEntityDesc';
+                    $hookArray[20]['desc'] = '::module:entities:SearchEntityDesc';
                     $hookArray[20]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID();
@@ -202,7 +202,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             case 'selfMenuObject':
                 if ($nid instanceof Entity) {
                     // See as entity.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:ShowEntity';
+                    $hookArray[0]['name'] = '::module:entities:ShowEntity';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -214,7 +214,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             case 'selfMenuEntity':
                 if ($unlocked) {
                     // Lock entity.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:lock';
+                    $hookArray[0]['name'] = '::module:entities:lock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
@@ -222,35 +222,38 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=logout';
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch to this entity.
-                        $hookArray[1]['name'] = '::sylabe:module:entities:seeAs';
+                        $hookArray[1]['name'] = '::module:entities:seeAs';
                         $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     }
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
                     // Unlock entity.
-                    $hookArray[0]['name'] = '::sylabe:module:entities:unlock';
+                    $hookArray[0]['name'] = '::module:entities:unlock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=login'
-                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch and connect to this entity.
-                        $hookArray[1]['name'] = '::sylabe:module:entities:connectWith';
+                        $hookArray[1]['name'] = '::module:entities:connectWith';
                         $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     }
                 }
 
                 // Synchronise entity.
-                $hookArray[2]['name'] = '::sylabe:module:entities:SynchronizeEntity';
+                $hookArray[2]['name'] = '::module:entities:SynchronizeEntity';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
                 $hookArray[2]['desc'] = '';
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -261,7 +264,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 // See entity.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
-                    $hookArray[3]['name'] = '::sylabe:module:entities:ShowEntity';
+                    $hookArray[3]['name'] = '::module:entities:ShowEntity';
                     $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -282,10 +285,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                 }*/
                 break;
 
-            case '::sylabe:module:entities:DisplayMyEntities':
-            case '::sylabe:module:entities:DisplayKnownEntity':
+            case '::module:entities:DisplayMyEntities':
+            case '::module:entities:DisplayKnownEntity':
                 // Synchroniser les entités connues.
-                $hookArray[0]['name'] = '::sylabe:module:entities:SynchronizeKnownEntities';
+                $hookArray[0]['name'] = '::module:entities:SynchronizeKnownEntities';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -296,9 +299,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
                 break;
 
-            case '::sylabe:module:entities:DisplayNebuleEntity':
+            case '::module:entities:DisplayNebuleEntity':
                 // Synchroniser les entités connues.
-                $hookArray[0]['name'] = '::sylabe:module:entities:SynchronizeKnownEntities';
+                $hookArray[0]['name'] = '::module:entities:SynchronizeKnownEntities';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -410,63 +413,63 @@ class ModuleEntities extends \Nebule\Library\Modules
                 text-align: left;
             }
 
-            .sylabeModuleEntityCreate {
+            .moduleEntitiesCreate {
                 margin-bottom: 60px;
                 clear: both;
             }
 
-            .sylabeModuleEntityCreateHeader p {
+            .moduleEntitiesCreateHeader p {
                 font-weight: bold;
                 margin: 0;
                 padding: 0;
             }
 
-            .sylabeModuleEntityCreateProperty {
+            .moduleEntitiesCreateProperty {
                 clear: both;
             }
 
-            .sylabeModuleEntityCreatePropertyName {
+            .moduleEntitiesCreatePropertyName {
                 float: left;
                 width: 25%;
                 text-align: right;
                 padding-top: 10px;
             }
 
-            .sylabeModuleEntityCreatePropertyEntry {
+            .moduleEntitiesCreatePropertyEntry {
                 margin-top: 2px;
                 margin-bottom: 2px;
                 float: right;
                 width: 70%;
             }
 
-            .sylabeModuleEntityCreateSubmit {
+            .moduleEntitiesCreateSubmit {
                 clear: both;
             }
 
-            .sylabeModuleEntityCreateSubmitEntry {
+            .moduleEntitiesCreateSubmitEntry {
                 width: 100%;
                 text-align: center;
             }
 
-            #sylabeModuleEntityCreatePropertyEntryNom {
+            #moduleEntitiesCreatePropertyEntryNom {
                 background: #ffffff;
             }
 
-            #sylabeModuleEntityCreatePropertyNamePWD1 {
+            #moduleEntitiesCreatePropertyNamePWD1 {
                 font-weight: bold;
                 text-align: left;
             }
 
-            #sylabeModuleEntityCreatePropertyEntryPWD1 {
+            #moduleEntitiesCreatePropertyEntryPWD1 {
                 background: #ffffff;
             }
 
-            #sylabeModuleEntityCreatePropertyEntryPWD2 {
+            #moduleEntitiesCreatePropertyEntryPWD2 {
                 background: #ffffff;
             }
 
             /* Les logs et acts */
-            .sylabeModuleEntityActionText {
+            .moduleEntitiesActionText {
                 padding: 20px;
                 padding-left: 74px;
                 background: rgba(255, 255, 255, 0.5);
@@ -475,7 +478,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 clear: both;
             }
 
-            .sylabeModuleEntityActionTextList1 {
+            .moduleEntitiesActionTextList1 {
                 padding: 10px;
                 padding-left: 74px;
                 min-height: 64px;
@@ -485,7 +488,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 clear: both;
             }
 
-            .sylabeModuleEntityActionTextList2 {
+            .moduleEntitiesActionTextList2 {
                 padding: 10px;
                 padding-left: 74px;
                 min-height: 64px;
@@ -495,33 +498,33 @@ class ModuleEntities extends \Nebule\Library\Modules
                 clear: both;
             }
 
-            .sylabeModuleEntityActionDivIcon {
+            .moduleEntitiesActionDivIcon {
                 float: left;
                 margin-right: 5px;
             }
 
-            .sylabeModuleEntityActionDate {
+            .moduleEntitiesActionDate {
                 float: right;
                 margin-left: 5px;
                 font-family: monospace;
             }
 
-            .sylabeModuleEntityActionTitle {
+            .moduleEntitiesActionTitle {
                 font-weight: bold;
                 font-size: 1.2em;
             }
 
-            .sylabeModuleEntityActionType {
+            .moduleEntitiesActionType {
                 font-style: italic;
                 font-size: 0.8em;
                 margin-bottom: 10px;
             }
 
-            .sylabeModuleEntityActionFromTo {
+            .moduleEntitiesActionFromTo {
             }
 
             /* Les propriétés */
-            .sylabeModuleEntityDescList1 {
+            .moduleEntitiesDescList1 {
                 padding: 5px;
                 background: rgba(255, 255, 255, 0.5);
                 background-origin: border-box;
@@ -529,7 +532,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 clear: both;
             }
 
-            .sylabeModuleEntityDescList2 {
+            .moduleEntitiesDescList2 {
                 padding: 5px;
                 background: rgba(230, 230, 230, 0.5);
                 background-origin: border-box;
@@ -537,47 +540,47 @@ class ModuleEntities extends \Nebule\Library\Modules
                 clear: both;
             }
 
-            .sylabeModuleEntityDescError {
+            .moduleEntitiesDescError {
                 padding: 5px;
                 background: rgba(0, 0, 0, 0.3);
                 background-origin: border-box;
                 clear: both;
             }
 
-            .sylabeModuleEntityDescError .sylabeModuleEntityDescAttrib {
+            .moduleEntitiesDescError .moduleEntitiesDescAttrib {
                 font-style: italic;
                 color: #202020;
             }
 
-            .sylabeModuleEntityDescIcon {
+            .moduleEntitiesDescIcon {
                 float: left;
                 margin-right: 5px;
             }
 
-            .sylabeModuleEntityDescContent {
+            .moduleEntitiesDescContent {
                 min-width: 300px;
             }
 
-            .sylabeModuleEntityDescDate, .sylabeModuleEntityDescSigner {
+            .moduleEntitiesDescDate, .moduleEntitiesDescSigner {
                 float: right;
                 margin-left: 10px;
             }
 
-            .sylabeModuleEntityDescValue {
+            .moduleEntitiesDescValue {
                 font-weight: bold;
             }
 
-            .sylabeModuleEntityDescEmotion {
+            .moduleEntitiesDescEmotion {
                 font-weight: bold;
             }
 
-            .sylabeModuleEntityDescEmotion img {
+            .moduleEntitiesDescEmotion img {
                 height: 16px;
                 width: 16px;
             }
 
             /* Connexion */
-            #sylabeModuleEntityConnect {
+            #moduleEntitiesConnect {
                 text-align: center;
             }
         </style>
@@ -600,8 +603,10 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _findDisplayEntity(): void
     {
-        $this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
-        $this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
+        //$this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
+        //$this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
+        $this->_displayEntity = $this->_nebuleInstance->getCurrentEntityEID();
+        $this->_displayEntityInstance = $this->_nebuleInstance->getCurrentEntityInstance();
     }
 
 
@@ -747,7 +752,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         echo '</div>' . "\n";*/
 
-        $entity = $this->_nebuleInstance->getCurrentEntityInstance();
+        $entity = $this->_displayEntityInstance;
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
@@ -779,7 +784,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityAuth(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        echo '<div class="layoutAloneItem">' . "\n";
+        /*echo '<div class="layoutAloneItem">' . "\n";
         echo '<div class="aloneItemContent">' . "\n";
 
         $param = array(
@@ -899,11 +904,11 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
 
-                echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="sylabeModuleEntityConnect">' . "\n";
+                echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="moduleEntitiesConnect">' . "\n";
                 echo $this->_translateInstance->getTranslate('::::Password') . "<br />\n";
                 echo '</div>' . "\n";
 
-                echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="sylabeModuleEntityConnect">' . "\n";
+                echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="moduleEntitiesConnect">' . "\n";
                 ?>
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -934,7 +939,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 );
                 echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
             }
-        }
+        }*/
     }
 
 
@@ -949,7 +954,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[7]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:ObjectTitle1');
+        $instance->setTitle('::module:entities:ObjectTitle1');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -958,17 +963,17 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance = $this->_displayEntityInstance;
         ?>
 
-        <div class="sylabeModuleEntityActionText">
+        <div class="moduleEntitiesActionText">
             <p>
                 <?php
                 if ($entity == $this->_entitiesInstance->getGhostEntityEID() && $this->_unlocked) {
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
-                        '::sylabe:module:entities:DisplayEntityMessages',
+                        '::module:entities:DisplayEntityMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = false;
                 } else {
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
-                        '::sylabe:module:entities:DisplayEntityPublicMessages',
+                        '::module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($instance));
                     $dispWarn = true;
                 }
@@ -980,7 +985,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
             $this->_displayInstance->displayMessageInformation_DEPRECATED(
-                $this->_translateInstance->getTranslate('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
+                $this->_translateInstance->getTranslate('::module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
 
@@ -1042,7 +1047,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             foreach ($links as $link) {
                 ?>
 
-                <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
+                <div class="moduleEntitiesActionTextList<?php echo $bg; ?>">
                     <?php
                     // Extrait l'action.
                     $action = $link->getParsed()['bl/rl/req'];
@@ -1055,19 +1060,19 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
-                        <div class="sylabeModuleEntityActionDivIcon">
+                        <div class="moduleEntitiesActionDivIcon">
                             <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
                         </div>
                         <div>
-                            <p class="sylabeModuleEntityActionDate">
+                            <p class="moduleEntitiesActionDate">
                                 <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
-                            <p class="sylabeModuleEntityActionTitle">
-                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Obfuscated'); ?>
+                            <p class="moduleEntitiesActionTitle">
+                                <?php echo $this->_translateInstance->getTranslate('::module:entities:Obfuscated'); ?>
                             </p>
-                            <p class="sylabeModuleEntityActionFromTo">
-                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
+                            <p class="moduleEntitiesActionFromTo">
+                                <?php echo $this->_translateInstance->getTranslate('::module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1081,19 +1086,19 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
-                        <div class="sylabeModuleEntityActionDivIcon">
+                        <div class="moduleEntitiesActionDivIcon">
                             <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
                         </div>
                         <div>
-                            <p class="sylabeModuleEntityActionDate">
+                            <p class="moduleEntitiesActionDate">
                                 <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
-                            <p class="sylabeModuleEntityActionTitle">
-                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Protected'); ?>
+                            <p class="moduleEntitiesActionTitle">
+                                <?php echo $this->_translateInstance->getTranslate('::module:entities:Protected'); ?>
                             </p>
-                            <p class="sylabeModuleEntityActionFromTo">
-                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
+                            <p class="moduleEntitiesActionFromTo">
+                                <?php echo $this->_translateInstance->getTranslate('::module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1107,25 +1112,25 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $objectInstance = new Node($this->_nebuleInstance, $object);
                         ?>
 
-                        <div class="sylabeModuleEntityActionDivIcon">
+                        <div class="moduleEntitiesActionDivIcon">
                             <?php $this->_displayInstance->displayObjectColorIcon(
                                 $objectInstance, Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                                 . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
-                            <p class="sylabeModuleEntityActionDate">
+                            <p class="moduleEntitiesActionDate">
                                 <?php $this->_displayInstance->displayDate($date);
                                 echo "\n"; ?>
                             </p>
-                            <p class="sylabeModuleEntityActionTitle">
+                            <p class="moduleEntitiesActionTitle">
                                 <?php echo $objectInstance->getFullName('all'); ?>
                             </p>
-                            <p class="sylabeModuleEntityActionType">
+                            <p class="moduleEntitiesActionType">
                                 <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($objectInstance->getType('all')); ?>
                             </p>
-                            <p class="sylabeModuleEntityActionFromTo">
-                                <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:From'); ?>
+                            <p class="moduleEntitiesActionFromTo">
+                                <?php echo $this->_translateInstance->getTranslate('::module:entities:From'); ?>
                                 &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($signer); ?><br/>
                             </p>
                         </div>
@@ -1157,7 +1162,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[8]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:ObjectTitle2');
+        $instance->setTitle('::module:entities:ObjectTitle2');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1168,7 +1173,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $owned = false;
         ?>
 
-        <div class="sylabeModuleEntityActionText">
+        <div class="moduleEntitiesActionText">
             <p>
                 <?php
                 $dispWarn = false;
@@ -1176,7 +1181,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
                     $entity = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
-                        '::sylabe:module:entities:DisplayEntityPublicMessages',
+                        '::module:entities:DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     $dispWarn = true;
                 } // Sinon, affiche les messages de l'entité courante.
@@ -1186,11 +1191,11 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $owned = true;
                     if ($this->_unlocked) {
                         echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
-                            '::sylabe:module:entities:DisplayEntityMessages',
+                            '::module:entities:DisplayEntityMessages',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                     } else {
                         echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
-                            '::sylabe:module:entities:DisplayEntityPublicMessages',
+                            '::module:entities:DisplayEntityPublicMessages',
                             $this->_displayInstance->convertInlineObjectColorIconName($entity));
                         $dispWarn = true;
                     }
@@ -1203,7 +1208,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         // Si besoin, affiche le message d'information.
         if ($dispWarn) {
             $this->_displayInstance->displayMessageInformation_DEPRECATED(
-                $this->_translateInstance->getTranslate('::sylabe:module:entities:DisplayEntityPublicMessagesWarning'));
+                $this->_translateInstance->getTranslate('::module:entities:DisplayEntityPublicMessagesWarning'));
         }
         unset($dispWarn);
 
@@ -1223,23 +1228,23 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 ?>
 
-                <div class="sylabeModuleEntityActionTextList<?php echo $bg; ?>">
-                    <div class="sylabeModuleEntityActionDivIcon">
+                <div class="moduleEntitiesActionTextList<?php echo $bg; ?>">
+                    <div class="moduleEntitiesActionDivIcon">
                         <?php $this->_displayInstance->displayObjectColorIcon($objectInstance); ?>
                     </div>
                     <div>
-                        <p class="sylabeModuleEntityActionDate">
+                        <p class="moduleEntitiesActionDate">
                             <?php $this->_displayInstance->displayDate($date);
                             echo "\n"; ?>
                         </p>
-                        <p class="sylabeModuleEntityActionTitle">
+                        <p class="moduleEntitiesActionTitle">
                             <?php echo $objectInstance->getFullName('all'); ?>
                         </p>
-                        <p class="sylabeModuleEntityActionType">
+                        <p class="moduleEntitiesActionType">
                             <?php echo $objectInstance->getType('all'); ?>
                         </p>
-                        <p class="sylabeModuleEntityActionFromTo">
-                            <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:To'); ?>
+                        <p class="moduleEntitiesActionFromTo">
+                            <?php echo $this->_translateInstance->getTranslate('::module:entities:To'); ?>
                             &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($source); ?><br/>
                         </p>
                     </div>
@@ -1262,7 +1267,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:MyEntities');
+        $instance->setTitle('::module:entities:MyEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1283,7 +1288,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:KnownEntities');
+        $instance->setTitle('::module:entities:KnownEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1319,7 +1324,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:KnownByEntities');
+        $instance->setTitle('::module:entities:KnownByEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1355,7 +1360,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:UnknownEntities');
+        $instance->setTitle('::module:entities:UnknownEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1399,7 +1404,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:allEntities');
+        $instance->setTitle('::module:entities:allEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1424,7 +1429,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:SpecialEntities');
+        $instance->setTitle('::module:entities:SpecialEntities');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1537,7 +1542,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
             if (!$this->_createEntityError) {
-                $instance->setMessage('::sylabe:module:entities:EntityCreated');
+                $this->_displayEntityInstance = $this->_createEntityInstance;
+                $this->_displayEntity = $this->_createEntityInstance->getID();
+
+                $instance->setMessage('::module:entities:EntityCreated');
                 $instance->setType(DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::::OK');
                 $instanceList->addItem($instance);
@@ -1596,14 +1604,14 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setIcon($instanceIcon2);
             } else {
                 $instance = new DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::sylabe:module:entities:EntityNotCreated');
+                $instance->setMessage('::module:entities:EntityNotCreated');
                 $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::::ERROR');
                 $instanceList->addItem($instance);
 
                 $instance = new DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::sylabe:module:entities:EntityNotCreated');
+                $instance->setMessage('::module:entities:EntityNotCreated');
                 $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setIconText('$this->_createEntityErrorMessage');
@@ -1621,7 +1629,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[5]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:CreateEntity');
+        $instance->setTitle('::module:entities:CreateEntity');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1640,147 +1648,151 @@ class ModuleEntities extends \Nebule\Library\Modules
                               . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
                               . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                               . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
-                        <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateNames">
-                            <div class="sylabeModuleEntityCreateHeader">
+                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
+                            <div class="moduleEntitiesCreateHeader">
                                 <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityNommage'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityNommage'); ?>
 
                                 </p>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
 
                                 </div>
                                 <input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
                                        size="10" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntryPrefix"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPrefix"/>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/prenom'); ?>
 
                                 </div>
                                 <input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
                                        size="20" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntryPrenom"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPrenom"/>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/surnom'); ?>
 
                                 </div>
                                 <input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME; ?>"
                                        size="10" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntrySurnom"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntrySurnom"/>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/nom'); ?>
 
                                 </div>
                                 <input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
                                        size="20" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntryNom"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryNom"/>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
                                 </div>
                                 <input type="text"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX; ?>"
                                        size="10" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntrySuffix"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntrySuffix"/>
                             </div>
                         </div>
-                        <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreatePassword">
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName"
-                                     id="sylabeModuleEntityCreatePropertyNamePWD1">
+                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName"
+                                     id="moduleEntitiesCreatePropertyNamePWD1">
                                     <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
 
                                 </div>
                                 <input type="password"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
                                        size="30" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntryPWD1"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPWD1"/>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName"
-                                     id="sylabeModuleEntityCreatePropertyNamePWD2">
-                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityConfirm'); ?>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName"
+                                     id="moduleEntitiesCreatePropertyNamePWD2">
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityConfirm'); ?>
 
                                 </div>
                                 <input type="password"
                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
                                        size="30" value=""
-                                       class="sylabeModuleEntityCreatePropertyEntry"
-                                       id="sylabeModuleEntityCreatePropertyEntryPWD2"/>
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPWD2"/>
                             </div>
                         </div>
-                        <div class="sylabeModuleEntityCreate" id="sylabeModuleEntityCreateOther">
-                            <div class="sylabeModuleEntityCreateHeader">
+                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateOther">
+                            <div class="moduleEntitiesCreateHeader">
                                 <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityOther'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityOther'); ?>
 
                                 </p>
                             </div>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityAlgorithm'); ?>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAlgorithm'); ?>
 
                                 </div>
                                 <select
-                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
-                                        class="sylabeModuleEntityCreatePropertyEntry">
-                                    <option value="<?php echo $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>"
-                                            selected>
-                                        <?php echo $this->_nebuleInstance->getConfigurationInstance()->getOptionAsString('cryptoAsymmetricAlgorithm'); ?>
-
-                                    </option>
+                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
+                                    class="moduleEntitiesCreatePropertyEntry">
+                                    <?php
+                                    $defaultAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
+                                    foreach ($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC) as $algo) {
+                                        echo '<option value="' . $algo . '"';
+                                        if ($defaultAlgo === $algo)
+                                            echo ' selected';
+                                        echo '>' . $algo . '</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
-                            <?php /*                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
+                            <?php /*                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
                                 </div>
                                  <select
                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
-                                    class="sylabeModuleEntityCreatePropertyEntry">
+                                    class="moduleEntitiesCreatePropertyEntry">
                                     <option value="undef" selected>
-                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeUndefined'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'); ?>
 
                                     </option>
                                     <option value="human">
-                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeHuman'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeHuman'); ?>
 
                                     </option>
                                     <option value="robot">
-                                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityTypeRobot'); ?>
+                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeRobot'); ?>
 
                                     </option>
                                 </select>
                             </div> */ ?>
 
                             <?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) { ?>
-                            <div class="sylabeModuleEntityCreateProperty">
-                                <div class="sylabeModuleEntityCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateEntityAutonomy'); ?>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAutonomy'); ?>
 
                                 </div>
                                 <select
                                         name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
-                                        class="sylabeModuleEntityCreatePropertyEntry">
+                                        class="moduleEntitiesCreatePropertyEntry">
                                     <option value="y" selected>
                                         <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
 
@@ -1790,17 +1802,17 @@ class ModuleEntities extends \Nebule\Library\Modules
                             <?php } ?>
 
                         </div>
-                        <div class="sylabeModuleEntityCreateSubmit">
+                        <div class="moduleEntitiesCreateSubmit">
                             <input type="submit"
-                                   value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:CreateTheEntity'); ?>"
-                                   class="sylabeModuleEntityCreateSubmitEntry"/>
+                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:CreateTheEntity'); ?>"
+                                   class="moduleEntitiesCreateSubmitEntry"/>
                         </div>
                     </form>
                 </div>
             </div>
             <?php
         } else {
-            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:CreateEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::module:entities:CreateEntityNotAllowed');
         }
     }
 
@@ -1813,13 +1825,13 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Affiche la création d'une entité.
-        $iconNID = $this->_cacheInstance->newNode(Display::DEFAULT_ICON_LF);
+        $iconNID = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:SearchEntity');
+        $instance->setTitle('::module:entities:SearchEntity');
         $instance->setIcon($iconNID);
         $instance->display();
 
-        // Vérifie que la création soit authorisée.
+        // Vérifie que la création soit autorisée.
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked')) ) {
             ?>
             <div class="text">
@@ -1835,20 +1847,20 @@ class ModuleEntities extends \Nebule\Library\Modules
                            value="<?php echo $this->_entitiesInstance->getGhostEntityEID(); ?>">
                     <table border="0" padding="2px">
                         <tr>
-                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:URL') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::module:entities:Search:URL') ?>
                             </td>
                             <td>:</td>
                             <td><input type="text" name="srchurl" size="80"
                                        value="<?php echo $this->_searchEntityURL; ?>"></td>
                         </tr>
                         <tr>
-                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:AndOr') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::module:entities:Search:AndOr') ?>
                             </td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:ID') ?>
+                            <td align="right"><?php echo $this->_translateInstance->getTranslate('::module:entities:Search:ID') ?>
                             </td>
                             <td>:</td>
                             <td><input type="text" name="srchid" size="80"
@@ -1858,7 +1870,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                             <td></td>
                             <td></td>
                             <td><input type="submit"
-                                       value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:Search:Submit'); ?>">
+                                       value="<?php echo $this->_translateInstance->getTranslate('::module:entities:Search:Submit'); ?>">
                             </td>
                         </tr>
                     </table>
@@ -1870,9 +1882,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                 </p>
             </div>
             <?php
-            $this->_displayInstance->displayMessageInformation_DEPRECATED('::sylabe:module:entities:SearchEntityLongTime');
+            $this->_displayInstance->displayMessageInformation_DEPRECATED('::module:entities:SearchEntityLongTime');
         } else {
-            $this->_displayInstance->displayMessageWarning_DEPRECATED('::sylabe:module:entities:SearchEntityNotAllowed');
+            $this->_displayInstance->displayMessageWarning_DEPRECATED('::module:entities:SearchEntityNotAllowed');
         }
     }
 
@@ -1891,7 +1903,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:entities:Desc:AttribsTitle');
+        $instance->setTitle('::module:entities:Desc:AttribsTitle');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1972,7 +1984,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $nextLinkSigne = $link->getSigneValue();
                 }
 
-                // Si l'affichage est permit.
+                // Si l'affichage est permis.
                 if ($okDisplay) {
                     // Extraction des attributs.
                     $action = $link->getParsed()['bl/rl/req'];
@@ -2038,13 +2050,13 @@ class ModuleEntities extends \Nebule\Library\Modules
                         // Affiche l'attribut.
                         ?>
 
-                        <div class="sylabeModuleEntityDescList<?php echo $bg; ?>">
+                        <div class="moduleEntitiesDescList<?php echo $bg; ?>">
                             <?php
                             if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
-                                <div class="sylabeModuleEntityDescIcon">
+                                <div class="moduleEntitiesDescIcon">
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
@@ -2055,12 +2067,12 @@ class ModuleEntities extends \Nebule\Library\Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($attribName); ?></span>
+                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="moduleEntitiesDescContent">
+                                <span class="moduleEntitiesDescAttrib"><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($attribName); ?></span>
                                 =
-                                <span class="sylabeModuleEntityDescValue"><?php echo $attribValue; ?></span>
+                                <span class="moduleEntitiesDescValue"><?php echo $attribValue; ?></span>
                             </div>
                         </div>
                         <?php
@@ -2068,13 +2080,13 @@ class ModuleEntities extends \Nebule\Library\Modules
                         // Affiche l'émotion.
                         ?>
 
-                        <div class="sylabeModuleEntityDescList<?php echo $bg; ?>">
+                        <div class="moduleEntitiesDescList<?php echo $bg; ?>">
                             <?php
                             if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
-                                <div class="sylabeModuleEntityDescIcon">
+                                <div class="moduleEntitiesDescIcon">
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
@@ -2085,10 +2097,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="sylabeModuleEntityDescContent">
-		<span class="sylabeModuleEntityDescEmotion">
+                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="moduleEntitiesDescContent">
+		<span class="moduleEntitiesDescEmotion">
 			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
             <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($emotionsList[$hashValue]); ?>
 		</span>
@@ -2099,13 +2111,13 @@ class ModuleEntities extends \Nebule\Library\Modules
                         // Affiche une erreur si la propriété n'est pas lisible.
                         ?>
 
-                        <div class="sylabeModuleEntityDescError">
+                        <div class="moduleEntitiesDescError">
                             <?php
                             if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
                                 // Affiche l'icône pour voir le lien.
                                 ?>
 
-                                <div class="sylabeModuleEntityDescIcon">
+                                <div class="moduleEntitiesDescIcon">
                                     <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
                                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
@@ -2118,10 +2130,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                             }
                             ?>
 
-                            <div class="sylabeModuleEntityDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="sylabeModuleEntityDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="sylabeModuleEntityDescContent">
-                                <span class="sylabeModuleEntityDescAttrib"><?php echo $this->_translateInstance->getTranslate('::sylabe:module:entities:AttribNotDisplayable'); ?></span>
+                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
+                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
+                            <div class="moduleEntitiesDescContent">
+                                <span class="moduleEntitiesDescAttrib"><?php echo $this->_translateInstance->getTranslate('::module:entities:AttribNotDisplayable'); ?></span>
                             </div>
                         </div>
                         <?php
@@ -2214,261 +2226,261 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::sylabe:module:entities:ModuleName' => 'Module des entités',
-            '::sylabe:module:entities:MenuName' => 'Entités',
-            '::sylabe:module:entities:ModuleDescription' => 'Module de gestion des entités.',
-            '::sylabe:module:entities:ModuleHelp' => "Ce module permet de voir les entités, de gérer les relations et de changer l'entité en cours d'utilisation.",
-            '::sylabe:module:entities:AppTitle1' => 'Entités',
-            '::sylabe:module:entities:AppDesc1' => 'Gestion des entités.',
-            '::sylabe:module:entities:display:ListEntities' => 'Lister les entités',
-            '::sylabe:module:entities:EntityCreated' => 'Nouvelle entité créée',
-            '::sylabe:module:entities:EntityNotCreated' => "La nouvelle entité n'a pas pu être créée",
-            '::sylabe:module:entities:ShowEntity' => "Voir l'entité",
-            '::sylabe:module:entities:DescriptionEntity' => "L'entité",
-            '::sylabe:module:entities:DescriptionEntityDesc' => "Description de l'entité.",
-            '::sylabe:module:entities:allEntities' => 'Toutes les entités',
-            '::sylabe:module:entities:allEntitiesDesc' => 'Toutes les entités.',
-            '::sylabe:module:entities:allEntitiesHelp' => 'La liste de toutes less entités.',
-            '::sylabe:module:entities:MyEntities' => 'Mes entités',
-            '::sylabe:module:entities:MyEntitiesDesc' => 'Toutes les entités sous contrôle.',
-            '::sylabe:module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lequelles ont peut instantanément basculer.",
-            '::sylabe:module:entities:KnownEntities' => 'Entités connues',
-            '::sylabe:module:entities:KnownEntitiesDesc' => 'Toutes les entités connues.',
-            '::sylabe:module:entities:KnownEntitiesHelp' => "La liste des entités que l'on connait, amies ou pas.",
-            '::sylabe:module:entities:KnownEntity' => 'Je connais cette entité',
-            '::sylabe:module:entities:SpecialEntities' => 'entités spéciales',
-            '::sylabe:module:entities:SpecialEntitiesDesc' => 'Les entités spécifiques à <i>nebule</i>.',
-            '::sylabe:module:entities:SpecialEntitiesHelp' => 'La liste des entités spécifiques à <i>nebule</i>.',
-            '::sylabe:module:entities:UnknownEntities' => 'Entités inconnues',
-            '::sylabe:module:entities:UnknownEntitiesDesc' => 'Toutes les autres entités, non connues.',
-            '::sylabe:module:entities:UnknownEntitiesHelp' => "La liste des entités que l'on connait pas.",
-            '::sylabe:module:entities:KnownByEntities' => 'Connu de ces entités',
-            '::sylabe:module:entities:KnownByEntitiesDesc' => 'Toutes les entités qui me connaissent.',
-            '::sylabe:module:entities:KnownByEntitiesHelp' => "La liste des entités qui me connaissent.",
-            '::sylabe:module:entities:SynchronizeEntity' => 'Synchroniser',
-            '::sylabe:module:entities:SynchronizeKnownEntities' => 'Synchroniser toutes les entités',
-            '::sylabe:module:entities:AttribNotDisplayable' => 'Propriété non affichable !',
-            '::sylabe:module:entities:ListEntities' => 'Lister',
-            '::sylabe:module:entities:ListEntitiesDesc' => 'Lister les entités',
-            '::sylabe:module:entities:CreateEntity' => 'Créer',
-            '::sylabe:module:entities:CreateEntityNommage' => 'Nommage',
-            '::sylabe:module:entities:CreateEntityConfirm' => 'Confirmation',
-            '::sylabe:module:entities:CreateEntityOther' => 'Autre',
-            '::sylabe:module:entities:CreateEntityAlgorithm' => 'Algorithme',
-            '::sylabe:module:entities:CreateEntityTypeUndefined' => '(Indéfini)',
-            '::sylabe:module:entities:CreateEntityTypeHuman' => 'Humain',
-            '::sylabe:module:entities:CreateEntityTypeRobot' => 'Robot',
-            '::sylabe:module:entities:CreateEntityAutonomy' => 'Entité indépendante',
-            '::sylabe:module:entities:CreateTheEntity' => "Créer l'entité",
-            '::sylabe:module:entities:CreateEntityDesc' => 'Créer une entité.',
-            '::sylabe:module:entities:CreateEntityNotAllowed' => "La création d'entité est désactivée !",
-            '::sylabe:module:entities:SearchEntity' => 'Chercher',
-            '::sylabe:module:entities:SearchEntityDesc' => 'Rechercher une entité.',
-            '::sylabe:module:entities:SearchEntityHelp' => 'Rechercher une entité connue.',
-            '::sylabe:module:entities:SearchEntityNotAllowed' => "La recherche d'entité est désactivée !",
-            '::sylabe:module:entities:SearchEntityLongTime' => 'La recherche sur identifiant uniquement peut prendre du temps...',
-            '::sylabe:module:entities:Search:URL' => 'Adresse de présence',
-            '::sylabe:module:entities:Search:AndOr' => 'et/ou',
-            '::sylabe:module:entities:Search:ID' => 'Identifiant',
-            '::sylabe:module:entities:Search:Submit' => 'Rechercher',
-            '::sylabe:module:entities:connectWith' => 'Se connecter avec cette entité',
-            '::sylabe:module:entities:unlock' => 'Déverrouiller cette entité',
-            '::sylabe:module:entities:switchTo' => 'Se connecter avec cette entité',
-            '::sylabe:module:entities:lock' => "Verrouiller l'entité",
-            '::sylabe:module:entities:seeAs' => "Voir en tant que",
-            '::sylabe:module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
-            '::sylabe:module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
-            '::sylabe:module:entities:CodeMaster' => "L'entité maîtresse du code.",
-            '::sylabe:module:entities:DirectoryMaster' => "L'entité maîtresse de l'annuaire.",
-            '::sylabe:module:entities:TimeMaster' => "L'entité maîtresse du temps.",
-            '::sylabe:module:entities:From' => 'De',
-            '::sylabe:module:entities:To' => 'Pour',
-            '::sylabe:module:entities:DisplayEntityMessages' => 'Liste des messages de %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessages' => 'Liste des messages publics de %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessagesWarning' => 'Les messages protégés ou dissimulés ne sont pas accessibles.',
-            '::sylabe:module:entities:AuthLockHelp' => 'Se déconnecter...',
-            '::sylabe:module:entities:AuthUnlockHelp' => 'Se connecter...',
-            '::sylabe:module:entities:Protected' => 'Message protégé.',
-            '::sylabe:module:entities:Obfuscated' => 'Message dissimulé.',
-            '::sylabe:module:entities:Desc:AttribsTitle' => "Propriétés de l'objet",
-            '::sylabe:module:entities:Desc:AttribsDesc' => "Toutes les propriétés de l'objet de l'entité.",
-            '::sylabe:module:entities:Desc:AttribsHelp' => "Toutes les propriétés de l'objet.",
-            '::sylabe:module:entities:Desc:Attrib' => 'Propriété',
-            '::sylabe:module:entities:Desc:Value' => 'Valeur',
-            '::sylabe:module:entities:Desc:Signer' => 'Emetteur',
-            '::sylabe:module:entities:Display:NoEntity' => "Pas d'entité à afficher.",
+            '::module:entities:ModuleName' => 'Module des entités',
+            '::module:entities:MenuName' => 'Entités',
+            '::module:entities:ModuleDescription' => 'Module de gestion des entités.',
+            '::module:entities:ModuleHelp' => "Ce module permet de voir les entités, de gérer les relations et de changer l'entité en cours d'utilisation.",
+            '::module:entities:AppTitle1' => 'Entités',
+            '::module:entities:AppDesc1' => 'Gestion des entités.',
+            '::module:entities:display:ListEntities' => 'Lister les entités',
+            '::module:entities:EntityCreated' => 'Nouvelle entité créée',
+            '::module:entities:EntityNotCreated' => "La nouvelle entité n'a pas pu être créée",
+            '::module:entities:ShowEntity' => "Voir l'entité",
+            '::module:entities:DescriptionEntity' => "L'entité",
+            '::module:entities:DescriptionEntityDesc' => "Description de l'entité.",
+            '::module:entities:allEntities' => 'Toutes les entités',
+            '::module:entities:allEntitiesDesc' => 'Toutes les entités.',
+            '::module:entities:allEntitiesHelp' => 'La liste de toutes less entités.',
+            '::module:entities:MyEntities' => 'Mes entités',
+            '::module:entities:MyEntitiesDesc' => 'Toutes les entités sous contrôle.',
+            '::module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lequelles ont peut instantanément basculer.",
+            '::module:entities:KnownEntities' => 'Entités connues',
+            '::module:entities:KnownEntitiesDesc' => 'Toutes les entités connues.',
+            '::module:entities:KnownEntitiesHelp' => "La liste des entités que l'on connait, amies ou pas.",
+            '::module:entities:KnownEntity' => 'Je connais cette entité',
+            '::module:entities:SpecialEntities' => 'entités spéciales',
+            '::module:entities:SpecialEntitiesDesc' => 'Les entités spécifiques à <i>nebule</i>.',
+            '::module:entities:SpecialEntitiesHelp' => 'La liste des entités spécifiques à <i>nebule</i>.',
+            '::module:entities:UnknownEntities' => 'Entités inconnues',
+            '::module:entities:UnknownEntitiesDesc' => 'Toutes les autres entités, non connues.',
+            '::module:entities:UnknownEntitiesHelp' => "La liste des entités que l'on connait pas.",
+            '::module:entities:KnownByEntities' => 'Connu de ces entités',
+            '::module:entities:KnownByEntitiesDesc' => 'Toutes les entités qui me connaissent.',
+            '::module:entities:KnownByEntitiesHelp' => "La liste des entités qui me connaissent.",
+            '::module:entities:SynchronizeEntity' => 'Synchroniser',
+            '::module:entities:SynchronizeKnownEntities' => 'Synchroniser toutes les entités',
+            '::module:entities:AttribNotDisplayable' => 'Propriété non affichable !',
+            '::module:entities:ListEntities' => 'Lister',
+            '::module:entities:ListEntitiesDesc' => 'Lister les entités',
+            '::module:entities:CreateEntity' => 'Créer',
+            '::module:entities:CreateEntityNommage' => 'Nommage',
+            '::module:entities:CreateEntityConfirm' => 'Confirmation',
+            '::module:entities:CreateEntityOther' => 'Autre',
+            '::module:entities:CreateEntityAlgorithm' => 'Algorithme',
+            '::module:entities:CreateEntityTypeUndefined' => '(Indéfini)',
+            '::module:entities:CreateEntityTypeHuman' => 'Humain',
+            '::module:entities:CreateEntityTypeRobot' => 'Robot',
+            '::module:entities:CreateEntityAutonomy' => 'Entité indépendante',
+            '::module:entities:CreateTheEntity' => "Créer l'entité",
+            '::module:entities:CreateEntityDesc' => 'Créer une entité.',
+            '::module:entities:CreateEntityNotAllowed' => "La création d'entité est désactivée !",
+            '::module:entities:SearchEntity' => 'Chercher',
+            '::module:entities:SearchEntityDesc' => 'Rechercher une entité.',
+            '::module:entities:SearchEntityHelp' => 'Rechercher une entité connue.',
+            '::module:entities:SearchEntityNotAllowed' => "La recherche d'entité est désactivée !",
+            '::module:entities:SearchEntityLongTime' => 'La recherche sur identifiant uniquement peut prendre du temps...',
+            '::module:entities:Search:URL' => 'Adresse de présence',
+            '::module:entities:Search:AndOr' => 'et/ou',
+            '::module:entities:Search:ID' => 'Identifiant',
+            '::module:entities:Search:Submit' => 'Rechercher',
+            '::module:entities:connectWith' => 'Se connecter avec cette entité',
+            '::module:entities:unlock' => 'Déverrouiller cette entité',
+            '::module:entities:switchTo' => 'Se connecter avec cette entité',
+            '::module:entities:lock' => "Verrouiller l'entité",
+            '::module:entities:seeAs' => "Voir en tant que",
+            '::module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
+            '::module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
+            '::module:entities:CodeMaster' => "L'entité maîtresse du code.",
+            '::module:entities:DirectoryMaster' => "L'entité maîtresse de l'annuaire.",
+            '::module:entities:TimeMaster' => "L'entité maîtresse du temps.",
+            '::module:entities:From' => 'De',
+            '::module:entities:To' => 'Pour',
+            '::module:entities:DisplayEntityMessages' => 'Liste des messages de %s.',
+            '::module:entities:DisplayEntityPublicMessages' => 'Liste des messages publics de %s.',
+            '::module:entities:DisplayEntityPublicMessagesWarning' => 'Les messages protégés ou dissimulés ne sont pas accessibles.',
+            '::module:entities:AuthLockHelp' => 'Se déconnecter...',
+            '::module:entities:AuthUnlockHelp' => 'Se connecter...',
+            '::module:entities:Protected' => 'Message protégé.',
+            '::module:entities:Obfuscated' => 'Message dissimulé.',
+            '::module:entities:Desc:AttribsTitle' => "Propriétés de l'objet",
+            '::module:entities:Desc:AttribsDesc' => "Toutes les propriétés de l'objet de l'entité.",
+            '::module:entities:Desc:AttribsHelp' => "Toutes les propriétés de l'objet.",
+            '::module:entities:Desc:Attrib' => 'Propriété',
+            '::module:entities:Desc:Value' => 'Valeur',
+            '::module:entities:Desc:Signer' => 'Emetteur',
+            '::module:entities:Display:NoEntity' => "Pas d'entité à afficher.",
         ],
         'en-en' => [
-            '::sylabe:module:entities:ModuleName' => 'Entities module',
-            '::sylabe:module:entities:MenuName' => 'Entities',
-            '::sylabe:module:entities:ModuleDescription' => 'Module to manage entities.',
-            '::sylabe:module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
-            '::sylabe:module:entities:AppTitle1' => 'Entities',
-            '::sylabe:module:entities:AppDesc1' => 'Manage entities.',
-            '::sylabe:module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
-            '::sylabe:module:entities:display:ListEntities' => 'Show list of entities',
-            '::sylabe:module:entities:EntityCreated' => 'New entity created',
-            '::sylabe:module:entities:EntityNotCreated' => "The new entity can't be created",
-            '::sylabe:module:entities:ShowEntity' => 'See the entity',
-            '::sylabe:module:entities:DescriptionEntity' => 'This entity',
-            '::sylabe:module:entities:DescriptionEntityDesc' => 'About this entity.',
-            '::sylabe:module:entities:allEntities' => 'All entities',
-            '::sylabe:module:entities:allEntitiesDesc' => 'All entities.',
-            '::sylabe:module:entities:allEntitiesHelp' => 'The list of all entities.',
-            '::sylabe:module:entities:MyEntities' => 'My entities',
-            '::sylabe:module:entities:MyEntitiesDesc' => 'All entities under control.',
-            '::sylabe:module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
-            '::sylabe:module:entities:KnownEntities' => 'Known entities',
-            '::sylabe:module:entities:KnownEntitiesDesc' => 'All known entities.',
-            '::sylabe:module:entities:KnownEntitiesHelp' => 'The list of all entities we known, friends or not.',
-            '::sylabe:module:entities:KnownEntity' => 'I known this entity',
-            '::sylabe:module:entities:SpecialEntities' => 'Specials entities',
-            '::sylabe:module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
-            '::sylabe:module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
-            '::sylabe:module:entities:UnknownEntities' => 'Unknown entities',
-            '::sylabe:module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
-            '::sylabe:module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
-            '::sylabe:module:entities:KnownByEntities' => 'Known by entities',
-            '::sylabe:module:entities:KnownByEntitiesDesc' => 'All known by entities.',
-            '::sylabe:module:entities:KnownByEntitiesHelp' => 'The list of all entities who known me.',
-            '::sylabe:module:entities:SynchronizeEntity' => 'Synchronize',
-            '::sylabe:module:entities:SynchronizeKnownEntities' => 'Synchronize all entities',
-            '::sylabe:module:entities:AttribNotDisplayable' => 'Attribut not displayable!',
-            '::sylabe:module:entities:ListEntities' => 'List',
-            '::sylabe:module:entities:ListEntitiesDesc' => 'Show list of entities',
-            '::sylabe:module:entities:CreateEntity' => 'Create',
-            '::sylabe:module:entities:CreateEntityNommage' => 'Naming',
-            '::sylabe:module:entities:CreateEntityConfirm' => 'Confirm',
-            '::sylabe:module:entities:CreateEntityOther' => 'Other',
-            '::sylabe:module:entities:CreateEntityAlgorithm' => 'Algorithm',
-            '::sylabe:module:entities:CreateEntityTypeUndefined' => '(Undefined)',
-            '::sylabe:module:entities:CreateEntityTypeHuman' => 'Human',
-            '::sylabe:module:entities:CreateEntityTypeRobot' => 'Robot',
-            '::sylabe:module:entities:CreateEntityAutonomy' => 'Independent entity',
-            '::sylabe:module:entities:CreateTheEntity' => 'Create the entity',
-            '::sylabe:module:entities:CreateEntityDesc' => 'Create entity.',
-            '::sylabe:module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
-            '::sylabe:module:entities:SearchEntity' => 'Search',
-            '::sylabe:module:entities:SearchEntityDesc' => 'Search entity.',
-            '::sylabe:module:entities:SearchEntityHelp' => 'Search a known entity.',
-            '::sylabe:module:entities:SearchEntityNotAllowed' => 'Entity search is disabled!',
-            '::sylabe:module:entities:SearchEntityLongTime' => 'The search on identifier only can take some time...',
-            '::sylabe:module:entities:Search:URL' => 'Address of localisation',
-            '::sylabe:module:entities:Search:AndOr' => 'and/or',
-            '::sylabe:module:entities:Search:ID' => 'Identifier',
-            '::sylabe:module:entities:Search:Submit' => 'Submit',
-            '::sylabe:module:entities:connectWith' => 'Connect with this entity',
-            '::sylabe:module:entities:unlock' => 'Unlock the entity',
-            '::sylabe:module:entities:switchTo' => 'Switch to this entity',
-            '::sylabe:module:entities:lock' => 'Lock entity',
-            '::sylabe:module:entities:seeAs' => "See as",
-            '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
-            '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
-            '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',
-            '::sylabe:module:entities:DirectoryMaster' => 'The master entity of directory.',
-            '::sylabe:module:entities:TimeMaster' => 'The master entity of time.',
-            '::sylabe:module:entities:From' => 'From',
-            '::sylabe:module:entities:To' => 'To',
-            '::sylabe:module:entities:DisplayEntityMessages' => 'List of messages for %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessages' => 'List of public messages for %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessagesWarning' => 'Protected ou hidden messages are not availables.',
-            '::sylabe:module:entities:AuthLockHelp' => 'Unconnecting...',
-            '::sylabe:module:entities:AuthUnlockHelp' => 'Connecting...',
-            '::sylabe:module:entities:Protected' => 'Message protected.',
-            '::sylabe:module:entities:Obfuscated' => 'Message obfuscated.',
-            '::sylabe:module:entities:Desc:AttribsTitle' => "Object's attributs",
-            '::sylabe:module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
-            '::sylabe:module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
-            '::sylabe:module:entities:Desc:Attrib' => 'Attribut',
-            '::sylabe:module:entities:Desc:Value' => 'Value',
-            '::sylabe:module:entities:Desc:Signer' => 'Sender',
-            '::sylabe:module:entities:Display:NoEntity' => 'No entity to display.',
+            '::module:entities:ModuleName' => 'Entities module',
+            '::module:entities:MenuName' => 'Entities',
+            '::module:entities:ModuleDescription' => 'Module to manage entities.',
+            '::module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
+            '::module:entities:AppTitle1' => 'Entities',
+            '::module:entities:AppDesc1' => 'Manage entities.',
+            '::module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
+            '::module:entities:display:ListEntities' => 'Show list of entities',
+            '::module:entities:EntityCreated' => 'New entity created',
+            '::module:entities:EntityNotCreated' => "The new entity can't be created",
+            '::module:entities:ShowEntity' => 'See the entity',
+            '::module:entities:DescriptionEntity' => 'This entity',
+            '::module:entities:DescriptionEntityDesc' => 'About this entity.',
+            '::module:entities:allEntities' => 'All entities',
+            '::module:entities:allEntitiesDesc' => 'All entities.',
+            '::module:entities:allEntitiesHelp' => 'The list of all entities.',
+            '::module:entities:MyEntities' => 'My entities',
+            '::module:entities:MyEntitiesDesc' => 'All entities under control.',
+            '::module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
+            '::module:entities:KnownEntities' => 'Known entities',
+            '::module:entities:KnownEntitiesDesc' => 'All known entities.',
+            '::module:entities:KnownEntitiesHelp' => 'The list of all entities we known, friends or not.',
+            '::module:entities:KnownEntity' => 'I known this entity',
+            '::module:entities:SpecialEntities' => 'Specials entities',
+            '::module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
+            '::module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
+            '::module:entities:UnknownEntities' => 'Unknown entities',
+            '::module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
+            '::module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
+            '::module:entities:KnownByEntities' => 'Known by entities',
+            '::module:entities:KnownByEntitiesDesc' => 'All known by entities.',
+            '::module:entities:KnownByEntitiesHelp' => 'The list of all entities who known me.',
+            '::module:entities:SynchronizeEntity' => 'Synchronize',
+            '::module:entities:SynchronizeKnownEntities' => 'Synchronize all entities',
+            '::module:entities:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::module:entities:ListEntities' => 'List',
+            '::module:entities:ListEntitiesDesc' => 'Show list of entities',
+            '::module:entities:CreateEntity' => 'Create',
+            '::module:entities:CreateEntityNommage' => 'Naming',
+            '::module:entities:CreateEntityConfirm' => 'Confirm',
+            '::module:entities:CreateEntityOther' => 'Other',
+            '::module:entities:CreateEntityAlgorithm' => 'Algorithm',
+            '::module:entities:CreateEntityTypeUndefined' => '(Undefined)',
+            '::module:entities:CreateEntityTypeHuman' => 'Human',
+            '::module:entities:CreateEntityTypeRobot' => 'Robot',
+            '::module:entities:CreateEntityAutonomy' => 'Independent entity',
+            '::module:entities:CreateTheEntity' => 'Create the entity',
+            '::module:entities:CreateEntityDesc' => 'Create entity.',
+            '::module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
+            '::module:entities:SearchEntity' => 'Search',
+            '::module:entities:SearchEntityDesc' => 'Search entity.',
+            '::module:entities:SearchEntityHelp' => 'Search a known entity.',
+            '::module:entities:SearchEntityNotAllowed' => 'Entity search is disabled!',
+            '::module:entities:SearchEntityLongTime' => 'The search on identifier only can take some time...',
+            '::module:entities:Search:URL' => 'Address of localisation',
+            '::module:entities:Search:AndOr' => 'and/or',
+            '::module:entities:Search:ID' => 'Identifier',
+            '::module:entities:Search:Submit' => 'Submit',
+            '::module:entities:connectWith' => 'Connect with this entity',
+            '::module:entities:unlock' => 'Unlock the entity',
+            '::module:entities:switchTo' => 'Switch to this entity',
+            '::module:entities:lock' => 'Lock entity',
+            '::module:entities:seeAs' => "See as",
+            '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
+            '::module:entities:SecurityMaster' => 'The master entity of security.',
+            '::module:entities:CodeMaster' => 'The master entity of code.',
+            '::module:entities:DirectoryMaster' => 'The master entity of directory.',
+            '::module:entities:TimeMaster' => 'The master entity of time.',
+            '::module:entities:From' => 'From',
+            '::module:entities:To' => 'To',
+            '::module:entities:DisplayEntityMessages' => 'List of messages for %s.',
+            '::module:entities:DisplayEntityPublicMessages' => 'List of public messages for %s.',
+            '::module:entities:DisplayEntityPublicMessagesWarning' => 'Protected ou hidden messages are not availables.',
+            '::module:entities:AuthLockHelp' => 'Unconnecting...',
+            '::module:entities:AuthUnlockHelp' => 'Connecting...',
+            '::module:entities:Protected' => 'Message protected.',
+            '::module:entities:Obfuscated' => 'Message obfuscated.',
+            '::module:entities:Desc:AttribsTitle' => "Object's attributs",
+            '::module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
+            '::module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
+            '::module:entities:Desc:Attrib' => 'Attribut',
+            '::module:entities:Desc:Value' => 'Value',
+            '::module:entities:Desc:Signer' => 'Sender',
+            '::module:entities:Display:NoEntity' => 'No entity to display.',
         ],
         'es-co' => [
-            '::sylabe:module:entities:ModuleName' => 'Entities module',
-            '::sylabe:module:entities:MenuName' => 'Entities',
-            '::sylabe:module:entities:ModuleDescription' => 'Module to manage entities.',
-            '::sylabe:module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
-            '::sylabe:module:entities:AppTitle1' => 'Entities',
-            '::sylabe:module:entities:AppDesc1' => 'Manage entities.',
-            '::sylabe:module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
-            '::sylabe:module:entities:display:ListEntities' => 'Show list of entities',
-            '::sylabe:module:entities:EntityCreated' => 'New entity created',
-            '::sylabe:module:entities:EntityNotCreated' => "The new entity can't be created",
-            '::sylabe:module:entities:ShowEntity' => 'See the entity',
-            '::sylabe:module:entities:DescriptionEntity' => 'This entity',
-            '::sylabe:module:entities:DescriptionEntityDesc' => 'About this entity.',
-            '::sylabe:module:entities:allEntities' => 'All entities',
-            '::sylabe:module:entities:allEntitiesDesc' => 'All entities.',
-            '::sylabe:module:entities:allEntitiesHelp' => 'The list of all entities.',
-            '::sylabe:module:entities:MyEntities' => 'My entities',
-            '::sylabe:module:entities:MyEntitiesDesc' => 'All entities under control.',
-            '::sylabe:module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
-            '::sylabe:module:entities:KnownEntities' => 'Known entities',
-            '::sylabe:module:entities:KnownEntitiesDesc' => 'All known entities.',
-            '::sylabe:module:entities:KnownEntitiesHelp' => 'The list of all entities we known, friends or not.',
-            '::sylabe:module:entities:KnownEntity' => 'I known this entity',
-            '::sylabe:module:entities:SpecialEntities' => 'Specials entities',
-            '::sylabe:module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
-            '::sylabe:module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
-            '::sylabe:module:entities:UnknownEntities' => 'Unknown entities',
-            '::sylabe:module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
-            '::sylabe:module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
-            '::sylabe:module:entities:KnownByEntities' => 'Known by entities',
-            '::sylabe:module:entities:KnownByEntitiesDesc' => 'All known by entities.',
-            '::sylabe:module:entities:KnownByEntitiesHelp' => 'The list of all entities who known me.',
-            '::sylabe:module:entities:SynchronizeEntity' => 'Synchronize',
-            '::sylabe:module:entities:SynchronizeKnownEntities' => 'Synchronize all entities',
-            '::sylabe:module:entities:AttribNotDisplayable' => 'Attribut not displayable!',
-            '::sylabe:module:entities:ListEntities' => 'List',
-            '::sylabe:module:entities:ListEntitiesDesc' => 'Show list of entities',
-            '::sylabe:module:entities:CreateEntity' => 'Create',
-            '::sylabe:module:entities:CreateEntityNommage' => 'Naming',
-            '::sylabe:module:entities:CreateEntityConfirm' => 'Confirm',
-            '::sylabe:module:entities:CreateEntityOther' => 'Otro',
-            '::sylabe:module:entities:CreateEntityAlgorithm' => 'Algoritmo',
-            '::sylabe:module:entities:CreateEntityTypeUndefined' => '(Undefined)',
-            '::sylabe:module:entities:CreateEntityTypeHuman' => 'Humano',
-            '::sylabe:module:entities:CreateEntityTypeRobot' => 'Robot',
-            '::sylabe:module:entities:CreateEntityAutonomy' => 'Entidad independiente',
-            '::sylabe:module:entities:CreateTheEntity' => 'Create the entity',
-            '::sylabe:module:entities:CreateEntityDesc' => 'Create entity.',
-            '::sylabe:module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
-            '::sylabe:module:entities:SearchEntity' => 'Search',
-            '::sylabe:module:entities:SearchEntityDesc' => 'Search entity.',
-            '::sylabe:module:entities:SearchEntityHelp' => 'Search a known entity.',
-            '::sylabe:module:entities:SearchEntityNotAllowed' => 'Entity search is disabled!',
-            '::sylabe:module:entities:SearchEntityLongTime' => 'The search on identifier only can take some time...',
-            '::sylabe:module:entities:Search:URL' => 'Address of localisation',
-            '::sylabe:module:entities:Search:AndOr' => 'y/o',
-            '::sylabe:module:entities:Search:ID' => 'Identifier',
-            '::sylabe:module:entities:Search:Submit' => 'Submit',
-            '::sylabe:module:entities:connectWith' => 'Connect with this entity',
-            '::sylabe:module:entities:unlock' => 'Unlock the entity',
-            '::sylabe:module:entities:switchTo' => 'Switch to this entity',
-            '::sylabe:module:entities:lock' => 'Lock entity',
-            '::sylabe:module:entities:seeAs' => "See as",
-            '::sylabe:module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
-            '::sylabe:module:entities:SecurityMaster' => 'The master entity of security.',
-            '::sylabe:module:entities:CodeMaster' => 'The master entity of code.',
-            '::sylabe:module:entities:DirectoryMaster' => 'The master entity of directory.',
-            '::sylabe:module:entities:TimeMaster' => 'The master entity of time.',
-            '::sylabe:module:entities:From' => 'From',
-            '::sylabe:module:entities:To' => 'To',
-            '::sylabe:module:entities:DisplayEntityMessages' => 'List of messages for %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessages' => 'List of public messages for %s.',
-            '::sylabe:module:entities:DisplayEntityPublicMessagesWarning' => 'Protected ou hidden messages are not availables.',
-            '::sylabe:module:entities:AuthLockHelp' => 'Unconnecting...',
-            '::sylabe:module:entities:AuthUnlockHelp' => 'Connecting...',
-            '::sylabe:module:entities:Protected' => 'Message protected.',
-            '::sylabe:module:entities:Obfuscated' => 'Message obfuscated.',
-            '::sylabe:module:entities:Desc:AttribsTitle' => "Object's attributs",
-            '::sylabe:module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
-            '::sylabe:module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
-            '::sylabe:module:entities:Desc:Attrib' => 'Attribut',
-            '::sylabe:module:entities:Desc:Value' => 'Value',
-            '::sylabe:module:entities:Desc:Signer' => 'Sender',
-            '::sylabe:module:entities:Display:NoEntity' => 'No entity to display.',
+            '::module:entities:ModuleName' => 'Entities module',
+            '::module:entities:MenuName' => 'Entities',
+            '::module:entities:ModuleDescription' => 'Module to manage entities.',
+            '::module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
+            '::module:entities:AppTitle1' => 'Entities',
+            '::module:entities:AppDesc1' => 'Manage entities.',
+            '::module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
+            '::module:entities:display:ListEntities' => 'Show list of entities',
+            '::module:entities:EntityCreated' => 'New entity created',
+            '::module:entities:EntityNotCreated' => "The new entity can't be created",
+            '::module:entities:ShowEntity' => 'See the entity',
+            '::module:entities:DescriptionEntity' => 'This entity',
+            '::module:entities:DescriptionEntityDesc' => 'About this entity.',
+            '::module:entities:allEntities' => 'All entities',
+            '::module:entities:allEntitiesDesc' => 'All entities.',
+            '::module:entities:allEntitiesHelp' => 'The list of all entities.',
+            '::module:entities:MyEntities' => 'My entities',
+            '::module:entities:MyEntitiesDesc' => 'All entities under control.',
+            '::module:entities:MyEntitiesHelp' => 'The list of all entities under control.',
+            '::module:entities:KnownEntities' => 'Known entities',
+            '::module:entities:KnownEntitiesDesc' => 'All known entities.',
+            '::module:entities:KnownEntitiesHelp' => 'The list of all entities we known, friends or not.',
+            '::module:entities:KnownEntity' => 'I known this entity',
+            '::module:entities:SpecialEntities' => 'Specials entities',
+            '::module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
+            '::module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
+            '::module:entities:UnknownEntities' => 'Unknown entities',
+            '::module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
+            '::module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
+            '::module:entities:KnownByEntities' => 'Known by entities',
+            '::module:entities:KnownByEntitiesDesc' => 'All known by entities.',
+            '::module:entities:KnownByEntitiesHelp' => 'The list of all entities who known me.',
+            '::module:entities:SynchronizeEntity' => 'Synchronize',
+            '::module:entities:SynchronizeKnownEntities' => 'Synchronize all entities',
+            '::module:entities:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::module:entities:ListEntities' => 'List',
+            '::module:entities:ListEntitiesDesc' => 'Show list of entities',
+            '::module:entities:CreateEntity' => 'Create',
+            '::module:entities:CreateEntityNommage' => 'Naming',
+            '::module:entities:CreateEntityConfirm' => 'Confirm',
+            '::module:entities:CreateEntityOther' => 'Otro',
+            '::module:entities:CreateEntityAlgorithm' => 'Algoritmo',
+            '::module:entities:CreateEntityTypeUndefined' => '(Undefined)',
+            '::module:entities:CreateEntityTypeHuman' => 'Humano',
+            '::module:entities:CreateEntityTypeRobot' => 'Robot',
+            '::module:entities:CreateEntityAutonomy' => 'Entidad independiente',
+            '::module:entities:CreateTheEntity' => 'Create the entity',
+            '::module:entities:CreateEntityDesc' => 'Create entity.',
+            '::module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
+            '::module:entities:SearchEntity' => 'Search',
+            '::module:entities:SearchEntityDesc' => 'Search entity.',
+            '::module:entities:SearchEntityHelp' => 'Search a known entity.',
+            '::module:entities:SearchEntityNotAllowed' => 'Entity search is disabled!',
+            '::module:entities:SearchEntityLongTime' => 'The search on identifier only can take some time...',
+            '::module:entities:Search:URL' => 'Address of localisation',
+            '::module:entities:Search:AndOr' => 'y/o',
+            '::module:entities:Search:ID' => 'Identifier',
+            '::module:entities:Search:Submit' => 'Submit',
+            '::module:entities:connectWith' => 'Connect with this entity',
+            '::module:entities:unlock' => 'Unlock the entity',
+            '::module:entities:switchTo' => 'Switch to this entity',
+            '::module:entities:lock' => 'Lock entity',
+            '::module:entities:seeAs' => "See as",
+            '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
+            '::module:entities:SecurityMaster' => 'The master entity of security.',
+            '::module:entities:CodeMaster' => 'The master entity of code.',
+            '::module:entities:DirectoryMaster' => 'The master entity of directory.',
+            '::module:entities:TimeMaster' => 'The master entity of time.',
+            '::module:entities:From' => 'From',
+            '::module:entities:To' => 'To',
+            '::module:entities:DisplayEntityMessages' => 'List of messages for %s.',
+            '::module:entities:DisplayEntityPublicMessages' => 'List of public messages for %s.',
+            '::module:entities:DisplayEntityPublicMessagesWarning' => 'Protected ou hidden messages are not availables.',
+            '::module:entities:AuthLockHelp' => 'Unconnecting...',
+            '::module:entities:AuthUnlockHelp' => 'Connecting...',
+            '::module:entities:Protected' => 'Message protected.',
+            '::module:entities:Obfuscated' => 'Message obfuscated.',
+            '::module:entities:Desc:AttribsTitle' => "Object's attributs",
+            '::module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
+            '::module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
+            '::module:entities:Desc:Attrib' => 'Attribut',
+            '::module:entities:Desc:Value' => 'Value',
+            '::module:entities:Desc:Signer' => 'Sender',
+            '::module:entities:Display:NoEntity' => 'No entity to display.',
         ],
     ];
 }

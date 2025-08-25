@@ -4,3 +4,4 @@
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
   - Solve bugg double refresh on flush call.
+  - Solve bugg load translate modules

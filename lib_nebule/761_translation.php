@@ -264,7 +264,9 @@ abstract class Translates extends Functions
     protected function _findLanguages(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance::USE_MODULES) { // FIXME find nothing
+            $this->_metrologyInstance->addLog('DEBUGGING ok use modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
+                $this->_metrologyInstance->addLog('DEBUGGING module name=' . $module::MODULE_NAME . ' type=' . $module::MODULE_TYPE, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 if ($module::MODULE_TYPE == 'traduction') {
                     $this->_languageList[$module::MODULE_LANGUAGE] = $module::MODULE_LANGUAGE;
                     $this->_applicationModulesInstance->getModulesTranslateListName()[$module::MODULE_LANGUAGE];

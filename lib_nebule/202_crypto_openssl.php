@@ -60,11 +60,13 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         'rsa.1024',
         'rsa.2048',
         'rsa.4096',
+        'ed25519.256',
     );
     const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
         'rsa.1024' => 'rsa1024',
         'rsa.2048' => 'rsa2048',
         'rsa.4096' => 'rsa4096',
+        'ed25519.256' => 'ed25519',
         '' => '',
     );
 
@@ -106,6 +108,19 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
             Crypto::TYPE_HASH => $this->_checkHashAlgorithm($algo),
             Crypto::TYPE_SYMMETRIC => $this->_checkSymmetricAlgorithm($algo),
             Crypto::TYPE_ASYMMETRIC => $this->_checkAsymmetricAlgorithm($algo),
+            default => false,
+        };
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getAlgorithmList()
+     */
+    public function getAlgorithmList(int $type): array {
+        return match ($type) {
+            Crypto::TYPE_HASH => self::HASH_ALGORITHM,
+            Crypto::TYPE_SYMMETRIC => self::SYMMETRIC_ALGORITHM,
+            Crypto::TYPE_ASYMMETRIC => self::ASYMMETRIC_ALGORITHM,
             default => false,
         };
     }

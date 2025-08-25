@@ -56,6 +56,14 @@ interface CryptoInterface
      */
     public function checkValidAlgorithm(string $algo, int $type): bool;
 
+    /**
+     * Get list of supported cryptographique function by type.
+     *
+     * @param int $type
+     * @return array
+     */
+    public function getAlgorithmList(int $type): array;
+
     // --------------------------------------------------------------------------------
 
     /**

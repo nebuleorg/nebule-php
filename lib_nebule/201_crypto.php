@@ -65,6 +65,12 @@ class Crypto extends Functions implements CryptoInterface
      */
     public function checkValidAlgorithm(string $algo, int $type): bool { return $this->_defaultInstance->checkValidAlgorithm($algo, $type); }
 
+    /**
+     * {@inheritDoc}
+     * @see CryptoInterface::getAlgorithmList()
+     */
+    public function getAlgorithmList(int $type): array { return $this->_defaultInstance->getAlgorithmList($type); }
+
     // --------------------------------------------------------------------------------
 
     /**
