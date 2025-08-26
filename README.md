@@ -2,7 +2,7 @@
 Code of nebule on PHP.
 This is a hyper-graph database with some applications.
 
-Do not work since PHP 8.0 .
+Do not work under PHP 8.2 .
 
 !!! Under full reconstruction for new links v2 !!!\
 Many bugs for now...
