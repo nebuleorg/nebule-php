@@ -51,7 +51,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250826';
     const APPLICATION_LICENCE = 'GNU GPL 2023-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
@@ -285,7 +285,9 @@ class Translate extends Translates
         'fr-fr' => [
             ':::connexion' => 'Connexion',
             ':::login' => 'Se connecter',
-            ':::logout' => 'Se déconnecter',
+            ':::logout' => 'Déconnecter',
+            ':::selfLogout' => 'Se déconnecter',
+            ':::flush' => 'Tout déconnecter',
             ':::return' => "Revenir à l'application",
             '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
             '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
@@ -310,6 +312,8 @@ class Translate extends Translates
             ':::connexion' => 'Connection',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
+            ':::selfLogout' => 'Disconnecting myself',
+            ':::flush' => 'Disconnecting all',
             ':::return' => 'Return to application',
             '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
             '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
@@ -334,6 +338,8 @@ class Translate extends Translates
             ':::connexion' => 'Connection',
             ':::login' => 'Connecting',
             ':::logout' => 'Disconnecting',
+            ':::selfLogout' => 'Disconnecting myself',
+            ':::flush' => 'Disconnecting all',
             ':::return' => 'Return to application',
             '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
             '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',

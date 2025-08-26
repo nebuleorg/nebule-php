@@ -35,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250825';
+    const MODULE_VERSION = '020250826';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -219,7 +219,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=logout';
+                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch to this entity.
                         $hookArray[1]['name'] = '::module:entities:seeAs';

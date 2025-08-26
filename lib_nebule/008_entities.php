@@ -217,9 +217,6 @@ class Entities extends Functions
     private function _findGhostEntityPassword(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity'))
-            return;
-
         if (filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT)
             || filter_has_var(INPUT_POST, References::COMMAND_AUTH_ENTITY_LOGOUT)) {
             if ($this->_ghostEntityInstance instanceof Entity) {
@@ -229,7 +226,7 @@ class Entities extends Functions
             return;
         }
 
-        if ($this->_ghostEntityInstance->getHavePrivateKeyPassword())
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity') || $this->_ghostEntityInstance->getHavePrivateKeyPassword())
             return;
 
         if (filter_has_var(INPUT_POST, References::COMMAND_SELECT_PASSWORD))
