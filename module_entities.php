@@ -219,7 +219,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                        . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {

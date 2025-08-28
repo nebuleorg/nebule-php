@@ -15,7 +15,7 @@ class App2
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250820';
+    const APPLICATION_VERSION = '020250828';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -39,13 +39,13 @@ class App2
             \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SELECT_GHOST . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
-        $argLogout = filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT); // FIXME use view
+        $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT); // FIXME use view
         $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . References::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
         $args .= '&' . References::COMMAND_SELECT_GHOST . '=' . $argEnt;
-        $args .= '&mod=auth&view=';
+        $args .= '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=';
         if ($argLogout)
-            $args .= References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT; // FIXME dont use logout without view
+            $args .= References::COMMAND_AUTH_ENTITY_LOGOUT;
         else
             $args .= References::COMMAND_AUTH_ENTITY_LOGIN;
 
