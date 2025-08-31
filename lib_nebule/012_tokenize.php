@@ -36,14 +36,14 @@ class Tokenize extends Functions
     private function _findActionToken(): void
     {
         $this->_metrologyInstance->addLog('find token', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitActionWithoutToken')) {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitActionWithoutToken')) {
             $this->_metrologyInstance->addLog('check token: permitActionWithoutToken=true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd767b2ca');
             $this->_validToken = true;
             return;
         }
 
         $token = $this->getFilterInput(References::COMMAND_TOKEN);
-        if (strlen($token) < self::TOKEN_SIZE || !ctype_xdigit($token))
+        if (strlen($token) < (self::TOKEN_SIZE / 4) || !ctype_xdigit($token))
             $token = '';
 
         // Verify token.
