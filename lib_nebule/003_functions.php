@@ -26,7 +26,7 @@ class Functions
     protected ?Recovery $_recoveryInstance = null;
     protected ?Cache $_cacheInstance = null;
     protected ?Session $_sessionInstance = null;
-    protected ?Ticketing $_ticketingInstance = null;
+    protected ?Tokenize $_tokenizeInstance = null;
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
@@ -66,7 +66,7 @@ class Functions
         $this->_recoveryInstance = $this->_nebuleInstance->getRecoveryInstance();
         $this->_cacheInstance = $this->_nebuleInstance->getCacheInstance();
         $this->_sessionInstance = $this->_nebuleInstance->getSessionInstance();
-        $this->_ticketingInstance = $this->_nebuleInstance->getTicketingInstance();
+        $this->_tokenizeInstance = $this->_nebuleInstance->getTokenizeInstance();
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();

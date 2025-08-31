@@ -401,16 +401,16 @@ class Metrology extends Functions
             <li><code>308b8a96</code> : Error. Erreur lors de l'initialisation de l'instance des actions de l'application par le bootstrap.</li>
             <li style="color: red; font-weight: bold">A compléter...</li>
         </ul>
-        <?php Displays::docDispTitle(4, 'mjct', 'Codes ticketing'); ?>
+        <?php Displays::docDispTitle(4, 'mjct', 'Codes tokenize'); ?>
         <ul>
             <li><code>d396f0a9</code> : Debug. Ticket vide.</li>
             <li><code>d516f0d4</code> : Error. Ticket déjà utilisé, tentative de rejeu de ticket.</li>
             <li><code>7083b07d</code> : Audit. Ticket valide.</li>
             <li><code>b221e760</code> : Error. Ticket inconnu.</li>
-            <li><code>8957de86</code> : Debug. Valeur du nouveau ticket généré.</li>
-            <li><code>d767b2ca</code> : Debug. Option permitActionWithoutTicket=true ticket always valid.</li>
-            <li><code>80fa0154</code> : Error. Cannot get ticket from GET.</li>
-            <li><code>65b5e0cc</code> : Error. Cannot get ticket from POST.</li>
+            <li><code>8957de86</code> : Debug. Generate new token.</li>
+            <li><code>d767b2ca</code> : Debug. Option permitActionWithoutToken=true token always valid.</li>
+            <li><code>80fa0154</code> : Error. Cannot get token from GET.</li>
+            <li><code>65b5e0cc</code> : Error. Cannot get token from POST.</li>
         </ul>
 
         <?php

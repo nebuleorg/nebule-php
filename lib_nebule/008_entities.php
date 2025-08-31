@@ -150,10 +150,16 @@ class Entities extends Functions
     private function _findGhostEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newNode($this->_findGhostEntityFromArg(), \Nebule\Library\Cache::TYPE_ENTITY);
+        $this->_metrologyInstance->addLog('DEBUGGING 1 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (!$instance->getIsEntity())
             $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleGhostEntityInstance');
+        if ($instance === null)
+            $this->_metrologyInstance->addLog('DEBUGGING 2 eid null=', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        else
+            $this->_metrologyInstance->addLog('DEBUGGING 2 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if ($instance === null || !$instance->getIsEntity())
             $instance = $this->_defaultEntityInstance;
+        $this->_metrologyInstance->addLog('DEBUGGING 3 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_ghostEntityInstance = $instance;
         $this->_ghostEntityEID = $instance->getID();
         $this->_metrologyInstance->addLog('ghost entity eid=' . $this->_ghostEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd026d625');

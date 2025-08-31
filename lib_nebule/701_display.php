@@ -1749,7 +1749,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->setUrlLinkTokenPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[13]
-                . '&' . References::COMMAND_SELECT_TOKEN . '=');
+                . '&' . References::COMMAND_SELECT_TOKENCOIN . '=');
             $this->setUrlLinkTransactionPrefix('?'
                 . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[19]
@@ -3986,7 +3986,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $rid = $this->_cacheInstance->newNode($listEmotions0[$emotion]);
             }
             $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-            $httpLink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+            $httpLink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
             $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.
@@ -6026,7 +6026,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'x';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
@@ -6034,7 +6034,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'f';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions0[$emotion], $emotion, 'iconInlineDisplay');

@@ -64,7 +64,7 @@ class Configuration extends Functions
         'permitApplicationModules',
         'permitApplicationModulesExternal',
         'permitApplicationModulesTranslate',
-        'permitActionWithoutTicket',
+        'permitActionWithoutToken',
         'codeBranch',
         'logsLevel',
         'modeRescue',
@@ -173,7 +173,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'Applications',
         'permitApplicationModulesExternal' => 'Applications',
         'permitApplicationModulesTranslate' => 'Applications',
-        'permitActionWithoutTicket' => 'Global',
+        'permitActionWithoutToken' => 'Global',
         'codeBranch' => 'Global',
         'logsLevel' => 'Logs',
         'modeRescue' => 'Global',
@@ -266,7 +266,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'boolean',
         'permitApplicationModulesExternal' => 'boolean',
         'permitApplicationModulesTranslate' => 'boolean',
-        'permitActionWithoutTicket' => 'boolean',
+        'permitActionWithoutToken' => 'boolean',
         'codeBranch' => 'string',
         'logsLevel' => 'string',
         'modeRescue' => 'boolean',
@@ -359,7 +359,7 @@ class Configuration extends Functions
         'permitApplicationModules' => true,
         'permitApplicationModulesExternal' => false,
         'permitApplicationModulesTranslate' => false,
-        'permitActionWithoutTicket' => false,
+        'permitActionWithoutToken' => false,
         'codeBranch' => false,
         'logsLevel' => false,
         'modeRescue' => false,
@@ -452,7 +452,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'true',
         'permitApplicationModulesExternal' => 'false',
         'permitApplicationModulesTranslate' => 'true',
-        'permitActionWithoutTicket' => 'false',
+        'permitActionWithoutToken' => 'false',
         'codeBranch' => 'develop',
         'logsLevel' => 'NORMAL',
         'modeRescue' => 'false',
@@ -545,7 +545,7 @@ class Configuration extends Functions
         'permitApplicationModules' => 'careful',
         'permitApplicationModulesExternal' => 'critical',
         'permitApplicationModulesTranslate' => 'careful',
-        'permitActionWithoutTicket' => 'critical',
+        'permitActionWithoutToken' => 'critical',
         'codeBranch' => 'careful',
         'logsLevel' => 'useful',
         'modeRescue' => 'critical',
@@ -627,7 +627,7 @@ class Configuration extends Functions
         'permitRecoveryRemoveEntity' => 'An entity can remove shared protection to recovery entity. By default, it is not permitted.',
         'permitServerEntityAsRecovery' => 'Declare instance entity of this server as recovery entity.',
         'permitDefaultEntityAsRecovery' => 'Declare default entity on this server as recovery entity.',
-        'permitActionWithoutTicket' => 'An action do not need valid ticket.',
+        'permitActionWithoutToken' => 'An action do not need valid token.',
         'permitAddLinkToSigner' => 'Todo description...',
         'permitListOtherHash' => 'Todo description...',
         'permitLocalisationStats' => 'Todo description...',
@@ -1221,7 +1221,7 @@ class Configuration extends Functions
     /**
      * Check a list of boolean options. If one is false, return false.
      * Except for unlocked that check the current entity state.
-     * Except for ticket that check a valid ticket.
+     * Except for tokens that check a valid token.
      * @param array $list
      * @return bool
      */
@@ -1238,9 +1238,9 @@ class Configuration extends Functions
                     $this->_metrologyInstance->addLog('not permitted with entity locked', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a6c88b6b');
                     return false;
                 }
-            } elseif ($name == 'ticket') {
-                if (!$this->_ticketingInstance->checkActionTicket()) {
-                    $this->_metrologyInstance->addLog('not permitted with invalid ticket', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ccd082e7');
+            } elseif ($name == 'token') {
+                if (!$this->_tokenizeInstance->checkActionToken()) {
+                    $this->_metrologyInstance->addLog('not permitted with invalid token', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ccd082e7');
                     return false;
                 }
             } elseif (!isset(self::OPTIONS_TYPE[$name])
@@ -1282,8 +1282,8 @@ class Configuration extends Functions
         'GroupUploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
         'GroupUploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
         'GroupUploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
-        'GroupCreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity'],
-        'GroupCreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'],
+        'GroupCreateEntity' => ['permitWrite','permitWriteLink','permitWriteObject','permitWriteEntity','token'],
+        'GroupCreateGroup' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup','token'],
         'GroupSignLink' => ['unlocked','permitWrite','permitWriteLink','permitCreateLink'],
         'GroupUploadLink' => ['permitWrite','permitWriteLink','permitUploadLink'],
         'GroupObfuscateLink' => ['unlocked','permitWrite','permitWriteLink','permitObfuscatedLink'],

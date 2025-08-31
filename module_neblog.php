@@ -58,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250426';
+    const MODULE_VERSION = '020250831';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -576,7 +576,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     <form enctype="multipart/form-data" method="post"
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newblog"
                                    name="<?php echo self::COMMAND_ACTION_NEW_BLOG_NAME; ?>"
@@ -615,7 +615,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     <form enctype="multipart/form-data" method="post"
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="getblog"
                                    name="<?php echo self::COMMAND_ACTION_GET_BLOG_NID; ?>"
@@ -665,7 +665,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newpost"
                                    name="<?php echo self::COMMAND_ACTION_NEW_POST_NAME; ?>"
@@ -777,7 +777,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newpage"
                                    name="<?php echo self::COMMAND_ACTION_NEW_PAGE_NAME; ?>"
@@ -826,7 +826,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionAddBlog(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action add blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd59dbd21');
 
             $this->_actionAddBlogName = $this->getFilterInput(self::COMMAND_ACTION_NEW_BLOG_NAME);
@@ -839,7 +839,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionGetBlog(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action get blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dba518d4');
 
             $this->_actionGetBlogNID = $this->getFilterInput(self::COMMAND_ACTION_GET_BLOG_NID);
@@ -853,7 +853,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionSyncBlog(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action sync blog', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9de747eb');
 
             $this->_actionSyncBlogNID = $this->getFilterInput(self::COMMAND_ACTION_SYNC_BLOG_NID);
@@ -866,7 +866,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionAddPost(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b54fc74c');
 
             $this->_actionAddPostName = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_NAME);
@@ -880,7 +880,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionAddAnswer(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action add answer', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8e1f227c');
 
             $this->_actionAddAnswerContent = $this->getFilterInput(self::COMMAND_ACTION_NEW_ANSWER);
@@ -893,7 +893,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _extractActionAddPage(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'ticket'))) {
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action add blog page', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b7e2f6c2');
 
             $this->_actionAddPageName = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_NAME);
@@ -1091,7 +1091,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                               . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                               . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
-                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicketCommand(); ?>">
+                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newanswer"
                                    name="<?php echo self::COMMAND_ACTION_NEW_ANSWER; ?>"

@@ -36,6 +36,7 @@ class References //extends Functions
     public const COMMAND_LOCAL_ENTITY_FILE = 'e'; // Into folder /
     public const COMMAND_FLUSH = 'f';
     public const COMMAND_RESCUE = 'r';
+    public const COMMAND_TOKEN = 't';
     public const COMMAND_AUTH_ENTITY_LOGIN = 'login';
     public const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     public const COMMAND_AUTH_ENTITY_MOD = 'auth';
@@ -48,12 +49,11 @@ class References //extends Functions
     public const COMMAND_SELECT_CONVERSATION = 'cvt';
     public const COMMAND_SELECT_CURRENCY = 'cur';
     public const COMMAND_SELECT_TOKENPOOL = 'tkp';
-    public const COMMAND_SELECT_TOKEN = 'tkn';
+    public const COMMAND_SELECT_TOKENCOIN = 'tkc';
     public const COMMAND_SELECT_WALLET = 'wal';
     public const COMMAND_SELECT_LINK = 'lnk';
     public const COMMAND_SELECT_TRANSACTION = 'trs';
     public const COMMAND_SELECT_PASSWORD = 'pwd';
-    public const COMMAND_SELECT_TICKET = 'tkt';
     
     // Les références.
     public const REFERENCE_OBJECT_TEXT = 'text/plain';

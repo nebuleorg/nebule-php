@@ -35,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250826';
+    const MODULE_VERSION = '020250831';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -262,7 +262,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
                 // See entity.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
@@ -283,7 +283,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }*/
                 break;
 
@@ -298,7 +298,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
 
             case '::module:entities:DisplayNebuleEntity':
@@ -311,7 +311,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
                     . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
         }
         return $hookArray;
@@ -1647,9 +1647,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                     <form method="post"
                           action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                              . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
+                              . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
                               . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                              . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
                             <div class="moduleEntitiesCreateHeader">
                                 <p>

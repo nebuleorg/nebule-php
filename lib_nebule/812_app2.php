@@ -39,7 +39,7 @@ class App2
             \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SELECT_GHOST . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
-        $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT); // FIXME use view
+        $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
         $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . References::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
         $args .= '&' . References::COMMAND_SELECT_GHOST . '=' . $argEnt;

@@ -139,14 +139,14 @@ abstract class Actions extends Functions
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f90d32f4');
         }
 
-        $this->modulesActions(); // try catch inside
+        $this->modulesActions(); // Try/catch inside
     }
 
     public function genericActions(): void {
         $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '84b627f1');
 
-        if (!$this->_ticketingInstance->checkActionTicket() || !$this->_unlocked)
-            return;
+        if (!$this->_tokenizeInstance->checkActionToken() || !$this->_unlocked)
+            return; // Do not accept module action without a valid token or an unlocked entity.
 
         $this->_extractActionObfuscateLink();
         $this->_extractActionDeleteObject();
@@ -282,8 +282,8 @@ abstract class Actions extends Functions
 
     public function modulesActions():void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('call modules actions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_ticketingInstance->checkActionTicket())
-            return;
+        if (!$this->_tokenizeInstance->checkActionToken())
+            return; // Do not accept module action without a valid token.
         $module = $this->_applicationInstance->getApplicationModulesInstance()->getCurrentModuleInstance();
         if ($module::MODULE_COMMAND_NAME == $this->_displayInstance->getCurrentDisplayMode()) {
             try {
@@ -1445,6 +1445,8 @@ abstract class Actions extends Functions
         unset($id, $instance);
     }
 
+
+
     protected bool $_actionCreateEntity = false;
     protected string $_actionCreateEntityPrefix = '';
     protected string $_actionCreateEntitySuffix = '';
@@ -1470,6 +1472,7 @@ abstract class Actions extends Functions
     protected function _extractActionCreateEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ((!$this->_unlocked && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
+            || !$this->_tokenizeInstance->checkActionToken()
             || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
         )
             return;
@@ -2491,7 +2494,7 @@ abstract class Actions extends Functions
 
         if ($this->_actionCreateTokens) {
             // Récupère la liste des propriétés.
-            $instance = $this->_ticketingInstance->getCurrentTokenInstance();
+            $instance = $this->_tokenizeInstance->getCurrentTokenInstance();
             $propertiesList = $instance->getPropertiesList();
             unset($instance);
 
@@ -2534,7 +2537,7 @@ abstract class Actions extends Functions
     {
         $this->_metrologyInstance->addLog('action create tokens', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        /*$instance = $this->_ticketingInstance->getCurrentTokenInstance(); FIXME
+        /*$instance = $this->_tokenizeInstance->getCurrentTokenInstance(); FIXME
         for ($i = 0; $i < $this->_actionCreateTokensCount; $i++) {
             if ($i > 0) {
                 $this->_actionCreateTokensParam['TokenSerialID'] = '';

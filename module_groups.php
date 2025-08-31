@@ -27,7 +27,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:groups:ModuleDescription';
-    const MODULE_VERSION = '020250825';
+    const MODULE_VERSION = '020250831';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -137,7 +137,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
                 break;
 
@@ -149,7 +149,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                 $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                     . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 break;
 
             case '::sylabe:module:group:remove':
@@ -169,7 +169,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . Action::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $object
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
                 break;
 
@@ -203,7 +203,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
                     } // Ou si c'est un groupe pour une autre entité.
                     elseif ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
@@ -223,7 +223,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                             // Refuser l'objet comme un groupe.
                             $hookArray[2]['name'] = '::module:groups:display:refuseGroup';
@@ -232,7 +232,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
                     } // Ou si ce n'est pas un groupe.
                     else {
@@ -244,7 +244,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
                     }
                 }
@@ -579,14 +579,14 @@ class ModuleGroups extends \Nebule\Library\Modules
 						$list[$i]['actions'][1]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[1]
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroup.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
-							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+							.$this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 						// Utiliser comme groupe fermé.
 						$list[$i]['actions'][2]['name'] = '::module:groups:display:useAsGroupClosed';
 						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LL;
 						$list[$i]['actions'][2]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
 							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[1]
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
-							.$this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+							.$this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 					}
 					$i++;
 				}
@@ -691,7 +691,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                           . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                           . '&' . Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-                          . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue(); ?>">
+                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
                     <div class="floatRight textAlignRight">
                         <input type="checkbox"
                                name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
@@ -824,7 +824,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                                 . '&' . $this->_nebuleInstance->getCurrentGroupOID()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
 
                         // Marque comme vu.
@@ -877,7 +877,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
                                     . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
-                                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                             }
 
                             // Marque comme vu.
@@ -939,7 +939,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
                                 . '&' . Action::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
 
                         // Marque comme vu.

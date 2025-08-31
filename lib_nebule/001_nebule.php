@@ -22,7 +22,7 @@ class nebule
         '_recoveryInstance',
         '_cacheInstance',
         '_sessionInstance',
-        '_ticketingInstance',
+        '_tokenizeInstance',
         '_cryptoInstance',
     );
 
@@ -36,7 +36,7 @@ class nebule
     private ?Recovery $_recoveryInstance = null;
     private ?Cache $_cacheInstance = null;
     private ?Session $_sessionInstance = null;
-    private ?Ticketing $_ticketingInstance = null;
+    private ?Tokenize $_tokenizeInstance = null;
     private ?ioInterface $_ioInstance = null;
     private ?CryptoInterface $_cryptoInstance = null;
     private ?SocialInterface $_socialInstance = null;
@@ -77,7 +77,7 @@ class nebule
         $this->_initAuthorities();
         $this->_initRecovery();
         $this->_initEntities();
-        $this->_initTicketing();
+        $this->_initTokenize();
         $this->_setEnvironmentInstances();
         $this->_initAllInstances();
 
@@ -109,7 +109,7 @@ class nebule
     private function _initAuthorities(): void { if ($this->_authoritiesInstance === null) $this->_authoritiesInstance = new Authorities($this); }
     private function _initRecovery(): void { if ($this->_recoveryInstance === null) $this->_recoveryInstance = new Recovery($this); }
     private function _initEntities(): void { $this->_entitiesInstance = new Entities($this); }
-    private function _initTicketing(): void { if ($this->_ticketingInstance === null) $this->_ticketingInstance = new Ticketing($this); }
+    private function _initTokenize(): void { if ($this->_tokenizeInstance === null) $this->_tokenizeInstance = new Tokenize($this); }
 
     /**
      * Reload all instances in all library components.
@@ -127,7 +127,7 @@ class nebule
         $this->_authoritiesInstance->setEnvironmentLibrary($this);
         $this->_entitiesInstance->setEnvironmentLibrary($this);
         $this->_recoveryInstance->setEnvironmentLibrary($this);
-        $this->_ticketingInstance->setEnvironmentLibrary($this);
+        $this->_tokenizeInstance->setEnvironmentLibrary($this);
     }
 
     private function _initAllInstances(): void {
@@ -142,7 +142,7 @@ class nebule
         $this->_authoritiesInstance->initialisation();
         $this->_entitiesInstance->initialisation();
         $this->_recoveryInstance->initialisation();
-        $this->_ticketingInstance->initialisation();
+        $this->_tokenizeInstance->initialisation();
     }
 
     public function getLoadingStatus(): bool { return $this->_loadingStatus; }
@@ -154,7 +154,7 @@ class nebule
     public function getRecoveryInstance(): ?Recovery { return $this->_recoveryInstance; }
     public function getCacheInstance(): ?Cache { return $this->_cacheInstance; }
     public function getSessionInstance(): ?Session { return $this->_sessionInstance; }
-    public function getTicketingInstance(): ?Ticketing { return $this->_ticketingInstance; }
+    public function getTokenizeInstance(): ?Tokenize { return $this->_tokenizeInstance; }
     public function getIoInstance(): ?ioInterface { return $this->_ioInstance; }
     public function getCryptoInstance(): ?CryptoInterface { return $this->_cryptoInstance; }
     public function getSocialInstance(): ?SocialInterface { return $this->_socialInstance; }
@@ -485,7 +485,7 @@ class nebule
     public function getCurrentTokenOID(): string { return $this->_currentTokenID; }
     public function getCurrentTokenInstance(): ?Token { return $this->_currentTokenInstance; }
     private function _findCurrentToken(): void {
-/*        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_TOKEN);
+/*        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_TOKENCOIN);
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_currentTokenID = '0';
             $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
@@ -493,12 +493,12 @@ class nebule
             return;
         }
 
-        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKEN))
-            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKENCOIN))
+            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKENCOIN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
-            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKEN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKENCOIN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg != '')
-            $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_TOKEN . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9504b976');
+            $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_TOKENCOIN . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9504b976');
 
         if (Node::checkNID($arg, false, true)
             && ($this->_ioInstance->checkObjectPresent($arg)

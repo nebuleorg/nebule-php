@@ -27,7 +27,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:objects:ModuleDescription';
-    const MODULE_VERSION = '0202505825';
+    const MODULE_VERSION = '0202505831';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -158,7 +158,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                         // Protéger l'objet.
                         if ($mode == $this::MODULE_COMMAND_NAME
@@ -197,7 +197,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[8]['name'] = '::MarkRemove';
@@ -207,7 +207,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
 
                 // Si la liste des marques n'est pas vide.
@@ -220,7 +220,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
                 unset($instance, $id, $protected, $update, $markList, $marked);
                 break;
@@ -238,7 +238,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
                 unset($markList);
                 break;
@@ -301,7 +301,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[1]['name'] = '::MarkRemove';
@@ -311,7 +311,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                 }
                 unset($instance, $id, $marked);
                 break;
@@ -952,7 +952,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                     . '&' . Action::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $object->getID()
                     . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                    . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
             }
 
             // Affichage.
@@ -1088,7 +1088,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[3]
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
                                 . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         } elseif (!$this->_recoveryInstance->getIsRecoveryEntity($entity)
                             || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                         ) {
@@ -1099,7 +1099,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[3]
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                 . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
-                                . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                         }
                     }
 
@@ -1281,13 +1281,13 @@ class ModuleObjects extends \Nebule\Library\Modules
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                             . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                     } else {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[4]
                             . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                             . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
                     }
 
                     // Marque comme vu.
@@ -1343,7 +1343,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
                         . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTicketingInstance()->getActionTicketValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                     // Marque comme vu.
                     $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
