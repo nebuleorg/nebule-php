@@ -44,23 +44,23 @@ class DisplayList extends DisplayItem implements DisplayInterface
         foreach ($this->_list as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item),
                 Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
-            if ($item instanceof DisplayInformation) {
+            if ($item instanceof \Nebule\Library\DisplayInformation) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            } elseif ($item instanceof DisplayObject) {
+            } elseif ($item instanceof \Nebule\Library\DisplayObject) {
                 $item->setSize($this->_sizeCSS);
                 //$item->setDisplayAlone(false); TODO
                 $result .= $item->getHTML();
-            } elseif ($item instanceof DisplaySecurity) {
+            } elseif ($item instanceof \Nebule\Library\DisplaySecurity) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            } elseif ($item instanceof DisplayQuery) {
+            } elseif ($item instanceof \Nebule\Library\DisplayQuery) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            } elseif ($item instanceof DisplayBlankLine)
+            } elseif ($item instanceof \Nebule\Library\DisplayBlankLine)
                 $result .= $item->getHTML();
             if ($this->_onPerLine)
                 $result .= '<br />';
@@ -74,11 +74,11 @@ class DisplayList extends DisplayItem implements DisplayInterface
     }
 
     public function addItem(DisplayItem $item): void {
-        if ($item instanceof DisplayInformation
-            || $item instanceof DisplayObject
-            || $item instanceof DisplaySecurity
-            || $item instanceof DisplayQuery
-            || $item instanceof DisplayBlankLine
+        if ($item instanceof \Nebule\Library\DisplayInformation
+            || $item instanceof \Nebule\Library\DisplayObject
+            || $item instanceof \Nebule\Library\DisplaySecurity
+            || $item instanceof \Nebule\Library\DisplayQuery
+            || $item instanceof \Nebule\Library\DisplayBlankLine
         )
             $this->_list[] = $item;
         else

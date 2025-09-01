@@ -1424,6 +1424,8 @@ class Traduction extends Traductions
             <li><b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> : Dans l'application 4, désigne le NID dont on veut
                 afficher les blocs de liens. Non reconnu ailleurs.</li>
             <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> : Charge en mode restreint pour dépannage.</li>
+            <li><b><?php echo References::COMMAND_TOKEN; ?></b> : Transmet un ticket qui doit être valide pour permettre
+                certaines actions. (hors bootstrap)</li>
             <li><b><?php echo LIB_ARG_UPDATE_APPLICATION; ?></b> : Demande une mise à jour des applications et du cache
                 associé.</li>
             <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non

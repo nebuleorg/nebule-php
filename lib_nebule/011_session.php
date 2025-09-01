@@ -205,40 +205,55 @@ class Session extends Functions
         return true;
     }
 
-    public function setSessionStoreAsEntity(string $name, ?Entity $instance): void {
+    public function setSessionStoreAsEntity(string $name, ?Entity $instance): void
+    {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($instance !== null)
-            $this->setSessionStore($name, serialize($instance));
+        if ($instance instanceof \Nebule\Library\Entity) // $instance !== null
+            $this->setSessionStoreAsString($name, serialize($instance));
     }
 
     public function getSessionStoreAsEntity(string $name): ?Entity {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_getEntityFromSession($name);
-        if (!$instance instanceof Entity)
+        try {
+            $instance = unserialize($this->getSessionStoreAsString($name));
+            if ($instance instanceof \Nebule\Library\Entity) {
+                $instance->setEnvironmentLibrary($this->_nebuleInstance);
+                $instance->initialisation();
+            }
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
+            $instance = null;
+        }
+        //$instance = $this->_getEntityFromSession($name);
+        if (!$instance instanceof \Nebule\Library\Entity)
             $instance = new Entity($this->_nebuleInstance, '0');
         $this->_metrologyInstance->addLog('get entity for ' . $name . ' from session EID=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '19f3e422');
         return $instance;
     }
 
     private function _getEntityFromSession(string $name): ?Entity {
-        session_start();
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-            || !isset($_SESSION['Buffer'][$name])
-            || !is_string($_SESSION['Buffer'][$name])
+            //|| !isset($_SESSION['Buffer'][$name])
+            //|| !is_string($_SESSION['Buffer'][$name])
         ) {
-            session_write_close();
+            $this->_metrologyInstance->addLog('DEBUGGING break', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             return null;
         }
         try {
-            $instance = unserialize($_SESSION['Options'][$name]);
+            $value = $this->getSessionStoreAsString($name);
+            $this->_metrologyInstance->addLog('DEBUGGING from session ' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $instance = unserialize($value);
+            $this->_metrologyInstance->addLog('DEBUGGING type ' . gettype($instance), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!$instance instanceof \Nebule\Library\Entity)
+                return null;
             $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->initialisation();
         } catch (\Exception $e) {
             $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
             return null;
         }
-        session_write_close();
         return $instance;
     }
 

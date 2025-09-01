@@ -108,11 +108,11 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid !== null) {
             $object = $nid->getID();
-            if (!$nid instanceof Entity && $nid->getIsEntity())
+            if (!$nid instanceof \Nebule\Library\Entity && $nid->getIsEntity())
                 $nid = $this->_cacheInstance->newNode($object, \Nebule\Library\cache::TYPE_ENTITY);
         } else
             $object = $this->_nebuleInstance->getCurrentObjectOID();
-        if ($nid instanceof Entity)
+        if ($nid instanceof \Nebule\Library\Entity)
             $unlocked = $nid->getHavePrivateKeyPassword();
         else
             $unlocked = false;
@@ -200,7 +200,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuObject':
-                if ($nid instanceof Entity) {
+                if ($nid instanceof \Nebule\Library\Entity) {
                     // See as entity.
                     $hookArray[0]['name'] = '::module:entities:ShowEntity';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];

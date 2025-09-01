@@ -533,41 +533,41 @@ class nebule
      */
     public function checkInstances(): int
     {
-        if (!$this->_authoritiesInstance->getPuppetmasterInstance() instanceof Entity) return 1;
+        if (!$this->_authoritiesInstance->getPuppetmasterInstance() instanceof \Nebule\Library\Entity) return 1;
         if ($this->_authoritiesInstance->getPuppetmasterEID() == '0') return 2;
         if ($this->_authoritiesInstance->getPuppetmasterEID() != $this->_configurationInstance->getOptionUntyped('puppetmaster')) return 3;
 
         if (sizeof($this->_authoritiesInstance->getSecurityAuthoritiesInstance()) == 0) return 11;
         foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)  {
-            if (!$instance instanceof Entity) return 12;
+            if (!$instance instanceof \Nebule\Library\Entity) return 12;
             if ($instance->getID() == '0') return 13;
         }
 
         if (sizeof($this->_authoritiesInstance->getCodeAuthoritiesInstance()) == 0) return 21;
         foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)  {
-            if (!$instance instanceof Entity) return 22;
+            if (!$instance instanceof \Nebule\Library\Entity) return 22;
             if ($instance->getID() == '0') return 23;
         }
 
         if (sizeof($this->_authoritiesInstance->getDirectoryAuthoritiesInstance()) == 0) return 31;
         foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)  {
-            if (!$instance instanceof Entity) return 32;
+            if (!$instance instanceof \Nebule\Library\Entity) return 32;
             if ($instance->getID() == '0') return 33;
         }
 
         if (sizeof($this->_authoritiesInstance->getTimeAuthoritiesInstance()) == 0) return 41;
         foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)  {
-            if (!$instance instanceof Entity) return 42;
+            if (!$instance instanceof \Nebule\Library\Entity) return 42;
             if ($instance->getID() == '0') return 43;
         }
 
-        if (!$this->_entitiesInstance->getServerEntityInstance() instanceof Entity) return 51;
+        if (!$this->_entitiesInstance->getServerEntityInstance() instanceof \Nebule\Library\Entity) return 51;
         if ($this->_entitiesInstance->getServerEntityEID() == '0') return 52;
 
-        if (!$this->_entitiesInstance->getDefaultEntityInstance() instanceof Entity) return 61;
+        if (!$this->_entitiesInstance->getDefaultEntityInstance() instanceof \Nebule\Library\Entity) return 61;
         if ($this->_entitiesInstance->getDefaultEntityInstance()->getID() == '0') return 62;
 
-        if (!$this->_entitiesInstance->getGhostEntityInstance() instanceof Entity) return 71;
+        if (!$this->_entitiesInstance->getGhostEntityInstance() instanceof \Nebule\Library\Entity) return 71;
         if ($this->_entitiesInstance->getGhostEntityInstance()->getID() == '0') return 72;
 
         return 128;
