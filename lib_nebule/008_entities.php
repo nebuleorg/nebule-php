@@ -13,7 +13,7 @@ namespace Nebule\Library;
  * - Connected entity : entity unlocked that can do signed actions and see/change enciphered and obfuscated things.
  * - Unlocked entities : list of inherited entities automatically unlocked with the connected entity. This permit to
  *   switch quickly from one to other to do some actions in other context. FIXME not functional now.
- * Must not be serialized on PHP session with nebule class.
+ * Must not be serialized on PHP session with nebule class. Recalculate on each request.
  *
  * @author    Projet nebule
  * @license   GNU GPLv3
@@ -308,22 +308,23 @@ else
     public function getConnectedEntityIsUnlocked(): bool { return $this->_connectedEntityIsUnlocked; }
 
     /**
-     * Try to find connected entity from :
+     * Try to find a connected entity from:
      * 1: from PHP session;
      * 3: last keep default instance.
-     * If not from PHP session, flush previous private key.
+     * If not from the PHP session, flush the previous private key.
      * @return void
      */
     private function _findConnectedEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleConnectedEntityInstance');
+        //$instance = $this->_sessionInstance->getSessionStoreAsEntity('nebuleConnectedEntityInstance');
+        $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance->getIsEntity())
             $instance = $this->_ghostEntityInstance;
         $this->_connectedEntityInstance = $instance;
         $this->_connectedEntityEID = $instance->getID();
         $this->_connectedEntityIsUnlocked = $this->_connectedEntityInstance->getHavePrivateKeyPassword();
         $this->_metrologyInstance->addLog('connected entity eid=' . $this->_connectedEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
-        $this->_sessionInstance->setSessionStoreAsEntity('nebuleConnectedEntityInstance', $this->_connectedEntityInstance);
+        $this->_sessionInstance->setSessionStoreAsString('nebuleConnectedEntityInstance', $this->_connectedEntityEID);
     }
 
     public function setConnectedEntity(Entity $entity): bool {
