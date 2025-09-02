@@ -65,7 +65,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
             $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . $nid->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2cd59e0e');
             $this->_nid = $nid;
             $this->setName();
-            $this->setShortName();
+            $this->setShortName($this->_shortName);
             $this->setStyleCSS();
         }
     }

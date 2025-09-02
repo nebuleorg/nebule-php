@@ -35,7 +35,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250831';
+    const MODULE_VERSION = '020250902';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -126,56 +126,56 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[0]['desc'] = '::module:entities:KnownEntitiesDesc';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List entities know me.
                 $hookArray[1]['name'] = '::module:entities:KnownByEntities';
                 $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[1]['desc'] = '::module:entities:KnownByEntitiesDesc';
                 $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List my entities.
                 $hookArray[2]['name'] = '::module:entities:MyEntities';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[2]['desc'] = '::module:entities:MyEntitiesDesc';
                 $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List unknown entities.
                 $hookArray[3]['name'] = '::module:entities:UnknownEntities';
                 $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[3]['desc'] = '::module:entities:UnknownEntitiesDesc';
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List special entities.
                 $hookArray[4]['name'] = '::module:entities:SpecialEntities';
                 $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[4]['desc'] = '::module:entities:SpecialEntitiesDesc';
                 $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // List all entities.
                 $hookArray[5]['name'] = '::module:entities:allEntities';
                 $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                 $hookArray[5]['desc'] = '::module:entities:allEntitiesDesc';
                 $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12];
+                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
 
                 // See entity properties.
                 $hookArray[6]['name'] = '::module:entities:DescriptionEntity';
                 $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                 $hookArray[6]['desc'] = '::module:entities:DescriptionEntityDesc';
                 $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7];
+                    //. '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
 
                 if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'])
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
@@ -220,7 +220,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch to this entity.
@@ -229,8 +229,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $object;
                     }
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
                     // Unlock entity.
@@ -240,7 +241,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=login'
-                        . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                     if ($object != $this->_entitiesInstance->getConnectedEntityEID()) {
                         // Switch and connect to this entity.
@@ -249,8 +250,9 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SELECT_GHOST . '=' . $object
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $object;
                     }
                 }
 
@@ -297,7 +299,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
 
@@ -310,7 +312,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
         }

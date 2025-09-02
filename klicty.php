@@ -1808,7 +1808,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $id;
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $id;
 
                 echo $this->getDisplayObject_DEPRECATED($instance, $param);
 
@@ -2110,7 +2110,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[1]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $id;
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $id;
             }
 
             if ($this->_configurationInstance->getOptionAsBoolean('permitSynchronizeLink') && $this->_configurationInstance->getOptionAsBoolean('permitSynchronizeObject')) {
@@ -2628,7 +2628,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['link'] = '?'
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $createEntityInstance;
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $createEntityInstance;
 
                 echo $this->getDisplayObject_DEPRECATED($createEntityInstance, $param);
 

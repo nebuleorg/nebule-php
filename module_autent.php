@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250831';
+    const MODULE_VERSION = '020250902';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -105,6 +105,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle('::::INFO');
+        $title->setEnableEntity(false);
         $title->display();
 
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
@@ -149,6 +150,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle(':::login');
+        $title->setEnableEntity(false);
         $title->display();
 
         $instanceList = new DisplayList($this->_applicationInstance);
@@ -166,7 +168,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                     '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                     . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
             else
                 $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
@@ -189,6 +191,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
 
         $title = new DisplayTitle($this->_applicationInstance);
         $title->setTitle(':::logout');
+        $title->setEnableEntity(false);
         $title->display();
 
         $instanceList = new DisplayList($this->_applicationInstance);
@@ -203,7 +206,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
             . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-            . '&' . References::COMMAND_SELECT_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         $this->_displayAddButton($instanceList,
             ':::flush',

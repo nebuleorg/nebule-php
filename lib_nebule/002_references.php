@@ -37,6 +37,9 @@ class References //extends Functions
     public const COMMAND_FLUSH = 'f';
     public const COMMAND_RESCUE = 'r';
     public const COMMAND_TOKEN = 't';
+    public const COMMAND_SWITCH_GHOST = 'g';
+    public const COMMAND_SWITCH_CONNECTED = 's';
+    public const COMMAND_PASSWORD = 'p';
     public const COMMAND_AUTH_ENTITY_LOGIN = 'login';
     public const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     public const COMMAND_AUTH_ENTITY_MOD = 'auth';
@@ -44,7 +47,6 @@ class References //extends Functions
     public const COMMAND_SELECT_LANG = 'lang';
     public const COMMAND_SELECT_OBJECT = 'obj';
     public const COMMAND_SELECT_ENTITY = 'ent';
-    public const COMMAND_SELECT_GHOST = 'gho';
     public const COMMAND_SELECT_GROUP = 'grp';
     public const COMMAND_SELECT_CONVERSATION = 'cvt';
     public const COMMAND_SELECT_CURRENCY = 'cur';
@@ -53,7 +55,6 @@ class References //extends Functions
     public const COMMAND_SELECT_WALLET = 'wal';
     public const COMMAND_SELECT_LINK = 'lnk';
     public const COMMAND_SELECT_TRANSACTION = 'trs';
-    public const COMMAND_SELECT_PASSWORD = 'pwd';
     
     // Les références.
     public const REFERENCE_OBJECT_TEXT = 'text/plain';

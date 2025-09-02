@@ -1426,6 +1426,11 @@ class Traduction extends Traductions
             <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> : Charge en mode restreint pour dépannage.</li>
             <li><b><?php echo References::COMMAND_TOKEN; ?></b> : Transmet un ticket qui doit être valide pour permettre
                 certaines actions. (hors bootstrap)</li>
+            <li><b><?php echo References::COMMAND_SWITCH_GHOST; ?></b> : Change l'entité en cours d'impersonation.
+                (hors bootstrap)</li>
+            <li><b><?php echo References::COMMAND_SWITCH_CONNECTED; ?></b> : Change l'entité connectée en cours. (hors
+                bootstrap)</li>
+            <li><b><?php echo References::COMMAND_PASSWORD; ?></b> : Mot de passe de l'entité. (hors bootstrap)</li>
             <li><b><?php echo LIB_ARG_UPDATE_APPLICATION; ?></b> : Demande une mise à jour des applications et du cache
                 associé.</li>
             <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non

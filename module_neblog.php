@@ -1078,6 +1078,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayContentAnswers(Node $nid): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:answ:list', $this::MODULE_REGISTERED_ICONS[1]);
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) { // FIXME add inside the list
             // Add answer query
@@ -1141,25 +1142,29 @@ class ModuleNeblog extends \Nebule\Library\Modules
     /*
      * Blogs
      *
-     * Definition of new blog with 'BlogNID' NID:
-     *  -  f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
+     * Definition of a new blog with 'BlogNID' NID:
+     *  - f>RID_BLOG_NODE>BlogNID>RID_BLOG_NODE
      * BlogNID should not have content.
-     * BlogNID should have name.
-     * BlogNID must not have update.
+     * BlogNID should have a name.
+     * BlogNID must not have an update.
      */
     private function _getLinksBlogNID(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $this->_getLinksF($links, $this->_instanceBlogNodeRID, self::RID_BLOG_NODE);
         return $links;
     }
     private function _getListBlogNID(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksBlogNID();
         return $this->_getOnLinksNID2($links);
     }
     private function _getCountBlogNID(): int {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksBlogNID());
     }
     private function _setNewBlogNID(string $name): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceNode = $this->_cacheInstance->newVirtualNode();
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
         $this->_metrologyInstance->addLog('new blog nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '24eb5b6b');
@@ -1180,40 +1185,46 @@ class ModuleNeblog extends \Nebule\Library\Modules
      * Posts on blogs
      *
      * On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
-     *  - f>BlogNID>PostNID>RID_BLOG_POST :
+     *  - f>BlogNID>PostNID>RID_BLOG_POST:
      * PostNID should not have content.
-     * PostNID can have name.
-     * PostNID can have update.
-     *  - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID :
+     * PostNID can have a name.
+     * PostNID can have an update.
+     *  - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID:
      * ContentOID must have content.
-     * ContentOID should not have name.
+     * ContentOID should not have a name.
      * ContentOID can have update.
-     * OrderNID reflect the order of a content on the list of contents to display.
+     * OrderNID reflects the order of a content on the list of contents to display.
      */
     private function _getLinksPostNID(Node $blog): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $this->_getLinksF($links, $blog, self::RID_BLOG_POST, true);
         $this->_metrologyInstance->addLog('size of post list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b81aeb71');
         return $links;
     }
     private function _getLinksPostContentOID(Node $post): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $this->_getLinksF($links, $post, self::RID_BLOG_POST, true);
         $this->_metrologyInstance->addLog('size of post content list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1ce94445');
         return $links;
     }
     private function _getListPostNID(Node $blog): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksPostNID($blog);
         return $this->_getOnLinksNID2($links);
     }
     private function _getListPostContentOID(Node $post): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksPostContentOID($post);
         return $this->_getOnLinksNID2($links);
     }
     private function _getCountPostNID(Node $blog): int {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPostNID($blog));
     }
     private function _setNewBlogPost(string $name, string $content): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Create PostNID
         $instanceNode = $this->_cacheInstance->newVirtualNode();
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');

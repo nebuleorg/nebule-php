@@ -6401,38 +6401,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $error;
     }
 
-    protected function _displayGhostEntityOnHeader(bool $enableLink = true): void
-    {
-        if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
-            $instance = new DisplayObject($this->_applicationInstance);
-            $instance->setNID($this->_entitiesInstance->getGhostEntityInstance());
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setEnableRefs(false);
-            $instance->setEnableNID(false);
-            $instance->setEnableFlags(true);
-            $instance->setEnableFlagProtection(false);
-            $instance->setEnableFlagObfuscate(false);
-            $instance->setEnableFlagUnlocked(true);
-            $instance->setEnableFlagState(true);
-            $instance->setEnableFlagEmotions(false);
-            $instance->setEnableStatus(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableActions(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableLink($enableLink);
-            $instance->setSize(DisplayItem::SIZE_MEDIUM);
-            $instance->setRatio(DisplayItem::RATIO_SHORT);
-            $instance->setFlagUnlocked($this->_entitiesInstance->getConnectedEntityIsUnlocked());
-            $instance->display();
-        }
-    }
-
-    protected function _displayConnectedEntityOnHeader(bool $enableLink = true): void
-    {
+    protected function _displayGhostEntityOnHeader(bool $enableLink = true): void {
         $instance = new DisplayObject($this->_applicationInstance);
-        $instance->setNID($this->_entitiesInstance->getConnectedEntityInstance());
+        $instance->setNID($this->_entitiesInstance->getGhostEntityInstance());
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setEnableName(true);
@@ -6451,8 +6422,37 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $instance->setEnableLink($enableLink);
         $instance->setSize(DisplayItem::SIZE_MEDIUM);
         $instance->setRatio(DisplayItem::RATIO_SHORT);
-        $instance->setFlagUnlocked($this->_entitiesInstance->getConnectedEntityIsUnlocked());
+        $instance->setFlagUnlocked($this->_entitiesInstance->getGhostEntityInstance()->getIsUnlocked());
         $instance->display();
+    }
+
+    protected function _displayConnectedEntityOnHeader(bool $enableLink = true): void {
+        if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()
+                && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+        ) {
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instance->setNID($this->_entitiesInstance->getConnectedEntityInstance());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagUnlocked(true);
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableActions(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink($enableLink);
+            $instance->setSize(DisplayItem::SIZE_MEDIUM);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instance->setFlagUnlocked($this->_entitiesInstance->getConnectedEntityInstance()->getIsUnlocked());
+            $instance->display();
+        }
     }
 
     static public function docDispTitle(int $level, string $id, string $title): void {
