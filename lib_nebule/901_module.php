@@ -249,7 +249,7 @@ abstract class Modules extends Functions implements ModuleInterface
     {
         ?>
 
-        <h3 id="oam">OAM / Module</h3>
+        <?php Displays::docDispTitle(3, 'oam', 'Module'); ?>
         <p>Le module est une classe enfant de la classe <i>Modules</i>. Cela permet d'étendre les fonctionnalités d'une
             application. Un module peut être par défaut présent dans une application, c'est-à-dire présent dans l'objet
             de l'application. Dans ce cas son nom doit être présent dans la liste des modules intégrés à l'application.
@@ -278,34 +278,34 @@ abstract class Modules extends Functions implements ModuleInterface
             et <i>permitApplicationModulesTranslate</i> doivent être à true.</p>
         <p>A faire...</p>
 
-        <h4 id="oamn">OAMN / Nommage</h4>
+        <?php Displays::docDispTitle(4, 'oamn', 'Nommage'); ?>
         <p>A faire...</p>
 
-        <h4 id="oamp">OAMP / Protection</h4>
+        <?php Displays::docDispTitle(4, 'oamp', 'Protection'); ?>
         <p>A faire...</p>
 
-        <h4 id="oamd">OAMD / Dissimulation</h4>
+        <?php Displays::docDispTitle(4, 'oamd', 'Dissimulation'); ?>
         <p>A faire...</p>
 
-        <h4 id="oaml">OAML / Liens</h4>
+        <?php Displays::docDispTitle(4, 'oaml', 'Liens'); ?>
         <p>A faire...</p>
 
-        <h4 id="oamc">OAMC / Création</h4>
+        <?php Displays::docDispTitle(4, 'oamc', 'Création'); ?>
         <p>Un module est une classe enfant de la classe <i>Modules</i> ou de la classe <i>ModuleTranslates</i>.</p>
         <p>Les modules sont chargés par la classe <i>Applications</i> dont hérite toutes les applications. </p>
         <p>Liste des liens à générer lors de la création d'un module.</p>
         <p>A faire...</p>
 
-        <h4 id="oamu">OAMU / Mise à Jour</h4>
+        <?php Displays::docDispTitle(4, 'oamu', 'Mise à Jour'); ?>
         <p>A faire...</p>
 
-        <h4 id="oams">OAMS / Stockage</h4>
+        <?php Displays::docDispTitle(4, 'oams', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h4 id="oamt">OAMT / Transfert</h4>
+        <?php Displays::docDispTitle(4, 'oamt', 'Transfert'); ?>
         <p>A faire...</p>
 
-        <h4 id="oamr">OAMR / Réservation et références</h4>
+        <?php Displays::docDispTitle(4, 'oamr', 'Réservation et références'); ?>
         <p>Pas d'objet réservé spécifiquement pour les modules d'applications.</p>
         <p>Les références :</p>
         <ul>

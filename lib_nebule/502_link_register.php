@@ -480,7 +480,7 @@ class LinkRegister extends Functions implements linkInterface
         <p>Le registre de lien ne porte pas son autoprotection. Il est enregistré dans un bloc de liens qui se charge de
             faire cohabiter et de protéger un ou plusieurs liens simultanément. Voir <a href="#b">B</a>.</p>
 
-        <h2 id="ls">LS / Structure</h2>
+        <?php Displays::docDispTitle(2, 'ls', 'Structure'); ?>
         <p>Chaque lien est écrit dans ce que l'on appelle un registre de lien. Ce registre va comprendre plusieurs
             champs. Le premier champ est dit requête d'action. Il est suivi par les champs contenant les identifiants
             des nœuds dans l'ordre d'usage (graphe orienté).</p>
@@ -491,7 +491,7 @@ class LinkRegister extends Functions implements linkInterface
         <p>La forme du registre de lien :</p>
         <p align="center"><code>REQ>NID>NID>NID>NID</code></p>
 
-        <h5 id="lelpo">LELPO / Liens à Propos d’un Objet</h5>
+        <?php Displays::docDispTitle(5, 'lelpo', 'Liens à Propos d’un Objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les liens d’un objet sont consultables séquentiellement. Ils doivent être perçus comme des méta-données d’un
             objet.</p>
@@ -499,7 +499,7 @@ class LinkRegister extends Functions implements linkInterface
             lien est donc une suite de caractères ininterrompue, c'est-à-dire sans espace ou retour à la ligne.</p>
         <p>La taille du lien dépend de la taille de chaque champ.</p>
 
-        <h5 id="lelco">LELCO / Liens Contenu dans un Objet</h5>
+        <?php Displays::docDispTitle(5, 'lelco', 'Liens Contenu dans un Objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Certains liens d’un objet peuvent être contenus dans un autre objet.</p>
         <p>Cette forme de stockage des liens permet de les transmettre et de les manipuler sous la forme d’un objet. On
@@ -513,13 +513,13 @@ class LinkRegister extends Functions implements linkInterface
             doivent d’abord être extraits et injectés dans les liens des objets concernés. En clair, on ne peut pas s’en
             servir facilement pour de l’anonymisation.</p>
 
-        <h2 id="le">LE / Entête</h2>
+        <?php Displays::docDispTitle(2, 'le', 'Entête'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’entête des liens est constitué du texte <code>nebule/liens/version/1.2</code>. Il est séparé du premier
             lien soit par un caractère espace «&nbsp;», soit par un retour chariot «&nbsp;\n&nbsp;».</p>
         <p>Il doit être transmis avec les liens, en premier.</p>
 
-        <h2 id="lr">LR / Registre</h2>
+        <?php Displays::docDispTitle(2, 'lr', 'Registre'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien décrit la syntaxe du lien :</p>
         <p style="text-align:center">
@@ -531,7 +531,7 @@ class LinkRegister extends Functions implements linkInterface
             <code>Signature</code> est invalide est à considérer comme invalide et à supprimer. La vérification peut
             être réalisée en réassemblant les champs après nettoyage.</p>
 
-        <h4 id="lrsi">LRSI / Le champ <code>Signature</code></h4>
+        <?php Displays::docDispTitle(4, 'lrsi', 'Le champ <code>Signature</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
             première partie contient la valeur de la signature. La deuxième partie contient le nom court de la fonction
@@ -544,20 +544,20 @@ class LinkRegister extends Functions implements linkInterface
             et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule. La fonction de prise d’empreinte est notée en
             caractères alphanumériques en minuscule.</p>
 
-        <h5 id="lrusi">LRHSI / Le champ <code>HashSignataire</code></h5>
+        <?php Displays::docDispTitle(5, 'lrusi', 'Le champ <code>HashSignataire</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
         <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
             à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <h3 id="lrt">LRT / Le champ <code>TimeStamp</code></h3>
+        <?php Displays::docDispTitle(3, 'lrt', 'Le champ <code>TimeStamp</code>'); ?>
         <p>Le champ <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
             être une date et une heure au format <a class="external text" title="http://fr.wikipedia.org/wiki/ISO_8601"
                                                     href="http://fr.wikipedia.org/wiki/ISO_8601"
                                                     rel="nofollow">ISO8601</a> ou simplement un compteur incrémental.
         </p>
 
-        <h3 id="lra">LRA / Le champ <code>Action</code></h3>
+        <?php Displays::docDispTitle(3, 'lra', 'Le champ <code>Action</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
         <p>Quand on parle du type d’un lien, on fait référence à son champ <code>Action</code>.</p>
@@ -568,7 +568,7 @@ class LinkRegister extends Functions implements linkInterface
         <p>Le vocabulaire ne reconnaît que les 8 caractères <code>l</code>, <code>f</code>, <code>u</code>,
             <code>d</code>, <code>e</code>, <code>x</code>, <code>k</code> et <code>s</code>, en minuscule.</p>
 
-        <h4 id="lral">LRAL / Action <code>l</code> – Lien entre objets</h4>
+        <?php Displays::docDispTitle(4, 'lral', 'Action <code>l</code> – Lien entre objets'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Met en place une relation entre deux objets. Cette relation a un sens de mise en place et peut être pondérée
             par un objet méta.</p>
@@ -579,7 +579,7 @@ class LinkRegister extends Functions implements linkInterface
             lien en date après filtrage social, éventuellement le dernier en date de l'entité signataire avec le plus
             fort score social.</p>
 
-        <h4 id="lraf">LRAF / Action <code>f</code> – Dérivé d’objet</h4>
+        <?php Displays::docDispTitle(4, 'lraf', 'Action <code>f</code> – Dérivé d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
         <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
@@ -592,12 +592,12 @@ class LinkRegister extends Functions implements linkInterface
         <p>Lors de la lecture de multiples liens <code>f</code>, on retient une liste de liens. On peut ne retenir que
             les liens ayant un minimum de score social de leurs entités signataires.</p>
 
-        <h4 id="lrau">LRAU / Action <code>u</code> – Mise à jour d’objet</h4>
+        <?php Displays::docDispTitle(4, 'lrau', 'Action <code>u</code> – Mise à jour d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Mise à jour d’un objet dérivé qui remplace l’objet parent.</p>
         <p><code>u</code> comme <i>update</i>.</p>
 
-        <h4 id="lrad">LRAD / Action <code>d</code> – Suppression d’objet</h4>
+        <?php Displays::docDispTitle(4, 'lrad', 'Action <code>d</code> – Suppression d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
@@ -616,11 +616,11 @@ class LinkRegister extends Functions implements linkInterface
             si il est encore utilisé par une autre entité, c'est-à-dire si une entité a un lien qui le concerne et n’a
             pas de lien de suppression.</p>
 
-        <h4 id="lrae">LRAE / Action <code>e</code> – Équivalence d’objets</h4>
+        <?php Displays::docDispTitle(4, 'lrae', 'Action <code>e</code> – Équivalence d’objets'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Définit des objets jugés équivalents, et donc interchangeables par exemple pour une traduction.</p>
 
-        <h4 id="lrac">LRAC / Action <code>c</code> – Chiffrement de lien</h4>
+        <?php Displays::docDispTitle(4, 'lrac', 'Action <code>c</code> – Chiffrement de lien'); ?>
         <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
             objets et donc d’anonymiser certaines actions de l’entité (cf. <a href="#ckl">CKL</a>).</p>
         <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
@@ -642,13 +642,13 @@ class LinkRegister extends Functions implements linkInterface
         <p>L'option <code>permitObfuscatedLink</code> permet de désactiver la dissimulation (offuscation) des liens des
             objets. Dans ce cas le lien de type <code>c</code> est rejeté comme invalide avec le code erreur 43.</p>
 
-        <h4 id="lrak">LRAK / Action <code>k</code> – Chiffrement d’objet</h4>
+        <?php Displays::docDispTitle(4, 'lrak', 'Action <code>k</code> – Chiffrement d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Désigne la version chiffrée de l’objet (cf. <a href="#cko">CKO</a>).</p>
         <p>L'option <code>permitProtectedObject</code> permet de désactiver la protection (chiffrement) des objets. Dans
             ce cas le lien de type <code>k</code> est rejeté comme invalide avec le code erreur 42.</p>
 
-        <h4 id="lras">LRAS / Action <code>s</code> – Subdivision d’objet</h4>
+        <?php Displays::docDispTitle(4, 'lras', 'Action <code>s</code> – Subdivision d’objet'); ?>
         <p>Désigne un fragment de l’objet.</p>
         <p>Ce champ nécessite un objet méta qui précise intervalle de contenu de l’objet d’origine. Le contenu de
             l’objet méta doit être de la forme <code>x-y</code> avec :</p>
@@ -662,7 +662,7 @@ class LinkRegister extends Functions implements linkInterface
             <li>sans espace, tabulation ou retour chariot.</li>
         </ul>
 
-        <h4 id="lrax">LRAX / Action <code>x</code> – Suppression de lien</h4>
+        <?php Displays::docDispTitle(4, 'lrax', 'Action <code>x</code> – Suppression de lien'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Supprime un ou plusieurs liens précédemment mis en place.</p>
         <p>Les liens concernés par la suppression sont les liens antérieurs de type <code>l</code>, <code>f</code>,
@@ -673,20 +673,20 @@ class LinkRegister extends Functions implements linkInterface
             suppression ou pas.</p>
         <p>C’est la seule action sur les liens et non sur les objets.</p>
 
-        <h4 id="lrhs">LRHS / Le champ <code>HashSource</code></h4>
+        <?php Displays::docDispTitle(4, 'lrhs', 'Le champ <code>HashSource</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>HashSource</code> désigne l’objet source du lien.</p>
         <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <h4 id="lrhc">LRHC / Le champ <code>HashCible</code></h4>
+        <?php Displays::docDispTitle(4, 'lrhc', 'Le champ <code>HashCible</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>HashCible</code> désigne l’objet destination du lien.</p>
         <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
         <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
-        <h4 id="lrhm">LRHM / Le champ <code>HashMeta</code></h4>
+        <?php Displays::docDispTitle(4, 'lrhm', 'Le champ <code>HashMeta</code>'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le champ <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
             l’objet destination.</p>
@@ -694,45 +694,45 @@ class LinkRegister extends Functions implements linkInterface
             à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
         <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
 
-        <h2 id="l1">L1 / Lien simple</h2>
+        <?php Displays::docDispTitle(2, 'l1', 'Lien simple'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien simple a ses champs <code>HashCible</code> et <code>HashMeta</code> égaux à «&nbsp;0&nbsp;».
         </p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_0_0</code></p>
 
-        <h2 id="l2">L2 / Lien double</h2>
+        <?php Displays::docDispTitle(2, 'l2', 'Lien double'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien double a son champ <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_0</code></p>
 
-        <h2 id="l3">L3 / Lien triple</h2>
+        <?php Displays::docDispTitle(2, 'l3', 'Lien triple'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien triple est complètement utilisé.</p>
         <p>Il ressemble à :</p>
         <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
 
-        <h2 id="ls">LS / Stockage</h2>
+        <?php Displays::docDispTitle(2, 'ls', 'Stockage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Tous les liens sont stockés dans un même emplacement ou sont visible comme étant dans un même emplacement.
             Cet emplacement ne contient pas les contenus des objets (cf <a href="#oos">OOS</a>).</p>
         <p>Le lien dissimulé est stocké dans le même emplacement mais dispose de fichiers de stockages différents du
             fait de la spécificité (cf <a href="#lsds">LSDS</a>).</p>
 
-        <h3 id="lsa">LSA / Arborescence</h3>
+        <?php Displays::docDispTitle(3, 'lsa', 'Arborescence'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Sur un système de fichiers, tous les liens sont stockés dans des fichiers contenus dans le dossier <code>pub/l/</code>
             (<code>l</code> comme lien).</p>
         <p>A faire...</p>
 
-        <h3 id="lsd">LSD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'lsd', 'Dissimulation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le lien de dissimulation, de type <code>c</code>, contient un lien dissimulé sans signature (cf <a
                     href="#lrac">LRAC</a>). Il permet d’offusquer des liens entre objets et donc d’anonymiser certaines
             actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
 
-        <h5 id="lsdrp">LSDRP / Registre public</h5>
+        <?php Displays::docDispTitle(5, 'lsdrp', 'Registre public'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
                     href="#lr">LR</a>). Si ce lien ne respectait pas cette structure il serait automatiquement ignoré ou
@@ -764,7 +764,7 @@ class LinkRegister extends Functions implements linkInterface
             <li>méta : clé de déchiffrement du lien, chiffrée pour le destinataire</li>
         </ul>
 
-        <h5 id="lsdrd">LSDRD / Registre dissimulé</h5>
+        <?php Displays::docDispTitle(5, 'lsdrd', 'Registre dissimulé'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien dissimulé est la partie utile du lien qui est protégée dans le lien de dissimulation.</p>
         <p>L'extraction du lien dissimulé se fait depuis le lien de dissimulation :</p>
@@ -792,7 +792,7 @@ class LinkRegister extends Functions implements linkInterface
             <li>méta : hash(objet méta)</li>
         </ul>
 
-        <h4 id="lsda">LSDA / Attaque sur la dissimulation</h4>
+        <?php Displays::docDispTitle(4, 'lsda', 'Attaque sur la dissimulation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le fait qu’une entité synchronise des liens dissimulés que d’autres entités partagent et les range dans des
             fichiers transcodés peut révéler l’ID de l’objet transcodé. Et par tâtonnement on peut retourner ainsi le
@@ -806,7 +806,7 @@ class LinkRegister extends Functions implements linkInterface
         <p>La solution implémentée pour palier à ce problème c'est la méthode dite de translation des liens
             dissimulés.</p>
 
-        <h4 id="lsds">LSDS / Stockage et transcodage</h4>
+        <?php Displays::docDispTitle(4, 'lsds', 'Stockage et transcodage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Les liens dissimulés sont camouflés dans des liens de dissimulation, ils ne sont donc plus utilisables pour
             assurer le transfert entre entités et le tri dans les fichiers de stockage des liens.</p>
@@ -821,7 +821,7 @@ class LinkRegister extends Functions implements linkInterface
             dans des fichiers clairement distincts répond au besoin d'utilisation. Et lors du nettoyage des liens, le
             traitement peut être différencié par rapport à la structure du nom des fichiers.</p>
 
-        <h5 id="lsdst">LSDST / Translation de lien</h5>
+        <?php Displays::docDispTitle(5, 'lsdst', 'Translation de lien'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La répartition des liens de dissimulation dans des fichiers attachés à l'entité émettrice et l'entité
             destinataire ne permet pas une exmploitation efficace et rapide des liens dissimulés. Il faut trouver un
@@ -838,19 +838,19 @@ class LinkRegister extends Functions implements linkInterface
             clé peut être commune à plusieurs entités sans donner les mêmes translations.</p>
         <p>A faire...</p>
 
-        <h5 id="lsdsp">LSDSP / Protection de translation</h5>
+        <?php Displays::docDispTitle(5, 'lsdsp', 'Protection de translation'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="lsdt">LSDT / Transfert et partage</h4>
+        <?php Displays::docDispTitle(4, 'lsdt', 'Transfert et partage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="lsdc">LSDC / Compromission</h4>
+        <?php Displays::docDispTitle(4, 'lsdc', 'Compromission'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="lt">LT / Transfert</h2>
+        <?php Displays::docDispTitle(2, 'lt', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="lv">LV / Vérification</h2>
+        <?php Displays::docDispTitle(2, 'lv', 'Vérification'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La signature d’un lien doit être vérifiée lors de la fin de la réception du lien. La signature d’un lien
             devrait être vérifiée avant chaque utilisation de ce lien. Un lien avec une signature invalide doit être
@@ -859,7 +859,7 @@ class LinkRegister extends Functions implements linkInterface
             liens, et inversement (cf <a href="#cl">CL</a> et <a href="#oov">OOV</a>).</p>
         <p>Toute modification de l’un des champs du lien entraîne l’invalidation de tout le lien.</p>
 
-        <h2 id="lo">LO / Oubli</h2>
+        <?php Displays::docDispTitle(2, 'lo', 'Oubli'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>

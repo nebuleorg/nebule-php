@@ -1680,11 +1680,11 @@ class Currency extends Node implements nodeInterface
     {
         ?>
 
-        <h2 id="om">OM / Monnaie</h2>
+        <?php Displays::docDispTitle(2, 'om', 'Monnaie'); ?>
         <p>Certains objets permettre de mettre en place et de gérer plusieurs types de monnaies et plusieurs monnaies
             concurrentes.</p>
 
-        <h3 id="omf">OMF / Fonctionnement</h3>
+        <?php Displays::docDispTitle(3, 'omf', 'Fonctionnement'); ?>
         <p>Une monnaie est un objet de référence qui va gérer des sac de jetons. La gestion se fait par différentes
             entités détenant des rôles spécifiques aux monnaies.</p>
         <p>Une monnaie va disposer de plusieurs propriétés connues par leurs abréviations, voir <a href="#omcp">OMCP</a>.
@@ -1706,7 +1706,7 @@ UNI:pou
 CPR:(c) nebule/qantion 2020
 </pre>
 
-        <h3 id="omn">OMN / Nommage</h3>
+        <?php Displays::docDispTitle(3, 'omn', 'Nommage'); ?>
         <p>Une monnaie peut disposer d'un nom complet. Ce nom est définit par la propriété <code>NAM</code> et est
             doublé par un lien de nommage classique comme tout objet.</p>
         <p>Une monnaie peut aussi disposer d'une abréviation définit par la propriété <code>UNI</code>.</p>
@@ -1714,46 +1714,46 @@ CPR:(c) nebule/qantion 2020
             certains cas il peut êrte formé de <code>NAM(UNI)</code> mais la propriété <code>UNI</code> a plutôt
             vocation a être utilisée dans un affichage condensé.</p>
 
-        <h3 id="omp">OMP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'omp', 'Protection'); ?>
         <p>A faire...</p>
 
-        <h3 id="omd">OMD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'omd', 'Dissimulation'); ?>
         <p>A faire...</p>
 
-        <h3 id="oml">OML / Liens</h3>
+        <?php Displays::docDispTitle(3, 'oml', 'Liens'); ?>
         <p>A faire...</p>
 
-        <h3 id="omv">OMV / Valeur</h3>
+        <?php Displays::docDispTitle(3, 'omv', 'Valeur'); ?>
         <p>La valeur de la monnaie, à un instant donné, est égale à la somme des sac de jetons de la monnaie au même
             instant.</p>
 
-        <h3 id="omc">OMC / Création</h3>
+        <?php Displays::docDispTitle(3, 'omc', 'Création'); ?>
         <p>A faire...</p>
 
-        <h4 id="omcl">OMCL / Liens</h4>
+        <?php Displays::docDispTitle(4, 'omcl', 'Liens'); ?>
         <p>Liste des liens à générer lors de la création d'une monnaie.</p>
         <p>A faire...</p>
 
-        <h4 id="omcp">OMCP / Propriétés</h4>
+        <?php Displays::docDispTitle(4, 'omcp', 'Propriétés'); ?>
         <p></p>
 
-        <h5 id="omcph">OMCPH / Héritage</h5>
+        <?php Displays::docDispTitle(5, 'omcph', 'Héritage'); ?>
         <p>Certaines propriétés des sacs de jetons et jetons sont héritées de la monnaie, si ces propriétés sont
             définies dans la monnaie. Les héritages sont prioritaires sur les propriétés définies via l'objet et les
             liens des sacs de jetons et jetons.</p>
 
-        <h5 id="omcphct">OMCPHCT / HCT</h5>
+        <?php Displays::docDispTitle(5, 'omcphct', 'HCT'); ?>
         <p>Définit si l'objet de la monnaie a un contenu. Si il n'a pas de contenu l'objet de la monnaie est virtuel et
             correspond à son SID, et les paramètres de la monnaie ne peuvent pas être forcés.</p>
         <p>Ce n'est pas écrit dans l'objet de la monnaie ni enregistré via des liens. Cela sert uniquement au moment de
             la création d'une monnaie.</p>
 
-        <h5 id="omcptyp">OMCPTYP / TYP</h5>
+        <?php Displays::docDispTitle(5, 'omcptyp', 'TYP'); ?>
         <p>Le type de monnaie.</p>
         <p>Toujours à la valeur <i>cryptocurrency</i>.</p>
         <p>Présence obligatoire en ligne 1 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpsid">OMCPSID / SID</h5>
+        <?php Displays::docDispTitle(5, 'omcpsid', 'SID'); ?>
         <p>Le numéro de série identifiant de la monnaie (<i>serial</i>).</p>
         <p>Si l'objet de référence de la monnaie est virtuel, l'identifiant de la monnaie <code>CID</code> sera le
             <code>SID</code>.</p>
@@ -1767,27 +1767,27 @@ CPR:(c) nebule/qantion 2020
             ne consomme pas du tout de précieux aléa de bonne qualité.</p>
         <p>Présence obligatoire en ligne 2 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpcap">OMCPCAP / CAP</h5>
+        <?php Displays::docDispTitle(5, 'omcpcap', 'CAP'); ?>
         <p>Liste des capacités connues de la monnaie.</p>
         <p>Si une capacité n'est pas présente elle ne peut être invoquée, même si elle est forcée.</p>
         <p>Présence obligatoire en ligne 3 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpmod">OMCPMOP / MOP</h5>
+        <?php Displays::docDispTitle(5, 'omcpmod', 'MOP'); ?>
         <p>Définit le mode d'exploitation de la monnaie.</p>
         <p>Si une capacité n'est pas présente elle ne peut être invoquée, même si elle est forcée.</p>
         <p>Présence obligatoire en ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpaid">OMCPAID / AID</h5>
+        <?php Displays::docDispTitle(5, 'omcpaid', 'AID'); ?>
         <p>Identifiant de l'entité authorité de la monnaie (<i>autority</i>).</p>
         <p>C'est l'entité qui forge la monnaie et délègue la gestion aux entités gestionnaires (MID).</p>
         <p>Présence obligatoire en ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpmid">OMCPMID / MID</h5>
+        <?php Displays::docDispTitle(5, 'omcpmid', 'MID'); ?>
         <p>Identifiant d'une entité de gestion de la monnaie (<i>manage</i>).</p>
         <p>Une monnaie peut avoir plusieurs entités de gestion.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpfid">OMCPFID / FID</h5>
+        <?php Displays::docDispTitle(5, 'omcpfid', 'FID'); ?>
         <p>Non utilisé !!!</p>
         <p>Identifiant de l'entité ayant forgé la monnaie (<i>forge</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
@@ -1795,22 +1795,22 @@ CPR:(c) nebule/qantion 2020
             sans que cela ne pose de problème.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpcid">OMCPCID / CID</h5>
+        <?php Displays::docDispTitle(5, 'omcpcid', 'CID'); ?>
         <p>Identifiant de l’objet de la monnaie (<i>currency</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème. Ce qui va faire la différence c'est l'autorité et ses liens.</p>
         <p>L'objet d'une monnaie ne peut en aucun cas contenir son propre identifiant <code>CID</code>.</p>
 
-        <h5 id="omcpnam">OMCPNAM / NAM</h5>
+        <?php Displays::docDispTitle(5, 'omcpnam', 'NAM'); ?>
         <p>Le nom de la monnaie. Limité à 256 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpuni">OMCPUNI / UNI</h5>
+        <?php Displays::docDispTitle(5, 'omcpuni', 'UNI'); ?>
         <p>Le nom de l'unité de la monnaie en 3 lettres maximum. Pas de chiffre.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpdta">OMCPDTA / DTA</h5>
+        <?php Displays::docDispTitle(5, 'omcpdta', 'DTA'); ?>
         <p>Identifiant de l’entité autorité de temps pour les limites de temps.</p>
         <p>La gestion du temps avec une autorité de temps permet de prendre en compte sérieusement les suppression
             programmées de jeton (<code>DTC</code>/<code>DTD</code>) ainsi que leur inflation/déflation automatique
@@ -1819,26 +1819,26 @@ CPR:(c) nebule/qantion 2020
             une monnaie ou dans certains cas à un sac de jetons.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpdtc">OMCPDTC / DTC</h5>
+        <?php Displays::docDispTitle(5, 'omcpdtc', 'DTC'); ?>
         <p>Date de création de la monnaie.</p>
         <p>Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpdtd">OMCPDTD / DTD</h5>
+        <?php Displays::docDispTitle(5, 'omcpdtd', 'DTD'); ?>
         <p>Date de suppression programmée de la monnaie.</p>
         <p> Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date pour être
             fonctionel.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpcom">OMCPCOM / COM</h5>
+        <?php Displays::docDispTitle(5, 'omcpcom', 'COM'); ?>
         <p>Commentaire texte libre limité à 4096 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpcpr">OMCPCPR / CPR</h5>
+        <?php Displays::docDispTitle(5, 'omcpcpr', 'CPR'); ?>
         <p>Licence du jeton sous forme d’une texte libre limité à 1024 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpidm">OMCPIDM / IDM</h5>
+        <?php Displays::docDispTitle(5, 'omcpidm', 'IDM'); ?>
         <p>Mode de fonctionnement du mécanisme d’inflation/déflation (<i>mode</i>) de tous les jetons de la monnaie.</p>
         <p>Les modes sont <i>creation</i> ou <i>transaction</i> ou <i>disabled</i>.</p>
         <p>Suivant le mode, le mécanisme tient compte du temps passé depuis la dernière transaction ou depuis l’émission
@@ -1857,13 +1857,13 @@ CPR:(c) nebule/qantion 2020
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>CF <a href="#omgcpidm">P/IDM</a> et <a href="#omjcpidm">T/IDM</a>.</p>
 
-        <h5 id="omcpidr">OMCPIDR / IDR</h5>
+        <?php Displays::docDispTitle(5, 'omcpidr', 'IDR'); ?>
         <p>Taux de variation du mécanisme d’inflation/déflation (<i>rate</i>) de tous les jetons de la monnaie.</p>
         <p>Égal à 1 (un), taux constant donc pas de variation.</p>
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpidp">OMCPIDP / IDP</h5>
+        <?php Displays::docDispTitle(5, 'omcpidp', 'IDP'); ?>
         <p>Périodicité d’application du taux de variation du mécanisme d’inflation/déflation (<i>period</i>) de tous les
             jetons de la monnaie.</p>
         <p>Unité exprimée en minutes.</p>
@@ -1871,24 +1871,24 @@ CPR:(c) nebule/qantion 2020
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpvmd">OMCPVMD / VMD</h5>
+        <?php Displays::docDispTitle(5, 'omcpvmd', 'VMD'); ?>
         <p>Définit le mode de validation des transactions de jetons de la monnaie. C'est le mode de fonctionnement
             global de la monnaie.</p>
         <p>Actuellement seul est supporté le mode centralisé.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcpvid">OMCPVID / VID</h5>
+        <?php Displays::docDispTitle(5, 'omcpvid', 'VID'); ?>
         <p>Dans le mode de validation centralisé, c'est l'entité de validation des transactions de jetons de la
             monnaie.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcptrs">OMCPTRS / TRS</h5>
+        <?php Displays::docDispTitle(5, 'omcptrs', 'TRS'); ?>
         <p>Liste des méthodes de transaction supportées.</p>
         <p>Le code <code>LNS</code> désigne la méthode de base avec un lien (L) matérialisant une transaction et
             imposant un jeton non sécable (NS).</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omcppcn">OMCPPCN / PCN</h5>
+        <?php Displays::docDispTitle(5, 'omcppcn', 'PCN'); ?>
         <p>Non utilisé !!!</p>
         <p>Définit le nombre de sacs de jetons à créer avec la monnaie. Ce nombre multiplié par le <a href="#omgcptcn">TCN</a>
             donne le nombre total de jetons créés pour la monnaie.</p>
@@ -1896,33 +1896,33 @@ CPR:(c) nebule/qantion 2020
             sert uniquement au moment de la création de la monnaie. Cependant un lien de rattachement sera créé pour
             chaque sac de jeton depuis la monnaie avec en meta le <a href="#omgcppid"></a>PID</a>.</p>
 
-        <h3 id="oms">OMS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'oms', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="omt">OMT/ Transfert</h3>
         <p>A faire...</p>
 
-        <h3 id="omr">OMR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'omr', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les monnaies :</p>
         <ul>
             <li>nebule/objet/monnaie</li>
         </ul>
 
-        <h4 id="omio">OMIO / Implémentation des Options</h4>
+        <?php Displays::docDispTitle(4, 'omio', 'Implémentation des Options'); ?>
         <p>A faire...</p>
 
-        <h4 id="omia">OMIA / Implémentation des Actions</h4>
+        <?php Displays::docDispTitle(4, 'omia', 'Implémentation des Actions'); ?>
         <p>A faire...</p>
 
-        <h3 id="omo">OMO / Oubli</h3>
+        <?php Displays::docDispTitle(3, 'omo', 'Oubli'); ?>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 
 
-        <h3 id="omg">OMG / Sac de jetons</h3>
+        <?php Displays::docDispTitle(3, 'omg', 'Sac de jetons'); ?>
         <p>A faire...</p>
 
-        <h3 id="omgf">OMGF / Fonctionnement</h3>
+        <?php Displays::docDispTitle(3, 'omgf', 'Fonctionnement'); ?>
         <p>A faire...</p>
         <p>Exemple d'objet de sac de jetons :</p>
         <pre>
@@ -1937,53 +1937,53 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         </p>
         <p>A faire...</p>
 
-        <h3 id="omgn">OMGN / Nommage</h3>
+        <?php Displays::docDispTitle(3, 'omgn', 'Nommage'); ?>
         <p>Un sac de jetons hérite du nommage de la monnaie à laquelle il est rattaché.</p>
         <p>Le nom complet d'un objet de type sac de jetons est uniquement extrait de la propriété <code>NAM</code>. Dans
             certains cas il peut êrte formé de <code>NAM(UNI)</code> mais la propriété <code>UNI</code> a plutôt
             vocation a être utilisée dans un affichage condensé.</p>
 
-        <h3 id="omgp">OMGP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'omgp', 'Protection'); ?>
         <p>A faire...</p>
 
-        <h3 id="omgd">OMGD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'omgd', 'Dissimulation'); ?>
         <p>A faire...</p>
 
-        <h3 id="omgl">OMGL / Liens</h3>
+        <?php Displays::docDispTitle(3, 'omgl', 'Liens'); ?>
         <p>A faire...</p>
 
-        <h3 id="omgv">OMGV / Valeur</h3>
+        <?php Displays::docDispTitle(3, 'omgv', 'Valeur'); ?>
         <p>La valeur du sac de jeton, à un instant donné, est égale à la somme des jetons du sac au même instant.</p>
 
-        <h3 id="omgc">OMGC / Création</h3>
+        <?php Displays::docDispTitle(3, 'omgc', 'Création'); ?>
         <p>A faire...</p>
 
-        <h4 id="omgcl">OMGCL / Liens</h4>
+        <?php Displays::docDispTitle(4, 'omgcl', 'Liens'); ?>
         <p>Liste des liens à générer lors de la création d'un sac de jetons.</p>
         <p>A faire...</p>
 
-        <h4 id="omgcp">OMGCP / Propriétés</h4>
+        <?php Displays::docDispTitle(4, 'omgcp', 'Propriétés'); ?>
         <p></p>
 
-        <h5 id="omgcph">OMGCPH / Héritage</h5>
+        <?php Displays::docDispTitle(5, 'omgcph', 'Héritage'); ?>
         <p>Certaines propriétés sont héritées de la monnaie, si ces propriétés sont définies dans la monnaie. Ce doit
             être la monnaie déclarée en cours d'utilisation et le sac de jetons doit dépendre de cette monnaie
             directement. Les héritages sont prioritaires sur les propriétés définies via l'objet et les liens.</p>
 
-        <h5 id="omgcphct">OMGCPHCT / HCT</h5>
+        <?php Displays::docDispTitle(5, 'omgcphct', 'HCT'); ?>
         <p>Définit si l'objet du sac de jetons a un contenu. Si il n'a pas de contenu l'objet du sac de jetons est
             virtuel et correspond à son SID, et les paramètres du sac de jetons ne peuvent pas être forcés.</p>
         <p>Ce n'est pas écrit dans l'objet du sac de jetons ni enregistré via des liens. Cela sert uniquement au moment
             de la création d'un sac de jetons.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcptyp">OMGCPTYP / TYP</h5>
+        <?php Displays::docDispTitle(5, 'omgcptyp', 'TYP'); ?>
         <p>Le type de sac de jetons.</p>
         <p>Toujours à la valeur <i>tokenpool</i>.</p>
         <p>Présence obligatoire en ligne 1 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcpsid">OMGCPSID / SID</h5>
+        <?php Displays::docDispTitle(5, 'omgcpsid', 'SID'); ?>
         <p>Le numéro de série identifiant du sac de jetons (<i>serial</i>).</p>
         <p>Si l'objet de référence du sac de jetons est virtuel, l'identifiant du sac de jetons <code>PID</code> sera le
             <code>SID</code>.</p>
@@ -1998,19 +1998,19 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         <p>Présence obligatoire en ligne 2 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcpcap">OMGCPCAP / CAP</h5>
+        <?php Displays::docDispTitle(5, 'omgcpcap', 'CAP'); ?>
         <p>Liste des capacités connues du sac de jetons.</p>
         <p>Si une capacité n'est pas présente elle ne peut être invoquée, même si elle est forcée.</p>
         <p>Présence obligatoire en ligne 3 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpcid">OMGCPCID / CID</h5>
+        <?php Displays::docDispTitle(5, 'omgcpcid', 'CID'); ?>
         <p>Identifiant de l’objet de la monnaie auquel est rattaché le sac de jetons (<i>currency</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème.</p>
         <p>Présence obligatoire en ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpfid">OMGCPFID / FID</h5>
+        <?php Displays::docDispTitle(5, 'omgcpfid', 'FID'); ?>
         <p>Identifiant de l'entité ayant forgé le sac de jetons (<i>forge</i>).</p>
         <p>L'entité forge doit désigner une entité de gestion, par défaut c'est elle-même.</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
@@ -2019,7 +2019,7 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcpmid">OMGCPMID / MID</h5>
+        <?php Displays::docDispTitle(5, 'omgcpmid', 'MID'); ?>
         <p>Identifiant de l'entité de gestion du sac de jetons (<i>manage</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
@@ -2027,14 +2027,14 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcppid">OMGCPPID / PID</h5>
+        <?php Displays::docDispTitle(5, 'omgcppid', 'PID'); ?>
         <p>Identifiant de l’objet du sac de jetons (<i>pool</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème.</p>
         <p>L'objet d'un sac de jetons ne peut en aucun cas contenir son propre identifiant <code>PID</code>.</p>
 
-        <h5 id="omgcpdta">OMGCPDTA / DTA</h5>
+        <?php Displays::docDispTitle(5, 'omgcpdta', 'DTA'); ?>
         <p>Identifiant de l’entité autorité de temps pour les limites de temps.</p>
         <p>La gestion du temps avec une autorité de temps permet de prendre en compte sérieusement les suppression
             programmées de jeton (<code>DTC</code>/<code>DTD</code>) ainsi que leur inflation/déflation automatique
@@ -2043,28 +2043,28 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
             une monnaie ou dans certains cas à un sac de jetons.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpdtc">OMGCPDTC / DTC</h5>
+        <?php Displays::docDispTitle(5, 'omgcpdtc', 'DTC'); ?>
         <p>Date de création du sac de jetons.</p>
         <p>Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpdtd">OMGCPDTD / DTD</h5>
+        <?php Displays::docDispTitle(5, 'omgcpdtd', 'DTD'); ?>
         <p>Date de suppression programmée du sac de jetons.</p>
         <p> Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date pour être
             fonctionel.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpcom">OMGCPCOM / COM</h5>
+        <?php Displays::docDispTitle(5, 'omgcpcom', 'COM'); ?>
         <p>Commentaire texte libre limité à 4096 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcpcpr">OMGCPCPR / CPR</h5>
+        <?php Displays::docDispTitle(5, 'omgcpcpr', 'CPR'); ?>
         <p>Licence du jeton sous forme d’une texte libre limité à 1024 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie.</p>
 
-        <h5 id="omgcpidm">OMGCPIDM / IDM</h5>
+        <?php Displays::docDispTitle(5, 'omgcpidm', 'IDM'); ?>
         <p>Mode de fonctionnement du mécanisme d’inflation/déflation (<i>mode</i>) des jetons dépendants du sac de
             jetons.</p>
         <p>Les modes sont <i>creation</i> ou <i>transaction</i> ou <i>disabled</i>.</p>
@@ -2084,14 +2084,14 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>CF <a href="#omcpidm">C/IDM</a>.</p>
 
-        <h5 id="omgcpidr">OMGCPIDR / IDR</h5>
+        <?php Displays::docDispTitle(5, 'omgcpidr', 'IDR'); ?>
         <p>Taux de variation du mécanisme d’inflation/déflation (<i>rate</i>) des jetons dépendants du sac de jetons.
         </p>
         <p>Égal à 1 (un), taux constant donc pas de variation.</p>
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcpidp">OMGCPIDP / IDP</h5>
+        <?php Displays::docDispTitle(5, 'omgcpidp', 'IDP'); ?>
         <p>Périodicité d’application du taux de variation du mécanisme d’inflation/déflation (<i>period</i>) des jetons
             dépendants du sac de jetons.</p>
         <p>Unité exprimée en minutes.</p>
@@ -2099,34 +2099,34 @@ MID:f0f7cf5c921320b97daedeb7c53f2417921c747c77b696f8a25ff29277661d2f
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omgcptcn">OMGCPTCN / TCN</h5>
+        <?php Displays::docDispTitle(5, 'omgcptcn', 'TCN'); ?>
         <p>Non utilisé !!!</p>
         <p>Définit le nombre de jetons à créer dans le pool ou par pools créés (cf <a href="#omcppcn">PCN</a>).</p>
         <p>Ce n'est pas écrit dans l'objet du sac de jetons ni enregistré via des liens. Cela sert uniquement au moment
             de la création d'un sac de jetons. Cependant un lien de rattachement sera créé pour chaque jeton depuis le
             sac de jeton avec en meta le <a href="#omjcptid"></a>TID</a>.</p>
 
-        <h3 id="omgs">OMGS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'omgs', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="omgt">OMGT/ Transfert</h3>
         <p>A faire...</p>
 
-        <h3 id="omgr">OMGR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'omgr', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les sacs de jetons :</p>
         <ul>
             <li>nebule/objet/monnaie/sac</li>
         </ul>
 
-        <h3 id="omgo">OMGO / Oubli</h3>
+        <?php Displays::docDispTitle(3, 'omgo', 'Oubli'); ?>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 
 
-        <h3 id="omj">OMJ / Jeton</h3>
+        <?php Displays::docDispTitle(3, 'omj', 'Jeton'); ?>
         <p>A faire...</p>
 
-        <h3 id="omjf">OMJF / Fonctionnement</h3>
+        <?php Displays::docDispTitle(3, 'omjf', 'Fonctionnement'); ?>
         <p>Un jeton est un objet de référence qui va servir de support de transmission de valeur. Il est attaché à un ou
             plusieurs sacs de jetons. Sa gestion se fait dans des monnaies par l'intermédiaire de sacs de jetons
             attachés aux monnaies.</p>
@@ -2153,22 +2153,22 @@ VAL:100
         <p>Un jeton va disposer de plusieurs propriétés connues par leurs abréviations, voir <a href="#omjcp">OMJCP</a>.
         </p>
 
-        <h3 id="omjn">OMJN / Nommage</h3>
+        <?php Displays::docDispTitle(3, 'omjn', 'Nommage'); ?>
         <p>Un jeton hérite du nommage de la monnaie via le sac de jeton auquel il est rattaché.</p>
         <p>Le nom complet d'un objet de type jeton est uniquement extrait de la propriété <code>NAM</code>. Dans
             certains cas il peut êrte formé de <code>NAM(UNI)</code> mais la propriété <code>UNI</code> a plutôt
             vocation a être utilisée dans un affichage condensé avec une valeur.</p>
 
-        <h3 id="omjp">OMJP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'omjp', 'Protection'); ?>
         <p>A faire...</p>
 
-        <h3 id="omjd">OMJD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'omjd', 'Dissimulation'); ?>
         <p>A faire...</p>
 
-        <h3 id="omjl">OMJL / Liens</h3>
+        <?php Displays::docDispTitle(3, 'omjl', 'Liens'); ?>
         <p>A faire...</p>
 
-        <h3 id="omjv">OMJV / Valeur</h3>
+        <?php Displays::docDispTitle(3, 'omjv', 'Valeur'); ?>
         <p>C’est une valeur calculée strictement numérique du jeton à un instant donné par rapport à une monnaie. Elle
             s'appelle la valeur relative du jeton.</p>
         <p>Par défaut, si <code>VAL</code> non défini, la valeur de <code>VAL</code> est à interpréter comme équivalente
@@ -2180,7 +2180,7 @@ VAL:100
         <p>Si le jeton est désactivé, sa valeur relative est nulle.</p>
         <p>A faire... le détail des calculs de la valeur relative en fonction de chaque propriétés citées.</p>
 
-        <h3 id="omjc">OMJC / Création</h3>
+        <?php Displays::docDispTitle(3, 'omjc', 'Création'); ?>
         <p>Si l'objet de référence du jeton est virtuel, il est forçément généré aléatoirement. Sinon il dépend du
             contenu de l'objet et est rendu unique grâce à la propriété <a href="#omjcpsid">SID</a>.</p>
         <p>Un jeton va disposer de plusieurs propriétés connues par leurs abréviations.</p>
@@ -2202,33 +2202,33 @@ VAL:100
         <p>La seconde ligne avec le <a href="#omjcpsid">SID</a> permet d’avoir un contenu unique et donc une empreinte
             unique pour chaque jeton.</p>
 
-        <h4 id="omjcl">OMJCL / Liens</h4>
+        <?php Displays::docDispTitle(4, 'omjcl', 'Liens'); ?>
         <p>Liste des liens à générer lors de la création d'un jeton.</p>
         <p>A faire...</p>
 
-        <h4 id="omjcp">OMJCP / Propriétés</h4>
+        <?php Displays::docDispTitle(4, 'omjcp', 'Propriétés'); ?>
         <p></p>
 
-        <h5 id="omjcph">OMJCPH / Héritage</h5>
+        <?php Displays::docDispTitle(5, 'omjcph', 'Héritage'); ?>
         <p>Certaines propriétés sont héritées de la monnaie, si ces propriétés sont définies dans la monnaie. Ce doit
             être la monnaie déclarée en cours d'utilisation et le jeton doit dépendre de cette monnaie via un sac de
             jetons. De la même façon certaines propriétés sont héritées en second lieu du sac de jeton. Les héritages
             sont prioritaires sur les propriétés définies via l'objet et les liens.</p>
 
-        <h5 id="omjcphct">OMJCPHCT / HCT</h5>
+        <?php Displays::docDispTitle(5, 'omjcphct', 'HCT'); ?>
         <p>Définit si l'objet du jeton a un contenu. Si il n'a pas de contenu l'objet du jeton est virtuel et correspond
             à son SID, et les paramètres du jeton ne peuvent pas être forcés.</p>
         <p>Ce n'est pas écrit dans l'objet du jeton ni enregistré via des liens. Cela sert uniquement au moment de la
             création d'un jeton.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcptyp">OMJCPTYP / TYP</h5>
+        <?php Displays::docDispTitle(5, 'omjcptyp', 'TYP'); ?>
         <p>Le type de jeton.</p>
         <p>Toujours à la valeur <i>cryptoken</i>.</p>
         <p>Présence obligatoire en ligne 1 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpsid">OMJCPSID / SID</h5>
+        <?php Displays::docDispTitle(5, 'omjcpsid', 'SID'); ?>
         <p>Le numéro de série identifiant le jeton (<i>serial</i>).</p>
         <p>Si l'objet de référence du jeton est virtuel, l'identifiant du jeton <code>TID</code> sera le
             <code>SID</code>.</p>
@@ -2243,20 +2243,20 @@ VAL:100
         <p>Présence obligatoire en ligne 2 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpcap">OMJCPCAP / CAP</h5>
+        <?php Displays::docDispTitle(5, 'omjcpcap', 'CAP'); ?>
         <p>Liste des capacités connues du jeton.</p>
         <p>Si une capacité n'est pas présente elle ne peut être invoquée, même si elle est forcée.</p>
         <p>Le contenu de cette propriété est hérité de la monnaie.</p>
         <p>Présence obligatoire en ligne 3 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpcid">OMJCPCID / CID</h5>
+        <?php Displays::docDispTitle(5, 'omjcpcid', 'CID'); ?>
         <p>Identifiant de l’objet de la monnaie (<i>currency</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème.</p>
         <p>Présence obligatoire en ligne 4 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcppid">OMJCPPID / PID</h5>
+        <?php Displays::docDispTitle(5, 'omjcppid', 'PID'); ?>
         <p>Identifiant de l’objet du sac de jetons (<i>pool</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
@@ -2264,12 +2264,12 @@ VAL:100
         <p>Présence facultative sans ordre après la ligne 2 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Présence obligatoire en ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcptid">OMJCPTID / TID</h5>
+        <?php Displays::docDispTitle(5, 'omjcptid', 'TID'); ?>
         <p>Identifiant du jeton.</p>
         <p>Sa valeur est égale à l'identifiant de l'objet.</p>
         <p>L'objet d'un jeton ne peut en aucun cas contenir son propre identifiant <code>TID</code>.</p>
 
-        <h5 id="omjcpfid">OMJCPFID / FID</h5>
+        <?php Displays::docDispTitle(5, 'omjcpfid', 'FID'); ?>
         <p>Identifiant de l'entité ayant forgé le jeton (<i>forge</i>).</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
@@ -2277,32 +2277,32 @@ VAL:100
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpbid">OMJCPBID / BID</h5>
+        <?php Displays::docDispTitle(5, 'omjcpbid', 'BID'); ?>
         <p>Identifiant du bloc de forge (<i>blockchain</i>).</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpnam">OMJCPNAM / NAM</h5>
+        <?php Displays::docDispTitle(5, 'omjcpnam', 'NAM'); ?>
         <p>Le nom de la monnaie. Limité à 256 caractères.</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpuni">OMJCPUNI / UNI</h5>
+        <?php Displays::docDispTitle(5, 'omjcpuni', 'UNI'); ?>
         <p>Le nom de l'unité de la monnaie en 3 lettres maximum. Pas de chiffre.</p>
         <p>Une monnaie peut tout à fait réutiliser un sac de jetons et des propriétés d’une autre monnaie sans qu’il y
             ai conflit dans la gestion des jetons et de leurs transactions. Les valeurs associées peuvent être copiées
             sans que cela ne pose de problème.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpval">OMJCPVAL / VAL</h5>
+        <?php Displays::docDispTitle(5, 'omjcpval', 'VAL'); ?>
         <p>Indication de valeur numérique initiale du jeton dans l’unité de la monnaie qui utilise le jeton.</p>
         <p>C’est une valeur strictement numérique.</p>
         <p>Par défaut, si non présent, la valeur est à interpréter comme équivalente à 1 (un).</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpdta">OMJCPDTA / DTA</h5>
+        <?php Displays::docDispTitle(5, 'omjcpdta', 'DTA'); ?>
         <p>Identifiant de l’entité autorité de temps pour les limites de temps.</p>
         <p>La gestion du temps avec une autorité de temps permet de prendre en compte sérieusement les suppression
             programmées de jeton (<code>DTC</code>/<code>DTD</code>) ainsi que leur inflation/déflation automatique
@@ -2311,28 +2311,28 @@ VAL:100
             une monnaie ou dans certains cas à un sac de jetons.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpdtc">OMJCPDTC / DTC</h5>
+        <?php Displays::docDispTitle(5, 'omjcpdtc', 'DTC'); ?>
         <p>Date de création du jeton.</p>
         <p>Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpdtd">OMJCPDTD / DTD</h5>
+        <?php Displays::docDispTitle(5, 'omjcpdtd', 'DTD'); ?>
         <p>Date de suppression programmée du jeton.</p>
         <p> Forme texte libre limitée à 128 caractères. Doit pourvoir être interprété comme une date pour être
             fonctionel.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpcom">OMJCPCOM / COM</h5>
+        <?php Displays::docDispTitle(5, 'omjcpcom', 'COM'); ?>
         <p>Commentaire texte libre limité à 4096 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpcpr">OMJCPCPR / CPR</h5>
+        <?php Displays::docDispTitle(5, 'omjcpcpr', 'CPR'); ?>
         <p>Licence du jeton sous forme d’une texte libre limité à 1024 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>Cette propriété ne peut pas être hérité de la monnaie ou du sac de jetons.</p>
 
-        <h5 id="omjcpidm">OMJCPIDM / IDM</h5>
+        <?php Displays::docDispTitle(5, 'omjcpidm', 'IDM'); ?>
         <p>Mode de fonctionnement du mécanisme d’inflation/déflation (<i>mode</i>) du jeton.</p>
         <p>Les modes sont <i>creation</i> ou <i>transaction</i> ou <i>disabled</i>.</p>
         <p>Suivant le mode, le mécanisme tient compte du temps passé depuis la dernière transaction ou depuis l’émission
@@ -2351,13 +2351,13 @@ VAL:100
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
         <p>CF <a href="#omcpidm">C/IDM</a>.</p>
 
-        <h5 id="omjcpidr">OMJCPIDR / IDR</h5>
+        <?php Displays::docDispTitle(5, 'omjcpidr', 'IDR'); ?>
         <p>Taux de variation du mécanisme d’inflation/déflation (<i>rate</i>) du jeton.</p>
         <p>Égal à 1 (un), taux constant donc pas de variation.</p>
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpidp">OMJCPIDP / IDP</h5>
+        <?php Displays::docDispTitle(5, 'omjcpidp', 'IDP'); ?>
         <p>Périodicité d’application du taux de variation du mécanisme d’inflation/déflation (<i>period</i>) du jeton.
         </p>
         <p>Unité exprimée en minutes.</p>
@@ -2365,12 +2365,12 @@ VAL:100
         <p>Doit être activé par <code>IDM</code>.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpsvc">OMJCPSVC / SVC</h5>
+        <?php Displays::docDispTitle(5, 'omjcpsvc', 'SVC'); ?>
         <p>Le jeton fait référence à un type de service rendu (<i>service</i>).</p>
         <p>Taille limitée à 1024 caractères.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpclb">OMJCPCLB / CLB</h5>
+        <?php Displays::docDispTitle(5, 'omjcpclb', 'CLB'); ?>
         <p>Le jeton peut être désactivé (<i>cancelable</i>).</p>
         <p>Par défaut un jeton n’est pas désactivable. Si cette option est présente, quelque soit son contenu, cela
             active la capacité de désactivation à la demande du jeton par la propriété <code>CLD</code>.</p>
@@ -2382,7 +2382,7 @@ VAL:100
         <p>La taille est de un caractère maximum.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcpcld">OMJCPCLD / CLD</h5>
+        <?php Displays::docDispTitle(5, 'omjcpcld', 'CLD'); ?>
         <p>Le jeton est désactivé (<i>canceled</i>).</p>
         <p>Cette propriété n’est d’utilisée que si <code>CLB</code> est activé.</p>
         <p>Si cette option est présente, quelque soit son contenu, cela désactive le jeton.</p>
@@ -2390,14 +2390,14 @@ VAL:100
         <p>La taille est de un caractère maximum.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h5 id="omjcptrs">OMJCPTRS / TRS</h5>
+        <?php Displays::docDispTitle(5, 'omjcptrs', 'TRS'); ?>
         <p>Liste des méthodes de transaction supportées.</p>
         <p>Les modes sont définis dans le chapitre <a href="omjm">modes de transfert</a>. Les modes supportés sont
             écrits les uns après les autres sur une seule ligne et séparés par un caractère espace.</p>
         <p>Le contenu de cette propriété est hérité de la monnaie.</p>
         <p>Présence facultative sans ordre après la ligne 5 dans l'objet si l'objet n'est pas virtuel.</p>
 
-        <h3 id="omjs">OMJS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'omjs', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
         <h3 id="omjt">OMJT/ Transfert</h3>
@@ -2431,13 +2431,13 @@ VAL:100
             imposant un jeton non sécable (NS).</p>
         <p>A faire...</p>
 
-        <h3 id="omjr">OMJR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'omjr', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les jetons :</p>
         <ul>
             <li>nebule/objet/monnaie/jeton</li>
         </ul>
 
-        <h3 id="omjo">OMJO / Oubli</h3>
+        <?php Displays::docDispTitle(3, 'omjo', 'Oubli'); ?>
         <p>L'oubli vonlontaire de certains liens et objets n'est encore ni théorisé ni implémenté mais deviendra
             indispensable lorsque l'espace viendra à manquer (cf <a href="#cn">CN</a>).</p>
 

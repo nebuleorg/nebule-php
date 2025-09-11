@@ -644,7 +644,7 @@ class Conversation extends Group implements nodeInterface
     {
         ?>
 
-        <h2 id="oc">OC / Conversation</h2>
+        <?php Displays::docDispTitle(2, 'oc', 'Conversation'); ?>
         <p>La conversation est un objet définit comme tel, c’est à dire qu’il doit avoir un type mime <code>nebule/objet/conversation</code>.
         </p>
         <p>Fondamentalement, la conversation est un groupe de plusieurs objets et est donc géré de la même façon qu'un
@@ -659,7 +659,7 @@ class Conversation extends Group implements nodeInterface
             qu’un seul niveau de conversation, c’est à dire que les sous-conversations sont gérés simplement comme des
             objets.</p>
 
-        <h3 id="oco">OCO / Objet</h3>
+        <?php Displays::docDispTitle(3, 'oco', 'Objet'); ?>
         <p>L’objet de la conversation peut être de deux natures.</p>
         <p>Soit c’est un objet existant qui est en plus définit comme une conversation. L’objet peut avoir un contenu et
             a sûrement d’autres types mime propres. Dans ce cas l’identifiant de conversation est l’identifiant de
@@ -671,7 +671,7 @@ class Conversation extends Group implements nodeInterface
             hash (<em>sha256</em>) d’une valeur aléatoire de 128bits et de la chaîne <code>006e6562756c652f6f626a65742f636f6e766572736174696f6e</code>.
             Soit un identifiant complet de la taille de 116 caractères.</p>
 
-        <h3 id="ocn">OCN / Nommage</h3>
+        <?php Displays::docDispTitle(3, 'ocn', 'Nommage'); ?>
         <p>Le nommage à l’affichage du nom des conversations repose sur une seule propriété :</p>
         <ol>
             <li>nom</li>
@@ -685,12 +685,12 @@ class Conversation extends Group implements nodeInterface
             <li><code>nom</code></li>
         </ul>
 
-        <h3 id="ocp">OCP / Protection</h3>
+        <?php Displays::docDispTitle(3, 'ocp', 'Protection'); ?>
         <p>En tant que tel la conversation ne nécessite pas de protection puisque soit l’objet de la conversation n’a
             pas de contenu soit on n’utilise pas son contenu directement.</p>
         <p>La gestion de la protection est désactivée dans une instance de conversation.</p>
 
-        <h3 id="ocd">OCD / Dissimulation</h3>
+        <?php Displays::docDispTitle(3, 'ocd', 'Dissimulation'); ?>
         <p>La conversation peut en tant que tel être dissimulée, c’est à dire que l’on dissimule l’existence de la
             conversation, donc sa création.</p>
         <p>La dissimulation devrait se faire lors de la création de la conversation.</p>
@@ -701,7 +701,7 @@ class Conversation extends Group implements nodeInterface
             de suppression de la conversation puis générer un nouveau lien dissimulée de création de la conversation à
             une date postérieure au lien de suppression.</p>
 
-        <h3 id="ocf">OCF / Fermeture</h3>
+        <?php Displays::docDispTitle(3, 'ocf', 'Fermeture'); ?>
         <p>La conversation va contenir un certain nombre de membres (messages) ajouter par différentes entités. Il est
             possible de limiter le nombre des membres à utiliser dans une conversation en restreignant artificiellement
             les entités contributrices de la conversation. Ainsi on marque la conversation comme fermée et on filtre sur
@@ -726,7 +726,7 @@ class Conversation extends Group implements nodeInterface
         <p>Le traitement des liens de fermeture d’une conversation doit être fait exclusivement avec le traitement
             social <em>self</em>.</p>
 
-        <h4 id="ocpm">OCPM / Protection des membres</h4>
+        <?php Displays::docDispTitle(4, 'ocpm', 'Protection des membres'); ?>
         <p>La conversation va contenir un certain nombre de membres (messages) ajouter par différentes entités. Il est
             possible de limiter la visibilité du contenu des membres utilisés dans une conversation en restreignant
             artificiellement les entités destinataires qui pourront les consulter.</p>
@@ -748,7 +748,7 @@ class Conversation extends Group implements nodeInterface
         <p>Le traitement des liens de protection d’une conversation doit être fait exclusivement avec le traitement
             social <em>self</em>.</p>
 
-        <h4 id="ocdm">OCDM / Dissimulation des membres</h4>
+        <?php Displays::docDispTitle(4, 'ocdm', 'Dissimulation des membres'); ?>
         <p>La conversation va contenir un certain nombre de membres (messages) ajouter par différentes entités. Il est
             possible de limiter la visibilité de l’appartenance des membres utilisés dans une conversation en
             restreignant artificiellement les entités destinataires qui pourront les voir.</p>
@@ -771,7 +771,7 @@ class Conversation extends Group implements nodeInterface
         <p>Le traitement des liens de dissimulation d’une conversation doit être fait exclusivement avec le traitement
             social <em>self</em>.</p>
 
-        <h3 id="ocl">OCL / Liens</h3>
+        <?php Displays::docDispTitle(3, 'ocl', 'Liens'); ?>
         <p>Une entité doit être déverrouillée pour la création de liens.</p>
         <ul>
             <li>Le lien de définition de la conversation :
@@ -910,7 +910,7 @@ class Conversation extends Group implements nodeInterface
             </li>
         </ul>
 
-        <h3 id="occ">OCC / Création</h3>
+        <?php Displays::docDispTitle(3, 'occ', 'Création'); ?>
         <p>Liste des liens à générer lors de la création d'une conversation :</p>
         <ul>
             <li>Le lien de définition de la conversation :
@@ -984,13 +984,13 @@ class Conversation extends Group implements nodeInterface
             </li>
         </ul>
 
-        <h3 id="ocs">OCS / Stockage</h3>
+        <?php Displays::docDispTitle(3, 'ocs', 'Stockage'); ?>
         <p>Voir <a href="#oos">OOS</a>, pas de particularité de stockage.</p>
 
-        <h3 id="oct">OCT / Transfert</h3>
+        <?php Displays::docDispTitle(3, 'oct', 'Transfert'); ?>
         <p>A faire...</p>
 
-        <h3 id="ocr">OCR / Réservation</h3>
+        <?php Displays::docDispTitle(3, 'ocr', 'Réservation'); ?>
         <p>Les objets réservés spécifiquement pour les conversations :</p>
         <ul>
             <li>nebule/objet/conversation</li>
@@ -999,7 +999,7 @@ class Conversation extends Group implements nodeInterface
             <li>nebule/objet/conversation/dissimulee</li>
         </ul>
 
-        <h4 id="ocio">OCIO / Implémentation des Options</h4>
+        <?php Displays::docDispTitle(4, 'ocio', 'Implémentation des Options'); ?>
         <p>Les options spécifiques aux conversations :</p>
         <ul>
             <li><code>permitWriteConversation</code> : permet toute écriture de conversations.</li>
@@ -1015,7 +1015,7 @@ class Conversation extends Group implements nodeInterface
         <p>Il est nécessaire à la création d’une conversation de pouvoir écrire des objets comme le nom de la
             conversation, même si l’objet de la conversation ne sera pas créé.</p>
 
-        <h4 id="ocia">OCIA / Implémentation des Actions</h4>
+        <?php Displays::docDispTitle(4, 'ocia', 'Implémentation des Actions'); ?>
         <p>Dans les actions, on retrouve les chaînes :</p>
         <ul>
             <li><code>creagrp</code> : Crée une conversation.</li>

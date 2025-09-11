@@ -917,8 +917,8 @@ class Entity extends Node implements nodeInterface
         <p>L’entité est un objet caractéristique. Elle dispose de :</p>
         <ul>
             <li>Une clé cryptographique publique par laquelle elle est identifiée ;</li>
-            <li>Une clé cryptographique privée pae laquelle elle peut générer des liens (actions) et manipuler des
-                données chiffrées (encrypted) et dissimulées (obfuscated).</li>
+            <li>Une ou plusieurs clés cryptographiques privées par lesquelles elle peut générer des liens (actions) et
+                manipuler des données chiffrées (encrypted) et dissimulées (obfuscated).</li>
         </ul>
         <p>Une entité déverrouillée est appelée entité connectée. Le déverrouillage d'une entité est techniquement le
             déverrouillage de la valeur de sa clé cryptographique privée.</p>
@@ -934,7 +934,7 @@ class Entity extends Node implements nodeInterface
         <p>La bibliothèque distingue plusieurs niveaux d'entités :</p>
         <ol>
             <li>Objet entité : C'est un objet auquel on donne des caractéristiques de visualisation propres à une
-                entité. Cela permet de manipuler des entités comme des objets, mais avec des actions en plus.</li>
+                entité. Cela permet de manipuler des entités comme des objets, mais avec des actions spécifiques.</li>
             <li>Entité courante : Cela désigne l'objet entité que l'on est en train d'observer.</li>
             <li>Entité serveur : C'est l'entité de l'instance du serveur sur lequel tourne le code.</li>
             <li>Entité par défaut : Lorsque l'on se connecte sur un serveur, c'est l'entité fantôme qui va être utilisée
@@ -953,11 +953,26 @@ class Entity extends Node implements nodeInterface
         <p>La bibliothèque utilise actuellement plusieurs entités spéciales, dites autorités maîtresses, avec des rôles
             prédéfinis :</p>
         <ol>
-            <li>Maître du tout. L'instance actuelle s'appelle <a href="<?php echo References::PUPPETMASTER_URL; ?>"><?php echo \Nebule\Library\References::PUPPETMASTER_NAME; ?></a>. Voir <a href="#cam">CAM</a>.</li>
-            <li>Maître de la sécurité. L'instance actuelle s'appelle <a href="<?php echo References::SECURITY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::SECURITY_MASTER_NAME; ?></a>.Voir <a href="#cams">CAMS</a>.</li>
-            <li>Maître du code. L'instance actuelle s'appelle <a href="<?php echo References::CODE_MASTER_URL; ?>"><?php echo \Nebule\Library\References::CODE_MASTER_NAME; ?></a>. Voir <a href="#camc">CAMC</a>.</li>
-            <li>Maître de l'annuaire. L'instance actuelle s'appelle <a href="<?php echo References::DIRECTORY_MASTER_URL; ?>"><?php echo \Nebule\Library\References::DIRECTORY_MASTER_NAME; ?></a>. Voir <a href="#cama">CAMA</a>.</li>
-            <li>Maître du temps. L'instance actuelle s'appelle <a href="<?php echo References::TIME_MASTER_URL; ?>"><?php echo \Nebule\Library\References::TIME_MASTER_NAME; ?></a>. Voir <a href="#camt">CAMT</a>.</li>
+            <li>Maître du tout. L'instance actuelle s'appelle
+                <a href="<?php echo References::PUPPETMASTER_URL; ?>">
+                    <?php echo \Nebule\Library\References::PUPPETMASTER_NAME; ?></a>.
+                Voir <a href="#cam">CAM</a>.</li>
+            <li>Maître de la sécurité. L'instance actuelle s'appelle
+                <a href="<?php echo References::SECURITY_MASTER_URL; ?>">
+                    <?php echo \Nebule\Library\References::SECURITY_MASTER_NAME; ?></a>.
+                Voir <a href="#cams">CAMS</a>.</li>
+            <li>Maître du code. L'instance actuelle s'appelle
+                <a href="<?php echo References::CODE_MASTER_URL; ?>">
+                    <?php echo \Nebule\Library\References::CODE_MASTER_NAME; ?></a>.
+                Voir <a href="#camc">CAMC</a>.</li>
+            <li>Maître de l'annuaire. L'instance actuelle s'appelle
+                <a href="<?php echo References::DIRECTORY_MASTER_URL; ?>">
+                    <?php echo \Nebule\Library\References::DIRECTORY_MASTER_NAME; ?></a>.
+                Voir <a href="#cama">CAMA</a>.</li>
+            <li>Maître du temps. L'instance actuelle s'appelle
+                <a href="<?php echo References::TIME_MASTER_URL; ?>">
+                    <?php echo \Nebule\Library\References::TIME_MASTER_NAME; ?></a>.
+                Voir <a href="#camt">CAMT</a>.</li>
         </ol>
         <p>Pour chaque catégorie, il peut y avoir plusieurs entités concurrentes reconnues simultanément. Actuellement
             seul un maître du tout est géré à la fois.</p>

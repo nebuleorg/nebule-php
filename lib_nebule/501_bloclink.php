@@ -506,8 +506,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRL(string &$rl, string $i): bool
     {
-        $this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i,
-            Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE)
         {
@@ -584,8 +583,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
-        $this->_metrologyInstance->addLog(substr($bs, 0, 512),
-            Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog(substr($bs, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($bs) > self::LINK_MAX_BS_SIZE)
         {
@@ -764,11 +762,14 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function sign(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, 'b6e89674');
+        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (!$this->_newLink
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-        ) {
+        if (!$this->_newLink) {
+            $this->_metrologyInstance->addLog('can not sign link already signed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f7433d1d');
+            return false;
+        }
+
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')) {
             $this->_metrologyInstance->addLog('can not sign link, permitCreateLink=false', Metrology::LOG_LEVEL_ERROR, __METHOD__, '976483ad');
             return false;
         }
@@ -825,7 +826,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function write(): bool
     {
-        $this->_metrologyInstance->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '50faf214');
+        $this->_metrologyInstance->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -881,10 +882,12 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function signWrite(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '51a338d4');
+        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if ($this->sign($publicKey, $date, $privateKey, $password))
+        if ($this->sign($publicKey, $date, $privateKey, $password)) {
+            $this->_metrologyInstance->addLog('signed ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8e59a93');
             return $this->write();
+        }
         return false;
     }
 
@@ -957,10 +960,10 @@ class BlocLink extends Functions implements blocLinkInterface
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux objets pondéré par un troisième
             objet.</p>
 
-        <h2 id="bd">BD / Description</h2>
+        <?php Displays::docDispTitle(2, 'bd', 'Description'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="bs">BS / Structure</h2>
+        <?php Displays::docDispTitle(2, 'bs', 'Structure'); ?>
         <p>Le bloc de liens est enregistré dans une structure avec un format définit et contraint afin de pouvoir être
             stocké et échangé de façon sûre et sécurisée.</p>
         <p>Cette structure a quatre niveaux de profondeur avec pour chaque niveau un séparateur de champs spécifique. Il
@@ -1010,59 +1013,59 @@ class BlocLink extends Functions implements blocLinkInterface
             </li>
         </ul>
 
-        <h2 id="bc">BC / Construction</h2>
+        <?php Displays::docDispTitle(2, 'bc', 'Construction'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="bcb">BCB / Blocs</h3>
+        <?php Displays::docDispTitle(3, 'bcb', 'Blocs'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcbh">BCBH / Bloc d'entête</h4>
+        <?php Displays::docDispTitle(4, 'bcbh', "Bloc d'entête"); ?>
         <p>Le bloc d'entête contient les registres <a href="#bcrf">RF</a> et <a href="#bcrv">RV</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcbl">BCBL / Bloc de liens</h4>
+        <?php Displays::docDispTitle(4, 'bcbl', 'Bloc de liens'); ?>
         <p>Le bloc de liens contient les registres <a href="#bcrc">RC</a> et <a href="#bcrl">RL</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcbs">BCBS / Bloc de signature</h4>
+        <?php Displays::docDispTitle(4, 'bcbs', 'Bloc de signature'); ?>
         <p>Le bloc d'entête contient les registres <a href="#bcrs">RS</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="bcr">BCR / Registres</h3>
+        <?php Displays::docDispTitle(3, 'bcr', 'Registres'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcrf">BCRF / Registre de forme</h4>
+        <?php Displays::docDispTitle(4, 'bcrf', 'Registre de forme'); ?>
         <p>Le registre de forme est le premier registre du <a href="#BCBH">bloc d'entête</a>.
             Il contient les éléments <a href="#bceapp">APP</a> et <a href="#bcetyp">TYP</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcrv">BCRV / Registre de version</h4>
+        <?php Displays::docDispTitle(4, 'bcrv', 'Registre de version'); ?>
         <p>Le registre de version est le second et dernier registre du <a href="#BCBH">bloc d'entête</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcrc">BCRC / Registre de chronologie</h4>
+        <?php Displays::docDispTitle(4, 'bcrc', 'Registre de chronologie'); ?>
         <p>Le registre de chronologie est le premier registre du <a href="#BCBL">bloc de liens</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcrl">BCRL / Registre de liens</h4>
+        <?php Displays::docDispTitle(4, 'bcrl', 'Registre de liens'); ?>
         <p>Le registre de liens est le second registre et les suivants du <a href="#BCBL">bloc de liens</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bcrs">BCRS / Registre de signature</h4>
+        <?php Displays::docDispTitle(4, 'bcrs', 'Registre de signature'); ?>
         <p>Le registre de signature est le ou les registres du <a href="#BCBL">bloc de signature</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h3 id="bce">BCE / Eléments</h3>
+        <?php Displays::docDispTitle(3, 'bce', 'Eléments'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h4 id="bceapp">BCEAPP / Application</h4>
+        <?php Displays::docDispTitle(4, 'bceapp', 'Application'); ?>
         <p>L'élément application (APP) est le premier élément du <a href="#BCBH">Registre de forme</a>.</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="bt">BT / Transfert</h2>
+        <?php Displays::docDispTitle(2, 'bt', 'Transfert'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <h2 id="bv">BV / Vérification</h2>
+        <?php Displays::docDispTitle(2, 'bv', 'Vérification'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php

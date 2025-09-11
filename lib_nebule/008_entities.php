@@ -323,8 +323,8 @@ else
 
         $this->_cacheInstance->flushBufferStore();
 
-        $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityEID = $this->_ghostEntityInstance->getID();
+        $this->_ghostEntityInstance = $entity; // FIXME: check if it's the same entity as setGhostEntity().
+        $this->_ghostEntityEID = $this->_ghostEntityInstance->getID(); // FIXME: check if it's the same entity as setGhostEntity().
         $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
 
         session_write_close();
