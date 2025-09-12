@@ -41,10 +41,14 @@ class LinkRegister extends Functions implements linkInterface
     {
         parent::__construct($nebuleInstance);
         $this->setEnvironmentLibrary($nebuleInstance);
+        $this->_metrologyInstance->addLog('create new link register ' . substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        if($blocLink->getNew()) {
+            $this->_metrologyInstance->addLog('unable to create on already signed bloc link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e56f08da');
+            return;
+        }
+
         $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID'); // FIXME ne lit pas correctement la valeur.
-
-        $this->_metrologyInstance->addLog(substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
         $this->_blocLink = $blocLink;
         $this->_rawLink = $rl;
         $this->_validStructure = $this->_checkRL($rl);
@@ -460,7 +464,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         ?>
 
-        <h1 id="l">L / Registre de lien</h1>
+        <?php Displays::docDispTitle(1, 'l', 'Registre de lien'); ?>
         <p>Le lien est la matérialisation dans un graphe d’une relation entre deux nœuds, généralement des objets.
             Le type de cette relation est définie par un troisième objet, c'est la façon dont on va interpréter
             la relation entre les deux premiers nœuds.

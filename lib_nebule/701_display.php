@@ -4921,7 +4921,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             $result .= '<div class="objectContent">' . "\n";
             $result .= $this->getDisplayInformation_DEPRECATED(
-                $this->_applicationInstance->getTranslate()->getTranslate('::::display:content:ObjectHaveUpdate')
+                $this->_applicationInstance->getTranslateInstance()->getTranslate('::::display:content:ObjectHaveUpdate')
                 . '<br />' . $this->getDisplayObject_DEPRECATED($UpdateID, $param2),
                 $param
             );
@@ -6455,17 +6455,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
     }
 
-    static public function docDispTitle(int $level, string $id, string $title): void {
+    static public function docDispTitle(int $level, string $href, string $title): void {
         if ($level > 7
             || $level < 1
-            || $id == ''
+            || $href == ''
             || $title == ''
         ) {
             echo "\n<br /><br /><i>Invalid title!</i><br /><br />";
             return;
         }
-        $dId=strtolower($id);
-        $uId=strtoupper($id);
+        $dId=strtolower($href);
+        $uId=strtoupper($href);
 
         echo "<h$level id=\"$dId\"></h$level><p>--<br /><br /><br /></p><h$level>$uId / $title</h$level>\n";
     }
@@ -6479,14 +6479,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Si authorisé à afficher l'aide.
         if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayOnlineHelp')) {
             // Prépare le texte à afficher dans la bulle.
-            $txt = $this->_applicationInstance->getTranslate()->getTranslate($help);
+            $txt = $this->_applicationInstance->getTranslateInstance()->getTranslate($help);
             $txt = str_replace('&', '&amp;', $txt);
             $txt = str_replace('"', '&quot;', $txt);
             $txt = str_replace("'", '&acute;', $txt);
             //$txt = str_replace('<','&lt;',$txt);
             $txt = str_replace("\n", ' ', $txt);
             // Prépare l'extension de lien.
-            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslate()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
+            $linkext = 'onmouseover="montre(\'<b>' . $this->_applicationInstance->getTranslateInstance()->getTranslate('Aide') . ' :</b><br />' . $txt . '\');" onmouseout="cache();"';
             unset($txt);
             // Affiche la bulle et le texte.
             ?>
@@ -6534,13 +6534,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <div class="textTitle">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTranslate()->getTranslate($title);
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTranslate()->getTranslate($desc);
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp_DEPRECATED($help);
@@ -6573,13 +6573,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <div class="textTitle2">
             <?php
             if ($title != '') {
-                $title = $this->_applicationInstance->getTranslate()->getTranslate($title);
+                $title = $this->_applicationInstance->getTranslateInstance()->getTranslate($title);
             }
 
             if ($desc == '') {
                 $desc = '-';
             } else {
-                $desc = $this->_applicationInstance->getTranslate()->getTranslate($desc);
+                $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($desc);
             }
 
             $this->_displayDivOnlineHelp_DEPRECATED($help);

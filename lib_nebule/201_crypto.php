@@ -248,7 +248,7 @@ class Crypto extends Functions implements CryptoInterface
     static public function echoDocumentationCore(): void {
         ?>
 
-        <h1 id="c">C / Confiance</h1>
+        <?php Displays::docDispTitle(1, 'c', 'Confiance'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La confiance n’est pas quelque chose de palpable, même numériquement. Cela tient plus de la façon de concevoir les choses et le fait de faire en sorte que l’ensemble soit solide. L’ensemble doit être cohérent et résistant. On doit pouvoir compter sur ce que l’on a.</p>
         <p>La confiance est donc sous-jacente aux objets et aux liens.</p>

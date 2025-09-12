@@ -145,7 +145,7 @@ class Social extends Functions implements SocialInterface
     {
         ?>
 
-        <h1 id="s">S / Social</h1>
+        <?php Displays::docDispTitle(1, 's', 'Social'); ?>
         <p>Gestion des relations sociales dans l'exploitation des objets. En cours...</p>
 
         <?php

@@ -39,7 +39,7 @@ class BlocLink extends Functions implements blocLinkInterface
     protected string $_linksType = '';
     protected array $_links = array();
     protected array $_parsedLink = array();
-    protected bool $_newLink = false;
+    protected bool $_isNewLink = false;
     protected int $_newLinkCount = 0;
     protected bool $_checkCompleted = false;
     protected bool $_valid = false;
@@ -108,7 +108,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _parse(string $link): bool
     {
-        $this->_metrologyInstance->addLog(substr($link, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('parse ' . substr($link, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_lid = $this->_cryptoInstance->hash($link);
 
         $this->_validStructure = false;
@@ -123,7 +123,7 @@ class BlocLink extends Functions implements blocLinkInterface
         if (is_bool($bl)) return false;
         //$this->_metrologyInstance->addLog('check link BL=' . $bl, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dc1eb20f');
         $bs = strtok('_');
-        if (!$this->_newLink && is_bool($bs)) return false;
+        if (!$this->_isNewLink && is_bool($bs)) return false;
         //$this->_metrologyInstance->addLog('check link BS=' . $bs, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '41e23a37');
 
         // Check link overflow
@@ -140,7 +140,7 @@ class BlocLink extends Functions implements blocLinkInterface
         }
         $bh_bl = $bh . '_' . $bl;
         // Do not check on new link before sign.
-        if (!$this->_newLink && !$this->_checkBS($bh_bl, $bs)) {
+        if (!$this->_isNewLink && !$this->_checkBS($bh_bl, $bs)) {
             $this->_metrologyInstance->addLog('check link BS failed '.$link, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2828e6ae');
             return false;
         }
@@ -154,9 +154,11 @@ class BlocLink extends Functions implements blocLinkInterface
 
     protected function _new(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_rawBlocLink = 'nebule:link/' . $this->_configurationInstance->getOptionAsString('defaultLinksVersion') . '_';
         $this->_newBL = '';
-        $this->_newLink = true;
+        $this->_isNewLink = true;
+        $this->_metrologyInstance->addLog('DEBUGGING 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_newLinkCount = 0;
     }
 
@@ -183,7 +185,7 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        return $this->_newLink;
+        return $this->_isNewLink;
     }
 
     /**
@@ -732,8 +734,15 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function addLink(string $rl, bool $obfuscate = false): bool
     {
-        if (!$this->_newLink || $rl == '')
+        if ($rl == '') {
+            $this->_metrologyInstance->addLog('can not add empty link register', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8f65f688');
             return false;
+        }
+
+        if (!$this->_isNewLink) {
+            $this->_metrologyInstance->addLog('can not add link register on signed bloc link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b20294b1');
+            return false;
+        }
 
         if ($this->_newLinkCount >= $this->_configurationInstance->getOptionAsInteger('linkMaxRL')) {
             $this->_metrologyInstance->addLog('can not add new link, limited by linkMaxRL', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c7aac0dd');
@@ -762,10 +771,10 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function sign(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (!$this->_newLink) {
-            $this->_metrologyInstance->addLog('can not sign link already signed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f7433d1d');
+        if (!$this->_isNewLink) {
+            $this->_metrologyInstance->addLog('can not sign link already signed ' . $this->_lid, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f7433d1d');
             return false;
         }
 
@@ -785,7 +794,7 @@ class BlocLink extends Functions implements blocLinkInterface
         // Prepare new link to sign.
         $this->_rawBlocLink .= $date . $this->_newBL;
         $this->_parse($this->_rawBlocLink);
-        $this->_newLink = false;
+        $this->_isNewLink = false;
 
         if (!$this->_validStructure) {
             $this->_metrologyInstance->addLog('can not sign invalid link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cd989943');
@@ -882,10 +891,10 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function signWrite(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($this->sign($publicKey, $date, $privateKey, $password)) {
-            $this->_metrologyInstance->addLog('signed ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8e59a93');
+            $this->_metrologyInstance->addLog('signed ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8e59a93');
             return $this->write();
         }
         return false;
@@ -948,7 +957,7 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         ?>
 
-        <h1 id="b">B / Bloc de liens</h1>
+        <?php Displays::docDispTitle(1, 'b', 'Bloc de liens'); ?>
         <p>Le bloc de liens permet d'agréger un ou plusieurs registres de liens, de le rendre transferable et de le
             sécuriser. Voir <a href="#l">L</a>.</p>
         <p>On parlera par facilité de bloc de liens BL pour la partie opérationnelle contenant uniquement les registres
