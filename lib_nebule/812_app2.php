@@ -15,7 +15,7 @@ class App2
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250902';
+    const APPLICATION_VERSION = '020250919';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -52,19 +52,15 @@ class App2
         echo 'CHK';
         ob_end_clean();
 
-        ?>
-<!DOCTYPE html>
-<html lang="">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <link rel="icon" type="image/png" href="favicon.png"/>
-        <meta http-equiv="refresh" content="0; url=<?php echo $args; ?>" />
-        <title><?php echo \Nebule\Bootstrap\BOOTSTRAP_NAME; ?> - app 2 - redirect</title>
-    </head>
-    <body>
-        Redirect...
-    </body>
-</html>
-        <?php
+        \Nebule\Bootstrap\bootstrap_htmlHeader('app 2', true, 0, $args);
+        \Nebule\Bootstrap\bootstrap_htmlTop();
+
+        echo '<div class="layout-main">' . "\n";
+        echo ' <div class="layout-content">' . "\n";
+        echo '  Redirecting to <a href="' . $args . '">authentication application</a>...' . "\n";
+        echo " </div>\n";
+        echo "</div>\n";
+
+        \Nebule\Bootstrap\bootstrap_htmlBottom();
     }
 }

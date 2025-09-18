@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250917';
+const BOOTSTRAP_VERSION = '020250918';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -4897,12 +4897,12 @@ function bootstrap_getCheckFingerprint(): void {
 
 // ------------------------------------------------------------------------------------------
 /**
- * Affichage du début de la page HTML.
+ * Display starting new HTML page.
  *
  * @param string $title
  * @return void
  */
-function bootstrap_htmlHeader(string $title = ''):void {
+function bootstrap_htmlHeader(string $title = '', bool $refresh = false, int $refreshTimer = 0, string $refreshLink = ''):void {
     global $bootstrapFlush, $libraryRescueMode;
 log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
@@ -4916,6 +4916,9 @@ log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
         if ($bootstrapFlush) echo ' - flush mode';
         if ($libraryRescueMode) echo ' - rescue mode'; ?></title>
     <link rel="icon" type="image/png" href="favicon.png"/>
+    <?php if ($refresh) { ?>
+    <meta http-equiv="refresh" content="<?php echo $refreshTimer; ?>; url=<?php echo $refreshLink; ?>">
+    <?php } ?>
     <meta name="author"
           content="<?php echo BOOTSTRAP_AUTHOR . ' - ' . BOOTSTRAP_WEBSITE . ' - ' . BOOTSTRAP_VERSION; ?>"/>
     <meta name="licence" content="<?php echo BOOTSTRAP_LICENCE . ' ' . BOOTSTRAP_AUTHOR; ?>"/>
