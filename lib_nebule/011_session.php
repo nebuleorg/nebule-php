@@ -235,17 +235,11 @@ class Session extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-            //|| !isset($_SESSION['Buffer'][$name])
-            //|| !is_string($_SESSION['Buffer'][$name])
-        ) {
-            $this->_metrologyInstance->addLog('DEBUGGING break', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        )
             return null;
-        }
         try {
             $value = $this->getSessionStoreAsString($name);
-            $this->_metrologyInstance->addLog('DEBUGGING from session ' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $instance = unserialize($value);
-            $this->_metrologyInstance->addLog('DEBUGGING type ' . gettype($instance), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             if (!$instance instanceof \Nebule\Library\Entity)
                 return null;
             $instance->setEnvironmentLibrary($this->_nebuleInstance);

@@ -18,7 +18,7 @@ interface CryptoInterface
     public function getCryptoInstance(): CryptoInterface;
 
     /**
-     * Return default crypto class name.
+     * Return the default crypto class name.
      *
      * @return string
      */
@@ -57,7 +57,7 @@ interface CryptoInterface
     public function checkValidAlgorithm(string $algo, int $type): bool;
 
     /**
-     * Get list of supported cryptographique function by type.
+     * Get a list of supported cryptographique function by type.
      *
      * @param int $type
      * @return array
@@ -67,10 +67,10 @@ interface CryptoInterface
     // --------------------------------------------------------------------------------
 
     /**
-     * Get $size octets of random string in raw form (strong) or in hexadecimal form (pseudo).
+     * Get $size octets of a random string in raw form (strong) or in hexadecimal form (pseudo).
      * The quality of a random sequence can be selected with strong or pseudo random.
      * But to save precious entropy, you have to use pseudo random in all cases where you do not absolutely need strong random.
-     * If problem, return empty string.
+     * If problem, return an empty string.
      *
      * @param int $size
      * @param int $quality
@@ -90,7 +90,7 @@ interface CryptoInterface
 
     /**
      * Get the hash value for $data with a specified hash algorithm.
-     * If problem, return empty string.
+     * If problem, return an empty string.
      *
      * @param string $data
      * @param string $algo
@@ -102,7 +102,7 @@ interface CryptoInterface
 
     /**
      * Get encrypted $data with specified cryptographic algorithm, key in hexadecimal and IV in hexadecimal.
-     * If problem, return empty string.
+     * If problem, return an empty string.
      *
      * @param string $data
      * @param string $algo
@@ -114,7 +114,7 @@ interface CryptoInterface
 
     /**
      * Get unencrypted data with specified cryptographic algorithm, key in hexadecimal and IV in hexadecimal.
-     * If problem, return empty string.
+     * If problem, return an empty string.
      *
      * @param string $data
      * @param string $algo
@@ -128,7 +128,7 @@ interface CryptoInterface
 
     /**
      * Get sign value of $data with a private key (not EID).
-     * If problem, return empty string.
+     * If problem, return an empty string.
      *
      * @param string $data
      * @param string $privateKey
@@ -150,8 +150,8 @@ interface CryptoInterface
 
     /**
      * Encode $data with a public key (not EID).
-     * Data have a maximum size minus padding to pass without a split.
-     * If problem, return empty string.
+     * Data has a maximum size minus padding to pass without a split.
+     * If problem, return an empty string.
      *
      * @param string $data
      * @param ?string $publicKey
@@ -161,8 +161,8 @@ interface CryptoInterface
 
     /**
      * Decode $data with a private key (not EID).
-     * Data have a maximum size minus padding to pass without a split.
-     * If problem, return empty string.
+     * Data has a maximum size minus padding to pass without a split.
+     * If problem, return an empty string.
      *
      * @param string $code
      * @param ?string $privateKey
@@ -192,8 +192,8 @@ interface CryptoInterface
     public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool;
 
     /**
-     * Change password on a private key (not EID).
-     * If problem, return empty string.
+     * Change the password on a private key (not EID).
+     * If problem, return an empty string.
      *
      * @param ?string $privateKey
      * @param ?string $oldPassword

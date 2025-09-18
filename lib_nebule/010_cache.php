@@ -311,7 +311,7 @@ class Cache extends Functions
     private function _writeCacheBlockLinks(BlocLink $instance, string $type): void
     {
         if ($this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
-            && !$instance->getNew()
+            && !$instance->getIsNew()
         ) {
             $this->_getCacheNeedOnePlace();
             $this->_cache[$type][$instance->getLID()] = $instance;

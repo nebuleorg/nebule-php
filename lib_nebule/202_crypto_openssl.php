@@ -151,7 +151,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     /**
      * Get robust random binary content.
      * Size is in octets.
-     * If problem, return empty string.
+     * If problem, return an empty string.
      * To save precious entropy, you have to use pseudo random in all case where you do not absolutely need strong random.
      *
      * @param int $size
@@ -286,7 +286,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     }
 
     /**
-     * Generate an empty IV as hexadecimal value full of zero.
+     * Generate an empty IV as a hexadecimal value full of zero.
      *
      * @param int $length
      * @return string
@@ -299,7 +299,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     }
 
     /**
-     * Convert the IV on hexadecimal value as binary value with max size accepted by the cryptographic algorithm.
+     * Convert the IV on hexadecimal value as a binary value with max size accepted by the cryptographic algorithm.
      *
      * @param string $hexIV
      * @param string $algo
@@ -324,8 +324,10 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
     public function sign(string $data, string $privateKey, string $privatePassword): string {
         $signatureBin = '';
         $ressource = openssl_pkey_get_private($privateKey, $privatePassword);
-        if ($ressource === false)
+        if ($ressource === false) {
+            $this->_metrologyInstance->addLog('unable to use private key', Metrology::LOG_LEVEL_ERROR, __METHOD__, '6993176f');
             return '';
+        }
         $maxSize = ((int)openssl_pkey_get_details($ressource)['bits']/8) - 11;
         if (strlen($data) > $maxSize)
             $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
@@ -333,7 +335,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $dataBin = pack('H*', $data);
         if (openssl_private_encrypt($dataBin, $signatureBin, $ressource, OPENSSL_PKCS1_PADDING))
             return bin2hex($signatureBin);
-        $this->_metrologyInstance->addLog('ERROR crypto sign', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3c5e617d'); // Log
+        $this->_metrologyInstance->addLog('crypto sign error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c5e617d');
         return '';
     }
 

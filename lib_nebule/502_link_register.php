@@ -16,11 +16,9 @@ class LinkRegister extends Functions implements linkInterface
         '_rawLink',
         '_parsedLink',
         '_parsedLinkObfuscated',
-        '_signe',
         '_obfuscated',
         '_valid',
         '_validStructure',
-        '_signed',
         '_permitObfuscated',
         '_maxRLUID',
     );
@@ -29,11 +27,9 @@ class LinkRegister extends Functions implements linkInterface
     protected string $_rawLink = '';
     protected array $_parsedLink = array();
     protected array $_parsedLinkObfuscated = array();
-    protected string $_signe = '0';
     protected bool $_obfuscated = false;
     protected bool $_valid = false;
     protected bool $_validStructure = false;
-    protected bool $_signed = false;
     protected bool $_permitObfuscated = false;
     protected int $_maxRLUID = 4;
 
@@ -43,14 +39,15 @@ class LinkRegister extends Functions implements linkInterface
         $this->setEnvironmentLibrary($nebuleInstance);
         $this->_metrologyInstance->addLog('create new link register ' . substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if($blocLink->getNew()) {
-            $this->_metrologyInstance->addLog('unable to create on already signed bloc link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e56f08da');
+        /*if($blocLink->getNew()) {
+            $this->_metrologyInstance->addLog('unable to create on an already signed bloc link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e56f08da');
             return;
-        }
+        }*/
 
-        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxRLUID'); // FIXME ne lit pas correctement la valeur.
+        $this->_maxRLUID = $this->_configurationInstance->getOptionAsInteger('linkMaxUIDbyRL'); // FIXME ne lit pas correctement la valeur.
         $this->_blocLink = $blocLink;
         $this->_rawLink = $rl;
+        $this->_metrologyInstance->addLinkRead();
         $this->_validStructure = $this->_checkRL($rl);
 
         $this->initialisation();
@@ -87,7 +84,7 @@ class LinkRegister extends Functions implements linkInterface
     }
 
     /**
-     * Link - Check block RL on link.
+     * Link - Check bloc RL on a link.
      *
      * @param string $rl
      * @return bool
@@ -142,7 +139,7 @@ class LinkRegister extends Functions implements linkInterface
     }
 
     /**
-     * Link - Check block REQ on link.
+     * Link - Check bloc REQ on a link.
      *
      * @param string $req
      * @return bool
@@ -170,7 +167,7 @@ class LinkRegister extends Functions implements linkInterface
 
     /**
      * Force bloc instance if not defined.
-     * Should be only use on link's instance wakeup.
+     * Should be only used on a link's instance wakeup.
      *
      * @param BlocLink $instance
      * @return void
@@ -238,7 +235,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (! $this->_validStructure)
+        if (! $this->_valid)
             $this->_metrologyInstance->addLog('get valid is false', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ecbbd1de');
 
         return ( $this->_blocLink->getValid() || !$this->_blocLink->getCheckCompleted() ) && $this->_valid;
@@ -267,7 +264,7 @@ class LinkRegister extends Functions implements linkInterface
     {
         $this->_metrologyInstance->addLog(substr($this->_rawLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (! $this->_validStructure)
+        if (! $this->_blocLink->getSigned())
             $this->_metrologyInstance->addLog('get signed is false', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84c305e5');
 
         return $this->_blocLink->getSigned();
@@ -490,7 +487,7 @@ class LinkRegister extends Functions implements linkInterface
             des nœuds dans l'ordre d'usage (graphe orienté).</p>
         <p>La requête d'action est obligatoire et est unique pour un registre de lien.</p>
         <p>Dans le registre, chaque champ est séparé des autres par le caractère «&nbsp;&gt;&nbsp;». Le nombre de champs
-            exploitable, sans compter la requête d'action, est limité par l'option <i>linkMaxRLUID</i>. Si le nombre de
+            exploitable, sans compter la requête d'action, est limité par l'option <i>linkMaxUIDbyRL</i>. Si le nombre de
             champs du registre est supérieur à la valeur limite, le lien est déclaré invalide.</p>
         <p>La forme du registre de lien :</p>
         <p align="center"><code>REQ>NID>NID>NID>NID</code></p>

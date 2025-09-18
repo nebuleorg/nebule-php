@@ -15,7 +15,7 @@ class App4
     const APPLICATION_NAME = 'app4';
     const APPLICATION_SURNAME = 'nebule/app4';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250820';
+    const APPLICATION_VERSION = '020250917';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -72,7 +72,7 @@ class App4
                         echo '>';
                         \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bl/rl/nid'.$i], $this->_seqNid($parsedBloc['bl/rl/nid'.$i]));
                         $i++;
-                        if ($i > \Nebule\Bootstrap\lib_getOption('linkMaxRLUID'))
+                        if ($i > \Nebule\Bootstrap\lib_getOption('linkMaxUIDbyRL'))
                             break;
                     }
 

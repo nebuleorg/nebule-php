@@ -108,11 +108,11 @@ class Entity extends Node implements nodeInterface
             if (sizeof($newPkey) != 0) {
                 $this->_publicKey = $newPkey['public'];
                 $this->_id = $this->_nebuleInstance->getFromDataNID($this->_publicKey);
-                $this->_metrologyInstance->addLog('create entity pub key oid=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b5dacb0d');
+                $this->_metrologyInstance->addLog('create entity public key oid=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b5dacb0d');
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
                 $this->_privateKeyOID = $this->_nebuleInstance->getFromDataNID($this->_privateKey);
-                $this->_metrologyInstance->addLog('create entity priv key oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '9afc5da2');
+                $this->_metrologyInstance->addLog('create entity private key oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '9afc5da2');
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
                 unset($newPkey);
@@ -245,14 +245,22 @@ class Entity extends Node implements nodeInterface
 
 
 
-    // Retourne l'identifiant de la clé privée.
+    // Get the OID of the private key.
     public function getPrivateKeyOID(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_findPrivateKeyOID();
         return $this->_privateKeyOID;
     }
 
-    // Retrouve l'identifiant de la clé privée.
+    // Get the OID of the private key.
+    public function getHavePrivateKey(): bool {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_privateKeyOID != '0')
+            return true;
+        return false;
+    }
+
+    // Try to find OID of the private key.
     private function _findPrivateKeyOID(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
@@ -307,7 +315,11 @@ class Entity extends Node implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_privateKey != '')
             return true;
+
         $this->_findPrivateKeyOID();
+        if ($this->_privateKeyOID == '0')
+            return false;
+
         $content = $this->_ioInstance->getObject($this->_privateKeyOID, self::ENTITY_MAX_SIZE);
         if ($content !== false)
             $this->_privateKey = $content;
@@ -413,8 +425,9 @@ class Entity extends Node implements nodeInterface
     }
 
 
+
     /**
-     * Signature de liens.
+     * Link signing.
      *
      * @param string $link
      * @param string $algo
@@ -433,6 +446,7 @@ class Entity extends Node implements nodeInterface
                 $this->_metrologyInstance->addLog('no password for private key', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '63de2900');
                 return null;
             }
+            $privateKey = $this->_privateKey;
             $password = $this->_privateKeyPassword;
         }
         if ($algo == '')

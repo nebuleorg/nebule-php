@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250820';
+const BOOTSTRAP_VERSION = '020250917';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -115,7 +115,7 @@ function log_reopen(string $name): void {
 
 function log_initDebugFile(): void {
     global $metrologyStartTime, $permitLogsOnDebugFile;
-    syslog(LOG_INFO, 'LogT=0.000000 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . '"');
+    syslog(LOG_INFO, 'LogT=0.000000 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . ' ' . date(DATE_ATOM) . '"');
 
     if (file_exists(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE)
         && !filter_has_var(INPUT_GET, LIB_ARG_INLINE_DISPLAY)
@@ -125,7 +125,7 @@ function log_initDebugFile(): void {
 
     if (lib_getOption('permitLogsOnDebugFile'))
     {
-        file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=0.000000 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . "\"\n", FILE_APPEND);
+        file_put_contents(LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE, 'LogT=0.000000 LogT0=' . $metrologyStartTime . ' LogL="info" LogI="76941959" LogM="start ' . BOOTSTRAP_NAME . ' ' . date(DATE_ATOM) . "\"\n", FILE_APPEND);
         syslog(LOG_INFO, 'LogT=0.000000 LogL="info" LogI="50615f80" LogM="create debug file ' . LIB_LOCAL_OBJECTS_FOLDER . '/' . LIB_LOCAL_DEBUG_FILE . '"');
         $permitLogsOnDebugFile = true;
     }
@@ -584,7 +584,7 @@ const LIB_CONFIGURATIONS_TYPE = array(
     'forceDisplayEntityOnTitle' => 'boolean',
     'linkMaxFollowedUpdates' => 'integer',
     'linkMaxRL' => 'integer',
-    'linkMaxRLUID' => 'integer',
+    'linkMaxUIDbyRL' => 'integer',
     'linkMaxRS' => 'integer',
     'permitSessionOptions' => 'boolean',
     'permitSessionBuffer' => 'boolean',
@@ -674,7 +674,7 @@ const LIB_CONFIGURATIONS_DEFAULT = array(
     'forceDisplayEntityOnTitle' => 'false',
     'linkMaxFollowedUpdates' => '100',
     'linkMaxRL' => '1',
-    'linkMaxRLUID' => '5',
+    'linkMaxUIDbyRL' => '5',
     'linkMaxRS' => '1',
     'permitSessionOptions' => 'true',
     'permitSessionBuffer' => 'true',
@@ -2576,7 +2576,7 @@ function lnk_checkRC(string &$rc): bool {
  */
 function lnk_checkRL(string &$rl): bool {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    $linkMaxRLUID = lib_getOption('linkMaxRLUID');
+    $linkMaxUIDbyRL = lib_getOption('linkMaxUIDbyRL');
     if (strlen($rl) > 4096) return false; // TODO à revoir.
 
     // Extract items from RL 1 : REQ>NID>NID>NID>...
@@ -2589,7 +2589,7 @@ function lnk_checkRL(string &$rl): bool {
     $i = 1;
     while (($rl1nid = strtok('>')) !== false) {
         $i++;
-        if ($i > $linkMaxRLUID) return false;
+        if ($i > $linkMaxUIDbyRL) return false;
         if (!nod_checkNID($rl1nid, true)) return false;
     }
 
