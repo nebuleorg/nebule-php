@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250918';
+const BOOTSTRAP_VERSION = '020250919';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -57,7 +57,7 @@ const BOOTSTRAP_FUNCTION_VERSION = '020241123';
  PART1: Initialization of the bootstrap environment.
  PART2: Procedural PHP library for nebule (Lib PP) restricted for bootstrap usage.
  PART3: Manage PHP session and arguments.
- PART4: Find and load object-oriented PHP library for nebule (Lib POO).
+ PART4: Find and load the object-oriented PHP library for nebule (Lib POO).
  PART5: Find application code.
  PART6: Manage and display breaking bootstrap on problem or user ask.
  PART7: Display of preload application web page.
@@ -460,6 +460,14 @@ const LIB_FIRST_RESERVED_OBJECTS = array(
     'sha384',
     'sha512',
 );
+
+const HASH_MAP = [
+        'sha2.128' => 'sha128',
+        'sha2.256' => 'sha256',
+        'sha2.384' => 'sha384',
+        'sha2.512' => 'sha512',
+];
+const DEFAULT_FALLBACK_HASH = 'sha256';
 
 // Command line args.
 const LIB_ARG_BOOTSTRAP_BREAK = 'b';
@@ -1773,53 +1781,36 @@ function io_objectInclude(string $nid): bool {
 }
 
 /**
- * I/O - End of work on I/O subsystem.
+ * I/O - End of work on the I/O subsystem.
  *
  * @return void
  */
 function io_close(): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    // Nothing to do for local filesystem.
+    // Nothing to do for the local filesystem.
 }
 
 /**
- * Crypto - Translate algo name into OpenSSL algo name.
+ * Crypto - Translate a library algo name into an OpenSSL algo name.
  *
  * @param string $algo
- * @param bool   $loop
  * @return string
  */
-function crypto_getTranslatedHashAlgo(string $algo, bool $loop = true): string {
+function crypto_getTranslatedHashAlgo(string $algo): string {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    if ($algo == '') {
+    if ($algo == '')
         $algo = lib_getOption('cryptoHashAlgorithm');
-        log_add('set default algo=' . $algo, 'warn', __FUNCTION__, '00000000');
-    }
-    log_add('algo=' . $algo, 'warn', __FUNCTION__, '00000000');
 
-    $translatedAlgo = '';
-    switch ($algo) {
-        case 'sha2.128' :
-            $translatedAlgo = 'sha128';
-            break;
-        case 'sha2.256' :
-            $translatedAlgo = 'sha256';
-            break;
-        case 'sha2.384' :
-            $translatedAlgo = 'sha384';
-            break;
-        case 'sha2.512' :
-            $translatedAlgo = 'sha512';
-            break;
-    }
-    log_add('translate=' . $translatedAlgo, 'warn', __FUNCTION__, '00000000');
+    $translatedAlgo = HASH_MAP[$algo] ?? '';
 
     if ($translatedAlgo == '') {
-        if ($loop) {
-            log_add('cryptoHashAlgorithm configuration have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
-            $translatedAlgo = crypto_getTranslatedHashAlgo(LIB_CONFIGURATIONS_DEFAULT['cryptoHashAlgorithm'], false);
-        } else
-            $translatedAlgo = 'sha512';
+        log_add('hash algo have an unknown value (' . $algo . ')', 'error', __FUNCTION__, 'b7627066');
+        $algo = LIB_CONFIGURATIONS_DEFAULT['cryptoHashAlgorithm'];
+        $translatedAlgo = HASH_MAP[$algo] ?? '';
+    }
+    if ($translatedAlgo == '') {
+        log_add('invalid default cryptoHashAlgorithm configuration (' . $algo . ')', 'error', __FUNCTION__, 'ad728da9');
+        $translatedAlgo = DEFAULT_FALLBACK_HASH;
     }
 
     return $translatedAlgo;
@@ -1840,7 +1831,7 @@ function crypto_getDataHash(string &$data, string $algo = ''): string {
 
 /**
  * Crypto - Calculate hash of file data with algo.
- * File must be on objects folder.
+ * File must be on the objects folder.
  * Use OpenSSL library.
  *
  * @param string $algo
@@ -4897,7 +4888,7 @@ function bootstrap_getCheckFingerprint(): void {
 
 // ------------------------------------------------------------------------------------------
 /**
- * Display starting new HTML page.
+ * Display starting a new HTML page.
  *
  * @param string $title
  * @return void
