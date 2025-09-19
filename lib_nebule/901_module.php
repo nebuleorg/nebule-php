@@ -78,8 +78,8 @@ abstract class Modules extends Functions implements ModuleInterface
 
     private ?string $_commandActionDisplayModuleCache = null;
 
-    public function getExtractCommandDisplayModule(): string
-    {
+    public function getExtractCommandDisplayModule(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $return = '';
 
         if ($this->_commandActionDisplayModuleCache != null)
@@ -125,6 +125,7 @@ abstract class Modules extends Functions implements ModuleInterface
     public function actions(): void {}
 
     public function getTranslate(string $text, string $lang = ''): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = $text;
         if ($this->_translateInstance === null)
             $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
@@ -169,6 +170,7 @@ abstract class Modules extends Functions implements ModuleInterface
     }
 
     protected function _displaySimpleTitle(string $title, string $icon): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle($title);
         $instance->setIconRID($icon);
@@ -176,8 +178,19 @@ abstract class Modules extends Functions implements ModuleInterface
     }
 
     protected function _displayNotImplemented(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::notImplemented');
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instance->display();
+    }
+
+    protected function _displayNotSupported(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage('::notSupported');
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
         $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);

@@ -354,6 +354,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
     public function displayModule(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
                 if ($this->_instanceCurrentBlog->getID() != '0')
@@ -410,6 +411,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     public function displayModuleInline(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
                 $this->_display_InlineBlog();
@@ -429,6 +431,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
     public function headerStyle(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         /*?> FIXME
 
         .neblogModuleObjectsDescList1 { padding:5px; background:rgba(255,255,255,0.5); background-origin:border-box; color:#000000; clear:both; }
@@ -448,6 +451,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
 
     private function _displayBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $instanceObject = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instanceObject->setNID($this->_instanceCurrentBlog);
@@ -473,6 +477,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _display_InlineBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // TODO sync blog with arg self::COMMAND_ACTION_SYNC_BLOG
 
         $this->_displaySimpleTitle('::posts', $this::MODULE_REGISTERED_ICONS[1]);
@@ -511,6 +516,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayBlogs(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:list', $this::MODULE_REGISTERED_ICONS[1]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -546,6 +552,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _display_InlineBlogs(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $list = $this->_getLinksBlogNID();
@@ -584,6 +591,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayNewBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
 
@@ -612,18 +620,21 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:blog:disp', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:blog:disp', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayGetBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:get', $this::MODULE_REGISTERED_ICONS[6]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
 
@@ -657,23 +668,27 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displaySyncBlog(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:blog:sync', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayPost(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:post:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post');
     }
 
     private function _display_InlinePost(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayContentPost($this->_instanceCurrentBlogPost, 'selfMenuPost');
         $this->_displayContentAnswers($this->_instanceCurrentBlogPost);
     }
 
     private function _displayNewPost(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:post:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:post:list', $this::MODULE_REGISTERED_VIEWS[0], true);
 
@@ -709,24 +724,28 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModPost(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:post:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[7], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPost(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:post:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayPage(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:page:disp', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayBackOrLogin('::neblog:module:blog:return', $this::MODULE_REGISTERED_VIEWS[0], true);
         $this->_displayContentPost($this->_instanceCurrentBlogPage, 'selfMenuPage');
     }
 
     private function _displayPages(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:page:list', $this::MODULE_REGISTERED_ICONS[4]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -762,6 +781,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _display_InlinePages(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
@@ -791,6 +811,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayNewPage(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:page:new', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
 
@@ -825,12 +846,14 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayModPage(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:page:mod', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPage(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::neblog:module:page:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLogin('::neblog:module:page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
         $this->_displayNotImplemented(); // TODO
@@ -937,6 +960,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
     // Common functions
     private function _getLinksF(array &$links, Node $nid1, string $nid3, bool $withOrder = false): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $filter = array(
             'bl/rl/req' => 'f',
             'bl/rl/nid1' => $nid1->getID(),
@@ -951,6 +975,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _getLinkL(Node $nid1, string $nid3): ?linkInterface {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -993,8 +1018,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
         return $this->_cacheInstance->newNode($oid);
     }
 
-    private function _displayBackOrLogin(string $backMessage, string $backView, bool $addBlog = false): void
-    {
+    private function _displayBackOrLogin(string $backMessage, string $backView, bool $addBlog = false): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $addURL = '';
         if ($addBlog)
             $addURL = '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID();
@@ -1005,7 +1030,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
         $instance->setMessage($backMessage);
         $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $backView . $addURL);
+            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $backView
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+            . $addURL);
         $instanceList->addItem($instance);
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -1020,6 +1047,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayAddButton(\Nebule\Library\DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
         $instance->setType($type);
@@ -1031,6 +1059,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayContentPost(Node $nid, string $hook): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setEnableColor(true);
@@ -1060,6 +1089,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayContentPostBlock(Node $oid): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $contentOID = $this->_getContentNID($oid);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($contentOID);
@@ -1090,11 +1120,12 @@ class ModuleNeblog extends \Nebule\Library\Modules
                 $this->_displayContentImage($contentOID);
                 break;
             default:
-                $this->_displayNotImplemented(); // TODO
+                $this->_displayNotSupported();
         }
     }
 
     private function _displayContentText(Node $nid): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = $nid->getContent();
         echo '<div class="text"><p>' . "\n";
         echo $content;
@@ -1102,6 +1133,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     }
 
     private function _displayContentImage(Node $nid): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
@@ -1120,6 +1152,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                               . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                               . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
+                              . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newanswer"
@@ -1234,7 +1267,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private function _getLinksPostContentOID(Node $post): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
-        $this->_getLinksF($links, $post, self::RID_BLOG_POST, true);
+        $this->_getLinksF($links, $post, self::RID_BLOG_CONTENT, true);
         $this->_metrologyInstance->addLog('size of post content list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1ce94445');
         return $links;
     }
@@ -1260,6 +1293,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('new blog post nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '5e3b8f18');
         $instanceBL->addLink('f>' . $this->_instanceCurrentBlog->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_POST);
         $instanceBL->signWrite();
+
+        // Create name
         $instanceNode->setName($name);
 
         // Create PostOID
@@ -1269,6 +1304,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('new blog post nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fd1f9a24');
         $instanceBL->addLink('f>' . $instanceNode->getID() . '>' . $instanceObject->getID() . '>' . self::RID_BLOG_CONTENT . '>0010000000000000.none.64');
         $instanceBL->signWrite();
+
+        // Create type
         $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
     private function _getPostNID(Node $blog, Node $post): void {
@@ -1281,7 +1318,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
      * Answers of posts on blogs
      *
      * On an post 'PostNID', definition of a new answer with 'AnswerOID' OID:
-     *  -  f>PostNID>AnswerOID>RID_BLOG_ANSWER
+     *  - f>PostNID>AnswerOID>RID_BLOG_ANSWER
      * AnswerOID must have content.
      * AnswerOID should not have name.
      * AnswerOID can have update.
@@ -1318,11 +1355,11 @@ class ModuleNeblog extends \Nebule\Library\Modules
      * Pages on blogs
      *
      * On a blog 'BlogNID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
-     *  -  f>BlogNID>PageNID>RID_BLOG_PAGE
+     *  - f>BlogNID>PageNID>RID_BLOG_PAGE
      * PageNID should not have content.
      * PageNID can have name.
      * PageNID can have update.
-     *  -  l>PageNID>PageOID>RID_BLOG_CONTENT
+     *  - l>PageNID>PageOID>RID_BLOG_CONTENT
      * PageOID must have content.
      * PageOID should not have name.
      * PageOID can have update.
@@ -1366,7 +1403,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::neblog:module:login' => 'Se connecter',
-            '::notImplemented' => 'Not yet implemented...',
             '::posts' => 'Posts',
             '::post' => 'Post',
             '::content' => 'Content',
@@ -1401,7 +1437,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         ],
         'en-en' => [
             '::neblog:module:login' => 'Connecting',
-            '::notImplemented' => 'Not yet implemented...',
             '::posts' => 'Posts',
             '::post' => 'Post',
             '::content' => 'Content',
@@ -1436,7 +1471,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         ],
         'es-co' => [
             '::neblog:module:login' => 'Connecting',
-            '::notImplemented' => 'Not yet implemented...',
             '::posts' => 'Posts',
             '::post' => 'Post',
             '::content' => 'Content',

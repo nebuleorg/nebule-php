@@ -18,7 +18,7 @@ class ModuleTranslateESCO extends \Nebule\Library\ModuleTranslates
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    const MODULE_VERSION = '020250218';
+    const MODULE_VERSION = '020250919';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -110,6 +110,8 @@ class ModuleTranslateESCO extends \Nebule\Library\ModuleTranslates
             '::MarkRemove' => 'Unmark',
             '::MarkRemoveAll' => 'Unmark all',
             '::Synchronize' => 'Synchronize',
+            '::notImplemented' => 'Not yet implemented...',
+            '::notSupported' => 'Not supported...',
         ],
     ];
 }
