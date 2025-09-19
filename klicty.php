@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250728';
+    const APPLICATION_VERSION = '020250919';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1885,7 +1885,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['selfHookList'][0]['link'] = '?'
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $id
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
 
                 echo $this->getDisplayObject_DEPRECATED($instance, $param);
@@ -1984,7 +1984,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
                               '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP
-                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="floatRight textAlignRight">
                             <input type="checkbox"
                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
@@ -2098,7 +2098,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $this->_applicationInstance->getCurrentObjectID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             }
         }
         if ($isEntity) {
@@ -2122,7 +2122,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY . '=' . $id
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             }
 
             if ($this->_unlocked && $id == $this->_entitiesInstance->getGhostEntityEID()) {
@@ -2187,7 +2187,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
                     // Renouveler le bail de durée de vie.
                     $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -2203,7 +2203,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                             . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=l_' . $source . '_' . $target . '_' . $meta
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
                 }
             }
@@ -2232,7 +2232,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                               . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
-                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <input type="submit"
                                value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::AddToGroup'); ?>"
                                class="klictyModuleEntityInput">
@@ -2282,7 +2282,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_FROM_GROUP . '=' . $group
-                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             }
                         }
 
@@ -2337,7 +2337,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         }
 
                         // Marque comme vu.
@@ -2502,7 +2502,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <div class="text">
                 <form enctype="multipart/form-data" method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
-                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                     <input type="hidden"
                            name="MAX_FILE_SIZE"
                            value="<?php echo $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP'); ?>"/>
@@ -2667,7 +2667,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
                               . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
-                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <table>
                             <tr>
                                 <td></td>
@@ -2755,7 +2755,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <form method="post"
                       action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
-                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                     <table>
                         <tr>
                             <td></td>
@@ -2907,7 +2907,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $id
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             } elseif (!$this->_recoveryInstance->getIsRecoveryEntity($entity)
                                 || $this->_configurationInstance->getOptionAsBoolean('permitRecoveryRemoveEntity')
                             ) {
@@ -2917,7 +2917,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             }
                         }
 
@@ -2952,7 +2952,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $id
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 $this->displayActionList($actionList);
                 unset($actionList);
 
@@ -3010,12 +3010,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         else
                             $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
                         // Marque comme vu.
                         $listOkGroups[$group] = true;
@@ -3070,7 +3070,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                             . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
                         // Marque comme vu.
                         $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;

@@ -9,6 +9,7 @@ use Nebule\Library\Metrology;
 use Nebule\Library\Actions;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
+use Nebule\Library\References;
 use Nebule\Library\Translates;
 
 /*
@@ -43,7 +44,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
+    const APPLICATION_VERSION = '020250919';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
@@ -179,7 +180,7 @@ class Display extends Displays
                         <h1>One link upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                                  action="<?php echo '?' . References::COMMAND_TOKEN . '=' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
                                 <label>
                                     <input type="text" class="newlink"
                                            name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
@@ -194,7 +195,7 @@ class Display extends Displays
                         <h1>Link's file upload</h1>
                         <div>
                             <form enctype="multipart/form-data" method="post"
-                                  action="<?php echo '?' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
+                                  action="<?php echo '?' . References::COMMAND_TOKEN . '=' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
                                 <input type="hidden"
                                        name="MAX_FILE_SIZE"
                                        value="<?php echo $this->_configurationInstance->getOptionUntyped('ioReadMaxData'); ?>"/>
