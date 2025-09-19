@@ -7,7 +7,9 @@ use Nebule\Library\Actions;
 use Nebule\Library\Cache;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItemIconMessage;
+use Nebule\Library\DisplayLink;
 use Nebule\Library\DisplayList;
+use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayObject;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
@@ -35,7 +37,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020250902';
+    const MODULE_VERSION = '020250919';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -122,60 +124,68 @@ class ModuleEntities extends \Nebule\Library\Modules
             case 'selfMenu':
             case 'typeMenuEntity':
                 // List entities I know.
-                $hookArray[0]['name'] = '::module:entities:KnownEntities';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[0]['desc'] = '::module:entities:KnownEntitiesDesc';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[0]) {
+                    $hookArray[0]['name'] = '::module:entities:KnownEntities';
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[0]['desc'] = '::module:entities:KnownEntitiesDesc';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0];
+                }
 
                 // List entities know me.
-                $hookArray[1]['name'] = '::module:entities:KnownByEntities';
-                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[1]['desc'] = '::module:entities:KnownByEntitiesDesc';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[11]) {
+                    $hookArray[1]['name'] = '::module:entities:KnownByEntities';
+                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[1]['desc'] = '::module:entities:KnownByEntitiesDesc';
+                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11];
+                }
 
                 // List my entities.
-                $hookArray[2]['name'] = '::module:entities:MyEntities';
-                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[2]['desc'] = '::module:entities:MyEntitiesDesc';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[8]) {
+                    $hookArray[2]['name'] = '::module:entities:MyEntities';
+                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[2]['desc'] = '::module:entities:MyEntitiesDesc';
+                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8];
+                }
 
                 // List unknown entities.
-                $hookArray[3]['name'] = '::module:entities:UnknownEntities';
-                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[3]['desc'] = '::module:entities:UnknownEntitiesDesc';
-                $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[9]) {
+                    $hookArray[3]['name'] = '::module:entities:UnknownEntities';
+                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[3]['desc'] = '::module:entities:UnknownEntitiesDesc';
+                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9];
+                }
 
                 // List special entities.
-                $hookArray[4]['name'] = '::module:entities:SpecialEntities';
-                $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[4]['desc'] = '::module:entities:SpecialEntitiesDesc';
-                $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[10]) {
+                    $hookArray[4]['name'] = '::module:entities:SpecialEntities';
+                    $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[4]['desc'] = '::module:entities:SpecialEntitiesDesc';
+                    $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10];
+                }
 
                 // List all entities.
-                $hookArray[5]['name'] = '::module:entities:allEntities';
-                $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[5]['desc'] = '::module:entities:allEntitiesDesc';
-                $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12];
-                    //. '&' . References::COMMAND_SELECT_GHOST . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[12]) {
+                    $hookArray[5]['name'] = '::module:entities:allEntities';
+                    $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
+                    $hookArray[5]['desc'] = '::module:entities:allEntitiesDesc';
+                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12];
+                }
 
                 // See entity properties.
-                $hookArray[6]['name'] = '::module:entities:DescriptionEntity';
-                $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                $hookArray[6]['desc'] = '::module:entities:DescriptionEntityDesc';
-                $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7];
-                    //. '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[7]) {
+                    $hookArray[6]['name'] = '::module:entities:DescriptionEntity';
+                    $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
+                    $hookArray[6]['desc'] = '::module:entities:DescriptionEntityDesc';
+                    $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
+                }
 
                 if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'])
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
@@ -721,40 +731,6 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo '<div class="layout-list">' . "\n";
         echo '<div class="textListObjects">' . "\n";
-
-        /*$param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => true,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => true,
-            'flagUnlocked' => $this->_unlocked,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'displaySize' => 'large',
-            'displayRatio' => 'short',
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
-        echo '<br />' . "\n";
-
-        if (!$this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
-            $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-            $instance->setMessage('::neblog:module:login');
-            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
-            $instance->display();
-        }
-
-
-        echo '</div>' . "\n";*/
 
         $entity = $this->_displayEntityInstance;
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
@@ -1917,260 +1893,94 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _display_InlineEntityProp(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Préparation de la gestion de l'affichage par parties.
-        $startLinkSigne = $this->_nebuleInstance->getDisplayNextObject();
-        $displayCount = 0;
-        $okDisplay = false;
-        if ($startLinkSigne == '') {
-            $okDisplay = true;
-        }
-        $displayNext = false;
-        $nextLinkSigne = '';
 
-        $list = array(); // @todo refaire la liste d'affichage avec les nouvelles fonctions.
-        $i = 0;
-
-        // Recherche si l'objet a une mise à jour.
-        $update = $this->_displayEntityInstance->getUpdateNID(false, false);
-        if ($update != $this->_displayEntity) {
-            // A affiner...
-            //
-            $this->_displayInstance->displayMessageWarning_DEPRECATED(
-                $this->_translateInstance->getTranslate('::sylabe:module:objects:warning:ObjectHaveUpdate'));
-        }
-        unset($update);
-
-        // Liste des attributs, càd des liens de type l.
+        $entity = $this->_displayEntityInstance;
+        $this->_metrologyInstance->addLog('DEBUGGING entity EID=' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         $links = array();
         $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid3' => $this->_displayEntityInstance->getID(),
-            'bl/rl/nid4' => '',
+                'bl/rl/req' => 'l',
+                'bl/rl/nid1' => $entity->getID(),
+                'bl/rl/nid4' => '',
         );
-        $this->_displayEntityInstance->getLinks($links, $filter);
-
-        // Affichage des attributs de base.
-        if (sizeof($links) != 0) {
-            // Indice de fond paire ou impaire.
-            $bg = 1;
-            $attribList = References::NODE_REFERENCES;
-            $emotionsList = array(
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE) => References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE) => References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR) => References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE) => References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE) => References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT) => References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE) => References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE,
-                $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET) => References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET,
-            );
-            $emotionsIcons = array(
-                References::REFERENCE_NEBULE_OBJET_EMOTION_JOIE => Displays::REFERENCE_ICON_EMOTION_JOIE1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_CONFIANCE => Displays::REFERENCE_ICON_EMOTION_CONFIANCE1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_PEUR => Displays::REFERENCE_ICON_EMOTION_PEUR1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_SURPRISE => Displays::REFERENCE_ICON_EMOTION_SURPRISE1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_TRISTESSE => Displays::REFERENCE_ICON_EMOTION_TRISTESSE1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_DEGOUT => Displays::REFERENCE_ICON_EMOTION_DEGOUT1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_COLERE => Displays::REFERENCE_ICON_EMOTION_COLERE1,
-                References::REFERENCE_NEBULE_OBJET_EMOTION_INTERET => Displays::REFERENCE_ICON_EMOTION_INTERET1,
-            );
-
-            foreach ($links as $i => $link) {
-                // Vérifie si la signature de lien est celle de départ de l'affichage.
-                if ($link->getSigneValue() == $startLinkSigne) {
-                    $okDisplay = true;
-                }
-
-                // Enregistre le message suivant à afficher si le compteur d'affichage est dépassé.
-                if ($displayNext
-                    && $nextLinkSigne == ''
-                ) {
-                    $nextLinkSigne = $link->getSigneValue();
-                }
-
-                // Si l'affichage est permis.
-                if ($okDisplay) {
-                    // Extraction des attributs.
-                    $action = $link->getParsed()['bl/rl/req'];
-                    $showAttrib = false;
-                    $showEmotion = false;
-                    $hashAttrib = $link->getParsed()['bl/rl/nid3'];
-                    $attribName = '';
-                    $attribTraduction = '';
-                    $hashValue = $link->getParsed()['bl/rl/nid2'];
-                    $value = '';
-                    $attribValue = '';
-                    $emotion = '';
-
-                    // Si action type l.
-                    if ($action == 'l') {
-                        // Extrait le nom.
-                        if ($hashAttrib != '0'
-                            && $hashAttrib != ''
-                            && $hashValue != '0'
-                            && $hashValue != ''
-                        ) {
-                            $attribInstance = $this->_cacheInstance->newNode($hashAttrib);
-                            $attribName = $attribInstance->readOneLineAsText();
-                            unset($attribInstance);
-                        }
-
-                        // Vérifie si l'attribut est dans la liste des objets réservés à afficher.
-                        if ($attribName != '') {
-                            foreach ($attribList as $attribItem) {
-                                if ($attribItem == $attribName) {
-                                    $showAttrib = true;
-                                    break;
-                                }
-                            }
-                        }
-                    } // Si action de type f, vérifie si l'attribut est dans la liste des émotions à afficher.
-                    elseif ($action == 'f'
-                        && $hashValue != '0'
-                    ) {
-                        foreach ($emotionsList as $item => $emotionItem) {
-                            if ($item == $hashValue) {
-                                $showEmotion = true;
-                                $emotion = $emotionItem;
-                                break;
-                            }
-                        }
-                    }
-
-                    // Extrait la valeur.
-                    if ($showAttrib
-                        && $attribName != ''
-                    ) {
-                        $valueInstance = $this->_cacheInstance->newNode($hashValue);
-                        $attribValue = $valueInstance->readOneLineAsText();
-                        unset($valueInstance);
-                        // Vérifie la valeur.
-                        if ($attribValue == null) {
-                            $attribValue = $this->_applicationInstance->getTranslateInstance()->getTranslate('::noContent');
-                        }
-                    }
-
-                    if ($showAttrib) {
-                        // Affiche l'attribut.
-                        ?>
-
-                        <div class="moduleEntitiesDescList<?php echo $bg; ?>">
-                            <?php
-                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
-                                // Affiche l'icône pour voir le lien.
-                                ?>
-
-                                <div class="moduleEntitiesDescIcon">
-                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
-                                        '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
-
-                                </div>
-                                <?php
-                            }
-                            ?>
-
-                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="moduleEntitiesDescContent">
-                                <span class="moduleEntitiesDescAttrib"><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($attribName); ?></span>
-                                =
-                                <span class="moduleEntitiesDescValue"><?php echo $attribValue; ?></span>
-                            </div>
-                        </div>
-                        <?php
-                    } elseif ($showEmotion) {
-                        // Affiche l'émotion.
-                        ?>
-
-                        <div class="moduleEntitiesDescList<?php echo $bg; ?>">
-                            <?php
-                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
-                                // Affiche l'icône pour voir le lien.
-                                ?>
-
-                                <div class="moduleEntitiesDescIcon">
-                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
-                                        '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
-
-                                </div>
-                                <?php
-                            }
-                            ?>
-
-                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="moduleEntitiesDescContent">
-		<span class="moduleEntitiesDescEmotion">
-			<?php $this->_displayInstance->displayReferenceImage($emotionsIcons[$emotion], $emotionsList[$hashValue]); ?>
-            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate($emotionsList[$hashValue]); ?>
-		</span>
-                            </div>
-                        </div>
-                        <?php
-                    } elseif ($action == 'l') {
-                        // Affiche une erreur si la propriété n'est pas lisible.
-                        ?>
-
-                        <div class="moduleEntitiesDescError">
-                            <?php
-                            if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleLinks')) {
-                                // Affiche l'icône pour voir le lien.
-                                ?>
-
-                                <div class="moduleEntitiesDescIcon">
-                                    <?php $this->_displayInstance->displayHypertextLink($this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_LL'),
-                                        '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . Display::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
-                                    &nbsp;
-                                    <?php $this->_displayInstance->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
-
-                                </div>
-                                <?php
-                            }
-                            ?>
-
-                            <div class="moduleEntitiesDescDate"><?php $this->_displayInstance->displayDate($link->getDate()); ?></div>
-                            <div class="moduleEntitiesDescSigner"><?php $this->_displayInstance->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
-                            <div class="moduleEntitiesDescContent">
-                                <span class="moduleEntitiesDescAttrib"><?php echo $this->_translateInstance->getTranslate('::module:entities:AttribNotDisplayable'); ?></span>
-                            </div>
-                        </div>
-                        <?php
-                    } else {
-                        // Si non affichable et lien de type autre que l, annule la permutation de l'indice de fond.
-                        $bg = 3 - $bg;
-                    }
-
-                    // Actualise le compteur d'affichage.
-                    $displayCount++;
-                    if ($displayCount >= self::DEFAULT_ATTRIBS_DISPLAY_NUMBER) {
-                        $okDisplay = false;
-                        $displayNext = true;
-                    }
-                }
-
-                // Permutation de l'indice de fond.
-                $bg = 3 - $bg;
+        $entity->getLinks($links, $filter);
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setNID($entity);
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableFlags(false);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        $instanceList->addItem($instance);
+        foreach ($links as $link) {
+            $ok = true;
+            $contentOID = $link->getParsed()['bl/rl/nid2'];
+            $content = $this->_ioInstance->getObject($contentOID);
+            if ($content === false) {
+                $ok = false;
+                $content = $contentOID;
+            }
+            $propertyOID = $link->getParsed()['bl/rl/nid3'];
+            $property = $this->_ioInstance->getObject($propertyOID);
+            if ($property === false) {
+                $ok = false;
+                $property = $propertyOID;
             }
 
-            // Affiche au besoin le bouton pour afficher les objets suivants.
-            if ($displayNext
-                && $nextLinkSigne != ''
-            ) {
-                $url = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . Displays::DEFAULT_INLINE_COMMAND . '&' . Displays::DEFAULT_INLINE_CONTENT_COMMAND . '=properties'
-                    . '&' . Displays::DEFAULT_NEXT_COMMAND . '=' . $nextLinkSigne;
-                $this->_displayInstance->displayButtonNextObject($nextLinkSigne, $url, $this->_applicationInstance->getTranslateInstance()->getTranslate('::seeMore'));
-            }
-            unset($links);
+            /*$instance = new DisplayInformation($this->_applicationInstance);
+            if ($ok)
+                $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+            else
+                $instance->setType(DisplayItemIconMessage::TYPE_WARN);
+            $instance->setMessage($property . " :<br />\n" . $content);
+            $instance->setIconText($property);
+            $instanceList->addItem($instance);*/
+
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instanceNode = $this->_cacheInstance->newNode($contentOID);
+            $instance->setNID($instanceNode);
+            $instance->setEnableColor(false);
+            $instance->setEnableIcon(false);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableContent(true);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(false);
+            $instance->setEnableRefs(true);
+            $instance->setName($property);
+            $instance->setRefs($link->getSignersEID());
+            $instanceList->addItem($instance);
         }
+
+        $links = array();
+        $filter = array(
+                'bl/rl/req' => 'f',
+                'bl/rl/nid1' => $entity->getID(),
+                'bl/rl/nid3' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_PRIVATE_KEY),
+                'bl/rl/nid4' => '',
+        );
+        $entity->getLinks($links, $filter);
+        foreach ($links as $link) {
+            $instance = new DisplayObject($this->_applicationInstance);
+            $instanceNode = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $instance->setNID($instanceNode);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['lo']);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
+            $instanceList->addItem($instance);
+        }
+
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->setRatio(DisplayItem::RATIO_SHORT);
+        $instanceList->display();
     }
 
 
@@ -2306,7 +2116,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:AuthUnlockHelp' => 'Se connecter...',
             '::module:entities:Protected' => 'Message protégé.',
             '::module:entities:Obfuscated' => 'Message dissimulé.',
-            '::module:entities:Desc:AttribsTitle' => "Propriétés de l'objet",
+            '::module:entities:Desc:AttribsTitle' => "Propriétés de l'entité",
             '::module:entities:Desc:AttribsDesc' => "Toutes les propriétés de l'objet de l'entité.",
             '::module:entities:Desc:AttribsHelp' => "Toutes les propriétés de l'objet.",
             '::module:entities:Desc:Attrib' => 'Propriété',
@@ -2392,7 +2202,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:AuthUnlockHelp' => 'Connecting...',
             '::module:entities:Protected' => 'Message protected.',
             '::module:entities:Obfuscated' => 'Message obfuscated.',
-            '::module:entities:Desc:AttribsTitle' => "Object's attributs",
+            '::module:entities:Desc:AttribsTitle' => "Entity's attributs",
             '::module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
             '::module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
             '::module:entities:Desc:Attrib' => 'Attribut',
@@ -2478,7 +2288,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:AuthUnlockHelp' => 'Connecting...',
             '::module:entities:Protected' => 'Message protected.',
             '::module:entities:Obfuscated' => 'Message obfuscated.',
-            '::module:entities:Desc:AttribsTitle' => "Object's attributs",
+            '::module:entities:Desc:AttribsTitle' => "Entity's attributs",
             '::module:entities:Desc:AttribsDesc' => "All attributs of the entity's object.",
             '::module:entities:Desc:AttribsHelp' => 'All attributs of the object.',
             '::module:entities:Desc:Attrib' => 'Attribut',

@@ -31,23 +31,23 @@ abstract class DisplayItem extends Functions implements DisplayInterface
     protected string $_sizeCSS = '';
     protected string $_ratioCSS = '';
 
-    public function __construct(Applications $applicationInstance) // Should not be overridden by children classes.
+    public function __construct(Applications $applicationInstance) // Should not be overridden by children's classes.
     {
         parent::__construct($applicationInstance->getNebuleInstance());
         $this->setEnvironmentLibrary($applicationInstance->getNebuleInstance());
         $this->setEnvironmentApplication($applicationInstance);
         $this->initialisation();
     }
-    protected function _initialisation(): void { $this->setSocial('authority'); } // Should be overridden by children classes.
+    protected function _initialisation(): void { $this->setSocial('authority'); } // Should be overridden by children's classes.
 
-    public static function displayCSS(): void {} // Must be overridden by children classes.
+    public static function displayCSS(): void {} // Must be overridden by children's classes.
 
-    public function getHTML(): string { // Must be overridden by children classes.
+    public function getHTML(): string { // Must be overridden by children's classes.
         $this->_metrologyInstance->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return '';
     }
 
-    public function display(): void { // Should not be overridden by children classes.
+    public function display(): void { // Should not be overridden by children's classes.
         $this->_metrologyInstance->addLog('display HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo $this->getHTML();
     }
@@ -144,6 +144,12 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         $this->_iconUpdate = $update;
     }
 
+    /**
+     * Set the alternate text of the icon and the text of the box if not on tiny size.
+     * Must be called after setType() because this changes the icon alternate name too.
+     * @param String $text
+     * @return void
+     */
     public function setIconText(String $text): void {
         $this->_iconText = $this->_translateInstance->getTranslate($text);
     }

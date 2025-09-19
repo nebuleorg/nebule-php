@@ -204,7 +204,7 @@ interface ioInterface
      * @param string $url
      * @return string|boolean
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = '');
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string;
 
 
 

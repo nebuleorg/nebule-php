@@ -187,7 +187,7 @@ class ioDisk extends io implements ioInterface
         $file = References::OBJECTS_FOLDER . '/0';
         $resultDelete = false;
 
-        // Test la création si pas déjà présent.
+        // Check if the object is already present.
         if (file_exists($file))
             $resultCreate = true;
         else {
@@ -241,15 +241,7 @@ class ioDisk extends io implements ioInterface
      */
     public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
     {
-        /**
-         * Compteur de liens lus.
-         * @var double $linkRead
-         */
         $linkRead = 0;
-
-        /**
-         * Table des liens lus.
-         */
         $linkList = array();
 
         if (!Node::checkNID($oid, false)
@@ -258,10 +250,6 @@ class ioDisk extends io implements ioInterface
         )
             return array();
 
-        /**
-         * Descripteur du fichier en cours de lecture.
-         * @var finfo $file
-         */
         $file = file(References::LINKS_FOLDER . '/' . $oid);
         foreach ($file as $link) {
             $linkList[$linkRead] = $link;
@@ -284,18 +272,18 @@ class ioDisk extends io implements ioInterface
         $fileList = array();
         $linksList = array();
 
-        // Vérifie la présence d'une clé de transcodage des noms des fichiers.
+        // Check if there is a file name transcoding key.
         if ($this->_filesTranscodeKey == '')
             return $linksList;
 
-        // Vérifie l'entité destinataire des liens dissimulés.
+        // Check the entity recipient of the hidden links.
         if (!Node::checkNID($entity, false)
             || !file_exists(References::LINKS_FOLDER . '/' . $entity)
             || is_dir(References::LINKS_FOLDER . '/' . $entity)
         )
             return $linksList;
 
-        // Vérifie l'entité signataire des liens dissimulés.
+        // Check the signing entity of the hidden links.
         if (!is_string($signer)
             || $signer == ''
             || !file_exists(References::LINKS_FOLDER . '/' . $signer)
@@ -304,10 +292,10 @@ class ioDisk extends io implements ioInterface
             $signer = '0';
 
         if ($signer == '0') {
-            // Si aucun signataire particulier n'est demandé, lit tous les fichiers de liens attachés à l'entité destinataire.
+            // If no specific signer requested, read all link files attached to the recipient entity.
             $fileList = glob(References::LINKS_FOLDER . '/' . $entity . '-*', GLOB_NOSORT);
 
-            // Vérifie la validité du nom du fichier.
+            // Check the validity of file names.
             /* TODO
              * foreach ($list as $l) {
              * if (preg_match("~^a+\.php$~",$file))
@@ -317,21 +305,21 @@ class ioDisk extends io implements ioInterface
         } elseif (file_exists(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
             && !is_dir(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
         ) {
-            // Si un signataire particulier est demandé, lit uniquement le fichier de liens concerné.
+            // If a specific signer is requested, only read the concerned link file.
             $fileList[0] = $entity . '-' . $signer;
         } else {
-            // Sinon il n'y a pas de liens dissimulés entre ces deux entités.
+            // Otherwise, there are no hidden links between these two entities.
             return $linksList;
         }
 
-        // Pour chaque fichier listé, lit les liens.
+        // For each file listed, reads the links.
         foreach ($fileList as $filename) {
             $file = file(References::LINKS_FOLDER . '/' . $filename);
             foreach ($file as $link) {
-                // @todo vérifier regex que le lien est de type c ...
+                // @todo verify with regex that the link is of type c ...
                 if (true)
                     $linksList[$linksRead] = $link;
-                // Vérifie que le nombre maximum de liens à lire n'est pas dépassé.
+                // Check if the maximum number of links to read has not been exceeded.
                 $linksRead++;
                 if ($linksRead > $this->_maxLink)
                     break 1;
@@ -345,7 +333,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObject()
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = '')
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string
     {
         if (!Node::checkNID($oid, false)
             || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
@@ -369,7 +357,6 @@ class ioDisk extends io implements ioInterface
      */
     public function setBlockLink(string $oid, string &$link, string $url = ''): bool
     {
-        // Vérifie les arguments.
         if (!Node::checkNID($oid, false)
             || $link == ''
             || !$this->_checkFileLink($oid, $link)
@@ -381,8 +368,8 @@ class ioDisk extends io implements ioInterface
             return false;
 
         if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
-            // Si le fichier de lien est présent, teste la présence du lien.
-            // Extrait un tableau avec une ligne par élément.
+            // If the link file is present, check for the presence of the link.
+            // Extract an array with one element per line.
             $l = file(References::LINKS_FOLDER . '/' . $oid);
             foreach ($l as $k) {
                 // Si déjà présent, on quitte.
@@ -390,7 +377,7 @@ class ioDisk extends io implements ioInterface
                     return true;
             }
         /*} else {
-            // Si le fichier de lien n'est pas présent, le crée.
+            // If the link file is not present, create it.
             file_put_contents(
                 nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid,
                 'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");*/
@@ -444,7 +431,7 @@ class ioDisk extends io implements ioInterface
         if (!file_exists(References::OBJECTS_FOLDER . '/' . $oid))
             return true;
 
-        // Essaye de supprimer le fichier de l'objet.
+        // Try to delete the object file.
         unlink(References::OBJECTS_FOLDER . '/' . $oid);
 
         if (file_exists(References::OBJECTS_FOLDER . '/' . $oid)) {
@@ -470,7 +457,7 @@ class ioDisk extends io implements ioInterface
         )
             return false;
 
-        // Prépare le fichier temporaire de travail des liens.
+        // Prepare a temporary working file for links.
         if (!file_exists(References::LINKS_FOLDER . '/' . $oid . '.rmlnk'))
             return true;
 
@@ -507,14 +494,13 @@ class ioDisk extends io implements ioInterface
     }
 
     /**
-     * Retourne l'identifiant traduit d'un objet en fonction de la clé de translation.
-     * La traduction se fait par la prise d'empreinte de la concaténation de l'identifiant de l'objet, de l'identifiant de l'entité et de la clé de translation.
-     * L'empreinte sur juste l'identifiant de l'objet est déjà non réversible en elle-même.
-     * Même sans clé de translation, la translation varie d'une entité à l'autre. Et c'est pareil si deux enttiés utilisent la même clé de translation.
-     * La valeur retournée dépend aussi de l'algorithme utilisé, c'est à dire celui par défaut pour les prises d'empreinte.
-     * La fonction est non réversible.
-     *
-     * TODO à revoir avec ajout d'une option TranslateLinkHashAlgorithm
+     * Returns a translated object identifier based on the translation key.
+     * Translation is done by hashing the concatenation of object ID, entity ID and translation key.
+     * The hash of just the object ID is already irreversible by itself.
+     * Even without a translation key, the translation varies from one entity to another. And it's the same if two entities use the same translation key.
+     * The returned value also depends on the algorithm used, which is the default one for hashing.
+     * The function is irreversible.
+     * TODO to review with addition of a TranslateLinkHashAlgorithm option
      *
      * @param string $id
      * @return string
@@ -525,11 +511,10 @@ class ioDisk extends io implements ioInterface
     }
 
     /**
-     * Vérification du fichier de liens que l'on doit utiliser.
-     * Si le lien est de type c, le fichier à la forme "hash-hash".
-     * Si non il a la forme "hash".
-     *
-     * TODO à revoir !
+     * Checking the links file we need to use.
+     * If the link is type c, the file has the form "hash-hash".
+     * Otherwise it has the form "hash".
+     * TODO to review !
      *
      * @param string $oid
      * @param string $link
@@ -538,43 +523,43 @@ class ioDisk extends io implements ioInterface
     private function _checkFileLink(string &$oid, string &$link): bool
     {
         /**
-         * Indice du champs lu, de 1 à 7.
+         * Index of field being read, from 1 to 7.
          */
         $j = 1;
 
         /**
-         * Action detectée.
+         * Action detected.
          */
         $action = '';
 
         /**
-         * Première lecture des champs, premier champs.
+         * First read of fields, first field.
+         *
          * @var string $e
          */
         $e = strtok(trim($link), '_');
 
-        // Extrait si lien type c.
+        // Extract if link type c.
         while ($e !== false) {
             if ($j == 4) {
                 $action = trim($e);
             }
             if ($j < 8) {
-                // Lecture de la suite des champs, champs suivant.
+                // Reading the following fields, next field.
                 $e = strtok('_');
             } else {
-                // Ne doit pas avoir plus de 7 champs.
+                // Must not have more than 7 fields.
                 return false;
             }
             $j++;
         }
 
-        // Vérifie l'objet si lien d'offuscation ou non.
+        // Check the object if obscured link or not.
         if ($action == 'c') {
             $hashentsign = '';
             $hashentdest = '';
             $j = 1;
             $e = strtok(trim($link), '-');
-            // Extrait les deux hashs.
             while ($e !== false) {
                 if ($j == 1) {
                     $hashentsign = trim($e);
@@ -599,7 +584,6 @@ class ioDisk extends io implements ioInterface
             }
         }
 
-        // Si on arrive là c'est que c'est bon.
         return true;
     }
 }

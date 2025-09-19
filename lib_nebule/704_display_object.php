@@ -237,7 +237,7 @@ namespace Nebule\Library;
  *      Ratios disponibles :
  *      - square : forme carrée de 2x2 displaySize.
  *      - short : forme plate courte de 6x1 displaySize.
- *      - long : forme plate longue de toute largeure disponible.
+ *      - long : forme plate longue de toute largeur disponible.
  *      Par défaut short : forme plate courte.
  *      String
  *  - selfHookList : Détermine la liste des point d'encrage à utiliser pour les actions sur l'objet utilisé.

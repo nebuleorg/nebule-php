@@ -155,23 +155,17 @@ class Entities extends Functions
     private function _findGhostEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newNode($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
-        $this->_metrologyInstance->addLog('DEBUGGING 1 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
-if ($instance === null)
-    $this->_metrologyInstance->addLog('DEBUGGING 2 eid null=', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-else
-    $this->_metrologyInstance->addLog('DEBUGGING 2 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_defaultEntityInstance;
-        $this->_metrologyInstance->addLog('DEBUGGING 3 eid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_ghostEntityInstance = $instance;
         $this->_ghostEntityEID = $instance->getID();
         $this->_metrologyInstance->addLog('ghost entity eid=' . $this->_ghostEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd026d625');
         $this->_sessionInstance->setSessionStoreAsString('nebuleGhostEntityInstance', $this->_ghostEntityEID);
     }
 
-    private function _findGhostEntityFromArg(): string {
+    /*private function _findGhostEntityFromArg(): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_GHOST))
             $arg = filter_input(INPUT_GET,
@@ -194,7 +188,7 @@ else
             return '0';
         $this->_metrologyInstance->addLog('find ghost entity key from arg eid=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '811a12be');
         return $arg;
-    }
+    }*/
 
     
     

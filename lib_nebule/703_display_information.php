@@ -9,7 +9,7 @@ namespace Nebule\Library;
  *     ---
  * Example:
  *  $instance = new DisplayInformation($this->_applicationInstance);
- *  $instance->setMessage('Message to user', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
+ *  $instance->setMessage('Message to user %s %s %s %s %s', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5');
  *  $instance->setDisplayAlone(true);
  *  $instance->setType(DisplayInformation::TYPE_MESSAGE);
  *  $instance->setIconText('Alternative text on icon');
@@ -22,53 +22,55 @@ namespace Nebule\Library;
  *     ---
  * Usage:
  *   - setMessage : Define message to display. If empty, nothing will be displayed.
- *       If empty, nothing displayed.
+ *       If empty, nothing is displayed.
+ *       Accept string replacement as with sprint() until 5 arguments.
+ *       Automatic translation is applied to the message before replacement.
  *       Default: empty.
  *       String
- *   - setDisplayAlone : Affiche le message dans une position identique à un titre. C'est utilisé pour un message isolé.
+ *   - setDisplayAlone: Set if displayed inside a list or alone in a div.
  *       Default: true
  *       Boolean
- *   - setType : Détermine le type de message.
- *       Les types disponibles :
- *       - DisplayInformation::TYPE_MESSAGE : affichage d'un message simple en blanc sur fond noir transparent.
- *       - DisplayInformation::TYPE_OK : affichage d'un message de validation en blanc sur fond vert.
- *       - DisplayInformation::TYPE_WARN : affichage d'un message d'avertissement en jaune gras sur fond orange clair.
- *       - DisplayInformation::TYPE_ERROR : affichage d'un message d'erreur en rouge gras sur fond rose clair.
- *       - DisplayInformation::TYPE_INFORMATION : affichage d'un message simple en noir sur fond blanc transparent (style d'affichage des objets).
- *       - DisplayInformation::TYPE_GO : affichage d'un message pour valider une action.
- *       - DisplayInformation::TYPE_BACK : affichage d'un message de retour arrière.
+ *   - setType: Set the type of the box for the message.
+ *       Types available:
+ *       - DisplayInformation::TYPE_MESSAGE: affichage d'un message simple en blanc sur fond noir transparent.
+ *       - DisplayInformation::TYPE_OK: affichage d'un message de validation en blanc sur fond vert.
+ *       - DisplayInformation::TYPE_WARN: affichage d'un message d'avertissement en jaune gras sur fond orange clair.
+ *       - DisplayInformation::TYPE_ERROR: affichage d'un message d'erreur en rouge gras sur fond rose clair.
+ *       - DisplayInformation::TYPE_INFORMATION: affichage d'un message simple en noir sur fond blanc transparent (style d'affichage des objets).
+ *       - DisplayInformation::TYPE_GO: affichage d'un message pour valider une action.
+ *       - DisplayInformation::TYPE_BACK: affichage d'un message de retour arrière.
  *       Default: DisplayInformation::TYPE_INFORMATION
  *       String
- *   - setIconText : Détermine le nom du type de message à afficher.
- *       If empty, no alternate text displayed.
+ *   - setIconText: Détermine le nom du type de message à afficher.
+ *       If empty, no alternate text is displayed.
  *       Default: empty.
  *       String
- *   - setSize : Détermine la taille de l'affichage de l'élément complet.
- *       Tailles disponibles :
- *       - DisplayInformation::SIZE_TINY : très petite taille correspondant à un carré de base de 16 pixels de large.
+ *   - setSize: Détermine la taille de l'affichage de l'élément complet.
+ *       Sizes available:
+ *       - DisplayInformation::SIZE_TINY: très petite taille correspondant à un carré de base de 16 pixels de large.
  *           Certains éléments ne sont pas affichés.
- *       - DisplayInformation::SIZE_SMALL : petite taille correspondant à un carré de base de 32 pixels de large.
- *       - DisplayInformation::SIZE_MEDIUM : taille moyenne correspondant à un carré de base de 64 pixels de large par défaut.
- *       - DisplayInformation::SIZE_LARGE : grande taille correspondant à un carré de base de 128 pixels de large par défaut.
- *       - DisplayInformation::SIZE_FULL : très grande taille correspondant à un carré de base de 256 pixels de large par défaut.
+ *       - DisplayInformation::SIZE_SMALL: petite taille correspondant à un carré de base de 32 pixels de large.
+ *       - DisplayInformation::SIZE_MEDIUM: taille moyenne correspondant à un carré de base de 64 pixels de large par défaut.
+ *       - DisplayInformation::SIZE_LARGE: grande taille correspondant à un carré de base de 128 pixels de large par défaut.
+ *       - DisplayInformation::SIZE_FULL: très grande taille correspondant à un carré de base de 256 pixels de large par défaut.
  *       Default: self::SIZE_MEDIUM
  *       String
- *   - setRatio : Détermine la forme de l'affichage par son ratio dans la mesure du possible si pas d'affichage du contenu de l'objet.
- *       Ratios disponibles :
- *       - DisplayInformation::RATIO_SQUARE : forme carrée de 2x2 displaySize.
- *       - DisplayInformation::RATIO_SHORT : forme plate courte de 6x1 displaySize.
- *       - DisplayInformation::RATIO_LONG : forme plate longue de toute largeur disponible.
+ *   - setRatio: Détermine la forme de l'affichage par son ratio dans la mesure du possible si pas d'affichage du contenu de l'objet.
+ *       Ratios available:
+ *       - DisplayInformation::RATIO_SQUARE: forme carrée de 2x2 displaySize.
+ *       - DisplayInformation::RATIO_SHORT: forme plate courte de 6x1 displaySize.
+ *       - DisplayInformation::RATIO_LONG: forme plate longue de toute largeur disponible.
  *       Default: DisplayInformation::RATIO_SHORT
  *       String
- *   - setIcon : Détermine l'icône à utiliser.
- *       Si null, l'icône est sélectionnée automatiquement en fonction du type de message.
+ *   - setIcon: Set the icon to display on the left.
+ *       If null, automatically select the icon according to the type of message.
  *       Default: null
  *       Node/null
- *   - setLink : Détermine le lien HTML à utiliser.
+ *   - setLink: Set the URL used for the link of the icon.
  *       If empty, no link displayed.
  *       Default: empty.
- *   - getHTML : Get HTML code to use.
- *   - display : Display HTML code.
+ *   - getHTML: Get HTML code to use.
+ *   - display: Display HTML code on the browser.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -160,6 +162,11 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         return $result;
     }
 
+    /**
+     * Set to true when not on a list.
+     * @param bool $enable
+     * @return void
+     */
     public function setDisplayAlone(bool $enable): void
     {
         $this->_displayAlone = $enable;

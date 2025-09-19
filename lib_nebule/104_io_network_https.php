@@ -234,7 +234,7 @@ class ioNetworkHTTPS extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObject()
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = '')
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string
     {
         if ($url == '')
             $url = $this->_defaultLocalisation;

@@ -29,20 +29,12 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     public function getHTML(): string
     {
         $result = '<div class="objectContent">' . "\n";
-        switch (get_class($this->_nid)) {
-            case 'Nebule\Library\Entity':
-                $result .= $this->_getEntityHTML();
-                break;
-            case 'Nebule\Library\Group':
-                $result .= $this->_getGroupHTML();
-                break;
-            case 'Nebule\Library\Conversation':
-                $result .= $this->_getConversationHTML();
-                break;
-            default:
-                $result .= $this->_getObjectHTML();
-                break;
-        }
+        $result .= match (get_class($this->_nid)) {
+            'Nebule\Library\Entity' => $this->_getEntityHTML(),
+            'Nebule\Library\Group' => $this->_getGroupHTML(),
+            'Nebule\Library\Conversation' => $this->_getConversationHTML(),
+            default => $this->_getObjectHTML(),
+        };
         $result .= "</div>\n";
 
         return $result;

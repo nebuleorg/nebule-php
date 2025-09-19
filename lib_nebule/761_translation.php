@@ -338,7 +338,7 @@ abstract class Translates extends Functions
 
 
     public function getTranslate(string $text, string $lang = ''): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7c2fce20');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($lang == '')
             $lang = $this->_currentLanguage;

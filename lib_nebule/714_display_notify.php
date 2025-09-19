@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe DisplayMessage
+ * Classe DisplayNotify
  *     ---
  * Display or prepare a simple message to the interface with the user.
  *     ---

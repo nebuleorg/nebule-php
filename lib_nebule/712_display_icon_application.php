@@ -18,15 +18,15 @@ namespace Nebule\Library;
  */
 class DisplayIconApplication extends DisplayItem implements DisplayInterface
 {
-    private $_nid = null;
-    private $_name = '';
-    private $_shortName = '';
-    private $_classCSS = '';
-    private $_idCSS = '';
-    private $_styleCSS = '';
-    private $_displayActions = false;
-    private $_actionsID = '';
-    private $_displayJS = true;
+    private ?Node $_nid = null;
+    private string $_name = '';
+    private string $_shortName = '';
+    private string $_classCSS = '';
+    private string $_idCSS = '';
+    private string $_styleCSS = '';
+    private bool $_displayActions = false;
+    private string $_actionsID = '';
+    private bool $_displayJS = true;
 
     protected function _initialisation(): void
     {
@@ -114,7 +114,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
         $this->_displayActions = $enable;
     }
 
-    public function setActionsID(string $id = '')
+    public function setActionsID(string $id = ''): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($id == '')

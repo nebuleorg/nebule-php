@@ -259,7 +259,7 @@ class io extends Functions implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObject()
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = '')
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string
     {
         $instance = $this->_getInstanceByURL($url);
         return $instance->getObject($oid, $maxsize, $url);
