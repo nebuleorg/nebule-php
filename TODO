@@ -3,6 +3,8 @@
   - Manage types of nodes as modules.
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
-  - Solve bugg double refresh on flush call.
-  - Solve bugg load translate modules
-  - cleaning 008_entities
+  - Fix bugg double refresh on flush call.
+  - Fix bugg load translate modules.
+  - Cleaning 008_entities.
+  - Manage entities's password and name.
+  - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
