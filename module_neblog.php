@@ -58,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250919';
+    const MODULE_VERSION = '020250920';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1090,9 +1090,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
     private function _displayContentPostBlock(Node $oid): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $contentOID = $this->_getContentNID($oid);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instance->setNID($contentOID);
+        $instance->setNID($oid);
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setEnableName(true);
@@ -1111,13 +1110,13 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->display();
 
-        switch ($contentOID->getType()) {
+        switch ($oid->getType()) {
             case References::REFERENCE_OBJECT_TEXT:
-                $this->_displayContentText($contentOID);
+                $this->_displayContentText($oid);
                 break;
             case References::REFERENCE_OBJECT_PNG:
             case References::REFERENCE_OBJECT_JPEG:
-                $this->_displayContentImage($contentOID);
+                $this->_displayContentImage($oid);
                 break;
             default:
                 $this->_displayNotSupported();
