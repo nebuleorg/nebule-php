@@ -5,7 +5,7 @@ namespace Nebule\Library;
 /**
  * Classe DisplayInput
  *     ---
- * Display or prepare a n input to the interface with the user.
+ * Display or prepare an input to the interface with the user.
  *     ---
  * Example:
  *  $instance = new DisplayInput($this->_applicationInstance);
