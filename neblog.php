@@ -748,7 +748,7 @@ class Translate extends Translates
 
 
 /**
- * This module manage the help pages and default first vue.
+ * This module manages the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -758,7 +758,7 @@ class Translate extends Translates
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250921';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

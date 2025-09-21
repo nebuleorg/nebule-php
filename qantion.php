@@ -890,7 +890,7 @@ class Translate extends Translates {}
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250222';
+    const MODULE_VERSION = '020250921';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

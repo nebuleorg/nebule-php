@@ -21,30 +21,34 @@ namespace Nebule\Library;
 class DisplayWikiSimple
 {
     static public function parse($wikiText): string {
-    $wikiText = preg_replace('/======(.*?)======/', '<h1>$1</h1>', $wikiText);
-    $wikiText = preg_replace('/=====(.*?)=====/', '<h2>$1</h2>', $wikiText);
-    $wikiText = preg_replace('/====(.*?)====/', '<h3>$1</h3>', $wikiText);
-    $wikiText = preg_replace('/===(.*?)===/', '<h4>$1</h4>', $wikiText);
-    $wikiText = preg_replace('/==(.*?)==/', '<h5>$1</h5>', $wikiText);
+        $result = htmlspecialchars(strip_tags($wikiText), ENT_QUOTES, 'UTF-8');
 
-    $wikiText = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $wikiText);
-    $wikiText = preg_replace('/\/\/(.*?)\/\//', '<em>$1</em>', $wikiText);
-    $wikiText = preg_replace('/\*\s+(.*?)(?=\n|$)/m', '<li>$1</li>', $wikiText);
-    $wikiText = preg_replace('/(<li>.*<\/li>)/ms', '<ul>$0</ul>', $wikiText);
+        $result = preg_replace('/====== (.*?) ======/', '<h1>$1</h1>', $result);
+        $result = preg_replace('/===== (.*?) =====/', '<h2>$1</h2>', $result);
+        $result = preg_replace('/==== (.*?) ====/', '<h3>$1</h3>', $result);
+        $result = preg_replace('/=== (.*?) ===/', '<h4>$1</h4>', $result);
+        $result = preg_replace('/== (.*?) ==/', '<h5>$1</h5>', $result);
 
-    $wikiText = preg_replace_callback(
-    '/\[\[(.*?)(?:\|(.*?))?\]\]/',
-        function($matches) {
-            $url = $matches[1];
-            $text = isset($matches[2]) ? $matches[2] : $matches[1];
-            return '<a href="' . htmlspecialchars($url) . '">' . htmlspecialchars($text) . '</a>';
-            },
-        $wikiText
-    );
+        $result = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $result);
+        $result = preg_replace('/\/\/(.*?)\/\//', '<em>$1</em>', $result);
+        $result = preg_replace('/\{\{(.*?)\}\}/', '<code>$1</code>', $result);
+        $result = preg_replace('/\*\s+(.*?)(?=\n|$)/m', '<li>$1</li>', $result);
+        $result = preg_replace('/(<li>.*<\/li>)/ms', '<ul>$0</ul>', $result);
 
-    $wikiText = '<p>' . str_replace("\n", '</p><p>', $wikiText) . '</p>';
-    $wikiText = str_replace('<p></p>', '', $wikiText);
+        $result = preg_replace_callback(
+        '/\[\[(.*?)(?:\|(.*?))?\]\]/',
+            function($matches) {
+                $url = $matches[1];
+                $text = isset($matches[2]) ? $matches[2] : $matches[1];
+                return '<a href="' . htmlspecialchars($url) . '">' . htmlspecialchars($text) . '</a>';
+                },
+            $result
+        );
 
-    return $wikiText;
+        $result = str_replace("\n\n", '<br />', $result);
+        //$result = '<p>' . str_replace("\n", '</p><p>', $result) . '</p>';
+        //$result = str_replace('<p></p>', '', $result);
+
+        return $result;
     }
 }
