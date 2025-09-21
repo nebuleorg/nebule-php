@@ -36,6 +36,7 @@ class References //extends Functions
     public const COMMAND_LOCAL_ENTITY_FILE = 'e'; // Into folder /
     public const COMMAND_FLUSH = 'f';
     public const COMMAND_RESCUE = 'r';
+    public const COMMAND_UPDATE = 'u';
     public const COMMAND_TOKEN = 't';
     public const COMMAND_SWITCH_GHOST = 'g';
     public const COMMAND_SWITCH_CONNECTED = 's';

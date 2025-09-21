@@ -4,7 +4,7 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * Functions for nebule library and more.
+ * Functions for the nebule library and more.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -13,9 +13,9 @@ use Nebule\Library\nebule;
  */
 class Functions
 {
-    const SESSION_SAVED_VARS = array(); // Replaced on children classes.
-    const DEFAULT_CLASS = ''; // Replaced on children classes.
-    const TYPE = ''; // Replaced on children classes.
+    const SESSION_SAVED_VARS = array(); // Replaced on child classes.
+    const DEFAULT_CLASS = ''; // Replaced on child classes.
+    const TYPE = ''; // Replaced on child classes.
 
     protected ?nebule $_nebuleInstance = null;
     protected ?Metrology $_metrologyInstance = null;
@@ -27,6 +27,7 @@ class Functions
     protected ?Cache $_cacheInstance = null;
     protected ?Session $_sessionInstance = null;
     protected ?Tokenize $_tokenizeInstance = null;
+    protected ?Router $_routerInstance = null;
     protected ?ioInterface $_ioInstance = null;
     protected ?CryptoInterface $_cryptoInstance = null;
     protected ?SocialInterface $_socialInstance = null;
@@ -70,6 +71,7 @@ class Functions
         $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
         $this->_cryptoInstance = $this->_nebuleInstance->getCryptoInstance();
         $this->_socialInstance = $this->_nebuleInstance->getSocialInstance();
+        $this->_routerInstance = $this->_nebuleInstance->getRouterInstance();
     }
 
     public function setEnvironmentApplication(Applications $applicationInstance): void {
@@ -85,7 +87,7 @@ class Functions
     }
 
     /**
-     * Call subfunction _initialisation() but only one time, the first time.
+     * Call subfunction XXX:_initialisation() but only one time, the first time.
      * @return void
      */
     public function initialisation(): void {
@@ -308,13 +310,8 @@ class Functions
         }
         return $arg;
     }
-    public function getHaveInput(string $name): bool
-    {
-        if ($name == '')
-            return false;
-        if (filter_has_var(INPUT_GET, $name) || filter_has_var(INPUT_POST, $name))
-            return true;
-        return false;
+    public function getHaveInput(string $name): bool {
+        return $this->_nebuleInstance->getHaveInput($name);
     }
 
     public function getIsRID(Node $nid): bool {

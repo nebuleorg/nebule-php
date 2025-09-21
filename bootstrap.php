@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020250919';
+const BOOTSTRAP_VERSION = '020250921';
 const BOOTSTRAP_LICENCE = 'GNU GPL 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -7207,13 +7207,9 @@ function bootstrap_logMetrology(): void {
         $caches = ' Lr=' . lib_getMetrology('lr') . ' Lv=' . lib_getMetrology('lv')
             . ' Or=' . lib_getMetrology('or') . ' Ov=' . lib_getMetrology('ov') . ' (PP)';
 
-    log_add('end bootstrap Mp='
-        . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . '/' . ini_get('memory_limit') . 'B'
-        . $timers
-        . $caches,
-        'info',
-        'end',
-        '11111111');
+    $memory = ' Mp=' . sprintf('%01.3f', memory_get_peak_usage() / 1024 / 1024) . '/' . ini_get('memory_limit') . 'B';
+
+    log_add('end bootstrap' . $memory . $timers . $caches, 'info', 'end', '11111111');
 }
 
 function main(): void {
