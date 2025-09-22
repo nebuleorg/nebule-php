@@ -72,6 +72,7 @@ class References //extends Functions
     public const REFERENCE_ENTITY_HEADER = '-----BEGIN PUBLIC KEY-----';
     public const REFERENCE_PRIVATE_KEY = 'nebule/objet/entite/prive';
     public const REFERENCE_CRYPTO_HASH_ALGORITHM = 'sha2.256';
+    public const LIB_RID_CODE_BRANCH = '50e1d0348892e7b8a555301983bccdb8a07871843ed8f392d539d3d90f37ea8c2a54d72a.none.288';
     public const LIB_RID_SECURITY_AUTHORITY = 'a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288';
     public const LIB_RID_CODE_AUTHORITY = '2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288';
     public const LIB_RID_TIME_AUTHORITY = 'bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288';
