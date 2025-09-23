@@ -95,7 +95,6 @@ class nebule
         $this->_findCurrentCurrency();
         $this->_findCurrentTokenPool();
         $this->_findCurrentToken();
-        $this->_getArgUpdate();
 
         $this->_loadingStatus = true;
         $this->_metrologyInstance->addLog('end init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '474676ed');
@@ -245,20 +244,6 @@ class nebule
         return $arg;
     }
 
-
-
-    private bool $_needUpdate = false;
-
-    /**
-     * Get if codes need to be reloaded after an update of objects.
-     * @return bool
-     */
-    public function getNeedUpdate(): bool { return $this->_needUpdate; }
-
-    private function _getArgUpdate(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_needUpdate = $this->getHaveInput(References::COMMAND_UPDATE);
-    }
 
 
     private string $_currentObject = '';

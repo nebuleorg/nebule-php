@@ -247,7 +247,9 @@ class Node extends Functions implements nodeInterface
     {
         // May be empty or zero in some case.
         if ($permitNull && $nid == '') return true;
+        if ($nid == '') return false;
         if ($permitZero && $nid == '0') return true;
+        if ($nid == '0') return false;
 
         $hash = strtok($nid, '.');
         if ($hash === false) return false;
@@ -279,6 +281,64 @@ class Node extends Functions implements nodeInterface
         if ((int)$size < $minSize) return false;
         if ((int)$size > BlocLink::NID_MAX_HASH_SIZE) return false;
         if ((strlen($hash) * 4) != (int)$size) return false;
+
+        return true;
+    }
+
+    /**
+     * Object - Verify name structure of the virtual node : hash.algo.size
+     * The part 'algo.size' is fixed.
+     * There's a specific treatment for NID empty or '0'.
+     *
+     * @param string $nid
+     * @param bool   $permitNull permit NID=''
+     * @param bool   $permitZero permit NID='0'
+     * @return boolean
+     */
+    static public function checkVirtualNID(string &$nid, bool $permitNull = false, bool $permitZero = false): bool
+    {
+        // May be empty or zero in some case.
+        if ($permitNull && $nid == '') return true;
+        if ($nid == '') return false;
+        if ($permitZero && $nid == '0') return true;
+        if ($nid == '0') return false;
+
+        $hash = strtok($nid, '.');
+        if ($hash === false) return false;
+        $algo = strtok('.');
+        if ($algo === false) return false;
+        $size = strtok('.');
+        if ($size === false) return false;
+
+        // Check item overflow
+        if (strtok('.') !== false) return false;
+
+        if ($algo == 'none' || $algo == 'string')
+            $minSize = BlocLink::NID_MIN_NONE_SIZE;
+        else
+            $minSize = BlocLink::NID_MIN_HASH_SIZE;
+
+        // Check hash value. Hash size = (size value / 4) .
+        if ((strlen($hash) * 4) < $minSize) return false;
+        if ((strlen($hash) * 4) > BlocLink::NID_MAX_HASH_SIZE) return false;
+        if (!ctype_xdigit($hash)) return false;
+
+        // Check algo value.
+        if (strlen($algo) < BlocLink::NID_MIN_ALGO_SIZE) return false;
+        if (strlen($algo) > BlocLink::NID_MAX_ALGO_SIZE) return false;
+        if (!ctype_alnum($algo)) return false;
+
+        // Check size value.
+        if (!ctype_digit($size)) return false; // Check content before!
+        if ((int)$size < $minSize) return false;
+        if ((int)$size > BlocLink::NID_MAX_HASH_SIZE) return false;
+        if ((strlen($hash) * 4) != (int)$size) return false;
+
+        // FIXME reduce the code with this limites
+        if (strlen($nid) != ((References::VIRTUAL_NODE_SIZE * 2) + strlen('.none.' . (References::VIRTUAL_NODE_SIZE * 8))))
+            return false;
+        if (substr($nid, References::VIRTUAL_NODE_SIZE * 2) != '.none.' . (References::VIRTUAL_NODE_SIZE * 8))
+            return false;
 
         return true;
     }
@@ -367,6 +427,7 @@ class Node extends Functions implements nodeInterface
 
         $links = array();
         $this->_getLinksByNID3($links, $type);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
             return array();
@@ -386,9 +447,6 @@ class Node extends Functions implements nodeInterface
         }
         unset($links);
         krsort($sortedLinks, SORT_STRING);
-
-        // Fait un tri par pertinence sociale.
-        $this->_socialInstance->arraySocialFilter($sortedLinks, $socialClass);
 
         return $sortedLinks;
     }
@@ -462,12 +520,10 @@ class Node extends Functions implements nodeInterface
 
         $list = array();
         $this->_getLinksByNID3($list, $type);
+        $this->_socialInstance->arraySocialFilter($list, $socialClass);
 
         if (sizeof($list) == 0)
             return array();
-
-        // Fait un tri par pertinence sociale.
-        $this->_socialInstance->arraySocialFilter($list, $socialClass);
 
         // Extrait les ID des objets de propriété.
         foreach ($list as $i => $l)
@@ -520,12 +576,10 @@ class Node extends Functions implements nodeInterface
 
         $links = array();
         $this->_getLinksByNID3($links, $type);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) == 0)
             return array();
-
-        // Fait un tri par pertinence sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Extrait le contenu des objets de propriété.
         foreach ($links as $i => $l)
@@ -917,16 +971,13 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, false);
+        $this->getSocialLinks($links, $filter, $socialClass);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
             if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -947,16 +998,13 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, false);
+        $this->getSocialLinks($links, $filter, $socialClass);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
             if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         $list = array();
@@ -993,16 +1041,13 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, false);
+        $this->getSocialLinks($links, $filter, $socialClass);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
             if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
@@ -1023,16 +1068,13 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid3' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($links, $filter, false);
+        $this->getSocialLinks($links, $filter, $socialClass);
 
         // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
             if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         // Tri les objets de type groupe.
         $list = array();
@@ -1126,7 +1168,7 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, false);
+        $this->getSocialLinks($list, $filter, ''); // FIXME
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1134,9 +1176,6 @@ class Node extends Functions implements nodeInterface
         ) {
             // A faire...
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
         if (sizeof($list) == 0)
@@ -1189,7 +1228,7 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid2' => $this->_id,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, false);
+        $this->getSocialLinks($list, $filter, ''); // FIXME
 
         // Fait une recherche sur d'autres types de hash si celui par défaut ne renvoie rien.
         if (sizeof($list) == 0
@@ -1197,9 +1236,6 @@ class Node extends Functions implements nodeInterface
         ) {
             // A faire...
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($list);
 
         // Si pas marqué, tout va bien. Résultat négatif.
         if (sizeof($list) == 0)
@@ -1234,7 +1270,7 @@ class Node extends Functions implements nodeInterface
 
 
     /**
-     * Lit les marques de protection, c'est à dire un lien de chiffrement pour l'objet.
+     * Lit les marques de protection, c'est-à-dire un lien de chiffrement pour l'objet.
      * Fait une recherche complète.
      * @return boolean
      */
@@ -1245,7 +1281,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Lit les marques de protection, c'est à dire un lien de chiffrement pour l'objet.
+     * Lit les marques de protection, c'est-à-dire un lien de chiffrement pour l'objet.
      * Fait une recherche sommaire et rapide.
      * @return boolean
      */
@@ -2016,7 +2052,7 @@ class Node extends Functions implements nodeInterface
             'bl/rl/nid3' => $context,
             'bl/rl/nid4' => '',
         );
-        $this->getLinks($list, $filter, false);
+        $this->getSocialLinks($list, $filter, $socialClass);
 
         // Nettoyage.
         foreach ($list as $i => $link) {
@@ -2032,9 +2068,6 @@ class Node extends Functions implements nodeInterface
         ) {
             // A faire...
         }
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->arraySocialFilter($list, $socialClass);
 
         return $list;
     }
@@ -2601,8 +2634,7 @@ class Node extends Functions implements nodeInterface
      * @param integer $limit
      * @return string
      */
-    public function readAsText(int $limit = 0): string
-    {
+    public function readAsText(int $limit = 0): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return '';
@@ -2621,15 +2653,13 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Link - Read links, parse and filter each links.
-     *
+     * Link - Read links, parse and filter each link.
      * @param array  $links
      * @param array  $filter
      * @param bool   $withInvalidLinks
      * @return void
      */
-    public function getLinks(array &$links, array $filter, bool $withInvalidLinks = false): void
-    {
+    public function getLinks(array &$links, array $filter, bool $withInvalidLinks = false): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0'
             || !$this->_ioInstance->checkLinkPresent($this->_id)
@@ -2656,6 +2686,21 @@ class Node extends Functions implements nodeInterface
             else
                 $this->_cacheInstance->unsetOnCache($line, Cache::TYPE_BLOCLINK);
         }
+    }
+
+    /**
+     * Link - Read links, parse, filter and socially select each link.
+     * If $social is empty or invalid, do not apply social filter.
+     *
+     * @param array  $links
+     * @param array  $filter
+     * @param string $socialClass
+     * @return void
+     */
+    public function getSocialLinks(array &$links, array $filter, string $socialClass = ''): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->getLinks($links, $filter);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
     }
 
     /**
@@ -2785,12 +2830,12 @@ class Node extends Functions implements nodeInterface
      * @param string $nid
      * @param int    $level
      * @param array  $exclude
-     * @param string $social
+     * @param string $socialClass
      * @param bool   $present
      * @param bool   $synchro
      * @return string
      */
-    private function _findUpdate(string $nid, int $level, array &$exclude, string $social, bool $present = true, bool $synchro = false): string
+    private function _findUpdate(string $nid, int $level, array &$exclude, string $socialClass, bool $present = true, bool $synchro = false): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $level++;
@@ -2803,8 +2848,7 @@ class Node extends Functions implements nodeInterface
                 'bl/rl/nid3' => '',
                 'bl/rl/nid4' => '',
             );
-            $this->getLinks($links, $filter, false);
-            $this->_socialInstance->arraySocialFilter($links, $social);
+            $this->getSocialLinks($links, $filter, $socialClass);
             $this->_arrayDateSort($links);
         }
 
@@ -2813,7 +2857,7 @@ class Node extends Functions implements nodeInterface
             $nid2 = $link->getParsed()['bl/rl/nid2'];
             $nid2Update = '';
             if (!isset($exclude[$nid2]))
-                $nid2Update = $this->_findUpdate($nid2, $level, $exclude, $social, $present, $synchro);
+                $nid2Update = $this->_findUpdate($nid2, $level, $exclude, $socialClass, $present, $synchro);
             if ($nid2Update != '')
                 return $nid2Update;
             $exclude[$nid2] = null;

@@ -19,10 +19,11 @@ class Router extends Functions
     // TODO move router from bootstrap to libPOO
     private string $_phpRID;
     private string $_codeBranchNID = '';
+    private bool $_needUpdate = false;
     private string $_applicationRID = '';
     private string $_applicationIID = '';
     private string $_applicationOID = '';
-    private string $_applicationSID = '';
+    private array $_applicationSID = array();
     private string $_applicationNameSpace = '';
     private bool $_applicationNoPreload = false;
 
@@ -30,7 +31,9 @@ class Router extends Functions
         $this->_phpRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $this->_applicationRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $this->_getCurrentBranch();
-        //$this->_findApplication();
+        $this->_getArgUpdate();
+        $this->_findApplicationIID();
+        $this->_findApplicationOID();
         //$this->_getApplicationPreload();
     }
 
@@ -41,53 +44,43 @@ class Router extends Functions
 
     public function getApplicationIID(): string {return $this->_applicationIID;}
     public function getApplicationOID(): string {return $this->_applicationOID;}
-    public function getApplicationSID(): string {return $this->_applicationSID;}
+    public function getApplicationSID(): array {return $this->_applicationSID;}
     public function getApplicationNameSpace(): string {return $this->_applicationNameSpace;}
     public function getApplicationNoPreload(): bool {return $this->_applicationNoPreload;}
     public function getReady(): bool {return $this->_ready;}
 
-    private function _findApplication(): void {
+    private function _findApplicationIID(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $this->_applicationIID = '';
-        $this->_applicationOID = '';
-
-        // Get OID of application.
         $this->_applicationIID = $this->_checkApplicationRID($this->_findApplicationAsk());
         if ($this->_applicationIID == '')
-            $this->_applicationIID = $this->_checkApplicationRID($this->_findApplicationSession());
+            $this->_applicationIID = $this->_checkApplicationRID($this->_findApplicationSession('bootstrapApplicationIID'));
         if ($this->_applicationIID == '')
-            $this->_findApplicationDefault();
-
-        // Set code ID for internal bootstrap apps.
-        session_start();
-        if (strlen($this->_applicationIID) < 2)
-            $this->_applicationOID = $this->_applicationIID;
-        elseif (!$this->_nebuleInstance->getNeedUpdate()
-            && isset($_SESSION['bootstrapApplicationIID'][0])
-            && $_SESSION['bootstrapApplicationIID'][0] == $this->_applicationIID
-            && \Nebule\Bootstrap\nod_checkNID($_SESSION['bootstrapApplicationIID'][0])
-            && isset($_SESSION['bootstrapApplicationOID'][0])
-        )
-            $this->_applicationOID = $_SESSION['bootstrapApplicationOID'][0];
-        else
-            $this->_applicationOID = \Nebule\Bootstrap\app_getCode($this->_applicationIID);
-        session_abort();
-
-        // If running bad, use the default app.
-        if ($this->_applicationOID == '') {
-            $this->_applicationIID = '0';
-            $this->_applicationOID = '0';
-        }
-
-        $this->_metrologyInstance->addLog('find application IID=' . $this->_applicationIID . ' OID=' . $this->_applicationOID, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '5bb68dab');
+            $this->_applicationIID = $this->_checkApplicationRID($this->_findApplicationConfig());
+        if ($this->_applicationIID == '')
+            $this->_applicationIID = $this->_findApplicationDefault();
+        $this->_metrologyInstance->addLog('find application IID=' . $this->_applicationIID, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '5bb68dab');
     }
 
-    private function _checkApplicationRID(string $rid): string {
+    private function _findApplicationOID(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (strlen($this->_applicationIID) == 1)
+            $this->_applicationOID = $this->_applicationIID;
+        else {
+            if (!$this->_needUpdate)
+                $this->_applicationOID = $this->_checkApplicationRID($this->_findApplicationSession('bootstrapApplicationOID'), false);
+            if ($this->_applicationOID == '')
+                $this->_applicationOID = $this->_checkApplicationRID($this->_findApplicationCode(), false);
+            if ($this->_applicationOID == '')
+                $this->_applicationOID = $this->_findApplicationDefault();
+        }
+        $this->_metrologyInstance->addLog('find application OID=' . $this->_applicationOID, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '3e9b68d3');
+    }
+
+    private function _checkApplicationRID(string $rid, bool $virtual = true): string {
         $this->_metrologyInstance->addLog('track functions RID=' . $rid, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
 
         if (strlen($rid) == 0) {
-            $this->_metrologyInstance->addLog('RID empty', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3f8451cb');
+            $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '3f8451cb');
             return '';
         }
         if (strlen($rid) == 1) {
@@ -95,32 +88,33 @@ class Router extends Functions
             if ($this->_configurationInstance->getOptionAsBoolean('permitApplication' . $rid))
                 return $rid;
             else {
-                $this->_metrologyInstance->addLog('RID invalid short app', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '954a99c4');
+                $this->_metrologyInstance->addLog('invalid short app', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '954a99c4');
                 return '';
             }
         }
-        if (strlen($rid) != ((References::VIRTUAL_NODE_SIZE * 2) + strlen('.none.' . (References::VIRTUAL_NODE_SIZE * 8)))) {
-            $this->_metrologyInstance->addLog('RID invalid size=' . strlen($rid), Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '99608a08');
-            return '';
-        }
-        if (substr($rid, References::VIRTUAL_NODE_SIZE * 2) != '.none.' . (References::VIRTUAL_NODE_SIZE * 8)) {
-            $this->_metrologyInstance->addLog('RID invalid virtual type', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '43e6baa9');
-            return '';
-        }
+        if ($virtual) {
+            if (!Node::checkVirtualNID($rid)) {
+                $this->_metrologyInstance->addLog('invalid virtual RID', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '43e6baa9');
+                return '';
+            }
+        } else {
+            if (!Node::checkNID($rid)) {
+                $this->_metrologyInstance->addLog('invalid NID', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'a3db87e7');
+                return '';
+            }
 
-        if (!Node::checkNID($rid)) {
-            $this->_metrologyInstance->addLog('RID invalid ID', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e9d6fec8');
-            return '';
         }
-
         $instance = $this->_cacheInstance->newNode($rid);
         if ($instance->getID() == '0') {
-            $this->_metrologyInstance->addLog('RID null instance', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ff07a565');
+            $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'ff07a565');
             return '';
         }
-
         if (!$this->_ioInstance->checkLinkPresent($rid)) {
-            $this->_metrologyInstance->addLog('RID without link', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e0171206');
+            $this->_metrologyInstance->addLog('without link', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'e0171206');
+            return '';
+        }
+        if (!$virtual && !$this->_ioInstance->checkObjectPresent($rid)) {
+            $this->_metrologyInstance->addLog('without content', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, 'b35a49ec');
             return '';
         }
 
@@ -132,9 +126,8 @@ class Router extends Functions
             'bl/rl/nid3' => $this->_codeBranchNID,
             'bl/rl/nid4' => '',
         );
-        $instance->getLinks($links, $filter);
+        $instance->getSocialLinks($links, $filter, 'authority');
         // TODO
-
         /*if (\Nebule\Bootstrap\lnk_checkExist('f',
                 \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS,
             $rid,
@@ -152,42 +145,40 @@ class Router extends Functions
         return $this->getFilterInput(References::COMMAND_SWITCH_APPLICATION);
     }
 
-    private function _findApplicationSession(): string {
+    private function _findApplicationSession(string $name): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
         session_start();
-        $iid = (isset($_SESSION['bootstrapApplicationIID'][0])) ? $_SESSION['bootstrapApplicationIID'][0] : '';
+        $iid = (isset($_SESSION[$name][0])) ? $_SESSION[$name][0] : '';
         session_abort();
         return $iid;
     }
 
-    private function _findApplicationDefault(): void {
+    private function _findApplicationConfig(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
+        return $this->_configurationInstance->getOptionAsString('defaultApplication');
+    }
+
+    private function _findApplicationDefault(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
+        return ($this->_configurationInstance->getOptionAsBoolean('permitApplication1')) ? '1' : '0';
+    }
+
+    private function _findApplicationCode(): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
 
-        //$defaultApplicationID = lib_getConfiguration('defaultApplication');
-        $defaultApplicationID = $this->_configurationInstance->getOptionAsString('defaultApplication');
-        if ($defaultApplicationID == '0'
-            || $defaultApplicationID == '1'
-            || $defaultApplicationID == '2'
-            || $defaultApplicationID == '3'
-            || $defaultApplicationID == '4'
-            || $defaultApplicationID == '5'
-            || $defaultApplicationID == '6'
-            || $defaultApplicationID == '7'
-            || $defaultApplicationID == '8'
-            || $defaultApplicationID == '9'
-        )
-            $this->_applicationIID = $defaultApplicationID;
-        elseif (\Nebule\Bootstrap\nod_checkNID($defaultApplicationID)
-            && \Nebule\Bootstrap\io_checkNodeHaveLink($defaultApplicationID)
-        )
-            $this->_applicationIID = $defaultApplicationID;
-        elseif (\Nebule\Bootstrap\lib_getOption('permitApplication1'))
-            $this->_applicationIID = '1';
-        else
-            $this->_applicationIID = '0';
+        $instance = $this->_cacheInstance->newNode($this->_applicationIID);
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_applicationIID,
+            'bl/rl/nid3' => $this->_codeBranchNID,
+            'bl/rl/nid4' => '',
+        );
+        $instance->getSocialLinks($links, $filter, 'authority');
+        $resultLink = $this->getYoungestLink($links); // FIXME verify it's a PHP type mime
 
-        $this->_metrologyInstance->addLog('use default application IID=' . $this->_applicationIID,
-            Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '423ae49b');
+        $this->_applicationSID = array($resultLink->getParsed()['bs/rs1/eid']); // FIXME more than one
+        return $resultLink->getParsed()['bl/rl/nid2'];
     }
 
     private function _getApplicationPreload(): void {
@@ -440,11 +431,18 @@ class Router extends Functions
         $this->_saveApplicationOnSession();
     }
 
-
+    /**
+     * Get the code branch detected by bootstrap.
+     * TODO maybe can be enhanced...
+     * @return void
+     */
     function _getCurrentBranch(): void {
+        global $codeBranchNID;
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
 
-        if ($this->_codeBranchNID != '')
+        $this->_codeBranchNID = $codeBranchNID;
+
+        /*if ($this->_codeBranchNID != '')
             return;
 
         // Get code branch on config
@@ -497,7 +495,17 @@ class Router extends Functions
                     }
                 }
             }
-        }
+        }*/
         $this->_metrologyInstance->addLog('Current branch : ' . $this->_codeBranchNID, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '9f1bf579');
+    }
+
+    /**
+     * Get if codes need to be reloaded after an update of objects.
+     * @return bool
+     */
+    public function getNeedUpdate(): bool { return $this->_needUpdate; }
+    private function _getArgUpdate(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_needUpdate = $this->getHaveInput(References::COMMAND_UPDATE);
     }
 }

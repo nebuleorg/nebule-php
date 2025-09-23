@@ -180,15 +180,18 @@ class Functions
         return $instance;
     }
 
-    public function dateCompare($date1, $date2): bool|int
+    public function dateCompare($chr1, $mod1, $chr2, $mod2): bool|int
     {
-        if ($date1 == '') return false;
-        if ($date2 == '') return false;
+        // FIXME comparateur universel sur multiples formats de dates...
+        if ($chr1 != '0') return false;
+        if ($chr2 != '0') return false;
+        if ($mod1 == '') return false;
+        if ($mod2 == '') return false;
         // Extrait les éléments d'une date.
-        $d1 = date_parse($date1);
-        if ($d1 === false) return 0;
-        $d2 = date_parse($date2);
-        if ($d2 === false) return 0;
+        $d1 = date_parse($mod1);
+        if (!$d1) return 0;
+        $d2 = date_parse($mod2);
+        if (!$d2) return 0;
         // Année
         if ($d1['year'] > $d2['year']) return 1;
         if ($d1['year'] < $d2['year']) return -1;
@@ -223,7 +226,15 @@ class Functions
         if ($d1['fraction'] > $d2['fraction']) return 1;
         if ($d1['fraction'] < $d2['fraction']) return -1;
         return 0;
-        // A faire... comparateur universel sur multiples formats de dates...
+    }
+
+    public function getYoungestLink(array $links): ?LinkRegister
+    {
+        $resultLink=$links[0];
+        foreach ($links as $link)
+            if ($this->dateCompare($link->getParsed()['bl/rc/mod'],$link->getParsed()['bl/rc/chr'],$resultLink->getParsed()['bl/rc/mod'],$resultLink->getParsed()['bl/rc/chr']) > 0)
+                $resultLink = $link;
+        return $resultLink;
     }
 
     /**
