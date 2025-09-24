@@ -26,19 +26,29 @@ class Router extends Functions
     private array $_applicationSID = array();
     private string $_applicationNameSpace = '';
     private bool $_applicationNoPreload = false;
+    private bool $_initStatus = false;
 
     protected function _initialisation(): void {
+        if (!$this->_nebuleInstance->getLoadingStatus())
+            return;
+
         $this->_phpRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $this->_applicationRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $this->_getCurrentBranch();
         $this->_getArgUpdate();
         $this->_findApplicationIID();
         $this->_findApplicationOID();
-        //$this->_getApplicationPreload();
+        $this->_getApplicationNamespace();
+        $this->_getApplicationPreload();
+
+        $this->_initStatus = true;
     }
 
     public function router(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_nebuleInstance->getLoadingStatus() || !$this->_initStatus)
+            return;
+
         //$this->_includeApplicationFile();
     }
 
@@ -181,31 +191,57 @@ class Router extends Functions
         return $resultLink->getParsed()['bl/rl/nid2'];
     }
 
+    private function _getApplicationNamespace(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
+        if (strlen($this->_applicationIID) == 1) {
+            $this->_metrologyInstance->addLog('namespace=Nebule\Library', Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '49374854');
+            $this->_applicationNameSpace = 'Nebule\Library';
+            return;
+        }
+
+        $content = $this->_ioInstance->getObject($this->_applicationOID, 10000);
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $content) as $line) {
+            $l = trim($line);
+            if (str_starts_with($l, "#"))
+                continue;
+            $name = trim((string)filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
+            $value = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
+            if ($name == 'namespace') {
+                $this->_applicationNameSpace = $value;
+                $this->_metrologyInstance->addLog('namespace=' . $value, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, 'fe5308a8');
+                break;
+            }
+        }
+    }
+
     private function _getApplicationPreload(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
-
-        if (!$this->_nebuleInstance->getLoadingStatus())
-            return;
-
-        if (isset($_SESSION['bootstrapApplicationsInstances'][$this->_applicationOID]))
+        if ($this->_getApplicationPreloadSession())
             $this->_applicationNoPreload = true;
-        elseif (strlen($this->_applicationIID) < 2)
+        elseif (strlen($this->_applicationIID) == 1)
             $this->_applicationNoPreload = true;
-        elseif (!$this->_applicationNoPreload) {
-            $this->_applicationNoPreload = \Nebule\Bootstrap\app_getPreload($this->_applicationIID);
+        elseif (!$this->_applicationNoPreload)
+            $this->_applicationNoPreload = $this->_getApplicationPreloadLinks();
 
-            if ($this->_applicationNoPreload)
-                $this->_metrologyInstance->addLog('do not preload application', Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '0ac7d800');
-        }
-        else
-            $this->_applicationNoPreload = false;
+        if ($this->_applicationNoPreload)
+            $this->_metrologyInstance->addLog('do not preload application', Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '0ac7d800');
+    }
+
+    private function _getApplicationPreloadSession(): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
+        session_start();
+        $noPreloadSession = isset($_SESSION['bootstrapApplicationsInstances'][$this->_applicationOID]);
+        session_abort();
+        return $noPreloadSession;
+    }
+
+    private function _getApplicationPreloadLinks(): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
+        return \Nebule\Bootstrap\app_getPreload($this->_applicationIID);
     }
 
     private function _includeApplicationFile(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
-
-        if (!$this->_nebuleInstance->getLoadingStatus())
-            return;
 
         //$this->_metrologyInstance->addLog('include application code OID=' . $this->_applicationOID, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, '8683e195');
         if ($this->_applicationOID == '' || $this->_applicationOID == '0') {
@@ -218,28 +254,6 @@ class Router extends Functions
         }
     }
 
-    private function _getApplicationNamespace(string $oid): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
-        $value = '';
-
-        $content = \Nebule\Bootstrap\io_objectRead($oid, 10000);
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", $content) as $line) {
-            $l = trim($line);
-
-            if (str_starts_with($l, "#"))
-                continue;
-
-            $fName = trim((string)filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
-            $fValue = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
-            if ($fName == 'namespace') {
-                $value = $fValue;
-                break;
-            }
-        }
-
-        return $value;
-    }
-
     /**
      * Load the application instance.
      *
@@ -249,7 +263,7 @@ class Router extends Functions
         global $nebuleInstance, $libraryPPCheckOK, $applicationInstance, $applicationNameSpace, $bootstrapApplicationOID;
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '1111c0de');
 
-        $nameSpace = $this->_getApplicationNamespace($this->_applicationOID);
+        $nameSpace = $this->_applicationNameSpace;
         $nameSpaceApplication = $nameSpace.'\\Application';
         $applicationNameSpace = $nameSpaceApplication;
 

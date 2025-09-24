@@ -115,10 +115,7 @@ abstract class Applications extends Functions implements applicationInterface
     public function getCurrentObjectID(): string { return $this->_nebuleInstance->getCurrentObjectOID(); }
     public function getCurrentObjectInstance(): Node { return $this->_nebuleInstance->getCurrentObjectInstance(); }
 
-    protected function _findEnvironment(): void
-    {
-        $this->_findURL();
-    }
+    protected function _findEnvironment(): void { $this->_findURL(); }
 
     protected string $_urlProtocol;
     protected string $_urlHost;
