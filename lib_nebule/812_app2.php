@@ -30,13 +30,13 @@ class App2 extends App0
 
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
             $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, 'info', __METHOD__, 'a8a5401d');
+            $this->_metrologyInstance->addLog('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a8a5401d');
         }
         else
             $argBack = '1';
         if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_GHOST)) {
             $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SWITCH_GHOST, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, 'info', __METHOD__, '425694ce');
+            $this->_metrologyInstance->addLog('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
         $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);

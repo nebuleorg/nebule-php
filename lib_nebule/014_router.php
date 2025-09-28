@@ -18,8 +18,8 @@ class Router extends Functions
 {
     const SESSION_SAVED_VARS = array();
 
-    // TODO move router from bootstrap to libPOO
     private string $_phpRID;
+    private string $_hashType;
     private string $_codeBranchNID = '';
     private bool $_needUpdate = false;
     //private string $_libraryRID = '';
@@ -38,6 +38,7 @@ class Router extends Functions
     protected function _initialisation(): void {
         $this->_phpRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $this->_applicationRID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
+        $this->_hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_getCurrentBranch();
         $this->_getCurrentLibrary();
         $this->_getArgUpdate();
@@ -59,6 +60,7 @@ class Router extends Functions
         $this->_saveApplicationOnSession();
     }
 
+    public function getCodeBranchNID(): string {return $this->_codeBranchNID;}
     public function getLibraryIID(): string {return $this->_libraryIID;}
     public function getLibraryOID(): string {return $this->_libraryOID;}
     public function getLibrarySID(): array {return $this->_librarySID;}
@@ -148,20 +150,17 @@ class Router extends Functions
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_applicationRID,
+            'bl/rl/nid1' => References::RID_INTERFACE_APPLICATIONS,
             'bl/rl/nid2' => $instance->getID(),
-            'bl/rl/nid3' => $this->_codeBranchNID,
-            'bl/rl/nid4' => '',
+            'bl/rl/nid3' => $this->_applicationRID,
+            'bl/rl/nid4' => $this->_codeBranchNID,
+            'bl/rl/nid5' => '',
         );
         $instance->getSocialLinks($links, $filter, 'authority');
-        // TODO
-        /*if (\Nebule\Bootstrap\lnk_checkExist('f',
-                \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS,
-                $rid,
-                $this->phpRID,
-                $this->_codeBranchNID)
-        )
-            $this->_applicationIID = $rid;*/
+        if (sizeof($links) == 0) {
+            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '081f9805');
+            return '';
+        }
 
         $this->_metrologyInstance->addLog('IID OK', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e7e5cfd0');
         return $iid;
@@ -216,23 +215,33 @@ class Router extends Functions
             return '';
         }
 
-        $links = array(); // FIXME
+        $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_applicationRID,
+            'bl/rl/nid1' => $this->_applicationIID,
             'bl/rl/nid2' => $instance->getID(),
             'bl/rl/nid3' => $this->_codeBranchNID,
             'bl/rl/nid4' => '',
         );
         $instance->getSocialLinks($links, $filter, 'authority');
-        // TODO
-        /*if (\Nebule\Bootstrap\lnk_checkExist('f',
-                \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS,
-                $rid,
-                $this->phpRID,
-                $this->_codeBranchNID)
-        )
-            $this->_applicationIID = $rid;*/
+        if (sizeof($links) == 0) {
+            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4df6e410');
+            return '';
+        }
+
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => $instance->getID(),
+            'bl/rl/nid2' => $this->_phpRID,
+            'bl/rl/nid3' => $this->_hashType,
+            'bl/rl/nid4' => '',
+        );
+        $instance->getSocialLinks($links, $filter, 'authority');
+        if (sizeof($links) == 0) {
+            $this->_metrologyInstance->addLog('no type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a52b9363');
+            return '';
+        }
 
         $this->_metrologyInstance->addLog('OID OK', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '634519a2');
         return $oid;

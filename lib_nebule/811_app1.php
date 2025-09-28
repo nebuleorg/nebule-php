@@ -36,8 +36,6 @@ class App1 extends App0
 
         echo '<div id="appslist">';
 
-        $appList = \Nebule\Bootstrap\app_getList(\Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, false);
-
         // Display interrupt page.
         echo '<a href="/?b">';
         echo '<div class="apps" style="background:#000000;">';
@@ -63,6 +61,22 @@ class App1 extends App0
         echo "</div></a>\n";
 
         // List all applications.
+        $instanceRID = $this->_cacheInstance->newNode(References::RID_INTERFACE_APPLICATIONS);
+        $phpNID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => References::RID_INTERFACE_APPLICATIONS,
+            'bl/rl/nid3' => $phpNID,
+            'bl/rl/nid4' => $this->_routerInstance->getCodeBranchNID(),
+            'bl/rl/nid5' => '',
+        );
+        $instanceRID->getSocialLinks($links, $filter, 'authority');
+        $appList = array();
+        foreach ($links as $i => $link) {
+            if (isset($link->getParsed()['bl/rl/nid2']))
+                $appList[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
+        }
         foreach ($appList as $application) {
             $nebuleInstance->getMetrologyInstance()->addLog('show application nid=' . $application, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b4f17c9d');
             $instance = new Node($nebuleInstance, $application);
@@ -82,7 +96,7 @@ class App1 extends App0
             $shortName = substr($shortName . '--', 0, 2);
             $subName = strtoupper(substr($shortName, 0, 1)) . strtolower(substr($shortName, 1, 1));
             $nebuleInstance->getMetrologyInstance()->addLog('app=' . $application . ' name=' . $title . ' sname=' . $shortName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9715d88e');
-            echo '<a href="/?' . \Nebule\Bootstrap\LIB_ARG_SWITCH_APPLICATION . '=' . $application . '">';
+            echo '<a href="/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $application . '">';
             echo '<div class="apps" style="background:' . $color . ';">';
             echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';
             echo "</div></a>\n";

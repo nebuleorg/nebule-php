@@ -573,15 +573,15 @@ class App0 extends Functions
         if ($name == $nebuleServerEntity)
             $name = '/';
         $defaultApp = '0';
-        if (\Nebule\Bootstrap\lib_getOption('permitApplication1'))
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication1'))
             $defaultApp = '1';
 
         ?>
         <body>
     <div class="layout-header">
         <div class="header-left">
-            <a href="/?<?php echo \Nebule\Bootstrap\LIB_ARG_SWITCH_APPLICATION . '=' . $defaultApp; ?>">
-                <img title="App switch" alt="[]" src="<?php echo \Nebule\Bootstrap\LIB_BOOTSTRAP_ICON; ?>"/>
+            <a href="/?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $defaultApp; ?>">
+                <img title="App switch" alt="[]" src="data:image/png;base64,<?php echo References::OBJ_IMG['nebule']; ?>" />
             </a>
         </div>
         <div class="header-right">
@@ -596,11 +596,11 @@ class App0 extends Functions
     <div class="layout-footer">
         <div class="footer-center">
             <p>
-                <?php echo \Nebule\Bootstrap\BOOTSTRAP_NAME; ?><br/>
-                <?php echo \Nebule\Bootstrap\BOOTSTRAP_VERSION; ?><br/>
-                (c) <?php echo \Nebule\Bootstrap\BOOTSTRAP_LICENCE . ' ' . \Nebule\Bootstrap\BOOTSTRAP_AUTHOR; ?> - <a
-                    href="http://<?php echo \Nebule\Bootstrap\BOOTSTRAP_WEBSITE; ?>" target="_blank"
-                    style="text-decoration:none;"><?php echo \Nebule\Bootstrap\BOOTSTRAP_WEBSITE; ?></a>
+                <?php echo nebule::NEBULE_NAME; ?><br/>
+                <?php echo nebule::NEBULE_VERSION; ?><br/>
+                (c) <?php echo nebule::NEBULE_LICENCE . ' ' . nebule::NEBULE_AUTHOR; ?> - <a
+                    href="http://<?php echo nebule::NEBULE_WEBSITE; ?>" target="_blank"
+                    style="text-decoration:none;"><?php echo nebule::NEBULE_WEBSITE; ?></a>
             </p>
         </div>
     </div>
@@ -619,7 +619,7 @@ class App0 extends Functions
         if ($ok) {
             ?>
 
-            &gt; <a onclick="javascript:window.location.reload();">reloading <?php echo \Nebule\Bootstrap\BOOTSTRAP_NAME; ?></a> ...
+            &gt; <a onclick="javascript:window.location.reload();">reloading <?php echo nebule::NEBULE_NAME; ?></a> ...
             <script type="text/javascript">
                 <!--
                 setTimeout(function () {
@@ -632,7 +632,7 @@ class App0 extends Functions
         ?>
 
             <button onclick="javascript:window.location.reload();">when ready,
-                reload <?php echo \Nebule\Bootstrap\BOOTSTRAP_NAME; ?></button>
+                reload <?php echo nebule::NEBULE_NAME; ?></button>
             <?php
         }
         echo "</div>\n";
