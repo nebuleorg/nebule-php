@@ -10,12 +10,12 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class App1
+class App1 extends App0
 {
     const APPLICATION_NAME = 'applis';
     const APPLICATION_SURNAME = 'nebule/applis';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250820';
+    const APPLICATION_VERSION = '020250928';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -25,14 +25,14 @@ class App1
     {
         global $nebuleInstance;
 
-        \Nebule\Bootstrap\log_reopen('app1');
-        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, '314e6e9b');
+        $this->_metrologyInstance->log_reopen('app1');
+        $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '314e6e9b');
 
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader('app 1 - menu');
-        \Nebule\Bootstrap\bootstrap_htmlTop();
+        $this->_htmlHeader('app 1 - menu');
+        $this->_htmlTop();
 
         echo '<div id="appslist">';
 
@@ -91,6 +91,6 @@ class App1
         echo "</div>\n";
         echo '<div id="sync">'."\n";
         echo "</div>\n";
-        \Nebule\Bootstrap\bootstrap_htmlBottom();
+        $this->_htmlBottom();
     }
 }

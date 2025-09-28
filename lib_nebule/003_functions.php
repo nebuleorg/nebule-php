@@ -53,7 +53,7 @@ class Functions
     public function __wakeup(){}
 
     public function setEnvironmentLibrary(nebule $nebuleInstance): void {
-        $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_environmentLibrarySet)
             return;
         $this->_environmentLibrarySet = true;
@@ -75,7 +75,7 @@ class Functions
     }
 
     public function setEnvironmentApplication(Applications $applicationInstance): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_environmentApplicationSet)
             return;
         $this->_environmentApplicationSet = true;
@@ -91,7 +91,7 @@ class Functions
      * @return void
      */
     public function initialisation(): void {
-        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __FUNCTION__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_initialisationSet)
             return;
         $this->_initialisationSet = true;
@@ -131,7 +131,7 @@ class Functions
             $this->_ready = true;
         } else {
             $defaultInstance = $this;
-            $this->_metrologyInstance->addLog('no default ' . get_class($this) . ' class found', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '72cc9a1b');
+            $this->_metrologyInstance->addLog('no default ' . get_class($this) . ' class found', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72cc9a1b');
         }
         $this->_metrologyInstance->addLog('set default class ' . get_class($defaultInstance), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4233cb6c');
         return $defaultInstance;

@@ -10,12 +10,12 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class App4
+class App4 extends App0
 {
     const APPLICATION_NAME = 'app4';
     const APPLICATION_SURNAME = 'nebule/app4';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250917';
+    const APPLICATION_VERSION = '020250928';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -26,14 +26,14 @@ class App4
 
     public function display(): void
     {
-        \Nebule\Bootstrap\log_reopen('app4');
-        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'a1613ff2');
+        $this->_metrologyInstance->log_reopen('app4');
+        $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a1613ff2');
 
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader('app 4 - links');
-        \Nebule\Bootstrap\bootstrap_htmlTop();
+        $this->_htmlHeader('app 4 - links');
+        $this->_htmlTop();
 
         echo '<div class="layout-main">' . "\n";
         echo ' <div class="layout-content">' . "\n";
@@ -97,7 +97,7 @@ class App4
         echo " </div>\n";
         echo "</div>\n";
 
-        \Nebule\Bootstrap\bootstrap_htmlBottom();
+        $this->_htmlBottom();
     }
 
     private function _translate(array $parsedBloc): string

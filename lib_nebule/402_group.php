@@ -120,7 +120,7 @@ class Group extends Node implements nodeInterface
             $this->write();
             $this->_isGroup = true;
         } elseif ($this->_id != '0') {
-            $this->_metrologyInstance->addLog('Create group error no authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '8613d472');
+            $this->_metrologyInstance->addLog('Create group error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
             $this->_id = '0';
         } else
             $this->_id = '0';
@@ -333,7 +333,7 @@ class Group extends Node implements nodeInterface
      */
     public function getMarkClosed(\Nebule\Library\Node|string|entity $entity = ''): bool
     {
-        $this->_metrologyInstance->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         // Extrait l'ID de l'entité.
         $id = $this->_checkExtractEntityID($entity);

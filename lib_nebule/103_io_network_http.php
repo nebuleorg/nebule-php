@@ -23,8 +23,6 @@ class ioNetworkHTTP extends io implements ioInterface
 
     protected function _initialisation(): void
     {
-        global $nebuleLibVersion;
-
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         // Détermination de l'URL par défaut.
@@ -33,7 +31,7 @@ class ioNetworkHTTP extends io implements ioInterface
         // Environnement PHP.
         ini_set('allow_url_fopen', 'true');
         ini_set('allow_url_include', 'true');
-        ini_set('user_agent', 'nebule/ioHTTP/' . $nebuleLibVersion);
+        ini_set('user_agent', 'nebule/ioHTTP/' . nebule::NEBULE_VERSION);
         ini_set('default_socket_timeout', $this->_configurationInstance->getOptionAsString('ioTimeout'));
         $this->_metrologyInstance->addLog('instancing class ioNetworkHTTP', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '024f57bf');
     }

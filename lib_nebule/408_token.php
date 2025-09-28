@@ -92,7 +92,7 @@ class Token extends TokenPool implements nodeInterface
         }
 
         $this->_id = $id;
-        $this->_metrologyInstance->addLog('Load token ' . $id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Load token ' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // On ne recherche pas les paramètres si ce n'est pas un jeton.
         if ($this->getIsToken('myself')) {
@@ -132,7 +132,7 @@ class Token extends TokenPool implements nodeInterface
      */
     public function setNewToken(array $param, bool $protected = false, bool $obfuscated = false): bool
     {
-        $this->_metrologyInstance->addLog('Ask create token', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Ask create token', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if (!$this->_isNew
             || sizeof($param) == 0
@@ -156,12 +156,12 @@ class Token extends TokenPool implements nodeInterface
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrologyInstance->addLog('Create token error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Create token error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrologyInstance->addLog('Create token error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Create token error not autorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_id = '0';
             return false;
         }
@@ -202,12 +202,12 @@ class Token extends TokenPool implements nodeInterface
             && ctype_xdigit($param['TokenSerialID'])
         ) {
             $sid = $this->_stringFilter($param['TokenSerialID']);
-            $this->_metrologyInstance->addLog('Generate token asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token asked SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         } else {
             // Génération d'un identifiant de sac de jetons unique aléatoire.
             $sid = $this->_nebuleInstance->getCryptoInstance()->getRandom(128, Crypto::RANDOM_PSEUDO);
             $param['TokenSerialID'] = $sid;
-            $this->_metrologyInstance->addLog('Generate token rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token rand SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         }
 
         // Détermine la monnaie associée.
@@ -216,7 +216,7 @@ class Token extends TokenPool implements nodeInterface
             $this->_propertiesList['token']['TokenCurrencyID']['force'] = $instanceCurrency->getID();
             $param['TokenCurrencyID'] = $instanceCurrency->getID();
         } else {
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' - error no valid CID selected', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' - error no valid CID selected', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return '0';
         }
 
@@ -226,7 +226,7 @@ class Token extends TokenPool implements nodeInterface
             $this->_propertiesList['token']['TokenPoolID']['force'] = $instancePool->getID();
             $param['TokenPoolID'] = $instancePool->getID();
         } else {
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' - error no valid PID selected', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' - error no valid PID selected', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             return '0';
         }
 
@@ -239,16 +239,16 @@ class Token extends TokenPool implements nodeInterface
         if (isset($param['TokenHaveContent'])
             && $param['TokenHaveContent'] === true
         ) {
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' HCT:true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
             // Le contenu final commence par l'identifiant interne du sac de jetons.
             $content = 'TYP:' . $this->_propertiesList['token']['TokenType']['force'] . "\n"; // @todo peut être intégré au reste.
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' TYP:' . $this->_propertiesList['token']['TokenType']['force'], Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' TYP:' . $this->_propertiesList['token']['TokenType']['force'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
             $content .= 'SID:' . $sid . "\n";
             $content .= 'CID:' . $param['TokenCurrencyID'] . "\n";
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' CID:' . $param['TokenCurrencyID'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' CID:' . $param['TokenCurrencyID'], Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             $content .= 'PID:' . $param['TokenPoolID'] . "\n";
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' PID:' . $param['TokenPoolID'], Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' PID:' . $param['TokenPoolID'], Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
             // Pour chaque propriété, si présente et forcée, l'écrit dans l'objet.
             foreach ($this->_propertiesList['token'] as $name => $property) {
@@ -282,7 +282,7 @@ class Token extends TokenPool implements nodeInterface
 
                     // Ajoute la ligne.
                     $content .= $property['key'] . ':' . $value . "\n";
-                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' force ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
 
@@ -303,11 +303,11 @@ class Token extends TokenPool implements nodeInterface
             }
         } else {
             $this->_id = $sid;
-            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' HCT:false', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
 
         // Le sac de jetons a maintenant un PID.
-        $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' TID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' TID:' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
 
         // Prépare la génération des liens.
@@ -358,17 +358,17 @@ class Token extends TokenPool implements nodeInterface
                 }
 
                 if ($value != null) {
-                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $meta = $this->getNidFromData($property['key']);
                     $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
-                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
         }
 
 
         // Retourne l'identifiant du sac de jetons.
-        $this->_metrologyInstance->addLog('Generate token end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Generate token end SID:' . $sid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         return $this->_id;
     }
 

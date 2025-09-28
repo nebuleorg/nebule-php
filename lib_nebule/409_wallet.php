@@ -82,7 +82,7 @@ class Wallet extends Entity implements nodeInterface
      */
     private function _createNewWallet(array $param, bool $protected = false, bool $obfuscated = false): void
     {
-        $this->_metrologyInstance->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+        $this->_metrologyInstance->addLog('Ask create wallet', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Vérifie que l'on puisse créer un sac de jetons.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -97,12 +97,12 @@ class Wallet extends Entity implements nodeInterface
 
             // Si la génération s'est mal passée.
             if ($this->_id == '0') {
-                $this->_metrologyInstance->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Create wallet error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_id = '0';
                 return;
             }
         } else {
-            $this->_metrologyInstance->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Create wallet error not autorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_id = '0';
             return;
         }

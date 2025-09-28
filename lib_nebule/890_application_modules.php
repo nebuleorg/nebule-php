@@ -126,7 +126,7 @@ class ApplicationModules
         } catch (\Error $e) {
             $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '6e8ba898');
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6e8ba898');
             return;
         }
         if (! $instance instanceof \Nebule\Library\ModuleInterface) {
@@ -141,7 +141,7 @@ class ApplicationModules
         } catch (\Error $e) {
             $this->_metrologyInstance->addLog('error initialisation class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '0d36b043');
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '0d36b043');
             return;
         }
         $this->_listModulesName[$moduleName] = $moduleFullName;

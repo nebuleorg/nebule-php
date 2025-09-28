@@ -92,22 +92,22 @@ class Authorities extends Functions
      */
     private function _findGlobalAuthorities(): void
     {
-        $this->_findEntityByType(References::LIB_RID_SECURITY_AUTHORITY,
+        $this->_findEntityByType(References::RID_SECURITY_AUTHORITY,
             $this->_securityAuthoritiesID,
             $this->_securityAuthoritiesInstance,
             $this->_securitySignersInstance,
             'security');
-        $this->_findEntityByType(References::LIB_RID_CODE_AUTHORITY,
+        $this->_findEntityByType(References::RID_CODE_AUTHORITY,
             $this->_codeAuthoritiesID,
             $this->_codeAuthoritiesInstance,
             $this->_codeSignersInstance,
             'code');
-        $this->_findEntityByType(References::LIB_RID_DIRECTORY_AUTHORITY,
+        $this->_findEntityByType(References::RID_DIRECTORY_AUTHORITY,
             $this->_directoryAuthoritiesID,
             $this->_directoryAuthoritiesInstance,
             $this->_directorySignersInstance,
             'directory');
-        $this->_findEntityByType(References::LIB_RID_TIME_AUTHORITY,
+        $this->_findEntityByType(References::RID_TIME_AUTHORITY,
             $this->_timeAuthoritiesID,
             $this->_timeAuthoritiesInstance,
             $this->_timeSignersInstance,

@@ -10,12 +10,12 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class App2
+class App2 extends App0
 {
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250919';
+    const APPLICATION_VERSION = '020250928';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -25,18 +25,18 @@ class App2
     {
         global $nebuleServerEntity;
 
-        \Nebule\Bootstrap\log_reopen('app2');
-        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'cb4450a2');
+        $this->_metrologyInstance->log_reopen('app2');
+        $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cb4450a2');
 
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
             $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, 'info', __FUNCTION__, 'a8a5401d');
+            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, 'info', __METHOD__, 'a8a5401d');
         }
         else
             $argBack = '1';
         if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_GHOST)) {
             $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SWITCH_GHOST, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, 'info', __FUNCTION__, '425694ce');
+            \Nebule\Bootstrap\log_add('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, 'info', __METHOD__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
         $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
@@ -52,8 +52,8 @@ class App2
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader('app 2', true, 0, $args);
-        \Nebule\Bootstrap\bootstrap_htmlTop();
+        $this->_htmlHeader('app 2', true, 0, $args);
+        $this->_htmlTop();
 
         echo '<div class="layout-main">' . "\n";
         echo ' <div class="layout-content">' . "\n";
@@ -61,6 +61,6 @@ class App2
         echo " </div>\n";
         echo "</div>\n";
 
-        \Nebule\Bootstrap\bootstrap_htmlBottom();
+        $this->_htmlBottom();
     }
 }

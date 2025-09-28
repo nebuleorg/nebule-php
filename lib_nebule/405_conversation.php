@@ -103,7 +103,7 @@ class Conversation extends Group implements nodeInterface
                 // Calcul l'ID référence de la conversation.
                 $this->_id = substr($this->_cryptoInstance->hash($data), 0, 32)
                     . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
-                $this->_metrologyInstance->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
                 // Mémorise les données.
                 $this->_data = $data;
@@ -142,7 +142,7 @@ class Conversation extends Group implements nodeInterface
 
                 // Si besoin, marque la conversation comme fermée.
                 if ($closed) {
-                    $this->_metrologyInstance->addLog('Create closed conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Create closed conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -158,7 +158,7 @@ class Conversation extends Group implements nodeInterface
 
                 // Si besoin, marque la conversation comme protégée.
                 if ($protected) {
-                    $this->_metrologyInstance->addLog('Create protected conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Create protected conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -174,7 +174,7 @@ class Conversation extends Group implements nodeInterface
 
                 // Si besoin, marque la conversation comme dissimulée.
                 if ($obfuscated) {
-                    $this->_metrologyInstance->addLog('Create obfuscated conversation', Metrology::LOG_LEVEL_DEBUG, __FUNCTION__, '00000000');
+                    $this->_metrologyInstance->addLog('Create obfuscated conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
@@ -201,12 +201,12 @@ class Conversation extends Group implements nodeInterface
 
                 $this->_isConversation = true;
             } else {
-                $this->_metrologyInstance->addLog('Create conversation error on generation', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+                $this->_metrologyInstance->addLog('Create conversation error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
                 $this->_id = '0';
                 return false;
             }
         } else {
-            $this->_metrologyInstance->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR, __FUNCTION__, '00000000');
+            $this->_metrologyInstance->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_id = '0';
             return false;
         }

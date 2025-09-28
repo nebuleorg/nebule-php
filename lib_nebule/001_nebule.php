@@ -12,8 +12,13 @@ namespace Nebule\Library;
  */
 class nebule
 {
-    const NEBULE_LICENCE_NAME = 'nebule';
-    const NEBULE_LICENCE_LINK = 'http://www.nebule.org/';
+    const NEBULE_NAME = 'library';
+    const NEBULE_SURNAME = 'nebule/library';
+    const NEBULE_VERSION = '020250928';
+    const NEBULE_AUTHOR = 'Project nebule';
+    const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
+    const NEBULE_WEBSITE = 'http://www.nebule.org/';
+    const NEBULE_CODING = 'application/x-httpd-php';
     const NEBULE_LICENCE_DATE = '2010-2025';
     const NEBULE_FUNCTION_VERSION = '020241123';
 
@@ -48,12 +53,13 @@ class nebule
         global $nebuleInstance ,$metrologyStartTime;
         $this->_nebuleInstance = $this;
         $nebuleInstance = $this;
+        \Nebule\Library\Metrology::log_reopen(nebule::NEBULE_NAME);
         syslog(LOG_INFO, 'LogT=' . sprintf('%01.6f', microtime(true) - $metrologyStartTime) . ' LogL="info" LogI="1452ed72" LogF="include nebule library" LogM="Loading nebule library"');
 
         $this->_initialisation();
     }
 
-    public function __toString(): string { return self::NEBULE_LICENCE_NAME; }
+    public function __toString(): string { return self::NEBULE_NAME; }
     public function __sleep(): array { return self::SESSION_SAVED_VARS; }
 
     public function __wakeup(): void {
@@ -67,7 +73,7 @@ class nebule
 
     private function _initialisation(): void {
         $this->_initMetrology();
-        $this->_metrologyInstance->addLog('first step init nebule instance', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '64154189');
+        $this->_metrologyInstance->addLog('first step init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '64154189');
         $this->_initConfiguration();
         $this->_initRescue();
         $this->_initSession();

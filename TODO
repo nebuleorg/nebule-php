@@ -1,5 +1,4 @@
 # Todo list
-  - Move launch application from library and not from bootstrap.
   - Manage types of nodes as modules.
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
@@ -8,3 +7,5 @@
   - Cleaning 008_entities.
   - Manage entities's password and name.
   - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
+  - Cleaning AppX with functions from bootstrap.
+  - 701_display modify filter_var() to $this->getFilterInput().

@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250919';
+    const APPLICATION_VERSION = '020250928';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -3271,9 +3271,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 private function _displayContentAbout()
 {
-    global $nebuleSurname,
-           $nebuleWebsite;
-
     $iconLL = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LL);
     $iconLK = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
     $iconTIME = $this->_cacheInstance->newNode(self::DEFAULT_ICON_TIME);
@@ -3395,9 +3392,9 @@ private function _displayContentAbout()
     if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
         $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
 
-    $linkNebuleWebsite = $nebuleWebsite;
-    if (strpos($nebuleWebsite, '://') === false)
-        $linkNebuleWebsite = 'http://' . $nebuleWebsite;
+    $linkNebuleWebsite = nebule::NEBULE_WEBSITE;
+    if (strpos(nebule::NEBULE_WEBSITE, '://') === false)
+        $linkNebuleWebsite = 'http://' . nebule::NEBULE_WEBSITE;
 
     ?>
 
@@ -3408,8 +3405,8 @@ private function _displayContentAbout()
                         alt="<?php echo Application::APPLICATION_SURNAME; ?>"
                         src="<?php echo Application::APPLICATION_LICENCE_LOGO; ?>"/></a>&nbsp;&nbsp;&nbsp;
             <a href="<?php echo $linkNebuleWebsite; ?>" target="_blank">
-                <img alt="<?php echo $nebuleSurname; ?>"
-                    src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>"/> <?php echo $nebuleSurname; ?>
+                <img alt="<?php echo nebule::NEBULE_SURNAME; ?>"
+                    src="<?php echo Application::NEBULE_LICENCE_LOGO; ?>"/> <?php echo nebule::NEBULE_SURNAME; ?>
             </a>
         </p>
     </div>

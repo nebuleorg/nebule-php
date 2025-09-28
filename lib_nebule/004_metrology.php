@@ -55,6 +55,12 @@ class Metrology extends Functions
         return 'Metrology';
     }
 
+    static public function log_reopen(string $name): void {
+        global $loggerSessionID;
+        closelog();
+        openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
+    }
+
     public function addLinkRead(): void
     {
         $this->_countLinkRead++;
@@ -337,7 +343,8 @@ class Metrology extends Functions
         <ul>
             <li><code>tB</code> : Temps de chargement du boostrap après la bibliothèque PP.</li>
             <li><code>tL</code> : Temps de chargement du boostrap après la bibliothèque POO.</li>
-            <li><code>tA</code> : Temps de chargement du boostrap après l'application.</li>
+            <li><code>tP</code> : Temps de chargement du boostrap après préchargement de l'application.</li>
+            <li><code>tA</code> : Temps de chargement du boostrap après l'application sans préchargement.</li>
         </ul>
         <p>Ces mesures de temps internes permettent de faire des comparaisons de performances entre serveurs.</p>
 

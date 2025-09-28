@@ -1088,8 +1088,6 @@ hBCAAAAJhx/QGiUnc0nJCIeAAAAABJRU5ErkJggg==';
 	 */
 	public function display()
 	{
-		global $applicationVersion, $applicationLicence, $applicationWebsite,
-				$applicationName, $applicationSurname, $applicationAuthor;
 		?>
 &lt;!DOCTYPE html>
 &lt;html>
@@ -1351,7 +1349,7 @@ class Traduction extends Traductions
             le <i>bootstrap</i>, il est possible d'accéder aux applications. Via une option, il est possible de modifier
             l'application par défaut afin de personnaliser une instance.</p>
         <p>Il est aussi en charge de trouver les dernières versions de la bibliothèque
-            <?php echo \Nebule\Library\nebule::NEBULE_LICENCE_NAME; ?> et des applications de manière sécurisée.</p>
+            <?php echo \Nebule\Library\nebule::NEBULE_NAME; ?> et des applications de manière sécurisée.</p>
 
         <?php Displays::docDispTitle(4, 'oabi', 'Installation'); ?>
         <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur
@@ -1361,8 +1359,8 @@ class Traduction extends Traductions
         <ul>
             <li>Installer un serveur Web (Linux/Apache) avec PHP. Aucun serveur de base de données n'est utilisé.</li>
             <li>Télécharger le fichier <i>bootstrap</i> sur le site Web
-                <a href="<?php echo \Nebule\Library\nebule::NEBULE_LICENCE_LINK; ?>">
-                <?php echo \Nebule\Library\nebule::NEBULE_LICENCE_LINK; ?></a>.
+                <a href="<?php echo \Nebule\Library\nebule::NEBULE_WEBSITE; ?>">
+                <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE; ?></a>.
                 <span style="color: red; font-weight: bold">FIXME téléchargement sécurisé !</span></li>
             <li>Positionner le fichier <i>bootstrap</i> dans le dossier Web du serveur Web. Au besoin, renommer le
                 fichier en <i>index.php</i>.</li>

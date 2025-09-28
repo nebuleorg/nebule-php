@@ -100,8 +100,6 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * @return string
      */
     private function _getPseudoRandom(int $size = 32): string {
-        global $nebuleSurname, $nebuleLibVersion;
-
         if ($size == 0 || !is_int($size))
             return '';
 
@@ -112,7 +110,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         $algo = 'sha256';
 
         // Génère une graine avec la date pour le compteur interne.
-        $internalCounter = date(DATE_ATOM) . microtime(false) . $nebuleSurname . $nebuleLibVersion . $this->_nebuleInstance->getEntitiesInstance()->getServerEntityEID();
+        $internalCounter = date(DATE_ATOM) . microtime(false) . nebule::NEBULE_SURNAME . nebule::NEBULE_VERSION . $this->_nebuleInstance->getEntitiesInstance()->getServerEntityEID();
 
         // Boucle de remplissage.
         while (strlen($result) < $size) {

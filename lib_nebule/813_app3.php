@@ -10,12 +10,12 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class App3
+class App3 extends App0
 {
     const APPLICATION_NAME = 'doctec';
     const APPLICATION_SURNAME = 'nebule/doctec';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250820';
+    const APPLICATION_VERSION = '020250928';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -23,31 +23,31 @@ class App3
 
     public function display(): void
     {
-        global $nebuleInstance, $nebuleLibLevel, $nebuleLibVersion, $nebuleLicence, $nebuleAuthor, $nebuleWebsite;
-
-        \Nebule\Bootstrap\log_reopen('app3');
-        \Nebule\Bootstrap\log_add('Loading', 'info', __FUNCTION__, 'a4e4acfe');
+        $this->_metrologyInstance->log_reopen('app3');
+        $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a4e4acfe');
 
         echo 'CHK';
         ob_end_clean();
 
-        \Nebule\Bootstrap\bootstrap_htmlHeader('app 3 - doctec');
-        \Nebule\Bootstrap\bootstrap_htmlTop();
+        $this->_htmlHeader('app 3 - doctec');
+        $this->_htmlTop();
 
-        // Instancie la classe de la documentation.
-        $instance = new \Nebule\Library\Documentation($nebuleInstance);
+        $instance = new \Nebule\Library\Documentation($this->_nebuleInstance);
 
-        // Affiche la documentation.
         echo '<div id="layout_documentation">' . "\n";
-        echo ' <div id="title_documentation"><p>Documentation technique de ' . $nebuleInstance->__toString() . '<br />' . "\n";
-        echo '  Version ' . $nebuleInstance->getConfigurationInstance()->getOptionAsString('defaultLinksVersion')
-            . ' - ' . $nebuleLibVersion . ' ' . $nebuleLibLevel . '<br />' . "\n";
-        echo '  (c) ' . $nebuleLicence . ' ' . $nebuleAuthor . ' - <a href="' . $nebuleWebsite . '">' . $nebuleWebsite . "</a></p></div>\n";
+        echo ' <div id="title_documentation"><p>Documentation technique de ' . $this->_nebuleInstance->__toString()
+            . '<br />' . "\n";
+        echo 'Version ' . $this->_configurationInstance->getOptionAsString('defaultLinksVersion')
+            . ' - ' . nebule::NEBULE_VERSION
+            . ' - ' . $this->_configurationInstance->getOptionAsString('codeBranch')
+            . '<br />' . "\n";
+        echo '(c) ' . nebule::NEBULE_LICENCE . ' ' . nebule::NEBULE_AUTHOR
+            . ' - <a href="' . nebule::NEBULE_WEBSITE . '">' . nebule::NEBULE_WEBSITE . "</a></p></div>\n";
         echo ' <div id="content_documentation">' . "\n";
         $instance->display_content();
         echo " </div>\n";
         echo "</div>\n";
 
-        \Nebule\Bootstrap\bootstrap_htmlBottom();
+        $this->_htmlBottom();
     }
 }

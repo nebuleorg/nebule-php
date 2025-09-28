@@ -261,42 +261,40 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     protected function _initUrlLinks(): void
     {
-        /*global $applicationName; // FIXME
-
-        $this->setUrlLinkObjectPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+        /*$this->setUrlLinkObjectPrefix('?'
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkGroupPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkConversationPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkEntityPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkCurrencyPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkTokenPoolPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkTokenPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkTransactionPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkWalletPrefix('?'
-            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $applicationName
+            . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');*/
     }
@@ -341,8 +339,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _findCurrentDisplayMode(): void
     {
-        global $applicationName; // FIXME encore utile ?
-
         // Prepare the right application's class to use, '\Nebule\Application\*\Display' and not '\Nebule\Library\Displays'.
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
@@ -370,8 +366,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         }
 
-        // Find mode to display by reading GET or ask cache or keep default mode..
-        $modeARG = filter_input(INPUT_GET, self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        // Find mode to display by reading GET or ask cache or keep default mode.
+        $modeARG = $this->getFilterInput(self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_FLAG_ENCODE_LOW);
         $okModeARG = false;
         foreach ($this->_listDisplayModes as $name) {
             if ($modeARG == $name)
@@ -381,7 +377,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->_metrologyInstance->addLog('ask mode : ' . $modeARG, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '43714573');
             $this->_currentDisplayMode = $modeARG;
         } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString($applicationName . 'DisplayMode');
+            $cache = $this->_sessionInstance->getSessionStoreAsString($this->_applicationInstance::APPLICATION_NAME . 'DisplayMode');
             if ($cache !== false
                 && $cache != '')
                 $this->_currentDisplayMode = $cache;
@@ -398,7 +394,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if (! $okMode)
             $this->_currentDisplayMode = $displayClass::DEFAULT_DISPLAY_MODE;
 
-        $this->_sessionInstance->setSessionStoreAsString($applicationName . 'DisplayMode', $this->_currentDisplayMode);
+        $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance::APPLICATION_NAME . 'DisplayMode', $this->_currentDisplayMode);
         $this->_metrologyInstance->addLog('current mode : ' . $this->_currentDisplayMode, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'bda64a7b');
     }
 
@@ -460,8 +456,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _findCurrentDisplayView(): void
     {
-        global $applicationName;
-
         if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
             $this->_metrologyInstance->addLog('search view, no module and no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82b83c17');
             return;
@@ -473,7 +467,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         // Lit et nettoie le contenu de la variable GET.
-        $arg_view = filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $arg_view = $this->getFilterInput(self::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_FLAG_ENCODE_LOW);
 
         $list_views_names = array();
 
@@ -504,9 +498,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Ecrit la vue dans la variable.
             $this->_currentDisplayView = $arg_view;
             // Ecrit la vue dans la session.
-            $this->_sessionInstance->setSessionStoreAsString($applicationName . 'DisplayView', $arg_view);
+            $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance::APPLICATION_NAME . 'DisplayView', $arg_view);
         } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString($applicationName . 'DisplayView');
+            $cache = $this->_sessionInstance->getSessionStoreAsString($this->_applicationInstance::APPLICATION_NAME . 'DisplayView');
             // S'il existe une variable de session pour la vue, la lit.
             if ($cache !== false
                 && $cache != ''
@@ -520,7 +514,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;
                 // Ecrit dans le cache.
-                $this->_sessionInstance->setSessionStoreAsString($applicationName . 'DisplayView', $this->_currentDisplayView);
+                $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance::APPLICATION_NAME . 'DisplayView', $this->_currentDisplayView);
             }
             unset($cache);
         }
@@ -545,7 +539,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _findInlineContentID(): void
     {
-        $arg_id = trim(' ' . filter_input(INPUT_GET, self::DEFAULT_INLINE_CONTENT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_id = $this->getFilterInput(self::DEFAULT_INLINE_CONTENT_COMMAND, FILTER_FLAG_ENCODE_LOW);
         if ($arg_id != '')
             $this->_inlineContentID = $arg_id;
 
@@ -1809,87 +1803,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         //$this->_configureLinks();
         $this->_preDisplay();
 
-        if (filter_has_var(INPUT_GET, self::DEFAULT_INLINE_COMMAND))
+        if ($this->getHaveInput(self::DEFAULT_INLINE_COMMAND))
             $this->_displayInline();
-        //elseif (filter_has_var(INPUT_GET, self::DEFAULT_CSS_COMMAND))
+        //elseif ($this->getHaveInput(self::DEFAULT_CSS_COMMAND))
         //    $this->commonCSS(); TODO
         else
             $this->_displayFull();
     }
 
-    /**
-     * Display full page.
-     */
-    /*protected function _displayFull(): void
-    {
-        global $applicationVersion,
-               $applicationLicence,
-               $applicationWebsite,
-               $applicationName,
-               $applicationSurname,
-               $applicationAuthor;
-        ?>
-        <!DOCTYPE html>
-        <html lang="">
-        <head>
-            <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-            <title><?php echo $applicationName; ?></title>
-            <link rel="icon" type="image/png" href="favicon.png"/>
-            <meta name="keywords" content="<?php echo $applicationSurname; ?>"/>
-            <meta name="description" content="<?php echo $applicationName; ?>"/>
-            <meta name="author" content="<?php echo $applicationAuthor . ' - ' . $applicationWebsite; ?>"/>
-            <meta name="licence" content="<?php echo $applicationLicence; ?>"/>
-            <?php $this->commonCSS(); ?>
-            <style type="text/css">
-                #logo img {
-                    height: 256px;
-                    width: 256px;
-                }
-            </style>
-        </head>
-        <body>
-        <div class="layout-header">
-            <div class="header-left">
-                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
-                    <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
-                </a>
-            </div>
-            <div class="header-right">
-                &nbsp;
-            </div>
-            <div class="header-center">
-                <p>
-                    <?php
-                    $name = $this->_entitiesInstance->getServerEntityInstance()->getFullName();
-                    if ($name != $this->_entitiesInstance->getServerEntityID())
-                        echo $name;
-                    else
-                        echo '/';
-                    echo '<br />' . $this->_entitiesInstance->getServerEntityID();
-                    ?>
-                </p>
-            </div>
-        </div>
-        <div class="layout-footer">
-            <div class="footer-center">
-                <p>
-                    <?php echo $applicationName; ?><br/>
-                    <?php echo $applicationVersion; ?><br/>
-                    (c) <?php echo $applicationLicence . ' ' . $applicationAuthor; ?> - <a
-                        href="http://<?php echo $applicationWebsite; ?>" target="_blank"
-                        style="text-decoration:none;"><?php echo $applicationWebsite; ?></a>
-                </p>
-            </div>
-        </div>
-        <div class="layout-main">
-            <div class="layout-content">
-                <img alt="nebule" id="logo" src="<?php echo static::DEFAULT_APPLICATION_LOGO_LIGHT; ?>"/>
-            </div>
-        </div>
-        </body>
-        </html>
-        <?php
-    }*/
     /**
      * Display full page.
      */
@@ -2270,7 +2191,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $module->displayModule();
                         $ok = true;
                     } catch (\Exception $e) {
-                        $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __FUNCTION__, 'fa838cce');
+                        $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fa838cce');
                     }
                 }
             }
