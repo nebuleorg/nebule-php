@@ -2,7 +2,6 @@
   - Manage types of nodes as modules.
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
-  - Fix bugg double refresh on flush call.
   - Fix bugg load translate modules.
   - Cleaning 008_entities.
   - Manage entities's password and name.

@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250928';
+    const APPLICATION_VERSION = '020251004';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1225,9 +1225,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
-                                . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                                . '&' . References::COMMAND_FLUSH);
+                                '?' . References::COMMAND_FLUSH);
                         } else {
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
@@ -1253,8 +1251,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $this->convertUpdateImage(
                             $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
-                        '?' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_FLUSH);
+                        '?' . References::COMMAND_FLUSH);
                 }
                 ?>
 
@@ -1331,7 +1328,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_GROUP_ENTITY_ADD_COMMAND,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
-                        self::DEFAULT_ABOUT_COMMAND . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH);
+                        References::COMMAND_FLUSH);
                 } else {
                     $modulesName = array(
                         '::ObjectsList',
@@ -1356,7 +1353,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         self::DEFAULT_ENTITY_LIST_COMMAND,
                         self::DEFAULT_ENTITY_SYNC_COMMAND,
                         self::DEFAULT_ENTITY_ADD_COMMAND,
-                        self::DEFAULT_ABOUT_COMMAND . '&' . References::COMMAND_FLUSH,
+                        References::COMMAND_FLUSH,
                         self::DEFAULT_ABOUT_COMMAND . '#help',
                         self::DEFAULT_ABOUT_COMMAND . '#lang',
                     );
@@ -2131,9 +2128,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[3]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[3]['desc'] = '';
                 $actionList[3]['css'] = 'oneAction-bg-warn';
-                $actionList[3]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND
-                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT . '&' . References::COMMAND_FLUSH;
+                $actionList[3]['link'] = '?' . References::COMMAND_FLUSH;
             }
 
             // Voir les objets.
@@ -3193,9 +3188,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
                 $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
-                $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_FLUSH;
+                $list[0]['htlink'] = '?' . References::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {
                 echo '<div class="layoutAloneItem">' . "\n";
@@ -3251,9 +3244,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
                 $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
                 $list[0]['icon'] = Displays::DEFAULT_ICON_ENTITY_LOCK;
-                $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
-                    . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                    . '&' . References::COMMAND_FLUSH;
+                $list[0]['htlink'] = '?' . References::COMMAND_FLUSH;
                 echo $this->_applicationInstance->getDisplayInstance()->getDisplayMenuList($list, 'Medium');
             } else {
                 // Affiche un message d'erreur.

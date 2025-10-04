@@ -31,7 +31,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020250919';
+    const MODULE_VERSION = '020251004';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -96,7 +96,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[0]['desc'] = '::sylabe:module:manage:AppDesc1';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
                 // Synchronisation des applications.
@@ -119,7 +119,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
 
@@ -136,7 +136,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
                 // Synchronisation du module.
@@ -160,7 +160,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
 
@@ -178,7 +178,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 break;
         }

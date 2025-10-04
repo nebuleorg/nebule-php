@@ -26,7 +26,7 @@ class ModuleMessages extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'groups';
     const MODULE_DESCRIPTION = '::module:messages:ModuleDescription';
-    const MODULE_VERSION = '020250919';
+    const MODULE_VERSION = '020251004';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2025-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
@@ -59,7 +59,7 @@ class ModuleMessages extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '::module:messages:AppDesc1';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::MODULE_DEFAULT_VIEW
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
         }
 

@@ -61,36 +61,20 @@ class Cache extends Functions
         }
     }
 
-    public function __wakeup()
-    {
-        /*$this->_sessionBufferLimit = $this->_configurationInstance->getOptionAsInteger('sessionBufferSize');
-        foreach ($this->_cache as $type => $table) {
-            foreach ($table as $item => $instance) {
-                $instance->setEnvironmentLibrary($this->_nebuleInstance);
-                $instance->initialisation();
-            }
-        }*/
-    }
+    public function __wakeup() {}
 
-    private function _getFlushCache(): void
-    {
+    private function _getFlushCache(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_FLUSH)
             || filter_has_var(INPUT_POST, References::COMMAND_FLUSH)
         ) {
             $this->_metrologyInstance->addLog('ask flush cache', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '3aeed4ed');
-            $this->_cache = array();
-            $this->_cacheDateInsertion = array();
             $this->_flushCache = true;
         }
     }
 
-    public function getFlushCache(): bool
-    {
-        return $this->_flushCache;
-    }
+    public function getFlushCache(): bool { return $this->_flushCache; }
 
-    public function readCacheOnSessionBuffer_DEPRECATED(): void
-    {
+    public function readCacheOnSessionBuffer_DEPRECATED(): void {
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
         )

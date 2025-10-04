@@ -26,7 +26,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::module:admin:ModuleDescription';
-    const MODULE_VERSION = '020250919';
+    const MODULE_VERSION = '020251004';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -72,7 +72,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     // Voir les options.
@@ -81,7 +81,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[2]) {
                     // Voir les admins.
@@ -90,7 +90,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[3]) {
                     // Voir les entités de recouvrement.
@@ -99,7 +99,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 break;
         }

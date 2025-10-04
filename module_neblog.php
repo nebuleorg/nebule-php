@@ -58,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020250920';
+    const MODULE_VERSION = '020251004';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -195,7 +195,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # New blog
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
@@ -205,7 +205,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # Get existing blog
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
@@ -215,7 +215,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # Come back to blog
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[7]
@@ -226,7 +226,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # List pages
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
@@ -237,7 +237,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # New page
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[12]
@@ -248,7 +248,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
             case 'selfMenuBlogs':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -258,14 +258,14 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     $hookArray[2]['name'] = '::neblog:module:blog:del';
                     $hookArray[2]['icon'] = Displays::DEFAULT_ICON_LD;
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
                         $hookArray[3]['name'] = '::neblog:module:blog:sync';
                         $hookArray[3]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
@@ -274,7 +274,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
                             . '&' . self::COMMAND_ACTION_SYNC_BLOG
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     }
                 }
                 break;
@@ -286,7 +286,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
                         $hookArray[1]['name'] = '::neblog:module:blog:sync';
                         $hookArray[1]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
@@ -295,7 +295,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . self::COMMAND_ACTION_SYNC_BLOG
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     }
                 }
                 $hookArray[3]['name'] = '::neblog:module:page:list';
@@ -304,7 +304,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
             case 'selfMenuPost':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked'))) {
@@ -316,7 +316,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_POST
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 break;
             case 'selfMenuPage':
@@ -329,7 +329,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPage->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_PAGE
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 break;
             case 'menu':
@@ -338,7 +338,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID();
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
         }
         return $hookArray;
@@ -490,7 +490,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_POST . '=' . $blogPostNID
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -523,7 +523,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setMessage('::neblog:module:blog:new');
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -532,12 +532,12 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setMessage('::neblog:module:blog:get');
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
         } else {
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
             $instance->setMessage('::neblog:module:login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
         }
         $instanceList->addItem($instance);
         $instanceList->setEnableWarnIfEmpty(false);
@@ -561,7 +561,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -599,7 +599,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     <form enctype="multipart/form-data" method="post"
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newblog"
@@ -642,7 +642,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                     <form enctype="multipart/form-data" method="post"
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="getblog"
@@ -697,7 +697,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newpost"
@@ -754,7 +754,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
@@ -763,15 +763,15 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         } elseif ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
             $instance->setMessage('::neblog:module:login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID()
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty(false);
@@ -794,7 +794,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_PAGE . '=' . $blogPageNID
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -825,7 +825,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                         action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newpage"
@@ -1030,7 +1030,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance->setMessage($backMessage);
         $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $backView
-            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . $addURL);
         $instanceList->addItem($instance);
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -1038,7 +1038,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
             $instance->setMessage('::neblog:module:login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_displayInstance->getCurrentApplicationIID());
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty(false);
@@ -1151,7 +1151,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                               . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                               . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
-                              . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_displayInstance->getCurrentApplicationIID()
+                              . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
                             <input type="text" class="newanswer"

@@ -248,7 +248,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
-        $this->_findCurrentApplication();
 
         // Si en mode téléchargement d'objet ou de lien, pas de traduction.
         if ($this->_translateInstance !== null) {
@@ -304,21 +303,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function getNeededObjectsList(): array
     {
         return $this->_neededObjectsList;
-    }
-
-
-    protected string $_currentApplicationIID = '';
-
-    protected function _findCurrentApplication(): void
-    {
-        global $bootstrapApplicationIID;
-
-        $this->_currentApplicationIID = $bootstrapApplicationIID;
-    }
-
-    public function getCurrentApplicationIID(): string
-    {
-        return $this->_currentApplicationIID;
     }
 
     protected string $_currentDisplayMode = '';
