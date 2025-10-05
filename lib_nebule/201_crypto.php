@@ -159,10 +159,10 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @param string $password
      * @param string $algo
-     * @param string $size
+     * @param int    $size
      * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newAsymmetricKeys(string $password = '', string $algo = '', string $size = ''): array {
+    public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 0): array {
         return $this->_defaultInstance->newAsymmetricKeys($password, $algo, $size);
     }
 

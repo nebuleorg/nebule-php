@@ -18,7 +18,7 @@ class ModuleTranslateENEN extends \Nebule\Library\ModuleTranslates
     const MODULE_NAME = '::translateModule:en-en:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
-    const MODULE_VERSION = '020250919';
+    const MODULE_VERSION = '020251005';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -45,8 +45,8 @@ class ModuleTranslateENEN extends \Nebule\Library\ModuleTranslates
             'nebule/objet/prefix' => 'Prefix',
             'nebule/objet/prenom' => 'First name',
             'nebule/objet/suffix' => 'Suffix',
-            'nebule/objet/surnom' => 'Nikename',
-            'nebule/objet/postnom' => 'Nikename',
+            'nebule/objet/surnom' => 'Nickname',
+            'nebule/objet/postnom' => 'Nickname',
             'nebule/objet/entite' => 'Entity',
             'nebule/objet/entite/type' => 'Type',
             'nebule/objet/date' => 'Date',

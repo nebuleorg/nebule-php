@@ -1657,11 +1657,12 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
 
                                 </div>
+                                <label for="moduleEntitiesCreatePropertyEntryPrefix"><?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?></label>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPrefix"/>
+                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
+                                        size="10" value=""
+                                        class="moduleEntitiesCreatePropertyEntry"
+                                        id="moduleEntitiesCreatePropertyEntryPrefix"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
                                 <div class="moduleEntitiesCreatePropertyName">
@@ -1680,7 +1681,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME; ?>"
+                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NICKNAME; ?>"
                                        size="10" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntrySurnom"/>
@@ -1759,7 +1760,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     ?>
                                 </select>
                             </div>
-                            <?php /*                            <div class="moduleEntitiesCreateProperty">
+                            <div class="moduleEntitiesCreateProperty">
                                 <div class="moduleEntitiesCreatePropertyName">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
                                 </div>
@@ -1779,7 +1780,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                     </option>
                                 </select>
-                            </div> */ ?>
+                            </div>
 
                             <?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) { ?>
                             <div class="moduleEntitiesCreateProperty">

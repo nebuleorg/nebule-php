@@ -101,18 +101,18 @@ class Entity extends Node implements nodeInterface
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
-            $this->_metrologyInstance->addLog('create entity algo=' . $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7344db13');
+            $this->_metrologyInstance->addLog('create entity algo=' . $algo . '.' . (string)$size, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7344db13');
 
             $this->_privateKeyPassword = $this->_cryptoInstance->getRandom(32, Crypto::RANDOM_STRONG);
-            $newPkey = $this->_cryptoInstance->newAsymmetricKeys($this->_privateKeyPassword);
+            $newPkey = $this->_cryptoInstance->newAsymmetricKeys($this->_privateKeyPassword, $algo, $size);
             if (sizeof($newPkey) != 0) {
                 $this->_publicKey = $newPkey['public'];
                 $this->_id = $this->_nebuleInstance->getFromDataNID($this->_publicKey);
-                $this->_metrologyInstance->addLog('create entity public key oid=' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'b5dacb0d');
+                $this->_metrologyInstance->addLog('create entity public key oid=' . $this->_id, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b5dacb0d');
                 $this->_privateKeyPasswordSalt = '';
                 $this->_privateKey = $newPkey['private'];
                 $this->_privateKeyOID = $this->_nebuleInstance->getFromDataNID($this->_privateKey);
-                $this->_metrologyInstance->addLog('create entity private key oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '9afc5da2');
+                $this->_metrologyInstance->addLog('create entity private key oid=' . $this->_privateKeyOID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9afc5da2');
                 $this->_isSetPrivateKeyPassword = true;
                 $this->_newPrivateKey = true;
                 unset($newPkey);

@@ -4,7 +4,7 @@
   - Sync all on first bootstrap from code entity.
   - Fix bugg load translate modules.
   - Cleaning 008_entities.
-  - Manage entities's password and name.
+  - Change entities's password and name.
   - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
   - Cleaning AppX with functions from bootstrap.
   - 701_display modify filter_var() to $this->getFilterInput().

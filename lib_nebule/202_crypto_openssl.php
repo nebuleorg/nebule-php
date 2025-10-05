@@ -401,39 +401,62 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @param string $password
      * @param string $algo
-     * @param string $size
+     * @param int    $size
      * @see CryptoInterface::newAsymmetricKeys()
      */
-    public function newAsymmetricKeys(string $password = '', string $algo = '', string $size = ''): array {
-        $algo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm'); // FIXME
-        if (!$this->_checkAsymmetricAlgorithm($algo))
+    public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 2048): array {
+        $this->_metrologyInstance->addLog('create keys algo=' . $algo . '.' . (string)$size, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c4915cf4');
+        if (!$this->_checkAsymmetricAlgorithm($algo . '.' . (string)$size)) {
+            $this->_metrologyInstance->addLog('unsupported algo=' . $algo . '.' . (string)$size, Metrology::LOG_LEVEL_ERROR, __METHOD__, '2a8e2237');
             return array();
+        }
 
         $config = array(
             'digest_alg' => $this->_translateHashAlgorithm($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm')),
-            'private_key_bits' => $this->_getAlgorithmSize($algo),
         );
-        switch ($this->_getAlgorithmName($algo)) {
+        switch ($algo) {
             case 'rsa' :
                 $config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+                $config['private_key_bits'] = $size;
                 break;
             case 'dsa' :
                 $config['private_key_type'] = OPENSSL_KEYTYPE_DSA;
+                $config['private_key_bits'] = $size;
                 break;
+            case 'dh' :
+                $config['private_key_type'] = OPENSSL_KEYTYPE_DH;
+                break;
+            case 'ec' :
+                $config['private_key_type'] = OPENSSL_KEYTYPE_EC;
+                $config['curve_name'] = 'prime256v1'; // FIXME how to change?
+                break;
+            /*case 'x25519' :
+                $config['private_key_type'] = OPENSSL_KEYTYPE_X25519; // FIXME PHP >= 8.4, verify OPENSSL_VERSION_NUMBER >= 0x30000000
+                break;
+            case 'ed25519' :
+                $config['private_key_type'] = OPENSSL_KEYTYPE_ED25519; // FIXME PHP >= 8.4
+                break;*/
             default    :
                 return array();
         }
 
         $pkey = openssl_pkey_new($config);
+        if ($pkey === false)
+            $this->_metrologyInstance->addLog('error generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e5c4817d');
 
         $pkeyDetail = openssl_pkey_get_details($pkey);
-        if ($pkeyDetail === false)
+        if ($pkeyDetail === false) {
+            $this->_metrologyInstance->addLog('error export public', Metrology::LOG_LEVEL_ERROR, __METHOD__, '34ce6d2c');
             return array();
+        }
 
         if ($password == '')
             $password = null;
-        if (openssl_pkey_export($pkey, $privateKey, $password) !== true)
+        $privateKey = '';
+        if (openssl_pkey_export($pkey, $privateKey, $password) !== true) {
+            $this->_metrologyInstance->addLog('error export private', Metrology::LOG_LEVEL_ERROR, __METHOD__, '34ce6d2c');
             return array();
+        }
 
         unset($pkey);
         return array(

@@ -177,10 +177,10 @@ interface CryptoInterface
      *
      * @param string $password
      * @param string $algo
-     * @param string $size
+     * @param int    $size
      * @return array
      */
-    public function newAsymmetricKeys(string $password = '', string $algo='', string $size=''): array;
+    public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 0): array;
 
     /**
      * Check the password on a private key (not EID).

@@ -53,7 +53,7 @@ abstract class Actions extends Functions
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX = 'creaentprefix';
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX = 'creaentsuffix';
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME = 'creaentfstnam';
-    const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME = 'creaentniknam';
+    const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NICKNAME = 'creaentniknam';
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME = 'creaentnam';
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1 = 'creaentpwd1';
     const DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2 = 'creaentpwd2';
@@ -1451,10 +1451,11 @@ abstract class Actions extends Functions
     protected string $_actionCreateEntityPrefix = '';
     protected string $_actionCreateEntitySuffix = '';
     protected string $_actionCreateEntityFirstname = '';
-    protected string $_actionCreateEntityNikename = '';
+    protected string $_actionCreateEntityNickname = '';
     protected string $_actionCreateEntityName = '';
     protected string $_actionCreateEntityPassword = '';
     protected string $_actionCreateEntityType = '';
+    protected string $_actionCreateEntityAlgo = '';
     protected string $_actionCreateEntityID = '0';
     protected string $_actionCreateEntityKeyID = '0';
     protected bool $_actionCreateEntityObfuscateLinks = false;
@@ -1482,11 +1483,12 @@ abstract class Actions extends Functions
             $this->_actionCreateEntityPrefix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
             $this->_actionCreateEntitySuffix = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX, FILTER_FLAG_NO_ENCODE_QUOTES);
             $this->_actionCreateEntityFirstname = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $this->_actionCreateEntityNikename = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NIKENAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityNickname = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NICKNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
             $this->_actionCreateEntityName = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
             $argPasswd1 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES, false, true);
             $argPasswd2 = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2, FILTER_FLAG_NO_ENCODE_QUOTES, false, true);
             $this->_actionCreateEntityType = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->_actionCreateEntityAlgo = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM, FILTER_FLAG_NO_ENCODE_QUOTES); // FIXME
 
             if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
                 $this->_actionCreateEntityObfuscateLinks = filter_has_var(INPUT_POST, self::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_OBFUSCATE_LINKS);
@@ -1503,18 +1505,25 @@ abstract class Actions extends Functions
 
             if ($this->_actionCreateEntityType != 'human' && $this->_actionCreateEntityType != 'robot')
                 $this->_actionCreateEntityType = '';
+
+            if (! in_array($this->_actionCreateEntityAlgo, $this->_cryptoInstance->getAlgorithmList(Crypto::TYPE_ASYMMETRIC)))
+                $this->_actionCreateEntityAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
+            if (! in_array($this->_actionCreateEntityAlgo, $this->_cryptoInstance->getAlgorithmList(Crypto::TYPE_ASYMMETRIC)))
+                $this->_actionCreateEntityAlgo = $this->_cryptoInstance->getAlgorithmList(Crypto::TYPE_ASYMMETRIC)[0];
         }
     }
     protected function _actionCreateEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $algo = 'rsa'; // FIXME
-        $size = 2048; //FIXME
+        $this->_metrologyInstance->addLog('action create entity algo=' . $this->_actionCreateEntityAlgo, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ea998a6d');
+        $algoArray = explode('.', $this->_actionCreateEntityAlgo);
+        $algo = $algoArray[0];
+        $size = (int)$algoArray[1];
         $instance = new Entity($this->_nebuleInstance, 'new');
         $instance->createNewEntity($algo, $size);
 
         if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
-            $this->_metrologyInstance->addLog('action create entity', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'ea998a6d');
+            $this->_metrologyInstance->addLog('action entity created', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd23d6cb3');
             $instance->setCreateWrite();
             $instance->setNewPrivateKeyPassword($this->_actionCreateEntityPassword);
             $this->_actionCreateEntityError = false;
@@ -1548,7 +1557,7 @@ abstract class Actions extends Functions
 
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_NOM, $this->_actionCreateEntityName);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_PRENOM, $this->_actionCreateEntityFirstname);
-            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityNikename);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityNickname);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_PREFIX, $this->_actionCreateEntityPrefix);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SUFFIX, $this->_actionCreateEntitySuffix);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_TYPE, $this->_actionCreateEntityType);
