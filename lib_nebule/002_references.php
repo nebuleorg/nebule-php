@@ -105,6 +105,7 @@ class References //extends Functions
     public const REFERENCE_NEBULE_OBJET_DATE_ZONE = 'nebule/objet/date/zone';
     public const REFERENCE_NEBULE_OBJET_ENTITE = 'nebule/objet/entite';
     public const REFERENCE_NEBULE_OBJET_ENTITE_TYPE = 'nebule/objet/entite/type';
+    public const REFERENCE_NEBULE_OBJET_ENTITE_ALGORITHME = 'nebule/objet/entite/algorithme';
     public const REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION = 'nebule/objet/entite/localisation';
     public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI = 'nebule/objet/entite/suivi';
     public const REFERENCE_NEBULE_OBJET_ENTITE_SUIVI_SECONDE = 'nebule/objet/entite/suivi/seconde';
@@ -323,6 +324,13 @@ class References //extends Functions
         self::REFERENCE_OBJECT_CRYPT_RSA,
         self::REFERENCE_OBJECT_ENTITY,
         self::REFERENCE_PRIVATE_KEY,
+        'sha2.224',
+        'sha2.256',
+        'sha2.384',
+        'sha2.512',
+        'rsa.1024',
+        'rsa.2048',
+        'rsa.4096',
     );
 
     public const ACTIVE_APPLICATIONS_WHITELIST = array(

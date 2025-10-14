@@ -215,6 +215,12 @@ namespace Nebule\Library;
  *      N'apparait pas comme icône simple.
  *      Par défaut vide : pas de message.
  *      String
+ *  - flagMessageList : Détermine une liste de messages successifs à afficher au niveau des flags dépliés.
+ *      enableDisplayFlags doit être à true.
+ *      N'apparait pas comme icône simple.
+ *      Par défaut vide : pas de message.
+ *      Est indépendant de flagMessage.
+ *      Array
  *  - flagTargetObject : Détermine un objet 'cible' (ou pas) à afficher au niveau des flags dépliés.
  *      enableDisplayFlags doit être à true.
  *      N'apparait pas comme icône simple. L'objet est affiché sous forme tiny.
@@ -304,6 +310,7 @@ namespace Nebule\Library;
  *  'flagState' => '',
  *  'flagStateDesc' => '',
  *  'flagMessage' => '',
+ *  'flagMessageList' => array(),
  *  'flagTargetObject' => '',
  *  'status' => '',
  *  'displaySize' => 'medium',
@@ -423,6 +430,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     private ?Node $_flagStateIcon = null;
     private string $_flagStateText = '';
     private string $_flagMessage = '';
+    private array $_flagMessageList = array();
     private ?Node $_flagTargetObject = null;
     private string $_status = '';
     private array $_refs = array();
@@ -600,6 +608,18 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                         '-');
                     $menuContent .= $this->_flagMessage;
                     $menuContent .= '</div>' . "\n";
+                }
+                if (sizeof($this->_flagMessageList) > 0) {
+                    foreach ($this->_flagMessageList as $_flagMessage) {
+                        $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgInfo">';
+                        $menuContent .= $this->_getObjectFlagHTML(
+                            false,
+                            Displays::DEFAULT_ICON_IINFO,
+                            '',
+                            '-');
+                        $menuContent .= $_flagMessage;
+                        $menuContent .= '</div>' . "\n";
+                    }
                 }
                 if ($this->_flagTargetObject !== null) {
                     $menuContent .= '   <div class="objectMenuContentMsg objectMenuContentMsgtargetObject">';
@@ -1381,6 +1401,12 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setFlagMessage(string $text): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('set flag message ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_flagMessage = trim((string)filter_var($text, FILTER_SANITIZE_STRING));
+    }
+
+    public function setFlagMessageList(array $list): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('set flag message list', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        foreach ($list as $value)
+            $this->_flagMessageList[] = trim((string)filter_var($value, FILTER_SANITIZE_STRING));
     }
 
     public function setFlagTargetObject(?Node $nid): void {

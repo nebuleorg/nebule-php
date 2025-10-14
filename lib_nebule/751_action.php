@@ -1560,7 +1560,8 @@ abstract class Actions extends Functions
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SURNOM, $this->_actionCreateEntityNickname);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_PREFIX, $this->_actionCreateEntityPrefix);
             $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_SUFFIX, $this->_actionCreateEntitySuffix);
-            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_TYPE, $this->_actionCreateEntityType);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, $this->_actionCreateEntityType);
+            $this->_writeEntitySelfProperty($instance, References::REFERENCE_NEBULE_OBJET_ENTITE_ALGORITHME, $this->_actionCreateEntityAlgo);
 
             $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_actionCreateEntityID);
             $this->_actionCreateEntityInstance = $this->_cacheInstance->newNode($this->_actionCreateEntityID, \Nebule\Library\Cache::TYPE_ENTITY);

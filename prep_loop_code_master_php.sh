@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020250731
+# Version 020251014
 
 echo ' > start'
 
@@ -197,6 +197,10 @@ function work_full_reinit()
   localRID=$(echo -n 'nebule/objet/entite/localisation' | sha256sum | cut -d' ' -f1)'.sha2.256'
   lauthOID=$(echo -n 'nebule/objet/entite/autorite/locale' | sha256sum | cut -d' ' -f1)'.sha2.256'
   Pkey=$(echo -n 'nebule/objet/entite/prive' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  algoKey=$(echo -n 'nebule/objet/entite/algorithme' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  rsa1024=$(echo -n 'rsa.1024' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  rsa2048=$(echo -n 'rsa.2048' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  rsa4096=$(echo -n 'rsa.4096' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
   echo ' > links puppetmaster'
   entityNameOID=$(echo -n 'puppetmaster' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -209,6 +213,7 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${entityNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${puppetmaster_develop_pem_hash}>${puppetmaster_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${rsa4096}>${algoKey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority_develop_pem_hash}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_CODE_AUTHORITY}>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
@@ -236,6 +241,7 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/f>${security_authority_develop_pem_hash}>${security_authority_develop_key_hash}>${Pkey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${rsa2048}>${algoKey}"
   )
   for link in "${links[@]}"
   do
@@ -254,6 +260,7 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/f>${code_authority_develop_pem_hash}>${code_authority_develop_key_hash}>${Pkey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${rsa2048}>${algoKey}"
   )
   for link in "${links[@]}"
   do
@@ -271,6 +278,7 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/f>${time_authority_develop_pem_hash}>${time_authority_develop_key_hash}>${Pkey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${rsa1024}>${algoKey}"
   )
   for link in "${links[@]}"
   do
@@ -289,12 +297,17 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/f>${directory_authority_develop_pem_hash}>${directory_authority_develop_key_hash}>${Pkey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${rsa1024}>${algoKey}"
   )
   for link in "${links[@]}"
   do
     sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
     sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
+
+  #echo -n 'rsa.1024' > "${SPACE}/o/${rsa1024}"
+  #echo -n 'rsa.2048' > "${SPACE}/o/${rsa2048}"
+  #echo -n 'rsa.4096' > "${SPACE}/o/${rsa4096}"
 
   echo ' > chmod masters folders'
   for SPACE in $ALL_SPACES

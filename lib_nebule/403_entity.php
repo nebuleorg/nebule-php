@@ -193,10 +193,16 @@ class Entity extends Node implements nodeInterface
 
     private bool $_typeVerified = false;
 
-    public function getKeyType(): string {
+    public function getEntityType(): string {
         if ($this->_id == '0')
             return '';
         return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_TYPE, 'all');
+    }
+
+    public function getKeyType(): string {
+        if ($this->_id == '0')
+            return '';
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_ALGORITHME, 'all');
     }
 
     public function getTypeVerify(): bool {

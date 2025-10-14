@@ -445,6 +445,13 @@ const LIB_FIRST_RESERVED_OBJECTS = array(
     'sha256',
     'sha384',
     'sha512',
+    'sha2.224',
+    'sha2.256',
+    'sha2.384',
+    'sha2.512',
+    'rsa.1024',
+    'rsa.2048',
+    'rsa.4096',
 );
 
 const HASH_MAP = [
@@ -1358,7 +1365,6 @@ function io_checkLinkFolder(): bool {
  */
 function io_checkObjectFolder(): bool {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    // Check if exist.
     if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER))
         io_createObjectFolder();
     if (!file_exists(LIB_LOCAL_OBJECTS_FOLDER) || !is_dir(LIB_LOCAL_OBJECTS_FOLDER)) {
@@ -1366,7 +1372,6 @@ function io_checkObjectFolder(): bool {
         return false;
     }
 
-    // Check writeability.
     if (lib_getOptionAsBool('permitWrite') && lib_getOptionAsBool('permitWriteObject')) {
         $data = crypto_getPseudoRandom(2048);
         $name = LIB_LOCAL_OBJECTS_FOLDER . '/writest' . bin2hex(crypto_getPseudoRandom(8));
@@ -3509,7 +3514,9 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
     $oidType = obj_getNID('nebule/objet/type');
     $oidPem = obj_getNID('application/x-pem-file');
     $oidPKey = obj_getNID('nebule/objet/entite/prive');
+    $oidTypeKey = obj_getNID('nebule/objet/entite/algorithme');
     $oidText = obj_getNID('text/plain');
+    $oidAlgo = obj_getNID($asymmetricAlgo);
 
     $list = array($oidType, $oidPem, $oidPKey, $oidText);
     foreach ($list as $item) {
@@ -3530,6 +3537,12 @@ function ent_generate(string $asymmetricAlgo, string $hashAlgo, string &$hashPub
     }
 
     $bh_bl = blk_generate('', 'f', $hashPublicKey, $hashPrivateKey, $oidPKey);
+    $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, false);
+    $link = $bh_bl . '_' . $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOptionAsString('cryptoHashAlgorithm');
+    if (!blk_write($link))
+        return false;
+
+    $bh_bl = blk_generate('', 'l', $hashPublicKey, $oidAlgo, $oidTypeKey); // FIXME
     $sign = crypto_asymmetricEncrypt($bh_bl, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity, false);
     $link = $bh_bl . '_' . $nebuleGhostPublicEntity . '>' . $sign . '.' . lib_getOptionAsString('cryptoHashAlgorithm');
     if (!blk_write($link))

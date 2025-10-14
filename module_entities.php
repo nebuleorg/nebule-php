@@ -750,6 +750,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         echo '<div class="textListObjects">' . "\n";
 
         $entity = $this->_displayEntityInstance;
+        $entityType = $entity->getKeyType();
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
@@ -763,6 +764,8 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
         $instance->setEnableFlagState(true);
         $instance->setEnableFlagEmotions(true);
+        if ($entityType != '')
+            $instance->setFlagMessage('Type: ' . $entityType);
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setSelfHookName('selfMenuEntity');
