@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020251004';
+const BOOTSTRAP_VERSION = '020251014';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -152,6 +152,11 @@ log_init(BOOTSTRAP_NAME);
 // ------------------------------------------------------------------------------------------
 // Name of bootstrap file used by web server.
 const BOOTSTRAP_FILE_NAME = 'index.php';
+
+// FIXME to remove when all OK
+// 1: old system
+// 2: new system
+const DEBUG_CRYPTO_SYSTEM = 1;
 
 /**
  * Instance de la bibliothèque nebule en PHP orienté objet.
@@ -1939,22 +1944,39 @@ function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string 
     )
         return '';
 
-    $privateCertificat = '';
-    if (!obj_getLocalContent($privateOid, $privateCertificat, 10000))
-        return '';
-    $private_key = openssl_pkey_get_private($privateCertificat, $password);
-    if ($private_key === false)
-        return '';
-    $binarySignature = '';
-    $hashData = crypto_getDataHash($data);
-    $binHashData = pack("H*", $hashData);
-    $ok = openssl_private_encrypt($binHashData, $binarySignature, $private_key, OPENSSL_PKCS1_PADDING);
-    //openssl_free_key($private_key);
-    unset($private_key);
-    if ($ok === false)
+    $signatureBin = '';
+    $privateCertificat = io_objectRead($privateOid, 10000);
+    $privateKeyBin = openssl_pkey_get_private($privateCertificat, $password);
+    if ($privateKeyBin === false)
         return '';
 
-    return bin2hex($binarySignature);
+    $algo = lib_getOptionAsString('cryptoHashAlgorithm');
+    switch ($algo) {
+        case 'sha2.256' :
+            $opensslAlgo = OPENSSL_ALGO_SHA256;
+            break;
+        case 'sha2.384' :
+            $opensslAlgo = OPENSSL_ALGO_SHA384;
+            break;
+        case 'sha2.512' :
+            $opensslAlgo = OPENSSL_ALGO_SHA512;
+            break;
+        default:
+            log_add('invalid algo ' . $algo . ' in config file', 'error', __FUNCTION__, '9f9200a4');
+            return '';
+    }
+    log_add('data=' . $data, 'debug', __FUNCTION__, '88dd4ac6');
+
+    if (openssl_sign($data, $signatureBin, $privateKeyBin, OPENSSL_ALGO_SHA256)) {
+        unset($privateKeyBin);
+        log_add('ok sign' . bin2hex($signatureBin), 'debug', __FUNCTION__, '051b7e5e');
+        return bin2hex($signatureBin);
+    }
+    unset($privateKeyBin);
+    log_add('unable to sign', 'error', __FUNCTION__, '40a79ccb');
+    while ($msg = openssl_error_string())
+        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, '00000551');
+    return '';
 }
 
 
@@ -1963,33 +1985,45 @@ function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string 
  * Use OpenSSL library.
  *
  * @param string $sign
- * @param string $hash
+ * @param string $data
  * @param string $nid
+ * @param string $algo
  * @return boolean
  */
-function crypto_asymmetricVerify(string $sign, string $hash, string $nid): bool {
+function crypto_asymmetricVerify(string $sign, string $data, string $nid, string $algo): bool {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
-    // Read signer's public key.
     $cert = io_objectRead($nid, 10000);
-    $hashSize = strlen($hash);
-
-    $pubKeyID = openssl_pkey_get_public($cert);
-    if ($pubKeyID === false)
+    $publicKeyBin = openssl_pkey_get_public($cert);
+    if ($publicKeyBin === false) {
+        log_add('invalid public key ' . $nid, 'error', __FUNCTION__, '4fd1e35c');
         return false;
-
-    lib_incrementMetrology('lv');
-
-    // Encoding sign before check.
-    $binSign = pack('H*', $sign);
-
-    // Decode sign with public key.
-    if (openssl_public_decrypt($binSign, $binDecrypted, $pubKeyID, OPENSSL_PKCS1_PADDING)) {
-        $decrypted = substr(bin2hex($binDecrypted), -$hashSize, $hashSize);
-        //log_add('decrypt RSA ' . $decrypted . '/' . $hash, 'error', __FUNCTION__, 'd4c712ea');
-        if ($decrypted == $hash)
-            return true;
     }
+    lib_incrementMetrology('lv');
+    $signBin = pack('H*', $sign);
 
+    switch ($algo) {
+        case 'sha2.256' :
+            $opensslAlgo = OPENSSL_ALGO_SHA256;
+            break;
+        case 'sha2.384' :
+            $opensslAlgo = OPENSSL_ALGO_SHA384;
+            break;
+        case 'sha2.512' :
+            $opensslAlgo = OPENSSL_ALGO_SHA512;
+            break;
+        default:
+            log_add('invalid bloc link algo ' . $algo, 'error', __FUNCTION__, 'e1c518c0');
+            return false;
+    }
+    log_add('data=' . $data, 'debug', __FUNCTION__, '3400a2f2');
+    $decodeOK = openssl_verify($data, $signBin, $publicKeyBin, $opensslAlgo);
+    if ($decodeOK == 1) {
+        log_add('ok sign', 'debug', __FUNCTION__, 'b71fa6b7');
+        return true;
+    }
+    log_add('invalid sign', 'error', __FUNCTION__, 'c0e97f3b');
+    while ($msg = openssl_error_string())
+        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, '00000551');
     return false;
 }
 
@@ -2667,8 +2701,9 @@ function blk_checkSIG(string &$bh, string &$bl, string &$sig, string &$nid): boo
     if (!lib_getOptionAsBool('permitCheckSignOnVerify')) return true;
     if (obj_checkContent($nid)) {
         $data = $bh . '_' . $bl;
-        $hash = crypto_getDataHash($data, $algo . '.' . $size);
-        return crypto_asymmetricVerify($sign, $hash, $nid);
+        //$hash = crypto_getDataHash($data, $algo . '.' . $size);
+        //return crypto_asymmetricVerify($sign, $hash, $nid);
+        return crypto_asymmetricVerify($sign, $data, $nid, $algo . '.' . $size);
     }
 
     return false;

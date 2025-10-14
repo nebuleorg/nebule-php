@@ -8,3 +8,4 @@
   - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
   - Cleaning AppX with functions from bootstrap.
   - 701_display modify filter_var() to $this->getFilterInput().
+  - Fix buggy crypto_openssl::verify() with openssl_verify().

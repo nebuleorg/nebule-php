@@ -144,9 +144,10 @@ interface CryptoInterface
      * @param string $data
      * @param string $sign
      * @param string $publicKey
+     * @param string $algo
      * @return bool
      */
-    public function verify(string $data, string $sign, string $publicKey): bool;
+    public function verify(string $data, string $sign, string $publicKey, string $algo): bool;
 
     /**
      * Encode $data with a public key (not EID).

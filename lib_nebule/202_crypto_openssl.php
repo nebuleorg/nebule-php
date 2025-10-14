@@ -60,14 +60,17 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         'rsa.1024',
         'rsa.2048',
         'rsa.4096',
-        'ed25519.256',
+        'dsa.2048',
+        'ec.256',
+        //'ed25519.256',
     );
     const TRANSLATE_ASYMMETRIC_ALGORITHM = array(
         'rsa.1024' => 'rsa1024',
         'rsa.2048' => 'rsa2048',
         'rsa.4096' => 'rsa4096',
-        'ed25519.256' => 'ed25519',
-        '' => '',
+        'dsa.2048' => 'dsa2048',
+        'ec.256' => 'ec',
+        //'ed25519.256' => 'ed25519',
     );
 
     protected function _initialisation(): void {
@@ -323,18 +326,28 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      */
     public function sign(string $data, string $privateKey, string $privatePassword): string {
         $signatureBin = '';
-        $ressource = openssl_pkey_get_private($privateKey, $privatePassword);
-        if ($ressource === false) {
+        $privateKeyBin = openssl_pkey_get_private($privateKey, $privatePassword);
+        if ($privateKeyBin === false) {
             $this->_metrologyInstance->addLog('unable to use private key', Metrology::LOG_LEVEL_ERROR, __METHOD__, '6993176f');
             return '';
         }
-        $maxSize = ((int)openssl_pkey_get_details($ressource)['bits']/8) - 11;
-        if (strlen($data) > $maxSize)
-            $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
+        if (\Nebule\Bootstrap\DEBUG_CRYPTO_SYSTEM == 1) {
+            $maxSize = ((int)openssl_pkey_get_details($privateKeyBin)['bits']/8) - 11;
+            if (strlen($data) > $maxSize)
+                $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
 
-        $dataBin = pack('H*', $data);
-        if (openssl_private_encrypt($dataBin, $signatureBin, $ressource, OPENSSL_PKCS1_PADDING))
-            return bin2hex($signatureBin);
+            $dataBin = pack('H*', $data);
+            if (openssl_private_encrypt($dataBin, $signatureBin, $privateKeyBin, OPENSSL_PKCS1_PADDING)) // FIXME replace by openssl_sign()
+                return bin2hex($signatureBin);
+        } else {
+            if (openssl_sign($data, $signatureBin, $privateKeyBin, OPENSSL_ALGO_SHA256)) {
+                unset($privateKeyBin);
+$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('DEBUGGING sign=' . bin2hex($signatureBin), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                return bin2hex($signatureBin);
+            }
+            unset($privateKeyBin);
+        }
         $this->_metrologyInstance->addLog('crypto sign error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c5e617d');
         return '';
     }
@@ -343,21 +356,64 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $data, string $sign, string $publicKey): bool {
-        $ressource = openssl_pkey_get_public($publicKey);
-        if ($ressource === false)
-            return false;
-        $maxSize = ((int)openssl_pkey_get_details($ressource)['bits']/8) - 11;
-        if (strlen($data) > $maxSize)
-            $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
+    public function verify(string $data, string $sign, string $publicKey, string $algo): bool {
+        $publicKeyBin = openssl_pkey_get_public($publicKey);
 
-        $signBin = pack('H*', $sign);
-        $decodeOK = openssl_public_decrypt($signBin, $decrypted, $ressource, OPENSSL_PKCS1_PADDING);
-        if (!$decodeOK)
+while ($msg = openssl_error_string())
+$this->_metrologyInstance->addLog('DEBUGGING error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+
+        if ($publicKeyBin === false)
             return false;
-        $decrypted = substr(bin2hex($decrypted), -strlen($data), strlen($data));
-        if ($decrypted == $data)
-            return true;
+        $signBin = pack('H*', $sign);
+$this->_metrologyInstance->addLog('DEBUGGING pubkey=' . $publicKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('DEBUGGING sign=' . $sign, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        if (\Nebule\Bootstrap\DEBUG_CRYPTO_SYSTEM == 1) {
+            $maxSize = ((int)openssl_pkey_get_details($publicKeyBin)['bits']/8) - 11;
+            if (strlen($data) > $maxSize)
+                $data = substr($data, 0, $maxSize); // for PKCS padding # 1.
+
+            $decodeOK = openssl_public_decrypt($signBin, $decrypted, $publicKeyBin, OPENSSL_PKCS1_PADDING); // FIXME replace by openssl_verify()
+            if (!$decodeOK) {
+                $this->_metrologyInstance->addLog('crypto verify error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c897dd6');
+                while ($msg = openssl_error_string())
+                    $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+                return false;
+            }
+            $decrypted = substr(bin2hex($decrypted), -strlen($data), strlen($data));
+            if ($decrypted == $data)
+                return true;
+        } else {
+            //$opensslAlgo = $this->_translateHashAlgorithm($algo);
+            switch ($algo) {
+                case 'sha2.256' :
+                    $opensslAlgo = OPENSSL_ALGO_SHA256;
+                    break;
+                case 'sha2.384' :
+                    $opensslAlgo = OPENSSL_ALGO_SHA384;
+                    break;
+                case 'sha2.512' :
+                    $opensslAlgo = OPENSSL_ALGO_SHA512;
+                    break;
+                default:
+                    $this->_metrologyInstance->addLog('invalid hash algo ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b8484404');
+                    return false;
+            }
+            /*if ($opensslAlgo == '') {
+                $this->_metrologyInstance->addLog('invalid hash algo ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b8484404');
+                return false;
+            }*/
+$this->_metrologyInstance->addLog('DEBUGGING algo=' . $opensslAlgo, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $decodeOK = openssl_verify($data, $signBin, $publicKeyBin, $opensslAlgo);
+            if ($decodeOK == 1) {
+                return true;
+            }
+        }
+        $this->_metrologyInstance->addLog('crypto verify error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c897dd6');
+
+        while ($msg = openssl_error_string())
+            $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+
         return false;
     }
 
@@ -544,7 +600,7 @@ EOD;
         $data = 'Bienvenue dans le projet nebule.';
         $hashData = hash('sha256', $data);
         $signed = $this->sign($hashData, $private_pem, $private_pass);
-        if ($this->verify($hashData, $signed, $public_pem))
+        if ($this->verify($hashData, $signed, $public_pem, 'sha2.256'))
             return true;
         $this->_metrologyInstance->addLog('Error check asymmetric ' . $hashData . ' can not verify ' . $signed, Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab8726b');
         return false;

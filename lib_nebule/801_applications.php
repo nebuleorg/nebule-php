@@ -715,20 +715,6 @@ abstract class Applications extends Functions implements applicationInterface
                         <li><a href="#oabc">OABC / Configuration</a></li>
                         <li><a href="#oabb">OABB / Interruption</a></li>
                         <li><a href="#oabe">OABE / Applications externes</a></li>
-                        <li><a href="#oaba">OABA / Applications intégrées</a>
-                            <ul>
-                                <li><a href="#oaba0">OABA0 / Application 0</a></li>
-                                <li><a href="#oaba1">OABA1 / Application 1</a></li>
-                                <li><a href="#oaba2">OABA2 / Application 2</a></li>
-                                <li><a href="#oaba3">OABA3 / Application 3</a></li>
-                                <li><a href="#oaba4">OABA4 / Application 4</a></li>
-                                <li><a href="#oaba5">OABA5 / Application 5</a></li>
-                                <li><a href="#oaba6">OABA6 / Application 6</a></li>
-                                <li><a href="#oaba7">OABA7 / Application 7</a></li>
-                                <li><a href="#oaba8">OABA8 / Application 8</a></li>
-                                <li><a href="#oaba9">OABA9 / Application 9</a></li>
-                            </ul>
-                        </li>
                         <li><a href="#oabn">OABN / Fonctionnement nominal</a></li>
                     </ul>
                 </li>
@@ -736,6 +722,20 @@ abstract class Applications extends Functions implements applicationInterface
                     <ul>
                         <li><a href="#oald">OALD / Description</a></li>
                         <li><a href="#oalc">OALC / Configuration</a></li>
+                        <li><a href="#oala">OALA / Applications intégrées</a>
+                            <ul>
+                                <li><a href="#oala0">OALA0 / Application 0</a></li>
+                                <li><a href="#oala1">OALA1 / Application 1</a></li>
+                                <li><a href="#oala2">OALA2 / Application 2</a></li>
+                                <li><a href="#oala3">OALA3 / Application 3</a></li>
+                                <li><a href="#oala4">OALA4 / Application 4</a></li>
+                                <li><a href="#oala5">OALA5 / Application 5</a></li>
+                                <li><a href="#oala6">OALA6 / Application 6</a></li>
+                                <li><a href="#oala7">OALA7 / Application 7</a></li>
+                                <li><a href="#oala8">OALA8 / Application 8</a></li>
+                                <li><a href="#oala9">OALA9 / Application 9</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <?php \Nebule\Library\Modules::echoDocumentationTitles(); ?>
@@ -1349,7 +1349,7 @@ class Traduction extends Traductions
             le <i>bootstrap</i>, il est possible d'accéder aux applications. Via une option, il est possible de modifier
             l'application par défaut afin de personnaliser une instance.</p>
         <p>Il est aussi en charge de trouver les dernières versions de la bibliothèque
-            <?php echo \Nebule\Library\nebule::NEBULE_NAME; ?> et des applications de manière sécurisée.</p>
+            <?php echo \Nebule\Library\nebule::NEBULE_NAME; ?> de manière sécurisée.</p>
 
         <?php Displays::docDispTitle(4, 'oabi', 'Installation'); ?>
         <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur
@@ -1404,38 +1404,52 @@ class Traduction extends Traductions
             <i>bootstrap</i> sur le serveur Web. Mais cela n'est pas le fonctionnement normal.</p>
 
         <?php Displays::docDispTitle(4, 'oabm', 'Commandes'); ?>
-        <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.</p>
+        <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.
+            Certaines commandes listées sont sur un digit et ont été historiquement dans le <i>bootstrap</i> mais sont
+            maintenant déportées dans la bibliothèque.</p>
         <p>Liste des commandes :</p>
         <ul>
-            <li><b><?php echo LIB_ARG_SWITCH_APPLICATION; ?></b> : Sélection d'une application.</li>
-            <li><b><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></b> : Interruption du <i>bootstrap</i>.
+            <li><b><?php echo LIB_ARG_SWITCH_APPLICATION; ?></b> :
+                Sélection d'une application.</li>
+            <li><b><?php echo LIB_ARG_BOOTSTRAP_BREAK; ?></b> :
+                Interruption du <i>bootstrap</i>.
                 Voir <a href="#oabb">OABB</a>.</li>
-            <li><b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> : Affichage de l'empreinte EID de l'entité de
-                l'instance.</li>
-            <li><b><?php echo LIB_ARG_FLUSH_SESSION; ?></b> : Réinitialisation de la session, suppression du cache,
-                fermeture des applications et entités.</li>
-            <li><b><?php echo LIB_ARG_INLINE_DISPLAY; ?></b> : Affichage en mode page intégrée d'une application.
-                Ce n'est pas supporté partout.</li>
-            <li><b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> : Dans l'application 4, désigne le NID dont on veut
-                afficher les blocs de liens. Non reconnu ailleurs.</li>
-            <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> : Charge en mode restreint pour dépannage.</li>
-            <li><b><?php echo References::COMMAND_TOKEN; ?></b> : Transmet un ticket qui doit être valide pour permettre
-                certaines actions. (hors bootstrap)</li>
-            <li><b><?php echo References::COMMAND_SWITCH_GHOST; ?></b> : Change l'entité en cours d'impersonation.
+            <li><b><?php echo LIB_LOCAL_ENTITY_FILE; ?></b> :
+                Affichage de l'empreinte EID de l'entité de l'instance.</li>
+            <li><b><?php echo LIB_ARG_FLUSH_SESSION; ?></b> :
+                Réinitialisation de la session, suppression du cache, fermeture des applications et entités.</li>
+            <li><b><?php echo LIB_ARG_INLINE_DISPLAY; ?></b> :
+                Affichage en mode page intégrée d'une application. Ce n'est pas supporté partout.</li>
+            <li><b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> :
+                Dans l'application 4, désigne le NID dont on veut afficher les blocs de liens.
+                Non reconnu ailleurs.
+                Voir <a href="#oala4">OALA4</a>.
                 (hors bootstrap)</li>
-            <li><b><?php echo References::COMMAND_SWITCH_CONNECTED; ?></b> : Change l'entité connectée en cours. (hors
-                bootstrap)</li>
-            <li><b><?php echo References::COMMAND_PASSWORD; ?></b> : Mot de passe de l'entité. (hors bootstrap)</li>
-            <li><b><?php echo LIB_ARG_UPDATE_APPLICATION; ?></b> : Demande une mise à jour des applications et du cache
-                associé.</li>
-            <li><b>bootstrapfirstpuppetmastereid</b> : Dans le <i>firstboot</i>, donne l'EID de puppetmaster. Non
-                reconnu ailleurs.</li>
-            <li><b>bootstrapfirstpuppetmasterlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
-                téléchargement de puppetmaster. Non reconnu ailleurs.</li>
-            <li><b>bootstrapfirstsubordinationeid</b> : Dans le <i>firstboot</i>, donne l'EID de l'entité de
-                subordination. Non reconnu ailleurs.</li>
-            <li><b>bootstrapfirstsubordinationlocation</b> : Dans le <i>firstboot</i>, donne la localisation de
-                téléchargement de l'entité de subordination. Non reconnu ailleurs.</li>
+            <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> :
+                Charge en mode restreint pour dépannage.</li>
+            <li><b><?php echo References::COMMAND_TOKEN; ?></b> :
+                Transmet un ticket qui doit être valide pour permettre certaines actions.
+                (hors bootstrap)</li>
+            <li><b><?php echo References::COMMAND_SWITCH_GHOST; ?></b> :
+                Change l'entité en cours d'impersonation. (hors bootstrap)</li>
+            <li><b><?php echo References::COMMAND_SWITCH_CONNECTED; ?></b> :
+                Change l'entité connectée en cours. (hors bootstrap)</li>
+            <li><b><?php echo References::COMMAND_PASSWORD; ?></b> :
+                Mot de passe de l'entité. (hors bootstrap)</li>
+            <li><b><?php echo LIB_ARG_UPDATE_APPLICATION; ?></b> :
+                Demande une mise à jour des applications et du cache associé.</li>
+            <li><b>bootstrapfirstpuppetmastereid</b> :
+                Dans le <i>firstboot</i>, donne l'EID de puppetmaster.
+                Non reconnu ailleurs.</li>
+            <li><b>bootstrapfirstpuppetmasterlocation</b> :
+                Dans le <i>firstboot</i>, donne la localisation de téléchargement de puppetmaster.
+                Non reconnu ailleurs.</li>
+            <li><b>bootstrapfirstsubordinationeid</b> :
+                Dans le <i>firstboot</i>, donne l'EID de l'entité de subordination.
+                Non reconnu ailleurs.</li>
+            <li><b>bootstrapfirstsubordinationlocation</b> :
+                Dans le <i>firstboot</i>, donne la localisation de téléchargement de l'entité de subordination.
+                Non reconnu ailleurs.</li>
         </ul>
         <p><b>ATTENTION</b> : si la bibliothèque ne peut être chargée, le <i>bootstrap</i> renverra systématiquement sur
             la page d'interruption ! Voir <a href="#oabb">OABB</a>.</p>
@@ -1452,54 +1466,52 @@ class Traduction extends Traductions
         <p>Si la bibliothèque ne peut être chargée, quelque soit les arguments passés, le <i>bootstrap</i> renverra
             systématiquement sur la page d'interruption avec une erreur.</p>
         <p>Le résultat est une page contenant en partie centrale, par exemple :</p>
-        <pre>#1 bootstrap break on
+        <pre>
 #1 bootstrap break on
 - [11] user interrupt
-tB=0.0820s
-? Flush PHP session (3d964e)
-
+tB=0.1473s
+? Flush PHP session (20ef2d)
 #2 bootstrap
 bootstrap RID         : fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288
 bootstrap BID         : 81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288
 bootstrap CID         : a9e420daf12bc21278317e180fd51460fa786f275a2923d7a7b0cb0ac9c1ee2f.sha2.256
 bootstrap IID         : 304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e4b3bffb90d47e73832374176.none.288
-bootstrap OID         : 37cce34df78966b2c18ca145fd4b8cd085d64887a4c06ca6b46b4abfc603473a.sha2.256 OK
-bootstrap SID         : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
-
+bootstrap OID         : e45853f1709a6b296fa9237f43a494721ffe6e7ca66a34c65da400a483ecd1de.sha2.256 OK
+bootstrap SID         : e2b35f9d064e9175ad845ed8261c20c8467f1673fe41112f5a5797e29224e493.sha2.256
 #3 nebule library PP
-library version       : 020250111
-puppetmaster          : 81b01d19877fcce130914137810101297a03305806212085693db81aac9dc989.sha2.256
-security authority    : 13257cc65415ab642418d086f76db4a32011cf70173e3d77db6db0031191b9fc.sha2.256
-code authority        : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
-directory authority   : 8e3eaf7607bd0c7f355dec8933d69331235c151e144ddb99b91eac5e0bffab22.sha2.256
-time authority        : 037b1c30219d17270402fa1ec8e9a709bf7207adc8cdf941b17f096de1d193ec.sha2.256
-server entity         : 13839ab4e217129b8e0bcc13b21201c4d5e894404aaa9db21b98839d482d60db.sha2.256
+library version       : 020251012
+puppetmaster          : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256
+security authority    : fe3bb546bafa81bb4316402f436b35f86c74a509b3e171d6365060cd44387c24.sha2.256
+code authority        : e2b35f9d064e9175ad845ed8261c20c8467f1673fe41112f5a5797e29224e493.sha2.256
+directory authority   : 5451784e6a448f744f56ce6f9c8afdab1473634529cb3f2d4843ba3e1724be9f.sha2.256
+time authority        : be7b4b52afcecc65bf8d743ff3b85b61d5abc2ddeb8c4b31af2c756bf8578849.sha2.256
+server entity         : 33fb69b18286bdbf7cbc66a377a72f29cc57493916d0668e7031998b26b26039.sha2.256
 default entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256
-current entity        : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256
+ghost entity          : 88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256
 code branch           : 81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288 (develop)
-php version           : found 8.2.26, need >= 8.0.0
-
+php version           : found 8.2.29, need >= 8.0.0
 #4 nebule library POO
-tL=0.4047s
+tL=0.2825s
 library RID           : 780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288
 library IID           : 21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288
-library OID           : 8c158d1e16f80cfa7c29726ce26f8a8e21b9a78723c54526f28b95eedc5774d9.sha2.256 version 020250111
-library SID           : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256
-functional level      : found 020241123, need >= 020241123
-puppetmaster          : 81b01d19877fcce130914137810101297a03305806212085693db81aac9dc989.sha2.256 OK (global authority)
-security authority    : 13257cc65415ab642418d086f76db4a32011cf70173e3d77db6db0031191b9fc.sha2.256 OK (global authority)
-code authority        : 8ed620ee3811ba4885f9dc25141bfd5456213a112441136ba98e066a777d6b6b.sha2.256 OK (local authority) (global authority)
-directory authority   : 8e3eaf7607bd0c7f355dec8933d69331235c151e144ddb99b91eac5e0bffab22.sha2.256 OK
-time authority        : 037b1c30219d17270402fa1ec8e9a709bf7207adc8cdf941b17f096de1d193ec.sha2.256 OK
-server entity         : aqrobo OK (local authority)
-default entity        : aqrobo OK (local authority)
-current entity        : aqrobo OK (local authority)
+library OID           : 6fe12abb07c6be3231e2a7d6970b6ce264106f1dc2888db80c41d4e85fbac1f0.sha2.256 version 020251011
+library SID           : e2b35f9d064e9175ad845ed8261c20c8467f1673fe41112f5a5797e29224e493.sha2.256
+functional level      : found 020241123, need >= 020250928
+puppetmaster          : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+security authority    : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+code authority        : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+directory authority   : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+time authority        : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+server entity         : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+default entity        : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+ghost entity          : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
+connected entity      : cf5ae12e8a97f7150a689c16734c926a35890d634625e129f8d62b5166eb1209.sha2.256 OK (local authority) (global authority)
 subordination         : 0 OK
 cryptography class    : Nebule\Library\CryptoOpenssl
 cryptography          : hash sha2.256 OK
 cryptography          : symmetric aes.256.ctr OK
 cryptography          : asymmetric rsa.2048 OK
-cryptography          : pseudo-random entropy 7.908364047653/8 OK
+cryptography          : pseudo-random entropy 7.8967484073741/8 OK
 i/o class             : Nebule\Library\io
 i/o                   : Nebule\Library\ioDisk (RW) file://, links OK, objects OK
 i/o                   : Nebule\Library\ioNetworkHTTP (RO) http://code.master.nebule.org, links OK no write., objects OK no write.
@@ -1516,17 +1528,16 @@ social                : Nebule\Library\SocialOnList OK
 social                : Nebule\Library\SocialOffList OK
 social                : Nebule\Library\SocialReputation OK
 social                : Nebule\Library\SocialUnreputation OK
-metrology inputs      : Lr=247+310 Lv=247+0 Or=255+2 Ov=255+2 (PP+POO)
-metrology buffers     : Lc=0 Oc=7 Ec=6 Gc=0 Cc=0 CUc=0 CPc=0 CTc=0 CWc=0
-
+metrology inputs      : Lr=463+153 Lv=463+0 Or=471+1 Ov=471+1 (PP+POO)
+metrology buffers     : Lc=0 Oc=5 Ec=2 Gc=0 Cc=0 CUc=0 CPc=0 CTc=0 CWc=0
 #5 application
+name space            : Nebule\Library
 application RID       : 4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288
 application IID       : 1 load
 application OID       : 1
-application SID       :
-
+application SID       : /
 #6 end bootstrap
-tE=0.8049s
+tE=0.5937s
         </pre>
         <p>Les codes d'interruption :</p>
         <ul>
@@ -1602,69 +1613,6 @@ tE=0.8049s
             d'un RID unique avec une valeur assez longue pour éviter toute collision avec une autre application.</p>
         <p>Voir <a href="#oa">OA</a>, <a href="#oail">OAIL</a> et <a href="#oabn">OABN</a>.</p>
 
-        <?php Displays::docDispTitle(4, 'oaba', 'Applications intégrées'); ?>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
-            vers l'application référencée par ce RID.
-            Pour les applications internes, le RID est l'objet de référence interne de l'application sur un seul
-            chiffre (0 à 9).</p>
-        <p> Toutes les applications internes ne sont pas actives et donc ne sont pas accessibles. Certaines
-            applications internes peuvent être bloquées par des options de configuration.</p>
-        <p>Ci-dessous les différentes applications.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba0', 'Application 0'); ?>
-        <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba1', 'Application 1'); ?>
-        <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=1</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba2', 'Application 2'); ?>
-        <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=2</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication2</b> à <i>false</i> ou un lien équivalent.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba3', 'Application 3'); ?>
-        <p>C'est l'application d'affichage de la documentation technique.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=3</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication3</b> à <i>false</i> ou un lien équivalent.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba4', 'Application 4'); ?>
-        <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=4</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication4</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Elle est désactivée par défaut.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba5', 'Application 5'); ?>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication5</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Non utilisé, redirigé vers l'application 0.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba6', 'Application 6'); ?>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication6</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Non utilisé, redirigé vers l'application 0.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba7', 'Application 7'); ?>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication7</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Non utilisé, redirigé vers l'application 0.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba8', 'Application 8'); ?>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication8</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Non utilisé, redirigé vers l'application 0.</p>
-
-        <?php Displays::docDispTitle(5, 'oaba9', 'Application 9'); ?>
-        <p>C'est une application utilisée pour le déverminage du code.</p>
-        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=9</i> sur l'URL déclenche l'affichage
-            de cette page dédiée du <i>bootstrap</i>.</p>
-        <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
-        <p>Elle est désactivée par défaut.</p>
-
         <?php Displays::docDispTitle(4, 'oabn', 'Fonctionnement nominal'); ?>
         <p>Le <i>bootstrap</i> mémorise la dernière application utilisée, externe ou intégrée, et va représenter la même
             application à l'utilisateur jusqu'à déconnexion de la session à l'instance ou vidage du cache ou problème.
@@ -1690,6 +1638,71 @@ tE=0.8049s
         <?php Displays::docDispTitle(4, 'oalc', 'Configuration'); ?>
         <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et les applications. Voir
             <a href="#cco">CCO</a>.</p>
+
+        <?php Displays::docDispTitle(4, 'oala', 'Applications intégrées'); ?>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
+            vers l'application référencée par ce RID.
+            Pour les applications internes, le RID est l'objet de référence interne de l'application sur un seul
+            chiffre (0 à 9).</p>
+        <p> Toutes les applications internes ne sont pas actives et donc ne sont pas accessibles. Certaines
+            applications internes peuvent être bloquées par des options de configuration.</p>
+        <p>Une application intégrée peut être appelée par défaut via l'option de configuration <b>defaultApplication</b>
+            par exemple à <i>1</i>.</p>
+        <p>Ci-dessous les différentes applications.</p>
+
+        <?php Displays::docDispTitle(5, 'oala0', 'Application 0'); ?>
+        <p>C'est l'application par défaut pour les instances sans interaction. La page Web délivrée est minimaliste.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=0</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès ne peut pas être bloqué.</p>
+
+        <?php Displays::docDispTitle(5, 'oala1', 'Application 1'); ?>
+        <p>C'est l'application de sélection et de navigation et les différentes applications.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=1</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication1</b> à <i>false</i> ou un lien équivalent.</p>
+
+        <?php Displays::docDispTitle(5, 'oala2', 'Application 2'); ?>
+        <p>C'est une application minimale d'authentification des utilisateurs sur les entités.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=2</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication2</b> à <i>false</i> ou un lien équivalent.</p>
+
+        <?php Displays::docDispTitle(5, 'oala3', 'Application 3'); ?>
+        <p>C'est l'application d'affichage de la documentation technique.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=3</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication3</b> à <i>false</i> ou un lien équivalent.</p>
+
+        <?php Displays::docDispTitle(5, 'oala4', 'Application 4'); ?>
+        <p>C'est une application qui permet de voir de façon simplifiée les blocs de liens.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=4</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication4</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Elle est désactivée par défaut.</p>
+
+        <?php Displays::docDispTitle(5, 'oala5', 'Application 5'); ?>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication5</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
+
+        <?php Displays::docDispTitle(5, 'oala6', 'Application 6'); ?>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication6</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
+
+        <?php Displays::docDispTitle(5, 'oala7', 'Application 7'); ?>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication7</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
+
+        <?php Displays::docDispTitle(5, 'oala8', 'Application 8'); ?>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication8</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Non utilisé, redirigé vers l'application 0.</p>
+
+        <?php Displays::docDispTitle(5, 'oala9', 'Application 9'); ?>
+        <p>C'est une application utilisée pour le déverminage du code.</p>
+        <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=9</i> sur l'URL déclenche l'affichage
+            de cette page dédiée de la <i>bibliothèque</i>.</p>
+        <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
+        <p>Elle est désactivée par défaut.</p>
 
         <?php Modules::echoDocumentationCore();
     }

@@ -135,8 +135,8 @@ class Crypto extends Functions implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::verify()
      */
-    public function verify(string $data, string $sign, string $publicKey): bool {
-        return $this->_defaultInstance->verify($data, $sign, $publicKey);
+    public function verify(string $data, string $sign, string $publicKey, string $algo): bool {
+        return $this->_defaultInstance->verify($data, $sign, $publicKey, $algo);
     }
 
     /**

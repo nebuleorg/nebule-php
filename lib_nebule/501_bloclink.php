@@ -725,12 +725,16 @@ class BlocLink extends Functions implements blocLinkInterface
             $hash = $this->_cryptoInstance->hash($bh_bl, $algo . '.' . $size);
             $publicKey = $this->_ioInstance->getObject($nid);
 
-            if ($this->_cryptoInstance->verify($hash, $sign, $publicKey))
-            {
+            if ($this->_cryptoInstance->verify($hash, $sign, $publicKey, $algo . '.' . $size)) {
                 $this->_parsed["bs/rs$i/sig"] = $sig;
+$this->_metrologyInstance->addLog('DEBUGGING true1 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 return true;
+            } elseif (\Nebule\Bootstrap\crypto_asymmetricVerify($sig, $hash, $nid, $algo . '.' . $size)) {
+$this->_metrologyInstance->addLog('DEBUGGING true2 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $this->_parsed["bs/rs$i/sig"] = $sig;
             }
         }
+$this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return false;
     }
 
