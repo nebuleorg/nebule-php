@@ -61,8 +61,7 @@ class Authorities extends Functions
     private array $_localAuthoritiesSigners = array();
     private array $_specialEntitiesID = array();
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_findPuppetmaster();
         $this->_findGlobalAuthorities();
         $this->_findLocalAuthorities();
@@ -76,8 +75,7 @@ class Authorities extends Functions
      *
      * @return void
      */
-    private function _findPuppetmaster(): void
-    {
+    private function _findPuppetmaster(): void {
         $this->_puppetmasterID = $this->_configurationInstance->getOptionUntyped('puppetmaster');
         $this->_puppetmasterInstance = $this->_cacheInstance->newNode($this->_puppetmasterID, \Nebule\Library\Cache::TYPE_ENTITY);
         $this->_metrologyInstance->addLog('Find puppetmaster ' . $this->_puppetmasterID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88848d09');
@@ -90,8 +88,7 @@ class Authorities extends Functions
      *
      * @return void
      */
-    private function _findGlobalAuthorities(): void
-    {
+    private function _findGlobalAuthorities(): void {
         $this->_findEntityByType(References::RID_SECURITY_AUTHORITY,
             $this->_securityAuthoritiesID,
             $this->_securityAuthoritiesInstance,
@@ -124,8 +121,7 @@ class Authorities extends Functions
      * @param string $name
      * @return void
      */
-    private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, array &$signersInstances, string $name): void
-    {
+    private function _findEntityByType(string $rid, array &$listEID, array &$listInstances, array &$signersInstances, string $name): void {
         $instance = $this->_cacheInstance->newNode($rid, Cache::TYPE_NODE);
         $links = array();
         $filter = array(
@@ -137,16 +133,14 @@ class Authorities extends Functions
         );
         $instance->getLinks($links, $filter, false);
 
-        if (sizeof($links) == 0)
-        {
+        if (sizeof($links) == 0) {
             $listEID[$this->_puppetmasterID] = $this->_puppetmasterID;
             $listInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
             $signersInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
             return;
         }
 
-        foreach ($links as $link)
-        {
+        foreach ($links as $link) {
             $eid = $link->getParsed()['bl/rl/nid2'];
             $instance = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
             $listEID[$eid] = $eid;
@@ -156,74 +150,24 @@ class Authorities extends Functions
         }
     }
 
-    public function getPuppetmasterEID(): string
-    {
-        return $this->_puppetmasterID;
-    }
-    public function getPuppetmasterInstance(): Node
-    {
-        return $this->_puppetmasterInstance;
-    }
+    public function getPuppetmasterEID(): string { return $this->_puppetmasterID; }
+    public function getPuppetmasterInstance(): Node { return $this->_puppetmasterInstance; }
 
-    public function getSecurityAuthoritiesEID(): array
-    {
-        return $this->_securityAuthoritiesID;
-    }
+    public function getSecurityAuthoritiesEID(): array { return $this->_securityAuthoritiesID; }
+    public function getSecurityAuthoritiesInstance(): array { return $this->_securityAuthoritiesInstance; }
+    public function getSecuritySignersInstance(): array { return $this->_securitySignersInstance; }
 
-    public function getSecurityAuthoritiesInstance(): array
-    {
-        return $this->_securityAuthoritiesInstance;
-    }
+    public function getCodeAuthoritiesEID(): array { return $this->_codeAuthoritiesID; }
+    public function getCodeAuthoritiesInstance(): array { return $this->_codeAuthoritiesInstance; }
+    public function getCodeSignersInstance(): array { return $this->_codeSignersInstance; }
 
-    public function getSecuritySignersInstance(): array
-    {
-        return $this->_securitySignersInstance;
-    }
+    public function getDirectoryAuthoritiesEID(): array { return $this->_directoryAuthoritiesID; }
+    public function getDirectoryAuthoritiesInstance(): array { return $this->_directoryAuthoritiesInstance; }
+    public function getDirectorySignersInstance(): array { return $this->_directorySignersInstance; }
 
-    public function getCodeAuthoritiesEID(): array
-    {
-        return $this->_codeAuthoritiesID;
-    }
-
-    public function getCodeAuthoritiesInstance(): array
-    {
-        return $this->_codeAuthoritiesInstance;
-    }
-
-    public function getCodeSignersInstance(): array
-    {
-        return $this->_codeSignersInstance;
-    }
-
-    public function getDirectoryAuthoritiesEID(): array
-    {
-        return $this->_directoryAuthoritiesID;
-    }
-
-    public function getDirectoryAuthoritiesInstance(): array
-    {
-        return $this->_directoryAuthoritiesInstance;
-    }
-
-    public function getDirectorySignersInstance(): array
-    {
-        return $this->_directorySignersInstance;
-    }
-
-    public function getTimeAuthoritiesEID(): array
-    {
-        return $this->_timeAuthoritiesID;
-    }
-
-    public function getTimeAuthoritiesInstance(): array
-    {
-        return $this->_timeAuthoritiesInstance;
-    }
-
-    public function getTimeSignersInstance(): array
-    {
-        return $this->_timeSignersInstance;
-    }
+    public function getTimeAuthoritiesEID(): array { return $this->_timeAuthoritiesID; }
+    public function getTimeAuthoritiesInstance(): array { return $this->_timeAuthoritiesInstance; }
+    public function getTimeSignersInstance(): array { return $this->_timeSignersInstance; }
 
 
 
@@ -232,19 +176,16 @@ class Authorities extends Functions
      *
      * @return void
      */
-    private function _findLocalAuthorities(): void
-    {
+    private function _findLocalAuthorities(): void {
         $this->_authoritiesID[$this->_puppetmasterID] = $this->_puppetmasterID;
         $this->_authoritiesInstances[$this->_puppetmasterID] = $this->_puppetmasterInstance;
         $this->_specialEntitiesID[$this->_puppetmasterID] = $this->_puppetmasterID;
-        foreach ($this->_securityAuthoritiesID as $item)
-        {
+        foreach ($this->_securityAuthoritiesID as $item) {
             $this->_authoritiesID[$item] = $item;
             $this->_authoritiesInstances[$item] = $this->_securityAuthoritiesInstance[$item];
             $this->_specialEntitiesID[$item] = $item;
         }
-        foreach ($this->_codeAuthoritiesID as $item)
-        {
+        foreach ($this->_codeAuthoritiesID as $item) {
             $this->_authoritiesID[$item] = $item;
             $this->_authoritiesInstances[$item] = $this->_codeAuthoritiesInstance[$item];
             $this->_specialEntitiesID[$item] = $item;
@@ -258,8 +199,7 @@ class Authorities extends Functions
             $this->_specialEntitiesID[$item] = $item;
     }
 
-    public function setServerEntityAsAuthorities(Entity $instance): void
-    {
+    public function setServerEntityAsAuthorities(Entity $instance): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
@@ -268,8 +208,7 @@ class Authorities extends Functions
         }
     }
 
-    public function setDefaultEntityAsAuthorities(Entity $instance): void
-    {
+    public function setDefaultEntityAsAuthorities(Entity $instance): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
@@ -278,8 +217,7 @@ class Authorities extends Functions
         }
     }
 
-    private function _addAsLocalAuthority(Entity $instance, String $eid, string $signer='0'): void
-    {
+    private function _addAsLocalAuthority(Entity $instance, String $eid, string $signer='0'): void {
             $this->_authoritiesID[$eid] = $eid;
             $this->_authoritiesInstances[$eid] = $instance;
             $this->_specialEntitiesID[$eid] = $eid;
@@ -296,8 +234,7 @@ class Authorities extends Functions
      * @param Entities $entitiesInstance
      * @return void
      */
-    public function setLinkedLocalAuthorities(Entities $entitiesInstance): void
-    {
+    public function setLinkedLocalAuthorities(Entities $entitiesInstance): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
@@ -342,107 +279,77 @@ class Authorities extends Functions
      *
      * @return array:string
      */
-    public function getAuthoritiesID(): array
-    {
-        return $this->_authoritiesID;
-    }
+    public function getAuthoritiesID(): array { return $this->_authoritiesID; }
 
     /**
      * Lit la liste des instances des autorités.
      *
      * @return array:Entity
      */
-    public function getAuthoritiesInstance(): array
-    {
-        return $this->_authoritiesInstances;
-    }
+    public function getAuthoritiesInstance(): array { return $this->_authoritiesInstances; }
 
     /**
      * Lit la liste des ID des autorités locales.
      *
      * @return array:string
      */
-    public function getLocalAuthoritiesID(): array
-    {
-        return $this->_localAuthoritiesID;
-    }
+    public function getLocalAuthoritiesID(): array { return $this->_localAuthoritiesID; }
 
     /**
      * Lit la liste des instances des autorités locales.
      *
      * @return array:Entity
      */
-    public function getLocalAuthoritiesInstance(): array
-    {
-        return $this->_localAuthoritiesInstances;
-    }
+    public function getLocalAuthoritiesInstance(): array { return $this->_localAuthoritiesInstances; }
 
     /**
      * Lit la liste des autorités locales déclarants des autorités locales.
      *
      * @return array:string
      */
-    public function getLocalAuthoritiesSigners(): array
-    {
-        return $this->_localAuthoritiesSigners;
-    }
+    public function getLocalAuthoritiesSigners(): array { return $this->_localAuthoritiesSigners; }
 
     /**
      * Lit la liste des ID des autorités locales.
      *
      * @return array:string
      */
-    public function getLocalPrimaryAuthoritiesID(): array
-    {
-        return $this->_localPrimaryAuthoritiesID;
-    }
+    public function getLocalPrimaryAuthoritiesID(): array { return $this->_localPrimaryAuthoritiesID; }
 
     /**
      * Lit la liste des instances des autorités locales.
      *
      * @return array:Entity
      */
-    public function getLocalPrimaryAuthoritiesInstance(): array
-    {
-        return $this->_localPrimaryAuthoritiesInstances;
-    }
+    public function getLocalPrimaryAuthoritiesInstance(): array { return $this->_localPrimaryAuthoritiesInstances; }
 
     /**
      * Lit la liste des ID des entités avec des rôles.
      *
      * @return array:string
      */
-    public function getSpecialEntitiesID(): array
-    {
-        return $this->_specialEntitiesID;
+    public function getSpecialEntitiesID(): array { return $this->_specialEntitiesID; }
+
+    public function getIsGlobalAuthority(Entity $entity): bool { return $this->getIsGlobalAuthorityEID($entity->getID()); }
+    public function getIsGlobalAuthorityEID(string $eid): bool {
+        return ($eid == $this->_puppetmasterID || in_array($eid, $this->_securityAuthoritiesID) || in_array($eid, $this->_codeAuthoritiesID));
     }
 
-    public function getIsGlobalAuthority(Entity $entity): bool
-    {
-        return $this->getIsGlobalAuthorityEID($entity->getID());
-    }
+    public function getIsLocalAuthority(Entity $entity): bool { return $this->getIsLocalAuthorityEID($entity->getID()); }
+    public function getIsLocalAuthorityEID(string $eid): bool { return in_array($eid, $this->_localAuthoritiesID); }
 
-    public function getIsGlobalAuthorityEID(string $eid): bool
-    {
-        if ($eid != '0'
-            && ($eid == $this->_puppetmasterID
-                || in_array($eid, $this->_securityAuthoritiesID)
-                || in_array($eid, $this->_codeAuthoritiesID)
-            )
-        )
-            return true;
-        return false;
-    }
+    public function getIsPuppetMaster(Entity $entity): bool { return $this->getIsPuppetMasterEID($entity->getID()); }
+    public function getIsPuppetMasterEID(string $eid): bool { return $eid == $this->_puppetmasterID; }
 
-    public function getIsLocalAuthority(Entity $entity): bool
-    {
-        return $this->getIsLocalAuthorityEID($entity->getID());
-    }
+    public function getIsSecurityMaster(Entity $entity): bool { return $this->getIsSecurityMasterEID($entity->getID()); }
+    public function getIsSecurityMasterEID(string $eid): bool { return in_array($eid, $this->_securityAuthoritiesID); }
 
-    public function getIsLocalAuthorityEID(string $eid): bool
-    {
-        if ($eid != '0' && in_array($eid, $this->_localAuthoritiesID))
-            return true;
-        return false;
-    }
+    public function getIsCodeMaster(Entity $entity): bool { return $this->getIsCodeMasterEID($entity->getID()); }
+    public function getIsCodeMasterEID(string $eid): bool { return in_array($eid, $this->_codeAuthoritiesID); }
+
+    public function getIsDirectoryMaster(Entity $entity): bool { return $this->getIsDirectoryMasterEID($entity->getID()); }
+    public function getIsDirectoryMasterEID(string $eid): bool { return in_array($eid, $this->_directoryAuthoritiesID); }
+
+    public function getIsTimeMaster(Entity $entity): bool { return $this->getIsTimeMasterEID($entity->getID()); }
+    public function getIsTimeMasterEID(string $eid): bool { return in_array($eid, $this->_timeAuthoritiesID); }
 }

@@ -11,6 +11,7 @@ use Nebule\Library\DisplayLink;
 use Nebule\Library\DisplayList;
 use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayObject;
+use Nebule\Library\DisplayQuery;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItem;
@@ -37,7 +38,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020251004';
+    const MODULE_VERSION = '020251015';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -47,7 +48,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_REGISTERED_VIEWS = array(
         'list',
         'disp',
-        'auth',
+        'pass',
         'crea',
         'srch',
         'logs',
@@ -358,7 +359,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 //                $this->_displayEntityDisp();
 //                break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayEntityAuth();
+                $this->_displayEntityPassword();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
                 $this->_displayEntityCreate();
@@ -750,7 +751,24 @@ class ModuleEntities extends \Nebule\Library\Modules
         echo '<div class="textListObjects">' . "\n";
 
         $entity = $this->_displayEntityInstance;
+        $messages = array();
         $entityType = $entity->getKeyType();
+        if ($entityType != '')
+            $messages[] = 'Type: ' . $entityType;
+        if ($this->_authoritiesInstance->getIsGlobalAuthority($entity))
+            $messages[] = 'Global authority';
+        if ($this->_authoritiesInstance->getIsLocalAuthority($entity))
+            $messages[] = 'Local authority';
+        if ($this->_authoritiesInstance->getIsPuppetMaster($entity))
+            $messages[] = 'Master of all';
+        if ($this->_authoritiesInstance->getIsSecurityMaster($entity))
+            $messages[] = 'Master of security';
+        if ($this->_authoritiesInstance->getIsCodeMaster($entity))
+            $messages[] = 'Master of code';
+        if ($this->_authoritiesInstance->getIsDirectoryMaster($entity))
+            $messages[] = 'Master of directory';
+        if ($this->_authoritiesInstance->getIsTimeMaster($entity))
+            $messages[] = 'Master of time';
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
@@ -764,8 +782,8 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
         $instance->setEnableFlagState(true);
         $instance->setEnableFlagEmotions(true);
-        if ($entityType != '')
-            $instance->setFlagMessage('Type: ' . $entityType);
+        if (sizeof($messages) > 0)
+            $instance->setFlagMessageList($messages);
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setSelfHookName('selfMenuEntity');
@@ -781,165 +799,64 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
-    private function _displayEntityAuth(): void
+    private function _displayEntityPassword(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        /*echo '<div class="layoutAloneItem">' . "\n";
-        echo '<div class="aloneItemContent">' . "\n";
+        echo '<div class="layout-list">' . "\n";
+        echo '<div class="textListObjects">' . "\n";
 
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => true,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => false,
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => true,
-            //'flagUnlocked' => $this->_unlocked,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => false,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'displaySize' => 'medium',
-            'displayRatio' => 'short',
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_displayEntityInstance, $param);
+        $entity = $this->_displayEntityInstance;
+        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instance = new DisplayObject($this->_applicationInstance);
+        $instance->setSocial('all');
+        $instance->setNID($entity);
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableRefs(false);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(false);
+        $instance->setEnableFlagObfuscate(false);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableStatus(false);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        $instance->setEnableLink(true);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setIcon($instanceIcon);
+        $instanceList->addItem($instance);
+
+        if ($entity->getHavePrivateKeyPassword()) {
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setMessage('::::Password');
+            $instance->setSocial('all'); // FIXME ne marche pas
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setLink('?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+            $instance->setHiddenName('id');
+            $instance->setHiddenValue($this->_entitiesInstance->getServerEntityEID());
+            $instanceList->addItem($instance);
+        }
+
+        $instance = new DisplayInformation($this->_applicationInstance);
+        $instance->setMessage('::::err_NotPermit');
+        $instance->setSocial('all');
+        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instanceList->addItem($instance);
+
+        $instanceList->setOnePerLine();
+        $instanceList->display();
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
-
-        $instance = new DisplayTitle($this->_applicationInstance);
-        if ($this->_displayEntityInstance->getHavePrivateKeyPassword()
-            || ($this->_displayEntity == $this->_entitiesInstance->getGhostEntityEID()
-                && $this->_unlocked
-            )
-        ) {
-            $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[9]);
-            $instance->setTitle('::::entity:unlocked');
-        } else {
-            $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[11]);
-            $instance->setTitle('::::entity:locked');
-        }
-        $instance->setIcon($icon);
-        $instance->display();
-
-        // Extrait les états de tests en warning ou en erreur.
-        $idCheck = 'Error';
-        if ($this->_applicationInstance->getCheckSecurityAll() == 'OK')
-            $idCheck = 'Ok';
-        elseif ($this->_applicationInstance->getCheckSecurityAll() == 'WARN')
-            $idCheck = 'Warn';
-        // Affiche les tests.
-        if ($idCheck != 'Ok') {
-            $list = array();
-            $check = array(
-                $this->_applicationInstance->getCheckSecurityBootstrap(),
-                $this->_applicationInstance->getCheckSecurityCryptoHash(),
-                $this->_applicationInstance->getCheckSecurityCryptoSym(),
-                $this->_applicationInstance->getCheckSecurityCryptoAsym(),
-                $this->_applicationInstance->getCheckSecuritySign(),
-                $this->_applicationInstance->getCheckSecurityURL(),
-            );
-            $chnam = array('Bootstrap', 'Crypto Hash', 'Crypto Sym', 'Crypto Asym', 'Link Sign', 'URL');
-            for ($i = 0; $i < sizeof($check); $i++) {
-                $list[$i]['param'] = array(
-                    'enableDisplayIcon' => true,
-                    'enableDisplayAlone' => false,
-                    'displayRatio' => 'short',
-                );
-                $list[$i]['information'] = $chnam[$i];
-                $list[$i]['object'] = '1';
-                $list[$i]['param']['informationType'] = 'error';
-                if ($check[$i] == 'OK')
-                    $list[$i]['param']['informationType'] = 'ok';
-                elseif ($check[$i] == 'WARN')
-                    $list[$i]['param']['informationType'] = 'warn';
-            }
-            echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'small');
-        } else {
-            $param = array(
-                'enableDisplayIcon' => true,
-                'enableDisplayAlone' => true,
-                'informationType' => 'ok',
-                'displaySize' => 'small',
-                'displayRatio' => 'short',
-            );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::SecurityChecks', $param);
-        }
-
-        // Affiche le champ de mot de passe.
-        if ($this->_displayEntityInstance->getHavePrivateKeyPassword()
-            || ($this->_displayEntity == $this->_entitiesInstance->getGhostEntityEID()
-                && $this->_unlocked
-            )
-        ) {
-            // Propose de la verrouiller.
-            $list = array();
-            $list[0]['title'] = $this->_translateInstance->getTranslate('::::lock');
-            $list[0]['desc'] = $this->_translateInstance->getTranslate('::::entity:unlocked');
-            $list[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-            $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                . '&' . \Nebule\Library\References::COMMAND_AUTH_ENTITY_LOGOUT
-                . '&' . \Nebule\Library\References::COMMAND_FLUSH;
-            echo $this->_displayInstance->getDisplayMenuList($list, 'Medium');
-        } else {
-            if ($idCheck != 'Error') {
-                echo '<div class="layoutAloneItem">' . "\n";
-                echo '<div class="aloneItemContent">' . "\n";
-                $param['displaySize'] = 'small';
-                $param['displayRatio'] = 'long';
-                $param['objectIcon'] = $this::MODULE_REGISTERED_ICONS[9];
-                echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_entitiesInstance->getGhostEntityPrivateKeyInstance(), $param);
-                echo '</div>' . "\n";
-                echo '</div>' . "\n";
-
-                echo '<div class="layoutAloneItem">' . "\n";
-                echo '<div class="aloneItemContent">' . "\n";
-
-                echo '<div class="layoutObject layoutInformation">' . "\n";
-                echo '<div class="objectTitle objectDisplayMediumShort objectTitleMedium objectDisplayShortMedium informationDisplay informationDisplayMedium informationDisplay' . $idCheck . '">' . "\n";
-
-                echo '<div class="objectTitleText objectTitleMediumText objectTitleText0 informationTitleText">' . "\n";
-
-                echo '<div class="objectTitleRefs objectTitleMediumRefs informationTitleRefs informationTitleRefs' . $idCheck . '" id="moduleEntitiesConnect">' . "\n";
-                echo $this->_translateInstance->getTranslate('::::Password') . "<br />\n";
-                echo '</div>' . "\n";
-
-                echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="moduleEntitiesConnect">' . "\n";
-                ?>
-                <form method="post"
-                      action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                          . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                          . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity; ?>">
-                    <input type="hidden" name="ent" value="<?php echo $this->_displayEntity; ?>">
-                    <input type="password" name="<?php echo \Nebule\Library\References::COMMAND_SELECT_PASSWORD; ?>">
-                    <input type="submit" value="<?php echo $this->_translateInstance->getTranslate('::::unlock'); ?>">
-                </form>
-                <?php
-                echo '</div>' . "\n";
-
-                echo '</div>' . "\n";
-
-                echo '</div>' . "\n";
-                echo '</div>' . "\n";
-
-                echo '</div>' . "\n";
-                echo '</div>' . "\n";
-            } else {
-                // Affiche un message d'erreur.
-                $param = array(
-                    'enableDisplayIcon' => true,
-                    'enableDisplayAlone' => true,
-                    'informationType' => 'error',
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                );
-                echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
-            }
-        }*/
     }
 
 
