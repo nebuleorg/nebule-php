@@ -3891,7 +3891,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 $rid = $this->_cacheInstance->newNode($listEmotions0[$emotion]);
             }
             $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-            $httpLink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+            $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
             $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.
@@ -5931,7 +5931,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'x';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                $htlink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
@@ -5939,7 +5939,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 // Création du lien.
                 $action = 'f';
                 $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-                $htlink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+                $htlink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions0[$emotion], $emotion, 'iconInlineDisplay');

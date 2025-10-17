@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251004';
+    const APPLICATION_VERSION = '020251017';
     const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1379,7 +1379,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 <div class="menu-applications-one">
                     <div class="menu-applications-icon">
-                        <?php $this->displayHypertextLink('<img src="' . parent::DEFAULT_APPLICATION_LOGO . '" alt="' . BOOTSTRAP_NAME . '" />', '?' . Actions::DEFAULT_COMMAND_NEBULE_BOOTSTRAP); ?>
+                        <?php $this->displayHypertextLink('<img src="' . parent::DEFAULT_APPLICATION_LOGO . '" alt="' . BOOTSTRAP_NAME . '" />', '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_configurationInstance->getOptionAsString('defaultApplication')); ?>; ?>
 
                     </div>
                     <div class="menu-applications-title">
@@ -2661,7 +2661,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                     <form method="post"
                           action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
-                              . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
+                              . '&' . Actions::ACTION_CREATE_ENTITY
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <table>
                             <tr>
@@ -2674,10 +2674,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nommage'); ?></b>
                                 </td>
                                 <td><input type="text"
-                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
+                                           name="<?php echo Actions::ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
                                            size="10" value="" class="klictyModuleEntityInput"></td>
                                 <td><input type="text"
-                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
+                                           name="<?php echo Actions::ACTION_CREATE_ENTITY_NAME; ?>"
                                            size="20" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2688,7 +2688,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::::Password'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
+                                                     name="<?php echo Actions::ACTION_CREATE_ENTITY_PASSWORD1; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2696,7 +2696,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Confirmation'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
+                                                     name="<?php echo Actions::ACTION_CREATE_ENTITY_PASSWORD2; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>

@@ -5,7 +5,6 @@ namespace Nebule\Library;
 use const Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS_ACTIVE;
 
 /**
- * FIXME UNDER CONSTRUCTION
  * Routing to application.
  * Must be serialized on PHP session with nebule class.
  *

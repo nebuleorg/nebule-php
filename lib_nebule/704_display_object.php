@@ -1097,7 +1097,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 $rid = $this->_cacheInstance->newNode($listEmotions0[$emotion]);
             }
             $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-            $httpLink .= '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+            $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
             $icon = $this->_displayInstance->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.

@@ -4,6 +4,7 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
+use Nebule\Library\ActionsEntities;
 use Nebule\Library\Cache;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItemIconMessage;
@@ -292,7 +293,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $hookArray[3]['desc'] = '';
                 $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
+                    . '&' . ActionsEntities::SYNCHRONIZE
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -330,7 +331,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
+                    . '&' . ActionsEntities::SYNCHRONIZE
                     . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -344,7 +345,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
+                    . '&' . ActionsEntities::SYNCHRONIZE
                     . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -655,7 +656,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _findSynchronizeEntity(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $arg = $this->getFilterInput(Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $arg = $this->getFilterInput(ActionsEntities::SYNCHRONIZE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         if ($arg != ''
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'))
@@ -1569,7 +1570,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     <form method="post"
                           action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                              . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY
+                              . '&' . ActionsEntities::CREATE
                               . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
@@ -1586,7 +1587,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                 </div>
                                 <label for="moduleEntitiesCreatePropertyEntryPrefix"><?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?></label>
                                 <input type="text"
-                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PREFIX; ?>"
+                                        name="<?php echo ActionsEntities::CREATE_PREFIX; ?>"
                                         size="10" value=""
                                         class="moduleEntitiesCreatePropertyEntry"
                                         id="moduleEntitiesCreatePropertyEntryPrefix"/>
@@ -1597,7 +1598,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_FIRSTNAME; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_FIRSTNAME; ?>"
                                        size="20" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntryPrenom"/>
@@ -1608,7 +1609,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NICKNAME; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_NICKNAME; ?>"
                                        size="10" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntrySurnom"/>
@@ -1619,7 +1620,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_NAME; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_NAME; ?>"
                                        size="20" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntryNom"/>
@@ -1629,7 +1630,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
                                 </div>
                                 <input type="text"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_SUFFIX; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_SUFFIX; ?>"
                                        size="10" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntrySuffix"/>
@@ -1643,7 +1644,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="password"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD1; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_PASSWORD1; ?>"
                                        size="30" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntryPWD1"/>
@@ -1655,7 +1656,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <input type="password"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_PASSWORD2; ?>"
+                                       name="<?php echo ActionsEntities::CREATE_PASSWORD2; ?>"
                                        size="30" value=""
                                        class="moduleEntitiesCreatePropertyEntry"
                                        id="moduleEntitiesCreatePropertyEntryPWD2"/>
@@ -1674,7 +1675,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <select
-                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_ALGORITHM; ?>"
+                                    name="<?php echo ActionsEntities::CREATE_ALGORITHM; ?>"
                                     class="moduleEntitiesCreatePropertyEntry">
                                     <?php
                                     $defaultAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
@@ -1692,7 +1693,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
                                 </div>
                                  <select
-                                    name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_TYPE; ?>"
+                                    name="<?php echo ActionsEntities::CREATE_TYPE; ?>"
                                     class="moduleEntitiesCreatePropertyEntry">
                                     <option value="undef" selected>
                                         <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'); ?>
@@ -1716,7 +1717,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                                 </div>
                                 <select
-                                        name="<?php echo Actions::DEFAULT_COMMAND_ACTION_CREATE_ENTITY_AUTONOMY; ?>"
+                                        name="<?php echo ActionsEntities::CREATE_AUTONOMY; ?>"
                                         class="moduleEntitiesCreatePropertyEntry">
                                     <option value="y" selected>
                                         <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>

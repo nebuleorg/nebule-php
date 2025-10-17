@@ -105,7 +105,7 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     private function _getObjectHTML(): string
     {
         $result = '';
-        $result .= $this->getDisplayAsObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS, $permitWarnProtected);
+        //$result .= $this->getDisplayAsObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS, $permitWarnProtected); FIXME
         return $result;
     }
 

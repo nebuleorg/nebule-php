@@ -73,9 +73,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         //'ed25519.256' => 'ed25519',
     );
 
-    protected function _initialisation(): void {
-        // Nothing to do.
-    }
+    protected function _initialisation(): void {}
 
     /**
      * {@inheritDoc}
