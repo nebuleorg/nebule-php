@@ -38,7 +38,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020251015';
+    const MODULE_VERSION = '020251017';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -48,7 +48,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_REGISTERED_VIEWS = array(
         'list',
         'disp',
-        'pass',
+        'chng',
         'crea',
         'srch',
         'logs',
@@ -221,7 +221,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
             case 'selfMenuObject':
                 if ($nid instanceof \Nebule\Library\Entity) {
-                    // See as entity.
                     $hookArray[0]['name'] = '::module:entities:ShowEntity';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
                     $hookArray[0]['desc'] = '';
@@ -255,6 +254,14 @@ class ModuleEntities extends \Nebule\Library\Modules
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                             . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $object;
                     }
+                    // Change entity.
+                    $hookArray[2]['name'] = '::module:entities:change';
+                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                    $hookArray[2]['desc'] = '';
+                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
                     // Unlock entity.
                     $hookArray[0]['name'] = '::module:entities:unlock';
@@ -280,10 +287,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                 }
 
                 // Synchronise entity.
-                $hookArray[2]['name'] = '::module:entities:SynchronizeEntity';
-                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                $hookArray[2]['desc'] = '';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                $hookArray[3]['name'] = '::module:entities:SynchronizeEntity';
+                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
+                $hookArray[3]['desc'] = '';
+                $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                     . '&' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_ENTITY
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
@@ -292,10 +299,10 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 // See entity.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
-                    $hookArray[3]['name'] = '::module:entities:ShowEntity';
-                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[4]['name'] = '::module:entities:ShowEntity';
+                    $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
+                    $hookArray[4]['desc'] = '';
+                    $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -303,10 +310,10 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 /*if (!$this->_applicationInstance->getMarkObject($object)) {
                     // Mark entity.
-                    $hookArray[4]['name'] = '::MarkAdd';
-                    $hookArray[4]['icon'] = Display::DEFAULT_ICON_MARK;
-                    $hookArray[4]['desc'] = '';
-                    $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[5]['name'] = '::MarkAdd';
+                    $hookArray[5]['icon'] = Display::DEFAULT_ICON_MARK;
+                    $hookArray[5]['desc'] = '';
+                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
@@ -359,7 +366,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 //                $this->_displayEntityDisp();
 //                break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayEntityPassword();
+                $this->_displayEntityChange();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
                 $this->_displayEntityCreate();
@@ -799,7 +806,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
-    private function _displayEntityPassword(): void
+    private function _displayEntityChange(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo '<div class="layout-list">' . "\n";
@@ -1730,7 +1737,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             </div>
             <?php
         } else {
-            $this->_displayInstance->displayMessageWarning_DEPRECATED('::module:entities:CreateEntityNotAllowed');
+            $instance = new DisplayNotify($this->_applicationInstance);
+            $instance->setMessage('::::err_NotPermit');
+            $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $instance->display();
         }
     }
 
@@ -2025,7 +2035,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CreateEntityAutonomy' => 'Entité indépendante',
             '::module:entities:CreateTheEntity' => "Créer l'entité",
             '::module:entities:CreateEntityDesc' => 'Créer une entité.',
-            '::module:entities:CreateEntityNotAllowed' => "La création d'entité est désactivée !",
             '::module:entities:SearchEntity' => 'Chercher',
             '::module:entities:SearchEntityDesc' => 'Rechercher une entité.',
             '::module:entities:SearchEntityHelp' => 'Rechercher une entité connue.',
@@ -2111,7 +2120,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CreateEntityAutonomy' => 'Independent entity',
             '::module:entities:CreateTheEntity' => 'Create the entity',
             '::module:entities:CreateEntityDesc' => 'Create entity.',
-            '::module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
             '::module:entities:SearchEntity' => 'Search',
             '::module:entities:SearchEntityDesc' => 'Search entity.',
             '::module:entities:SearchEntityHelp' => 'Search a known entity.',
@@ -2197,7 +2205,6 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CreateEntityAutonomy' => 'Entidad independiente',
             '::module:entities:CreateTheEntity' => 'Create the entity',
             '::module:entities:CreateEntityDesc' => 'Create entity.',
-            '::module:entities:CreateEntityNotAllowed' => 'Entity creation is disabled!',
             '::module:entities:SearchEntity' => 'Search',
             '::module:entities:SearchEntityDesc' => 'Search entity.',
             '::module:entities:SearchEntityHelp' => 'Search a known entity.',
