@@ -13,6 +13,7 @@ use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
 use Nebule\Library\Actions;
+use Nebule\Library\ActionsEntities;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;

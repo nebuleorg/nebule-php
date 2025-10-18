@@ -317,7 +317,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $object
+                        . '&' . ActionsMarks::MARK . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }*/
@@ -986,7 +986,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         ?>
 
                         <div class="moduleEntitiesActionDivIcon">
-                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LC); ?>
+                            <?php $instance = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LC); $this->_displayInstance->displayUpdateImage($instance); ?>
                         </div>
                         <div>
                             <p class="moduleEntitiesActionDate">
@@ -1012,7 +1012,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         ?>
 
                         <div class="moduleEntitiesActionDivIcon">
-                            <?php $this->_displayInstance->displayUpdateImage(Display::DEFAULT_ICON_LK); ?>
+                            <?php $instance = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LK); $this->_displayInstance->displayUpdateImage($instance); ?>
                         </div>
                         <div>
                             <p class="moduleEntitiesActionDate">
@@ -1571,7 +1571,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                           action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                               . '&' . ActionsEntities::CREATE
-                              . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                              . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
                             <div class="moduleEntitiesCreateHeader">

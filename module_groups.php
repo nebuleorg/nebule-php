@@ -4,6 +4,8 @@ namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
+use Nebule\Library\ActionsGroups;
+use Nebule\Library\ActionsLinks;
 use Nebule\Library\Cache;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
@@ -137,11 +139,11 @@ class ModuleGroups extends \Nebule\Library\Modules
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
                     // Refuser l'objet comme un groupe.
                     $hookArray[1]['name'] = '::module:groups:display:unmakeGroup';
-                    $hookArray[1]['icon'] = Display::DEFAULT_ICON_LX;
+                    $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                        . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -150,11 +152,11 @@ class ModuleGroups extends \Nebule\Library\Modules
             case 'selfMenuGroup':
                 // Refuser l'objet comme un groupe.
                 $hookArray[1]['name'] = '::module:groups:display:unmakeGroup';
-                $hookArray[1]['icon'] = Display::DEFAULT_ICON_LX;
+                $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
                 $hookArray[1]['desc'] = '';
                 $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                    . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                    . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
@@ -171,7 +173,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     // Supprimer le groupe.
                     $hookArray[1]['name'] = '::module:groups:display:deleteGroup';
-                    $hookArray[1]['icon'] = Display::DEFAULT_ICON_LX;
+                    $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['css'] = 'oneAction-bg-warn';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -193,75 +195,72 @@ class ModuleGroups extends \Nebule\Library\Modules
                 break;
 
             case 'selfMenuObject':
-                // Si l'entité est déverrouillée.
-                if ($this->_unlocked) {
-                    // Affiche si l'objet courant est un groupe.
-                    if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('myself')) {
-                        // Voir comme groupe.
-                        $hookArray[0]['name'] = '::module:groups:display:seeAsGroup';
-                        $hookArray[0]['icon'] = $this::MODULE_LOGO;
+                // Affiche si l'objet courant est un groupe.
+                if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('myself')) {
+                    // Voir comme groupe.
+                    $hookArray[0]['name'] = '::module:groups:display:seeAsGroup';
+                    $hookArray[0]['icon'] = $this::MODULE_LOGO;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
+                        . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+
+                    if ($this->_unlocked) {
+                        // Refuser l'objet comme un groupe.
+                        $hookArray[1]['name'] = '::module:groups:display:unmakeGroup';
+                        $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
+                        $hookArray[1]['desc'] = '';
+                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                            . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    }
+                } // Ou si c'est un groupe pour une autre entité.
+                elseif ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
+                    // Voir comme groupe.
+                    $hookArray[0]['name'] = '::module:groups:display:seeAsGroup';
+                    $hookArray[0]['icon'] = $this::MODULE_LOGO;
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
+                        . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+
+                    if ($this->_unlocked) {
+                        // Faire de l'objet un groupe pour moi aussi.
+                        $hookArray[1]['name'] = '::module:groups:display:makeGroupMe';
+                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
+                        $hookArray[1]['desc'] = '';
+                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+
+                        // Refuser l'objet comme un groupe.
+                        $hookArray[2]['name'] = '::module:groups:display:refuseGroup';
+                        $hookArray[2]['icon'] = Displays::DEFAULT_ICON_LX;
+                        $hookArray[2]['desc'] = '';
+                        $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                            . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    }
+                } // Ou si ce n'est pas un groupe.
+                else {
+                    if ($this->_unlocked) {
+                        // Faire de l'objet un groupe.
+                        $hookArray[0]['name'] = '::module:groups:display:makeGroup';
+                        $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-
-                        if ($this->_unlocked) {
-                            // Refuser l'objet comme un groupe.
-                            $hookArray[1]['name'] = '::module:groups:display:unmakeGroup';
-                            $hookArray[1]['icon'] = Display::DEFAULT_ICON_LX;
-                            $hookArray[1]['desc'] = '';
-                            $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                        }
-                    } // Ou si c'est un groupe pour une autre entité.
-                    elseif ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
-                        // Voir comme groupe.
-                        $hookArray[0]['name'] = '::module:groups:display:seeAsGroup';
-                        $hookArray[0]['icon'] = $this::MODULE_LOGO;
-                        $hookArray[0]['desc'] = '';
-                        $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-
-                        if ($this->_unlocked) {
-                            // Faire de l'objet un groupe pour moi aussi.
-                            $hookArray[1]['name'] = '::module:groups:display:makeGroupMe';
-                            $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                            $hookArray[1]['desc'] = '';
-                            $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-
-                            // Refuser l'objet comme un groupe.
-                            $hookArray[2]['name'] = '::module:groups:display:refuseGroup';
-                            $hookArray[2]['icon'] = Display::DEFAULT_ICON_LX;
-                            $hookArray[2]['desc'] = '';
-                            $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                        }
-                    } // Ou si ce n'est pas un groupe.
-                    else {
-                        if ($this->_unlocked) {
-                            // Faire de l'objet un groupe.
-                            $hookArray[0]['name'] = '::module:groups:display:makeGroup';
-                            $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                            $hookArray[0]['desc'] = '';
-                            $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                        }
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
                 }
                 break;

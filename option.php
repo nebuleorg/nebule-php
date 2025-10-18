@@ -1389,7 +1389,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 <?php
                 $this->displayHypertextLink(
                     $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
-                    '/?' . Actions::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION . '=0'
+                    '/?' . ActionsApplications::SYNCHRONIZE . '=0'
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand()
                 );
                 ?>

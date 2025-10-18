@@ -2548,7 +2548,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         </select><?php /* <br />
 					<?php $this->_applicationInstance->getTranslateInstance()->echoTraduction('::SubmitShowTimeFile'); ?> :
 <?php					<select
-						name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME; ?>"
+						name="<?php echo ActionsObjects::UPLOAD_FILE_SHOWTIME; ?>"
 						class="klictyInput">
 						<option value="0" selected>
 							<?php $this->_applicationInstance->getTranslateInstance()->echoTraduction('::Unlimited'); ?>
