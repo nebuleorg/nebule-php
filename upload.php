@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Upload;
+use Nebule\Library\ActionsLinks;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\DisplayItemIconMessage;
@@ -44,7 +45,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250919';
+    const APPLICATION_VERSION = '020251018';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
@@ -183,7 +184,7 @@ class Display extends Displays
                                   action="<?php echo '?' . References::COMMAND_TOKEN . '=' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
                                 <label>
                                     <input type="text" class="newlink"
-                                           name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_SIGNED_LINK; ?>"
+                                           name="<?php echo ActionsLinks::UPLOAD_SIGNED; ?>"
                                            value=""/>
                                 </label><br/>
                                 <input type="submit"
@@ -200,7 +201,7 @@ class Display extends Displays
                                        name="MAX_FILE_SIZE"
                                        value="<?php echo $this->_configurationInstance->getOptionUntyped('ioReadMaxData'); ?>"/>
                                 <input type="file"
-                                       name="<?php echo Actions::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LINKS; ?>"/><br/>
+                                       name="<?php echo ActionsLinks::UPLOAD_FILE_LINKS; ?>"/><br/>
                                 <input type="submit"
                                        value="Upload"/>
                             </form>
@@ -276,30 +277,19 @@ class Display extends Displays
  */
 class Action extends Actions
 {
-    const ACTION_APPLY_DELAY = 5;
+    // TODO move actions if needed.
+    //const ACTION_APPLY_DELAY = 5;
 
-    /**
-     * Traitement des actions génériques.
-     */
-    public function genericActions(): void
+    /*public function genericActions(): void
     {
         $this->_metrologyInstance->addLog('Generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Rien.
 
         $this->_metrologyInstance->addLog('Generic actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-    }
+    }*/
 
-
-    /**
-     * Traitement des actions spéciales, qui peuvent être réalisées sans entité déverrouillée.
-     *
-     * Utilise les fonctions d'action _actionUploadLink() et _actionUploadFileLinks() de la bibliothèque nebule.
-     * Le fonctionnement est identique à celui du module module_upload de l'application sylabe.
-     *
-     * @return void
-     */
-    public function specialActions(): void
+    /*public function specialActions(): void
     {
         $this->_metrologyInstance->addLog('Special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
@@ -309,7 +299,7 @@ class Action extends Actions
             && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
             // Extrait les actions.
@@ -334,7 +324,7 @@ class Action extends Actions
         }
 
         $this->_metrologyInstance->addLog('Special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-    }
+    }*/
 }
 
 

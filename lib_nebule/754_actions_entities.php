@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
+ * Actions on entities.
+ * TODO must be refactored!
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -39,7 +41,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     }
     public function specialActions(): void {
         if ($this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
-            || $this->_unlocked
+            || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             $this->_extractActionCreateEntity();
         if ($this->_actionCreateEntity)
@@ -246,7 +248,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     public function getCreateEntityErrorMessage(): string { return $this->_actionCreateEntityErrorMessage; }
     protected function _extractActionCreateEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ((!$this->_unlocked && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
+        if ((!$this->_entitiesInstance->getConnectedEntityIsUnlocked() && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
             || !$this->_tokenizeInstance->checkActionToken()
             || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
         )

@@ -9,3 +9,4 @@
   - Cleaning AppX with functions from bootstrap.
   - 701_display modify filter_var() to $this->getFilterInput().
   - Fix buggy crypto_openssl::verify() with openssl_verify().
+  - Add a sleep state for background cleaning.

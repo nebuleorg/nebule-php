@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
+ * Actions on links and bloclinks.
+ * TODO must be refactored!
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -19,12 +21,20 @@ class ActionsLinks extends Actions implements ActionsInterface {
     const SIGN3_OBFUSCATE = 'actsiglnk3o';
     const UPLOAD_SIGNED = 'actupsl';
     const UPLOAD_FILE_LINKS = 'actupfl';
+    const SYNCHRONIZE = 'actsynlnk';
+    const ADD_PROPERTY = 'actaddprop';
+    const ADD_PROPERTY_OBJECT = 'actaddpropobj';
+    const ADD_PROPERTY_VALUE = 'actaddpropval';
+    const ADD_PROPERTY_PROTECTED = 'actaddpropprf';
+    const ADD_PROPERTY_OBFUSCATED = 'actaddpropobf';
 
 
 
     public function initialisation(): void {}
     public function genericActions(): void {
         $this->_extractActionObfuscateLink();
+        $this->_extractActionSynchronizeObjectLinks();
+        $this->_extractActionAddProperty();
 
         if ($this->_actionObfuscateLinkInstance !== null
             && $this->_actionObfuscateLinkInstance != ''
@@ -32,11 +42,15 @@ class ActionsLinks extends Actions implements ActionsInterface {
             && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
         )
             $this->_actionObfuscateLink();
+        if ($this->_actionSynchronizeObjectLinksInstance != '')
+            $this->_actionSynchronizeObjectLinks();
+        if ($this->_actionAddProperty != '')
+            $this->_actionAddProperty();
     }
     public function specialActions(): void {
         // Vérifie que l'action de chargement de lien soit permise.
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
-            || $this->_unlocked
+            || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // Extrait les actions.
             $this->_extractActionSignLink1();
@@ -49,7 +63,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
             // Lien à signer 1.
@@ -80,6 +94,40 @@ class ActionsLinks extends Actions implements ActionsInterface {
             if ($this->_actionUploadFileLinks)
                 $this->_actionUploadFileLinks();
         }
+    }
+
+    protected function _actionUploadLink_DISABLED(LinkRegister $link): void
+    {
+        /*if (!$link->getValid()
+            || true // FIXME
+        )
+            return;
+
+        $this->_metrologyInstance->addLog('action upload link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+
+        if ($link->getSigned()
+            && (($link->getSignersEID() == $this->_authoritiesInstance->getCodeAuthoritiesEID()
+                    && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
+                )
+                || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+            )
+        ) {
+            $link->write();
+            $this->_metrologyInstance->addLog('action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        } elseif ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $link = $this->_cacheInstance->newBlockLink(
+                '0_'
+                . $this->_entitiesInstance->getCurrentEntityID() . '_'
+                . $link->getDate() . '_'
+                . $link->getParsed()['bl/rl/req'] . '_'
+                . $link->getParsed()['bl/rl/nid1'] . '_'
+                . $link->getParsed()['bl/rl/nid2'] . '_'
+                . $link->getParsed()['bl/rl/nid3']
+            );
+            $link->signWrite();
+            $this->_metrologyInstance->addLog('action upload link - unsigned link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        }*/
     }
 
 
@@ -131,7 +179,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionSignLink(string $link, bool $obfuscate = false): void
     {
-        if ($this->_unlocked) {
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8baa9fae');
 
             $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
@@ -198,7 +246,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
             $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0e682f22');
@@ -207,7 +255,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
 
             $permitNotCodeMaster = false;
             if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
                 $permitNotCodeMaster = true;
 
@@ -267,7 +315,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadFileLinks')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
             $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -353,13 +401,13 @@ class ActionsLinks extends Actions implements ActionsInterface {
                                 && $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                             )
                             || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
-                            || $this->_unlocked
+                            || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
                         )
                     ) {
                         $instance->write();
                         $nbLinks++;
                         $this->_metrologyInstance->addLog('action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
-                    } elseif ($this->_unlocked) {
+                    } elseif ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
                         /*$instance = $this->_cacheInstance->newBlockLink( FIXME
                             '0_'
                             . $this->_entitiesInstance->getCurrentEntityID() . '_'
@@ -376,5 +424,114 @@ class ActionsLinks extends Actions implements ActionsInterface {
                 }
             }
         }
+    }
+
+    protected ?Node $_actionSynchronizeObjectLinksInstance = null;
+    public function getSynchronizeObjectLinksInstance(): ?Node
+    {
+        return $this->_actionSynchronizeObjectLinksInstance;
+    }
+    protected function _extractActionSynchronizeObjectLinks(): void
+    {
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeObjectLinks'))
+            return;
+
+        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ec3ab52');
+
+        $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
+
+        if (Node::checkNID($arg))
+            $this->_actionSynchronizeObjectLinksInstance = $this->_cacheInstance->newNode($arg);
+    }
+    protected function _actionSynchronizeObjectLinks(): void
+    {
+        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4dc338f4');
+
+        echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
+
+        // Synchronisation.
+        $this->_actionSynchronizeObjectLinksInstance->syncLinks();
+    }
+
+    protected string $_actionAddProperty = '';
+    protected string $_actionAddPropertyObject = '';
+    protected string $_actionAddPropertyValue = '';
+    protected bool $_actionAddPropertyProtected = false;
+    protected bool $_actionAddPropertyObfuscateLinks = false;
+    protected bool $_actionAddPropertyError = false;
+    protected string $_actionAddPropertyErrorMessage = 'Initialisation de la supression.';
+    public function getAddPropertyError(): bool
+    {
+        return $this->_actionAddPropertyError;
+    }
+    public function getAddPropertyErrorMessage(): string
+    {
+        return $this->_actionAddPropertyErrorMessage;
+    }
+    protected function _extractActionAddProperty(): void
+    {
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddProperty'))
+            return;
+
+        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+
+        $argAdd = $this->getFilterInput(self::ADD_PROPERTY, FILTER_FLAG_ENCODE_LOW);
+
+        if ($argAdd != '')
+            $this->_actionAddProperty = $argAdd;
+
+        // Si on crée une nouvelle propriété.
+        if ($this->_actionAddProperty != '') {
+            $argObj = $this->getFilterInput(self::ADD_PROPERTY_OBJECT, FILTER_FLAG_ENCODE_LOW);
+            $argVal = $this->getFilterInput(self::ADD_PROPERTY_VALUE);
+            $argPrt = filter_has_var(INPUT_POST, self::ADD_PROPERTY_PROTECTED);
+            $argObf = filter_has_var(INPUT_POST, self::ADD_PROPERTY_OBFUSCATED);
+
+            // Sauvegarde les valeurs.
+            if ($argVal != '') {
+                if ($argObj == '')
+                    $this->_actionAddPropertyObject = $this->_nebuleInstance->getCurrentObjectOID();
+                else
+                    $this->_actionAddPropertyObject = $argObj;
+                $this->_actionAddPropertyValue = $argVal;
+                if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
+                    $this->_actionAddPropertyProtected = $argPrt;
+                if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
+                    $this->_actionAddPropertyObfuscateLinks = $argObf;
+            } else {
+                $this->_metrologyInstance->addLog('action _extractActionAddProperty null value', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+                $this->_actionAddPropertyError = true;
+                $this->_actionAddPropertyErrorMessage = 'Valeur vide.';
+            }
+        }
+    }
+    protected function _actionAddProperty(): void
+    {
+        $prop = $this->_actionAddProperty;
+        $propID = $this->getNidFromData($prop);
+        $this->_metrologyInstance->addLog('action add property ' . $prop, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $objectID = $this->_actionAddPropertyObject;
+        $this->_metrologyInstance->addLog('action add property for ' . $objectID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $value = $this->_actionAddPropertyValue;
+        $valueID = $this->getNidFromData($value);
+        $this->_metrologyInstance->addLog('action add property value : ' . $value, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $protected = $this->_actionAddPropertyProtected;
+        if ($protected) {
+            $this->_metrologyInstance->addLog('action add property protected', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        }
+        if ($this->_actionAddPropertyObfuscateLinks) {
+            $this->_metrologyInstance->addLog('action add property with obfuscated links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        }
+
+        if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($propID)) {
+            $this->createTextAsObject($prop);
+        }
+        if (!$this->_nebuleInstance->getIoInstance()->checkObjectPresent($valueID)) {
+            $this->createTextAsObject($value, $protected, $this->_actionAddPropertyObfuscateLinks);
+        }
+
+        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+        $instanceBL->addLink('l>' . $objectID . '>' . $valueID . '>' . $propID);
+        $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
     }
 }

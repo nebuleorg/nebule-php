@@ -176,7 +176,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                     $hookArray[1]['css'] = 'oneAction-bg-warn';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_GROUP . '=' . $object
+                        . '&' . ActionsGroups::DELETE . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -354,11 +354,11 @@ class ModuleGroups extends \Nebule\Library\Modules
     private function _displayGroups(): void
     {
         // Si un groupe a été créé.
-        if ($this->_applicationInstance->getActionInstance()->getCreateGroup()) {
-            $createGroupID = $this->_applicationInstance->getActionInstance()->getCreateGroupID();
-            $createGroupInstance = $this->_applicationInstance->getActionInstance()->getCreateGroupInstance();
-            $createGroupError = $this->_applicationInstance->getActionInstance()->getCreateGroupError();
-            $createGroupErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateGroupErrorMessage();
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGroup()) {
+            $createGroupID = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGroupID();
+            $createGroupInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGroupInstance();
+            $createGroupError = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGroupError();
+            $createGroupErrorMessage = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGroupErrorMessage();
 
             // Si la création à réussi.
             if (!$createGroupError
@@ -708,17 +708,17 @@ class ModuleGroups extends \Nebule\Library\Modules
                 <form method="post"
                       action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                           . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                          . '&' . Actions::DEFAULT_COMMAND_ACTION_CREATE_GROUP
+                          . '&' . ActionsGroups::CREATE
                           . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                     <div class="floatRight textAlignRight">
                         <input type="checkbox"
-                               name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_CLOSED; ?>"
+                               name="<?php echo ActionsGroups::CREATE_CLOSED; ?>"
                                value="y" checked>
                         <?php echo $this->_translateInstance->getTranslate('::GroupeFerme'); ?>
                     </div>
                     <?php echo $this->_translateInstance->getTranslate('::module:groups:display:nom'); ?>
                     <input type="text"
-                           name="<?php echo Action::DEFAULT_COMMAND_ACTION_CREATE_GROUP_NAME; ?>"
+                           name="<?php echo ActionsGroups::CREATE_NAME; ?>"
                            size="20" value="" class="klictyModuleEntityInput"><br/>
                     <input type="submit"
                            value="<?php echo $this->_translateInstance->getTranslate('::module:groups:display:createTheGroup'); ?>"
@@ -841,7 +841,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                                 . '&' . $this->_nebuleInstance->getCurrentGroupOID()
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item
+                                . '&' . ActionsGroups::REMOVE_ITEM_FROM_GROUP . '=' . $item
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         }
 
@@ -894,7 +894,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                                 $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
-                                    . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
+                                    . '&' . ActionsGroups::REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             }
 
@@ -956,7 +956,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                             $list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
+                                . '&' . ActionsGroups::REMOVE_ITEM_FROM_GROUP . '=' . $item->getParsed()['bl/rl/nid1']
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         }
 

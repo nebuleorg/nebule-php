@@ -161,7 +161,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         $hookArray[5]['desc'] = '';
                         $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Actions::DEFAULT_COMMAND_ACTION_DELETE_OBJECT . '=' . $id
+                            . '&' . ActionsObjects::DELETE . '=' . $id
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -203,7 +203,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
+                        . '&' . ActionsMarks::MARK . '=' . $id
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 } else {
@@ -214,7 +214,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[8]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
+                        . '&' . ActionsMarks::UNMARK . '=' . $id
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -228,7 +228,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[9]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
+                        . '&' . ActionsMarks::UNMARK_ALL
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -247,7 +247,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_ALL_OBJECT
+                        . '&' . ActionsMarks::UNMARK_ALL
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -266,15 +266,15 @@ class ModuleObjects extends \Nebule\Library\Modules
 
             case '::sylabe:module:upload:FileUploaded':
                 // Si il y a eu le téléchargement d'un fichier.
-                if ($this->_applicationInstance->getActionInstance()->getUploadObject()) {
+                if ($this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObject()) {
                     // Si pas d'erreur.
-                    if (!$this->_applicationInstance->getActionInstance()->getUploadObjectError()) {
+                    if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectError()) {
                         $hookArray[0]['name'] = '::module:objects:DisplayNewObject';
                         $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getActionInstance()->getUploadObjectID()
+                            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     }
                 }
@@ -314,7 +314,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_MARK_OBJECT . '=' . $id
+                        . '&' . ActionsMarks::MARK . '=' . $id
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 } else {
@@ -325,7 +325,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_UNMARK_OBJECT . '=' . $id
+                        . '&' . ActionsMarks::UNMARK . '=' . $id
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -969,7 +969,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 $list[2]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
                 $list[2]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                    . '&' . Actions::DEFAULT_COMMAND_ACTION_PROTECT_OBJECT . '=' . $object->getID()
+                    . '&' . ActionsObjects::PROTECT . '=' . $object->getID()
                     . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -1106,7 +1106,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                             $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[3]
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_UNPROTECT_OBJECT . '=' . $object->getID()
+                                . '&' . ActionsObjects::UNPROTECT . '=' . $object->getID()
                                 . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -1118,7 +1118,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                             $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LX;
                             $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[3]
-                                . '&' . Actions::DEFAULT_COMMAND_ACTION_CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
+                                . '&' . ActionsObjects::CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                 . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -1300,14 +1300,14 @@ class ModuleObjects extends \Nebule\Library\Modules
                     if ($typeClosed) {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[4]
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
+                            . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                             . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     } else {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_ICONS[4]
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
+                            . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                             . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -1364,8 +1364,8 @@ class ModuleObjects extends \Nebule\Library\Modules
                     $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                     $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                        . '&' . Actions::DEFAULT_COMMAND_ACTION_SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $id
+                        . '&' . ActionsObjects::SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

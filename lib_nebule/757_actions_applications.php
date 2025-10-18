@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
+ * Actions on applications.
+ * TODO must be refactored!
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
@@ -20,8 +22,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
         if ($this->_actionSynchronizeApplicationInstance != '')
             $this->_actionSynchronizeApplication();
     }
-    public function specialActions(): void {
-    }
+    public function specialActions(): void {}
 
 
 
@@ -34,7 +35,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
     {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeApplication')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
-                || $this->_unlocked
+                || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
             $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2692acb5');

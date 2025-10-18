@@ -1441,7 +1441,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntity();
         if ($this->_createEntityAction)
             $this->_displayEntityCreateNew();
 
@@ -1455,11 +1455,11 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getCreateEntity();
-        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityInstance();
-        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getCreateEntityKeyInstance();
-        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getCreateEntityError();
-        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getCreateEntityErrorMessage();
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntity();
+        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityInstance();
+        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityKeyInstance();
+        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityError();
+        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityErrorMessage();
 
         if ($this->_createEntityAction) {
             $instanceList = new DisplayList($this->_applicationInstance);

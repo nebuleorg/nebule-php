@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
-use Nebule\Library\Configuration;
+use Nebule\Library\ActionsLinks;use Nebule\Library\Configuration;
 use Nebule\Library\Crypto;use Nebule\Library\DisplayBlankLine;use Nebule\Library\DisplayColor;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItem;
@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250919';
+    const APPLICATION_VERSION = '020251018';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -848,7 +848,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refAuthority
+                            . ActionsLinks::SIGN1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refAuthority
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -927,7 +927,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refAuthority
+                            . ActionsLinks::SIGN1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refAuthority
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
 
@@ -1481,7 +1481,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refRecovery
+                            . ActionsLinks::SIGN1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refRecovery
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -1557,7 +1557,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . Actions::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refRecovery
+                            . ActionsLinks::SIGN1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refRecovery
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
 
@@ -1668,14 +1668,15 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
  */
 class Action extends Actions
 {
-    const COMMAND_OPTION_NAME = 'name';
-    const COMMAND_OPTION_VALUE = 'value';
+    // FIXME
+    //const COMMAND_OPTION_NAME = 'name';
+    //const COMMAND_OPTION_VALUE = 'value';
 
-    public function genericActions():void
+    /*public function genericActions():void
     {
         $this->_metrologyInstance->addLog('generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1f5dd135');
 
-        if ($this->_unlocked
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
             && $this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getServerEntityEID()
             && $this->_nebuleInstance->getTokenizeInstance()->checkActionToken()
             && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink'))
@@ -1686,7 +1687,7 @@ class Action extends Actions
             if ($this->_actionOptionName != '')
                 $this->_actionChangeOption();
 
-            if ($this->_unlocked
+            if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()
                 && $this->_configurationInstance->getOptionAsBoolean('permitUploadLink')
                 && $this->_actionSignLinkInstance1 != ''
                 && is_a($this->_actionSignLinkInstance1, 'Link') // FIXME la classe
@@ -1720,7 +1721,7 @@ class Action extends Actions
     protected function _extractActionChangeOption():void
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
-            && $this->_unlocked
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             $this->_metrologyInstance->addLog('extract action change option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '62a03a08');
 
@@ -1751,7 +1752,7 @@ class Action extends Actions
     {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink'))
             && $this->_actionOptionName != ''
-            && $this->_unlocked
+            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
 
             $listOptionsType = $this->_configurationInstance->getListOptionsType();
@@ -1781,7 +1782,7 @@ class Action extends Actions
             // Affichage des actions.
             $this->_displayInstance->displayInlineAllActions();
         }
-    }
+    }*/
 }
 
 

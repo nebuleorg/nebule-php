@@ -736,6 +736,8 @@ abstract class Applications extends Functions implements applicationInterface
                                 <li><a href="#oala9">OALA9 / Application 9</a></li>
                             </ul>
                         </li>
+                        <li><a href="#oalt">OALT / Actions</a></li>
+                        <li><a href="#oalz">OALZ / Mode sommeil</a></li>
                     </ul>
                 </li>
                 <?php \Nebule\Library\Modules::echoDocumentationTitles(); ?>
@@ -1703,6 +1705,21 @@ tE=0.5937s
             de cette page dédiée de la <i>bibliothèque</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
+
+        <?php Displays::docDispTitle(4, 'oalt', 'Actions'); ?>
+        <p>Les actions sont les interactions qui amènent à la modification de liens et/ou d'objets.
+            Il y a deux types d'actions :</p>
+        <ul>
+            <li>Actions génériques : ce sont toutes les actions basiques qui nécessitent cependant qu'une entité soit
+                déverrouillée et un jeton valide.</li>
+            <li>Actions spéciales : ce sont toutes les actions un peu particulières qui doivent pouvoir être réalisées
+                sans entité déverrouillée et/ou sans jeton valide. Un certain nombre de contrôles supplémentaires sont
+                nécessaires dans ce cas avant de réaliser l'action.</li>
+        </ul>
+        <p>Cette distinction se retrouve dans la bibliothèque et dans les applications, mais pas dans les modules.</p>
+
+        <?php Displays::docDispTitle(4, 'oalz', 'Mode sommeil'); ?>
+        <p>À définir...</p>
 
         <?php Modules::echoDocumentationCore();
     }
