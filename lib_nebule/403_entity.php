@@ -405,7 +405,7 @@ class Entity extends Node implements nodeInterface
 
         unset($newKey);
 
-        // Ecrit l'objet de la nouvelle clé privée.
+        // Écrit l'objet de la nouvelle clé privée.
         $this->_ioInstance->setObject($this->_privateKeyOID, $this->_privateKey);
 
         // Si ce n'est pas une création d'entité, fait les liens de mises à jour de clés privées.

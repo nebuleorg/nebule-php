@@ -255,8 +255,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                             . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $object;
                     }
-                    // Change entity.
-                    $hookArray[2]['name'] = '::module:entities:change';
+                    // Modify entity.
+                    $hookArray[2]['name'] = '::module:entities:modify';
                     $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -298,15 +298,24 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-                // See entity.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
+                    // See entity.
                     $hookArray[4]['name'] = '::module:entities:ShowEntity';
                     $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[4]['desc'] = '';
                     $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+
+                    // See entity properties.
+                    $hookArray[5]['name'] = '::module:entities:DescriptionEntity';
+                    $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
+                    $hookArray[5]['desc'] = '::module:entities:DescriptionEntityDesc';
+                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
                 /*if (!$this->_applicationInstance->getMarkObject($object)) {
@@ -646,7 +655,12 @@ class ModuleEntities extends \Nebule\Library\Modules
         //$this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
         //$this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
         $this->_displayEntity = $this->_nebuleInstance->getCurrentEntityEID();
-        $this->_displayEntityInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+        if ($this->_displayEntity != '0')
+            $this->_displayEntityInstance = $this->_nebuleInstance->getCurrentEntityInstance();
+        else {
+            $this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
+            $this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
+        }
     }
 
 
@@ -826,6 +840,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setEnableName(true);
         $instance->setEnableRefs(false);
         $instance->setEnableFlags(true);
+        $instance->setEnableFlagUnlocked(true);
         $instance->setEnableFlagProtection(false);
         $instance->setEnableFlagObfuscate(false);
         $instance->setEnableFlagState(true);
@@ -834,34 +849,159 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
+        $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
         $instance->setRatio(DisplayItem::RATIO_SHORT);
-        $instance->setEnableFlagUnlocked(true);
         $instance->setIcon($instanceIcon);
         $instanceList->addItem($instance);
 
-        if ($entity->getHavePrivateKeyPassword()) {
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setMessage('::::Password');
-            $instance->setSocial('all'); // FIXME ne marche pas
-            $instance->setType(DisplayQuery::QUERY_PASSWORD);
-            $instance->setLink('?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
-            $instance->setHiddenName('id');
-            $instance->setHiddenValue($this->_entitiesInstance->getServerEntityEID());
+        if ($this->_actionInstance->getInstanceActionsEntities()->getChange()) {
+            $instance = new DisplayInformation($this->_applicationInstance);
+            $instance->setMessage('::module:entities:EntityModified');
+            $instance->setSocial('all');
+            $instance->setType(DisplayItemIconMessage::TYPE_OK);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
             $instanceList->addItem($instance);
         }
 
-        $instance = new DisplayInformation($this->_applicationInstance);
-        $instance->setMessage('::::err_NotPermit');
-        $instance->setSocial('all');
-        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
-        $instanceList->addItem($instance);
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+            $instance = new DisplayInformation($this->_applicationInstance);
+            $instance->setMessage('::::err_NotPermit');
+            $instance->setSocial('all');
+            $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceList->addItem($instance);
+        }
 
         $instanceList->setOnePerLine();
         $instanceList->display();
+
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+            ?>
+
+            <div class="layoutAloneItem">
+                <div class="aloneTextItemContent">
+                    <form method="post"
+                          action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                                  . '&' . ActionsEntities::CHANGE
+                                  . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                                  . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
+                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
+                            <div class="moduleEntitiesCreateHeader">
+                                <p>
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:naming'); ?>
+
+                                </p>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
+
+                                </div>
+                                <label for="moduleEntitiesCreatePropertyEntryPrefix"><?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?></label>
+                                <input type="text"
+                                       name="<?php echo ActionsEntities::CHANGE_PREFIX; ?>"
+                                       size="10" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPrefix"/>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prenom'); ?>
+
+                                </div>
+                                <input type="text"
+                                       name="<?php echo ActionsEntities::CHANGE_FIRSTNAME; ?>"
+                                       size="20" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPrenom"/>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/surnom'); ?>
+
+                                </div>
+                                <input type="text"
+                                       name="<?php echo ActionsEntities::CHANGE_NICKNAME; ?>"
+                                       size="10" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntrySurnom"/>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/nom'); ?>
+
+                                </div>
+                                <input type="text"
+                                       name="<?php echo ActionsEntities::CHANGE_NAME; ?>"
+                                       size="20" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryNom"/>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName">
+                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
+                                </div>
+                                <input type="text"
+                                       name="<?php echo ActionsEntities::CHANGE_SUFFIX; ?>"
+                                       size="10" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntrySuffix"/>
+                            </div>
+                        </div>
+                        <div class="moduleEntitiesCreateSubmit">
+                            <input type="submit"
+                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:ModifyTheEntity'); ?>"
+                                   class="moduleEntitiesRenameSubmitEntry"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br />
+            <div class="layoutAloneItem">
+                <div class="aloneTextItemContent">
+                    <form method="post"
+                          action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                                  . '&' . ActionsEntities::CHANGE_PASSWORD
+                                  . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                                  . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
+                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName"
+                                     id="moduleEntitiesCreatePropertyNamePWD1">
+                                    <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
+
+                                </div>
+                                <input type="password"
+                                       name="<?php echo ActionsEntities::CHANGE_PASSWORD1; ?>"
+                                       size="30" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPWD1"/>
+                            </div>
+                            <div class="moduleEntitiesCreateProperty">
+                                <div class="moduleEntitiesCreatePropertyName"
+                                     id="moduleEntitiesCreatePropertyNamePWD2">
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
+
+                                </div>
+                                <input type="password"
+                                       name="<?php echo ActionsEntities::CHANGE_PASSWORD2; ?>"
+                                       size="30" value=""
+                                       class="moduleEntitiesCreatePropertyEntry"
+                                       id="moduleEntitiesCreatePropertyEntryPWD2"/>
+                            </div>
+                        </div>
+                        <div class="moduleEntitiesCreateSubmit">
+                            <input type="submit"
+                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:ModifyTheEntity'); ?>"
+                                   class="moduleEntitiesPasswordSubmitEntry"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <?php
+        }
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -1441,7 +1581,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntity();
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate();
         if ($this->_createEntityAction)
             $this->_displayEntityCreateNew();
 
@@ -1455,11 +1595,11 @@ class ModuleEntities extends \Nebule\Library\Modules
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntity();
-        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityInstance();
-        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityKeyInstance();
-        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityError();
-        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEntityErrorMessage();
+        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate();
+        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateInstance();
+        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateKeyInstance();
+        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateError();
+        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateErrorMessage();
 
         if ($this->_createEntityAction) {
             $instanceList = new DisplayList($this->_applicationInstance);
@@ -1576,7 +1716,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
                             <div class="moduleEntitiesCreateHeader">
                                 <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityNommage'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:naming'); ?>
 
                                 </p>
                             </div>
@@ -1652,7 +1792,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                             <div class="moduleEntitiesCreateProperty">
                                 <div class="moduleEntitiesCreatePropertyName"
                                      id="moduleEntitiesCreatePropertyNamePWD2">
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityConfirm'); ?>
+                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
 
                                 </div>
                                 <input type="password"
@@ -2006,7 +2146,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:allEntitiesHelp' => 'La liste de toutes less entités.',
             '::module:entities:MyEntities' => 'Mes entités',
             '::module:entities:MyEntitiesDesc' => 'Toutes les entités sous contrôle.',
-            '::module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lequelles ont peut instantanément basculer.",
+            '::module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lesquelles ont peut instantanément basculer.",
             '::module:entities:KnownEntities' => 'Entités connues',
             '::module:entities:KnownEntitiesDesc' => 'Toutes les entités connues.',
             '::module:entities:KnownEntitiesHelp' => "La liste des entités que l'on connait, amies ou pas.",
@@ -2026,8 +2166,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:ListEntities' => 'Lister',
             '::module:entities:ListEntitiesDesc' => 'Lister les entités',
             '::module:entities:CreateEntity' => 'Créer',
-            '::module:entities:CreateEntityNommage' => 'Nommage',
-            '::module:entities:CreateEntityConfirm' => 'Confirmation',
+            '::module:entities:naming' => 'Nommage',
+            '::module:entities:confirm' => 'Confirmation',
             '::module:entities:CreateEntityOther' => 'Autre',
             '::module:entities:CreateEntityAlgorithm' => 'Algorithme',
             '::module:entities:CreateEntityTypeUndefined' => '(Indéfini)',
@@ -2049,7 +2189,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:unlock' => 'Déverrouiller cette entité',
             '::module:entities:switchTo' => 'Se connecter avec cette entité',
             '::module:entities:lock' => "Verrouiller l'entité",
-            '::module:entities:seeAs' => "Voir en tant que",
+            '::module:entities:seeAs' => 'Voir en tant que',
+            '::module:entities:modify' => 'Modifier',
+            '::module:entities:ModifyTheEntity' => "Modifier l'entité",
+            '::module:entities:EntityModified' => 'Entité modifiée',
             '::module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
             '::module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
             '::module:entities:CodeMaster' => "L'entité maîtresse du code.",
@@ -2069,14 +2212,14 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:Desc:AttribsHelp' => "Toutes les propriétés de l'objet.",
             '::module:entities:Desc:Attrib' => 'Propriété',
             '::module:entities:Desc:Value' => 'Valeur',
-            '::module:entities:Desc:Signer' => 'Emetteur',
+            '::module:entities:Desc:Signer' => 'Émetteur',
             '::module:entities:Display:NoEntity' => "Pas d'entité à afficher.",
         ],
         'en-en' => [
             '::module:entities:ModuleName' => 'Entities module',
             '::module:entities:MenuName' => 'Entities',
             '::module:entities:ModuleDescription' => 'Module to manage entities.',
-            '::module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
+            '::module:entities:ModuleHelp' => 'This module permit to see entities, to manage related and to change of current entity.',
             '::module:entities:AppTitle1' => 'Entities',
             '::module:entities:AppDesc1' => 'Manage entities.',
             '::module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
@@ -2098,7 +2241,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:KnownEntity' => 'I known this entity',
             '::module:entities:SpecialEntities' => 'Specials entities',
             '::module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
-            '::module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
+            '::module:entities:SpecialEntitiesHelp' => 'The list of specific entities to <i>nebule</i>.',
             '::module:entities:UnknownEntities' => 'Unknown entities',
             '::module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
             '::module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
@@ -2111,8 +2254,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:ListEntities' => 'List',
             '::module:entities:ListEntitiesDesc' => 'Show list of entities',
             '::module:entities:CreateEntity' => 'Create',
-            '::module:entities:CreateEntityNommage' => 'Naming',
-            '::module:entities:CreateEntityConfirm' => 'Confirm',
+            '::module:entities:naming' => 'Naming',
+            '::module:entities:confirm' => 'Confirm',
             '::module:entities:CreateEntityOther' => 'Other',
             '::module:entities:CreateEntityAlgorithm' => 'Algorithm',
             '::module:entities:CreateEntityTypeUndefined' => '(Undefined)',
@@ -2134,7 +2277,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:unlock' => 'Unlock the entity',
             '::module:entities:switchTo' => 'Switch to this entity',
             '::module:entities:lock' => 'Lock entity',
-            '::module:entities:seeAs' => "See as",
+            '::module:entities:seeAs' => 'See as',
+            '::module:entities:modify' => 'Modify',
+            '::module:entities:ModifyTheEntity' => 'Modify the entity',
+            '::module:entities:EntityModified' => 'Entity modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::module:entities:SecurityMaster' => 'The master entity of security.',
             '::module:entities:CodeMaster' => 'The master entity of code.',
@@ -2161,7 +2307,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:ModuleName' => 'Entities module',
             '::module:entities:MenuName' => 'Entities',
             '::module:entities:ModuleDescription' => 'Module to manage entities.',
-            '::module:entities:ModuleHelp' => 'This module permit to see entites, to manage related and to change of corrent entity.',
+            '::module:entities:ModuleHelp' => 'This module permit to see entities, to manage related and to change of current entity.',
             '::module:entities:AppTitle1' => 'Entities',
             '::module:entities:AppDesc1' => 'Manage entities.',
             '::module:entities:display:SynchronizeEntities' => 'Synchronize current entity',
@@ -2183,7 +2329,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:KnownEntity' => 'I known this entity',
             '::module:entities:SpecialEntities' => 'Specials entities',
             '::module:entities:SpecialEntitiesDesc' => 'Specifics entities to <i>nebule</i>.',
-            '::module:entities:SpecialEntitiesHelp' => 'The list of specifics entities to <i>nebule</i>.',
+            '::module:entities:SpecialEntitiesHelp' => 'The list of specific entities to <i>nebule</i>.',
             '::module:entities:UnknownEntities' => 'Unknown entities',
             '::module:entities:UnknownEntitiesDesc' => 'All unknown entities.',
             '::module:entities:UnknownEntitiesHelp' => 'The list of all others entities.',
@@ -2196,8 +2342,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:ListEntities' => 'List',
             '::module:entities:ListEntitiesDesc' => 'Show list of entities',
             '::module:entities:CreateEntity' => 'Create',
-            '::module:entities:CreateEntityNommage' => 'Naming',
-            '::module:entities:CreateEntityConfirm' => 'Confirm',
+            '::module:entities:naming' => 'Naming',
+            '::module:entities:confirm' => 'Confirm',
             '::module:entities:CreateEntityOther' => 'Otro',
             '::module:entities:CreateEntityAlgorithm' => 'Algoritmo',
             '::module:entities:CreateEntityTypeUndefined' => '(Undefined)',
@@ -2219,7 +2365,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:unlock' => 'Unlock the entity',
             '::module:entities:switchTo' => 'Switch to this entity',
             '::module:entities:lock' => 'Lock entity',
-            '::module:entities:seeAs' => "See as",
+            '::module:entities:seeAs' => 'See as',
+            '::module:entities:modify' => 'Modify',
+            '::module:entities:ModifyTheEntity' => 'Modify the entity',
+            '::module:entities:EntityModified' => 'Entity modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::module:entities:SecurityMaster' => 'The master entity of security.',
             '::module:entities:CodeMaster' => 'The master entity of code.',

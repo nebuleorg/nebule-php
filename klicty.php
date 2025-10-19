@@ -2584,11 +2584,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityAdd(): void
     {
         // Si une nouvelle entité vient d'être créée par l'instance des actions.
-        if ($this->_actionInstance->getInstanceActionsEntities()->getCreateEntity()) {
-            $createEntityAction = $this->_actionInstance->getInstanceActionsEntities()->getCreateEntity();
-            $createEntityInstance = $this->_actionInstance->getInstanceActionsEntities()->getCreateEntityInstance();
-            $createEntityError = $this->_actionInstance->getInstanceActionsEntities()->getCreateEntityError();
-            $createEntityErrorMessage = $this->_actionInstance->getInstanceActionsEntities()->getCreateEntityErrorMessage();
+        if ($this->_actionInstance->getInstanceActionsEntities()->getCreate()) {
+            $createEntityAction = $this->_actionInstance->getInstanceActionsEntities()->getCreate();
+            $createEntityInstance = $this->_actionInstance->getInstanceActionsEntities()->getCreateInstance();
+            $createEntityError = $this->_actionInstance->getInstanceActionsEntities()->getCreateError();
+            $createEntityErrorMessage = $this->_actionInstance->getInstanceActionsEntities()->getCreateErrorMessage();
 
             // S'il n'y a pas d'erreur de création.
             if (!$createEntityError

@@ -288,13 +288,13 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
                 font-size: 2rem;
             }
 
-            input {
+            .queryTitleName input {
                 margin-right: 5px;
             }
-            input[type=password], input[type=text], input[type=email] {
+            .queryTitleName input[type=password], input[type=text], input[type=email] {
                 width: 268px;
             }
-            input[type=submit] {
+            .queryTitleName input[type=submit] {
                 width: 27px;
                 font-weight: bold;
             }

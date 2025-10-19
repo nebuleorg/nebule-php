@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020251014
+# Version 020251019
 
 echo ' > start'
 
@@ -110,6 +110,7 @@ function work_full_reinit()
   sed -i 's/^#permitApplication4 = .*$/permitApplication4 = true/' "${CODE_MASTER_SPACE}/c"
   sed -i 's/^#permitApplication9 = .*$/permitApplication9 = true/' "${CODE_MASTER_SPACE}/c"
   sed -i 's/^#permitApplicationModules = .*$/permitApplicationModules = true/' "${CODE_MASTER_SPACE}/c"
+  sed -i 's/^#permitPublicCreateEntity = .*$/permitPublicCreateEntity = true/' "${CODE_MASTER_SPACE}/c" # FIXME temporary for tests
 
   cat "${WORKSPACE}/nebule.env" > "${TIME_MASTER_SPACE}/c"
   sed -i 's/^puppetmaster = .*$/puppetmaster = '"${puppetmaster_develop_pem_hash}"'/' "${TIME_MASTER_SPACE}/c"
