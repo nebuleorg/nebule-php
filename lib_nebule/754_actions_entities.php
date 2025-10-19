@@ -26,50 +26,47 @@ class ActionsEntities extends Actions implements ActionsInterface {
     const CREATE_TYPE = 'creaenttype';
     const CREATE_AUTONOMY = 'creaentaut';
     const CREATE_OBFUSCATE_LINKS = 'creaentobf';
+    const CHANGE_NAME = 'chentnam';
 
 
 
     public function initialisation(): void {}
     public function genericActions(): void {
-        $this->_extractActionSynchronizeEntity();
-        if ($this->_actionSynchronizeEntityInstance != '')
+
+        if ($this->getHaveInput(self::SYNCHRONIZE))
             $this->_actionSynchronizeEntity();
 
         $this->_extractActionSynchronizeNewEntity();
         if ($this->_actionSynchronizeNewEntityID != '')
             $this->_actionSynchronizeNewEntity();
+
+        if ($this->getHaveInput(self::CHANGE_NAME))
+            $this->actionChangeName();
     }
     public function specialActions(): void {
-        if ($this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
-            || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
-        )
+        if (($this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
+            || $this->_entitiesInstance->getConnectedEntityIsUnlocked())
+            && $this->getHaveInput(self::CREATE)
+        ) {
             $this->_extractActionCreateEntity();
-        if ($this->_actionCreateEntity)
             $this->_actionCreateEntity();
+        }
     }
 
 
 
     protected ?Entity $_actionSynchronizeEntityInstance = null;
-    public function getSynchronizeEntityInstance(): ?Entity
-    {
-        return $this->_actionSynchronizeEntityInstance;
-    }
-    protected function _extractActionSynchronizeEntity(): void
-    {
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeEntity'))
-            return;
+    public function getSynchronizeEntityInstance(): ?Entity { return $this->_actionSynchronizeEntityInstance; }
+    protected function _actionSynchronizeEntity(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_metrologyInstance->addLog('extract action synchronize entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2ec437bf');
+        // TODO DISABLED for refactor
+        return;
 
         $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
-
-        if (Node::checkNID($arg))
-            $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
-    }
-    protected function _actionSynchronizeEntity(): void
-    {
-        $this->_metrologyInstance->addLog('action synchronize entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'f41d4b64');
+        if (!Node::checkNID($arg))
+            return;
+        $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNENT') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeEntityInstance);
 
@@ -104,16 +101,15 @@ class ActionsEntities extends Actions implements ActionsInterface {
     protected string $_actionSynchronizeNewEntityID = '';
     protected string $_actionSynchronizeNewEntityURL = '';
     protected ?Entity $_actionSynchronizeNewEntityInstance = null;
-    public function getSynchronizeNewEntityInstance(): ?Entity
-    {
-        return $this->_actionSynchronizeNewEntityInstance;
-    }
-    protected function _extractActionSynchronizeNewEntity(): void
-    {
+    public function getSynchronizeNewEntityInstance(): ?Entity { return $this->_actionSynchronizeNewEntityInstance; }
+    protected function _extractActionSynchronizeNewEntity(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeNewEntity'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action synchronize new entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+
+        // TODO DISABLED for refactor
+        return;
 
         $arg = $this->getFilterInput(self::SYNCHRONIZE_NEW, FILTER_FLAG_ENCODE_LOW);
 
@@ -160,9 +156,11 @@ class ActionsEntities extends Actions implements ActionsInterface {
             }
         }
     }
-    protected function _actionSynchronizeNewEntity(): void
-    {
-        $this->_metrologyInstance->addLog('action synchronize new entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+    protected function _actionSynchronizeNewEntity(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        // TODO DISABLED for refactor
+        return;
 
         // Vérifie si l'objet est déjà présent.
         $present = $this->_ioInstance->checkObjectPresent($this->_actionSynchronizeNewEntityID);
@@ -219,6 +217,10 @@ class ActionsEntities extends Actions implements ActionsInterface {
             $object->syncObject();
         }
         unset($links, $link, $object);
+    }
+
+    public function actionChangeName(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
     }
 
 
@@ -347,6 +349,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         }
     }
     private function _writeEntitySelfProperty(Entity $instance, string $reference, string $content): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($content != '') {
             $this->_metrologyInstance->addLog('action set entity ' . $reference . '=' . $content, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '81385b9d');
             $instance->setSelfProperty($reference, $content);

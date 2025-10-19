@@ -95,10 +95,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _extractActionDeleteObject(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteObject'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action delete object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '19096242');
 
         $argObject = $this->getFilterInput(self::DELETE, FILTER_FLAG_ENCODE_LOW);
         $argForce = filter_has_var(INPUT_GET, self::DELETE_FORCE);
@@ -123,7 +122,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionDeleteObject(): void
     {
-        $this->_metrologyInstance->addLog('action delete object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '234f6195');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Suppression de l'objet.
         if ($this->_actionDeleteObjectForce)
@@ -135,10 +134,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected ?Node $_actionProtectObjectInstance = null;
     protected function _extractActionProtectObject(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupProtectObject'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action protect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd4d5b6f4');
 
         $arg = $this->getFilterInput(self::PROTECT, FILTER_FLAG_ENCODE_LOW);
 
@@ -147,7 +145,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionProtectObject(): void
     {
-        $this->_metrologyInstance->addLog('action protect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0aff7e01');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
         $this->_actionProtectObjectInstance->setProtected();
@@ -156,10 +154,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected ?Node $_actionUnprotectObjectInstance = null;
     protected function _extractActionUnprotectObject(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUnprotectObject'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action unprotect object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4a15018f');
 
         $arg = $this->getFilterInput(self::UNPROTECT, FILTER_FLAG_ENCODE_LOW);
 
@@ -168,7 +165,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionUnprotectObject(): void
     {
-        $this->_metrologyInstance->addLog('action unprotect object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '2a652083');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
         $this->_actionUnprotectObjectInstance->setUnprotected();
@@ -177,10 +174,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected string $_actionShareProtectObjectToEntity = '';
     protected function _extractActionShareProtectObjectToEntity(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToEntity'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ae098953');
 
         $arg = $this->getFilterInput(self::SHARE_PROTECT_TO_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
@@ -189,7 +185,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to entity ' . $this->_actionShareProtectObjectToEntity, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27bac517');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($this->_actionShareProtectObjectToEntity);
@@ -198,10 +194,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected string $_actionShareProtectObjectToGroupOpened = '';
     protected function _extractActionShareProtectObjectToGroupOpened(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToGroupOpened'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action share protect object to opened group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '302775bd');
 
         $arg = $this->getFilterInput(self::SHARE_PROTECT_TO_GROUP_OPENED, FILTER_FLAG_ENCODE_LOW);
 
@@ -210,7 +205,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionShareProtectObjectToGroupOpened(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to opened group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3ae7ee74');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupOpened, \Nebule\Library\Cache::TYPE_GROUP);
@@ -223,10 +218,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected string $_actionShareProtectObjectToGroupClosed = '';
     protected function _extractActionShareProtectObjectToGroupClosed(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToGroupClosed'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action share protect object to closed group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c6c42849');
 
         $arg = $this->getFilterInput(self::SHARE_PROTECT_TO_GROUP_CLOSED, FILTER_FLAG_ENCODE_LOW);
 
@@ -235,7 +229,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionShareProtectObjectToGroupClosed(): void
     {
-        $this->_metrologyInstance->addLog('action share protect object to closed group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b217dcb1');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
         $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupClosed, \Nebule\Library\Cache::TYPE_GROUP);
@@ -248,10 +242,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected string $_actionCancelShareProtectObjectToEntity = '';
     protected function _extractActionCancelShareProtectObjectToEntity(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCancelShareProtectObjectToEntity'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action cancel share protect object to entity', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bf5ed8c7');
 
         $arg = $this->getFilterInput(self::CANCEL_SHARE_PROTECT_TO_ENTITY, FILTER_FLAG_ENCODE_LOW);
 
@@ -260,7 +253,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionCancelShareProtectObjectToEntity(): void
     {
-        $this->_metrologyInstance->addLog('action cancel share protect object to entity', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '71313220');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande d'annulation de protection de l'objet.
         $this->_nebuleInstance->getCurrentObjectInstance()->cancelShareProtectionTo($this->_actionCancelShareProtectObjectToEntity);
@@ -273,10 +266,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _extractActionSynchronizeObject(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeObject'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action synchronize object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd9e5454c');
 
         $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
 
@@ -285,7 +277,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionSynchronizeObject(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '74dfb558');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
 
@@ -323,10 +315,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _extractActionUploadFile(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadFile'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action upload file', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $uploadArgName = self::UPLOAD_FILE;
         if (!isset($_FILES[$uploadArgName]))
@@ -444,7 +435,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
     protected function _actionUploadFile(): void
     {
-        $this->_metrologyInstance->addLog('action upload file', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Lit le contenu du fichier.
         $data = file_get_contents($_FILES[self::UPLOAD_FILE]['tmp_name']);
@@ -505,10 +496,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     public function getUploadTextError(): bool { return $this->_actionUploadTextError; }
     public function getUploadTextErrorMessage(): string { return $this->_actionUploadTextErrorMessage; }
     protected function _extractActionUploadText(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadText'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action upload text', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = filter_has_var(INPUT_POST, self::UPLOAD_TEXT);
 
@@ -539,7 +529,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         }
     }
     protected function _actionUploadText(): void {
-        $this->_metrologyInstance->addLog('action upload text', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Crée l'instance de l'objet.
         $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);

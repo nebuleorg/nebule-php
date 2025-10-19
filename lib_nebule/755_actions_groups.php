@@ -80,10 +80,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionCreateGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action create group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argCreate = filter_has_var(INPUT_GET, self::CREATE);
 
@@ -107,7 +106,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionCreateGroup(): void
     {
-        $this->_metrologyInstance->addLog('action create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instance = new Group($this->_nebuleInstance, 'new', $this->_actionCreateGroupClosed);
 
@@ -148,10 +147,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionDeleteGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteGroup'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action delete group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argDelete = $this->getFilterInput(self::DELETE, FILTER_FLAG_ENCODE_LOW);
 
@@ -165,7 +163,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionDeleteGroup(): void
     {
-        $this->_metrologyInstance->addLog('action delete group ' . $this->_actionDeleteGroupID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instance = $this->_cacheInstance->newNode($this->_actionDeleteGroupID, \Nebule\Library\Cache::TYPE_GROUP);
 
@@ -202,10 +200,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionAddToGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action add to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = $this->getFilterInput(self::ADD_TO_GROUP, FILTER_FLAG_ENCODE_LOW);
 
@@ -214,7 +211,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionAddToGroup(): void
     {
-        $this->_metrologyInstance->addLog('action add to group ' . $this->_actionAddToGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceGroupe = $this->_cacheInstance->newNode($this->_actionAddToGroup, \Nebule\Library\Cache::TYPE_GROUP);
         $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
@@ -226,10 +223,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionRemoveFromGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupRemoveFromGroup'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action remove from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = $this->getFilterInput(self::REMOVE_FROM_GROUP, FILTER_FLAG_ENCODE_LOW);
 
@@ -238,7 +234,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionRemoveFromGroup(): void
     {
-        $this->_metrologyInstance->addLog('action remove from group ' . $this->_actionRemoveFromGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceGroupe = $this->_cacheInstance->newNode($this->_actionRemoveFromGroup, \Nebule\Library\Cache::TYPE_GROUP);
         $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
@@ -250,10 +246,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionAddItemToGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddItemToGroup'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action add item to group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = $this->getFilterInput(self::ADD_ITEM_TO_GROUP, FILTER_FLAG_ENCODE_LOW);
 
@@ -262,7 +257,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionAddItemToGroup(): void
     {
-        $this->_metrologyInstance->addLog('action add item to group ' . $this->_actionAddItemToGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
     }
 
@@ -273,10 +268,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _extractActionRemoveItemFromGroup(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupRemoveItemFromGroup'))
             return;
 
-        $this->_metrologyInstance->addLog('extract action remove item from group', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $arg = $this->getFilterInput(self::REMOVE_ITEM_FROM_GROUP, FILTER_FLAG_ENCODE_LOW);
 
@@ -285,7 +280,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
     protected function _actionRemoveItemFromGroup(): void
     {
-        $this->_metrologyInstance->addLog('action remove item from group ' . $this->_actionRemoveItemFromGroup, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
     }
 

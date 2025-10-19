@@ -205,6 +205,7 @@ abstract class Actions extends Functions implements ActionsInterface {
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c48b1d8c');
             }
         }
+        $this->_metrologyInstance->addLog('call modules actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27b77f2d');
     }
 
 

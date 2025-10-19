@@ -135,10 +135,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     protected ?BlocLink $_actionObfuscateLinkInstance = null;
     protected function _extractActionObfuscateLink(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupObfuscateLink'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c22677ad');
 
         $arg = $this->getFilterInput(self::OBFUSCATE);
 
@@ -147,13 +146,12 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionObfuscateLink(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_actionObfuscateLinkInstance === null
             || !$this->_actionObfuscateLinkInstance->getValid()
             || !$this->_actionObfuscateLinkInstance->getSigned() // FIXME
         )
             return;
-
-        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b3bf62a9');
 
         // On dissimule le lien.
         //$this->_actionObfuscateLinkInstance->obfuscateWrite(); FIXME
@@ -163,10 +161,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     protected bool $_actionSignLinkInstance1Obfuscate = false;
     protected function _extractActionSignLink1(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action sign link 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c5415d94');
 
         $arg = $this->getFilterInput(self::SIGN1);
         $argObfuscate = filter_has_var(INPUT_GET, self::SIGN1_OBFUSCATE);
@@ -179,8 +176,8 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionSignLink(string $link, bool $obfuscate = false): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8baa9fae');
 
             $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
             $blockLinkInstance->addLink($link);
@@ -208,10 +205,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     protected bool $_actionSignLinkInstance2Obfuscate = false;
     protected function _extractActionSignLink2(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action sign link 2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e1059b93');
 
         $arg = $this->getFilterInput(self::SIGN2);
         $argObfuscate = filter_has_var(INPUT_GET, self::SIGN2_OBFUSCATE);
@@ -226,10 +222,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     protected bool $_actionSignLinkInstance3Obfuscate = false;
     protected function _extractActionSignLink3(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action sign link 3', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cc145716');
 
         $arg = $this->getFilterInput(self::SIGN3);
         $argObfuscate = filter_has_var(INPUT_GET, self::SIGN3_OBFUSCATE);
@@ -243,14 +238,13 @@ class ActionsLinks extends Actions implements ActionsInterface {
     protected ?BlocLink $_actionUploadLinkInstance = null;
     protected function _extractActionUploadLink(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload signed link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0e682f22');
-
             $arg = $this->getFilterInput(self::UPLOAD_SIGNED);
 
             $permitNotCodeMaster = false;
@@ -276,10 +270,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     /*protected ?BlocLink $_actionObfuscateLinkInstance = null;
     protected function _extractActionObfuscateLink(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupObfuscateLink'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action obfuscate link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c22677ad');
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_OBFUSCATE_LINK);
 
@@ -288,13 +281,12 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionObfuscateLink(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_actionObfuscateLinkInstance === null
             || !$this->_actionObfuscateLinkInstance->getValid()
             || !$this->_actionObfuscateLinkInstance->getSigned() // FIXME
         )
             return;
-
-        $this->_metrologyInstance->addLog('action obfuscate link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b3bf62a9');
 
         // On dissimule le lien.
         $this->_actionObfuscateLinkInstance->obfuscateWrite();
@@ -312,14 +304,13 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _extractActionUploadFileLinks(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadFileLinks')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
                 || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
             )
         ) {
-            $this->_metrologyInstance->addLog('extract action upload file of signed links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
             // Lit le contenu de la variable _FILE si un fichier est téléchargé.
             if (isset($_FILES[self::UPLOAD_FILE_LINKS]['error'])
                 && $_FILES[self::UPLOAD_FILE_LINKS]['error'] == UPLOAD_ERR_OK
@@ -385,7 +376,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
      */
     protected function _actionUploadFileLinks(): void
     {
-        $this->_metrologyInstance->addLog('action upload file signed links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Ecrit les liens correctement signés.
         $updata = file($this->_actionUploadFileLinksPath);
@@ -433,10 +424,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _extractActionSynchronizeObjectLinks(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeObjectLinks'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action synchronize object links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1ec3ab52');
 
         $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
 
@@ -445,7 +435,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionSynchronizeObjectLinks(): void
     {
-        $this->_metrologyInstance->addLog('action synchronize object links', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4dc338f4');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNLNK') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectLinksInstance);
 
@@ -470,10 +460,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _extractActionAddProperty(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddProperty'))
             return;
-
-        $this->_metrologyInstance->addLog('extract action add property', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         $argAdd = $this->getFilterInput(self::ADD_PROPERTY, FILTER_FLAG_ENCODE_LOW);
 
@@ -507,6 +496,8 @@ class ActionsLinks extends Actions implements ActionsInterface {
     }
     protected function _actionAddProperty(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
         $prop = $this->_actionAddProperty;
         $propID = $this->getNidFromData($prop);
         $this->_metrologyInstance->addLog('action add property ' . $prop, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
