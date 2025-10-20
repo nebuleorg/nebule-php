@@ -4,6 +4,7 @@ namespace Nebule\Library;
 
 /**
  * Actions on applications.
+ * This class must not be used directly but via the entry point Actions->getInstanceActionsLocations().
  *
  * @author Projet nebule
  * @license GNU GPLv3

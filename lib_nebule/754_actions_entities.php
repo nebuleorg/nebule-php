@@ -4,7 +4,9 @@ namespace Nebule\Library;
 
 /**
  * Actions on entities.
+ * This class must not be used directly but via the entry point Actions->getInstanceActionsEntities().
  * TODO must be refactored!
+ *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule

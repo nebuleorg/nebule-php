@@ -3,7 +3,16 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe Actions communes.
+ * Common class for actions.
+ * All actions the user ask are detected and processed by different subclasses depending on the theme of the action.
+ * There's five parts:
+ * - 1 _initSubActions(): preparing the subclasses.
+ * - 2 specialActions(): proceed with special actions.
+ * - 3 genericActions(): proceed with generic actions.
+ * - 4 applicationsActions(): search and proceed with actions on the current application.
+ * - 5 modulesActions(): search and proceed with actions on all modules of the current application.
+ * The segmentation between generic and special actions is applied on applications and modules.
+ * All generique actions need a unlocked entity and a valid token.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -129,6 +138,62 @@ abstract class Actions extends Functions implements ActionsInterface {
         $this->modulesActions();
     }
 
+
+
+    public function specialActions(): void {
+        $this->_metrologyInstance->addLog('call special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6f9dfb64');
+        try {
+            $this->_instanceActionsLinks->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions links ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '211aa041');
+        }
+        try {
+            $this->_instanceActionsObjects->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions objects ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e85d6df2');
+        }
+        try {
+            $this->_instanceActionsEntities->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions entities ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '8000113d');
+        }
+        try {
+            $this->_instanceActionsGroups->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions groups ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '18dd4a7c');
+        }
+        try {
+            $this->_instanceActionsLocations->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions locations ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '5d2b7c0b');
+        }
+        try {
+            $this->_instanceActionsApplications->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions applications ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cc89cc54');
+        }
+        try {
+            $this->_instanceActionsMarks->specialActions();
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('error call special actions marks ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '327969ed');
+        }
+        $this->_metrologyInstance->addLog('call special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88ff0291');
+    }
+
     public function genericActions(): void {
         $this->_metrologyInstance->addLog('call generic actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '84b627f1');
 
@@ -206,62 +271,6 @@ abstract class Actions extends Functions implements ActionsInterface {
             }
         }
         $this->_metrologyInstance->addLog('call modules actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27b77f2d');
-    }
-
-
-
-    public function specialActions(): void {
-        $this->_metrologyInstance->addLog('call special actions', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6f9dfb64');
-        try {
-            $this->_instanceActionsLinks->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions links ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '211aa041');
-        }
-        try {
-            $this->_instanceActionsObjects->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions objects ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e85d6df2');
-        }
-        try {
-            $this->_instanceActionsEntities->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions entities ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '8000113d');
-        }
-        try {
-            $this->_instanceActionsGroups->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions groups ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '18dd4a7c');
-        }
-        try {
-            $this->_instanceActionsLocations->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions locations ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '5d2b7c0b');
-        }
-        try {
-            $this->_instanceActionsApplications->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions applications ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cc89cc54');
-        }
-        try {
-            $this->_instanceActionsMarks->specialActions();
-        } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('error call special actions marks ('  . $e->getCode() . ') : ' . $e->getFile()
-                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '327969ed');
-        }
-        $this->_metrologyInstance->addLog('call special actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '88ff0291');
     }
 
     public function getDisplayActions(): void
