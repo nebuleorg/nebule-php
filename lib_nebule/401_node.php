@@ -446,7 +446,8 @@ class Node extends Functions implements nodeInterface
             $sortedLinks[$date] = $r;
         }
         unset($links);
-        krsort($sortedLinks, SORT_STRING);
+        //krsort($sortedLinks, SORT_STRING);
+        ksort($sortedLinks, SORT_STRING); // FIXME
 
         return $sortedLinks;
     }
@@ -470,7 +471,8 @@ class Node extends Functions implements nodeInterface
 
         if (sizeof($links) == 0)
             return null;
-
+foreach ($links as $link)
+    $this->_metrologyInstance->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $link = end($links);
 
         return $link;
@@ -549,18 +551,17 @@ class Node extends Functions implements nodeInterface
 
         $link = $this->getPropertyLink($type, $socialClass);
 
-        if ($link == '' || !is_a($link, 'Nebule\Library\LinkRegister'))
-            return '';
+        $property = '';
+        if ($link != null && is_a($link, 'Nebule\Library\LinkRegister'))
+            $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
 
-        $property = $this->_readOneLineOtherObject($link->getParsed()['bl/rl/nid2']);
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('property=' . $property, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '535b1337');
-
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('property name=' . $type . ' value=' . $property, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '535b1337');
         return $property;
     }
 
     /**
      * Lit les propriétés de l'objet nebule dans ses liens.
-     * Retourne un tableau de chaines de texte de une seule ligne, ou un tableau de une chaine vide si problème.
+     * Retourne un tableau de chaines de texte d'une seule ligne, ou un tableau d'une chaine vide si problème.
      *
      * @param string $type
      * @param string $socialClass
@@ -578,14 +579,10 @@ class Node extends Functions implements nodeInterface
         $this->_getLinksByNID3($links, $type);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
-        if (sizeof($links) == 0)
-            return array();
-
-        // Extrait le contenu des objets de propriété.
-        foreach ($links as $i => $l)
+        foreach ($links as $i => $l) {
             $properties[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
-        unset($links);
-
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('list property name=' . $type . ' value=' . $properties[$i], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3bbb0aa7');
+        }
         return $properties;
     }
 

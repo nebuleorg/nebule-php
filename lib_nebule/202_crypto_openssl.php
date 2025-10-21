@@ -340,8 +340,8 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         } else {
             if (openssl_sign($data, $signatureBin, $privateKeyBin, OPENSSL_ALGO_SHA256)) {
                 unset($privateKeyBin);
-$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('DEBUGGING sign=' . bin2hex($signatureBin), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_metrologyInstance->addLog('DEBUGGING sign=' . bin2hex($signatureBin), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 return bin2hex($signatureBin);
             }
             unset($privateKeyBin);
@@ -357,15 +357,15 @@ $this->_metrologyInstance->addLog('DEBUGGING sign=' . bin2hex($signatureBin), Me
     public function verify(string $data, string $sign, string $publicKey, string $algo): bool {
         $publicKeyBin = openssl_pkey_get_public($publicKey);
 
-while ($msg = openssl_error_string())
-$this->_metrologyInstance->addLog('DEBUGGING error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+//while ($msg = openssl_error_string())
+//$this->_metrologyInstance->addLog('DEBUGGING error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
 
         if ($publicKeyBin === false)
             return false;
         $signBin = pack('H*', $sign);
-$this->_metrologyInstance->addLog('DEBUGGING pubkey=' . $publicKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('DEBUGGING sign=' . $sign, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_metrologyInstance->addLog('DEBUGGING pubkey=' . $publicKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//$this->_metrologyInstance->addLog('DEBUGGING sign=' . $sign, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (\Nebule\Bootstrap\DEBUG_CRYPTO_SYSTEM == 1) {
             $maxSize = ((int)openssl_pkey_get_details($publicKeyBin)['bits']/8) - 11;
             if (strlen($data) > $maxSize)

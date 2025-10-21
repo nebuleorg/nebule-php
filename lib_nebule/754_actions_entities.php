@@ -244,27 +244,27 @@ class ActionsEntities extends Actions implements ActionsInterface {
 
         if ($_changeName  != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_NOM . '=' . $_changeName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '78517959');
-            $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changeName);
+            $instance->setProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changeName);
             $this->_change = true;
         }
         if ($_changePrefix  != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_PREFIX . '=' . $_changePrefix, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '486f6813');
-            $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changePrefix);
+            $instance->setProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $_changePrefix);
             $this->_change = true;
         }
         if ($_changeSuffix  != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_SUFFIX . '=' . $_changeSuffix, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '30d08e02');
-            $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changeSuffix);
+            $instance->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $_changeSuffix);
             $this->_change = true;
         }
         if ($_changeFirstname  != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_PRENOM . '=' . $_changeFirstname, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ceca7fb5');
-            $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changeFirstname);
+            $instance->setProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $_changeFirstname);
             $this->_change = true;
         }
         if ($_changeNickname  != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_SURNOM . '=' . $_changeNickname, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7af6f9fe');
-            $instance->setSelfProperty(References::REFERENCE_NEBULE_OBJET_NOM, $_changeNickname);
+            $instance->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $_changeNickname);
             $this->_change = true;
         }
     }

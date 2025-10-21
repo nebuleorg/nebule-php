@@ -298,7 +298,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[1]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
                     // See entity.
                     $hookArray[4]['name'] = '::module:entities:ShowEntity';
                     $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
@@ -894,11 +894,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                 </p>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
-
-                                </div>
-                                <label for="moduleEntitiesCreatePropertyEntryPrefix"><?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?></label>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPrefix">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PREFIX); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CHANGE_PREFIX; ?>"
                                        size="10" value=""
@@ -906,10 +905,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryPrefix"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prenom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPrenom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PRENOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CHANGE_FIRSTNAME; ?>"
                                        size="20" value=""
@@ -917,10 +916,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryPrenom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/surnom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntrySurnom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SURNOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CHANGE_NICKNAME; ?>"
                                        size="10" value=""
@@ -928,10 +927,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntrySurnom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/nom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryNom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_NOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CHANGE_NAME; ?>"
                                        size="20" value=""
@@ -939,9 +938,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryNom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntrySuffix">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SUFFIX); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CHANGE_SUFFIX; ?>"
                                        size="10" value=""
@@ -968,11 +968,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                   . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName"
-                                     id="moduleEntitiesCreatePropertyNamePWD1">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPWD1">
                                     <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
-
-                                </div>
+                                </label>
                                 <input type="password"
                                        name="<?php echo ActionsEntities::CHANGE_PASSWORD1; ?>"
                                        size="30" value=""
@@ -980,11 +979,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryPWD1"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName"
-                                     id="moduleEntitiesCreatePropertyNamePWD2">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPWD2">
                                     <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
-
-                                </div>
+                                </label>
                                 <input type="password"
                                        name="<?php echo ActionsEntities::CHANGE_PASSWORD2; ?>"
                                        size="30" value=""
@@ -1721,11 +1719,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                 </p>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?>
-
-                                </div>
-                                <label for="moduleEntitiesCreatePropertyEntryPrefix"><?php echo $this->_translateInstance->getTranslate('nebule/objet/prefix'); ?></label>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPrefix">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PREFIX); ?>
+                                </label>
                                 <input type="text"
                                         name="<?php echo ActionsEntities::CREATE_PREFIX; ?>"
                                         size="10" value=""
@@ -1733,10 +1730,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                         id="moduleEntitiesCreatePropertyEntryPrefix"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/prenom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPrenom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PRENOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CREATE_FIRSTNAME; ?>"
                                        size="20" value=""
@@ -1744,10 +1741,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryPrenom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/surnom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntrySurnom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SURNOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CREATE_NICKNAME; ?>"
                                        size="10" value=""
@@ -1755,10 +1752,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntrySurnom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/nom'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryNom">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_NOM); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CREATE_NAME; ?>"
                                        size="20" value=""
@@ -1766,9 +1763,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryNom"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/suffix'); ?>
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntrySuffix">
+                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SUFFIX); ?>
+                                </label>
                                 <input type="text"
                                        name="<?php echo ActionsEntities::CREATE_SUFFIX; ?>"
                                        size="10" value=""
@@ -1778,11 +1776,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                         </div>
                         <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName"
-                                     id="moduleEntitiesCreatePropertyNamePWD1">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPWD1">
                                     <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
-
-                                </div>
+                                </label>
                                 <input type="password"
                                        name="<?php echo ActionsEntities::CREATE_PASSWORD1; ?>"
                                        size="30" value=""
@@ -1790,11 +1787,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                                        id="moduleEntitiesCreatePropertyEntryPWD1"/>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName"
-                                     id="moduleEntitiesCreatePropertyNamePWD2">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryPWD2">
                                     <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
-
-                                </div>
+                                </label>
                                 <input type="password"
                                        name="<?php echo ActionsEntities::CREATE_PASSWORD2; ?>"
                                        size="30" value=""
@@ -1810,59 +1806,63 @@ class ModuleEntities extends \Nebule\Library\Modules
                                 </p>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryAlgo">
                                     <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAlgorithm'); ?>
-
-                                </div>
+                                </label>
                                 <select
-                                    name="<?php echo ActionsEntities::CREATE_ALGORITHM; ?>"
-                                    class="moduleEntitiesCreatePropertyEntry">
-                                    <?php
-                                    $defaultAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
-                                    foreach ($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC) as $algo) {
-                                        echo '<option value="' . $algo . '"';
-                                        if ($defaultAlgo === $algo)
-                                            echo ' selected';
-                                        echo '>' . $algo . '</option>';
-                                    }
-                                    ?>
+                                        id="moduleEntitiesCreatePropertyEntryAlgo"
+                                        name="<?php echo ActionsEntities::CREATE_ALGORITHM; ?>"
+                                        class="moduleEntitiesCreatePropertyEntry">
+                                        <?php
+                                        $defaultAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
+                                        foreach ($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC) as $algo) {
+                                            echo '<option value="' . $algo . '"';
+                                            if ($defaultAlgo === $algo)
+                                                echo ' selected';
+                                            echo '>' . $algo . '</option>';
+                                        }
+                                        ?>
                                 </select>
                             </div>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
+                                <label class="moduleEntitiesCreatePropertyName"
+                                       for="moduleEntitiesCreatePropertyEntryType">
                                     <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
-                                </div>
+                                </label>
                                  <select
-                                    name="<?php echo ActionsEntities::CREATE_TYPE; ?>"
-                                    class="moduleEntitiesCreatePropertyEntry">
-                                    <option value="undef" selected>
-                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'); ?>
+                                        id="moduleEntitiesCreatePropertyEntryType"
+                                        name="<?php echo ActionsEntities::CREATE_TYPE; ?>"
+                                        class="moduleEntitiesCreatePropertyEntry">
+                                        <option value="undef" selected>
+                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'); ?>
 
-                                    </option>
-                                    <option value="human">
-                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeHuman'); ?>
+                                        </option>
+                                        <option value="human">
+                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeHuman'); ?>
 
-                                    </option>
-                                    <option value="robot">
-                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeRobot'); ?>
+                                        </option>
+                                        <option value="robot">
+                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeRobot'); ?>
 
-                                    </option>
+                                        </option>
                                 </select>
                             </div>
 
                             <?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) { ?>
                             <div class="moduleEntitiesCreateProperty">
-                                <div class="moduleEntitiesCreatePropertyName">
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAutonomy'); ?>
-
-                                </div>
+                                <label class="moduleEntitiesCreatePropertyName"
+                                        for="moduleEntitiesCreatePropertyEntryAutonomy">
+                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAutonomy'); ?>
+                                </label>
                                 <select
+                                        id="moduleEntitiesCreatePropertyEntryAutonomy"
                                         name="<?php echo ActionsEntities::CREATE_AUTONOMY; ?>"
                                         class="moduleEntitiesCreatePropertyEntry">
-                                    <option value="y" selected>
-                                        <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
+                                        <option value="y" selected>
+                                            <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
 
-                                    </option>
+                                        </option>
                                 </select>
                             </div>
                             <?php } ?>
