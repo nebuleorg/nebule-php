@@ -447,7 +447,7 @@ class Node extends Functions implements nodeInterface
         }
         unset($links);
         //krsort($sortedLinks, SORT_STRING);
-        ksort($sortedLinks, SORT_STRING); // FIXME
+        ksort($sortedLinks, SORT_STRING);
 
         return $sortedLinks;
     }
@@ -471,10 +471,11 @@ class Node extends Functions implements nodeInterface
 
         if (sizeof($links) == 0)
             return null;
-foreach ($links as $link)
-    $this->_metrologyInstance->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+//foreach ($links as $link)
+//    $this->_metrologyInstance->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $link = end($links);
-
+        if (!$link)
+            return null;
         return $link;
     }
 

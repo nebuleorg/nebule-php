@@ -854,12 +854,26 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setIcon($instanceIcon);
         $instanceList->addItem($instance);
 
-        if ($this->_actionInstance->getInstanceActionsEntities()->getChange()) {
+        if ($this->_actionInstance->getInstanceActionsEntities()->getChangeProperty()) {
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setMessage('::module:entities:EntityModified');
             $instance->setSocial('all');
             $instance->setType(DisplayItemIconMessage::TYPE_OK);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceList->addItem($instance);
+        }
+
+        if ($this->_actionInstance->getInstanceActionsEntities()->getTryChangePassword()) {
+            $instance = new DisplayInformation($this->_applicationInstance);
+            $instance->setSocial('all');
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            if ($this->_actionInstance->getInstanceActionsEntities()->getChangePassword()) {
+                $instance->setMessage('::module:entities:PasswordModified');
+                $instance->setType(DisplayItemIconMessage::TYPE_OK);
+            } else {
+                $instance->setMessage('::module:entities:PasswordNotModified');
+                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            }
             $instanceList->addItem($instance);
         }
 
@@ -2193,6 +2207,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modifier',
             '::module:entities:ModifyTheEntity' => "Modifier l'entité",
             '::module:entities:EntityModified' => 'Entité modifiée',
+            '::module:entities:PasswordModified' => 'Mot de passe modifié',
+            '::module:entities:PasswordNotModified' => 'Mot de passe non modifié',
             '::module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
             '::module:entities:SecurityMaster' => "L'entité maîtresse de la sécurité.",
             '::module:entities:CodeMaster' => "L'entité maîtresse du code.",
@@ -2281,6 +2297,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modify',
             '::module:entities:ModifyTheEntity' => 'Modify the entity',
             '::module:entities:EntityModified' => 'Entity modified',
+            '::module:entities:PasswordModified' => 'Password modified',
+            '::module:entities:PasswordNotModified' => 'Password not modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::module:entities:SecurityMaster' => 'The master entity of security.',
             '::module:entities:CodeMaster' => 'The master entity of code.',
@@ -2369,6 +2387,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modify',
             '::module:entities:ModifyTheEntity' => 'Modify the entity',
             '::module:entities:EntityModified' => 'Entity modified',
+            '::module:entities:PasswordModified' => 'Password modified',
+            '::module:entities:PasswordNotModified' => 'Password not modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
             '::module:entities:SecurityMaster' => 'The master entity of security.',
             '::module:entities:CodeMaster' => 'The master entity of code.',
