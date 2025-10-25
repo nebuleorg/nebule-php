@@ -28,7 +28,6 @@ class ActionsEntities extends Actions implements ActionsInterface {
     const CREATE_TYPE = 'creaenttype';
     const CREATE_AUTONOMY = 'creaentaut';
     const CREATE_OBFUSCATE_LINKS = 'creaentobf';
-    const CHANGE = 'chent';
     const CHANGE_NAME = 'chentnam';
     const CHANGE_PREFIX = 'chentprefix';
     const CHANGE_SUFFIX = 'chentsuffix';
@@ -50,8 +49,16 @@ class ActionsEntities extends Actions implements ActionsInterface {
 
         if ($this->getHaveInput(self::SYNCHRONIZE))
             $this->_synchronize();
-        if ($this->getHaveInput(self::CHANGE))
-            $this->_changeProperty();
+        if ($this->getHaveInput(self::CHANGE_NAME))
+            $this->_changeName();
+        if ($this->getHaveInput(self::CHANGE_PREFIX))
+            $this->_changePrefix();
+        if ($this->getHaveInput(self::CHANGE_SUFFIX))
+            $this->_changeSuffix();
+        if ($this->getHaveInput(self::CHANGE_FIRSTNAME))
+            $this->_changeFirstname();
+        if ($this->getHaveInput(self::CHANGE_NICKNAME))
+            $this->_changeNickname();
         if ($this->getHaveInput(self::CHANGE_PASSWORD))
             $this->_changePassword();
         if ($this->getHaveInput(self::DELETE_NAME)
@@ -244,7 +251,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
 
     private bool $_changeProperty = false;
     public function getChangeProperty(): bool { return $this->_changeProperty; }
-    private function _changeProperty(): void { // TODO do the same on 753_actions_objects.php
+    private function _changePropertyOld(): void { // TODO do the same on 753_actions_objects.php
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeProperty = false;
         $instance = $this->_nebuleInstance->getCurrentEntityInstance();
@@ -254,31 +261,31 @@ class ActionsEntities extends Actions implements ActionsInterface {
         $changeFirstname = $this->getFilterInput(self::CHANGE_FIRSTNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
         $changeNickname = $this->getFilterInput(self::CHANGE_NICKNAME, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        if ($changeName  != '') {
+        if ($changeName != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_NOM . '=' . $changeName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '78517959');
             $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_NOM);
             $instance->setProperty(References::REFERENCE_NEBULE_OBJET_NOM, $changeName);
             $this->_changeProperty = true;
         }
-        if ($changePrefix  != '') {
+        if ($changePrefix != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_PREFIX . '=' . $changePrefix, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '486f6813');
             $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PREFIX);
             $instance->setProperty(References::REFERENCE_NEBULE_OBJET_PREFIX, $changePrefix);
             $this->_changeProperty = true;
         }
-        if ($changeSuffix  != '') {
+        if ($changeSuffix != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_SUFFIX . '=' . $changeSuffix, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '30d08e02');
             $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX);
             $instance->setProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX, $changeSuffix);
             $this->_changeProperty = true;
         }
-        if ($changeFirstname  != '') {
+        if ($changeFirstname != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_PRENOM . '=' . $changeFirstname, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ceca7fb5');
             $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PRENOM);
             $instance->setProperty(References::REFERENCE_NEBULE_OBJET_PRENOM, $changeFirstname);
             $this->_changeProperty = true;
         }
-        if ($changeNickname  != '') {
+        if ($changeNickname != '') {
             $this->_metrologyInstance->addLog('change entity ' . References::REFERENCE_NEBULE_OBJET_SURNOM . '=' . $changeNickname, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '7af6f9fe');
             $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SURNOM);
             $instance->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $changeNickname);
@@ -286,68 +293,99 @@ class ActionsEntities extends Actions implements ActionsInterface {
         }
     }
 
+    private bool $_changeNameTry = false;
+    private bool $_changeNameOk = false;
+    private bool $_changePrefixTry = false;
+    private bool $_changePrefixOk = false;
+    private bool $_changeSuffixTry = false;
+    private bool $_changeSuffixOk = false;
+    private bool $_changeFirstnameTry = false;
+    private bool $_changeFirstnameOk = false;
+    private bool $_changeNicknameTry = false;
+    private bool $_changeNicknameOk = false;
+    public function getChangeNameTry(): bool { return $this->_changeNameTry; }
+    public function getChangeNameOk(): bool { return $this->_changeNameOk; }
+    public function getChangePrefixTry(): bool { return $this->_changePrefixTry; }
+    public function getChangePrefixOk(): bool { return $this->_changePrefixOk; }
+    public function getChangeSuffixTry(): bool { return $this->_changeSuffixTry; }
+    public function getChangeSuffixOk(): bool { return $this->_changeSuffixOk; }
+    public function getChangeFirstnameTry(): bool { return $this->_changeFirstnameTry; }
+    public function getChangeFirstnameOk(): bool { return $this->_changeFirstnameOk; }
+    public function getChangeNicknameTry(): bool { return $this->_changeNicknameTry; }
+    public function getChangeNicknameOk(): bool { return $this->_changeNicknameOk; }
+    private function _changeName(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_changeNameTry = true;
+        $this->_changePrefixOk = $this->_changeProperty(self::CHANGE_NAME, References::REFERENCE_NEBULE_OBJET_NOM);
+    }
+    private function _changePrefix(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_changePrefixTry = true;
+        $this->_changePrefixOk = $this->_changeProperty(self::CHANGE_PREFIX, References::REFERENCE_NEBULE_OBJET_PREFIX);
+    }
+    private function _changeSuffix(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_changeSuffixTry = true;
+        $this->_changeSuffixOk = $this->_changeProperty(self::CHANGE_SUFFIX, References::REFERENCE_NEBULE_OBJET_SUFFIX);
+    }
+    private function _changeFirstname(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_changeFirstnameTry = true;
+        $this->_changeFirstnameOk = $this->_changeProperty(self::CHANGE_FIRSTNAME, References::REFERENCE_NEBULE_OBJET_PRENOM);
+    }
+    private function _changeNickname(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_changeNicknameTry = true;
+        $this->_changeNicknameOk = $this->_changeProperty(self::CHANGE_NICKNAME, References::REFERENCE_NEBULE_OBJET_SURNOM);
+    }
 
 
-    private bool $_deleteProperty = false;
-    public function getDeleteProperty(): bool { return $this->_deleteProperty; }
+
+    private bool $_deletePropertyTry = false;
+    private bool $_deletePropertyOk = false;
+    public function getDeletePropertyTry(): bool { return $this->_deletePropertyTry; }
+    public function getDeleteProperty(): bool { return $this->_deletePropertyOk; }
     private function _deleteProperties(): void { // TODO do the same on 753_actions_objects.php
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_deleteProperty = false;
+        $this->_deletePropertyTry = true;
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink'))
+            return;
         $deleteName = $this->getHaveInput(self::DELETE_NAME);
         $deletePrefix = $this->getHaveInput(self::DELETE_PREFIX);
         $deleteSuffix = $this->getHaveInput(self::DELETE_SUFFIX);
         $deleteFirstname = $this->getHaveInput(self::DELETE_FIRSTNAME);
         $deleteNickname = $this->getHaveInput(self::DELETE_NICKNAME);
-
         if ($deleteName)
-            $this->_deleteProperty = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_NOM);
+            $this->_deletePropertyOk = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_NOM);
         if ($deletePrefix)
-            $this->_deleteProperty = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PREFIX);
+            $this->_deletePropertyOk = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PREFIX);
         if ($deleteSuffix)
-            $this->_deleteProperty = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX);
+            $this->_deletePropertyOk = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SUFFIX);
         if ($deleteFirstname)
-            $this->_deleteProperty = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PRENOM);
+            $this->_deletePropertyOk = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_PRENOM);
         if ($deleteNickname)
-            $this->_deleteProperty = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SURNOM);
-    }
-    private function _deleteProperty(string $name): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_nebuleInstance->getCurrentEntityInstance();
-        $inputLinks = $instance->getPropertiesLinks($name);
-        if (sizeof($inputLinks) == 0)
-            return false;
-        $this->_metrologyInstance->addLog('delete entity property ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c92cb974');
-        foreach ($inputLinks as $inputLink) {
-            $bloclink = new BlocLink($this->_nebuleInstance, 'new');
-            $nid1 = $instance->getID();
-            $nid2 = $inputLink->getParsed()['bl/rl/nid2'];
-            $nid3 = $inputLink->getParsed()['bl/rl/nid3'];
-            $bloclink->addLink('x>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-            $bloclink->write();
-$this->_metrologyInstance->addLog('add delete link ' . 'x>' . $nid1 . '>' . $nid2 . '>' . $nid3, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        }
-        return true;
+            $this->_deletePropertyOk = $this->_deleteProperty(References::REFERENCE_NEBULE_OBJET_SURNOM);
     }
 
 
 
-    private bool $_tryChangePassword = false;
-    private bool $_changePassword = false;
-    public function getChangePassword(): bool { return $this->_changePassword; }
-    public function getTryChangePassword(): bool { return $this->_tryChangePassword; }
+    private bool $_changePasswordTry = false;
+    private bool $_changePasswordOk = false;
+    public function getChangePasswordOk(): bool { return $this->_changePasswordOk; }
+    public function getChangePasswordTry(): bool { return $this->_changePasswordTry; }
     private function _changePassword(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_changePassword = false;
-        $this->_tryChangePassword = true;
+        $this->_changePasswordTry = true;
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity'))
+            return;
         $instance = $this->_entitiesInstance->getConnectedEntityInstance();
         $_changePassword1 = $this->getFilterInput(self::CHANGE_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES);
         $_changePassword2 = $this->getFilterInput(self::CHANGE_PASSWORD2, FILTER_FLAG_NO_ENCODE_QUOTES);
-
         if ($_changePassword1 != '' && $_changePassword2 != '') {
             if ($_changePassword1 == $_changePassword2) {
                 $this->_metrologyInstance->addLog('change entity password', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '652ba93f');
                 $instance->setNewPrivateKeyPassword($_changePassword1);
-                $this->_changePassword = true;
+                $this->_changePasswordOk = true;
             } else {
                 $this->_metrologyInstance->addLog('passwords not match', Metrology::LOG_LEVEL_ERROR, __METHOD__, '11a6587c');
             }

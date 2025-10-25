@@ -79,7 +79,7 @@ namespace Nebule\Library;
  */
 class DisplayInformation extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    private bool $_displayAlone = false;
+    protected bool $_displayAlone = false;
 
     protected function _initialisation(): void
     {
@@ -87,6 +87,13 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         $this->setSize();
         $this->setRatio();
     }
+
+    /**
+     * Set to true when not on a list.
+     * @param bool $enable
+     * @return void
+     */
+    public function setDisplayAlone(bool $enable): void { $this->_displayAlone = $enable; }
 
     public function getHTML(): string
     {
@@ -107,35 +114,35 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         return $result;
     }
 
-    private function _getAloneStartHTML(): string
+    protected function _getAloneStartHTML(): string
     {
         if ($this->_displayAlone)
             return '<div class="layoutAloneItem"><div class="aloneItemContent">';
         return '';
     }
 
-    private function _getAloneEndHTML(): string
+    protected function _getAloneEndHTML(): string
     {
         if ($this->_displayAlone)
             return '</div></div>';
         return '';
     }
 
-    private function _getLinkStartHTML(): string
+    protected function _getLinkStartHTML(): string
     {
-        if ($this->_link != '')
+        if ($this->_link != '' && $this->_linkEnable)
             return '<a href="' . $this->_link . '">';
         return '';
     }
 
-    private function _getLinkEndHTML(): string
+    protected function _getLinkEndHTML(): string
     {
-        if ($this->_link != '')
+        if ($this->_link != '' && $this->_linkEnable)
             return '</a>';
         return '';
     }
 
-    private function _getTinyHTML(): string
+    protected function _getTinyHTML(): string
     {
         $result = '';
         if ($this->_icon !== null)
@@ -144,7 +151,7 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         return $result;
     }
 
-    private function _getNotTinyHTML(): string
+    protected function _getNotTinyHTML(): string
     {
         $padding = 0;
         $result = '<div class="layoutObject layoutInformation">';
@@ -160,16 +167,6 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         $result .= '<div class="informationTitleName informationTitleName' . $this->_type . ' informationTitle' . $this->_sizeCSS . 'Name">' . $this->_message . '</div>';
         $result .= '</div></div></div>';
         return $result;
-    }
-
-    /**
-     * Set to true when not on a list.
-     * @param bool $enable
-     * @return void
-     */
-    public function setDisplayAlone(bool $enable): void
-    {
-        $this->_displayAlone = $enable;
     }
 
     public static function displayCSS(): void

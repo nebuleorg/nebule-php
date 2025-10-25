@@ -147,12 +147,11 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     /**
      * Set the alternate text of the icon and the text of the box if not on tiny size.
      * Must be called after setType() because this changes the icon alternate name too.
+     * The text is translated.
      * @param String $text
      * @return void
      */
-    public function setIconText(String $text): void {
-        $this->_iconText = $this->_translateInstance->getTranslate($text);
-    }
+    public function setIconText(String $text): void { $this->_iconText = $this->_translateInstance->getTranslate($text);}
 
     protected function _getNidIconHTML(?Node $nid, ?Node $icon = null): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -239,6 +238,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
 
     protected string $_message = '';
     protected string $_link = '';
+    protected bool $_linkEnable = true;
     protected string $_type = '';
 
     public function setMessage(string $message,
@@ -263,10 +263,8 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
         $this->_message = sprintf($message, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
-    public function setLink(string $link): void
-    {
-        $this->_link = trim((string)filter_var($link, FILTER_SANITIZE_URL));
-    }
+    public function setLink(string $link): void { $this->_link = trim((string)filter_var($link, FILTER_SANITIZE_URL)); }
+    public function setLinkEnable(bool $enable): void { $this->_linkEnable = $enable; }
 
     public function setType(string $type): void
     {

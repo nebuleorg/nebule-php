@@ -238,7 +238,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['name'] = '::module:entities:lock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                    $hookArray[0]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGOUT
                         . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
@@ -259,7 +259,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[2]['name'] = '::module:entities:modify';
                     $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                     $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[2]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                         . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object;
@@ -268,7 +269,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[0]['name'] = '::module:entities:unlock';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                    $hookArray[0]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
                         . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=login'
                         . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
@@ -854,20 +855,35 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instance->setIcon($instanceIcon);
         $instanceList->addItem($instance);
 
-        if ($this->_actionInstance->getInstanceActionsEntities()->getChangeProperty()) {
+        if ($this->_actionInstance->getInstanceActionsEntities()->getChangeNameTry()
+                || $this->_actionInstance->getInstanceActionsEntities()->getChangePrefixTry()
+                || $this->_actionInstance->getInstanceActionsEntities()->getChangeSuffixTry()
+                || $this->_actionInstance->getInstanceActionsEntities()->getChangeFirstnameTry()
+                || $this->_actionInstance->getInstanceActionsEntities()->getChangeNicknameTry()
+        ) {
             $instance = new DisplayInformation($this->_applicationInstance);
-            $instance->setMessage('::module:entities:EntityModified');
+            if (($this->_actionInstance->getInstanceActionsEntities()->getChangeNameTry() && $this->_actionInstance->getInstanceActionsEntities()->getChangeNameOk())
+                    || ($this->_actionInstance->getInstanceActionsEntities()->getChangePrefixTry() && $this->_actionInstance->getInstanceActionsEntities()->getChangePrefixOk())
+                    || ($this->_actionInstance->getInstanceActionsEntities()->getChangeSuffixTry() && $this->_actionInstance->getInstanceActionsEntities()->getChangeSuffixOk())
+                    || ($this->_actionInstance->getInstanceActionsEntities()->getChangeFirstnameTry() && $this->_actionInstance->getInstanceActionsEntities()->getChangeFirstnameOk())
+                    || ($this->_actionInstance->getInstanceActionsEntities()->getChangeNicknameTry() && $this->_actionInstance->getInstanceActionsEntities()->getChangeNicknameOk())
+            ) {
+                $instance->setMessage('::module:entities:EntityModified');
+                $instance->setType(DisplayItemIconMessage::TYPE_OK);
+            } else {
+                $instance->setMessage('::module:entities:EntityNotModified');
+                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            }
             $instance->setSocial('all');
-            $instance->setType(DisplayItemIconMessage::TYPE_OK);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
             $instanceList->addItem($instance);
         }
 
-        if ($this->_actionInstance->getInstanceActionsEntities()->getTryChangePassword()) {
+        if ($this->_actionInstance->getInstanceActionsEntities()->getChangePasswordTry()) {
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setSocial('all');
             $instance->setRatio(DisplayItem::RATIO_SHORT);
-            if ($this->_actionInstance->getInstanceActionsEntities()->getChangePassword()) {
+            if ($this->_actionInstance->getInstanceActionsEntities()->getChangePasswordOk()) {
                 $instance->setMessage('::module:entities:PasswordModified');
                 $instance->setType(DisplayItemIconMessage::TYPE_OK);
             } else {
@@ -876,106 +892,97 @@ class ModuleEntities extends \Nebule\Library\Modules
             }
             $instanceList->addItem($instance);
         }
+        $commonLink = '?'
+                . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue($entity->getPrefixName());
+            $instance->setInputName(ActionsEntities::CHANGE_PREFIX);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PREFIX);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue($entity->getFirstname());
+            $instance->setInputName(ActionsEntities::CHANGE_FIRSTNAME);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PRENOM);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue($entity->getSurname());
+            $instance->setInputName(ActionsEntities::CHANGE_NICKNAME);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SURNOM);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue($entity->getName());
+            $instance->setInputName(ActionsEntities::CHANGE_NAME);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue($entity->getSuffixName());
+            $instance->setInputName(ActionsEntities::CHANGE_SUFFIX);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SUFFIX);
+        } else {
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setMessage('::::err_NotPermit');
             $instance->setSocial('all');
             $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
-            $instanceList->addItem($instance);
         }
+        $instanceList->addItem($instance);
 
         $instanceList->setOnePerLine();
         $instanceList->display();
 
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue($entity->getSuffixName());
+            $instance->setInputName(ActionsEntities::CHANGE_PASSWORD1);
+            $instance->setWithoutForm(true);
+            $instance->setWithSubmit(false);
+            $instance->setIconText('::::Password');
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue($entity->getSuffixName());
+            $instance->setInputName(ActionsEntities::CHANGE_PASSWORD2);
+            $instance->setWithoutForm(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconText('::module:entities:confirm');
+            $instanceList->addItem($instance);
+
+            $instanceList->setOnePerLine();
+            echo '<form method="post" action="' . $commonLink . '">' . "\n";
+            $instanceList->display();
+            echo '</form>' . "\n";
             ?>
 
             <div class="layoutAloneItem">
                 <div class="aloneTextItemContent">
                     <form method="post"
-                          action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                                  . '&' . ActionsEntities::CHANGE
-                                  . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                                  . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
-                            <div class="moduleEntitiesCreateHeader">
-                                <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:naming'); ?>
-
-                                </p>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPrefix">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PREFIX); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CHANGE_PREFIX; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPrefix"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPrenom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PRENOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CHANGE_FIRSTNAME; ?>"
-                                       size="20" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPrenom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntrySurnom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SURNOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CHANGE_NICKNAME; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntrySurnom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryNom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_NOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CHANGE_NAME; ?>"
-                                       size="20" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryNom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntrySuffix">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SUFFIX); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CHANGE_SUFFIX; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntrySuffix"/>
-                            </div>
-                        </div>
-                        <div class="moduleEntitiesCreateSubmit">
-                            <input type="submit"
-                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:ModifyTheEntity'); ?>"
-                                   class="moduleEntitiesRenameSubmitEntry"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <br />
-            <div class="layoutAloneItem">
-                <div class="aloneTextItemContent">
-                    <form method="post"
-                          action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                          action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                   . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                                   . '&' . ActionsEntities::CHANGE_PASSWORD
                                   . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
@@ -1191,9 +1198,10 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                         <div class="moduleEntitiesActionDivIcon">
                             <?php $this->_displayInstance->displayObjectColorIcon(
-                                $objectInstance, Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                $objectInstance, References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                                . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
+                                . '&' . References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid2']); ?>
                         </div>
                         <div>
                             <p class="moduleEntitiesActionDate">
@@ -1720,7 +1728,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             <div class="layoutAloneItem">
                 <div class="aloneTextItemContent">
                     <form method="post"
-                          action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                          action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                               . '&' . ActionsEntities::CREATE
                               . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
@@ -2207,6 +2216,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modifier',
             '::module:entities:ModifyTheEntity' => "Modifier l'entité",
             '::module:entities:EntityModified' => 'Entité modifiée',
+            '::module:entities:EntityNotModified' => 'Entité non modifiée',
             '::module:entities:PasswordModified' => 'Mot de passe modifié',
             '::module:entities:PasswordNotModified' => 'Mot de passe non modifié',
             '::module:entities:puppetmaster' => "L'entité de référence de <i>nebule</i>, le maître des clés.",
@@ -2297,6 +2307,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modify',
             '::module:entities:ModifyTheEntity' => 'Modify the entity',
             '::module:entities:EntityModified' => 'Entity modified',
+            '::module:entities:EntityNotModified' => 'Entity not modified',
             '::module:entities:PasswordModified' => 'Password modified',
             '::module:entities:PasswordNotModified' => 'Password not modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',
@@ -2387,6 +2398,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:modify' => 'Modify',
             '::module:entities:ModifyTheEntity' => 'Modify the entity',
             '::module:entities:EntityModified' => 'Entity modified',
+            '::module:entities:EntityNotModified' => 'Entity not modified',
             '::module:entities:PasswordModified' => 'Password modified',
             '::module:entities:PasswordNotModified' => 'Password not modified',
             '::module:entities:puppetmaster' => 'The reference entity of <i>nebule</i>, the master of keys.',

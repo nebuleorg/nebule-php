@@ -53,10 +53,10 @@ class DisplayList extends DisplayItem implements DisplayInterface
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            } elseif ($item instanceof \Nebule\Library\DisplayQuery) {
+            /*} elseif ($item instanceof \Nebule\Library\DisplayQuery) {
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
-                $result .= $item->getHTML();
+                $result .= $item->getHTML();*/
             } elseif ($item instanceof \Nebule\Library\DisplayBlankLine)
                 $result .= $item->getHTML();
             else
@@ -76,7 +76,7 @@ class DisplayList extends DisplayItem implements DisplayInterface
         if ($item instanceof \Nebule\Library\DisplayInformation
             || $item instanceof \Nebule\Library\DisplayObject
             || $item instanceof \Nebule\Library\DisplaySecurity
-            || $item instanceof \Nebule\Library\DisplayQuery
+            //|| $item instanceof \Nebule\Library\DisplayQuery
             || $item instanceof \Nebule\Library\DisplayBlankLine
         )
             $this->_list[] = $item;

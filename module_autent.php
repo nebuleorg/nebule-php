@@ -169,7 +169,8 @@ class ModuleAutent extends \Nebule\Library\Modules {
                     . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
+                    References::COMMAND_PASSWORD);
             else
                 $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
         } else
@@ -274,13 +275,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link): void {
+    private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link, string $inputName): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayQuery($this->_applicationInstance);
-        $instance->setMessage($message);
+        $instance->setIconText($message);
         $instance->setSocial('all'); // FIXME ne marche pas
         $instance->setType($type);
         $instance->setLink($link);
+        $instance->setInputName($inputName);
         $instance->setHiddenName('id');
         $instance->setHiddenValue($this->_entitiesInstance->getServerEntityEID());
         $instanceList->addItem($instance);

@@ -19,7 +19,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInterface
+class DisplayQuery extends DisplayInformation implements DisplayInterface
 {
     public const QUERY_STRING = 'query';
     public const QUERY_PASSWORD = 'password';
@@ -27,99 +27,67 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
     public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
     public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
 
-    private bool $_displayAlone = false;
-    private string $_displayPassword = '';
-    private string $_hiddenName = 'id';
-    private string $_hiddenValue = 'none';
+    protected string $_inputType = '';
+    protected string $_inputValue = '';
+    protected string $_inputName = '';
+    protected string $_hiddenName = 'unused_hidden';
+    protected string $_hiddenValue = 'unused_hidden';
+    protected bool $_withoutForm = false;
+    protected bool $_withSubmit = false;
+    protected bool $_linkEnable = false;
 
-    protected function _initialisation(): void
-    {
+    public function setHiddenName(string $name): void { $this->_hiddenName = trim($name); }
+    public function setHiddenValue(string $value): void { $this->_hiddenValue = trim($value); }
+    public function setInputValue(string $value): void { $this->_inputValue = trim($value); }
+    public function setInputName(string $name): void { $this->_inputName = trim($name); }
+    public function setWithoutForm(bool $withoutForm): void { $this->_withoutForm = $withoutForm; }
+    public function setWithSubmit(bool $withSubmit): void { $this->_withSubmit = $withSubmit; }
+
+    protected function _initialisation(): void {
         $this->setType(self::QUERY_STRING);
         $this->setSize();
         $this->setRatio();
+        $this->_message = 'Not displayed';
     }
 
-    public function getHTML(): string
-    {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_message == '')
-            return '';
-
-        $result = $this->_getAloneStartHTML();
-        if ($this->_sizeCSS == self::SIZE_TINY)
-            $result .= $this->_getTinyHTML();
-        else
-            $result .= $this->_getNotTinyHTML();
-        $result .= $this->_getAloneEndHTML()
-            . "\n";
-
-        return $result;
-    }
-
-    private function _getAloneStartHTML(): string
-    {
-        if ($this->_displayAlone)
-            return '<div class="layoutAloneItem"><div class="aloneItemContent">';
-        return '';
-    }
-
-    private function _getAloneEndHTML(): string
-    {
-        if ($this->_displayAlone)
-            return '</div></div>';
-        return '';
-    }
-
-    private function _getTinyHTML(): string
-    {
-        $result = '';
-        if ($this->_icon !== null)
+    protected function _getTinyHTML(): string {
+        $result = ''; // TODO
+        /*if ($this->_icon !== null)
             $result .= '<span style="font-size:1em" class="objectTitleIconsInline">' . $this->_getImageHTML($this->_icon, $this->_iconText) . '</span>';
-        $result .= $this->_getFormInputHTML();
+        $result .= '<form method="post" action="' . $this->_link . '">';
+        $result .= '<input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '">';
+        $result .= '<label><input ' . $this->_inputType . ' name="' . References::COMMAND_PASSWORD . '"></label>';
+        $result .= '<input type="submit" value="&gt;">';
+        $result .= '</form>';*/
         return $result;
     }
 
-    private function _getNotTinyHTML(): string
-    {
+    protected function _getNotTinyHTML(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $padding = 0;
-        $result = '<div class="layoutObject layoutInformation">';
-        $result .= '<div class="objectTitle objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . ' queryDisplay queryDisplay' . $this->_sizeCSS . ' queryDisplay' . $this->_type . '">';
-        $result .= '<div class="objectTitleIcons queryTitleIcons queryTitleIcons' . $this->_type . '">';
+        $result  = '<div class="layoutObject layoutInformation">';
+        $result .= ' <div class="objectTitle objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . ' queryDisplay queryDisplay' . $this->_sizeCSS . ' queryDisplay' . $this->_type . '">';
+        $result .= '  <div class="objectTitleIcons queryTitleIcons queryTitleIcons' . $this->_type . '">';
         if ($this->_icon !== null) {
             $result .= $this->_getImageHTML($this->_icon, $this->_iconText);
             $padding = 1;
         }
-        $result .= '</div>';
-        $result .= '<div class="objectTitleText' . $padding . ' queryTitleText queryTitle' . $this->_sizeCSS . 'Text">';
-        $result .= '<div class="queryTitleName queryTitleName' . $this->_type . ' queryTitle' . $this->_sizeCSS . 'Name">';
-        $result .= $this->_getFormInputHTML();
-        $result .= '</div></div></div></div>';
+        $result .= '  </div>' . "\n";
+        $result .= '  <div class="objectTitleText' . $padding . ' queryTitleText queryTitle' . $this->_sizeCSS . 'Text">' . "\n";
+        if (!$this->_withoutForm)
+            $result .= '   <form method="post" action="' . $this->_link . '">' . "\n";
+        $result .= '    <div class="objectTitleRefs objectTitle' . $this->_sizeCSS . 'Refs queryTitleRefs queryTitleRefs"><label for="' . $this->_inputName . '">' .  $this->_iconText . '</label></div>' . "\n";
+        $result .= '    <div class="queryTitleName queryTitleName' . $this->_type . ' queryTitle' . $this->_sizeCSS . 'Name">' . "\n";
+        $result .= '     <input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '" />' . "\n";
+        $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n";
+        if (!$this->_withoutForm || $this->_withSubmit)
+            $result .= '     <input type="submit" value="&gt;">' . "\n";
+        $result .= '    </div>' . "\n";
+        if (!$this->_withoutForm)
+            $result .= '   </form>' . "\n";
+        $result .= '  </div>' . "\n";
+        $result .= '</div></div>' . "\n";
         return $result;
-    }
-
-    private function _getFormInputHTML(): string {
-        $result = $this->_message;
-        $result .= '<form method="post" action="' . $this->_link . '">';
-        $result .= '<input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '">';
-        $result .= '<label><input ' . $this->_displayPassword . ' name="' . References::COMMAND_PASSWORD . '"></label>';
-        $result .= '<input type="submit" value="&gt;">';
-        $result .= '</form>';
-        return $result;
-    }
-
-    public function setHiddenName(string $name): void
-    {
-        $this->_hiddenName = trim($name);
-    }
-
-    public function setHiddenValue(string $value): void
-    {
-        $this->_hiddenValue = trim($value);
-    }
-
-    public function setDisplayAlone(bool $enable): void
-    {
-        $this->_displayAlone = $enable;
     }
 
     public function setType(string $type): void
@@ -130,19 +98,19 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
                 $this->_type = 'Password';
                 $this->_iconText = '::::Password';
                 $icon = self::ICON_PASSWORD_RID;
-                $this->_displayPassword = 'type="password" ';
+                $this->_inputType = 'password';
                 break;
             case self::QUERY_BOOLEAN:
                 $this->_type = 'Boolean';
                 $this->_iconText = '::::Switch';
                 $icon = self::ICON_QUERY_RID;
-                $this->_displayPassword = 'type="bool" '; // FIXME
+                $this->_inputType = 'bool'; // FIXME
                 break;
             default:
                 $this->_type = 'Query';
                 $this->_iconText = '::::Query';
                 $icon = self::ICON_QUERY_RID;
-                $this->_displayPassword = '';
+                $this->_inputType = 'text';
                 break;
         }
         $rid = $this->_cacheInstance->newNode($icon);
@@ -244,14 +212,12 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
 
             .queryTitleNamePassword {
                 color: #ff8000;
-            }
-
-            .queryTitleNamePassword {
                 font-weight: bold;
             }
 
             .queryTitleNameQuery {
                 color: #000000;
+                font-weight: bold;
             }
 
             .queryTitleTinyName {
@@ -289,10 +255,13 @@ class DisplayQuery extends DisplayItemIconMessageSizeable implements DisplayInte
             }
 
             .queryTitleName input {
-                margin-right: 5px;
+                margin: 10px 5px 0 0;
             }
-            .queryTitleName input[type=password], input[type=text], input[type=email] {
-                width: 268px;
+            .queryTitleName input[type=text], input[type=email] {
+                width: 260px;
+            }
+            .queryTitleName input[type=password] {
+                width: 258px;
             }
             .queryTitleName input[type=submit] {
                 width: 27px;
