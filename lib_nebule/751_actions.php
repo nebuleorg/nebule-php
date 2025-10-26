@@ -297,18 +297,19 @@ abstract class Actions extends Functions implements ActionsInterface {
         $newValue = $this->getFilterInput($nameInput, FILTER_FLAG_NO_ENCODE_QUOTES);
         if ($newValue == $oldValue) {
             $this->_metrologyInstance->addLog('same ' . $nameProperty . ', no change', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '69a9562e');
-            return false;
+            return true;
         }
         if ($newValue != '' && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')) {
             $this->_metrologyInstance->addLog('change ' . $nameProperty . '=' . $newValue, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '83fb3258');
-            return ($this->_deleteProperty($nameProperty) && $instance->setProperty($nameProperty, $newValue));
+            $this->_deleteProperty($nameProperty);
+            return $instance->setProperty($nameProperty, $newValue);
         } else
             return $this->_deleteProperty($nameProperty);
     }
     protected function _deleteProperty(string $name): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_nebuleInstance->getCurrentEntityInstance();
-        $inputLinks = $instance->getPropertiesLinks($name);
+        $inputLinks = $instance->getPropertiesLinks($name, 'all');
         if (sizeof($inputLinks) == 0)
             return false;
         $this->_metrologyInstance->addLog('delete property ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c92cb974');
@@ -318,7 +319,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $nid2 = $inputLink->getParsed()['bl/rl/nid2'];
             $nid3 = $inputLink->getParsed()['bl/rl/nid3'];
             $bloclink->addLink('x>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-            $bloclink->write();
+            $bloclink->signWrite();
             $this->_metrologyInstance->addLog('add delete link ' . 'x>' . $nid1 . '>' . $nid2 . '>' . $nid3, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
         return true;

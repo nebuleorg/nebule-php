@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Classe de gestion du côté social stricte des liens.
+ * Classe de gestion du côté social stricte des liens générés par des autorités locales et globales.
  *
  * @author Projet nebule
  * @license GNU GPLv3

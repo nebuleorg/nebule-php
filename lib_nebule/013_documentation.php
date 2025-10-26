@@ -50,8 +50,8 @@ class Documentation extends Functions
         BlocLink::echoDocumentationTitles();
         LinkRegister::echoDocumentationTitles();
         Transaction::echoDocumentationTitles();
-        Crypto::echoDocumentationTitles();
         Social::echoDocumentationTitles();
+        Crypto::echoDocumentationTitles();
         Metrology::echoDocumentationTitles();
         ?>
 
@@ -73,8 +73,8 @@ class Documentation extends Functions
         BlocLink::echoDocumentationCore();
         LinkRegister::echoDocumentationCore();
         Transaction::echoDocumentationCore();
-        Crypto::echoDocumentationCore();
         Social::echoDocumentationCore();
+        Crypto::echoDocumentationCore();
         Metrology::echoDocumentationCore();
     }
 

@@ -30,7 +30,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020251004';
+    const MODULE_VERSION = '020251026';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -121,7 +121,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
             $title = ':::logout';
-            $type = DisplayItemIconMessage::TYPE_PLAY;
+            $type = DisplayItemIconMessage::TYPE_WARN;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
@@ -135,9 +135,11 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
-        $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
-        $this->_addBlankLine($instanceList);
+        if (!$this->_unlocked)
+            $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
         $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        if ($this->_unlocked)
+            $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
         $instanceList->setOnePerLine();
         $instanceList->display();
     }
@@ -283,8 +285,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instance->setType($type);
         $instance->setLink($link);
         $instance->setInputName($inputName);
-        $instance->setHiddenName('id');
-        $instance->setHiddenValue($this->_entitiesInstance->getServerEntityEID());
+        $instance->setHiddenInput1('id', $this->_entitiesInstance->getServerEntityEID());
         $instanceList->addItem($instance);
     }
 

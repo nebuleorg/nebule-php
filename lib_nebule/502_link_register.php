@@ -5,6 +5,8 @@ use Nebule\Library\nebule;
 use Nebule\Library\linkInterface;
 
 /**
+ * The link register RL : REQ>NID>NID>NID>NID...
+ *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule

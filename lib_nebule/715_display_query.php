@@ -24,24 +24,38 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     public const QUERY_STRING = 'query';
     public const QUERY_PASSWORD = 'password';
     public const QUERY_BOOLEAN = 'boolean';
+    public const QUERY_SELECT = 'select';
+    public const QUERY_TEXT = 'text';
     public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
     public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
 
     protected string $_inputType = '';
     protected string $_inputValue = '';
     protected string $_inputName = '';
-    protected string $_hiddenName = 'unused_hidden';
-    protected string $_hiddenValue = 'unused_hidden';
-    protected bool $_withoutForm = false;
-    protected bool $_withSubmit = false;
+    protected string $_hiddenName1 = '';
+    protected string $_hiddenValue1 = '';
+    protected string $_hiddenName2 = '';
+    protected string $_hiddenValue2 = '';
+    protected bool $_withFormOpen = true;
+    protected bool $_withFormClose = true;
+    protected bool $_withSubmit = true;
     protected bool $_linkEnable = false;
+    protected array $_selectList = array();
 
-    public function setHiddenName(string $name): void { $this->_hiddenName = trim($name); }
-    public function setHiddenValue(string $value): void { $this->_hiddenValue = trim($value); }
+    public function setHiddenInput1(string $name, string $value = ''): void {
+        $this->_hiddenName1 = trim($name);
+        $this->_hiddenValue1 = trim($value);
+    }
+    public function setHiddenInput2(string $name, string $value = ''): void {
+        $this->_hiddenName1 = trim($name);
+        $this->_hiddenValue1 = trim($value);
+    }
     public function setInputValue(string $value): void { $this->_inputValue = trim($value); }
     public function setInputName(string $name): void { $this->_inputName = trim($name); }
-    public function setWithoutForm(bool $withoutForm): void { $this->_withoutForm = $withoutForm; }
+    public function setWithFormOpen(bool $withFormOpen): void { $this->_withFormOpen = $withFormOpen; }
+    public function setWithFormClose(bool $withFormClose): void { $this->_withFormClose = $withFormClose; }
     public function setWithSubmit(bool $withSubmit): void { $this->_withSubmit = $withSubmit; }
+    public function setSelectList(array $selectList): void { $this->_selectList = $selectList; }
 
     protected function _initialisation(): void {
         $this->setType(self::QUERY_STRING);
@@ -55,7 +69,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         /*if ($this->_icon !== null)
             $result .= '<span style="font-size:1em" class="objectTitleIconsInline">' . $this->_getImageHTML($this->_icon, $this->_iconText) . '</span>';
         $result .= '<form method="post" action="' . $this->_link . '">';
-        $result .= '<input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '">';
+        $result .= '<input type="hidden" name="' . $this->_hiddenName1 . '" value="' . $this->_hiddenValue1 . '">';
         $result .= '<label><input ' . $this->_inputType . ' name="' . References::COMMAND_PASSWORD . '"></label>';
         $result .= '<input type="submit" value="&gt;">';
         $result .= '</form>';*/
@@ -64,8 +78,13 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
 
     protected function _getNotTinyHTML(): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_type == '')
+            return '';
         $padding = 0;
-        $result  = '<div class="layoutObject layoutInformation">';
+        $result  = '';
+        if ($this->_withFormOpen)
+            $result .= '<form method="post" action="' . $this->_link . '">' . "\n";
+        $result .= '<div class="layoutObject layoutInformation">';
         $result .= ' <div class="objectTitle objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . ' queryDisplay queryDisplay' . $this->_sizeCSS . ' queryDisplay' . $this->_type . '">';
         $result .= '  <div class="objectTitleIcons queryTitleIcons queryTitleIcons' . $this->_type . '">';
         if ($this->_icon !== null) {
@@ -74,19 +93,28 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         }
         $result .= '  </div>' . "\n";
         $result .= '  <div class="objectTitleText' . $padding . ' queryTitleText queryTitle' . $this->_sizeCSS . 'Text">' . "\n";
-        if (!$this->_withoutForm)
-            $result .= '   <form method="post" action="' . $this->_link . '">' . "\n";
         $result .= '    <div class="objectTitleRefs objectTitle' . $this->_sizeCSS . 'Refs queryTitleRefs queryTitleRefs"><label for="' . $this->_inputName . '">' .  $this->_iconText . '</label></div>' . "\n";
         $result .= '    <div class="queryTitleName queryTitleName' . $this->_type . ' queryTitle' . $this->_sizeCSS . 'Name">' . "\n";
-        $result .= '     <input type="hidden" name="' . $this->_hiddenName . '" value="' . $this->_hiddenValue . '" />' . "\n";
-        $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n";
-        if (!$this->_withoutForm || $this->_withSubmit)
+        if ($this->_hiddenName1 != '')
+            $result .= '     <input type="hidden" name="' . $this->_hiddenName1 . '" value="' . $this->_hiddenValue1 . '" />' . "\n";
+        if ($this->_hiddenName2 != '')
+            $result .= '     <input type="hidden" name="' . $this->_hiddenName2 . '" value="' . $this->_hiddenValue2 . '" />' . "\n";
+        if ($this->_type == 'Query' || $this->_type == 'Password')
+            $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n";
+        elseif ($this->_type == 'Boolean')
+            $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n"; // FIXME
+        elseif ($this->_type == 'Select') {
+            $result .= '     <select name="' . $this->_inputName . '" id="' . $this->_inputName . '">' . "\n";
+            foreach ($this->_selectList as $key => $value)
+                $result .= '      <option value="' . $key . '">' . $value . '</option>' . "\n";
+            $result .= '     </select>' . "\n";
+        } else
+            $result .= $this->_message . "\n";
+        if ($this->_withSubmit)
             $result .= '     <input type="submit" value="&gt;">' . "\n";
-        $result .= '    </div>' . "\n";
-        if (!$this->_withoutForm)
-            $result .= '   </form>' . "\n";
-        $result .= '  </div>' . "\n";
-        $result .= '</div></div>' . "\n";
+        $result .= '</div></div></div></div>' . "\n";
+        if ($this->_withFormClose)
+            $result .= '</form>' . "\n";
         return $result;
     }
 
@@ -106,11 +134,27 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'bool'; // FIXME
                 break;
-            default:
+            case self::QUERY_SELECT:
+                $this->_type = 'Select';
+                $this->_iconText = '::::Switch';
+                $icon = self::ICON_QUERY_RID;
+                $this->_inputType = 'select';
+                break;
+            case self::QUERY_STRING:
                 $this->_type = 'Query';
                 $this->_iconText = '::::Query';
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
+                break;
+            case self::QUERY_TEXT:
+                $this->_type = 'Text';
+                $this->_iconText = '::::Query';
+                $icon = self::ICON_QUERY_RID;
+                $this->_inputType = 'text';
+                break;
+            default:
+                $this->_type = '';
+                $icon = self::ICON_QUERY_RID;
                 break;
         }
         $rid = $this->_cacheInstance->newNode($icon);
@@ -135,7 +179,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 background: #ffe080;
             }
 
-            .queryDisplayQuery {
+            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText {
                 background: #ababab;
             }
 

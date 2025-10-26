@@ -5,6 +5,7 @@ namespace Nebule\Library;
 /**
  * Classe de gestion du côté social des liens par rapport à une liste d'ID.
  * Ne sélectionne que les liens des entités qui ne sont pas dans la liste.
+ * La liste doit être pré-alimentée.
  *
  * @author Projet nebule
  * @license GNU GPLv3

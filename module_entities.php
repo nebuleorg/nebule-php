@@ -39,7 +39,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020251017';
+    const MODULE_VERSION = '020251026';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -902,7 +902,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
-            $instance->setInputValue($entity->getPrefixName());
+            $instance->setInputValue($entity->getPrefixName('self'));
             $instance->setInputName(ActionsEntities::CHANGE_PREFIX);
             $instance->setLink($commonLink);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PREFIX);
@@ -910,7 +910,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
-            $instance->setInputValue($entity->getFirstname());
+            $instance->setInputValue($entity->getFirstname('self'));
             $instance->setInputName(ActionsEntities::CHANGE_FIRSTNAME);
             $instance->setLink($commonLink);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PRENOM);
@@ -918,7 +918,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
-            $instance->setInputValue($entity->getSurname());
+            $instance->setInputValue($entity->getSurname('self'));
             $instance->setInputName(ActionsEntities::CHANGE_NICKNAME);
             $instance->setLink($commonLink);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SURNOM);
@@ -926,7 +926,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
-            $instance->setInputValue($entity->getName());
+            $instance->setInputValue($entity->getName('self'));
             $instance->setInputName(ActionsEntities::CHANGE_NAME);
             $instance->setLink($commonLink);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
@@ -934,10 +934,31 @@ class ModuleEntities extends \Nebule\Library\Modules
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
-            $instance->setInputValue($entity->getSuffixName());
+            $instance->setInputValue($entity->getSuffixName('self'));
             $instance->setInputName(ActionsEntities::CHANGE_SUFFIX);
             $instance->setLink($commonLink);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SUFFIX);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CHANGE_PASSWORD1);
+            $instance->setLink($commonLink . '&' . ActionsEntities::CHANGE_PASSWORD);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instance->setIconText('::::Password');
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CHANGE_PASSWORD2);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconText('::module:entities:confirm');
         } else {
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setMessage('::::err_NotPermit');
@@ -950,7 +971,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         $instanceList->setOnePerLine();
         $instanceList->display();
 
-        if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
+        /*if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity', 'unlocked'))) {
             $instanceList = new DisplayList($this->_applicationInstance);
             $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
 
@@ -958,7 +979,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setType(DisplayQuery::QUERY_PASSWORD);
             $instance->setInputValue($entity->getSuffixName());
             $instance->setInputName(ActionsEntities::CHANGE_PASSWORD1);
-            $instance->setWithoutForm(true);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
             $instance->setIconText('::::Password');
             $instanceList->addItem($instance);
@@ -967,60 +989,17 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setType(DisplayQuery::QUERY_PASSWORD);
             $instance->setInputValue($entity->getSuffixName());
             $instance->setInputName(ActionsEntities::CHANGE_PASSWORD2);
-            $instance->setWithoutForm(true);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
             $instance->setWithSubmit(true);
             $instance->setIconText('::module:entities:confirm');
             $instanceList->addItem($instance);
 
             $instanceList->setOnePerLine();
-            echo '<form method="post" action="' . $commonLink . '">' . "\n";
+            echo '<form method="post" action="' . $commonLink . '&' . ActionsEntities::CHANGE_PASSWORD . '">' . "\n";
             $instanceList->display();
             echo '</form>' . "\n";
-            ?>
-
-            <div class="layoutAloneItem">
-                <div class="aloneTextItemContent">
-                    <form method="post"
-                          action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                                  . '&' . ActionsEntities::CHANGE_PASSWORD
-                                  . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                                  . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPWD1">
-                                    <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
-                                </label>
-                                <input type="password"
-                                       name="<?php echo ActionsEntities::CHANGE_PASSWORD1; ?>"
-                                       size="30" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPWD1"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPWD2">
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
-                                </label>
-                                <input type="password"
-                                       name="<?php echo ActionsEntities::CHANGE_PASSWORD2; ?>"
-                                       size="30" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPWD2"/>
-                            </div>
-                        </div>
-                        <div class="moduleEntitiesCreateSubmit">
-                            <input type="submit"
-                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:ModifyTheEntity'); ?>"
-                                   class="moduleEntitiesPasswordSubmitEntry"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <?php
-        }
+        }*/
 
         echo '</div>' . "\n";
         echo '</div>' . "\n";
@@ -1723,183 +1702,141 @@ class ModuleEntities extends \Nebule\Library\Modules
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
             )
         ) {
-            ?>
+            $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                    . '&' . ActionsEntities::CREATE
+                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-            <div class="layoutAloneItem">
-                <div class="aloneTextItemContent">
-                    <form method="post"
-                          action="?<?php echo References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                              . '&' . ActionsEntities::CREATE
-                              . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateNames">
-                            <div class="moduleEntitiesCreateHeader">
-                                <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:naming'); ?>
+            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
 
-                                </p>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPrefix">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PREFIX); ?>
-                                </label>
-                                <input type="text"
-                                        name="<?php echo ActionsEntities::CREATE_PREFIX; ?>"
-                                        size="10" value=""
-                                        class="moduleEntitiesCreatePropertyEntry"
-                                        id="moduleEntitiesCreatePropertyEntryPrefix"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPrenom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_PRENOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CREATE_FIRSTNAME; ?>"
-                                       size="20" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPrenom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntrySurnom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SURNOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CREATE_NICKNAME; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntrySurnom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryNom">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_NOM); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CREATE_NAME; ?>"
-                                       size="20" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryNom"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntrySuffix">
-                                    <?php echo $this->_translateInstance->getTranslate(References::REFERENCE_NEBULE_OBJET_SUFFIX); ?>
-                                </label>
-                                <input type="text"
-                                       name="<?php echo ActionsEntities::CREATE_SUFFIX; ?>"
-                                       size="10" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntrySuffix"/>
-                            </div>
-                        </div>
-                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreatePassword">
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPWD1">
-                                    <?php echo $this->_translateInstance->getTranslate('::::Password'); ?>
-                                </label>
-                                <input type="password"
-                                       name="<?php echo ActionsEntities::CREATE_PASSWORD1; ?>"
-                                       size="30" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPWD1"/>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryPWD2">
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:confirm'); ?>
-                                </label>
-                                <input type="password"
-                                       name="<?php echo ActionsEntities::CREATE_PASSWORD2; ?>"
-                                       size="30" value=""
-                                       class="moduleEntitiesCreatePropertyEntry"
-                                       id="moduleEntitiesCreatePropertyEntryPWD2"/>
-                            </div>
-                        </div>
-                        <div class="moduleEntitiesCreate" id="moduleEntitiesCreateOther">
-                            <div class="moduleEntitiesCreateHeader">
-                                <p>
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityOther'); ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_PREFIX);
+            $instance->setLink($commonLink);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PREFIX);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                                </p>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryAlgo">
-                                    <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAlgorithm'); ?>
-                                </label>
-                                <select
-                                        id="moduleEntitiesCreatePropertyEntryAlgo"
-                                        name="<?php echo ActionsEntities::CREATE_ALGORITHM; ?>"
-                                        class="moduleEntitiesCreatePropertyEntry">
-                                        <?php
-                                        $defaultAlgo = $this->_configurationInstance->getOptionAsString('cryptoAsymmetricAlgorithm');
-                                        foreach ($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC) as $algo) {
-                                            echo '<option value="' . $algo . '"';
-                                            if ($defaultAlgo === $algo)
-                                                echo ' selected';
-                                            echo '>' . $algo . '</option>';
-                                        }
-                                        ?>
-                                </select>
-                            </div>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                       for="moduleEntitiesCreatePropertyEntryType">
-                                    <?php echo $this->_translateInstance->getTranslate('nebule/objet/entite/type'); ?>
-                                </label>
-                                 <select
-                                        id="moduleEntitiesCreatePropertyEntryType"
-                                        name="<?php echo ActionsEntities::CREATE_TYPE; ?>"
-                                        class="moduleEntitiesCreatePropertyEntry">
-                                        <option value="undef" selected>
-                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'); ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_FIRSTNAME);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_PRENOM);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                                        </option>
-                                        <option value="human">
-                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeHuman'); ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_NICKNAME);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SURNOM);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                                        </option>
-                                        <option value="robot">
-                                            <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeRobot'); ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_NAME);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                                        </option>
-                                </select>
-                            </div>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_SUFFIX);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_SUFFIX);
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                            <?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) { ?>
-                            <div class="moduleEntitiesCreateProperty">
-                                <label class="moduleEntitiesCreatePropertyName"
-                                        for="moduleEntitiesCreatePropertyEntryAutonomy">
-                                        <?php echo $this->_translateInstance->getTranslate('::module:entities:CreateEntityAutonomy'); ?>
-                                </label>
-                                <select
-                                        id="moduleEntitiesCreatePropertyEntryAutonomy"
-                                        name="<?php echo ActionsEntities::CREATE_AUTONOMY; ?>"
-                                        class="moduleEntitiesCreatePropertyEntry">
-                                        <option value="y" selected>
-                                            <?php echo $this->_translateInstance->getTranslate('::::yes'); ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(ActionsEntities::CREATE_ALGORITHM);
+            $instance->setIconText('::module:entities:CreateEntityAlgorithm');
+            $instance->setSelectList($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                                        </option>
-                                </select>
-                            </div>
-                            <?php } ?>
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(ActionsEntities::CREATE_TYPE);
+            $instance->setIconText('nebule/objet/entite/type');
+            $instance->setSelectList(array(
+                    'undef' => $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeUndefined'),
+                    'human' => $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeHuman'),
+                    'robot' => $this->_translateInstance->getTranslate('::module:entities:CreateEntityTypeRobot'),
+            ));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
 
-                        </div>
-                        <div class="moduleEntitiesCreateSubmit">
-                            <input type="submit"
-                                   value="<?php echo $this->_translateInstance->getTranslate('::module:entities:CreateTheEntity'); ?>"
-                                   class="moduleEntitiesCreateSubmitEntry"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <?php
+            if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+                $instance = new DisplayQuery($this->_applicationInstance);
+                $instance->setType(DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(ActionsEntities::CREATE_AUTONOMY);
+                $instance->setIconText('::module:entities:CreateEntityAutonomy');
+                $instance->setSelectList(array(
+                        'y' => $this->_translateInstance->getTranslate('::::yes'),
+                        'n' => $this->_translateInstance->getTranslate('::::no'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_PASSWORD1);
+            $instance->setIconText('::::Password');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_PASSWORD);
+            $instance->setInputValue('');
+            $instance->setInputName(ActionsEntities::CREATE_PASSWORD2);
+            $instance->setIconText('::module:entities:confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instance->setLink($commonLink);
+            $instanceList->addItem($instance);
+
+            $instance = new DisplayQuery($this->_applicationInstance);
+            $instance->setType(DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::module:entities:CreateTheEntity');
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::module:entities:CreateTheEntity'));
+            $instance->setIconText('::module:entities:confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setLink($commonLink);
+            $instanceList->addItem($instance);
+
+            $instanceList->setOnePerLine();
+            $instanceList->display();
         } else {
             $instance = new DisplayNotify($this->_applicationInstance);
             $instance->setMessage('::::err_NotPermit');

@@ -418,6 +418,7 @@ class Node extends Functions implements nodeInterface
      */
     public function getPropertiesLinks(string $type, string $socialClass = ''): array
     {
+        // FIXME manage x links
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($type == '')
             return array();
@@ -446,6 +447,11 @@ class Node extends Functions implements nodeInterface
             $sortedLinks[$date] = $r;
         }
         unset($links);
+
+        /*foreach ($sortedLinks as $k => $r) {
+            FIXME manage x links
+        }*/
+
         //krsort($sortedLinks, SORT_STRING);
         ksort($sortedLinks, SORT_STRING);
 
@@ -704,7 +710,7 @@ class Node extends Functions implements nodeInterface
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($type == ''
             || $property == ''
-            || $protect // TODO
+            //|| $protect // TODO
         )
             return false;
 
@@ -846,7 +852,7 @@ class Node extends Functions implements nodeInterface
         return $this->setProperty(References::REFERENCE_NEBULE_OBJET_SURNOM, $surname, $protect, $obfuscated, $signer);
     }
 
-    public function getFullName(string $socialClass = ''): string
+    public function getFullName(string $socialClass = 'self'): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (isset($this->_fullName)
@@ -1285,6 +1291,7 @@ class Node extends Functions implements nodeInterface
      */
     public function getMarkProtectedFast(): bool
     {
+        // FIXME manage x links
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_markProtectedChecked === true)
             return $this->_cacheMarkProtected;
@@ -2247,6 +2254,7 @@ class Node extends Functions implements nodeInterface
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return array(); // FIXME disabled!
+        // FIXME manage x links
 
         $result = array();
         if (!$this->_getMarkProtected()) {
@@ -2743,6 +2751,9 @@ class Node extends Functions implements nodeInterface
                 $listFilterValues = array($filterValue);
             else
                 continue;
+
+            if ($fieldName == 'bl/rl/req')
+                $listFilterValues[] = 'x';
 
             $onList = false;
             foreach ($listFilterValues as $value)

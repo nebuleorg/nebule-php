@@ -45,6 +45,8 @@ class SocialSelf extends SocialMySelf implements SocialInterface
             if ($link->getParsed()['bl/rl/nid1'] == $signer
                 || (isset($link->getParsed()['bl/rl/nid2']) && $link->getParsed()['bl/rl/nid2'] == $signer)
                 || (isset($link->getParsed()['bl/rl/nid3']) && $link->getParsed()['bl/rl/nid3'] == $signer)
+                || (isset($link->getParsed()['bl/rl/nid4']) && $link->getParsed()['bl/rl/nid4'] == $signer)
+                || (isset($link->getParsed()['bl/rl/nid5']) && $link->getParsed()['bl/rl/nid5'] == $signer)
             ) {
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
                 return 1;
