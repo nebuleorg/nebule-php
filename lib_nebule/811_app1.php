@@ -71,7 +71,7 @@ class App1 extends App0
             'bl/rl/nid4' => $this->_routerInstance->getCodeBranchNID(),
             'bl/rl/nid5' => '',
         );
-        $instanceRID->getSocialLinks($links, $filter, 'authority');
+        $instanceRID->getLinks($links, $filter, 'authority');
         $appList = array();
         foreach ($links as $i => $link) {
             if (isset($link->getParsed()['bl/rl/nid2']))

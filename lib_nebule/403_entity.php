@@ -281,7 +281,7 @@ class Entity extends Node implements nodeInterface
                 'bl/rl/nid1' => $this->_id,
                 'bl/rl/nid3' => $oidPKey,
         );
-        $this->getLinks($list, $filter, false);
+        $this->getLinks($list, $filter, 'self', false);
         if (sizeof($list) == 0) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('no link to private key for eid=' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'be65246d');
             return;
@@ -490,7 +490,7 @@ class Entity extends Node implements nodeInterface
 
 
 
-    public function getName(string $socialClass = 'self'): string {
+    public function getName(string $socialClass = ''): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
             $socialClass = 'self';
@@ -707,64 +707,14 @@ class Entity extends Node implements nodeInterface
 
 
     // Désactivation des fonctions de protection.
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return boolean
-     */
     public function getMarkProtected(): bool { return false; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return boolean
-     */
     public function getReloadMarkProtected(): bool { return false; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return string
-     */
     public function getProtectedID(): string { return '0'; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return string
-     */
     public function getUnprotectedID(): string { return $this->_id; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @param bool $obfuscated
-     * @return boolean
-     */
-    public function setProtected(bool $obfuscated = false): bool { return false; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return boolean
-     */
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
     public function setUnprotected(): bool { return false; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @param string $entity
-     * @return boolean
-     */
     public function setProtectedTo(string $entity): bool{ return false; }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return array
-     */
-    public function getProtectedTo(): array { return array(); }
+    public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
 
     /**

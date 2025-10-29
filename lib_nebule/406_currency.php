@@ -272,78 +272,13 @@ class Currency extends Node implements nodeInterface
 
 
     // Désactivation des fonctions de protection et autres.
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @return boolean
-     */
-    public function getReloadMarkProtected(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @return string
-     */
-    public function getProtectedID(): string
-    {
-        return '0';
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @return string
-     */
-    public function getUnprotectedID(): string
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @param bool $obfuscated
-     * @return boolean
-     */
-    public function setProtected(bool $obfuscated = false): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @return boolean
-     */
-    public function setUnprotected(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @param string|Entity $entity
-     * @return boolean
-     */
-    public function setProtectedTo($entity): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les monnaies.
-     *
-     * @return array
-     */
-    public function getProtectedTo(): array
-    {
-        return array();
-    }
+    public function getReloadMarkProtected(): bool { return false; }
+    public function getProtectedID(): string { return '0'; }
+    public function getUnprotectedID(): string { return $this->_id; }
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
+    public function setUnprotected(): bool { return false; }
+    public function setProtectedTo($entity): bool { return false; }
+    public function getProtectedTo(string $socialClass = ''): array { return array();  }
 
 
     /**

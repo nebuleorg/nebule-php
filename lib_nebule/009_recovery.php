@@ -78,7 +78,7 @@ class Recovery extends Functions
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getServerEntityEID(),
             );
-            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, 'strict', false);
         }
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')) {
@@ -90,7 +90,7 @@ class Recovery extends Functions
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getDefaultEntityEID(),
             );
-            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, 'strict', false);
         }
 
         foreach ($list as $link) {

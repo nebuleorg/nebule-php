@@ -327,54 +327,23 @@ class Entities extends Functions
 
 
 
-/* TODO manage multi-connected entities
-
-    private array $_listEntitiesUnlocked = array();
-    private array $_listEntitiesUnlockedInstances = array();
-
-    public function getListEntitiesUnlocked(): array
-    {
-        return $this->_listEntitiesUnlocked;
-    }
-
-    public function getListEntitiesUnlockedInstances(): array
-    {
-        return $this->_listEntitiesUnlockedInstances;
-    }
-
-    public function addListEntitiesUnlocked(Entity $entity): void
-    {
-        if ($entity->getID() == '0')
-            return;
-        $eid = $entity->getID();
-
-        $this->_listEntitiesUnlocked[$eid] = $eid;
-        $this->_listEntitiesUnlockedInstances[$eid] = $entity;
-    }
-
-    public function removeListEntitiesUnlocked(Entity $entity): void
-    {
-        unset($this->_listEntitiesUnlocked[$entity->getID()]);
-        unset($this->_listEntitiesUnlockedInstances[$entity->getID()]);
-    }
-
-    public function flushListEntitiesUnlocked(): void
-    {
-        $this->_listEntitiesUnlocked = array();
-        $this->_listEntitiesUnlockedInstances = array();
-    }
-*/
-
-
-
-    public function getListEntitiesLinks(string $eid=''): array {
+    public function getListEntitiesLinks(): array {
         $hashEntityObject = $this->_cacheInstance->newNode($this->hashEntity);
-        return $hashEntityObject->getLinksOnFields($eid, '', 'l', '', $this->hashEntity, $this->hashType);
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid2' => $this->hashEntity,
+            'bl/rl/nid3' => $this->hashType,
+            'bl/rl/nid4' => '',
+        );
+        $hashEntityObject->getLinks($links, $filter, 'all', false);
+        //return $hashEntityObject->getLinksOnFields($eid, '', 'l', '', $this->hashEntity, $this->hashType);
+        return $links;
     }
 
-    public function getListEntitiesInstances(string $eid=''): array {
+    public function getListEntitiesInstances(): array {
         $result = array();
-        foreach ($this->getListEntitiesLinks($eid) as $link) {
+        foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
             $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
             if ($instance->getIsPublicKey())
@@ -383,9 +352,9 @@ class Entities extends Functions
         return $result;
     }
 
-    public function getListEntitiesID(string $eid): array {
+    public function getListEntitiesID(): array {
         $result = array();
-        foreach ($this->getListEntitiesLinks($eid) as $link) {
+        foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
             if (Node::checkNID($nid))
                 $result[$nid] = $nid;

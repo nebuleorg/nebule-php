@@ -193,91 +193,14 @@ class Group extends Node implements nodeInterface
 
 
     // Désactivation des fonctions de protection et autres.
-
-    /**
-     * Vérifie la consistance de l'objet.
-     *
-     * Retourne toujours true pour une conversation.
-     * Il n'y a pas de contenu à vérifier pour un objet de référence.
-     *
-     * @return boolean
-     */
-    public function checkConsistency(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return boolean
-     */
-    public function getReloadMarkProtected(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return string
-     */
-    public function getProtectedID(): string
-    {
-        return '0';
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return string
-     */
-    public function getUnprotectedID(): string
-    {
-        return $this->_id;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @param bool $obfuscated
-     * @return boolean
-     */
-    public function setProtected(bool $obfuscated = false): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return boolean
-     */
-    public function setUnprotected(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @param $entity
-     * @return boolean
-     */
-    public function setProtectedTo($entity): bool
-    {
-        return false;
-    }
-
-    /**
-     * Fonction pour les objets, désactivée pour les groupes.
-     *
-     * @return array
-     */
-    public function getProtectedTo(): array
-    {
-        return array();
-    }
+    public function checkConsistency(): bool { return true; }
+    public function getReloadMarkProtected(): bool { return false; }
+    public function getProtectedID(): string { return '0'; }
+    public function getUnprotectedID(): string { return $this->_id; }
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
+    public function setUnprotected(): bool { return false; }
+    public function setProtectedTo($entity): bool { return false; }
+    public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
 
 

@@ -131,7 +131,7 @@ class Authorities extends Functions
             //'bl/rl/nid4' => '',
             //'bs/rs1/eid' => $this->_puppetmaster,
         );
-        $instance->getLinks($links, $filter, false);
+        $instance->getLinks($links, $filter, 'all', false);
 
         if (sizeof($links) == 0) {
             $listEID[$this->_puppetmasterID] = $this->_puppetmasterID;
@@ -251,7 +251,7 @@ class Authorities extends Functions
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getServerEntityEID(),
             );
-            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, 'strict', false);
         }
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
@@ -263,7 +263,7 @@ class Authorities extends Functions
                 'bl/rl/nid4' => '',
                 'bs/rs1/eid' => $entitiesInstance->getDefaultEntityEID(),
             );
-            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, false);
+            $entitiesInstance->getServerEntityInstance()->getLinks($list, $filter, 'strict', false);
         }
 
         foreach ($list as $link) {

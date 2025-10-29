@@ -155,7 +155,7 @@ class Router extends Functions
             'bl/rl/nid4' => $this->_codeBranchNID,
             'bl/rl/nid5' => '',
         );
-        $instance->getSocialLinks($links, $filter, 'authority');
+        $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
             $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '081f9805');
             return '';
@@ -222,7 +222,7 @@ class Router extends Functions
             'bl/rl/nid3' => $this->_codeBranchNID,
             'bl/rl/nid4' => '',
         );
-        $instance->getSocialLinks($links, $filter, 'authority');
+        $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
             $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4df6e410');
             return '';
@@ -236,7 +236,7 @@ class Router extends Functions
             'bl/rl/nid3' => $this->_hashType,
             'bl/rl/nid4' => '',
         );
-        $instance->getSocialLinks($links, $filter, 'authority');
+        $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
             $this->_metrologyInstance->addLog('no type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a52b9363');
             return '';
@@ -280,7 +280,7 @@ class Router extends Functions
             'bl/rl/nid3' => $this->_codeBranchNID,
             'bl/rl/nid4' => '',
         );
-        $instance->getSocialLinks($links, $filter, 'authority');
+        $instance->getLinks($links, $filter, 'authority');
         $resultLink = $this->getYoungestLink($links); // FIXME verify it's a PHP type mime
 
         $this->_applicationSID = array($resultLink->getParsed()['bs/rs1/eid']); // FIXME more than one
@@ -343,7 +343,7 @@ class Router extends Functions
             'bl/rl/nid3' => '',
             'bl/rl/nid4' => '',
         );
-        $instance->getSocialLinks($links, $filter, 'authority');
+        $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) > 0)
             return true;
         return false;

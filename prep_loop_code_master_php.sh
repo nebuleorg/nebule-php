@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020251019
+# Version 020251029
 
 echo ' > start'
 
@@ -55,14 +55,22 @@ export INIT_DATE='020250111'
 echo " > prep authorities"
 puppetmaster_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 4096 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export puppetmaster_develop_key
-security_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
-export security_authority_develop_key
-code_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
-export code_authority_develop_key
-time_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
-export time_authority_develop_key
-directory_authority_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
-export directory_authority_develop_key
+security_authority1_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export security_authority1_develop_key
+security_authority2_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export security_authority2_develop_key
+code_authority1_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export code_authority1_develop_key
+code_authority2_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 2048 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export code_authority2_develop_key
+time_authority1_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export time_authority1_develop_key
+time_authority2_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export time_authority2_develop_key
+directory_authority1_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export directory_authority1_develop_key
+directory_authority2_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
+export directory_authority2_develop_key
 
 function work_full_reinit()
 {
@@ -150,47 +158,76 @@ function work_full_reinit()
   echo ' > prep masters objects'
   echo '   - obj puppetmaster'
   echo -n "${puppetmaster_develop_key}" > "${PUPPETMASTER_SPACE}/o/${puppetmaster_develop_key_hash}"
-  echo -n "${security_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${security_authority_develop_key_hash}"
-  echo -n "${code_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${code_authority_develop_key_hash}"
-  echo -n "${time_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${time_authority_develop_key_hash}"
-  echo -n "${directory_authority_develop_key}" > "${PUPPETMASTER_SPACE}/o/${directory_authority_develop_key_hash}"
+  echo -n "${security_authority1_develop_key}" > "${PUPPETMASTER_SPACE}/o/${security_authority1_develop_key_hash}"
+  echo -n "${security_authority2_develop_key}" > "${PUPPETMASTER_SPACE}/o/${security_authority2_develop_key_hash}"
+  echo -n "${code_authority1_develop_key}" > "${PUPPETMASTER_SPACE}/o/${code_authority1_develop_key_hash}"
+  echo -n "${code_authority2_develop_key}" > "${PUPPETMASTER_SPACE}/o/${code_authority2_develop_key_hash}"
+  echo -n "${time_authority1_develop_key}" > "${PUPPETMASTER_SPACE}/o/${time_authority1_develop_key_hash}"
+  echo -n "${time_authority2_develop_key}" > "${PUPPETMASTER_SPACE}/o/${time_authority2_develop_key_hash}"
+  echo -n "${directory_authority1_develop_key}" > "${PUPPETMASTER_SPACE}/o/${directory_authority1_develop_key_hash}"
+  echo -n "${directory_authority2_develop_key}" > "${PUPPETMASTER_SPACE}/o/${directory_authority2_develop_key_hash}"
   echo -n "${puppetmaster_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+  echo -n "${security_authority1_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${security_authority1_develop_pem_hash}"
+  echo -n "${security_authority2_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${security_authority2_develop_pem_hash}"
+  echo -n "${code_authority1_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${code_authority1_develop_pem_hash}"
+  echo -n "${code_authority2_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${code_authority2_develop_pem_hash}"
+  echo -n "${time_authority1_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${time_authority1_develop_pem_hash}"
+  echo -n "${time_authority2_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${time_authority2_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${directory_authority1_develop_pem_hash}"
+  echo -n "${directory_authority2_develop_pem}" > "${PUPPETMASTER_SPACE}/o/${directory_authority2_develop_pem_hash}"
 
   echo '   - obj security master'
-  echo -n "${security_authority_develop_key}" > "${SECURITY_MASTER_SPACE}/o/${security_authority_develop_key_hash}"
   echo -n "${puppetmaster_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+  echo -n "${security_authority1_develop_key}" > "${SECURITY_MASTER_SPACE}/o/${security_authority1_develop_key_hash}"
+  echo -n "${security_authority2_develop_key}" > "${SECURITY_MASTER_SPACE}/o/${security_authority2_develop_key_hash}"
+  echo -n "${security_authority1_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${security_authority1_develop_pem_hash}"
+  echo -n "${security_authority2_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${security_authority2_develop_pem_hash}"
+  echo -n "${code_authority1_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${code_authority1_develop_pem_hash}"
+  echo -n "${code_authority2_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${code_authority2_develop_pem_hash}"
+  echo -n "${time_authority1_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${time_authority1_develop_pem_hash}"
+  echo -n "${time_authority2_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${time_authority2_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${directory_authority1_develop_pem_hash}"
+  echo -n "${directory_authority2_develop_pem}" > "${SECURITY_MASTER_SPACE}/o/${directory_authority2_develop_pem_hash}"
 
   echo '   - obj code master'
-  echo -n "${code_authority_develop_key}" > "${CODE_MASTER_SPACE}/o/${code_authority_develop_key_hash}"
   echo -n "${puppetmaster_develop_pem}" > "${CODE_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "${CODE_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+  echo -n "${puppetmaster_develop_key}" > "${CODE_MASTER_SPACE}/o/${puppetmaster_develop_key_hash}"
+  echo -n "${code_authority1_develop_key}" > "${CODE_MASTER_SPACE}/o/${code_authority1_develop_key_hash}"
+  echo -n "${code_authority2_develop_key}" > "${CODE_MASTER_SPACE}/o/${code_authority2_develop_key_hash}"
+  echo -n "${security_authority1_develop_pem}" > "${CODE_MASTER_SPACE}/o/${security_authority1_develop_pem_hash}"
+  echo -n "${security_authority2_develop_pem}" > "${CODE_MASTER_SPACE}/o/${security_authority2_develop_pem_hash}"
+  echo -n "${code_authority1_develop_pem}" > "${CODE_MASTER_SPACE}/o/${code_authority1_develop_pem_hash}"
+  echo -n "${code_authority2_develop_pem}" > "${CODE_MASTER_SPACE}/o/${code_authority2_develop_pem_hash}"
+  echo -n "${time_authority1_develop_pem}" > "${CODE_MASTER_SPACE}/o/${time_authority1_develop_pem_hash}"
+  echo -n "${time_authority2_develop_pem}" > "${CODE_MASTER_SPACE}/o/${time_authority2_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_pem}" > "${CODE_MASTER_SPACE}/o/${directory_authority1_develop_pem_hash}"
+  echo -n "${directory_authority2_develop_pem}" > "${CODE_MASTER_SPACE}/o/${directory_authority2_develop_pem_hash}"
 
   echo '   - obj time master'
-  echo -n "${time_authority_develop_key}" > "${TIME_MASTER_SPACE}/o/${time_authority_develop_key_hash}"
   echo -n "${puppetmaster_develop_pem}" > "${TIME_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "${TIME_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+  echo -n "${time_authority1_develop_key}" > "${TIME_MASTER_SPACE}/o/${time_authority1_develop_key_hash}"
+  echo -n "${time_authority2_develop_key}" > "${TIME_MASTER_SPACE}/o/${time_authority2_develop_key_hash}"
+  echo -n "${security_authority1_develop_pem}" > "${TIME_MASTER_SPACE}/o/${security_authority1_develop_pem_hash}"
+  echo -n "${security_authority2_develop_pem}" > "${TIME_MASTER_SPACE}/o/${security_authority2_develop_pem_hash}"
+  echo -n "${code_authority1_develop_pem}" > "${TIME_MASTER_SPACE}/o/${code_authority1_develop_pem_hash}"
+  echo -n "${code_authority2_develop_pem}" > "${TIME_MASTER_SPACE}/o/${code_authority2_develop_pem_hash}"
+  echo -n "${time_authority1_develop_pem}" > "${TIME_MASTER_SPACE}/o/${time_authority1_develop_pem_hash}"
+  echo -n "${time_authority2_develop_pem}" > "${TIME_MASTER_SPACE}/o/${time_authority2_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_pem}" > "${TIME_MASTER_SPACE}/o/${directory_authority1_develop_pem_hash}"
+  echo -n "${directory_authority2_develop_pem}" > "${TIME_MASTER_SPACE}/o/${directory_authority2_develop_pem_hash}"
 
   echo '   - obj directory master'
-  echo -n "${directory_authority_develop_key}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority_develop_key_hash}"
   echo -n "${puppetmaster_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${puppetmaster_develop_pem_hash}"
-  echo -n "${security_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${security_authority_develop_pem_hash}"
-  echo -n "${code_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${code_authority_develop_pem_hash}"
-  echo -n "${time_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${time_authority_develop_pem_hash}"
-  echo -n "${directory_authority_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_key}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority1_develop_key_hash}"
+  echo -n "${directory_authority2_develop_key}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority2_develop_key_hash}"
+  echo -n "${security_authority1_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${security_authority1_develop_pem_hash}"
+  echo -n "${security_authority2_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${security_authority2_develop_pem_hash}"
+  echo -n "${code_authority1_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${code_authority1_develop_pem_hash}"
+  echo -n "${code_authority2_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${code_authority2_develop_pem_hash}"
+  echo -n "${time_authority1_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${time_authority1_develop_pem_hash}"
+  echo -n "${time_authority2_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${time_authority2_develop_pem_hash}"
+  echo -n "${directory_authority1_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority1_develop_pem_hash}"
+  echo -n "${directory_authority2_develop_pem}" > "${DIRECTORY_MASTER_SPACE}/o/${directory_authority2_develop_pem_hash}"
 
   pemOID=$(echo -n 'application/x-pem-file' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -215,11 +252,16 @@ function work_full_reinit()
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${localOID}>${localRID}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${puppetmaster_develop_pem_hash}>${puppetmaster_develop_key_hash}>${Pkey}"
     "nebule:link/2:0_0>${INIT_DATE}/l>${puppetmaster_develop_pem_hash}>${rsa4096}>${algoKey}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority_develop_pem_hash}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_CODE_AUTHORITY}>${code_authority_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_TIME_AUTHORITY}>${time_authority_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority1_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_SECURITY_AUTHORITY}>${security_authority2_develop_pem_hash}>${LIB_RID_SECURITY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority1_develop_pem_hash}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${lauthOID}>${security_authority2_develop_pem_hash}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_CODE_AUTHORITY}>${code_authority1_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_CODE_AUTHORITY}>${code_authority2_develop_pem_hash}>${LIB_RID_CODE_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority1_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_DIRECTORY_AUTHORITY}>${directory_authority2_develop_pem_hash}>${LIB_RID_DIRECTORY_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_TIME_AUTHORITY}>${time_authority1_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${LIB_RID_TIME_AUTHORITY}>${time_authority2_develop_pem_hash}>${LIB_RID_TIME_AUTHORITY}"
   )
   for link in "${links[@]}"
   do
@@ -237,17 +279,25 @@ function work_full_reinit()
   echo -n 'cerberus' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
   echo -n 'http://cerberus.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${security_authority_develop_pem_hash}>${security_authority_develop_key_hash}>${Pkey}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority_develop_pem_hash}>${rsa2048}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority1_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority2_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority1_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority2_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${security_authority1_develop_pem_hash}>${security_authority1_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${security_authority2_develop_pem_hash}>${security_authority2_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority1_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority2_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority1_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority2_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority1_develop_pem_hash}>${rsa2048}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${security_authority2_develop_pem_hash}>${rsa2048}>${algoKey}"
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256 "${SECURITY_MASTER_SPACE}"
-    sign_write_link "${link}" "${security_authority_develop_key_hash}" "${security_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${security_authority1_develop_key_hash}" "${security_authority1_develop_pem_hash}" 256 "${SECURITY_MASTER_SPACE}"
+    sign_write_link "${link}" "${security_authority2_develop_key_hash}" "${security_authority2_develop_pem_hash}" 256 "${SECURITY_MASTER_SPACE}"
+    sign_write_link "${link}" "${security_authority1_develop_key_hash}" "${security_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${security_authority2_develop_key_hash}" "${security_authority2_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links code authority'
@@ -256,16 +306,23 @@ function work_full_reinit()
   echo -n 'bachue' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
   echo -n 'http://bachue.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${code_authority_develop_pem_hash}>${code_authority_develop_key_hash}>${Pkey}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority_develop_pem_hash}>${rsa2048}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority1_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority2_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority1_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority2_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${code_authority1_develop_pem_hash}>${code_authority1_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${code_authority2_develop_pem_hash}>${code_authority2_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority1_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority2_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority1_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority2_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority1_develop_pem_hash}>${rsa2048}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${code_authority2_develop_pem_hash}>${rsa2048}>${algoKey}"
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${code_authority2_develop_key_hash}" "${code_authority2_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links time authority'
@@ -274,17 +331,25 @@ function work_full_reinit()
   echo -n 'kronos' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
   echo -n 'http://kronos.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${time_authority_develop_pem_hash}>${time_authority_develop_key_hash}>${Pkey}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority_develop_pem_hash}>${rsa1024}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority1_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority2_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority1_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority2_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${time_authority1_develop_pem_hash}>${time_authority1_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${time_authority2_develop_pem_hash}>${time_authority2_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority1_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority2_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority1_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority2_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority1_develop_pem_hash}>${rsa1024}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${time_authority2_develop_pem_hash}>${rsa1024}>${algoKey}"
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256 "${TIME_MASTER_SPACE}"
-    sign_write_link "${link}" "${time_authority_develop_key_hash}" "${time_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${time_authority1_develop_key_hash}" "${time_authority1_develop_pem_hash}" 256 "${TIME_MASTER_SPACE}"
+    sign_write_link "${link}" "${time_authority2_develop_key_hash}" "${time_authority2_develop_pem_hash}" 256 "${TIME_MASTER_SPACE}"
+    sign_write_link "${link}" "${time_authority1_develop_key_hash}" "${time_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${time_authority2_develop_key_hash}" "${time_authority2_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   echo ' > links directory authority'
@@ -293,17 +358,25 @@ function work_full_reinit()
   echo -n 'asabiyya' > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
   echo -n 'http://asabiyya.nebule.org' > "${CODE_MASTER_SPACE}/o/${localOID}"
   links=(
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_key_hash}>${pemOID}>${typeRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${directory_authority_develop_pem_hash}>${directory_authority_develop_key_hash}>${Pkey}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${entityNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${localOID}>${localRID}"
-    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority_develop_pem_hash}>${rsa1024}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority1_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority2_develop_pem_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority1_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority2_develop_key_hash}>${pemOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${directory_authority1_develop_pem_hash}>${directory_authority1_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${directory_authority2_develop_pem_hash}>${directory_authority2_develop_key_hash}>${Pkey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority1_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority2_develop_pem_hash}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority1_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority2_develop_pem_hash}>${localOID}>${localRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority1_develop_pem_hash}>${rsa1024}>${algoKey}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${directory_authority2_develop_pem_hash}>${rsa1024}>${algoKey}"
   )
   for link in "${links[@]}"
   do
-    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
-    sign_write_link "${link}" "${directory_authority_develop_key_hash}" "${directory_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${directory_authority1_develop_key_hash}" "${directory_authority1_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
+    sign_write_link "${link}" "${directory_authority2_develop_key_hash}" "${directory_authority2_develop_pem_hash}" 256 "${DIRECTORY_MASTER_SPACE}"
+    sign_write_link "${link}" "${directory_authority1_develop_key_hash}" "${directory_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${directory_authority2_develop_key_hash}" "${directory_authority2_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
 
   #echo -n 'rsa.1024' > "${SPACE}/o/${rsa1024}"
@@ -351,10 +424,10 @@ function work_dev_deploy()
   echo ' > links'
   echo '   - code branch'
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+  sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   echo '   - name'
   link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${entityNameOID}>${nameRID}"
-  sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+  sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
 }
 
 function work_refresh()
@@ -632,7 +705,7 @@ EOF
   for link in "${links[@]}"
   do
     echo -n .
-    sign_write_link "${link}" "${code_authority_develop_key_hash}" "${code_authority_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
   done
   echo
 
@@ -711,37 +784,63 @@ function sign_write_link()
 
 # Extrait les clés publiques.
 echo " > extract pub keys"
-puppetmaster_develop_pem=$(       echo -n "${puppetmaster_develop_key}"        | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+puppetmaster_develop_pem=$(        echo -n "${puppetmaster_develop_key}"         | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
 export puppetmaster_develop_pem
-security_authority_develop_pem=$( echo -n "${security_authority_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export security_authority_develop_pem
-code_authority_develop_pem=$(     echo -n "${code_authority_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export code_authority_develop_pem
-time_authority_develop_pem=$(     echo -n "${time_authority_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export time_authority_develop_pem
-directory_authority_develop_pem=$(echo -n "${directory_authority_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
-export directory_authority_develop_pem
+security_authority1_develop_pem=$( echo -n "${security_authority1_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export security_authority1_develop_pem
+security_authority2_develop_pem=$( echo -n "${security_authority2_develop_key}"  | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export security_authority2_develop_pem
+code_authority1_develop_pem=$(     echo -n "${code_authority1_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export code_authority1_develop_pem
+code_authority2_develop_pem=$(     echo -n "${code_authority2_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export code_authority2_develop_pem
+time_authority1_develop_pem=$(     echo -n "${time_authority1_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export time_authority1_develop_pem
+time_authority2_develop_pem=$(     echo -n "${time_authority2_develop_key}"      | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export time_authority2_develop_pem
+directory_authority1_develop_pem=$(echo -n "${directory_authority1_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export directory_authority1_develop_pem
+directory_authority2_develop_pem=$(echo -n "${directory_authority2_develop_key}" | openssl rsa -outform PEM -pubout -passin "pass:${password_entity}")
+export directory_authority2_develop_pem
 
-puppetmaster_develop_key_hash=$(       echo -n "$puppetmaster_develop_key"        | sha256sum | cut -d' ' -f1)'.sha2.256'
+puppetmaster_develop_key_hash=$(        echo -n "${puppetmaster_develop_key}"         | sha256sum | cut -d' ' -f1)'.sha2.256'
 export puppetmaster_develop_key_hash
-puppetmaster_develop_pem_hash=$(       echo -n "$puppetmaster_develop_pem"        | sha256sum | cut -d' ' -f1)'.sha2.256'
+puppetmaster_develop_pem_hash=$(        echo -n "${puppetmaster_develop_pem}"         | sha256sum | cut -d' ' -f1)'.sha2.256'
 export puppetmaster_develop_pem_hash
-security_authority_develop_key_hash=$( echo -n "$security_authority_develop_key"  | sha256sum | cut -d' ' -f1)'.sha2.256'
-export security_authority_develop_key_hash
-security_authority_develop_pem_hash=$( echo -n "$security_authority_develop_pem"  | sha256sum | cut -d' ' -f1)'.sha2.256'
-export security_authority_develop_pem_hash
-code_authority_develop_key_hash=$(     echo -n "$code_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha2.256'
-export code_authority_develop_key_hash
-code_authority_develop_pem_hash=$(     echo -n "$code_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha2.256'
-export code_authority_develop_pem_hash
-time_authority_develop_key_hash=$(     echo -n "$time_authority_develop_key"      | sha256sum | cut -d' ' -f1)'.sha2.256'
-export time_authority_develop_key_hash
-time_authority_develop_pem_hash=$(     echo -n "$time_authority_develop_pem"      | sha256sum | cut -d' ' -f1)'.sha2.256'
-export time_authority_develop_pem_hash
-directory_authority_develop_key_hash=$(echo -n "$directory_authority_develop_key" | sha256sum | cut -d' ' -f1)'.sha2.256'
-export directory_authority_develop_key_hash
-directory_authority_develop_pem_hash=$(echo -n "$directory_authority_develop_pem" | sha256sum | cut -d' ' -f1)'.sha2.256'
-export directory_authority_develop_pem_hash
+
+security_authority1_develop_key_hash=$( echo -n "${security_authority1_develop_key}"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority1_develop_key_hash
+security_authority1_develop_pem_hash=$( echo -n "${security_authority1_develop_pem}"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority1_develop_pem_hash
+code_authority1_develop_key_hash=$(     echo -n "${code_authority1_develop_key}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority1_develop_key_hash
+code_authority1_develop_pem_hash=$(     echo -n "${code_authority1_develop_pem}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority1_develop_pem_hash
+time_authority1_develop_key_hash=$(     echo -n "${time_authority1_develop_key}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority1_develop_key_hash
+time_authority1_develop_pem_hash=$(     echo -n "${time_authority1_develop_pem}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority1_develop_pem_hash
+directory_authority1_develop_key_hash=$(echo -n "${directory_authority1_develop_key}" | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority1_develop_key_hash
+directory_authority1_develop_pem_hash=$(echo -n "${directory_authority1_develop_pem}" | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority1_develop_pem_hash
+
+security_authority2_develop_key_hash=$( echo -n "${security_authority2_develop_key}"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority2_develop_key_hash
+security_authority2_develop_pem_hash=$( echo -n "${security_authority2_develop_pem}"  | sha256sum | cut -d' ' -f1)'.sha2.256'
+export security_authority2_develop_pem_hash
+code_authority2_develop_key_hash=$(     echo -n "${code_authority2_develop_key}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority2_develop_key_hash
+code_authority2_develop_pem_hash=$(     echo -n "${code_authority2_develop_pem}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export code_authority2_develop_pem_hash
+time_authority2_develop_key_hash=$(     echo -n "${time_authority2_develop_key}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority2_develop_key_hash
+time_authority2_develop_pem_hash=$(     echo -n "${time_authority2_develop_pem}"      | sha256sum | cut -d' ' -f1)'.sha2.256'
+export time_authority2_develop_pem_hash
+directory_authority2_develop_key_hash=$(echo -n "${directory_authority2_develop_key}" | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority2_develop_key_hash
+directory_authority2_develop_pem_hash=$(echo -n "${directory_authority2_develop_pem}" | sha256sum | cut -d' ' -f1)'.sha2.256'
+export directory_authority2_develop_pem_hash
 
 function mode_loop
 {
@@ -787,14 +886,14 @@ function main
 
   echo "   - puppetmaster        : ${puppetmaster_develop_pem_hash}"
   echo "     - key               : ${puppetmaster_develop_key_hash}"
-  echo "   - security authority  : ${security_authority_develop_pem_hash}"
-  echo "     - key               : ${security_authority_develop_key_hash}"
-  echo "   - code authority      : ${code_authority_develop_pem_hash}"
-  echo "     - key               : ${code_authority_develop_key_hash}"
-  echo "   - time authority      : ${time_authority_develop_pem_hash}"
-  echo "     - key               : ${time_authority_develop_key_hash}"
-  echo "   - directory authority : ${directory_authority_develop_pem_hash}"
-  echo "     - key               : ${directory_authority_develop_key_hash}"
+  echo "   - security authority  : ${security_authority1_develop_pem_hash}"
+  echo "     - key               : ${security_authority1_develop_key_hash}"
+  echo "   - code authority      : ${code_authority1_develop_pem_hash}"
+  echo "     - key               : ${code_authority1_develop_key_hash}"
+  echo "   - time authority      : ${time_authority1_develop_pem_hash}"
+  echo "     - key               : ${time_authority1_develop_key_hash}"
+  echo "   - directory authority : ${directory_authority1_develop_pem_hash}"
+  echo "     - key               : ${directory_authority1_develop_key_hash}"
 
   if [ "${1}" == '' ]
   then

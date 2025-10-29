@@ -5,6 +5,7 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\ActionsEntities;
+use Nebule\Library\ActionsLinks;
 use Nebule\Library\Cache;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayItemIconMessage;
@@ -39,7 +40,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020251026';
+    const MODULE_VERSION = '020251029';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -249,7 +250,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . '&' . References::COMMAND_SWITCH_GHOST . '=' . $object
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
@@ -325,12 +326,37 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[5]['icon'] = Display::DEFAULT_ICON_MARK;
                     $hookArray[5]['desc'] = '';
                     $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . ActionsMarks::MARK . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }*/
+
+                if ($this->_authoritiesInstance->getIsPuppetMaster($this->_entitiesInstance->getConnectedEntityInstance())
+                        && $unlocked
+                        && $object != $this->_entitiesInstance->getConnectedEntityEID()
+                ) {
+                    // Promote as master of security.
+                    if ($this->_authoritiesInstance->getIsSecurityMasterEID($object)) {
+                        $req = 'x';
+                        $hookArray[10]['name'] = '::module:entities:UnsetSecurityMaster';
+                        $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[10]['desc'] = '::module:entities:UnsetSecurityMaster';
+                    } else {
+                        $req = 'l';
+                        $hookArray[10]['name'] = '::module:entities:SetSecurityMaster';
+                        $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[10]['desc'] = '::module:entities:SetSecurityMaster';
+                    }
+                    $hookArray[10]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                        . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $object . '>' . References::RID_SECURITY_AUTHORITY
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    // TODO add for others authorities.
+                }
                 break;
 
             case '::module:entities:DisplayMyEntities':
@@ -410,7 +436,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $this->_displayAllEntitiesList();
                 break;
             default:
-                $this->_displayEntityDisp();
+                $this->_displayEntityDisplay();
                 break;
         }
     }
@@ -767,7 +793,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
-    private function _displayEntityDisp(): void
+    private function _displayEntityDisplay(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo '<div class="layout-list">' . "\n";
@@ -1370,7 +1396,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             'bl/rl/req' => 'f',
             'bl/rl/nid1' => $this->_entitiesInstance->getGhostEntityEID(),
         );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'self');
 
         $entities = array();
         foreach ($links as $link) {
@@ -1406,7 +1432,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             'bl/rl/req' => 'f',
             'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
         );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
 
         $entities = array();
         foreach ($links as $link) {
@@ -1442,7 +1468,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             'bl/rl/req' => 'f',
             'bl/rl/nid1' => $this->_entitiesInstance->getGhostEntityEID(),
         );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
         foreach ($links as $link) {
             $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
         }
@@ -1452,7 +1478,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             'bl/rl/req' => 'f',
             'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
         );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter);
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
 
         foreach ($links as $link) {
             $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
@@ -1585,7 +1611,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $this->_displayEntityCreateNew();
 
         if ($this->_createEntityAction && !$this->_createEntityError)
-            $this->_displayEntityDisp();
+            $this->_displayEntityDisplay();
         else
             $this->_displayEntityCreateForm();
     }
@@ -1951,7 +1977,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 'bl/rl/nid1' => $entity->getID(),
                 'bl/rl/nid4' => '',
         );
-        $entity->getLinks($links, $filter);
+        $entity->getLinks($links, $filter, 'myself');
         $instanceList = new DisplayList($this->_applicationInstance);
         $instance = new DisplayObject($this->_applicationInstance);
         $instance->setNID($entity);
@@ -2009,7 +2035,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                 'bl/rl/nid3' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_PRIVATE_KEY),
                 'bl/rl/nid4' => '',
         );
-        $entity->getLinks($links, $filter);
+        $entity->getLinks($links, $filter, 'myself');
         foreach ($links as $link) {
             $instance = new DisplayObject($this->_applicationInstance);
             $instanceNode = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
@@ -2161,6 +2187,14 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CodeMaster' => "L'entité maîtresse du code.",
             '::module:entities:DirectoryMaster' => "L'entité maîtresse de l'annuaire.",
             '::module:entities:TimeMaster' => "L'entité maîtresse du temps.",
+            '::module:entities:SetSecurityMaster' => 'Promeut entité maîtresse de la sécurité',
+            '::module:entities:UnsetSecurityMaster' => 'Révoque entité maîtresse de la sécurité',
+            '::module:entities:SetCodeMaster' => 'Promeut entité maîtresse du code',
+            '::module:entities:UnsetCodeMaster' => 'Révoque entité maîtresse du code',
+            '::module:entities:SetDirectoryMaster' => "Promeut entité maîtresse de l'annuaire",
+            '::module:entities:UnsetDirectoryMaster' => "Révoque entité maîtresse de l'annuaire",
+            '::module:entities:SetTimeMaster' => 'Promeut entité maîtresse du temps',
+            '::module:entities:UnsetTimeMaster' => 'Révoque entité maîtresse du temps',
             '::module:entities:From' => 'De',
             '::module:entities:To' => 'Pour',
             '::module:entities:DisplayEntityMessages' => 'Liste des messages de %s.',
@@ -2252,6 +2286,14 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CodeMaster' => 'The master entity of code.',
             '::module:entities:DirectoryMaster' => 'The master entity of directory.',
             '::module:entities:TimeMaster' => 'The master entity of time.',
+            '::module:entities:SetSecurityMaster' => 'Promote as master entity of security',
+            '::module:entities:UnsetSecurityMaster' => 'Fire as master entity of security',
+            '::module:entities:SetCodeMaster' => 'Promote as master entity of code',
+            '::module:entities:UnsetCodeMaster' => 'Fire as master entity of code',
+            '::module:entities:SetDirectoryMaster' => 'Promote as master entity of directory',
+            '::module:entities:UnsetDirectoryMaster' => 'Fire as master entity of directory',
+            '::module:entities:SetTimeMaster' => 'Promote as master entity of time',
+            '::module:entities:UnsetTimeMaster' => 'Fire as master entity of time',
             '::module:entities:From' => 'From',
             '::module:entities:To' => 'To',
             '::module:entities:DisplayEntityMessages' => 'List of messages for %s.',
@@ -2343,6 +2385,14 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:CodeMaster' => 'The master entity of code.',
             '::module:entities:DirectoryMaster' => 'The master entity of directory.',
             '::module:entities:TimeMaster' => 'The master entity of time.',
+            '::module:entities:SetSecurityMaster' => 'Promote as master entity of security',
+            '::module:entities:UnsetSecurityMaster' => 'Fire as master entity of security',
+            '::module:entities:SetCodeMaster' => 'Promote as master entity of code',
+            '::module:entities:UnsetCodeMaster' => 'Fire as master entity of code',
+            '::module:entities:SetDirectoryMaster' => 'Promote as master entity of directory',
+            '::module:entities:UnsetDirectoryMaster' => 'Fire as master entity of directory',
+            '::module:entities:SetTimeMaster' => 'Promote as master entity of time',
+            '::module:entities:UnsetTimeMaster' => 'Fire as master entity of time',
             '::module:entities:From' => 'From',
             '::module:entities:To' => 'To',
             '::module:entities:DisplayEntityMessages' => 'List of messages for %s.',
