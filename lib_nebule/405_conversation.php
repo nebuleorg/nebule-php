@@ -32,34 +32,33 @@ class Conversation extends Group implements nodeInterface
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f636f6e766572736174696f6e000000000000000000.none.272';
 
     const SESSION_SAVED_VARS = array(
-        '_id',
-        '_fullName',
-        '_cacheProperty',
-        '_cacheProperties',
-        '_cacheMarkProtected',
-        '_idProtected',
-        '_idUnprotected',
-        '_idProtectedKey',
-        '_idUnprotectedKey',
-        '_markProtectedChecked',
-        '_cacheCurrentEntityUnlocked',
-        '_usedUpdate',
-        '_isGroup',
-        '_isConversation',
-        '_isMarkClosed',
-        '_isMarkProtected',
-        '_isMarkObfuscated',
-        '_referenceObject',
-        '_referenceObjectClosed',
-        '_referenceObjectProtected',
-        '_referenceObjectObfuscated',
+            '_id',
+            '_fullName',
+            '_cacheProperty',
+            '_cacheProperties',
+            '_cacheMarkProtected',
+            '_idProtected',
+            '_idUnprotected',
+            '_idProtectedKey',
+            '_idUnprotectedKey',
+            '_markProtectedChecked',
+            '_cacheCurrentEntityUnlocked',
+            '_usedUpdate',
+            '_isGroup',
+            '_isConversation',
+            '_isMarkClosed',
+            '_isMarkProtected',
+            '_isMarkObfuscated',
+            '_referenceObject',
+            '_referenceObjectClosed',
+            '_referenceObjectProtected',
+            '_referenceObjectObfuscated',
     );
 
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency') )
-        {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_id = '0';
             $this->_isNew = false;
             return;
@@ -90,10 +89,10 @@ class Conversation extends Group implements nodeInterface
     {
         // Vérifie que l'on puisse créer une conversation.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
+                && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // Génère un contenu aléatoire.
             $data = $this->_cryptoInstance->getRandom(32, Crypto::RANDOM_PSEUDO);
@@ -102,7 +101,7 @@ class Conversation extends Group implements nodeInterface
             if ($data != '') {
                 // Calcul l'ID référence de la conversation.
                 $this->_id = substr($this->_cryptoInstance->hash($data), 0, 32)
-                    . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
+                        . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
                 $this->_metrologyInstance->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
                 // Mémorise les données.
@@ -214,16 +213,46 @@ class Conversation extends Group implements nodeInterface
     }
 
 
-
     // Désactivation des fonctions de protection et autres.
-    public function checkConsistency(): bool { return true; }
-    public function getReloadMarkProtected(): bool { return false; }
-    public function getProtectedID(): string { return '0'; }
-    public function getUnprotectedID(): string { return $this->_id; }
-    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
-    public function setUnprotected(): bool { return false; }
-    public function setProtectedTo($entity): bool { return false; }
-    public function getProtectedTo(string $socialClass = ''): array { return array(); }
+    public function checkConsistency(): bool
+    {
+        return true;
+    }
+
+    public function getReloadMarkProtected(): bool
+    {
+        return false;
+    }
+
+    public function getProtectedID(): string
+    {
+        return '0';
+    }
+
+    public function getUnprotectedID(): string
+    {
+        return $this->_id;
+    }
+
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool
+    {
+        return false;
+    }
+
+    public function setUnprotected(): bool
+    {
+        return false;
+    }
+
+    public function setProtectedTo($entity): bool
+    {
+        return false;
+    }
+
+    public function getProtectedTo(string $socialClass = ''): array
+    {
+        return array();
+    }
 
 
     /**
@@ -251,12 +280,12 @@ class Conversation extends Group implements nodeInterface
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $id,
-            $this->_id,
-            $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
+                '',
+                '',
+                'l',
+                $id,
+                $this->_id,
+                $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
         );
 
         // Fait un tri par pertinance sociale.
@@ -281,10 +310,10 @@ class Conversation extends Group implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             return false;
         }
@@ -335,10 +364,10 @@ class Conversation extends Group implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             return false;
         }
@@ -526,13 +555,11 @@ class Conversation extends Group implements nodeInterface
         }
         return $this->_referenceObjectObfuscated;
     }
+}
 
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
+
+abstract class HelpConversation {
     static public function echoDocumentationTitles(): void
     {
         ?>
@@ -559,11 +586,6 @@ class Conversation extends Group implements nodeInterface
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationCore(): void
     {
         ?>

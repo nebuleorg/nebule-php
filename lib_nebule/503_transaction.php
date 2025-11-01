@@ -62,7 +62,6 @@ class Transaction extends LinkRegister implements linkInterface
 
     /**
      * Table des transactions unitaires.
-     *
      * Les transactions unitaires sont incrémentées à partir de 0.
      * Chaque transaction unitaire est un sous-tableau :
      * - CID
@@ -126,7 +125,6 @@ class Transaction extends LinkRegister implements linkInterface
 
     /**
      * Extrait une transaction en mode LNS.
-     *
      * Une transaction en mode LNS est marquée par un lien :
      * - hashsign : signataire et entité source disposant du jeton.
      * - date : date de la prise en compte de la transaction.
@@ -143,39 +141,39 @@ class Transaction extends LinkRegister implements linkInterface
     private function _extractModeLNS_disabled(): void
     {
         return;
-    /*    $this->_transactionsMode = 'LNS';
+        /*    $this->_transactionsMode = 'LNS';
 
-        // Vérifie si l'objet source est un jeton.
-        $instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
-        $instanceTarget = $this->_nebuleInstance->newWallet($this->_hashTarget);
-        if ($instanceSource->getID() != '0'
-            && $instanceSource->getIsToken('all') // @todo modifier le filtre social.
-            && $instanceSource->getID() != '0'
-            && $instanceSource->getIsWallet('all') // @todo modifier le filtre social.
-        ) {
-            // Extrait la monnaie.
-            $CID = $instanceSource->getParam('CID');
-            $instanceCID = $this->_nebuleInstance->newCurrency($CID);
-            $modesCID = ' ' . $instanceCID->getParam('TRS') . ' ';
-
-            // Vérifie que le mode LNS est présent dans les modes supportés par la monnaie
-            if ($modesCID != '  '
-                && strpos($modesCID, ' LNS ') !== false
+            // Vérifie si l'objet source est un jeton.
+            $instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
+            $instanceTarget = $this->_nebuleInstance->newWallet($this->_hashTarget);
+            if ($instanceSource->getID() != '0'
+                && $instanceSource->getIsToken('all') // @todo modifier le filtre social.
+                && $instanceSource->getID() != '0'
+                && $instanceSource->getIsWallet('all') // @todo modifier le filtre social.
             ) {
-                $this->_transactionsArray[0]['CID'] = $CID;
-                $this->_transactionsArray[0]['D'] = $this->_date;
-                $this->_transactionsArray[0]['S'] = $this->_hashSigner;
-                $this->_transactionsArray[0]['T'] = $this->_hashTarget;
-                $this->_transactionsArray[0]['TID'] = $this->_hashSource;
-                $this->_transactionsArray[0]['R'] = '1';
-                $this->_transactionsArray[0]['TRS'] = 'LNS';
-                $this->_isTransaction = true;
+                // Extrait la monnaie.
+                $CID = $instanceSource->getParam('CID');
+                $instanceCID = $this->_nebuleInstance->newCurrency($CID);
+                $modesCID = ' ' . $instanceCID->getParam('TRS') . ' ';
+
+                // Vérifie que le mode LNS est présent dans les modes supportés par la monnaie
+                if ($modesCID != '  '
+                    && strpos($modesCID, ' LNS ') !== false
+                ) {
+                    $this->_transactionsArray[0]['CID'] = $CID;
+                    $this->_transactionsArray[0]['D'] = $this->_date;
+                    $this->_transactionsArray[0]['S'] = $this->_hashSigner;
+                    $this->_transactionsArray[0]['T'] = $this->_hashTarget;
+                    $this->_transactionsArray[0]['TID'] = $this->_hashSource;
+                    $this->_transactionsArray[0]['R'] = '1';
+                    $this->_transactionsArray[0]['TRS'] = 'LNS';
+                    $this->_isTransaction = true;
+                } else {
+                    $this->_isTransaction = false;
+                }
             } else {
                 $this->_isTransaction = false;
-            }
-        } else {
-            $this->_isTransaction = false;
-        }*/
+            }*/
     }
 
     /**
@@ -220,24 +218,14 @@ class Transaction extends LinkRegister implements linkInterface
     {
         return $this->_transactionsArray;
     }
+}
 
 
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationTitles(): void
-    {
+abstract class HelpTransaction {
+    static public function echoDocumentationTitles(): void {
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationCore(): void
-    {
+    static public function echoDocumentationCore(): void {
     }
 }

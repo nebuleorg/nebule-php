@@ -1443,13 +1443,11 @@ class Currency extends Node implements nodeInterface
 
         return $total;
     }
+}
 
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
+
+abstract class HelpCurrency {
     static public function echoDocumentationTitles(): void
     {
         ?>
@@ -1606,11 +1604,6 @@ class Currency extends Node implements nodeInterface
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationCore(): void
     {
         ?>

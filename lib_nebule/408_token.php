@@ -63,8 +63,7 @@ class Token extends TokenPool implements nodeInterface
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency'))
-        {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_id = '0';
             $this->_isNew = false;
             return;
@@ -136,7 +135,7 @@ class Token extends TokenPool implements nodeInterface
 
         if (!$this->_isNew
             || sizeof($param) == 0
-            || ( get_class($this) != 'Token'
+            || (get_class($this) != 'Token'
                 && get_class($this) != 'Nebule\Library\Token'
             )
         )
@@ -420,24 +419,14 @@ class Token extends TokenPool implements nodeInterface
 
         return $result;
     }
+}
 
 
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationTitles(): void
-    {
+abstract class HelpToken {
+    static public function echoDocumentationTitles(): void {
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationCore(): void
-    {
+    static public function echoDocumentationCore(): void {
     }
 }

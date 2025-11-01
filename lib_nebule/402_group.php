@@ -32,26 +32,26 @@ class Group extends Node implements nodeInterface
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a65742f67726f757065000000000000000000000000000000.none.272';
 
     const SESSION_SAVED_VARS = array(
-        '_id',
-        '_fullName',
-        '_cacheProperty',
-        '_cacheProperties',
-        '_cacheMarkProtected',
-        '_idProtected',
-        '_idUnprotected',
-        '_idProtectedKey',
-        '_idUnprotectedKey',
-        '_markProtectedChecked',
-        '_usedUpdate',
-        '_isGroup',
-        '_isConversation',
-        '_isMarkClosed',
-        '_isMarkProtected',
-        '_isMarkObfuscated',
-        '_referenceObject',
-        '_referenceObjectClosed',
-        '_referenceObjectProtected',
-        '_referenceObjectObfuscated',
+            '_id',
+            '_fullName',
+            '_cacheProperty',
+            '_cacheProperties',
+            '_cacheMarkProtected',
+            '_idProtected',
+            '_idUnprotected',
+            '_idProtectedKey',
+            '_idUnprotectedKey',
+            '_markProtectedChecked',
+            '_usedUpdate',
+            '_isGroup',
+            '_isConversation',
+            '_isMarkClosed',
+            '_isMarkProtected',
+            '_isMarkObfuscated',
+            '_referenceObject',
+            '_referenceObjectClosed',
+            '_referenceObjectProtected',
+            '_referenceObjectObfuscated',
     );
 
     protected function _initialisation(): void
@@ -70,18 +70,19 @@ class Group extends Node implements nodeInterface
 
     /**
      * Create a new group.
+     *
      * @return void
      */
     protected function _createNewGroup(): void
     {
         // Vérifie que l'on puisse créer un groupe et tous ses attributs.
         if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitCreateObject')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitCreateObject')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                && $this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             // calcul l'ID.
             $nid = $this->_cacheInstance->newVirtualNode();
@@ -156,7 +157,7 @@ class Group extends Node implements nodeInterface
             $id = '';
 
         if ($id != ''
-            && !$entityInstance->getIsEntity('all')
+                && !$entityInstance->getIsEntity('all')
         )
             $id = '';
         unset($entityInstance);
@@ -191,17 +192,46 @@ class Group extends Node implements nodeInterface
     }
 
 
-
     // Désactivation des fonctions de protection et autres.
-    public function checkConsistency(): bool { return true; }
-    public function getReloadMarkProtected(): bool { return false; }
-    public function getProtectedID(): string { return '0'; }
-    public function getUnprotectedID(): string { return $this->_id; }
-    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
-    public function setUnprotected(): bool { return false; }
-    public function setProtectedTo($entity): bool { return false; }
-    public function getProtectedTo(string $socialClass = ''): array { return array(); }
+    public function checkConsistency(): bool
+    {
+        return true;
+    }
 
+    public function getReloadMarkProtected(): bool
+    {
+        return false;
+    }
+
+    public function getProtectedID(): string
+    {
+        return '0';
+    }
+
+    public function getUnprotectedID(): string
+    {
+        return $this->_id;
+    }
+
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool
+    {
+        return false;
+    }
+
+    public function setUnprotected(): bool
+    {
+        return false;
+    }
+
+    public function setProtectedTo($entity): bool
+    {
+        return false;
+    }
+
+    public function getProtectedTo(string $socialClass = ''): array
+    {
+        return array();
+    }
 
 
     /**
@@ -214,10 +244,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -243,6 +273,7 @@ class Group extends Node implements nodeInterface
 
     /**
      * Variable si l'objet est marqué comme un groupe fermé.
+     *
      * @var boolean
      */
     protected bool $_isMarkClosed = false;
@@ -266,12 +297,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous mes liens de définition de groupe fermé.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $this->_id,
-            $id,
-            $this->getReferenceObjectClosed()
+                '',
+                '',
+                'l',
+                $this->_id,
+                $id,
+                $this->getReferenceObjectClosed()
         );
 
         // Fait un tri par pertinance sociale. Forcé à myself.
@@ -302,10 +333,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -349,8 +380,8 @@ class Group extends Node implements nodeInterface
 
     /**
      * Ecrit l'objet comme n'étant pas un groupe fermé.
-     *
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
+     *
      * @param string|entity|Node $entity
      * @return boolean
      */
@@ -358,10 +389,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -396,6 +427,7 @@ class Group extends Node implements nodeInterface
 
     /**
      * Variable si l'objet est marqué comme un groupe protégé.
+     *
      * @var boolean
      */
     protected bool $_isMarkProtected = false;
@@ -417,12 +449,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous mes liens de définition de groupe protégé.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $this->_id,
-            $id,
-            $this->getReferenceObjectProtected()
+                '',
+                '',
+                'l',
+                $this->_id,
+                $id,
+                $this->getReferenceObjectProtected()
         );
 
         // Fait un tri par pertinance sociale. Forcé à myself.
@@ -453,10 +485,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -500,8 +532,8 @@ class Group extends Node implements nodeInterface
 
     /**
      * Ecrit l'objet comme n'étant pas un groupe protégé.
-     *
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
+     *
      * @param string|entity|Node $entity
      * @return boolean
      */
@@ -509,10 +541,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -547,6 +579,7 @@ class Group extends Node implements nodeInterface
 
     /**
      * Variable si l'objet est marqué comme un groupe dissimulé.
+     *
      * @var boolean
      */
     protected bool $_isMarkObfuscated = false;
@@ -572,12 +605,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous mes liens de définition de groupe dissimulé.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $this->_id,
-            $id,
-            $this->getReferenceObjectObfuscated()
+                '',
+                '',
+                'l',
+                $this->_id,
+                $id,
+                $this->getReferenceObjectObfuscated()
         );
 
         // Fait un tri par pertinance sociale. Forcé à myself.
@@ -613,10 +646,10 @@ class Group extends Node implements nodeInterface
 
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -660,8 +693,8 @@ class Group extends Node implements nodeInterface
 
     /**
      * Ecrit l'objet comme n'étant pas un groupe dissimulé.
-     *
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
+     *
      * @param string|entity|Node $entity
      * @return boolean
      */
@@ -673,10 +706,10 @@ class Group extends Node implements nodeInterface
 
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -727,12 +760,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $this->_id,
-            $id,
-            $this->_id
+                '',
+                '',
+                'l',
+                $this->_id,
+                $id,
+                $this->_id
         );
 
         // Fait un tri par pertinence sociale.
@@ -754,10 +787,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -793,9 +826,9 @@ class Group extends Node implements nodeInterface
 
     /**
      * Retire un membre du groupe.
-     *
      * TODo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      * TODO retirer la dissimulation déjà faite dans le code.
+     *
      * @param string|Node $object
      * @param boolean     $obfuscated
      * @return boolean
@@ -804,10 +837,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -855,12 +888,12 @@ class Group extends Node implements nodeInterface
     {
         // Liste tous les liens des membres de la conversation.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $this->_id,
-            '',
-            $this->_id
+                '',
+                '',
+                'l',
+                $this->_id,
+                '',
+                $this->_id
         );
 
         // Fait un tri par pertinence sociale.
@@ -875,7 +908,7 @@ class Group extends Node implements nodeInterface
      * Extrait la liste des ID des objets du groupe.
      *
      * @param string $socialClass
-     * @param array $socialListID
+     * @param array  $socialListID
      * @return array:string
      */
     public function getListMembersID(string $socialClass = '', array $socialListID = array()): array
@@ -923,12 +956,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous les liens de définition des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            $id,
-            $this->_id,
-            $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
+                '',
+                '',
+                'l',
+                $id,
+                $this->_id,
+                $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
         // Fait un tri par pertinance sociale.
@@ -952,10 +985,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -991,9 +1024,9 @@ class Group extends Node implements nodeInterface
 
     /**
      * Retire une entité à l'écoute du groupe.
-     *
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      * TODO retirer la dissimulation déjà faite dans le code.
+     *
      * @param string  $entity
      * @param boolean $obfuscated
      * @return boolean
@@ -1002,10 +1035,10 @@ class Group extends Node implements nodeInterface
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
-            || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteGroup')
+                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
         )
             return false;
 
@@ -1071,12 +1104,12 @@ class Group extends Node implements nodeInterface
 
         // Liste tous les liens des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(
-            '',
-            '',
-            'l',
-            '',
-            $this->_id,
-            $reference
+                '',
+                '',
+                'l',
+                '',
+                $this->_id,
+                $reference
         );
 
         // Fait un tri par pertinance sociale.
@@ -1218,13 +1251,11 @@ class Group extends Node implements nodeInterface
             $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         return $this->_referenceObjectObfuscated;
     }
+}
 
 
-    /**
-     * Affiche la partie du menu de la documentation.
-     *
-     * @return void
-     */
+
+abstract class HelpGroup {
     static public function echoDocumentationTitles(): void
     {
         ?>
@@ -1259,11 +1290,6 @@ class Group extends Node implements nodeInterface
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationCore(): void
     {
         ?>

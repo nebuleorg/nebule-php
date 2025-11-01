@@ -26,21 +26,21 @@ namespace Nebule\Library;
 class BlocLink extends Functions implements blocLinkInterface
 {
     const SESSION_SAVED_VARS = array(
-        '_rawBlocLink',
-        '_linksType',
-        '_links',
-        '_parsed',
-        '_isNew',
-        '_newLinkCount',
-        '_checkCompleted',
-        '_valid',
-        '_validStructure',
-        '_signed',
-        '_maxRL',
-        '_maxUIDbyRL',
-        '_maxRS',
-        '_lid',
-        '_newBL',
+            '_rawBlocLink',
+            '_linksType',
+            '_links',
+            '_parsed',
+            '_isNew',
+            '_newLinkCount',
+            '_checkCompleted',
+            '_valid',
+            '_validStructure',
+            '_signed',
+            '_maxRL',
+            '_maxUIDbyRL',
+            '_maxRS',
+            '_lid',
+            '_newBL',
     );
 
     const LINK_VERSION = '2:0';
@@ -188,8 +188,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getRaw()
      * @return string
+     * @see blocLinkInterface::getRaw()
      */
     public function getRaw(): string
     {
@@ -197,7 +197,7 @@ class BlocLink extends Functions implements blocLinkInterface
 
         return $this->_rawBlocLink;
     }
-    
+
     public function getLID(): string
     {
         $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -214,8 +214,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getLinks()
      * @return array:linkInterface
+     * @see blocLinkInterface::getLinks()
      */
     public function getLinks(): array
     {
@@ -227,7 +227,7 @@ class BlocLink extends Functions implements blocLinkInterface
     /**
      * {@inheritDoc}
      * @return array
-     *@see blocLinkInterface::getSignersEID()
+     * @see blocLinkInterface::getSignersEID()
      */
     public function getSignersEID(): array
     {
@@ -242,8 +242,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getParsed()
      * @return array
+     * @see blocLinkInterface::getParsed()
      */
     public function getParsed(): array
     {
@@ -254,6 +254,7 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * Get if the bloc link has been checked entirely.
+     *
      * @return boolean
      */
     public function getCheckCompleted(): bool
@@ -265,8 +266,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getValid()
      * @return boolean
+     * @see blocLinkInterface::getValid()
      */
     public function getValid(): bool
     {
@@ -277,8 +278,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getValidStructure()
      * @return boolean
+     * @see blocLinkInterface::getValidStructure()
      */
     public function getValidStructure(): bool
     {
@@ -289,8 +290,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getSigned()
      * @return boolean
+     * @see blocLinkInterface::getSigned()
      */
     public function getSigned(): bool
     {
@@ -301,8 +302,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getVersion()
      * @return string
+     * @see blocLinkInterface::getVersion()
      */
     public function getVersion(): string
     {
@@ -315,8 +316,8 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::getDate()
      * @return string
+     * @see blocLinkInterface::getDate()
      */
     public function getDate(): string
     {
@@ -326,7 +327,6 @@ class BlocLink extends Functions implements blocLinkInterface
             return '';
         return $this->_parsed['bl/rc/chr'] ?: '';
     }
-
 
 
     /**
@@ -339,9 +339,8 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         //$this->_metrologyInstance->addLog(substr($bh, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($bh) > 15)
-        {
-            $this->_metrologyInstance->addLog('BH size overflow '.substr($bh, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
+        if (strlen($bh) > 15) {
+            $this->_metrologyInstance->addLog('BH size overflow ' . substr($bh, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
             return false;
         }
 
@@ -430,10 +429,9 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         //$this->_metrologyInstance->addLog(substr($bl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($bl) > self::LINK_MAX_BL_SIZE)
-        {
-            $this->_metrologyInstance->addLog('BL size overflow '.substr($bl, 0, 1000) . '+',
-                Metrology::LOG_LEVEL_ERROR, __METHOD__, '9d3f9bda');
+        if (strlen($bl) > self::LINK_MAX_BL_SIZE) {
+            $this->_metrologyInstance->addLog('BL size overflow ' . substr($bl, 0, 1000) . '+',
+                    Metrology::LOG_LEVEL_ERROR, __METHOD__, '9d3f9bda');
             return false;
         }
 
@@ -450,21 +448,18 @@ class BlocLink extends Functions implements blocLinkInterface
 
         $list = array();
         $i = 0;
-        while (!is_bool($rl))
-        {
+        while (!is_bool($rl)) {
             $list[$i] = $rl;
             $i++;
-            if ($i > $this->_maxRL)
-            {
-                $this->_metrologyInstance->addLog('BL overflow '.substr($bl, 0, 1000) . '+ maxRL=' . $this->_maxRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
+            if ($i > $this->_maxRL) {
+                $this->_metrologyInstance->addLog('BL overflow ' . substr($bl, 0, 1000) . '+ maxRL=' . $this->_maxRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6a777706');
                 return false;
             }
             $rl = strtok('/');
         }
-        foreach ($list as $i => $rl)
-        {
-            if (!$this->_checkRL($rl, (string)$i)) $this->_metrologyInstance->addLog('check link BL/RL failed '.$bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
-            if (!$this->_checkRL($rl, (string)($i+1))) return false;
+        foreach ($list as $i => $rl) {
+            if (!$this->_checkRL($rl, (string)$i)) $this->_metrologyInstance->addLog('check link BL/RL failed ' . $bl, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd865ee87');
+            if (!$this->_checkRL($rl, (string)($i + 1))) return false;
             if ($this->_linksType == Cache::TYPE_TRANSACTION)
                 $instanceRL = new Transaction($this->_nebuleInstance, $rl, $this);
             else
@@ -490,9 +485,8 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         //$this->_metrologyInstance->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($rc) > 27)
-        {
-            $this->_metrologyInstance->addLog('BL/RC size overflow '.substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7282e54a');
+        if (strlen($rc) > 27) {
+            $this->_metrologyInstance->addLog('BL/RC size overflow ' . substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7282e54a');
             return false;
         }
 
@@ -507,9 +501,8 @@ class BlocLink extends Functions implements blocLinkInterface
         // TODO faire un filtrage plus fin...
 
         // Check registry overflow
-        if (strtok('>') !== false)
-        {
-            $this->_metrologyInstance->addLog('BL/RC overflow '.substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
+        if (strtok('>') !== false) {
+            $this->_metrologyInstance->addLog('BL/RC overflow ' . substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
             return false;
         }
 
@@ -530,9 +523,8 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         //$this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE)
-        {
-            $this->_metrologyInstance->addLog('BL/RL size overflow '.substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');
+        if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE) {
+            $this->_metrologyInstance->addLog('BL/RL size overflow ' . substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');
             return false;
         }
 
@@ -547,24 +539,21 @@ class BlocLink extends Functions implements blocLinkInterface
 
         $list = array();
         $j = 0;
-        while (!is_bool($rl1nid))
-        {
+        while (!is_bool($rl1nid)) {
             $list[$j] = $rl1nid;
             $j++;
-            if ($j > $this->_maxUIDbyRL)
-            {
-                $this->_metrologyInstance->addLog('BL/RL overflow '.substr($rl, 0, 1000) . '+ maxRLUID=' . $this->_maxUIDbyRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd0c9961a');
+            if ($j > $this->_maxUIDbyRL) {
+                $this->_metrologyInstance->addLog('BL/RL overflow ' . substr($rl, 0, 1000) . '+ maxRLUID=' . $this->_maxUIDbyRL, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd0c9961a');
                 return false;
             }
             $rl1nid = strtok('>');
         }
-        foreach ($list as $j => $nid)
-        {
+        foreach ($list as $j => $nid) {
             if (!Node::checkNID($nid, $j > 0)) return false;
-            $this->_parsed['bl/rl'.$i.'/nid'.$j] = $nid;
+            $this->_parsed['bl/rl' . $i . '/nid' . $j] = $nid;
         }
 
-        $this->_parsed['bl/rl'.$i] = $rl;
+        $this->_parsed['bl/rl' . $i] = $rl;
         return true;
     }
 
@@ -580,14 +569,14 @@ class BlocLink extends Functions implements blocLinkInterface
         //$this->_metrologyInstance->addLog(substr($req, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($req != 'l'
-            && $req != 'f'
-            && $req != 'u'
-            && $req != 'd'
-            && $req != 'e'
-            && $req != 'c'
-            && $req != 'k'
-            && $req != 's'
-            && $req != 'x'
+                && $req != 'f'
+                && $req != 'u'
+                && $req != 'd'
+                && $req != 'e'
+                && $req != 'c'
+                && $req != 'k'
+                && $req != 's'
+                && $req != 'x'
         )
             return false;
 
@@ -607,9 +596,8 @@ class BlocLink extends Functions implements blocLinkInterface
     {
         //$this->_metrologyInstance->addLog(substr($bs, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (strlen($bs) > self::LINK_MAX_BS_SIZE)
-        {
-            $this->_metrologyInstance->addLog('BS size overflow '.substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efc551d7');
+        if (strlen($bs) > self::LINK_MAX_BS_SIZE) {
+            $this->_metrologyInstance->addLog('BS size overflow ' . substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efc551d7');
             return false;
         }
 
@@ -617,12 +605,10 @@ class BlocLink extends Functions implements blocLinkInterface
         if (is_bool($rs)) return false;
 
         $i = 0;
-        while (!is_bool($rs))
-        {
+        while (!is_bool($rs)) {
             $i++;
-            if ($i > $this->_maxRS)
-            {
-                $this->_metrologyInstance->addLog('BS overflow '.substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9f2e670f');
+            if ($i > $this->_maxRS) {
+                $this->_metrologyInstance->addLog('BS overflow ' . substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9f2e670f');
                 return false;
             }
             //if (!$this->_checkRS($rs, $bh, $bl)) $this->_metrology->addLog('check link BS/RS failed '.$bs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0690f5ac');
@@ -665,13 +651,13 @@ class BlocLink extends Functions implements blocLinkInterface
         // --- --- --- --- --- --- --- --- ---
         // Check content RS 1 NID 1 : hash.algo.size
         if (!Node::checkNID($nid, false)) {
-            $this->_metrologyInstance->addLog('check link bs/rs1/eid failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6e1150f9');
+            $this->_metrologyInstance->addLog('check link bs/rs1/eid failed ' . $rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, '6e1150f9');
             return false;
         }
         $this->_parsed["bs/rs$i/eid"] = $nid;
 
         if (!$this->_checkSIG($bh_bl, $sig, $nid, $i)) {
-            $this->_metrologyInstance->addLog('check link BS/RS1/SIG failed '.$rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
+            $this->_metrologyInstance->addLog('check link BS/RS1/SIG failed ' . $rs, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e99ec81f');
             return false;
         }
 
@@ -743,7 +729,7 @@ class BlocLink extends Functions implements blocLinkInterface
         $this->_metrologyInstance->addLog($oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!Node::checkNID($oid, false)
-            || !$this->_ioInstance->checkObjectPresent($oid)
+                || !$this->_ioInstance->checkObjectPresent($oid)
         )
             return false;
         return true;
@@ -775,8 +761,7 @@ class BlocLink extends Functions implements blocLinkInterface
         }
 
         $instance = new LinkRegister($this->_nebuleInstance, $rl, $this);
-        if ($instance->getValidStructure())
-        {
+        if ($instance->getValidStructure()) {
             if ($obfuscate)
                 $instance->setObfuscate();
             $this->_newBL .= '/' . $rl;
@@ -789,10 +774,10 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::sign()
      * @param ?Entity $publicKey
-     * @param string $date
+     * @param string  $date
      * @return boolean
+     * @see blocLinkInterface::sign()
      */
     public function sign(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
@@ -870,17 +855,17 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::write()
      * @return boolean
+     * @see blocLinkInterface::write()
      */
     public function write(): bool
     {
         $this->_metrologyInstance->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            || !$this->_valid
-            || !$this->_signed
+                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
+                || !$this->_valid
+                || !$this->_signed
         )
             return false;
 
@@ -892,14 +877,14 @@ class BlocLink extends Functions implements blocLinkInterface
 
         // If needed, in signers.
         for ($j = 0; $j > $this->_maxRS; $j++) {
-            if (isset($this->_parsed['bs/rs'.$j.'/eid'])) {
+            if (isset($this->_parsed['bs/rs' . $j . '/eid'])) {
                 //$this->_metrologyInstance->addLog('add link on bs/rs' . $j . '/eid' . $j, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8b0aea5');
                 $this->_ioInstance->setBlockLink($this->_parsed['bs/rs' . $j . '/eid'], $this->_rawBlocLink);
             } else
                 break;
         }
 
-        for ($i = 0 ; $i < $this->_maxRL; $i++) {
+        for ($i = 0; $i < $this->_maxRL; $i++) {
             if (isset($this->_parsed['bl/rl' . $i . '/req'])) {
                 if ($this->_parsed['bl/rl' . $i . '/req'] != 'c') {
                     for ($j = 0; $j < $this->_maxUIDbyRL; $j++) {
@@ -924,10 +909,10 @@ class BlocLink extends Functions implements blocLinkInterface
 
     /**
      * {@inheritDoc}
-     * @see blocLinkInterface::signWrite()
      * @param ?Entity $publicKey
-     * @param string $date
+     * @param string  $date
      * @return boolean
+     * @see blocLinkInterface::signWrite()
      */
     public function signWrite(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
@@ -939,14 +924,11 @@ class BlocLink extends Functions implements blocLinkInterface
         }
         return false;
     }
+}
 
 
 
-    /**
-     * Affiche la partie du menu de la documentation.
-     *
-     * @return void
-     */
+abstract class HelpBlocLink {
     static public function echoDocumentationTitles(): void
     {
         ?>
@@ -988,11 +970,6 @@ class BlocLink extends Functions implements blocLinkInterface
         <?php
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
     static public function echoDocumentationCore(): void
     {
         ?>

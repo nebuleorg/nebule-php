@@ -57,8 +57,7 @@ class Wallet extends Entity implements nodeInterface
     protected function _initialisation(): void
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency'))
-        {
+        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_id = '0';
             $this->_isNew = false;
             return;
@@ -126,24 +125,14 @@ class Wallet extends Entity implements nodeInterface
         // @todo
         return '';
     }
+}
 
 
 
-    /**
-     * Affiche la partie menu de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationTitles(): void
-    {
+abstract class HelpWallet {
+    static public function echoDocumentationTitles(): void {
     }
 
-    /**
-     * Affiche la partie texte de la documentation.
-     *
-     * @return void
-     */
-    static public function echoDocumentationCore(): void
-    {
+    static public function echoDocumentationCore(): void {
     }
 }

@@ -31,51 +31,50 @@ class Documentation extends Functions
         <ul>
 
         <?php
-        Node::echoDocumentationTitles();
-        Group::echoDocumentationTitles();
-        Entity::echoDocumentationTitles();
-        Localisation::echoDocumentationTitles();
-        Conversation::echoDocumentationTitles();
-        Currency::echoDocumentationTitles();
-        TokenPool::echoDocumentationTitles();
-        Token::echoDocumentationTitles();
-        Wallet::echoDocumentationTitles();
-        Applications::echoDocumentationTitles();
+        HelpNode::echoDocumentationTitles();
+        HelpGroup::echoDocumentationTitles();
+        HelpEntity::echoDocumentationTitles();
+        HelpLocalisation::echoDocumentationTitles();
+        HelpConversation::echoDocumentationTitles();
+        HelpCurrency::echoDocumentationTitles();
+        HelpTokenPool::echoDocumentationTitles();
+        HelpToken::echoDocumentationTitles();
+        HelpWallet::echoDocumentationTitles();
+        HelpApplications::echoDocumentationTitles();
         ?>
 
         </ul>
     </li>
 
         <?php
-        BlocLink::echoDocumentationTitles();
-        LinkRegister::echoDocumentationTitles();
-        Transaction::echoDocumentationTitles();
-        Social::echoDocumentationTitles();
-        Crypto::echoDocumentationTitles();
-        Metrology::echoDocumentationTitles();
+        HelpBlocLink::echoDocumentationTitles();
+        HelpLinkRegister::echoDocumentationTitles();
+        HelpTransaction::echoDocumentationTitles();
+        HelpSocial::echoDocumentationTitles();
+        HelpCrypto::echoDocumentationTitles();
+        HelpMetrology::echoDocumentationTitles();
         ?>
 
 </ul>
 
 <?php
         Documentation::echoDocumentationCore();
-        Node::echoDocumentationCore();
-        Group::echoDocumentationCore();
-        Entity::echoDocumentationCore();
-        Localisation::echoDocumentationCore();
-        Conversation::echoDocumentationCore();
-        Currency::echoDocumentationCore();
-        TokenPool::echoDocumentationCore();
-        Token::echoDocumentationCore();
-        Wallet::echoDocumentationCore();
-        Applications::echoDocumentationCore();
-        Modules::echoDocumentationCore();
-        BlocLink::echoDocumentationCore();
-        LinkRegister::echoDocumentationCore();
-        Transaction::echoDocumentationCore();
-        Social::echoDocumentationCore();
-        Crypto::echoDocumentationCore();
-        Metrology::echoDocumentationCore();
+        HelpNode::echoDocumentationCore();
+        HelpGroup::echoDocumentationCore();
+        HelpEntity::echoDocumentationCore();
+        HelpLocalisation::echoDocumentationCore();
+        HelpConversation::echoDocumentationCore();
+        HelpCurrency::echoDocumentationCore();
+        HelpTokenPool::echoDocumentationCore();
+        HelpToken::echoDocumentationCore();
+        HelpWallet::echoDocumentationCore();
+        HelpApplications::echoDocumentationCore();
+        HelpBlocLink::echoDocumentationCore();
+        HelpLinkRegister::echoDocumentationCore();
+        HelpTransaction::echoDocumentationCore();
+        HelpSocial::echoDocumentationCore();
+        HelpCrypto::echoDocumentationCore();
+        HelpMetrology::echoDocumentationCore();
     }
 
     static public function echoDocumentationTitles(): void

@@ -23,11 +23,11 @@ class Metrology extends Functions
     const LOG_LEVEL_FUNCTION = 8;
     const LOG_LEVEL_DEBUG = 16;
     const LOG_LEVEL_NAMES = array(
-        '1' => 'error',
-        '2' => 'audit',
-        '4' => 'develop',
-        '8' => 'function',
-        '16' => 'debug',
+            '1' => 'error',
+            '2' => 'audit',
+            '4' => 'develop',
+            '8' => 'function',
+            '16' => 'debug',
     );
     const DEFAULT_DEBUG_FILE = 'debug';
 
@@ -42,7 +42,8 @@ class Metrology extends Functions
     private int $_actionCount = 0;
     private array $_actionArray = array();
 
-    public function __construct(nebule $nebuleInstance){
+    public function __construct(nebule $nebuleInstance)
+    {
         parent::__construct($nebuleInstance);
         $this->_setTimeStart();
         $this->_getPermitLogsOnDebugFile();
@@ -55,7 +56,8 @@ class Metrology extends Functions
         return 'Metrology';
     }
 
-    static public function log_reopen(string $name): void {
+    static public function log_reopen(string $name): void
+    {
         global $loggerSessionID;
         closelog();
         openlog($name . '/' . $loggerSessionID, LOG_NDELAY, LOG_USER);
@@ -141,8 +143,7 @@ class Metrology extends Functions
     private function _getPermitLogsOnDebugFile(): void
     {
         // If permitted, write debug level logs to debug file.
-        if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile'))
-        {
+        if (Configuration::getOptionFromEnvironmentAsBooleanStatic('permitLogsOnDebugFile')) {
             file_put_contents(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, 'START on library ' . $this->_timeStart . "\n", FILE_APPEND);
             $this->_permitLogsOnDebugFile = true;
         }
@@ -208,10 +209,10 @@ class Metrology extends Functions
             default:
                 $this->_logsLevel = self::LOG_LEVEL_ERROR;
                 $levelName = 'ERROR';
-                $this->addLog('invalid logs level : '  . $level, self::LOG_LEVEL_ERROR, __METHOD__, '2e57f5d2');
+                $this->addLog('invalid logs level : ' . $level, self::LOG_LEVEL_ERROR, __METHOD__, '2e57f5d2');
         }
 
-        $this->addLog('logsLevel=' . (string)$this->_logsLevel. ' (' . $levelName . ')', self::LOG_LEVEL_DEBUG, __METHOD__, '63efc8ea');
+        $this->addLog('logsLevel=' . (string)$this->_logsLevel . ' (' . $levelName . ')', self::LOG_LEVEL_DEBUG, __METHOD__, '63efc8ea');
     }
 
     /**
@@ -234,7 +235,7 @@ class Metrology extends Functions
     {
         $levelName = 'normal';
         foreach (self::LOG_LEVEL_NAMES as $i => $l)
-            if (($level / $i) >= 1 )
+            if (($level / $i) >= 1)
                 $levelName = $l;
 
         if ($level <= $this->_logsLevel) {
@@ -246,8 +247,7 @@ class Metrology extends Functions
             syslog(LOG_INFO, $logM);
         }
 
-        if ($this->_permitLogsOnDebugFile)
-        {
+        if ($this->_permitLogsOnDebugFile) {
             $logM = 'LogT=' . sprintf('%01.6f', (float)microtime(true) - $this->_timeStart) . ' LogL="' . $levelName . '(' . $level . ')" LogI="' . $luid . '" LogF="' . $function . '" LogM="' . $message . '"';
             if (file_exists(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE))
                 file_put_contents(References::OBJECTS_FOLDER . '/' . Metrology::DEFAULT_DEBUG_FILE, $logM . "\n", FILE_APPEND);
@@ -303,7 +303,11 @@ class Metrology extends Functions
             $this->_actionArray[$i] = $this->_actionArray[$i + 1];
         return $r;
     }
+}
 
+
+
+abstract class HelpMetrology {
     static public function echoDocumentationTitles(): void
     {
         ?>
