@@ -4515,7 +4515,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         if ($dispHook['link'] != '')
             $result .= ' <a href="' . $dispHook['link'] . '">' . "\n";
-        $result .= '  <div class="objectMenuContentAction' . $iconNoJS . ' objectMenuContentAction' . $size . ' objectMenuContentAction' . $dispHook['hookType'] . '" ' . $dispHook['link'] . '>' . "\n";
+        $result .= '  <div class="objectMenuContentAction' . $iconNoJS . ' objectMenuContentAction' . $size . ' objectMenuContentAction' . $dispHook['hookType'] . '">' . "\n";
         $result .= '   <div class="objectMenuContentAction-icon' . $iconNoJS . '">';
         $result .= $this->convertUpdateImage($dispHook['icon'], $dispHook['name']);
         $result .= '</div>' . "\n";
