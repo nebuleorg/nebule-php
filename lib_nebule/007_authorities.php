@@ -39,7 +39,7 @@ class Authorities extends Functions
     );
 
     private string $_puppetmasterID = '';
-    private ?Node $_puppetmasterInstance = null;
+    private ?Entity $_puppetmasterInstance = null;
     private array $_securityAuthoritiesID = array();
     private array $_securityAuthoritiesInstance = array();
     private array $_securitySignersInstance = array();
@@ -151,7 +151,7 @@ class Authorities extends Functions
     }
 
     public function getPuppetmasterEID(): string { return $this->_puppetmasterID; }
-    public function getPuppetmasterInstance(): Node { return $this->_puppetmasterInstance; }
+    public function getPuppetmasterInstance(): Entity { return $this->_puppetmasterInstance; }
 
     public function getSecurityAuthoritiesEID(): array { return $this->_securityAuthoritiesID; }
     public function getSecurityAuthoritiesInstance(): array { return $this->_securityAuthoritiesInstance; }

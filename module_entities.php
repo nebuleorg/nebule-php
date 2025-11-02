@@ -40,7 +40,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::module:entities:ModuleDescription';
-    const MODULE_VERSION = '020251029';
+    const MODULE_VERSION = '020251102';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -332,86 +332,6 @@ class ModuleEntities extends \Nebule\Library\Modules
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }*/
-
-                if (($this->_authoritiesInstance->getIsPuppetMaster($this->_entitiesInstance->getConnectedEntityInstance())
-                        || $this->_configurationInstance->getOptionAsBoolean('permitActAsMaster'))
-                        && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
-                        && $object != $this->_entitiesInstance->getConnectedEntityEID()
-                        && $this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]
-                ) {
-                    // Promote as master of security.
-                    if ($this->_authoritiesInstance->getIsSecurityMasterEID($object)) {
-                        $req = 'x';
-                        $hookArray[10]['name'] = '::module:entities:UnsetSecurityMaster';
-                        $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[10]['desc'] = '::module:entities:UnsetSecurityMaster';
-                    } else {
-                        $req = 'l';
-                        $hookArray[10]['name'] = '::module:entities:SetSecurityMaster';
-                        $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[10]['desc'] = '::module:entities:SetSecurityMaster';
-                    }
-                    $hookArray[10]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $object . '>' . References::RID_SECURITY_AUTHORITY
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                    // Promote as master of code.
-                    if ($this->_authoritiesInstance->getIsCodeMasterEID($object)) {
-                        $req = 'x';
-                        $hookArray[11]['name'] = '::module:entities:UnsetCodeMaster';
-                        $hookArray[11]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[11]['desc'] = '::module:entities:UnsetCodeMaster';
-                    } else {
-                        $req = 'l';
-                        $hookArray[11]['name'] = '::module:entities:SetCodeMaster';
-                        $hookArray[11]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[11]['desc'] = '::module:entities:SetCodeMaster';
-                    }
-                    $hookArray[11]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_CODE_AUTHORITY . '>' . $object . '>' . References::RID_CODE_AUTHORITY
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                    // Promote as master of the directory.
-                    if ($this->_authoritiesInstance->getIsDirectoryMasterEID($object)) {
-                        $req = 'x';
-                        $hookArray[12]['name'] = '::module:entities:UnsetCodeMaster';
-                        $hookArray[12]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[12]['desc'] = '::module:entities:UnsetCodeMaster';
-                    } else {
-                        $req = 'l';
-                        $hookArray[12]['name'] = '::module:entities:SetCodeMaster';
-                        $hookArray[12]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[12]['desc'] = '::module:entities:SetCodeMaster';
-                    }
-                    $hookArray[12]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_DIRECTORY_AUTHORITY . '>' . $object . '>' . References::RID_DIRECTORY_AUTHORITY
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                    // Promote as master of time.
-                    if ($this->_authoritiesInstance->getIsTimeMasterEID($object)) {
-                        $req = 'x';
-                        $hookArray[13]['name'] = '::module:entities:UnsetCodeMaster';
-                        $hookArray[13]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[13]['desc'] = '::module:entities:UnsetCodeMaster';
-                    } else {
-                        $req = 'l';
-                        $hookArray[13]['name'] = '::module:entities:SetCodeMaster';
-                        $hookArray[13]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[13]['desc'] = '::module:entities:SetCodeMaster';
-                    }
-                    $hookArray[13]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_TIME_AUTHORITY . '>' . $object . '>' . References::RID_TIME_AUTHORITY
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                }
                 break;
 
             case '::module:entities:DisplayMyEntities':
@@ -429,18 +349,96 @@ class ModuleEntities extends \Nebule\Library\Modules
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
 
-            case '::module:entities:DisplayNebuleEntity':
-                // Synchroniser les entités connues.
-                $hookArray[0]['name'] = '::module:entities:SynchronizeKnownEntities';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . ActionsEntities::SYNCHRONIZE
-                    . '&' . self::COMMAND_SYNC_NEBULE_ENTITIES
-                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+            case '::module:entities:DisplayAuthorityEntities':
+                if (($this->_authoritiesInstance->getIsPuppetMaster($this->_entitiesInstance->getConnectedEntityInstance())
+                                || $this->_configurationInstance->getOptionAsBoolean('permitActAsMaster'))
+                        && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+                        && $object != $this->_entitiesInstance->getConnectedEntityEID()
+                        && $this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[10]
+                ) {
+                    // Promote as master of security.
+                    if ($this->_authoritiesInstance->getIsSecurityMasterEID($object)) {
+                        $req = 'x';
+                        $hookArray[0]['name'] = '::module:entities:UnsetSecurityMaster';
+                        $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[0]['desc'] = '::module:entities:UnsetSecurityMaster';
+                    } else {
+                        $req = 'l';
+                        $hookArray[0]['name'] = '::module:entities:SetSecurityMaster';
+                        $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[0]['desc'] = '::module:entities:SetSecurityMaster';
+                    }
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $object . '>' . References::RID_SECURITY_AUTHORITY
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    // Promote as master of code.
+                    if ($this->_authoritiesInstance->getIsCodeMasterEID($object)) {
+                        $req = 'x';
+                        $hookArray[1]['name'] = '::module:entities:UnsetCodeMaster';
+                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[1]['desc'] = '::module:entities:UnsetCodeMaster';
+                    } else {
+                        $req = 'l';
+                        $hookArray[1]['name'] = '::module:entities:SetCodeMaster';
+                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[1]['desc'] = '::module:entities:SetCodeMaster';
+                    }
+                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_CODE_AUTHORITY . '>' . $object . '>' . References::RID_CODE_AUTHORITY
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    // Promote as master of the directory.
+                    if ($this->_authoritiesInstance->getIsDirectoryMasterEID($object)) {
+                        $req = 'x';
+                        $hookArray[2]['name'] = '::module:entities:UnsetCodeMaster';
+                        $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[2]['desc'] = '::module:entities:UnsetCodeMaster';
+                    } else {
+                        $req = 'l';
+                        $hookArray[2]['name'] = '::module:entities:SetCodeMaster';
+                        $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[2]['desc'] = '::module:entities:SetCodeMaster';
+                    }
+                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_DIRECTORY_AUTHORITY . '>' . $object . '>' . References::RID_DIRECTORY_AUTHORITY
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    // Promote as master of time.
+                    if ($this->_authoritiesInstance->getIsTimeMasterEID($object)) {
+                        $req = 'x';
+                        $hookArray[3]['name'] = '::module:entities:UnsetCodeMaster';
+                        $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[3]['desc'] = '::module:entities:UnsetCodeMaster';
+                    } else {
+                        $req = 'l';
+                        $hookArray[3]['name'] = '::module:entities:SetCodeMaster';
+                        $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
+                        $hookArray[3]['desc'] = '::module:entities:SetCodeMaster';
+                    }
+                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_TIME_AUTHORITY . '>' . $object . '>' . References::RID_TIME_AUTHORITY
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                } else {
+                    $hookArray[0]['name'] = '::module:entities:SynchronizeEntity';
+                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
+                    $hookArray[0]['desc'] = '';
+                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . ActionsEntities::SYNCHRONIZE
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                }
                 break;
         }
         return $hookArray;
@@ -1581,69 +1579,119 @@ class ModuleEntities extends \Nebule\Library\Modules
         $this->_displayInstance->registerInlineContentID('specialentities');
     }
 
-    private function _display_InlineSpecialEntitiesList(): void
-    {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Liste des entités.
-        $entities = array();
-        $masters = array();
-        $signers = array();
-        $id = $this->_authoritiesInstance->getPuppetmasterEID();
-        $entities[$id] = $this->_authoritiesInstance->getPuppetmasterInstance();
-        $masters[$id] = '';
-        $signers[$id] = array();
-        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $instance)
-        {
-            $id = $instance->getID();
-            $entities[$id] = $instance;
-            $masters[$id] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_SECURITE;
-            $signers[$id] = $this->_authoritiesInstance->getSecuritySignersInstance()[$instance->getID()];
+    private function _getDisplaySpecialEntities(Entity $entity, Node $instanceIcon, array $refs): DisplayObject {
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+        $instance->setSocial('self');
+        $instance->setNID($entity);
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setIcon($instanceIcon);
+        $instance->setEnableName(true);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(false);
+        $instance->setEnableFlagUnlocked(true);
+        $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(false);
+        if (sizeof($refs) != 0) {
+            $instance->setEnableRefs(true);
+            $instance->setRefs($refs[$entity->getID()]);
         }
-        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $instance)
-        {
-            $id = $instance->getID();
-            $entities[$id] = $instance;
-            $masters[$id] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_CODE;
-            $signers[$id] = $this->_authoritiesInstance->getCodeSignersInstance()[$instance->getID()];
-        }
-        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $instance)
-        {
-            $id = $instance->getID();
-            $entities[$id] = $instance;
-            $masters[$id] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_ANNUAIRE;
-            $signers[$id] = $this->_authoritiesInstance->getDirectorySignersInstance()[$instance->getID()];
-        }
-        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $instance)
-        {
-            $id = $instance->getID();
-            $entities[$id] = $instance;
-            $masters[$id] = References::REFERENCE_NEBULE_OBJET_ENTITE_MAITRE_TEMPS;
-            $signers[$id] = $this->_authoritiesInstance->getTimeSignersInstance()[$instance->getID()];
-        }
-        $id = $this->_entitiesInstance->getServerEntityEID() . ' se';
-        $entities[$id] = $this->_entitiesInstance->getServerEntityInstance();
-        $masters[$id] = 'Server entity';
-        $signers[$id] = array();
-        $id = $this->_entitiesInstance->getDefaultEntityEID() . ' de';
-        $entities[$id] = $this->_entitiesInstance->getDefaultEntityInstance();
-        if (isset($masters[$id]))
-            $masters[$id] .= ', ';
-        $masters[$id] .= 'Default entity';
-        $signers[$id] = array();
-        $id = $this->_entitiesInstance->getGhostEntityEID() . ' ge';
-        $entities[$id] = $this->_entitiesInstance->getGhostEntityInstance();
-        if (isset($masters[$id]))
-            $masters[$id] .= ', ';
-        $masters[$id] .= 'Ghost entity';
-        $signers[$id] = array();
-        $id = $this->_entitiesInstance->getConnectedEntityEID() . ' ce';
-        $entities[$id] = $this->_entitiesInstance->getConnectedEntityInstance();
-        if (isset($masters[$id]))
-            $masters[$id] .= ', ';
-        $masters[$id] .= 'Connected entity';
-        $signers[$id] = array();
+        else
+            $instance->setEnableRefs(false);
+        $instance->setSelfHookName('::module:entities:DisplayAuthorityEntities');
+        $messages = array();
+        $entityType = $entity->getKeyType();
+        if ($entityType != '')
+            $messages[] = 'Type: ' . $entityType;
+        if ($this->_authoritiesInstance->getIsGlobalAuthority($entity))
+            $messages[] = 'Global authority';
+        if ($this->_authoritiesInstance->getIsLocalAuthority($entity))
+            $messages[] = 'Local authority';
+        if ($this->_authoritiesInstance->getIsPuppetMaster($entity))
+            $messages[] = 'Master of all';
+        if ($this->_authoritiesInstance->getIsSecurityMaster($entity))
+            $messages[] = 'Master of security';
+        if ($this->_authoritiesInstance->getIsCodeMaster($entity))
+            $messages[] = 'Master of code';
+        if ($this->_authoritiesInstance->getIsDirectoryMaster($entity))
+            $messages[] = 'Master of directory';
+        if ($this->_authoritiesInstance->getIsTimeMaster($entity))
+            $messages[] = 'Master of time';
+        if ($this->_entitiesInstance->getServerEntityEID() == $entity->getID())
+            $messages[] = 'Server entity';
+        if ($this->_entitiesInstance->getDefaultEntityEID() == $entity->getID())
+            $messages[] = 'Default entity';
+        //if ($this->_entitiesInstance->getGhostEntityEID() == $entity->getID())
+        //    $messages[] = 'Ghost entity';
+        //if ($this->_entitiesInstance->getConnectedEntityEID() == $entity->getID())
+        //    $messages[] = 'Connected entity';
+        if (sizeof($messages) > 0)
+            $instance->setFlagMessageList($messages);
+        return $instance;
+    }
 
-        $this->_displayEntitiesList($entities, \Nebule\Library\DisplayItem::RATIO_LONG, array(), $masters, $signers, true, true, false);
+    private function _display_InlineSpecialEntitiesList(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $listOkEntities = array();
+
+        $instanceList->addItem($this->_getDisplaySpecialEntities($this->_authoritiesInstance->getPuppetmasterInstance(), $instanceIcon, array()));
+        $listOkEntities[$this->_authoritiesInstance->getPuppetmasterEID()] = $this->_authoritiesInstance->getPuppetmasterEID();
+
+        foreach ($this->_authoritiesInstance->getSecurityAuthoritiesInstance() as $entity) {
+            $instanceList->addItem($this->_getDisplaySpecialEntities($entity, $instanceIcon, $this->_authoritiesInstance->getSecuritySignersInstance()));
+            $listOkEntities[$entity->getID()] = $entity->getID();
+        }
+
+        foreach ($this->_authoritiesInstance->getCodeAuthoritiesInstance() as $entity) {
+            $instanceList->addItem($this->_getDisplaySpecialEntities($entity, $instanceIcon, $this->_authoritiesInstance->getCodeSignersInstance()));
+            $listOkEntities[$entity->getID()] = $entity->getID();
+        }
+
+        foreach ($this->_authoritiesInstance->getDirectoryAuthoritiesInstance() as $entity) {
+            $instanceList->addItem($this->_getDisplaySpecialEntities($entity, $instanceIcon, $this->_authoritiesInstance->getDirectorySignersInstance()));
+            $listOkEntities[$entity->getID()] = $entity->getID();
+        }
+
+        foreach ($this->_authoritiesInstance->getTimeAuthoritiesInstance() as $entity) {
+            $instanceList->addItem($this->_getDisplaySpecialEntities($entity, $instanceIcon, $this->_authoritiesInstance->getTimeSignersInstance()));
+            $listOkEntities[$entity->getID()] = $entity->getID();
+        }
+
+        $instanceList->addItem($this->_getDisplaySpecialEntities($this->_entitiesInstance->getServerEntityInstance(), $instanceIcon, array()));
+        $listOkEntities[$this->_entitiesInstance->getServerEntityEID()] = $this->_entitiesInstance->getServerEntityEID();
+
+        $listOkEntities[$this->_entitiesInstance->getConnectedEntityEID()] = $this->_entitiesInstance->getConnectedEntityEID();
+
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+
+        if (($this->_authoritiesInstance->getIsPuppetMaster($this->_entitiesInstance->getConnectedEntityInstance())
+                        || $this->_configurationInstance->getOptionAsBoolean('permitActAsMaster'))
+                && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
+        ) {
+            $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
+            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('::module:entities:KnownEntitiesDesc');
+            $instance->setIcon($icon);
+            $instance->display();
+
+            $this->_displayEntitiesList($this->_entitiesInstance->getListEntitiesInstances(),
+                    \Nebule\Library\DisplayItem::RATIO_SHORT,
+                    $listOkEntities,
+                    array(),
+                    array(),
+                    false,
+                    true,
+                    false,
+                    '::module:entities:DisplayAuthorityEntities');
+        }
     }
 
 
@@ -2123,7 +2171,8 @@ class ModuleEntities extends \Nebule\Library\Modules
             array  $listSigners = array(),
             bool   $allowDouble = false,
             bool   $showState = true,
-            bool   $showEmotions = false): void
+            bool   $showEmotions = false,
+            string $hookName = 'selfMenuEntity'): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
@@ -2152,7 +2201,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setEnableRefs(true);
             if (isset($listSigners[$i]))
                 $instance->setRefs($listSigners[$i]);
-            $instance->setSelfHookName('selfMenuEntity');
+            $instance->setSelfHookName($hookName);
             if (isset($listDesc[$i])) {
                 $instance->setEnableStatus(true);
                 $instance->setStatus($listDesc[$i]);
@@ -2184,7 +2233,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:DescriptionEntityDesc' => "Description de l'entité.",
             '::module:entities:allEntities' => 'Toutes les entités',
             '::module:entities:allEntitiesDesc' => 'Toutes les entités.',
-            '::module:entities:allEntitiesHelp' => 'La liste de toutes less entités.',
+            '::module:entities:allEntitiesHelp' => 'La liste de toutes les entités.',
             '::module:entities:MyEntities' => 'Mes entités',
             '::module:entities:MyEntitiesDesc' => 'Toutes les entités sous contrôle.',
             '::module:entities:MyEntitiesHelp' => "La liste des entités sous contrôle, c'est à dire avec lesquelles ont peut instantanément basculer.",
@@ -2198,7 +2247,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             '::module:entities:UnknownEntities' => 'Entités inconnues',
             '::module:entities:UnknownEntitiesDesc' => 'Toutes les autres entités, non connues.',
             '::module:entities:UnknownEntitiesHelp' => "La liste des entités que l'on connait pas.",
-            '::module:entities:KnownByEntities' => 'Connu de ces entités',
+            '::module:entities:KnownByEntities' => 'Connus de ces entités',
             '::module:entities:KnownByEntitiesDesc' => 'Toutes les entités qui me connaissent.',
             '::module:entities:KnownByEntitiesHelp' => "La liste des entités qui me connaissent.",
             '::module:entities:SynchronizeEntity' => 'Synchroniser',

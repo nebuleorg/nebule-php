@@ -230,10 +230,7 @@ class Node extends Functions implements nodeInterface
      *
      * @return string
      */
-    public function getID(): string
-    {
-        return $this->_id;
-    }
+    public function getID(): string{ return $this->_id; }
 
     /**
      * Object - Verify name structure of the node : hash.algo.size
@@ -244,8 +241,7 @@ class Node extends Functions implements nodeInterface
      * @param bool   $permitZero permit NID='0'
      * @return boolean
      */
-    static public function checkNID(string &$nid, bool $permitNull = false, bool $permitZero = false): bool
-    {
+    static public function checkNID(string &$nid, bool $permitNull = false, bool $permitZero = false): bool {
         // May be empty or zero in some case.
         if ($permitNull && $nid == '') return true;
         if ($nid == '') return false;
