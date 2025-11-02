@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020251029';
+const BOOTSTRAP_VERSION = '020251102';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -5999,7 +5999,7 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool {
     echo "<br/>\n";
     flush();
 
-    // Activation comme autorité locale.
+    // Activate as a local authority.
     $nebuleLocalAuthorities[0] = $puppetmaster;
 
     echo 'sync for authorities references';
@@ -6014,98 +6014,120 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool {
     echo "<br/>\n";
     flush();
 
-    // Try to find others autorities.
+    // Try to find others authorities.
     $securityAuthorities = ent_getSecurityAuthorities(true);
     $codeAuthorities = ent_getCodeAuthorities(true);
     $timeAuthorities = ent_getTimeAuthorities(true);
     $directoryAuthorities = ent_getDirectoryAuthorities(true);
 
-    bootstrap_echoLineTitle('security authorities');
+    bootstrap_echoLineTitle('security authority');
     if (sizeof($securityAuthorities) != 0) {
         if (!ent_checkSecurityAuthorities($securityAuthorities)) {
             echo 'sync... ';
             ent_syncAuthorities($securityAuthorities);
         }
         if (ent_checkSecurityAuthorities($securityAuthorities)) {
-            foreach ($securityAuthorities as $authority)
+            $i=0;
+            foreach ($securityAuthorities as $authority) {
+                if ($i != 0)
+                    bootstrap_echoLineTitle('security authority');
                 echo $authority . ' ';
-            echo 'ok';
+                echo 'ok';
+                echo "<br/>\n";
+                $i++;
+            }
         } else {
-            echo " <span class=\"error\">invalid!</span>\n";
+            echo " <span class=\"error\">invalid!</span>\n<br/>\n";
             $ok = false;
         }
     } else {
-        echo " <span class=\"error\">empty!</span>\n";
-        $ok = true; // TODO false;
+        echo " <span class=\"error\">empty!</span>\n<br/>\n";
+        $ok = false;
     }
-    echo "<br/>\n";
     flush();
 
-    bootstrap_echoLineTitle('code authorities');
+    bootstrap_echoLineTitle('code authority');
     if (sizeof($codeAuthorities) != 0) {
         if (!ent_checkCodeAuthorities($codeAuthorities)) {
             echo 'sync... ';
             ent_syncAuthorities($codeAuthorities);
         }
         if (ent_checkCodeAuthorities($codeAuthorities)) {
-            foreach ($codeAuthorities as $authority)
+            $i=0;
+            foreach ($codeAuthorities as $authority) {
+                if ($i != 0)
+                    bootstrap_echoLineTitle('code authority');
                 echo $authority . ' ';
-            echo 'ok';
+                echo 'ok';
+                echo "<br/>\n";
+                $i++;
+            }
         } else {
-            echo " <span class=\"error\">invalid!</span>\n";
+            echo " <span class=\"error\">invalid!</span>\n<br/>\n";
             $ok = false;
         }
     } else {
-        echo " <span class=\"error\">empty!</span>\n";
-        $ok = true; // TODO false;
+        echo " <span class=\"error\">empty!</span>\n<br/>\n";
+        $ok = false;
     }
-    echo "<br/>\n";
     flush();
 
-    bootstrap_echoLineTitle('time authorities');
+    bootstrap_echoLineTitle('time authority');
     if (sizeof($timeAuthorities) != 0) {
         if (!ent_checkTimeAuthorities($timeAuthorities)) {
             echo 'sync... ';
             ent_syncAuthorities($timeAuthorities);
         }
         if (ent_checkTimeAuthorities($timeAuthorities)) {
-            foreach ($timeAuthorities as $authority)
+            $i=0;
+            foreach ($timeAuthorities as $authority) {
+                if ($i != 0)
+                    bootstrap_echoLineTitle('time authority');
                 echo $authority . ' ';
-            echo 'ok';
+                echo 'ok';
+                echo "<br/>\n";
+                $i++;
+            }
         } else {
-            echo " <span class=\"error\">invalid!</span>\n";
+            echo " <span class=\"error\">invalid!</span>\n<br/>\n";
             $ok = false;
         }
     } else {
-        echo " <span class=\"error\">empty!</span>\n";
-        $ok = true; // TODO false;
+        echo " <span class=\"error\">empty!</span>\n<br/>\n";
+        $ok = false;
     }
-    echo "<br/>\n";
     flush();
 
-    bootstrap_echoLineTitle('directory authorities');
+    bootstrap_echoLineTitle('directory authority');
     if (sizeof($directoryAuthorities) != 0) {
         if (!ent_checkDirectoryAuthorities($directoryAuthorities)) {
             echo 'sync... ';
             ent_syncAuthorities($directoryAuthorities);
         }
         if (ent_checkDirectoryAuthorities($directoryAuthorities)) {
-            foreach ($directoryAuthorities as $authority)
+            $i=0;
+            foreach ($directoryAuthorities as $authority) {
+                if ($i != 0)
+                    bootstrap_echoLineTitle('directory authority');
                 echo $authority . ' ';
-            echo 'ok';
+                echo 'ok';
+                echo "<br/>\n";
+                $i++;
+            }
         } else {
-            echo " <span class=\"error\">invalid!</span>\n";
+            echo " <span class=\"error\">invalid!</span>\n<br/>\n";
             $ok = false;
         }
     } else {
-        echo " <span class=\"error\">empty!</span>\n";
-        $ok = true; // TODO false;
+        echo " <span class=\"error\">empty!</span>\n<br/>\n";
+        $ok = false;
     }
-    echo "<br/>\n";
     flush();
 
     if ($ok)
-        log_add('ok sync authorities', 'info', __FUNCTION__, 'c5b55957');
+        log_add('ok sync authority', 'info', __FUNCTION__, 'c5b55957');
+    else
+        log_add('error sync authority', 'error', __FUNCTION__, '68292d6d');
 
     echo "</div>\n";
 
