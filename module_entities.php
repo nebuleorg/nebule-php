@@ -1896,7 +1896,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setType(DisplayQuery::QUERY_SELECT);
             $instance->setInputName(ActionsEntities::CREATE_ALGORITHM);
             $instance->setIconText('::module:entities:CreateEntityAlgorithm');
-            $instance->setSelectList($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC));
+            $list = array();
+            foreach ($this->_cryptoInstance->getAlgorithmList(\Nebule\Library\Crypto::TYPE_ASYMMETRIC) as $algo)
+                $list[$algo] = $algo;
+            $instance->setSelectList($list);
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
