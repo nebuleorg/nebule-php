@@ -275,6 +275,18 @@ class Functions
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
     }
 
+    /**
+     * This function gets content as an argument named $name on GET or POST methods. The method POST has priority.
+     * Usually, $flag is FILTER_FLAG_NO_ENCODE_QUOTES.
+     * When the content can have sensitive data like password, use $logContent=false to disable logging the content of
+     *   the data.
+     * By default, data is trimmed, but this can be disabled with $noTrim=true.
+     * @param string $name
+     * @param int    $flag
+     * @param bool   $logContent
+     * @param bool   $noTrim
+     * @return string
+     */
     public function getFilterInput(string $name, int $flag=0, bool $logContent=true, bool $noTrim = false): string {
         if ($name == '')
             return '';

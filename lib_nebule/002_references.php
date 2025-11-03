@@ -56,6 +56,9 @@ class References //extends Functions
     public const COMMAND_SELECT_WALLET = 'wal';
     public const COMMAND_SELECT_LINK = 'lnk';
     public const COMMAND_SELECT_TRANSACTION = 'trs';
+    public const COMMAND_SLEEP = 'sleep';
+    public const INTERNAL_SLEEP_STATE = 's1';
+    public const EXTERNAL_SLEEP_STATE = 's2';
     
     // Les références.
     public const REFERENCE_OBJECT_TEXT = 'text/plain';

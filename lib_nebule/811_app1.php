@@ -15,7 +15,7 @@ class App1 extends App0
     const APPLICATION_NAME = 'applis';
     const APPLICATION_SURNAME = 'nebule/applis';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250928';
+    const APPLICATION_VERSION = '020251103';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -44,21 +44,71 @@ class App1 extends App0
 
         // Display flush page.
         echo '<a href="/?f">';
-        echo '<div class="apps" style="background:#111111;">';
+        echo '<div class="apps" style="background:#070707;">';
         echo '<span class="appstitle">Nf</span><br /><span class="appsname">flush</span>';
         echo "</div></a>\n";
 
         // Display default page.
         echo '<a href="/?a=0">';
-        echo '<div class="apps" style="background:#222222;">';
+        echo '<div class="apps" style="background:#101010;">';
         echo '<span class="appstitle">N0</span><br /><span class="appsname">defolt</span>';
         echo "</div></a>\n";
 
         // Display page of technical documentation.
-        echo '<a href="/?a=3">';
-        echo '<div class="apps" style="background:#333333;">';
-        echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
-        echo "</div></a>\n";
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication3')) {
+            echo '<a href="/?a=3">';
+            echo '<div class="apps" style="background:#171717;">';
+            echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of app 4.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication4')) {
+            echo '<a href="/?a=4">';
+            echo '<div class="apps" style="background:#202020;">';
+            echo '<span class="appstitle">N4</span><br /><span class="appsname">app 4</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of app 5.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication5')) {
+            echo '<a href="/?a=5">';
+            echo '<div class="apps" style="background:#272727;">';
+            echo '<span class="appstitle">N5</span><br /><span class="appsname">app 5</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of app 6.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication6')) {
+            echo '<a href="/?a=6">';
+            echo '<div class="apps" style="background:#303030;">';
+            echo '<span class="appstitle">N6</span><br /><span class="appsname">app 6</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of app 7.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication7')) {
+            echo '<a href="/?a=7">';
+            echo '<div class="apps" style="background:#373737;">';
+            echo '<span class="appstitle">N7</span><br /><span class="appsname">app 7</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of app 8.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication8')) {
+            echo '<a href="/?a=8">';
+            echo '<div class="apps" style="background:#404040;">';
+            echo '<span class="appstitle">N8</span><br /><span class="appsname">app 8</span>';
+            echo "</div></a>\n";
+        }
+
+        // Display page of sleeping state.
+        if ($this->_configurationInstance->getOptionAsBoolean('permitApplication9')) {
+            echo '<a href="/?a=9">';
+            echo '<div class="apps" style="background:#505050;">';
+            echo '<span class="appstitle">N9</span><br /><span class="appsname">sleep</span>';
+            echo "</div></a>\n";
+        }
 
         // List all applications.
         $instanceRID = $this->_cacheInstance->newNode(References::RID_INTERFACE_APPLICATIONS);

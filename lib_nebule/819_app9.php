@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Class Application for app9
+ * Class Application for app9 - sleeping mode
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -15,7 +15,7 @@ class App9 extends App0
     const APPLICATION_NAME = 'app9';
     const APPLICATION_SURNAME = 'nebule/app9';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250928';
+    const APPLICATION_VERSION = '020251103';
     const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -23,46 +23,48 @@ class App9 extends App0
 
     public function display(): void
     {
-        global $lastReferenceSID;
-
         $this->_metrologyInstance->log_reopen('app9');
         $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df3680d3');
 
         echo 'CHK';
         ob_end_clean();
 
-        $this->_htmlHeader('app 9 - test');
+        $this->_htmlHeader('app 9 - sleeping');
         $this->_htmlTop();
 
         echo '<div class="layout-main">' . "\n";
         echo ' <div class="layout-content">' . "\n";
+        echo '  <p style="text-align:center">' . "\n";
 
-        $ridList = array(
-            \Nebule\Bootstrap\LIB_RID_INTERFACE_BOOTSTRAP,
-            \Nebule\Bootstrap\LIB_RID_INTERFACE_LIBRARY,
-            \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS);
-
-        foreach ($ridList as $rid)
-        {
-            echo "RID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$rid'>$rid</a><br />\n";
-            $appList = \Nebule\Bootstrap\app_getList($rid, false);
-            foreach ($appList as $iid) {
-                echo "&gt;&nbsp;IID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$iid'>$iid</a><br />\n";
-                $links = array();
-                \Nebule\Bootstrap\app_getCodeList($iid, $links);
-                foreach ($links as $link)
-                {
-                    $oid = $link['bl/rl/nid2'];
-                    $eid = $link['bs/rs1/eid'];
-                    $date = $link['bl/rc'];
-                    echo "&nbsp;-&nbsp;$date&nbsp;EID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$eid'>$eid</a>a>&nbsp;OID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
-                }
-                $oid = \Nebule\Bootstrap\app_getCode($iid);
-                echo "&nbsp;+&nbsp;EID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$lastReferenceSID'>$lastReferenceSID</a>&nbsp;OID=<a href='?a=4&" . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . "=$oid'>$oid</a><br />\n";
-                echo "<br />\n";
+        if ($this->getHaveInput(\Nebule\Library\References::COMMAND_SLEEP)) {
+            $action = $this->getFilterInput(\Nebule\Library\References::COMMAND_SLEEP, FILTER_FLAG_NO_ENCODE_QUOTES);
+            if ($action == 'true' && !file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE)) {
+                if (file_put_contents(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE, 'sleep') === false)
+                    echo '<b>Error creating sleeping flag file!</b><br /><br />' . "\n";
+            }
+            if ($action == 'false' && file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE)) {
+                if (unlink(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE) === false)
+                    echo '<b>Error removing sleeping flag file!</b><br /><br />' . "\n";
             }
         }
 
+        $baseUrl = '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=9&' . \Nebule\Library\References::COMMAND_SLEEP . '=';
+        if (file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::EXTERNAL_SLEEP_STATE)) {
+            echo 'Status: deep sleeping<br /><br />' . "\n";
+            if (file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE))
+                echo "<a href='" . $baseUrl . "false'>&gt;&gt;&gt; Ask exit sleep mode &lt;&lt;&lt;</a>";
+            else
+                echo 'Waiting exit deep sleeping mode...';
+        } elseif (file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE)) {
+            echo 'Status: soft sleeping<br /><br />' . "\n";
+            echo "<a href='" . $baseUrl . "false'>&gt;&gt;&gt; Exit sleep mode &lt;&lt;&lt;</a>";
+        } else {
+            echo 'Status: ready<br /><br />' . "\n";
+            echo "<a href='" . $baseUrl . "true'>&gt;&gt;&gt; Enter sleep mode &lt;&lt;&lt;</a><br /><br />\n";
+            echo "<a href='?" . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . "=1'>&gt; Return to application 1 &lt;</a>";
+        }
+
+        echo "  </p>\n";
         echo " </div>\n";
         echo "</div>\n";
 

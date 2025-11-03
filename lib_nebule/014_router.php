@@ -103,7 +103,9 @@ class Router extends Functions
 
     private function _findApplicationIID(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_applicationIID = $this->_checkApplicationIID($this->_findApplicationAsk());
+        $this->_applicationIID = $this->_findApplicationSleeping();
+        if ($this->_applicationIID == '')
+            $this->_applicationIID = $this->_checkApplicationIID($this->_findApplicationAsk());
         if ($this->_applicationIID == '')
             $this->_applicationIID = $this->_checkApplicationIID($this->_findApplicationSession('bootstrapApplicationIID'));
         if ($this->_applicationIID == '')
@@ -244,6 +246,14 @@ class Router extends Functions
 
         $this->_metrologyInstance->addLog('OID OK', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '634519a2');
         return $oid;
+    }
+
+    private function _findApplicationSleeping(): string {
+        if (file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::EXTERNAL_SLEEP_STATE)
+            || file_exists(\Nebule\Library\References::OBJECTS_FOLDER . '/' . \Nebule\Library\References::INTERNAL_SLEEP_STATE)
+        )
+            return '9';
+        return '';
     }
 
     private function _findApplicationAsk(): string {
