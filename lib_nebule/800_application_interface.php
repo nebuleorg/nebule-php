@@ -1091,11 +1091,15 @@ tE=0.5937s
         <p>Non utilisé, redirigé vers l'application 0.</p>
 
         <?php Displays::docDispTitle(5, 'oala9', 'Application 9'); ?>
-        <p>C'est une application utilisée pour le déverminage du code.</p>
+        <p>C'est une application utilisée pour la mise à l'arrêt de l'instance, comme une mise en sommeil, dans le but
+            de permettre à un autre programme externe de manipuler les objets et liens. Cette mise en sommeil peut être
+            utilisée afin de faire sans entrave le ménage, supprimer et réorganiser les données.</p>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=9</i> sur l'URL déclenche l'affichage
             de cette page dédiée de la <i>bibliothèque</i>.</p>
         <p>Son accès peut être bloqué par l'option <b>permitApplication9</b> à <i>false</i> ou un lien équivalent.</p>
         <p>Elle est désactivée par défaut.</p>
+        <p>Cette application n'a pas de protection dans son usage et ne doit être activée que sur une instance à usage
+            privée.</p>
 
         <?php Displays::docDispTitle(4, 'oalt', 'Actions'); ?>
         <p>Les actions sont les interactions qui amènent à la modification de liens et/ou d'objets.
