@@ -42,13 +42,13 @@ class SocialAuthority extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=strict score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '02897782');
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_nebuleInstance->getAuthoritiesInstance()->getLocalAuthoritiesID() as $authority) {
             foreach ($link->getSignersEID() as $signer) {
                 if ($signer == $authority) {
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '67d18e91');
                     return 1;
                 }
             }
@@ -56,7 +56,7 @@ class SocialAuthority extends SocialMySelf implements SocialInterface
 
         // Sinon par défaut retourne la valeur sociale 0.
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=strict score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '10d4a3fc');
         return 0;
     }
 }

@@ -37,9 +37,9 @@ class SocialNone extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=none score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0e4e500c');
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=none score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'dee3e8bd');
 
         return 0;
     }

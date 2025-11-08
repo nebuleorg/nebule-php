@@ -44,13 +44,13 @@ class SocialUnreputation extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=unreputation score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=unreputation score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8ebdabfa');
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
             foreach ($link->getSignersEID() as $signer) {
-                if (true) { // @TODO
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                if (true) { // TODO
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fd932a98');
                     return 1;
                 }
             }
@@ -58,7 +58,7 @@ class SocialUnreputation extends SocialMySelf implements SocialInterface
 
         // Sinon par défaut retourne la valeur sociale 0.
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=unreputation score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '38f0db2c');
         return 0;
     }
 }

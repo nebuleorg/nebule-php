@@ -861,6 +861,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     private function _solveConflicts():void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
             $this->_displayFlagProtection = false;
 
@@ -919,6 +920,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     private function _getObjectColorHTML(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_displayColor)
             return '';
 
@@ -934,6 +936,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     private function _getObjectIconHTML(): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_displayIcon)
             return '';
 
@@ -958,15 +961,14 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     /**
-     * Pour les fonctions getDisplayObject() et getDisplayMessage().
-     * Prépare la liste des références (signataires).
-     *
-     * Si l'entrée est un texte, retourne le texte (à afficher).
+     * For getDisplayObject() and getDisplayMessage() functions.
+     * Prepare the list of references (signers).
      *
      * @param array $list
      * @return string
      */
     private function _getObjectRefsHTML(array $list): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // FIXME add $this->_displayLink2Refs support.
         $result = '';
 
@@ -977,10 +979,12 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $count = 0;
 
         foreach ($list as $object) {
-            if (is_string($object))
-                $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
-            if ($object === null)
+            if (is_string($object) && Node::checkNID($object))
+                $object = $this->_cacheInstance->newNode($object);
+            if (! is_a($object, 'Nebule\Library\Node') || $object->getID() === '0') {
+                $this->_metrologyInstance->addLog('not a node', Metrology::LOG_LEVEL_ERROR, __METHOD__, '34ef9500');
                 continue;
+            }
             $htLink = $this->_displayInstance->prepareDefaultObjectOrGroupOrEntityHtlink($object);
             $color = $this->_displayInstance->prepareObjectColor($object);
             $icon = '';
@@ -1014,6 +1018,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
      * @return string
      */
     private function _getObjectFlagHTML(bool $on, string $image, string $descOff, string $descOn): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = '';
 
         $image = $this->_displayInstance->prepareIcon($image);
@@ -1038,6 +1043,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
      * @return string
      */
     private function _getObjectFlagEmotionsHTML(Node $object, bool $counts = false): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie si les émotions doivent être affichées.
         if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
             return '';

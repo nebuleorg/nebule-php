@@ -43,13 +43,13 @@ class SocialReputation extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=reputation score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=reputation score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52f240d5');
 
         // Si l'entité signataire du lien est une des entités autorités, retourne la valeur sociale 1.
         foreach ($this->_list as $id) {
             foreach ($link->getSignersEID() as $signer) {
                 if (false) { // TODO check...
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3262ce87');
                     return 1;
                 }
             }
@@ -57,7 +57,7 @@ class SocialReputation extends SocialMySelf implements SocialInterface
 
         // Sinon par défaut retourne la valeur sociale 0.
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=reputation score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'eb306b18');
         return 0;
     }
 }

@@ -46,7 +46,7 @@ class SocialOnList extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=onlist score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ab050821');
 
         if (sizeof($this->_list) == 0) {
             return 0;
@@ -56,7 +56,7 @@ class SocialOnList extends SocialMySelf implements SocialInterface
         foreach ($this->_list as $id) {
             foreach ($link->getSignersEID() as $signer) {
                 if ($signer == $id) {
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c465016b');
                     return 1;
                 }
             }
@@ -64,7 +64,7 @@ class SocialOnList extends SocialMySelf implements SocialInterface
 
         // Sinon par défaut retourne la valeur sociale 0.
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=onlist score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bab20bf3');
         return 0;
     }
 }

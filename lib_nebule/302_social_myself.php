@@ -43,11 +43,11 @@ class SocialMySelf extends Social implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fef0e929');
 
         foreach ($link->getSignersEID() as $signer) {
             if ($signer == $this->_nebuleInstance->getEntitiesInstance()->getGhostEntityEID()) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=myself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b10ae177');
                 return 1;
             }
         }

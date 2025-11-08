@@ -42,19 +42,19 @@ class SocialNotMyself extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7abbca23');
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.
         foreach ($link->getSignersEID() as $signer) {
             if ($signer != $this->_nebuleInstance->getEntitiesInstance()->getGhostEntityEID()) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '80db7d9f');
                 return 1;
             }
         }
 
         // Sinon par défaut retourne la valeur sociale 0.
         foreach ($link->getSignersEID() as $signer)
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=notmyself score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00c8aa17');
         return 0;
     }
 }

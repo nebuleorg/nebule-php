@@ -39,7 +39,7 @@ class SocialSelf extends SocialMySelf implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG);
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '46e5975d');
 
         foreach ($link->getSignersEID() as $signer) {
             if ($link->getParsed()['bl/rl/nid1'] == $signer
@@ -48,13 +48,13 @@ class SocialSelf extends SocialMySelf implements SocialInterface
                 || (isset($link->getParsed()['bl/rl/nid4']) && $link->getParsed()['bl/rl/nid4'] == $signer)
                 || (isset($link->getParsed()['bl/rl/nid5']) && $link->getParsed()['bl/rl/nid5'] == $signer)
             ) {
-                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a4487d36');
                 return 1;
             }
         }
 
         //foreach ($link->getSignersEID() as $signer)
-        //    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG);
+        //    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'acfd6bab');
         return 0;
     }
 }

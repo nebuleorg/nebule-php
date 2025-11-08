@@ -321,7 +321,7 @@ class LinkRegister extends Functions implements linkInterface
      * Offusque le lien. Ne pas oublier de l'écrire.
      *
      * @return boolean
-     * @todo
+     * TODO
      * Le lien à dissimuler est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du champs source.
      */
     public function setObfuscate(): bool
@@ -334,7 +334,7 @@ class LinkRegister extends Functions implements linkInterface
                 && $this->_valid
                 && $this->_permitObfuscated
         ) {
-            // @todo
+            // TODO
         }
 
         return false;
@@ -344,7 +344,7 @@ class LinkRegister extends Functions implements linkInterface
      * Désoffusque le lien. Ne pas oublier de l'écrire.
      *
      * @return boolean
-     * @todo
+     * TODO
      */
     public function unsetObfuscate(): bool
     {
@@ -355,7 +355,7 @@ class LinkRegister extends Functions implements linkInterface
         if ($this->_obfuscated
                 && $this->_valid
         ) {
-            // @todo
+            // TODO
         }
 
         return false;
@@ -365,7 +365,7 @@ class LinkRegister extends Functions implements linkInterface
      * Extrait le lien offusqué.
      *
      * @return boolean
-     * @todo
+     * TODO
      */
     public function decrypt(): bool
     {
@@ -374,7 +374,7 @@ class LinkRegister extends Functions implements linkInterface
         if ($this->_obfuscated
                 && $this->_valid
         ) {
-            // @todo
+            // TODO
         }
         return false;
     }
