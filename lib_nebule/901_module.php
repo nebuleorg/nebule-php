@@ -180,28 +180,21 @@ abstract class Modules extends Functions implements ModuleInterface
      */
     protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void
     {
-        /*// Génère le lien.
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
+        /*$link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
-
-        // Signe le lien.
         $newLink->sign($signer);
-
-        // Si besoin, obfuscation du lien.
-        if ($obfuscate) {
+        if ($obfuscate)
             $link->obfuscate();
-        }
-
-        // Ecrit le lien.
         $newLink->write();*/
     }
 
-    protected function _displaySimpleTitle(string $title, string $icon): void
+    protected function _displaySimpleTitle(string $title, string $icon = ''): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle($title);
-        $instance->setIconRID($icon);
+        if ($icon != '')
+            $instance->setIconRID($icon);
         $instance->display();
     }
 

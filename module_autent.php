@@ -10,7 +10,6 @@ use Nebule\Library\DisplayObject;
 use Nebule\Library\DisplayQuery;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplaySecurity;
-use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
 use Nebule\Library\Node;
 use Nebule\Library\References;
@@ -102,11 +101,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      */
     private function _displayInfo(): void {
         $this->_metrologyInstance->addLog('display desc ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
-
-        $title = new DisplayTitle($this->_applicationInstance);
-        $title->setTitle('::::INFO');
-        $title->setEnableEntity(false);
-        $title->display();
+        $this->_displaySimpleTitle('::::INFO');
 
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
@@ -149,11 +144,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      */
     private function _displayLogin(): void {
         $this->_metrologyInstance->addLog('Display login ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
-
-        $title = new DisplayTitle($this->_applicationInstance);
-        $title->setTitle(':::login');
-        $title->setEnableEntity(false);
-        $title->display();
+        $this->_displaySimpleTitle(':::login');
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -191,11 +182,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      */
     private function _displayLogout(): void {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
-
-        $title = new DisplayTitle($this->_applicationInstance);
-        $title->setTitle(':::logout');
-        $title->setEnableEntity(false);
-        $title->display();
+        $this->_displaySimpleTitle(':::logout');
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);

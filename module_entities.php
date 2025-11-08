@@ -15,7 +15,6 @@ use Nebule\Library\DisplayNotify;
 use Nebule\Library\DisplayObject;
 use Nebule\Library\DisplayQuery;
 use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
 use Nebule\Library\DisplayItem;
 use Nebule\Library\Entity;
 use Nebule\Library\Metrology;
@@ -1089,16 +1088,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityLogs(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Entité en cours.
         if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
-
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[7]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:ObjectTitle1');
-        $instance->setIcon($icon);
-        $instance->display();
+        $this->_displaySimpleTitle('::module:entities:ObjectTitle1', $this::MODULE_REGISTERED_ICONS[7]);
 
         // Extrait des propriétés de l'objet.
         $entity = $this->_displayEntity;
@@ -1298,16 +1291,10 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityActs(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Entité en cours.
         if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
             $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
         }
-
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[8]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:ObjectTitle2');
-        $instance->setIcon($icon);
-        $instance->display();
+        $this->_displaySimpleTitle('::module:entities:ObjectTitle2', $this::MODULE_REGISTERED_ICONS[8]);
 
         // Extrait des propriétés de l'objet.
         $id = $this->_applicationInstance->getCurrentObjectInstance()->getID();
@@ -1408,12 +1395,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayMyEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:MyEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:MyEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('myentities');
     }
 
@@ -1429,12 +1411,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayKnownEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:KnownEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:KnownEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
@@ -1465,12 +1442,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayKnownByEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:KnownByEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:KnownByEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('knownentities');
     }
 
@@ -1501,12 +1473,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayUnknownEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:UnknownEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:UnknownEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('unknownentities');
     }
 
@@ -1545,12 +1512,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayAllEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:allEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:allEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('allentities');
     }
 
@@ -1570,12 +1532,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displaySpecialEntitiesList(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:SpecialEntities');
-        $instance->setIcon($icon);
-        $instance->display();
-
+        $this->_displaySimpleTitle('::module:entities:SpecialEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('specialentities');
     }
 
@@ -1676,12 +1633,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                         || $this->_configurationInstance->getOptionAsBoolean('permitActAsMaster'))
                 && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
-            $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[4]);
-            $instance = new DisplayTitle($this->_applicationInstance);
-            $instance->setTitle('::module:entities:KnownEntitiesDesc');
-            $instance->setIcon($icon);
-            $instance->display();
-
+            $this->_displaySimpleTitle('::module:entities:KnownEntitiesDesc', $this::MODULE_REGISTERED_ICONS[4]);
             $this->_displayEntitiesList($this->_entitiesInstance->getListEntitiesInstances(),
                     \Nebule\Library\DisplayItem::RATIO_SHORT,
                     $listOkEntities,
@@ -1819,12 +1771,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityCreateForm(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[5]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:CreateEntity');
-        $instance->setIcon($icon);
-        $instance->display();
+        $this->_displaySimpleTitle('::module:entities:CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
 
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity'))
             && ($this->_unlocked
@@ -1985,12 +1932,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntitySearch(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        // Affiche la création d'une entité.
-        $iconNID = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
-        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:SearchEntity');
-        $instance->setIcon($iconNID);
-        $instance->display();
+        $this->_displaySimpleTitle('::module:entities:SearchEntity', Displays::DEFAULT_ICON_LF);
 
         // Vérifie que la création soit autorisée.
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked')) ) {
@@ -2062,11 +2004,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityProp(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:entities:Desc:AttribsTitle');
-        $instance->setIcon($icon);
-        $instance->display();
+        $this->_displaySimpleTitle('::module:entities:Desc:AttribsTitle', $this::MODULE_REGISTERED_ICONS[3]);
 
         $this->_displayInstance->registerInlineContentID('properties');
     }
