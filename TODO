@@ -3,7 +3,6 @@
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
   - Fix bugg load translate modules.
-  - Cleaning 008_entities.
   - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
   - Cleaning AppX with functions from bootstrap.
   - 701_display modify filter_var() to $this->getFilterInput().
