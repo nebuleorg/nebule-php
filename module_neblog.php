@@ -58,7 +58,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::neblog:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020251102';
+    const MODULE_VERSION = '020251111';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -494,18 +494,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $list = $this->_getLinksPostNID($this->_instanceCurrentBlog, 'all');
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
-            $blogPostNID = $parsedLink['bl/rl/nid2'];
-            $blogInstance = $this->_cacheInstance->newNode($blogPostNID);
+            $postPostNID = $parsedLink['bl/rl/nid2'];
+            $postInstance = $this->_cacheInstance->newNode($postPostNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setNID($blogInstance);
+            $instance->setNID($postInstance);
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                . '&' . self::COMMAND_SELECT_POST . '=' . $blogPostNID
+                . '&' . self::COMMAND_SELECT_POST . '=' . $postPostNID
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
+            $instance->setName($postInstance->getName('all'));
             $instance->setEnableFlags(false);
             $instance->setEnableFlagState(false);
             $instance->setEnableFlagEmotions(false);
@@ -514,7 +515,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setEnableRefs(true);
             $instance->setRefs($link->getSignersEID());
             $instance->setEnableStatus(true);
-            $instance->setStatus($this->_translateInstance->getTranslate('::answers') . ':' . $this->_getCountAnswerOID($blogInstance, 'all'));
+            $instance->setStatus($this->_translateInstance->getTranslate('::answers') . ':' . $this->_getCountAnswerOID($postInstance, 'all'));
             $instanceList->addItem($instance);
         }
         $instanceList->setEnableWarnIfEmpty();
