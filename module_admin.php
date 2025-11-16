@@ -21,16 +21,16 @@ use Nebule\Library\References;
 class ModuleAdmin extends \Nebule\Library\Modules
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::module:admin:ModuleName';
-    const MODULE_MENU_NAME = '::module:admin:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
-    const MODULE_DESCRIPTION = '::module:admin:ModuleDescription';
-    const MODULE_VERSION = '020251004';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
+    const MODULE_VERSION = '020251116';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
-    const MODULE_HELP = '::module:admin:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array(
@@ -43,9 +43,9 @@ class ModuleAdmin extends \Nebule\Library\Modules
         '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256',    // 0 : Icône admin.
         '3edf52669e7284e4cefbdbb00a8b015460271765e97a0d6ce6496b11fe530ce1.sha2.256',    // 1 : Icône liste entités.
     );
-    const MODULE_APP_TITLE_LIST = array('::module:admin:AppTitle1');
+    const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256');
-    const MODULE_APP_DESC_LIST = array('::module:admin:AppDesc1');
+    const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('options');
 
 
@@ -67,7 +67,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
             case 'selfMenu':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     // Voir les options.
-                    $hookArray[0]['name'] = '::module:admin:display:AppOptions';
+                    $hookArray[0]['name'] = '::display:AppOptions';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -76,7 +76,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     // Voir les options.
-                    $hookArray[1]['name'] = '::module:admin:display:NebOptions';
+                    $hookArray[1]['name'] = '::display:NebOptions';
                     $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -85,7 +85,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[2]) {
                     // Voir les admins.
-                    $hookArray[2]['name'] = '::module:admin:display:seeAdmins';
+                    $hookArray[2]['name'] = '::display:seeAdmins';
                     $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -94,7 +94,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[3]) {
                     // Voir les entités de recouvrement.
-                    $hookArray[3]['name'] = '::module:admin:display:seeRecovery';
+                    $hookArray[3]['name'] = '::display:seeRecovery';
                     $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -198,20 +198,20 @@ class ModuleAdmin extends \Nebule\Library\Modules
         //'sylabeLogLockEntity'				=> Application::APPLICATION_DEFAULT_LOG_LOCK_ENTITY,
         'sylabeLoadModules' => Application::APPLICATION_DEFAULT_LOAD_MODULES);
     private $_listOptionsHelp = array(
-        'sylabeDisplayOnlineHelp' => '::module:admin:option:help:sylabeDisplayOnlineHelp',
-        'sylabeDisplayOnlineOptions' => '::module:admin:option:help:sylabeDisplayOnlineOptions',
-        'sylabeDisplayMetrology' => '::module:admin:option:help:sylabeDisplayMetrology',
-        //'sylabeDisplayUnsecureURL'			=> '::module:admin:option:help:sylabeDisplayUnsecureURL',
-        'sylabeDisplayUnverifyLargeContent' => '::module:admin:option:help:sylabeDisplayUnverifyLargeContent',
-        'sylabeDisplayNameSize' => '::module:admin:option:help:sylabeDisplayNameSize',
-        'sylabeIOReadMaxDataPHP' => '::module:admin:option:help:sylabeIOReadMaxDataPHP',
-        'sylabePermitUploadObject' => '::module:admin:option:help:sylabePermitUploadObject',
-        'sylabePermitUploadLinks' => '::module:admin:option:help:sylabePermitUploadLinks',
-        'sylabePermitPublicUploadObject' => '::module:admin:option:help:sylabePermitPublicUploadObject',
-        'sylabePermitPublicUploadLinks' => '::module:admin:option:help:sylabePermitPublicUploadLinks',
-        //'sylabeLogUnlockEntity'				=> '::module:admin:option:help:sylabeLogUnlockEntity',
-        //'sylabeLogLockEntity'				=> '::module:admin:option:help:sylabeLogLockEntity',
-        'sylabeLoadModules' => '::module:admin:option:help:sylabeLoadModules');
+        'sylabeDisplayOnlineHelp' => '::option:help:sylabeDisplayOnlineHelp',
+        'sylabeDisplayOnlineOptions' => '::option:help:sylabeDisplayOnlineOptions',
+        'sylabeDisplayMetrology' => '::option:help:sylabeDisplayMetrology',
+        //'sylabeDisplayUnsecureURL'			=> '::option:help:sylabeDisplayUnsecureURL',
+        'sylabeDisplayUnverifyLargeContent' => '::option:help:sylabeDisplayUnverifyLargeContent',
+        'sylabeDisplayNameSize' => '::option:help:sylabeDisplayNameSize',
+        'sylabeIOReadMaxDataPHP' => '::option:help:sylabeIOReadMaxDataPHP',
+        'sylabePermitUploadObject' => '::option:help:sylabePermitUploadObject',
+        'sylabePermitUploadLinks' => '::option:help:sylabePermitUploadLinks',
+        'sylabePermitPublicUploadObject' => '::option:help:sylabePermitPublicUploadObject',
+        'sylabePermitPublicUploadLinks' => '::option:help:sylabePermitPublicUploadLinks',
+        //'sylabeLogUnlockEntity'				=> '::option:help:sylabeLogUnlockEntity',
+        //'sylabeLogLockEntity'				=> '::option:help:sylabeLogLockEntity',
+        'sylabeLoadModules' => '::option:help:sylabeLoadModules');
 
 
     /**
@@ -223,7 +223,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:admin:display:AppOptions');
+        $instance->setTitle('::display:AppOptions');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -284,7 +284,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:admin:display:NebOptions');
+        $instance->setTitle('::display:NebOptions');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -353,7 +353,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:admin:display:seeAdmins');
+        $instance->setTitle('::display:seeAdmins');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -397,12 +397,12 @@ class ModuleAdmin extends \Nebule\Library\Modules
             // Affichage
             if (sizeof($list) != 0) {
                 // Affiche les point d'encrage de toutes les entités.
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::module:admin:DisplayLocalAuthorities');
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::DisplayLocalAuthorities');
 
                 // Affiche les entités.
                 $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::module:admin:Display:NoLocalAuthority');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::Display:NoLocalAuthority');
             }
             unset($list, $listEntities, $listSigners);
         } else {
@@ -425,7 +425,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::module:admin:display:seeRecovery');
+        $instance->setTitle('::display:seeRecovery');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -470,12 +470,12 @@ class ModuleAdmin extends \Nebule\Library\Modules
             // Affichage
             if (sizeof($list) != 0) {
                 // Affiche les point d'encrage de toutes les entités.
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::module:admin:DisplayRecoveryEntities');
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::DisplayRecoveryEntities');
 
                 // Affiche les entités.
                 $this->_applicationInstance->getDisplayInstance()->displayItemList($list);
             } else {
-                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('::module:admin:Display:NoRecoveryEntity');
+                $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::Display:NoRecoveryEntity');
             }
             unset($list, $listEntities, $listSigners);
         } else {
@@ -492,142 +492,142 @@ class ModuleAdmin extends \Nebule\Library\Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:admin:ModuleName' => "Module d'administration",
-            '::module:admin:MenuName' => 'Options',
-            '::module:admin:ModuleDescription' => 'Module de gestion des options de configuration et de personnalisation.',
-            '::module:admin:ModuleHelp' => "Ce module permet de voir et de gérer les options.",
-            '::module:admin:AppTitle1' => 'Options',
-            '::module:admin:AppDesc1' => 'Modifier les options.',
-            '::module:admin:display:AppOptions' => "Options de l'application",
-            '::module:admin:display:NebOptions' => 'Options de nebule',
-            '::module:admin:display:seeAdmins' => 'Autorités locales',
-            '::module:admin:Display:NoLocalAuthority' => "Pas d'entité autorité sur ce serveur.",
-            '::module:admin:display:seeRecovery' => 'Entités de recouvrement',
-            '::module:admin:Display:NoRecoveryEntity' => "Pas d'entité de recouvrement des objets protégés sur ce serveur.",
-            '::module:admin:display:defaultValue' => 'Valeur par défaut',
-            '::module:admin:option:sylabeDisplayOnlineHelp' => "Affichage de l'aide en ligne",
-            '::module:admin:option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:sylabeDisplayMetrology' => 'Affichage de la métrologie',
-            '::module:admin:option:sylabeDisplayUnsecureURL' => 'Affiche une URL non sécurisée',
-            '::module:admin:option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:sylabeDisplayNameSize' => 'Taille maximum des noms',
-            '::module:admin:option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:sylabePermitUploadObject' => 'Autorise la synchronisation des objets',
-            '::module:admin:option:sylabePermitUploadLinks' => 'Autorise la synchronisation des liens',
-            '::module:admin:option:sylabePermitPublicUploadObject' => 'Autorise la synchronisation publique des objets',
-            '::module:admin:option:sylabePermitPublicUploadLinks' => 'Autorise la synchronisation publique des liens',
-            '::module:admin:option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:sylabeLoadModules' => 'Modules à charger',
-            '::module:admin:option:type:int' => 'Entier',
-            '::module:admin:option:type:text' => 'Texte',
-            '::module:admin:option:type:bool' => 'Booléen',
-            '::module:admin:option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
-            '::module:admin:option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
-            '::module:admin:option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
-            '::module:admin:option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
-            '::module:admin:option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
-            '::module:admin:option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
-            '::module:admin:option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
-            '::module:admin:option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
-            '::module:admin:option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:help:sylabeLoadModules' => 'sylabeLoadModules',
+            '::ModuleName' => "Module d'administration",
+            '::MenuName' => 'Options',
+            '::ModuleDescription' => 'Module de gestion des options de configuration et de personnalisation.',
+            '::ModuleHelp' => "Ce module permet de voir et de gérer les options.",
+            '::AppTitle1' => 'Options',
+            '::AppDesc1' => 'Modifier les options.',
+            '::display:AppOptions' => "Options de l'application",
+            '::display:NebOptions' => 'Options de nebule',
+            '::display:seeAdmins' => 'Autorités locales',
+            '::Display:NoLocalAuthority' => "Pas d'entité autorité sur ce serveur.",
+            '::display:seeRecovery' => 'Entités de recouvrement',
+            '::Display:NoRecoveryEntity' => "Pas d'entité de recouvrement des objets protégés sur ce serveur.",
+            '::display:defaultValue' => 'Valeur par défaut',
+            '::option:sylabeDisplayOnlineHelp' => "Affichage de l'aide en ligne",
+            '::option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:sylabeDisplayMetrology' => 'Affichage de la métrologie',
+            '::option:sylabeDisplayUnsecureURL' => 'Affiche une URL non sécurisée',
+            '::option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:sylabeDisplayNameSize' => 'Taille maximum des noms',
+            '::option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:sylabePermitUploadObject' => 'Autorise la synchronisation des objets',
+            '::option:sylabePermitUploadLinks' => 'Autorise la synchronisation des liens',
+            '::option:sylabePermitPublicUploadObject' => 'Autorise la synchronisation publique des objets',
+            '::option:sylabePermitPublicUploadLinks' => 'Autorise la synchronisation publique des liens',
+            '::option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:sylabeLoadModules' => 'Modules à charger',
+            '::option:type:int' => 'Entier',
+            '::option:type:text' => 'Texte',
+            '::option:type:bool' => 'Booléen',
+            '::option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
+            '::option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
+            '::option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
+            '::option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
+            '::option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
+            '::option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
+            '::option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
+            '::option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
+            '::option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:help:sylabeLoadModules' => 'sylabeLoadModules',
         ],
         'en-en' => [
-            '::module:admin:ModuleName' => 'Administration module',
-            '::module:admin:MenuName' => 'Options',
-            '::module:admin:ModuleDescription' => 'Options management module for configration and customisation.',
-            '::module:admin:ModuleHelp' => 'This module permit to see and manage options.',
-            '::module:admin:AppTitle1' => 'Options',
-            '::module:admin:AppDesc1' => 'Modify all options.',
-            '::module:admin:display:AppOptions' => "Application's options",
-            '::module:admin:display:NebOptions' => "nebule's options",
-            '::module:admin:display:seeAdmins' => 'Local autorities',
-            '::module:admin:Display:NoLocalAuthority' => 'No autority entity on this server.',
-            '::module:admin:display:seeRecovery' => 'Recovery entities',
-            '::module:admin:Display:NoRecoveryEntity' => 'No recovery entity for protected objects on this server.',
-            '::module:admin:display:defaultValue' => 'Default value',
-            '::module:admin:option:sylabeDisplayOnlineHelp' => 'Display online help',
-            '::module:admin:option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:sylabeDisplayMetrology' => 'Display metrology',
-            '::module:admin:option:sylabeDisplayUnsecureURL' => 'Display unsecure URL',
-            '::module:admin:option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:sylabeDisplayNameSize' => 'Maximum name size',
-            '::module:admin:option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:sylabePermitUploadObject' => 'Permit object synchronisation',
-            '::module:admin:option:sylabePermitUploadLinks' => 'Permit links synchronisation',
-            '::module:admin:option:sylabePermitPublicUploadObject' => 'Permit public object synchronisation',
-            '::module:admin:option:sylabePermitPublicUploadLinks' => 'Permit public links synchronisation',
-            '::module:admin:option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:sylabeLoadModules' => 'Modules to load',
-            '::module:admin:option:type:int' => 'Integer',
-            '::module:admin:option:type:text' => 'Text',
-            '::module:admin:option:type:bool' => 'Boolean',
-            '::module:admin:option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
-            '::module:admin:option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
-            '::module:admin:option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
-            '::module:admin:option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
-            '::module:admin:option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
-            '::module:admin:option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
-            '::module:admin:option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
-            '::module:admin:option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
-            '::module:admin:option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:help:sylabeLoadModules' => 'sylabeLoadModules',
+            '::ModuleName' => 'Administration module',
+            '::MenuName' => 'Options',
+            '::ModuleDescription' => 'Options management module for configration and customisation.',
+            '::ModuleHelp' => 'This module permit to see and manage options.',
+            '::AppTitle1' => 'Options',
+            '::AppDesc1' => 'Modify all options.',
+            '::display:AppOptions' => "Application's options",
+            '::display:NebOptions' => "nebule's options",
+            '::display:seeAdmins' => 'Local autorities',
+            '::Display:NoLocalAuthority' => 'No autority entity on this server.',
+            '::display:seeRecovery' => 'Recovery entities',
+            '::Display:NoRecoveryEntity' => 'No recovery entity for protected objects on this server.',
+            '::display:defaultValue' => 'Default value',
+            '::option:sylabeDisplayOnlineHelp' => 'Display online help',
+            '::option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:sylabeDisplayMetrology' => 'Display metrology',
+            '::option:sylabeDisplayUnsecureURL' => 'Display unsecure URL',
+            '::option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:sylabeDisplayNameSize' => 'Maximum name size',
+            '::option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:sylabePermitUploadObject' => 'Permit object synchronisation',
+            '::option:sylabePermitUploadLinks' => 'Permit links synchronisation',
+            '::option:sylabePermitPublicUploadObject' => 'Permit public object synchronisation',
+            '::option:sylabePermitPublicUploadLinks' => 'Permit public links synchronisation',
+            '::option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:sylabeLoadModules' => 'Modules to load',
+            '::option:type:int' => 'Integer',
+            '::option:type:text' => 'Text',
+            '::option:type:bool' => 'Boolean',
+            '::option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
+            '::option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
+            '::option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
+            '::option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
+            '::option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
+            '::option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
+            '::option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
+            '::option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
+            '::option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:help:sylabeLoadModules' => 'sylabeLoadModules',
         ],
         'es-co' => [
-            '::module:admin:ModuleName' => 'Administration module',
-            '::module:admin:MenuName' => 'Options',
-            '::module:admin:ModuleDescription' => 'Options management module for configration and customisation.',
-            '::module:admin:ModuleHelp' => 'This module permit to see and manage options.',
-            '::module:admin:AppTitle1' => 'Options',
-            '::module:admin:AppDesc1' => 'Modify all options.',
-            '::module:admin:display:AppOptions' => "Application's options",
-            '::module:admin:display:NebOptions' => "nebule's options",
-            '::module:admin:display:seeAdmins' => 'Autoritidad local',
-            '::module:admin:Display:NoLocalAuthority' => 'No autority entity on this server.',
-            '::module:admin:display:seeRecovery' => 'Recovery entities',
-            '::module:admin:Display:NoRecoveryEntity' => 'No recovery entity for protected objects on this server.',
-            '::module:admin:display:defaultValue' => 'Default value',
-            '::module:admin:option:sylabeDisplayOnlineHelp' => 'Display online help',
-            '::module:admin:option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:sylabeDisplayMetrology' => 'Display metrology',
-            '::module:admin:option:sylabeDisplayUnsecureURL' => 'Display unsecure URL',
-            '::module:admin:option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:sylabeDisplayNameSize' => 'Maximum name size',
-            '::module:admin:option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:sylabePermitUploadObject' => 'Permit object synchronisation',
-            '::module:admin:option:sylabePermitUploadLinks' => 'Permit links synchronisation',
-            '::module:admin:option:sylabePermitPublicUploadObject' => 'Permit public object synchronisation',
-            '::module:admin:option:sylabePermitPublicUploadLinks' => 'Permit public links synchronisation',
-            '::module:admin:option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:sylabeLoadModules' => 'Modules to load',
-            '::module:admin:option:type:int' => 'Integer',
-            '::module:admin:option:type:text' => 'Text',
-            '::module:admin:option:type:bool' => 'Boolean',
-            '::module:admin:option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
-            '::module:admin:option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
-            '::module:admin:option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
-            '::module:admin:option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
-            '::module:admin:option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
-            '::module:admin:option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
-            '::module:admin:option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
-            '::module:admin:option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
-            '::module:admin:option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
-            '::module:admin:option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
-            '::module:admin:option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
-            '::module:admin:option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
-            '::module:admin:option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
-            '::module:admin:option:help:sylabeLoadModules' => 'sylabeLoadModules',
+            '::ModuleName' => 'Administration module',
+            '::MenuName' => 'Options',
+            '::ModuleDescription' => 'Options management module for configration and customisation.',
+            '::ModuleHelp' => 'This module permit to see and manage options.',
+            '::AppTitle1' => 'Options',
+            '::AppDesc1' => 'Modify all options.',
+            '::display:AppOptions' => "Application's options",
+            '::display:NebOptions' => "nebule's options",
+            '::display:seeAdmins' => 'Autoritidad local',
+            '::Display:NoLocalAuthority' => 'No autority entity on this server.',
+            '::display:seeRecovery' => 'Recovery entities',
+            '::Display:NoRecoveryEntity' => 'No recovery entity for protected objects on this server.',
+            '::display:defaultValue' => 'Default value',
+            '::option:sylabeDisplayOnlineHelp' => 'Display online help',
+            '::option:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:sylabeDisplayMetrology' => 'Display metrology',
+            '::option:sylabeDisplayUnsecureURL' => 'Display unsecure URL',
+            '::option:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:sylabeDisplayNameSize' => 'Maximum name size',
+            '::option:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:sylabePermitUploadObject' => 'Permit object synchronisation',
+            '::option:sylabePermitUploadLinks' => 'Permit links synchronisation',
+            '::option:sylabePermitPublicUploadObject' => 'Permit public object synchronisation',
+            '::option:sylabePermitPublicUploadLinks' => 'Permit public links synchronisation',
+            '::option:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:sylabeLoadModules' => 'Modules to load',
+            '::option:type:int' => 'Integer',
+            '::option:type:text' => 'Text',
+            '::option:type:bool' => 'Boolean',
+            '::option:help:sylabeDisplayOnlineHelp' => 'sylabeDisplayOnlineHelp',
+            '::option:help:sylabeDisplayOnlineOptions' => 'sylabeDisplayOnlineOptions',
+            '::option:help:sylabeDisplayMetrology' => 'sylabeDisplayMetrology',
+            '::option:help:sylabeDisplayUnsecureURL' => 'sylabeDisplayUnsecureURL',
+            '::option:help:sylabeDisplayUnverifyLargeContent' => 'sylabeDisplayUnverifyLargeContent',
+            '::option:help:sylabeDisplayNameSize' => 'sylabeDisplayNameSize',
+            '::option:help:sylabeIOReadMaxDataPHP' => 'sylabeIOReadMaxDataPHP',
+            '::option:help:sylabePermitUploadObject' => 'sylabePermitUploadObject',
+            '::option:help:sylabePermitUploadLinks' => 'sylabePermitUploadLinks',
+            '::option:help:sylabePermitPublicUploadObject' => 'sylabePermitPublicUploadObject',
+            '::option:help:sylabePermitPublicUploadLinks' => 'sylabePermitPublicUploadLinks',
+            '::option:help:sylabeLogUnlockEntity' => 'sylabeLogUnlockEntity',
+            '::option:help:sylabeLogLockEntity' => 'sylabeLogLockEntity',
+            '::option:help:sylabeLoadModules' => 'sylabeLoadModules',
         ],
     ];
 }

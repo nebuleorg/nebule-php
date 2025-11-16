@@ -54,7 +54,7 @@ g8rh1K/R4HNYBzwE/Ax40MwOKOklAAmhYfC7+zTgM8BcYDYwdZikijHRIduG+xTwOPCEmW081DkLCUAM
     const DEFAULT_APPLICATION_LOGO_LINK = 'a=1';
     const DEFAULT_BOOTSTRAP_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702m
 PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
-    const DEFAULT_BOOTSTRAP_LOGO_LINK = 'a=1';
+    const DEFAULT_BOOTSTRAP_LINK = 'a=1';
     const DEFAULT_DISPLAY_COMMAND_MODE = 'mod';
     const DEFAULT_DISPLAY_COMMAND_VIEW = 'view';
     const DEFAULT_NEXT_COMMAND = 'next';
@@ -2153,9 +2153,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Add application 1
         $list[$j]['icon'] = Displays::REFERENCE_DEFAULT_LOGO;
-        $list[$j]['title'] = BOOTSTRAP_NAME;
-        $list[$j]['htlink'] = '?' . Displays::DEFAULT_BOOTSTRAP_LOGO_LINK;
-        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::appSwitch');
+        $list[$j]['title'] = 'N1';
+        $list[$j]['htlink'] = '?' . Displays::DEFAULT_BOOTSTRAP_LINK;
+        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::::allApplications');
         $list[$j]['ref'] = 'nebule';
         $list[$j]['class'] = 'menuListContentActionModules';
 
@@ -2258,14 +2258,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 *  Affichage des messages.
 	 * -------------------------------------------------------------------------------- */
     /**
-     * Affiche un message d'information pré-formaté.
-     * Use DisplayNotify()
-     *
      * @param string $text
      * @param string $arg1
      * @return void
      */
-    public function displayMessageInformation_DEPRECATED(string $text, string $arg1 = ''): void
+    public function displayMessageInformation(string $text, string $arg1 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
@@ -2274,14 +2271,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affiche un message de validation pré-formaté.
-     * Use DisplayNotify()
-     *
      * @param string $text
      * @param string $arg1
      * @return void
      */
-    public function displayMessageOk_DEPRECATED(string $text, string $arg1 = ''): void
+    public function displayMessageOk(string $text, string $arg1 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
@@ -2290,14 +2284,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affiche un message d'avertissement pré-formaté.
-     * Use DisplayNotify()
-     *
      * @param string $text
      * @param string $arg1
      * @return void
      */
-    public function displayMessageWarning_DEPRECATED(string $text, string $arg1 = ''): void
+    public function displayMessageWarning(string $text, string $arg1 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);
@@ -2306,14 +2297,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     /**
-     * Affiche un message d'erreur pré-formaté.
-     * Use DisplayNotify()
-     *
      * @param string $text
      * @param string $arg1
      * @return void
      */
-    public function displayMessageError_DEPRECATED(string $text, string $arg1 = ''): void
+    public function displayMessageError(string $text, string $arg1 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
         $instance->setMessage($text, $arg1);

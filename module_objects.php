@@ -22,16 +22,16 @@ use Nebule\Library\References;
 class ModuleObjects extends \Nebule\Library\Modules
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::module:objects:ModuleName';
-    const MODULE_MENU_NAME = '::module:objects:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
-    const MODULE_DESCRIPTION = '::module:objects:ModuleDescription';
-    const MODULE_VERSION = '020251004';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
+    const MODULE_VERSION = '020251116';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    const MODULE_HELP = '::module:objects:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array('disp', 'desc', 'nav', 'prot', 'sprot');
@@ -94,7 +94,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     )
                 ) {
                     // Affichage de l'objet.
-                    $hookArray[0]['name'] = '::module:objects:DisplayObject';
+                    $hookArray[0]['name'] = '::DisplayObject';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -105,7 +105,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     // Si l'objet a une mise à jour.
                     if ($update != $id) {
                         // Affichage de l'objet à jour.
-                        $hookArray[1]['name'] = '::module:objects:DisplayObjectUpdated';
+                        $hookArray[1]['name'] = '::DisplayObjectUpdated';
                         $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LU;
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -119,7 +119,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 if ($mode == $this::MODULE_COMMAND_NAME
                     && $view != $this::MODULE_REGISTERED_VIEWS[1]
                 ) {
-                    $hookArray[2]['name'] = '::module:objects:ObjectDescription';
+                    $hookArray[2]['name'] = '::ObjectDescription';
                     $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -132,7 +132,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 if ($mode == $this::MODULE_COMMAND_NAME
                     && $view != $this::MODULE_REGISTERED_VIEWS[2]
                 ) {
-                    $hookArray[3]['name'] = '::module:objects:ObjectRelations';
+                    $hookArray[3]['name'] = '::ObjectRelations';
                     $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -144,9 +144,9 @@ class ModuleObjects extends \Nebule\Library\Modules
                 // Si le contenu de l'objet est présent.
                 if ($instance->checkPresent()) {
                     // Télécharger l'objet.
-                    $hookArray[4]['name'] = '::module:objects:ObjectDownload';
+                    $hookArray[4]['name'] = '::ObjectDownload';
                     $hookArray[4]['icon'] = Displays::DEFAULT_ICON_IDOWNLOAD;
-                    $hookArray[4]['desc'] = '::module:objects:Action:Download';
+                    $hookArray[4]['desc'] = '::Action:Download';
                     $hookArray[4]['link'] = '?o=' . $id;
 
                     // Si l'entité est déverrouillée.
@@ -156,7 +156,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     ) {
                         // Supprimer l'objet.
-                        $hookArray[5]['name'] = '::module:objects:ObjectDelete';
+                        $hookArray[5]['name'] = '::ObjectDelete';
                         $hookArray[5]['icon'] = Displays::DEFAULT_ICON_LD;
                         $hookArray[5]['desc'] = '';
                         $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -169,7 +169,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                         if ($mode == $this::MODULE_COMMAND_NAME
                             && $view != $this::MODULE_REGISTERED_VIEWS[3]
                         ) {
-                            $hookArray[6]['name'] = '::module:objects:Protection';
+                            $hookArray[6]['name'] = '::Protection';
                             $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
                             $hookArray[6]['desc'] = '';
                             $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -183,7 +183,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                             && $view != $this::MODULE_REGISTERED_VIEWS[4]
                             && $protected
                         ) {
-                            $hookArray[7]['name'] = '::module:objects:ShareProtection';
+                            $hookArray[7]['name'] = '::ShareProtection';
                             $hookArray[7]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                             $hookArray[7]['desc'] = '';
                             $hookArray[7]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -255,7 +255,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 break;
 
             case '::sylabe:module:links:MenuNameSelfMenu':
-                $hookArray[0]['name'] = '::module:objects:DisplayObject';
+                $hookArray[0]['name'] = '::DisplayObject';
                 $hookArray[0]['icon'] = Display::DEFAULT_ICON_LO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -269,7 +269,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 if ($this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObject()) {
                     // Si pas d'erreur.
                     if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectError()) {
-                        $hookArray[0]['name'] = '::module:objects:DisplayNewObject';
+                        $hookArray[0]['name'] = '::DisplayNewObject';
                         $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -285,7 +285,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             case 'typeMenuTokenPool':
             case 'typeMenuToken':
                 // Voir l'objet de l'entité.
-                $hookArray[0]['name'] = '::module:objects:DisplayAsObject';
+                $hookArray[0]['name'] = '::DisplayAsObject';
                 $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -338,7 +338,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             case '::sylabe:module:filesystem:adminObject' :
             case 'selfMenuConversation':
                 // Voir comme objet simplement.
-                $hookArray[0]['name'] = '::module:objects:DisplayAsObject';
+                $hookArray[0]['name'] = '::DisplayAsObject';
                 $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -371,7 +371,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
                 ) {
-                    $hookArray[0]['name'] = '::module:objects:ShareProtection';
+                    $hookArray[0]['name'] = '::ShareProtection';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -383,7 +383,7 @@ class ModuleObjects extends \Nebule\Library\Modules
 
             case '::sylabe:module:objet:ProtectionShareButtons' :
                 // Protéger l'objet.
-                $hookArray[0]['name'] = '::module:objects:Protection';
+                $hookArray[0]['name'] = '::Protection';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -749,7 +749,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                             <div class="sylabeModuleObjectsDescDate"><?php $display->displayDate($link->getDate()); ?></div>
                             <div class="sylabeModuleObjectsDescSigner"><?php $display->displayInlineObjectColorIconName($link->getParsed()['bs/rs1/eid']); ?></div>
                             <div class="sylabeModuleObjectsDescContent">
-                                <span class="sylabeModuleObjectsDescAttrib"><?php echo $this->_translateInstance->getTranslate('::module:objects:AttribNotDisplayable'); ?></span>
+                                <span class="sylabeModuleObjectsDescAttrib"><?php echo $this->_translateInstance->getTranslate('::AttribNotDisplayable'); ?></span>
                             </div>
                         </div>
                         <?php
@@ -1184,7 +1184,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             ) {
                 $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
                 $instance = new DisplayTitle($this->_applicationInstance);
-                $instance->setTitle('::module:objects:ShareObjectProtection');
+                $instance->setTitle('::ShareObjectProtection');
                 $instance->setIcon($icon);
                 $instance->display();
 
@@ -1295,7 +1295,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     }
 
                     // Ajout l'action de partage d eprotection au groupe.
-                    $list[$i]['param']['selfHookList'][0]['name'] = '::module:objects:ShareProtectionToGroup';
+                    $list[$i]['param']['selfHookList'][0]['name'] = '::ShareProtectionToGroup';
                     $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                     if ($typeClosed) {
                         $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -1360,7 +1360,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     );
 
                     // Partager avec cette entité.
-                    $list[$i]['param']['selfHookList'][0]['name'] = '::module:objects:ShareProtectionToEntity';
+                    $list[$i]['param']['selfHookList'][0]['name'] = '::ShareProtectionToEntity';
                     $list[$i]['param']['selfHookList'][0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
                     $list[$i]['param']['selfHookList'][0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
@@ -1386,37 +1386,37 @@ class ModuleObjects extends \Nebule\Library\Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:objects:ModuleName' => 'Module des objets',
-            '::module:objects:MenuName' => 'Objets',
-            '::module:objects:ModuleDescription' => 'Module de gestion des objets.',
-            '::module:objects:ModuleHelp' => "Ce module permet de voir et de gérer les objets.",
-            '::module:objects:AppTitle1' => 'Objets',
-            '::module:objects:AppDesc1' => 'Affiche les objets.',
-            '::module:objects:DisplayObject' => "Afficher l'objet",
-            '::module:objects:DisplayObjectUpdated' => "Afficher l'objet à jour",
-            '::module:objects:ObjectDescription' => 'Afficher la description',
-            '::module:objects:ObjectRelations' => 'Relations',
-            '::module:objects:ObjectDelete' => 'Supprimer',
-            '::module:objects:ObjectDownload' => 'Télécharger',
-            '::module:objects:LinksSrc' => 'Source des liens bruts.',
-            '::module:objects:DisplayAsObject' => 'Voir comme objet',
-            '::module:objects:DisplayNewObject' => 'Voir le nouvel objet',
-            '::module:objects:Actions' => "Actions sur l'objet",
-            '::module:objects:ActionsDesc' => 'Les actions simples sur cet objet.',
-            '::module:objects:ExtendedActions' => "Actions étendues sur l'objet",
-            '::module:objects:ExtendedActionsDesc' => 'Les actions avancées sur cet objet.',
-            '::module:objects:Description' => "Description de l'objet",
-            '::module:objects:DescriptionDesc' => "Les propriétés de l'objet.",
-            '::module:objects:Nothing' => 'Rien à afficher.',
-            '::module:objects:Action:Download' => "Télécharger l'objet.",
-            '::module:objects:Desc:Attrib' => 'Propriété',
-            '::module:objects:Desc:Value' => 'Valeur',
-            '::module:objects:Desc:Signer' => 'Emetteur',
-            '::module:objects:Protection' => 'Protection',
-            '::module:objects:ShareProtection' => 'Partager la protection',
-            '::module:objects:ShareObjectProtection' => "Partager la protection de l'objet",
-            '::module:objects:ShareProtectionToGroup' => 'Partager la protection',
-            '::module:objects:ShareProtectionToEntity' => 'Partager la protection',
+            '::ModuleName' => 'Module des objets',
+            '::MenuName' => 'Objets',
+            '::ModuleDescription' => 'Module de gestion des objets.',
+            '::ModuleHelp' => "Ce module permet de voir et de gérer les objets.",
+            '::AppTitle1' => 'Objets',
+            '::AppDesc1' => 'Affiche les objets.',
+            '::DisplayObject' => "Afficher l'objet",
+            '::DisplayObjectUpdated' => "Afficher l'objet à jour",
+            '::ObjectDescription' => 'Afficher la description',
+            '::ObjectRelations' => 'Relations',
+            '::ObjectDelete' => 'Supprimer',
+            '::ObjectDownload' => 'Télécharger',
+            '::LinksSrc' => 'Source des liens bruts.',
+            '::DisplayAsObject' => 'Voir comme objet',
+            '::DisplayNewObject' => 'Voir le nouvel objet',
+            '::Actions' => "Actions sur l'objet",
+            '::ActionsDesc' => 'Les actions simples sur cet objet.',
+            '::ExtendedActions' => "Actions étendues sur l'objet",
+            '::ExtendedActionsDesc' => 'Les actions avancées sur cet objet.',
+            '::Description' => "Description de l'objet",
+            '::DescriptionDesc' => "Les propriétés de l'objet.",
+            '::Nothing' => 'Rien à afficher.',
+            '::Action:Download' => "Télécharger l'objet.",
+            '::Desc:Attrib' => 'Propriété',
+            '::Desc:Value' => 'Valeur',
+            '::Desc:Signer' => 'Emetteur',
+            '::Protection' => 'Protection',
+            '::ShareProtection' => 'Partager la protection',
+            '::ShareObjectProtection' => "Partager la protection de l'objet",
+            '::ShareProtectionToGroup' => 'Partager la protection',
+            '::ShareProtectionToEntity' => 'Partager la protection',
             '::WarningSharedProtection' => "Lorsque la protection d'un objet est partagée, son annulation est incertaine !",
             '::RemoveShareProtect' => 'Annuler le partage de protection',
             '::ProtectObject' => "Protéger l'objet",
@@ -1428,42 +1428,42 @@ class ModuleObjects extends \Nebule\Library\Modules
             '::WarningProtectObject' => "La protection d'un objet déjà existant est incertaine !",
             '::WarningDoNotProtectEntity' => "La protection d'une entité la rend indisponible !",
             '::ErrorCantProtectObject' => 'Cet objet ne peut pas être protégé.',
-            '::module:objects:AttribNotDisplayable' => 'Propriété non affichable !',
+            '::AttribNotDisplayable' => 'Propriété non affichable !',
             '::GroupeFerme' => 'Groupe fermé',
             '::GroupeOuvert' => 'Groupe ouvert',
         ],
         'en-en' => [
-            '::module:objects:ModuleName' => 'Objects module',
-            '::module:objects:MenuName' => 'Objects',
-            '::module:objects:ModuleDescription' => 'Object management module.',
-            '::module:objects:ModuleHelp' => 'This module permit to see and manage objects.',
-            '::module:objects:AppTitle1' => 'Objects',
-            '::module:objects:AppDesc1' => 'Display objects.',
-            '::module:objects:DisplayObject' => 'Display object',
-            '::module:objects:DisplayObjectUpdated' => 'Display updated object',
-            '::module:objects:ObjectDescription' => 'Display description',
-            '::module:objects:ObjectRelations' => 'Relations',
-            '::module:objects:ObjectDelete' => 'Delete',
-            '::module:objects:ObjectDownload' => 'Download',
-            '::module:objects:LinksSrc' => 'Source of raw links.',
-            '::module:objects:DisplayAsObject' => 'See as object',
-            '::module:objects:DisplayNewObject' => 'See the new object',
-            '::module:objects:Actions' => 'Actions on object',
-            '::module:objects:ActionsDesc' => 'Simple actions on this object.',
-            '::module:objects:ExtendedActions' => 'Extended actions on object',
-            '::module:objects:ExtendedActionsDesc' => 'Advanced actions on this object.',
-            '::module:objects:Description' => 'Object description',
-            '::module:objects:DescriptionDesc' => "Object's properties.",
-            '::module:objects:Nothing' => 'Nothing to display.',
-            '::module:objects:Action:Download' => 'Download object.',
-            '::module:objects:Desc:Attrib' => 'Attribut',
-            '::module:objects:Desc:Value' => 'Value',
-            '::module:objects:Desc:Signer' => 'Sender',
-            '::module:objects:Protection' => 'Protection',
-            '::module:objects:ShareProtection' => 'Share protection',
-            '::module:objects:ShareObjectProtection' => 'Share protection of this objet',
-            '::module:objects:ShareProtectionToGroup' => 'Share protection',
-            '::module:objects:ShareProtectionToEntity' => 'Share protection',
+            '::ModuleName' => 'Objects module',
+            '::MenuName' => 'Objects',
+            '::ModuleDescription' => 'Object management module.',
+            '::ModuleHelp' => 'This module permit to see and manage objects.',
+            '::AppTitle1' => 'Objects',
+            '::AppDesc1' => 'Display objects.',
+            '::DisplayObject' => 'Display object',
+            '::DisplayObjectUpdated' => 'Display updated object',
+            '::ObjectDescription' => 'Display description',
+            '::ObjectRelations' => 'Relations',
+            '::ObjectDelete' => 'Delete',
+            '::ObjectDownload' => 'Download',
+            '::LinksSrc' => 'Source of raw links.',
+            '::DisplayAsObject' => 'See as object',
+            '::DisplayNewObject' => 'See the new object',
+            '::Actions' => 'Actions on object',
+            '::ActionsDesc' => 'Simple actions on this object.',
+            '::ExtendedActions' => 'Extended actions on object',
+            '::ExtendedActionsDesc' => 'Advanced actions on this object.',
+            '::Description' => 'Object description',
+            '::DescriptionDesc' => "Object's properties.",
+            '::Nothing' => 'Nothing to display.',
+            '::Action:Download' => 'Download object.',
+            '::Desc:Attrib' => 'Attribut',
+            '::Desc:Value' => 'Value',
+            '::Desc:Signer' => 'Sender',
+            '::Protection' => 'Protection',
+            '::ShareProtection' => 'Share protection',
+            '::ShareObjectProtection' => 'Share protection of this objet',
+            '::ShareProtectionToGroup' => 'Share protection',
+            '::ShareProtectionToEntity' => 'Share protection',
             '::WarningSharedProtection' => 'When protection of an object is shared, its cancellation is uncertain!',
             '::RemoveShareProtect' => 'Cancel share protection',
             '::ProtectObject' => 'Protect the object',
@@ -1475,42 +1475,42 @@ class ModuleObjects extends \Nebule\Library\Modules
             '::WarningProtectObject' => 'The protection of an existing object is uncertain!',
             '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
             '::ErrorCantProtectObject' => "This object can't be protected.",
-            '::module:objects:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::AttribNotDisplayable' => 'Attribut not displayable!',
             '::GroupeFerme' => 'Closed group',
             '::GroupeOuvert' => 'Opened group',
         ],
         'es-co' => [
-            '::module:objects:ModuleName' => 'Módulo de objetos',
-            '::module:objects:MenuName' => 'Objetos',
-            '::module:objects:ModuleDescription' => 'Módulo de gestión de objetos.',
-            '::module:objects:ModuleHelp' => 'This module permit to see and manage objects.',
-            '::module:objects:AppTitle1' => 'Objetos',
-            '::module:objects:AppDesc1' => 'Display objects.',
-            '::module:objects:DisplayObject' => 'Display object',
-            '::module:objects:DisplayObjectUpdated' => 'Display updated object',
-            '::module:objects:ObjectDescription' => 'Display description',
-            '::module:objects:ObjectRelations' => 'Relations',
-            '::module:objects:ObjectDelete' => 'Delete',
-            '::module:objects:ObjectDownload' => 'Download',
-            '::module:objects:LinksSrc' => 'Fuente de enlaces primas.',
-            '::module:objects:DisplayAsObject' => 'See as object',
-            '::module:objects:DisplayNewObject' => 'See the new object',
-            '::module:objects:Actions' => 'Actions on object',
-            '::module:objects:ActionsDesc' => 'Simple actions on this object.',
-            '::module:objects:ExtendedActions' => 'Extended actions on object',
-            '::module:objects:ExtendedActionsDesc' => 'Advanced actions on this object.',
-            '::module:objects:Description' => 'Object description',
-            '::module:objects:DescriptionDesc' => "Object's properties.",
-            '::module:objects:Nothing' => 'Nothing to display.',
-            '::module:objects:Action:Download' => 'Download object.',
-            '::module:objects:Desc:Attrib' => 'Attribut',
-            '::module:objects:Desc:Value' => 'Value',
-            '::module:objects:Desc:Signer' => 'Sender',
-            '::module:objects:Protection' => 'Protection',
-            '::module:objects:ShareProtection' => 'Share protection',
-            '::module:objects:ShareObjectProtection' => 'Share protection of this objet',
-            '::module:objects:ShareProtectionToGroup' => 'Share protection',
-            '::module:objects:ShareProtectionToEntity' => 'Share protection',
+            '::ModuleName' => 'Módulo de objetos',
+            '::MenuName' => 'Objetos',
+            '::ModuleDescription' => 'Módulo de gestión de objetos.',
+            '::ModuleHelp' => 'This module permit to see and manage objects.',
+            '::AppTitle1' => 'Objetos',
+            '::AppDesc1' => 'Display objects.',
+            '::DisplayObject' => 'Display object',
+            '::DisplayObjectUpdated' => 'Display updated object',
+            '::ObjectDescription' => 'Display description',
+            '::ObjectRelations' => 'Relations',
+            '::ObjectDelete' => 'Delete',
+            '::ObjectDownload' => 'Download',
+            '::LinksSrc' => 'Fuente de enlaces primas.',
+            '::DisplayAsObject' => 'See as object',
+            '::DisplayNewObject' => 'See the new object',
+            '::Actions' => 'Actions on object',
+            '::ActionsDesc' => 'Simple actions on this object.',
+            '::ExtendedActions' => 'Extended actions on object',
+            '::ExtendedActionsDesc' => 'Advanced actions on this object.',
+            '::Description' => 'Object description',
+            '::DescriptionDesc' => "Object's properties.",
+            '::Nothing' => 'Nothing to display.',
+            '::Action:Download' => 'Download object.',
+            '::Desc:Attrib' => 'Attribut',
+            '::Desc:Value' => 'Value',
+            '::Desc:Signer' => 'Sender',
+            '::Protection' => 'Protection',
+            '::ShareProtection' => 'Share protection',
+            '::ShareObjectProtection' => 'Share protection of this objet',
+            '::ShareProtectionToGroup' => 'Share protection',
+            '::ShareProtectionToEntity' => 'Share protection',
             '::WarningSharedProtection' => 'Donde se comparte la protección de un objeto, su cancelación esta incierto!',
             '::RemoveShareProtect' => 'Cancel share protection',
             '::ProtectObject' => 'Protect the object',
@@ -1522,7 +1522,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             '::WarningProtectObject' => 'The protection of an existing object is uncertain!',
             '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
             '::ErrorCantProtectObject' => "This object can't be protected.",
-            '::module:objects:AttribNotDisplayable' => 'Attribut not displayable!',
+            '::AttribNotDisplayable' => 'Attribut not displayable!',
             '::GroupeFerme' => 'Closed group',
             '::GroupeOuvert' => 'Opened group',
         ],

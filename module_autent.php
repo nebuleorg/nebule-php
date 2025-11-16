@@ -115,13 +115,13 @@ class ModuleAutent extends \Nebule\Library\Modules {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
-            $title = ':::logout';
+            $title = '::logout';
             $type = DisplayItemIconMessage::TYPE_WARN;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[1];
-            $title = ':::login';
+            $title = '::login';
             $type = DisplayItemIconMessage::TYPE_PLAY;
         }
 
@@ -131,10 +131,10 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         if (!$this->_unlocked)
-            $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
-        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+            $this->_displayAddButton($instanceList, $title, $type, $urlLink, '::connexion');
+        $this->_displayAddButton($instanceList, '::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         if ($this->_unlocked)
-            $this->_displayAddButton($instanceList, $title, $type, $urlLink, ':::connexion');
+            $this->_displayAddButton($instanceList, $title, $type, $urlLink, '::connexion');
         $instanceList->setOnePerLine();
         $instanceList->display();
     }
@@ -144,7 +144,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      */
     private function _displayLogin(): void {
         $this->_metrologyInstance->addLog('Display login ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
-        $this->_displaySimpleTitle(':::login');
+        $this->_displaySimpleTitle('::login');
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -167,10 +167,10 @@ class ModuleAutent extends \Nebule\Library\Modules {
             else
                 $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
         } else
-            $this->_displayAddButton($instanceList, '::::err_NoPrivKey', DisplayItemIconMessage::TYPE_ERROR, '');
+            $this->_displayAddButton($instanceList, '::err_NoPrivKey', DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList,
-            ':::return',
+            '::return',
             DisplayItemIconMessage::TYPE_BACK,
             '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->setOnePerLine();
@@ -182,7 +182,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
      */
     private function _displayLogout(): void {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
-        $this->_displaySimpleTitle(':::logout');
+        $this->_displaySimpleTitle('::logout');
 
         $instanceList = new DisplayList($this->_applicationInstance);
         $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
@@ -190,7 +190,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         $this->_displayAddButton($instanceList,
-            ':::selfLogout',
+            '::selfLogout',
             DisplayItemIconMessage::TYPE_PLAY,
             '/?' . References::COMMAND_AUTH_ENTITY_LOGOUT
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -199,12 +199,12 @@ class ModuleAutent extends \Nebule\Library\Modules {
             . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         $this->_displayAddButton($instanceList,
-            ':::flush',
+            '::flush',
             DisplayItemIconMessage::TYPE_ERROR,
             '/?f',
-            ':::flush');
+            '::flush');
         $this->_addBlankLine($instanceList);
-        $this->_displayAddButton($instanceList, ':::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $this->_displayAddButton($instanceList, '::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->setOnePerLine();
         $instanceList->display();
     }
@@ -285,12 +285,33 @@ class ModuleAutent extends \Nebule\Library\Modules {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::privateKey' => 'Clé privée',
+            '::connexion' => 'Connexion',
+            '::login' => 'Se connecter',
+            '::logout' => 'Déconnecter',
+            '::selfLogout' => 'Se déconnecter',
+            '::flush' => 'Tout déconnecter',
+            '::return' => "Revenir à l'application",
+            '::err_NoPrivKey' => 'Pas de clé privée !',
         ],
         'en-en' => [
             '::privateKey' => 'Private key',
+            '::connexion' => 'Connection',
+            '::login' => 'Connecting',
+            '::logout' => 'Disconnecting',
+            '::selfLogout' => 'Disconnecting myself',
+            '::flush' => 'Disconnecting all',
+            '::return' => 'Return to application',
+            '::err_NoPrivKey' => 'No private key!',
         ],
         'es-co' => [
             '::privateKey' => 'Private key',
+            '::connexion' => 'Connection',
+            '::login' => 'Connecting',
+            '::logout' => 'Disconnecting',
+            '::selfLogout' => 'Disconnecting myself',
+            '::flush' => 'Disconnecting all',
+            '::return' => 'Return to application',
+            '::err_NoPrivKey' => 'No private key!',
         ],
     ];
 }

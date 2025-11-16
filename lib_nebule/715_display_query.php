@@ -7,8 +7,13 @@ namespace Nebule\Library;
  *     ---
  * Display or prepare an input to the interface with the user.
  *     ---
- * Example:
- *  $instance = new DisplayInput($this->_applicationInstance);
+ * Example for string:
+ * $instance = new DisplayInput($this->_applicationInstance);
+ * $instance->setType(DisplayQuery::QUERY_STRING);
+ * $instance->setInputName('action');
+ * $instance->setLink('?nid=0' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand());
+ * $instance->setIconText('My action');
+ * $instance->display();
  *  TODO
  *     ---
  * Usage:
@@ -52,9 +57,24 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     }
     public function setInputValue(string $value): void { $this->_inputValue = trim($value); }
     public function setInputName(string $name): void { $this->_inputName = trim($name); }
-    public function setWithFormOpen(bool $withFormOpen): void { $this->_withFormOpen = $withFormOpen; }
-    public function setWithFormClose(bool $withFormClose): void { $this->_withFormClose = $withFormClose; }
-    public function setWithSubmit(bool $withSubmit): void { $this->_withSubmit = $withSubmit; }
+
+    /** Open the formular. Useful for a query in multiple parts on a list of DispayQuery() where the first one opens the formular and the last one closes it.
+     * @param bool $withFormOpen
+     * @return void
+     */
+    public function setWithFormOpen(bool $withFormOpen = true): void { $this->_withFormOpen = $withFormOpen; }
+
+    /** Close the formular. Useful for a query in multiple parts on a list of DispayQuery() where the first one opens the formular and the last one closes it.
+     * @param bool $withFormClose
+     * @return void
+     */
+    public function setWithFormClose(bool $withFormClose = true): void { $this->_withFormClose = $withFormClose; }
+
+    /** Show the submitting button on a formular for a query in multiple parts on a list of DispayQuery(). Maybe the best place is on the last one.
+     * @param bool $withSubmit
+     * @return void
+     */
+    public function setWithSubmit(bool $withSubmit = true): void { $this->_withSubmit = $withSubmit; }
     public function setSelectList(array $selectList): void { $this->_selectList = $selectList; }
 
     protected function _initialisation(): void {
@@ -102,7 +122,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         if ($this->_type == 'Query' || $this->_type == 'Password')
             $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n";
         elseif ($this->_type == 'Boolean')
-            $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" />' . "\n"; // FIXME
+            $result .= '     <input type="' . $this->_inputType . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '" value="' . $this->_inputValue . '" /> ' . $this->_message . "\n"; // FIXME
         elseif ($this->_type == 'Select') {
             $result .= '     <select name="' . $this->_inputName . '" id="' . $this->_inputName . '">' . "\n";
             foreach ($this->_selectList as $key => $value)
@@ -124,31 +144,31 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         switch (strtolower($type)) {
             case self::QUERY_PASSWORD:
                 $this->_type = 'Password';
-                $this->_iconText = '::::Password';
+                $this->_iconText = $this->_translateInstance->getTranslate('::::Password');
                 $icon = self::ICON_PASSWORD_RID;
                 $this->_inputType = 'password';
                 break;
             case self::QUERY_BOOLEAN:
                 $this->_type = 'Boolean';
-                $this->_iconText = '::::Switch';
+                $this->_iconText = $this->_translateInstance->getTranslate('::::Switch');
                 $icon = self::ICON_QUERY_RID;
-                $this->_inputType = 'bool'; // FIXME
+                $this->_inputType = 'checkbox';
                 break;
             case self::QUERY_SELECT:
                 $this->_type = 'Select';
-                $this->_iconText = '::::Switch';
+                $this->_iconText = $this->_translateInstance->getTranslate('::::Switch');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'select';
                 break;
             case self::QUERY_STRING:
                 $this->_type = 'Query';
-                $this->_iconText = '::::Query';
+                $this->_iconText = $this->_translateInstance->getTranslate('::::Query');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
                 break;
             case self::QUERY_TEXT:
                 $this->_type = 'Text';
-                $this->_iconText = '::::Query';
+                $this->_iconText = $this->_translateInstance->getTranslate('::::Query');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
                 break;

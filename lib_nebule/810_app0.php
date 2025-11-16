@@ -316,8 +316,8 @@ class App0 extends Functions
             .apps {
                 float: left;
                 margin: 4px;
-                height: 64px;
-                width: 64px;
+                height: 96px;
+                width: 96px;
                 padding: 8px;
                 color: #ffffff;
                 overflow: hidden;

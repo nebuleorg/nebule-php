@@ -1400,46 +1400,46 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayChecks()
     {
         if ($this->_rescueInstance->getModeRescue()) {
-            $this->displayMessageWarning_DEPRECATED('::::RESCUE');
+            $this->displayMessageWarning('::::RESCUE');
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR') {
-            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR') {
-            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR') {
-            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR') {
-            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR') {
-            $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
+            $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
         }
         if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN') {
-            $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
+            $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
         }
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
-            $this->displayMessageWarning_DEPRECATED('::::warn_ServNotPermitWrite');
+            $this->displayMessageWarning('::::warn_ServNotPermitWrite');
         }
         if ($this->_nebuleInstance->getCacheInstance()->getFlushCache()) {
-            $this->displayMessageWarning_DEPRECATED('::::warn_flushSessionAndCache');
+            $this->displayMessageWarning('::::warn_flushSessionAndCache');
         }
     }
 
@@ -2295,7 +2295,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation_DEPRECATED('::NoGroupMember');
+                $this->displayMessageInformation('::NoGroupMember');
             }
             unset($listGroupsMember, $listOkGroups);
 
@@ -2349,7 +2349,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation_DEPRECATED('::NoEntityGroup');
+                $this->displayMessageInformation('::NoEntityGroup');
             }
             unset($groupListID, $listOkItems);
         }
@@ -2415,7 +2415,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
 
             if ($lifetimeExpired) {
-                $this->displayMessageError_DEPRECATED('::Expired');
+                $this->displayMessageError('::Expired');
             }
             ?>
 
@@ -2447,7 +2447,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 // Si pas d'erreur.
                 if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectError()) {
                     // Affiche un message OK.
-                    $this->displayMessageOk_DEPRECATED('::UploadedNewFileOK');
+                    $this->displayMessageOk('::UploadedNewFileOK');
 
                     $id = $this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectID();
                     $instance = $this->_cacheInstance->newNode($id);
@@ -2478,7 +2478,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     </div>
                     <?php
                 } else {
-                    $this->displayMessageError_DEPRECATED('::UploadedNewFileError');
+                    $this->displayMessageError('::UploadedNewFileError');
                     ?>
 
                     <div class="text">
@@ -2571,9 +2571,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 </form>
             </div>
             <?php
-            $this->displayMessageInformation_DEPRECATED($this->_applicationInstance->getTranslateInstance()->getTranslate('::UploadMaxFileSize') . ' : ' . $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP') . 'o');
+            $this->displayMessageInformation($this->_applicationInstance->getTranslateInstance()->getTranslate('::UploadMaxFileSize') . ' : ' . $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP') . 'o');
         } else {
-            $this->displayMessageError_DEPRECATED('::::err_NotPermit');
+            $this->displayMessageError('::::err_NotPermit');
         }
     }
 
@@ -2809,7 +2809,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Si l'objet est présent.
         if ($object->checkPresent()) {
             if ($protect) {
-                $this->displayMessageOk_DEPRECATED('::ProtectedObject');
+                $this->displayMessageOk('::ProtectedObject');
                 ?>
 
                 <div class="text">
@@ -2839,13 +2839,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $this->displayDivTextTitleH2_DEPRECATED($icon, '::ShareProtectObject', '', '');
 
                 // Avertissement.
-                $this->displayMessageWarning_DEPRECATED('::WarningSharedProtection');
+                $this->displayMessageWarning('::WarningSharedProtection');
 
                 // Affiche en ligne les entités pour qui cela est partagé.
                 $this->registerInlineContentID('objectprotectionshareto');
             }
         } else {
-            $this->displayMessageError_DEPRECATED('::::display:content:errorNotAvailable');
+            $this->displayMessageError('::::display:content:errorNotAvailable');
         }
     }
 
@@ -2930,11 +2930,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 unset($list);
             } else {
                 // Pas d'entité.
-                $this->displayMessageInformation_DEPRECATED('::NoEntity');
+                $this->displayMessageInformation('::NoEntity');
             }
             unset($shareTo);
         } else {
-            $this->displayMessageInformation_DEPRECATED('::UnprotectedObject');
+            $this->displayMessageInformation('::UnprotectedObject');
 
             // Si l'entité est déverrouillée.
             if ($this->_unlocked
@@ -2953,7 +2953,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $this->displayActionList($actionList);
                 unset($actionList);
 
-                $this->displayMessageWarning_DEPRECATED('::WarningProtectObject');
+                $this->displayMessageWarning('::WarningProtectObject');
             }
         }
     }
@@ -3082,7 +3082,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (sizeof($list) != 0)
                 $this->displayItemList($list);
             else
-                $this->displayMessageInformation_DEPRECATED('::NoEntity');
+                $this->displayMessageInformation('::NoEntity');
             unset($list);
         }
     }

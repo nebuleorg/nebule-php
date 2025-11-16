@@ -154,7 +154,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getServerEntityEID()) echo 'other';
         } ?>">
             <div class="header-left">
-                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LINK; ?>">
                     <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
                 </a>
             </div>
@@ -190,7 +190,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         // Vérifie les tests de sécurité. Pas d'affichage des options si problème.
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
             if ($this->_rescueInstance->getModeRescue())
-                $this->displayMessageWarning_DEPRECATED('::::RESCUE');
+                $this->displayMessageWarning('::::RESCUE');
             $this->_displayActions();
 
             switch ($this->getCurrentDisplayView()) {
@@ -1614,31 +1614,31 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         <div id="check">
             <?php
             if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoHash() == 'ERROR')
-                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
+                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoHashMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoSym() == 'ERROR')
-                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
+                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoSymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
             if ($this->_applicationInstance->getCheckSecurityCryptoAsym() == 'ERROR')
-                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
+                $this->displayMessageError($this->_applicationInstance->getCheckSecurityCryptoAsymMessage());
             if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'ERROR')
-                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+                $this->displayMessageError($this->_applicationInstance->getCheckSecurityBootstrapMessage());
             if ($this->_applicationInstance->getCheckSecurityBootstrap() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityBootstrapMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityBootstrapMessage());
             if ($this->_applicationInstance->getCheckSecuritySign() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecuritySignMessage());
             if ($this->_applicationInstance->getCheckSecuritySign() == 'ERROR')
-                $this->displayMessageError_DEPRECATED($this->_applicationInstance->getCheckSecuritySignMessage());
+                $this->displayMessageError($this->_applicationInstance->getCheckSecuritySignMessage());
             if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN')
-                $this->displayMessageWarning_DEPRECATED($this->_applicationInstance->getCheckSecurityURLMessage());
+                $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
             if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite'))
-                $this->displayMessageWarning_DEPRECATED('::::warn_ServNotPermitWrite');
+                $this->displayMessageWarning('::::warn_ServNotPermitWrite');
             if ($this->_nebuleInstance->getCacheInstance()->getFlushCache())
-                $this->displayMessageWarning_DEPRECATED('::::warn_flushSessionAndCache');
+                $this->displayMessageWarning('::::warn_flushSessionAndCache');
             ?>
 
         </div>

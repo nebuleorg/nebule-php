@@ -5,6 +5,7 @@ use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
 use Nebule\Library\Actions;
 use Nebule\Library\ActionsApplications;
+use Nebule\Library\ActionsLinks;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
@@ -27,16 +28,16 @@ use Nebule\Library\References;
 class ModuleManage extends \Nebule\Library\Modules
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::sylabe:module:manage:ModuleName';
-    const MODULE_MENU_NAME = '::sylabe:module:manage:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
-    const MODULE_DESCRIPTION = '::sylabe:module:manage:ModuleDescription';
-    const MODULE_VERSION = '020251018';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
+    const MODULE_VERSION = '020251116';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
-    const MODULE_HELP = '::sylabe:module:manage:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array('list', 'disp', 'add', 'cod');
@@ -44,9 +45,9 @@ class ModuleManage extends \Nebule\Library\Modules
         '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256',    // 0 Module
         '37be5ba2a53e9835dbb0ff67a0ece1cc349c311660e4779680ee2daa4ac45636.sha2.256',    // 1 Ajout d'un module
     );
-    const MODULE_APP_TITLE_LIST = array('::sylabe:module:manage:AppTitle1');
+    const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256');
-    const MODULE_APP_DESC_LIST = array('::sylabe:module:manage:AppDesc1');
+    const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
     // Constantes spécifiques à la création de liens.
@@ -92,9 +93,9 @@ class ModuleManage extends \Nebule\Library\Modules
             case 'selfMenu':
                 // Affichage des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[0]['name'] = '::sylabe:module:manage:AppTitle1';
+                    $hookArray[0]['name'] = '::AppTitle1';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[0]['desc'] = '::sylabe:module:manage:AppDesc1';
+                    $hookArray[0]['desc'] = '::AppDesc1';
                     $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -112,7 +113,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         || $this->_unlocked
                     )
                 ) {
-                    $hookArray[0]['name'] = '::sylabe:module:manage:syncModules';
+                    $hookArray[0]['name'] = '::syncModules';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -132,7 +133,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_unlocked
                 ) {
-                    $hookArray[1]['name'] = '::sylabe:module:manage:create:createModule';
+                    $hookArray[1]['name'] = '::create:createModule';
                     $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -153,7 +154,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         || $this->_unlocked
                     )
                 ) {
-                    $hookArray[2]['name'] = '::sylabe:module:manage:syncModule';
+                    $hookArray[2]['name'] = '::syncModule';
                     $hookArray[2]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
@@ -172,7 +173,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
                     && $this->_unlocked
                 ) {
-                    $hookArray[3]['name'] = '::sylabe:module:manage:changeCode';
+                    $hookArray[3]['name'] = '::changeCode';
                     $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LU;
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -431,7 +432,7 @@ class ModuleManage extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:manage:Modules');
+        $instance->setTitle('::Modules');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -468,7 +469,7 @@ class ModuleManage extends \Nebule\Library\Modules
         $listOkModules = array();
 
 
-        $this->_applicationInstance->getDisplayInstance()->displayMessageInformation_DEPRECATED('Size ' . sizeof($listModules));
+        $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('Size ' . sizeof($listModules));
 
         ?>
 
@@ -537,10 +538,10 @@ class ModuleManage extends \Nebule\Library\Modules
                                 && $listModulesValid[$className]
                             ) {
                                 $param['flagState'] = 'o';
-                                $param['flagStateDesc'] = '::sylabe:module:manage:ModuleValid';
+                                $param['flagStateDesc'] = '::ModuleValid';
                             } else {
                                 $param['flagState'] = 'e';
-                                $param['flagStateDesc'] = '::sylabe:module:manage:ModuleInvalid';
+                                $param['flagStateDesc'] = '::ModuleInvalid';
                             }
                         }
 
@@ -549,10 +550,10 @@ class ModuleManage extends \Nebule\Library\Modules
                             && $listModulesEnabled[$className]
                         ) {
                             $param['flagActivated'] = true;
-                            $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleEnabled';
+                            $param['flagActivatedDesc'] = '::ModuleEnabled';
                         } else {
                             $param['flagActivated'] = false;
-                            $param['flagActivatedDesc'] = '::sylabe:module:manage:ModuleDisabled';
+                            $param['flagActivatedDesc'] = '::ModuleDisabled';
                         }
                         $instance = $this->_cacheInstance->newNode('0'); // FIXME
                         echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
@@ -560,7 +561,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         // Marque comme vu.
                         $listOkModules[$name] = true;
                     } else
-                        $this->_applicationInstance->getDisplayInstance()->displayMessageWarning_DEPRECATED('Try ' . $moduleName);
+                        $this->_applicationInstance->getDisplayInstance()->displayMessageWarning('Try ' . $moduleName);
                 }
                 ?>
 
@@ -579,7 +580,7 @@ class ModuleManage extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:manage:Module');
+        $instance->setTitle('::Module');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -613,7 +614,7 @@ class ModuleManage extends \Nebule\Library\Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:noModule', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::display:noModule', $param);
 
             return;
         }
@@ -756,7 +757,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         'displayRatio' => 'long',
                         'informationType' => 'warn',
                     );
-                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:integratedModule', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::display:integratedModule', $param);
                 }
 
                 // ID
@@ -789,7 +790,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         'displayRatio' => 'short',
                         'informationType' => 'ok',
                     );
-                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleValid', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::ModuleValid', $param);
                 } else {
                     $param = array(
                         'enableDisplayIcon' => true,
@@ -797,7 +798,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         'displayRatio' => 'short',
                         'informationType' => 'error',
                     );
-                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleInvalid', $param);
+                    echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::ModuleInvalid', $param);
                 }
 
                 // Activation du module.
@@ -823,20 +824,20 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=x_' . $rid . '_' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '_' . $rid
+                            . '&' . ActionsLinks::SIGN1 . '=x>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IOK;
-                        $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnabled');
-                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisable');
+                        $dispHook['name'] = $this->_translateInstance->getTranslate('::ModuleEnabled');
+                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::ModuleDisable');
                     } else {
                         $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1 . '=f_' . $rid . '_' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '_' . $rid
+                            . '&' . ActionsLinks::SIGN1 . '=f>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IERR;
-                        $dispHook['name'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleDisabled');
-                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::sylabe:module:manage:ModuleEnable');
+                        $dispHook['name'] = $this->_translateInstance->getTranslate('::ModuleDisabled');
+                        $dispHook['desc'] = $this->_translateInstance->getTranslate('::ModuleEnable');
                     }
                     echo $this->_displayInstance->getDisplayHookAction($dispHook, true, 'MediumShort');
                 } else {
@@ -849,10 +850,10 @@ class ModuleManage extends \Nebule\Library\Modules
                         && $listModulesEnabled[$className]
                     ) {
                         $param['informationType'] = 'ok';
-                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleEnabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::ModuleEnabled', $param);
                     } else {
                         $param['informationType'] = 'error';
-                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::sylabe:module:manage:ModuleDisabled', $param);
+                        echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::ModuleDisabled', $param);
                     }
                 }
 
@@ -915,7 +916,7 @@ class ModuleManage extends \Nebule\Library\Modules
 							.'&'.Action::DEFAULT_COMMAND_ACTION_SYNCHRONIZE_APPLICATION.'='.$rid
 							.$this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
 					'icon' => Display::DEFAULT_ICON_SYNOBJ,
-					'name' => $this->_translateInstance->getTranslate('::sylabe:module:manage:syncModule'),
+					'name' => $this->_translateInstance->getTranslate('::syncModule'),
 					'desc' => '',
 			);
 			echo $this->_display->getDisplayHookAction($dispHook, true, 'MediumShort');
@@ -938,7 +939,7 @@ class ModuleManage extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:manage:create:createModule');
+        $instance->setTitle('::create:createModule');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -956,16 +957,16 @@ class ModuleManage extends \Nebule\Library\Modules
                           action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                               . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:nom'); ?><br/>
+                        <?php echo $this->_translateInstance->getTranslate('::create:nom'); ?><br/>
                         <input type="text"
                                name="<?php echo self::DEFAULT_COMMAND_ACTION_NOM; ?>"
-                               size="80" value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:nom'); ?>"/><br/>
+                               size="80" value="<?php echo $this->_translateInstance->getTranslate('::create:nom'); ?>"/><br/>
                         RID<br/>
                         <input type="text"
                                name="<?php echo self::DEFAULT_COMMAND_ACTION_RID; ?>"
                                size="80" value=""/><br/>
                         <input type="submit"
-                               value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:SubmitCreate') ?>"/>
+                               value="<?php echo $this->_translateInstance->getTranslate('::create:SubmitCreate') ?>"/>
                     </form>
                 </div>
             </div>
@@ -991,7 +992,7 @@ class ModuleManage extends \Nebule\Library\Modules
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::sylabe:module:manage:create:addModuleCode');
+        $instance->setTitle('::create:addModuleCode');
         $instance->setIcon($icon);
         $instance->display();
 
@@ -1056,7 +1057,7 @@ class ModuleManage extends \Nebule\Library\Modules
                                    name="<?php echo self::DEFAULT_COMMAND_ACTION_ID; ?>"
                                    size="80" value=""/><br/>
                             <input type="submit"
-                                   value="<?php echo $this->_translateInstance->getTranslate('::sylabe:module:manage:create:SubmitChange') ?>"/>
+                                   value="<?php echo $this->_translateInstance->getTranslate('::create:SubmitChange') ?>"/>
                         </form>
                     </div>
                 </div>
@@ -1068,7 +1069,7 @@ class ModuleManage extends \Nebule\Library\Modules
                     'informationType' => 'error',
                     'displayRatio' => 'short',
                 );
-                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::sylabe:module:manage:display:noModule', $param);
+                echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::display:noModule', $param);
             }
         } else {
             $param = array(
@@ -1084,88 +1085,88 @@ class ModuleManage extends \Nebule\Library\Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::sylabe:module:manage:ModuleName' => 'Module des modules',
-            '::sylabe:module:manage:MenuName' => 'Modules',
-            '::sylabe:module:manage:ModuleDescription' => 'Module de gestion des modules.',
-            '::sylabe:module:manage:ModuleHelp' => 'Ce module permet de voir les modules détectés par une application.',
-            '::sylabe:module:manage:AppTitle1' => 'Modules',
-            '::sylabe:module:manage:AppDesc1' => 'Module de gestion des modules.',
-            '::sylabe:module:manage:Module' => 'Le module',
-            '::sylabe:module:manage:Modules' => 'Les modules',
-            '::sylabe:module:manage:display:noModule' => 'Pas de module.',
-            '::sylabe:module:manage:display:integratedModule' => "Ce module est intégré à l'application, il ne peut pas être modifié.",
-            '::sylabe:module:manage:ModuleValid' => 'Module valide.',
-            '::sylabe:module:manage:ModuleInvalid' => 'Module invalide !',
-            '::sylabe:module:manage:ModuleEnabled' => 'Module activé.',
-            '::sylabe:module:manage:ModuleDisabled' => 'Module désactivé !',
-            '::sylabe:module:manage:ModuleEnable' => 'Activer ?.',
-            '::sylabe:module:manage:ModuleDisable' => 'Désactivé ?',
-            '::sylabe:module:manage:display:noCode' => 'Pas de code !',
-            '::sylabe:module:manage:syncModule' => 'Synchroniser le module',
-            '::sylabe:module:manage:syncModules' => 'Synchroniser les modules',
-            '::sylabe:module:manage:changeCode' => 'Mettre à jour le code',
-            '::sylabe:module:manage:create:createModule' => 'Créer un module',
-            '::sylabe:module:manage:create:addModuleCode' => 'Ajouter un code',
-            '::sylabe:module:manage:create:nom' => 'Nom',
-            '::sylabe:module:manage:create:Desc' => 'Description',
-            '::sylabe:module:manage:create:SubmitCreate' => 'Créer',
-            '::sylabe:module:manage:create:SubmitChange' => 'Changer',
+            '::ModuleName' => 'Module des modules',
+            '::MenuName' => 'Modules',
+            '::ModuleDescription' => 'Module de gestion des modules.',
+            '::ModuleHelp' => 'Ce module permet de voir les modules détectés par une application.',
+            '::AppTitle1' => 'Modules',
+            '::AppDesc1' => 'Module de gestion des modules.',
+            '::Module' => 'Le module',
+            '::Modules' => 'Les modules',
+            '::display:noModule' => 'Pas de module.',
+            '::display:integratedModule' => "Ce module est intégré à l'application, il ne peut pas être modifié.",
+            '::ModuleValid' => 'Module valide.',
+            '::ModuleInvalid' => 'Module invalide !',
+            '::ModuleEnabled' => 'Module activé.',
+            '::ModuleDisabled' => 'Module désactivé !',
+            '::ModuleEnable' => 'Activer ?.',
+            '::ModuleDisable' => 'Désactivé ?',
+            '::display:noCode' => 'Pas de code !',
+            '::syncModule' => 'Synchroniser le module',
+            '::syncModules' => 'Synchroniser les modules',
+            '::changeCode' => 'Mettre à jour le code',
+            '::create:createModule' => 'Créer un module',
+            '::create:addModuleCode' => 'Ajouter un code',
+            '::create:nom' => 'Nom',
+            '::create:Desc' => 'Description',
+            '::create:SubmitCreate' => 'Créer',
+            '::create:SubmitChange' => 'Changer',
         ],
         'en-en' => [
-            '::sylabe:module:manage:ModuleName' => 'Module of modules',
-            '::sylabe:module:manage:MenuName' => 'Modules',
-            '::sylabe:module:manage:ModuleDescription' => 'Module to manage modules.',
-            '::sylabe:module:manage:ModuleHelp' => 'This module permit to see modules detected by an application.',
-            '::sylabe:module:manage:AppTitle1' => 'Modules',
-            '::sylabe:module:manage:AppDesc1' => 'Manage modules.',
-            '::sylabe:module:manage:Module' => 'The module',
-            '::sylabe:module:manage:Modules' => 'The modules',
-            '::sylabe:module:manage:display:noModule' => 'No module.',
-            '::sylabe:module:manage:display:integratedModule' => "This module is integrated to the application, it can't be modified.",
-            '::sylabe:module:manage:ModuleValid' => 'Valid module',
-            '::sylabe:module:manage:ModuleInvalid' => 'Invalid module!',
-            '::sylabe:module:manage:ModuleEnabled' => 'Module enabled.',
-            '::sylabe:module:manage:ModuleDisabled' => 'Module disabled!',
-            '::sylabe:module:manage:ModuleEnable' => 'Enable?',
-            '::sylabe:module:manage:ModuleDisable' => 'Disable?',
-            '::sylabe:module:manage:display:noCode' => 'No code!',
-            '::sylabe:module:manage:syncModule' => 'Synchronize the module',
-            '::sylabe:module:manage:syncModules' => 'Synchronize the modules',
-            '::sylabe:module:manage:changeCode' => 'Update the code',
-            '::sylabe:module:manage:create:createModule' => 'Create a module',
-            '::sylabe:module:manage:create:addModuleCode' => 'Add a code',
-            '::sylabe:module:manage:create:nom' => 'Name',
-            '::sylabe:module:manage:create:Desc' => 'Description',
-            '::sylabe:module:manage:create:SubmitCreate' => 'Create',
-            '::sylabe:module:manage:create:SubmitChange' => 'Change',
+            '::ModuleName' => 'Module of modules',
+            '::MenuName' => 'Modules',
+            '::ModuleDescription' => 'Module to manage modules.',
+            '::ModuleHelp' => 'This module permit to see modules detected by an application.',
+            '::AppTitle1' => 'Modules',
+            '::AppDesc1' => 'Manage modules.',
+            '::Module' => 'The module',
+            '::Modules' => 'The modules',
+            '::display:noModule' => 'No module.',
+            '::display:integratedModule' => "This module is integrated to the application, it can't be modified.",
+            '::ModuleValid' => 'Valid module',
+            '::ModuleInvalid' => 'Invalid module!',
+            '::ModuleEnabled' => 'Module enabled.',
+            '::ModuleDisabled' => 'Module disabled!',
+            '::ModuleEnable' => 'Enable?',
+            '::ModuleDisable' => 'Disable?',
+            '::display:noCode' => 'No code!',
+            '::syncModule' => 'Synchronize the module',
+            '::syncModules' => 'Synchronize the modules',
+            '::changeCode' => 'Update the code',
+            '::create:createModule' => 'Create a module',
+            '::create:addModuleCode' => 'Add a code',
+            '::create:nom' => 'Name',
+            '::create:Desc' => 'Description',
+            '::create:SubmitCreate' => 'Create',
+            '::create:SubmitChange' => 'Change',
         ],
         'es-co' => [
-            '::sylabe:module:manage:ModuleName' => 'Module of modules',
-            '::sylabe:module:manage:MenuName' => 'Modules',
-            '::sylabe:module:manage:ModuleDescription' => 'Module to manage modules.',
-            '::sylabe:module:manage:ModuleHelp' => 'This module permit to see modules detected by an application.',
-            '::sylabe:module:manage:AppTitle1' => 'Modules',
-            '::sylabe:module:manage:AppDesc1' => 'Manage modules.',
-            '::sylabe:module:manage:Module' => 'El modulo',
-            '::sylabe:module:manage:Modules' => 'Los modulos',
-            '::sylabe:module:manage:display:noModule' => 'No modulo.',
-            '::sylabe:module:manage:display:integratedModule' => "This module is integrated to the application, it can't be modified.",
-            '::sylabe:module:manage:ModuleValid' => 'Valid module',
-            '::sylabe:module:manage:ModuleInvalid' => 'Invalid module!',
-            '::sylabe:module:manage:ModuleEnabled' => 'Module enabled.',
-            '::sylabe:module:manage:ModuleDisabled' => 'Module disabled!',
-            '::sylabe:module:manage:ModuleEnable' => 'Enable?',
-            '::sylabe:module:manage:ModuleDisable' => 'Disable?',
-            '::sylabe:module:manage:display:noCode' => 'No code!',
-            '::sylabe:module:manage:syncModule' => 'Synchronize the module',
-            '::sylabe:module:manage:syncModules' => 'Synchronize the modules',
-            '::sylabe:module:manage:changeCode' => 'Update the code',
-            '::sylabe:module:manage:create:createModule' => 'Create a module',
-            '::sylabe:module:manage:create:addModuleCode' => 'Add a code',
-            '::sylabe:module:manage:create:nom' => 'Name',
-            '::sylabe:module:manage:create:Desc' => 'Description',
-            '::sylabe:module:manage:create:SubmitCreate' => 'Create',
-            '::sylabe:module:manage:create:SubmitChange' => 'Change',
+            '::ModuleName' => 'Module of modules',
+            '::MenuName' => 'Modules',
+            '::ModuleDescription' => 'Module to manage modules.',
+            '::ModuleHelp' => 'This module permit to see modules detected by an application.',
+            '::AppTitle1' => 'Modules',
+            '::AppDesc1' => 'Manage modules.',
+            '::Module' => 'El modulo',
+            '::Modules' => 'Los modulos',
+            '::display:noModule' => 'No modulo.',
+            '::display:integratedModule' => "This module is integrated to the application, it can't be modified.",
+            '::ModuleValid' => 'Valid module',
+            '::ModuleInvalid' => 'Invalid module!',
+            '::ModuleEnabled' => 'Module enabled.',
+            '::ModuleDisabled' => 'Module disabled!',
+            '::ModuleEnable' => 'Enable?',
+            '::ModuleDisable' => 'Disable?',
+            '::display:noCode' => 'No code!',
+            '::syncModule' => 'Synchronize the module',
+            '::syncModules' => 'Synchronize the modules',
+            '::changeCode' => 'Update the code',
+            '::create:createModule' => 'Create a module',
+            '::create:addModuleCode' => 'Add a code',
+            '::create:nom' => 'Name',
+            '::create:Desc' => 'Description',
+            '::create:SubmitCreate' => 'Create',
+            '::create:SubmitChange' => 'Change',
         ],
     ];
 }

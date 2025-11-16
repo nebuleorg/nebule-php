@@ -119,7 +119,7 @@ class Display extends Displays
         <body>
         <div class="layout-header">
             <div class="header-left">
-                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LOGO_LINK; ?>">
+                <a href="/?<?php echo Displays::DEFAULT_BOOTSTRAP_LINK; ?>">
                     <img title="App switch" alt="[]" src="<?php echo Displays::DEFAULT_APPLICATION_LOGO; ?>"/>
                 </a>
             </div>
