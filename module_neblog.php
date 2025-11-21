@@ -594,9 +594,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        //$this->_socialInstance->setList(array($this->_entitiesInstance->getGhostEntityEID()), 'onlist'); // FIXME
-        //$list = $this->_getLinksBlogNID('onlist');
-        $list = $this->_getLinksBlogNID('all');
+        $this->_socialInstance->setList(array($this->_entitiesInstance->getGhostEntityEID()), 'onlist'); // FIXME
+        $list = $this->_getLinksBlogNID('onlist');
+        //$list = $this->_getLinksBlogNID('all');
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
             $blogNID = $parsedLink['bl/rl/nid2'];

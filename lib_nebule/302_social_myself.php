@@ -17,18 +17,15 @@ class SocialMySelf extends Social implements SocialInterface
 {
     const TYPE='myself';
 
-    protected function _initialisation(): void
-    {
-        // Nothing to do.
-    }
+    protected function _initialisation(): void {}
 
     /**
      * @param array &$links
      * @param string $socialClass
      * @return void
      */
-    public function arraySocialFilter(array &$links, string $socialClass = ''): void
-    {
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
                 unset($links[$i]);
@@ -41,8 +38,7 @@ class SocialMySelf extends Social implements SocialInterface
      * @param string         $socialClass
      * @return float
      */
-    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
-    {
+    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=myself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fef0e929');
 
         foreach ($link->getSignersEID() as $signer) {
@@ -74,8 +70,8 @@ class SocialMySelf extends Social implements SocialInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function setList(array $listID, string $socialClass = ''): bool
-    {
+    public function setList(array $listID, string $socialClass = ''): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($listID as $nid) {
             if (is_string($nid)
                 && Node::checkNID($nid)
@@ -96,8 +92,7 @@ class SocialMySelf extends Social implements SocialInterface
      * @param string $socialClass
      * @return boolean
      */
-    public function unsetList(string $socialClass = ''): bool
-    {
+    public function unsetList(string $socialClass = ''): bool {
         $this->_list = array();
         return true;
     }
