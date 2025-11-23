@@ -80,8 +80,8 @@ class Node extends Functions implements nodeInterface
     /**
      * Create an instance of a node or derivative.
      * Always give a valid nebule instance.
-     * For new node, set $id as '0' or 'new'. This is mandatory to add data (or other) after with dedicated function.
-     * If $id is invalid, the instance return getID = '0', even if new but not initialised.
+     * For a new node, set $id as '0' or 'new'. This is mandatory to add data (or other) after with dedicated function.
+     * If $id is invalid, the instance returns getID = '0', even if new but not initialized.
      *
      * @param nebule $nebuleInstance
      * @param string $nid
@@ -116,7 +116,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * Local initialisation for a node or derivatives.
+     * Local initialization for a node or derivatives.
      * Called by function initialisation() but only one time, the first time.
      *
      * @return void
@@ -127,7 +127,7 @@ class Node extends Functions implements nodeInterface
     }
 
     /**
-     * On new node (ID='0'), add content and recalculate ID.
+     * On a new node (ID='0'), add content and recalculate ID.
      * Remember to write with write().
      *
      * @param string $data

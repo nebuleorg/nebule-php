@@ -294,20 +294,20 @@ class Entity extends Node implements nodeInterface
         if ($this->_privateKeyOID != '0')
             return;
 
-        $list = array();
+        $links = array();
         $filter = array(
                 'bl/rl/req' => 'f',
                 'bl/rl/nid1' => $this->_id,
                 'bl/rl/nid3' => $oidPKey,
         );
-        $this->getLinks($list, $filter, 'self', false);
-        if (sizeof($list) == 0) {
+        $this->getLinks($links, $filter, 'self', false);
+        if (sizeof($links) == 0) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('no link to private key for eid=' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'be65246d');
             return;
         }
 
         $refDate = '0';
-        foreach ($list as $link) {
+        foreach ($links as $link) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('try link ' . $link->getParsed()['bl/rl'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bc321274');
             if (!$link->getValid())
                 continue;

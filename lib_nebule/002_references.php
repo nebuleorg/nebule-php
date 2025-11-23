@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class References //extends Functions
+class References
 {
     public const CONFIGURATION_FILE = 'c'; // Into folder /
     public const LOCAL_ENTITY_FILE = 'e'; // Into folder /

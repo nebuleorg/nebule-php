@@ -737,12 +737,14 @@ class Traduction extends Traductions
             PHP.</p>
         <p>Il constitue le point d'entrée par défaut de toute connexion des utilisateurs ou robots vers l'instance,
             c'est-à-dire une localisation précise sur un serveur Web sur lequel on se connecte avec une URL dédiée.</p>
-        <p>Il permet de gérer un certain nombre d'applications intégrées ou externes. Ces applications sont des
-            interfaces entre les informations stockées dans les objets et reliées par des liens. En interagissant avec
-            le <i>bootstrap</i>, il est possible d'accéder aux applications. Via une option, il est possible de modifier
-            l'application par défaut afin de personnaliser une instance.</p>
+        <p>Il est en charge lors du premier appel de retrouver et télécharger tout le nécessaire à la nouvelle instance
+            depuis Internet.</p>
         <p>Il est aussi en charge de trouver les dernières versions de la bibliothèque
             <?php echo \Nebule\Library\nebule::NEBULE_NAME; ?> de manière sécurisée.</p>
+        <p>Il gère en interne une page de description de l'instance.</p>
+        <p>Il va ensuite normalement charger la bibliothèque qui permet de gérer un certain nombre d'applications
+            intégrées ou externes. Ces applications sont des interfaces entre les informations stockées dans les objets
+            et reliées par des liens.</p>
 
         <?php Displays::docDispTitle(4, 'oabi', 'Installation'); ?>
         <p>Le <i>bootstrap</i> nécessite pour fonctionner un serveur Web avec PHP pré-installé. Il peut être hébergé sur
