@@ -2000,6 +2000,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     protected function _displayInternalMenuApplications(): void
     {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
         $list = array();
         $j = 0;
@@ -2009,6 +2010,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($this->_currentDisplayView != 'menu') {
             $list[$j]['icon'] = '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272';
             $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu');
+$this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$j]['title'], Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
             $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
             $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc');
@@ -2033,12 +2035,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $icon = $module::MODULE_LOGO;
                         if ($icon == '')
                             $icon = self::DEFAULT_ICON_IMLOG;
-                        $desc = $module->getTranslate($appHook['desc']);
+                        $desc = $this->_translateInstance->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
 
                         $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $module->getTranslate($appHook['name']);
+                        $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
@@ -2066,12 +2068,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             $icon = $module::MODULE_LOGO;
                         if ($icon == '')
                             $icon = self::DEFAULT_ICON_IMLOG;
-                        $desc = $module->getTranslate($appHook['desc']);
+                        $desc = $this->_translateInstance->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
 
                         $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $module->getTranslate($appHook['name']);
+                        $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $list[$j]['htlink'] = $appHook['link'];
                         $list[$j]['desc'] = $desc;
                         $list[$j]['ref'] = $moduleName;
@@ -2098,12 +2100,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $module::MODULE_LOGO;
                             if ($icon == '')
                                 $icon = self::DEFAULT_ICON_IMLOG;
-                            $desc = $module->getTranslate($appHook['desc']);
+                            $desc = $this->_translateInstance->getTranslate($appHook['desc']);
                             if ($desc == '')
                                 $desc = '&nbsp;';
 
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $module->getTranslate($appHook['name']);
+                            $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
