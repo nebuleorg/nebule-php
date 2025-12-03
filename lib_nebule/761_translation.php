@@ -278,7 +278,7 @@ abstract class Translates extends Functions
                 $this->_metrologyInstance->addLog('DEBUGGING module name=' . $module::MODULE_NAME . ' type=' . $module::MODULE_TYPE, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 if ($module::MODULE_TYPE == 'traduction') {
                     $this->_languageList[$module::MODULE_LANGUAGE] = $module::MODULE_LANGUAGE;
-                    $this->_applicationModulesInstance->getModulesTranslateListName()[$module::MODULE_LANGUAGE];
+                    $this->_applicationModulesInstance->getModulesTranslateListName()[$module::MODULE_LANGUAGE]; // FIXME
                     $this->_metrologyInstance->addLog('find new language : ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
                 }
             }
