@@ -10,19 +10,18 @@ namespace Nebule\Library;
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *          To open a node as object, create instance with :
+ *          To open a node as an object, create instance with:
  *          - nebule instance;
  *          - valid node ID.
- *          To create a new object with specific content, create a instance with :
+ *          To create a new object with specific content, create an instance with:
  *          - nebule instance;
  *          - node ID = '0'
  *          - call setContent() with data of the object.
  *          Don't forget to call write() if you want a persistant object on database /o.
- *          On error, return instance with ID = '0'.
+ *          On error, return an instance with ID = '0'.
  * ------------------------------------------------------------------------------------------
  */
-class Node extends Functions implements nodeInterface
-{
+class Node extends Functions implements nodeInterface {
     const CRYPTO_SESSION_KEY_SIZE = 117; // FIXME utilisé par setProtected(), à refaire pour le cas général.
     const DEFAULT_ICON_RID = '6e6562756c652f6f626a657400000000000000000000000000000000000000000000.none.272';
 
@@ -665,6 +664,11 @@ class Node extends Functions implements nodeInterface
      */
     public function setProperty(string $type, string $property, bool $protect = false, bool $obfuscated = false, array $signer = array()): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitCreateObject', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask protected but not authorized.
+        // TODO exit if ask obfuscated but not authorized.
+
         if ($type == ''
                 || $property == ''
             //|| $protect // TODO
@@ -1101,9 +1105,9 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
                 'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER),
-                'bl/rl/nid2' => $this->_id,
-                'bl/rl/nid4' => '',
+                'bl/rl/nid1' => $this->_id,
+                'bl/rl/nid2' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER),
+                'bl/rl/nid3' => '',
         );
         $this->getLinks($list, $filter, ''); // FIXME
 
@@ -1133,13 +1137,16 @@ class Node extends Functions implements nodeInterface
      */
     public function setMarkDanger(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->_cacheMarkDanger)
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER);
-        $this->writeLink('l>' . $this->_id . '>' . $target);
+        $nid2 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER);
+        $this->writeLink('l>' . $this->_id . '>' . $nid2);
 
         $this->_cacheMarkDanger = true;
         return true;
@@ -1160,9 +1167,9 @@ class Node extends Functions implements nodeInterface
         $list = array();
         $filter = array(
                 'bl/rl/req' => 'f',
-                'bl/rl/nid1' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING),
-                'bl/rl/nid2' => $this->_id,
-                'bl/rl/nid4' => '',
+                'bl/rl/nid1' => $this->_id,
+                'bl/rl/nid2' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING),
+                'bl/rl/nid3' => '',
         );
         $this->getLinks($list, $filter, ''); // FIXME
 
@@ -1192,13 +1199,16 @@ class Node extends Functions implements nodeInterface
      */
     public function setMarkWarning(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         // Si déjà marqué, donne le résultat tout de suite.
         if ($this->_cacheMarkWarning)
             return true;
 
         // Création lien de groupe.
-        $target = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING);
-        $this->writeLink('l>' . $this->_id . '>' . $target);
+        $nid2 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING);
+        $this->writeLink('l>' . $this->_id . '>' . $nid2);
 
         $this->_cacheMarkWarning = true;
         return true;
@@ -1467,6 +1477,10 @@ class Node extends Functions implements nodeInterface
      */
     public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled!
 
         /*if ($this->_id == '0')
@@ -1685,6 +1699,10 @@ class Node extends Functions implements nodeInterface
      */
     public function setUnprotected(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled!
 
         /*// Vérifie que l'objet est protégé et que l'on peut y acceder.
@@ -1711,6 +1729,10 @@ class Node extends Functions implements nodeInterface
      * @return boolean
      */
     public function setProtectedTo(string $entity): bool {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled!
 
         // TODO
@@ -1725,6 +1747,10 @@ class Node extends Functions implements nodeInterface
      */
     public function shareProtectionTo($entity): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled!
 
         /*if (is_string($entity)) {
@@ -1830,6 +1856,10 @@ class Node extends Functions implements nodeInterface
      */
     public function cancelShareProtectionTo($entity, string $socialClass = ''): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled!
 
         /*if (is_string($entity))
@@ -2060,6 +2090,10 @@ class Node extends Functions implements nodeInterface
      * @return boolean
      */
     public function setMarkEmotion(string $emotion, bool $obfuscate = false, string $context = ''): bool {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink','unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled
 
         /*$this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -2120,6 +2154,10 @@ class Node extends Functions implements nodeInterface
      * @return boolean
      */
     public function unsetMarkEmotion(string $emotion, bool $obfuscate = false, string $entity = ''): bool {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink','unlocked')))
+            return false;
+        // TODO exit if ask obfuscated but not authorized.
+
         return false; // FIXME disabled
 
         /*$this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -2960,7 +2998,7 @@ class Node extends Functions implements nodeInterface
             return true;
 
         // Vérifie si autorisé.
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWriteObject', 'permitSynchronizeObject')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitSynchronizeObject')))
             return false;
 
         // Liste les liens à la recherche de la propriété de localisation.
@@ -3020,7 +3058,7 @@ class Node extends Functions implements nodeInterface
         $this->syncLinkAntiLoop = true;
 
         // Vérifie si autorisé.
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWriteLink', 'permitSynchronizeLink')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitSynchronizeLink')))
             return false;
 
         // Liste les liens à la recherche de la propriété de localisation.
@@ -3071,6 +3109,9 @@ class Node extends Functions implements nodeInterface
      */
     public function deleteObject(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         $deleteObject = true;
 
         // Détecte si l'objet est protégé.
@@ -3146,6 +3187,9 @@ class Node extends Functions implements nodeInterface
      */
     public function deleteObjectLinks(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         $this->writeLink('d>' . $this->_id);
 
         $links = array();
@@ -3164,7 +3208,7 @@ class Node extends Functions implements nodeInterface
 
         $this->_metrologyInstance->addAction('delobj', $this->_id, $r);
 
-        $this->_ioInstance->linksDelect($this->_id);
+        $this->_ioInstance->unsetLink($this->_id);
 
         return $r;
     }
@@ -3177,6 +3221,9 @@ class Node extends Functions implements nodeInterface
      */
     public function deleteForceObject(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         $this->writeLink('d>' . $this->_id);
 
         $r = $this->_ioInstance->unsetObject($this->_id);
@@ -3192,6 +3239,9 @@ class Node extends Functions implements nodeInterface
      */
     public function deleteForceObjectLinks() {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
+            return false;
+
         // Supprime l'objet.
         $this->_ioInstance->unsetObject($this->_id);
 
@@ -3223,7 +3273,7 @@ class Node extends Functions implements nodeInterface
      */
     public function write(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject'))) {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitCreateObject'))) {
             $this->_metrologyInstance->addLog('Write object no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'f5869664');
             return false;
         } // TODO
