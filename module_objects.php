@@ -73,7 +73,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
-                $protected = $instance->getMarkProtected();
+                $protected = $instance->getMarkProtectedGroup();
                 if ($protected) {
                     $id = $instance->getUnprotectedID();
                     $instance = $this->_cacheInstance->newNode($id);
@@ -297,7 +297,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
-                if ($instance->getMarkProtected()) {
+                if ($instance->getMarkProtectedGroup()) {
                     $id = $instance->getUnprotectedID();
                     $instance = $this->_cacheInstance->newNode($id);
                 }
@@ -369,7 +369,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
+                    && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtectedGroup()
                 ) {
                     $hookArray[0]['name'] = '::ShareProtection';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
@@ -487,7 +487,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             'enableDisplayID' => false,
             'enableDisplayFlags' => true,
             'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtectedGroup(),
             'enableDisplayFlagObfuscate' => false,
             'enableDisplayFlagUnlocked' => false,
             'enableDisplayFlagState' => true,
@@ -516,7 +516,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             'enableDisplayID' => false,
             'enableDisplayFlags' => true,
             'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtectedGroup(),
             'enableDisplayFlagObfuscate' => false,
             'enableDisplayFlagUnlocked' => false,
             'enableDisplayFlagState' => true,
@@ -807,7 +807,7 @@ class ModuleObjects extends \Nebule\Library\Modules
             'enableDisplayID' => false,
             'enableDisplayFlags' => true,
             'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
+            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtectedGroup(),
             'enableDisplayFlagObfuscate' => false,
             'enableDisplayFlagUnlocked' => false,
             'enableDisplayFlagState' => true,
@@ -848,7 +848,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
-        if ($object->getMarkProtected()) {
+        if ($object->getMarkProtectedGroup()) {
             // Affiche l'objet seul dans une liste.
             $list = array();
             $list[0]['object'] = $object;
@@ -995,7 +995,7 @@ class ModuleObjects extends \Nebule\Library\Modules
 
         // Si l'objet est présent.
         if ($object->checkPresent()
-            && $object->getMarkProtected()
+            && $object->getMarkProtectedGroup()
         ) {
             // Prépare l'affichage.
             $list = array();
@@ -1147,7 +1147,7 @@ class ModuleObjects extends \Nebule\Library\Modules
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
-        if ($object->getMarkProtected()) {
+        if ($object->getMarkProtectedGroup()) {
             // Affiche l'objet seul danns une liste.
             $list = array();
             $list[0]['object'] = $object;
@@ -1205,7 +1205,7 @@ class ModuleObjects extends \Nebule\Library\Modules
         $id = $this->_applicationInstance->getCurrentObjectID();
 
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
-        if ($object->getMarkProtected()
+        if ($object->getMarkProtectedGroup()
             && $this->_unlocked
             && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -1261,7 +1261,7 @@ class ModuleObjects extends \Nebule\Library\Modules
                     && $typeGroup
                 ) {
                     // Si c'est un groupe fermé.
-                    $typeClosed = $instance->getMarkClosed();
+                    $typeClosed = $instance->getMarkClosedGroup();
 
                     $list[$i]['object'] = $instance;
                     $list[$i]['param'] = array(

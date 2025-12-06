@@ -38,7 +38,6 @@ class Group extends Node implements nodeInterface {
             '_markProtectedChecked',
             '_usedUpdate',
             '_isGroup',
-            '_isConversation',
             '_isMarkClosed',
             '_isMarkProtected',
             '_isMarkObfuscated',
@@ -61,100 +60,20 @@ class Group extends Node implements nodeInterface {
             $this->getIsGroup();
     }
 
-    /**
-     * Create a new group.
-     *
-     * @return void
-     */
     protected function _createNewGroup(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked'))) {
             $this->_metrologyInstance->addLog('create group error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
             return;
         }
-
         $nid = $this->_cacheInstance->newVirtualNode();
         $this->_id = $nid->getID();
         $this->_metrologyInstance->addLog('create group ' . $this->_id, Metrology::LOG_LEVEL_AUDIT);
-
         $this->_data = null;
         $this->_haveData = false;
-        $this->_isGroup = true;
-
-        $nid2 = $this->_nebuleInstance->getFromDataNID($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_HASH);
-        $link = 'l>' . $this->_id . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
-        $newBlockLink->signWrite();
-
-        $nid2 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE);
-        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $link = 'l>' . $this->_id . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
-        $newBlockLink->signWrite();
+        $this->setGroup();
     }
 
-    /**
-     * Extrait l'ID de l'entité.
-     * Filtre l'entité et s'assure que c'est une entité.
-     *
-     * @param string|Entity|Node $entity
-     * @return string
-     */
-    protected function _checkExtractEntityID(\Nebule\Library\Node|string|Entity $entity): string {
-        $entityInstance = null;
-        if (is_string($entity)) {
-            if (!Node::checkNID($entity, false, false))
-                $id = '';
-            else {
-                $id = $entity;
-                $entityInstance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
-            }
-        } elseif (is_a($entity, 'Node')) {
-            $id = $entity->getID();
-            if ($id == '0')
-                $id = '';
-            else
-                $entityInstance = $entity;
-        } else
-            $id = '';
-
-        if ($id == '0')
-            $id = '';
-
-        if ($id != '' && !$entityInstance->getIsEntity('all'))
-            $id = '';
-        unset($entityInstance);
-
-        return $id;
-    }
-
-    /**
-     * Filtre l'objet.
-     *
-     * @param string|Node $object
-     * @return string
-     */
-    private function _checkExtractObjectID($object): string {
-        if (is_string($object)) {
-            if (!Node::checkNID($object))
-                $id = '';
-            else
-                $id = $object;
-        } elseif (is_a($object, 'Node')) {
-            $id = $object->getID();
-            if ($id == '0')
-                $id = '';
-        } else
-            $id = '';
-
-        if ($id == '0')
-            $id = '';
-
-        return $id;
-    }
 
 
     // Disable some functions.
@@ -168,32 +87,36 @@ class Group extends Node implements nodeInterface {
     public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
 
+
+    /**
+     * Ecrit l'objet comme étant un groupe.
+     *
+     * @param bool $obfuscated
+     * @return boolean
+     */
+    public function setGroup(bool $obfuscated = false): bool {
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+            return false;
+        $this->_isGroup = true;
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                $obfuscated);
+    }
+
     /**
      * Ecrit l'objet comme n'étant plus un groupe.
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      *
+     * @param bool $obfuscated
      * @return boolean
      */
-    public function unsetGroup(): bool {
+    public function unsetGroup(bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
-        // Si déjà marqué, donne le résultat tout de suite.
-        if (!$this->_isGroup)
-            return true;
-
-        // Création lien de suppression de groupe.
-        $req = 'x';
-        $nid1 = $this->_id;
-        $nid2 = $this->getReferenceObject();
-        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
-        $newBlockLink->signWrite();
-
         $this->_isGroup = false;
-        return true;
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                $obfuscated);
     }
 
 
@@ -207,7 +130,7 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkClosed(?Entity $entity = null): bool {
+    public function getMarkClosedGroup(?Entity $entity = null): bool {
         $this->_metrologyInstance->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
 
         if ($entity != null)
@@ -215,7 +138,6 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Liste tous mes liens de définition de groupe fermé.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -225,10 +147,8 @@ class Group extends Node implements nodeInterface {
                 $this->getReferenceObjectClosed()
         );
 
-        // Fait un tri par pertinence sociale. Forcé à myself.
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
-        // Mémorise le résultat.
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkClosed = true;
@@ -236,7 +156,6 @@ class Group extends Node implements nodeInterface {
                 $this->_isMarkClosed = false;
         }
 
-        // Retourne le résultat.
         if (sizeof($links) != 0)
             return true;
         return false;
@@ -249,12 +168,11 @@ class Group extends Node implements nodeInterface {
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkClosedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
         if ($entity != null)
@@ -262,20 +180,12 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->getMarkClosed())
+        if ($this->getMarkClosedGroup())
             return true;
 
-        // Création du lien de groupe.
-        $req = 'l';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectClosed();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
-        $this->_isMarkClosed = true;
-        return $newBlockLink->signWrite();
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(),
+                $obfuscated);
     }
 
     /**
@@ -283,9 +193,10 @@ class Group extends Node implements nodeInterface {
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      *
      * @param Entity|null $entity
+     * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkClosed(?Entity $entity = null): bool {
+    public function unsetMarkClosedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
@@ -294,20 +205,10 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if (!$this->getMarkClosed())
+        if (!$this->getMarkClosedGroup())
             return true;
 
-        // Création lien de suppression de groupe.
-        $req = 'x';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectClosed();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
-        $this->_isMarkClosed = false;
-        return $newBlockLink->signWrite();
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(), $obfuscated);
     }
 
 
@@ -321,13 +222,12 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkProtected(?Entity $entity = null): bool {
+    public function getMarkProtectedGroup(?Entity $entity = null): bool {
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Liste tous mes liens de définition de groupe protégé.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -337,21 +237,15 @@ class Group extends Node implements nodeInterface {
                 $this->getReferenceObjectProtected()
         );
 
-        // Fait un tri par pertinance sociale. Forcé à myself.
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
-        // Mémorise le r&sultat.
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkProtected = true;
             else
                 $this->_isMarkProtected = false;
         }
-
-        // Retourne le résultat.
-        if (sizeof($links) != 0)
-            return true;
-        return false;
+        return $this->_isMarkProtected;
     }
 
     /**
@@ -361,12 +255,11 @@ class Group extends Node implements nodeInterface {
      * @param boolean            $obfuscated
      * @return boolean
      */
-    public function setMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkProtectedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated($entity))
+        if ($this->getMarkObfuscatedGroup($entity))
             $obfuscated = true;
 
         if ($entity != null)
@@ -374,20 +267,13 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->getMarkProtected())
+        if ($this->getMarkProtectedGroup())
             return true;
-
-        // Création du lien de groupe.
-        $req = 'l';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectProtected();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
         $this->_isMarkProtected = true;
-        return $newBlockLink->signWrite();
+
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(),
+                $obfuscated);
     }
 
     /**
@@ -395,9 +281,10 @@ class Group extends Node implements nodeInterface {
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      *
      * @param Entity|null $entity
+     * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkProtected(?Entity $entity = null): bool {
+    public function unsetMarkProtectedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
@@ -406,20 +293,11 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if (!$this->getMarkProtected())
+        if (!$this->getMarkProtectedGroup())
             return true;
-
-        // Création lien de suppression de groupe.
-        $req = 'x';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectProtected();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
         $this->_isMarkProtected = false;
-        return $newBlockLink->signWrite();
+
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(), $obfuscated);
     }
 
 
@@ -433,7 +311,7 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkObfuscated(?Entity $entity = null): bool {
+    public function getMarkObfuscatedGroup(?Entity $entity = null): bool {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             return false;
 
@@ -442,7 +320,6 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Liste tous mes liens de définition de groupe dissimulé.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -452,21 +329,15 @@ class Group extends Node implements nodeInterface {
                 $this->getReferenceObjectObfuscated()
         );
 
-        // Fait un tri par pertinance sociale. Forcé à myself.
         $this->_socialInstance->arraySocialFilter($links, 'myself');
 
-        // Mémorise le r&sultat.
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkObfuscated = true;
             else
                 $this->_isMarkObfuscated = false;
         }
-
-        // Retourne le résultat.
-        if (sizeof($links) != 0)
-            return true;
-        return false;
+        return $this->_isMarkObfuscated;
     }
 
     /**
@@ -476,12 +347,11 @@ class Group extends Node implements nodeInterface {
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setMarkObfuscated(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkObfuscatedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
         if ($entity != null)
@@ -489,20 +359,13 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if ($this->getMarkObfuscated())
+        if ($this->getMarkObfuscatedGroup())
             return true;
-
-        // Création du lien de groupe.
-        $req = 'l';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectObfuscated();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
         $this->_isMarkObfuscated = true;
-        return $newBlockLink->signWrite();
+
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(),
+                $obfuscated);
     }
 
     /**
@@ -510,9 +373,10 @@ class Group extends Node implements nodeInterface {
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      *
      * @param Entity|null $entity
+     * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkObfuscated(?Entity $entity = null): bool {
+    public function unsetMarkObfuscatedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
@@ -521,39 +385,27 @@ class Group extends Node implements nodeInterface {
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
 
-        // Si déjà marqué, donne le résultat tout de suite.
-        if (!$this->getMarkObfuscated())
+        if (!$this->getMarkObfuscatedGroup())
             return true;
-
-        // Création lien de suppression de groupe.
-        $req = 'x';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->getReferenceObjectObfuscated();
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link);
         $this->_isMarkObfuscated = false;
-        return $newBlockLink->signWrite();
+
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(), $obfuscated);
     }
+
 
 
     /**
      * Retourne si l'objet est membre du groupe.
      *
-     * @param string|Node $object
-     * @param string      $socialClass
+     * @param Node $object
+     * @param string $socialClass
      * @return boolean
      */
-    public function getIsMember(\Nebule\Library\Node|string $object, string $socialClass = ''): bool {
-        // Extrait l'ID de l'objet.
-        $id = $this->_checkExtractObjectID($object);
-
-        // Vérifie que c'est bien un objet.
-        if ($id == '')
+    public function getIsMember(Node $object, string $socialClass = ''): bool {
+        $id = $object->getID();
+        if ($id == 0)
             return false;
 
-        // Liste tous les liens de définition des membres du groupe.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -563,7 +415,6 @@ class Group extends Node implements nodeInterface {
                 $this->_id
         );
 
-        // Fait un tri par pertinence sociale.
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
 
         if (sizeof($links) != 0)
@@ -574,35 +425,24 @@ class Group extends Node implements nodeInterface {
     /**
      * Ajoute un objet comme membre dans le groupe.
      *
-     * @param string|Node $object
-     * @param boolean     $obfuscated
+     * @param Node $object
+     * @param boolean $obfuscated
      * @return boolean
      */
-    public function setMember(\Nebule\Library\Node|string $object, bool $obfuscated = false): bool {
+    public function setAsMember(Node $object, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
-        // Extrait l'ID de l'objet.
-        $id = $this->_checkExtractObjectID($object);
-
-        // Vérifie que c'est bien un objet.
-        if ($id == '')
+        $id = $object->getID();
+        if ($id == 0)
             return false;
 
-        // Création lien de groupe.
-        $req = 'l';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->_id;
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
-        $newBlockLink->sign();
-        return $newBlockLink->write();
+        return $this->writeLink(
+                'l>' . $this->_id . '>' . $id . '>' . $this->_id,
+                $obfuscated);
     }
 
     /**
@@ -610,35 +450,26 @@ class Group extends Node implements nodeInterface {
      * TODo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      * TODO retirer la dissimulation déjà faite dans le code.
      *
-     * @param string|Node $object
-     * @param boolean     $obfuscated
+     * @param Node $object
+     * @param boolean $obfuscated
      * @return boolean
      */
-    public function unsetMember(\Nebule\Library\Node|string $object = '', bool $obfuscated = false): bool {
+    public function unsetAsMember(Node $object, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
-        // Extrait l'ID de l'objet.
-        $id = $this->_checkExtractObjectID($object);
-
-        // Vérifie que c'est bien un objet.
-        if ($id == '')
+        $id = $object->getID();
+        if ($id == 0)
             return false;
 
-        // Création lien de groupe.
-        $req = 'x';
-        $nid1 = $this->_id;
-        $nid2 = $id;
-        $nid3 = $this->_id;
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
-        return $newBlockLink->signWrite();
+        return $this->writeLink(
+                'x>' . $this->_id . '>' . $id . '>' . $this->_id,
+                $obfuscated);
     }
+
 
 
     /**
@@ -661,7 +492,6 @@ class Group extends Node implements nodeInterface {
                 $this->_id
         );
 
-        // Fait un tri par pertinence sociale.
         $this->_socialInstance->setList($socialListID);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         $this->_socialInstance->unsetList();
@@ -677,10 +507,8 @@ class Group extends Node implements nodeInterface {
      * @return array:string
      */
     public function getListMembersID(string $socialClass = '', array $socialListID = array()): array {
-        // Extrait les liens des groupes.
         $links = $this->getListMembersLinks($socialClass, $socialListID);
 
-        // Extraction des ID cibles.
         $list = array();
         foreach ($links as $link)
             $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
@@ -700,23 +528,20 @@ class Group extends Node implements nodeInterface {
     }
 
 
+
     /**
      * Retourne si l'entité est à l'écoute du groupe.
      *
-     * @param string|Node $entity
-     * @param string      $socialClass
-     * @param array       $socialListID
+     * @param Node   $entity
+     * @param string $socialClass
+     * @param array  $socialListID
      * @return boolean
      */
-    public function getIsFollower(\Nebule\Library\Node|string $entity, string $socialClass = '', array $socialListID = array()): bool {
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '')
+    public function getIsFollower(Node $entity, string $socialClass = '', array $socialListID = array()): bool {
+        $id = $entity->getID();
+        if ($id == 0)
             return false;
 
-        // Liste tous les liens de définition des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -726,7 +551,6 @@ class Group extends Node implements nodeInterface {
                 $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
         );
 
-        // Fait un tri par pertinance sociale.
         $this->_socialInstance->setList($socialListID);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         $this->_socialInstance->unsetList();
@@ -739,34 +563,24 @@ class Group extends Node implements nodeInterface {
     /**
      * Ajoute une entité comme à l'écoute du groupe.
      *
-     * @param string  $entity
+     * @param Entity  $entity
      * @param boolean $obfuscated
      * @return boolean
      */
-    public function setFollower(string $entity, bool $obfuscated = false): bool {
+    public function setAsFollower(Entity $entity, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '')
+        $id = $entity->getID();
+        if ($id == 0)
             return false;
 
-        // Création lien de groupe.
-        $req = 'l';
-        $nid1 = $id;
-        $nid2 = $this->_id;
-        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3; // FIXME
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
-        return $newBlockLink->signWrite();
+        return $this->writeLink(
+                'l>' . $id . '>' . $this->_id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI),
+                $obfuscated);
     }
 
     /**
@@ -774,35 +588,26 @@ class Group extends Node implements nodeInterface {
      * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
      * TODO retirer la dissimulation déjà faite dans le code.
      *
-     * @param string  $entity
+     * @param Entity  $entity
      * @param boolean $obfuscated
      * @return boolean
      */
-    public function unsetFollower(string $entity = '', bool $obfuscated = false): bool {
+    public function unsetAsFollower(Entity $entity, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
 
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated(''))
+        if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '')
+        $id = $entity->getID();
+        if ($id == 0)
             return false;
 
-        // Création lien de groupe.
-        $req = 'x';
-        $nid1 = $id;
-        $nid2 = $this->_id;
-        $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
-        $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
-        $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($link, $obfuscated);
-        return $newBlockLink->signWrite();
+        return $this->writeLink(
+                'x>' . $id . '>' . $this->_id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI),
+                $obfuscated);
     }
+
 
 
     /**
@@ -828,11 +633,9 @@ class Group extends Node implements nodeInterface {
      * @return array:Link
      */
     protected function _getListFollowersLinks(string $reference, string $socialClass = '', array $socialListID = array()): array {
-        // Vérifie la référence.
         if (!Node::checkNID($reference))
             $reference = $this->_nebuleInstance->getFromDataNID($reference);
 
-        // Liste tous les liens des entités à l'écoutes du groupe.
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -842,7 +645,6 @@ class Group extends Node implements nodeInterface {
                 $reference
         );
 
-        // Fait un tri par pertinance sociale.
         $this->_socialInstance->setList($socialListID);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         $this->_socialInstance->unsetList();
@@ -858,10 +660,8 @@ class Group extends Node implements nodeInterface {
      * @return array:string
      */
     public function getListFollowersID(string $socialClass = '', array $socialListID = array()): array {
-        // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
 
-        // Extraction des ID cibles.
         $list = array();
         foreach ($links as $link)
             $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
@@ -881,7 +681,7 @@ class Group extends Node implements nodeInterface {
     }
 
     /**
-     * Retourne la liste des entités qui ont ajouté l'entité cité comme suiveuse du groupe.
+     * Retourne la liste des entités qui ont ajouté l'entité citée comme suiveuse du groupe.
      *
      * @param string $entity
      * @param string $socialClass
@@ -889,10 +689,8 @@ class Group extends Node implements nodeInterface {
      * @return array:string
      */
     public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', array $socialListID = array()): array {
-        // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
 
-        // Extraction des ID cibles.
         $list = array();
         foreach ($links as $link) {
             if ($link->getParsed()['bl/rl/nid1'] == $entity)
@@ -903,72 +701,33 @@ class Group extends Node implements nodeInterface {
     }
 
 
-    /**
-     * ID de référence de l'objet.
-     *
-     * @var string
-     */
+
     private string $_referenceObject = '';
 
-    /**
-     * Calcule et retourne la référence de l'objet.
-     *
-     * @return string
-     */
     public function getReferenceObject(): string {
         if ($this->_referenceObject == '')
             $this->_referenceObject = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE);
         return $this->_referenceObject;
     }
 
-    /**
-     * ID de référence de l'objet de fermeture.
-     *
-     * @var string
-     */
     private string $_referenceObjectClosed = '';
 
-    /**
-     * Calcule et retourne la référence de l'objet de fermeture.
-     *
-     * @return string
-     */
     public function getReferenceObjectClosed(): string {
         if ($this->_referenceObjectClosed == '')
             $this->_referenceObjectClosed = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
         return $this->_referenceObjectClosed;
     }
 
-    /**
-     * ID de référence de l'objet de protection des membres.
-     *
-     * @var string
-     */
     private string $_referenceObjectProtected = '';
 
-    /**
-     * Calcule et retourne la référence de l'objet de protection des membres.
-     *
-     * @return string
-     */
     public function getReferenceObjectProtected(): string {
         if ($this->_referenceObjectProtected == '')
             $this->_referenceObjectProtected = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE);
         return $this->_referenceObjectProtected;
     }
 
-    /**
-     * ID de référence de l'objet de dissimulation des membres.
-     *
-     * @var string
-     */
     private string $_referenceObjectObfuscated = '';
 
-    /**
-     * Calcule et retourne la référence de l'objet de dissimulation des membres.
-     *
-     * @return string
-     */
     public function getReferenceObjectObfuscated(): string {
         if ($this->_referenceObjectObfuscated == '')
             $this->_referenceObjectObfuscated = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE);

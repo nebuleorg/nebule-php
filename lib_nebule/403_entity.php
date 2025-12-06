@@ -12,20 +12,19 @@ use Nebule\Library\Node;
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *           To open a node as entity, create instance with :
+ *           To open a node as an entity, create an instance with:
  *           - nebule instance;
  *           - valid node ID.
- *           To create a new entity, create a instance with :
+ *           To create a new entity, create an instance with:
  *           - nebule instance;
  *           - node ID = '0'
- *           Creation of new entity is a little bit different to object because it's impossible to check links on
- *              previously unknown entity. Link of entity cannot be obfuscated.
- *           Don't forget to call write() if you want a persistant object on database /o.
- *           On error, return instance with ID = '0'.
+ *           The creation of a new entity is a little bit different to object because it's impossible to check links on
+ *              a previously unknown entity. Link of entity cannot be obfuscated.
+ *           Remember to call write() if you want a persistant object on database /o.
+ *           On error, return an instance with ID = '0'.
  * ------------------------------------------------------------------------------------------
  */
-class Entity extends Node implements nodeInterface
-{
+class Entity extends Node implements nodeInterface {
     const ENTITY_MAX_SIZE = 16000;
     const ENTITY_PASSWORD_SALT_SIZE = 128;
     const ENTITY_TYPE = 'application/x-pem-file';
@@ -745,46 +744,15 @@ class Entity extends Node implements nodeInterface
     }
 
 
-    // Désactivation des fonctions de protection.
-    public function getMarkProtected(): bool
-    {
-        return false;
-    }
+    // Disable some functions.
+    public function getReloadMarkProtected(): bool { return false; }
+    public function getProtectedID(): string { return '0'; }
+    public function getUnprotectedID(): string { return $this->_id; }
+    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool { return false; }
+    public function setUnprotected(): bool { return false; }
+    public function setProtectedTo($entity): bool { return false; }
+    public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
-    public function getReloadMarkProtected(): bool
-    {
-        return false;
-    }
-
-    public function getProtectedID(): string
-    {
-        return '0';
-    }
-
-    public function getUnprotectedID(): string
-    {
-        return $this->_id;
-    }
-
-    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool
-    {
-        return false;
-    }
-
-    public function setUnprotected(): bool
-    {
-        return false;
-    }
-
-    public function setProtectedTo(string $entity): bool
-    {
-        return false;
-    }
-
-    public function getProtectedTo(string $socialClass = ''): array
-    {
-        return array();
-    }
 
 
     /**

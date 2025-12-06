@@ -1611,7 +1611,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     'enableDisplayFlags' => true,
                     'enableDisplayFlagEmotions' => true,
                     'enableDisplayFlagProtection' => true,
-                    'flagProtection' => $instance->getMarkProtected(),
+                    'flagProtection' => $instance->getMarkProtectedGroup(),
                     'enableDisplayStatus' => true,
                     'enableDisplayContent' => false,
                     'displaySize' => 'medium',
@@ -1701,7 +1701,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         'enableDisplayFlags' => true,
                         'enableDisplayFlagEmotions' => true,
                         'enableDisplayFlagProtection' => true,
-                        'flagProtection' => $instance->getMarkProtected(),
+                        'flagProtection' => $instance->getMarkProtectedGroup(),
                         'enableDisplayStatus' => true,
                         'enableDisplayContent' => false,
                         'displaySize' => 'medium',
@@ -2032,7 +2032,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             'enableDisplayFlags' => true,
             'enableDisplayFlagEmotions' => true,
             'enableDisplayFlagProtection' => true,
-            'flagProtection' => $instance->getMarkProtected(),
+            'flagProtection' => $instance->getMarkProtectedGroup(),
             'enableDisplayStatus' => true,
             'enableDisplayContent' => true,
             'displaySize' => 'medium',
@@ -2079,7 +2079,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
 
         // Détermine si l'objet est protégé.
-        $protected = $object->getMarkProtected();
+        $protected = $object->getMarkProtectedGroup();
 
         // Affiche le menu des actions.
         if ($isGroup) {
@@ -2801,7 +2801,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentProtection()
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
-        $protect = $object->getMarkProtected();
+        $protect = $object->getMarkProtectedGroup();
 
         // Affichage de l'entête.
         $this->displayObjectDivHeaderH1($object->getID());
@@ -2868,7 +2868,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affichage les actions possibles.
         $actionList = array();
         $id = $object->getID();
-        $protect = $object->getMarkProtected();
+        $protect = $object->getMarkProtectedGroup();
 
         // Si l'objet est présent.
         if ($object->checkPresent()
@@ -2964,7 +2964,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affichage les entités pour partage.
         $id = $object->getID();
-        $protect = $object->getMarkProtected();
+        $protect = $object->getMarkProtectedGroup();
 
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->checkPresent()
@@ -2987,7 +2987,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
                         // Si c'est un groupe fermé.
-                        $typeClosed = $instance->getMarkClosed();
+                        $typeClosed = $instance->getMarkClosedGroup();
 
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
@@ -3550,7 +3550,7 @@ private function _displayContentAbout()
             $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
 
         // Vérifie si il est protégé
-        $protected = $object->getMarkProtected();
+        $protected = $object->getMarkProtectedGroup();
 
         $name = $object->getFullName('all');
         $present = $object->checkPresent();

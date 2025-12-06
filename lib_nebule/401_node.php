@@ -1221,7 +1221,7 @@ class Node extends Functions implements nodeInterface {
      *
      * @return boolean
      */
-    public function getMarkProtected(): bool {
+    public function getMarkProtectedGroup(): bool {
         $this->_getMarkProtected();
         return $this->_cacheMarkProtected;
     }

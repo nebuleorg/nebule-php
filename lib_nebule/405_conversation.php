@@ -213,46 +213,43 @@ class Conversation extends Group implements nodeInterface
     }
 
 
-    // Désactivation des fonctions de protection et autres.
-    public function checkConsistency(): bool
-    {
-        return true;
+
+    /**
+     * Extrait l'ID de l'entité.
+     * Filtre l'entité et s'assure que c'est une entité.
+     * FIXME à supprimer
+     *
+     * @param string|Entity|Node $entity
+     * @return string
+     */
+    protected function _checkExtractEntityID(\Nebule\Library\Node|string|Entity $entity): string {
+        $entityInstance = null;
+        if (is_string($entity)) {
+            if (!Node::checkNID($entity, false, false))
+                $id = '';
+            else {
+                $id = $entity;
+                $entityInstance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+            }
+        } elseif (is_a($entity, 'Node')) {
+            $id = $entity->getID();
+            if ($id == '0')
+                $id = '';
+            else
+                $entityInstance = $entity;
+        } else
+            $id = '';
+
+        if ($id == '0')
+            $id = '';
+
+        if ($id != '' && !$entityInstance->getIsEntity('all'))
+            $id = '';
+        unset($entityInstance);
+
+        return $id;
     }
 
-    public function getReloadMarkProtected(): bool
-    {
-        return false;
-    }
-
-    public function getProtectedID(): string
-    {
-        return '0';
-    }
-
-    public function getUnprotectedID(): string
-    {
-        return $this->_id;
-    }
-
-    public function setProtected(bool $obfuscated = false, string $socialClass = ''): bool
-    {
-        return false;
-    }
-
-    public function setUnprotected(): bool
-    {
-        return false;
-    }
-
-    public function setProtectedTo($entity): bool
-    {
-        return false;
-    }
-
-    public function getProtectedTo(string $socialClass = ''): array
-    {
-        return array();
-    }
 
 
     /**
@@ -306,7 +303,7 @@ class Conversation extends Group implements nodeInterface
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setFollower($entity, bool $obfuscated = false): bool
+    public function setAsFollower($entity, bool $obfuscated = false): bool
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -319,7 +316,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated('')) {
+        if ($this->getMarkObfuscatedGroup('')) {
             $obfuscated = true;
         }
 
@@ -360,7 +357,7 @@ class Conversation extends Group implements nodeInterface
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function unsetFollower($entity = '', bool $obfuscated = false): bool
+    public function unsetAsFollower($entity = '', bool $obfuscated = false): bool
     {
         // Vérifie que la création de liens est possible.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
@@ -373,7 +370,7 @@ class Conversation extends Group implements nodeInterface
         }
 
         // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscated('')) {
+        if ($this->getMarkObfuscatedGroup('')) {
             $obfuscated = true;
         }
 

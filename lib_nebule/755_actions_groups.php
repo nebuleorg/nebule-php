@@ -180,9 +180,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
         }
 
         // Suppression.
-        if ($instance->getMarkClosed()) {
+        if ($instance->getMarkClosedGroup()) {
             $this->_metrologyInstance->addLog('action delete group closed', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
-            $instance->unsetMarkClosed();
+            $instance->unsetMarkClosedGroup();
         }
         $instance->unsetGroup();
 
@@ -215,7 +215,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceGroupe = $this->_cacheInstance->newNode($this->_actionAddToGroup, \Nebule\Library\Cache::TYPE_GROUP);
-        $instanceGroupe->setMember($this->_nebuleInstance->getCurrentObjectInstance());
+        $instanceGroupe->setAsMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
 
     protected string $_actionRemoveFromGroup = '';
@@ -238,7 +238,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceGroupe = $this->_cacheInstance->newNode($this->_actionRemoveFromGroup, \Nebule\Library\Cache::TYPE_GROUP);
-        $instanceGroupe->unsetMember($this->_nebuleInstance->getCurrentObjectInstance());
+        $instanceGroupe->unsetAsMember($this->_nebuleInstance->getCurrentObjectInstance());
     }
 
     protected string $_actionAddItemToGroup = '';
@@ -260,7 +260,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     protected function _actionAddItemToGroup(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_nebuleInstance->getCurrentGroupInstance()->setMember($this->_actionAddItemToGroup);
+        $this->_nebuleInstance->getCurrentGroupInstance()->setAsMember($this->_actionAddItemToGroup);
     }
 
     protected string $_actionRemoveItemFromGroup = '';
@@ -283,7 +283,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     protected function _actionRemoveItemFromGroup(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_nebuleInstance->getCurrentGroupInstance()->unsetMember($this->_actionRemoveItemFromGroup);
+        $this->_nebuleInstance->getCurrentGroupInstance()->unsetAsMember($this->_actionRemoveItemFromGroup);
     }
 
 }

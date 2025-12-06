@@ -394,7 +394,7 @@ class ModuleGroups extends \Nebule\Library\Modules
                     'displaySize' => 'medium', // Forcé par getDisplayObjectsList().
                     'displayRatio' => 'short',
                     'enableDisplayID' => false,
-                    'flagProtection' => $instance->getMarkProtected(),
+                    'flagProtection' => $instance->getMarkProtectedGroup(),
                     'enableDisplaySelfHook' => true,
                     'selfHookName' => 'selfMenuObject',
                     'enableDisplayTypeHook' => false,
@@ -809,7 +809,7 @@ class ModuleGroups extends \Nebule\Library\Modules
     private function _display_InlineGroup(): void
     {
         // Détermine si c'est un groupe fermé.
-        if ($this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosed()) {
+        if ($this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosedGroup()) {
             // Liste tous les objets du groupe fermé.
             $groupListID = $this->_nebuleInstance->getCurrentGroupInstance()->getListMembersID('self', null);
 

@@ -2388,7 +2388,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
                 $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
-            $isClosed = $object->getMarkClosed();
+            $isClosed = $object->getMarkClosedGroup();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
@@ -2403,7 +2403,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         } elseif ($isConversation) {
             if (!is_a($object, 'Conversation'))
                 $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
-            $isClosed = $object->getMarkClosed();
+            $isClosed = $object->getMarkClosedGroup();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
@@ -2517,7 +2517,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         $nid = $object->getID();
 
         // Vérifie s'il est protégé
-        $protected = $object->getMarkProtected();
+        $protected = $object->getMarkProtectedGroup();
 
         // Extrait les propriétés de l'objet.
         $name = $object->getFullName('all');
@@ -3973,7 +3973,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
             if (!isset($param['flagProtection'])
                 || !is_bool($param['flagProtection'])
             )
-                $param['flagProtection'] = $messageInstance->getMarkProtected();
+                $param['flagProtection'] = $messageInstance->getMarkProtectedGroup();
 
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
@@ -4225,7 +4225,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         // Sinon rien.
 
         // Affiche le contenu, si pas protégé et présent.
-        if ($messageInstance->getMarkProtected()
+        if ($messageInstance->getMarkProtectedGroup()
             && !$this->_unlocked
         ) {
             $paramInfo = array(
@@ -4625,7 +4625,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosed())
+            if ($object->getMarkClosedGroup())
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
             else
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
@@ -4634,7 +4634,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosed())
+            if ($object->getMarkClosedGroup())
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
             else
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
@@ -4685,7 +4685,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         $id = $object->getID();
 
         // Vérifie si il est protégé
-        $protected = $object->getMarkProtected();
+        $protected = $object->getMarkProtectedGroup();
 
         // Extrait les propriétés de l'objet.
         $name = $object->getFullName('all');
@@ -6113,7 +6113,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
             <?php
             if ($object->getMarkWarning()
                 || $object->getMarkDanger()
-                || $object->getMarkProtected()
+                || $object->getMarkProtectedGroup()
                 || (isset($item['actions'])
                     && sizeof($item['actions']) != 0
                 )
@@ -6152,7 +6152,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
                         </div>
                         <?php
                     }
-                    if ($object->getMarkProtected()) {
+                    if ($object->getMarkProtectedGroup()) {
                         ?>
 
                         <div class="oneAction-ok">
