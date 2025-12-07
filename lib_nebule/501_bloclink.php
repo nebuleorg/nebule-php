@@ -828,7 +828,7 @@ class BlocLink extends Functions implements blocLinkInterface
             $this->_metrologyInstance->addLog('can not sign for null EID', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8e3d67f6');
             return false;
         }
-        $this->_metrologyInstance->addLog('sign link for ' . $publicKeyID . ' with private key ' . $privateKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
+        $this->_metrologyInstance->addLog('sign link for ' . $publicKeyID . ' with private key', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3c9521d');
 
         $hashAlgo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
 

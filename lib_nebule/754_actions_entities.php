@@ -459,11 +459,16 @@ class ActionsEntities extends Actions implements ActionsInterface {
             $instance = new Entity($this->_nebuleInstance, 'new');
             $instance->createNewEntity($algo, $size);
 
-            if (is_a($instance, 'Nebule\Library\Entity') && $instance->getID() != '0') {
+            if (is_a($instance, '\Nebule\Library\Entity') && $instance->getID() != '0') {
                 $this->_metrologyInstance->addLog('entity created', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'd23d6cb3');
                 $instance->setCreateWrite();
                 $instance->setNewPrivateKeyPassword($this->_createPassword);
                 $this->_createError = false;
+                $ghost = new Entity($this->_nebuleInstance, $instance->getID());
+                $ghost->setPrivateKeyPassword($this->_createPassword);
+                $this->_nebuleInstance->setCurrentEntityInstance($ghost);
+                $this->_entitiesInstance->setGhostEntity($ghost);
+                $this->_entitiesInstance->setConnectedEntity($ghost);
 
                 $this->_createEID = $instance->getID();
                 if ($this->_createEID == '0') {

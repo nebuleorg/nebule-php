@@ -18,9 +18,10 @@ use Nebule\Library\Node;
  *           To create a new entity, create an instance with:
  *           - nebule instance;
  *           - node ID = '0'
+ *           - call createNewEntity()
  *           The creation of a new entity is a little bit different to object because it's impossible to check links on
- *              a previously unknown entity. Link of entity cannot be obfuscated.
- *           Remember to call write() if you want a persistant object on database /o.
+ *              a previously unknown entity. Link of entity cannot be obfuscated on the creation.
+ *           Remember to call setCreateWrite() if you want a persistant entity on database /o and /l.
  *           On error, return an instance with ID = '0'.
  * ------------------------------------------------------------------------------------------
  */
@@ -140,7 +141,6 @@ class Entity extends Node implements nodeInterface {
 
         $this->_ioInstance->setObject($this->_id, $this->_publicKey);
 
-        //$nid1 = $this->_id;
         $nid2 = $this->_nebuleInstance->getFromDataNID(self::ENTITY_TYPE);
         $nid3 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE);
         $this->_setCreateBlocLink('l', $this->_id, $nid2, $nid3);
