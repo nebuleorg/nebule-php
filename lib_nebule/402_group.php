@@ -154,7 +154,7 @@ class Group extends Node implements nodeInterface {
                 $this->_isMarkClosed = true;
             else
                 $this->_isMarkClosed = false;
-        }
+        } // FIXME _isMarkClosed
 
         if (sizeof($links) != 0)
             return true;

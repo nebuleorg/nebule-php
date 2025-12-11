@@ -73,7 +73,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251203';
+    const MODULE_VERSION = '020251211';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -159,7 +159,11 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private ?node $_instanceCurrentBlog = null;
     private ?node $_instanceCurrentBlogPost = null;
     private ?node $_instanceCurrentBlogPage = null;
-    private ?Node $_instanceCurrentBlogOwner = null;
+    private array $_instanceCurrentBlogListOwners = array();
+    private array $_currentBlogMembersList = array();
+    private array $_currentBlogFollowersList = array();
+    private array $_currentBlogPostMembersList = array();
+    private array $_currentBlogPageMembersList = array();
 
     protected function _initialisation(): void {
         $this->_instanceBlogNodeRID = $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
@@ -171,6 +175,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_getCurrentBlogPost();
         $this->_getCurrentBlogPage();
         $this->_getCurrentBlogOwner();
+        $this->_getCurrentBlogSocialList();
+        $this->_getCurrentBlogPostSocialList();
+        $this->_getCurrentBlogPageSocialList();
     }
 
     private function _getCurrentBlog(): void {
@@ -235,7 +242,41 @@ class ModuleNeblog extends \Nebule\Library\Modules
         if (! Node::checkNID($eid, false, false))
             return;
         $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
-        $this->_instanceCurrentBlogOwner = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
+        $this->_instanceCurrentBlogListOwners = array($eid => $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY));
+    }
+
+    private function _getCurrentBlogSocialList(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (sizeof($this->_instanceCurrentBlogListOwners) == 0)
+            return;
+
+        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
+        if (!$instance->getMarkClosedGroup())
+            return;
+        $this->_currentBlogMembersList = $instance->getListMembersID();
+        $this->_currentBlogFollowersList = $instance->getListFollowersID();
+    }
+
+    private function _getCurrentBlogPostSocialList(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (sizeof($this->_instanceCurrentBlogListOwners) == 0)
+            return;
+
+        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlogPost->getID());
+        if (!$instance->getMarkClosedGroup())
+            return;
+        $this->_currentBlogPostMembersList = $instance->getListMembersID();
+    }
+
+    private function _getCurrentBlogPageSocialList(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (sizeof($this->_instanceCurrentBlogListOwners) == 0)
+            return;
+
+        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlogPage->getID());
+        if (!$instance->getMarkClosedGroup())
+            return;
+        $this->_currentBlogPageMembersList = $instance->getListMembersID();
     }
 
 
@@ -626,8 +667,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // TODO sync blog with arg self::COMMAND_ACTION_SYNC_BLOG
 
-        if ($this->_instanceCurrentBlogOwner != null) {
-            $this->_socialInstance->setList(array($this->_instanceCurrentBlogOwner->getID()), 'onlist');
+        if (sizeof($this->_instanceCurrentBlogListOwners) != 0) {
+            $this->_socialInstance->setList(array($this->_instanceCurrentBlogListOwners), 'onlist');
             $linksPost = $this->_getLinksPostNID($this->_instanceCurrentBlog, 'onlist');
             $this->_socialInstance->unsetList('onlist');
         } else
@@ -1055,6 +1096,93 @@ class ModuleNeblog extends \Nebule\Library\Modules
 
     private function _display_InlineRightsBlog(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        $this->_displaySimpleTitle('::members', Displays::DEFAULT_ICON_ENT);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        foreach ($this->_currentBlogMembersList as $eid) {
+            if (isset($this->_instanceCurrentBlogListOwners[$eid]))
+                continue;
+            $entityInstance = $this->_cacheInstance->newNode($eid);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($entityInstance);
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . 'delmember=' . $eid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()); // FIXME
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(true);
+            $instance->setStatus('-');
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instanceList->addItem($instance);
+        }
+//        $instanceList->setEnableWarnIfEmpty();
+//        $instanceList->display();
+//        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+//        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        foreach ($this->_entitiesInstance->getListEntitiesID() as $eid) {
+            if (isset($this->_instanceCurrentBlogListOwners[$eid]))
+                continue;
+            if (isset($this->_currentBlogMembersList[$eid]))
+                continue;
+            $entityInstance = $this->_cacheInstance->newNode($eid);
+            if (!$entityInstance->getIsEntity())
+                continue;
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($entityInstance);
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . 'addmember=' . $eid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()); // FIXME
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(true);
+            $instance->setStatus('+');
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
+
+        $this->_displaySimpleTitle('::followers', Displays::DEFAULT_ICON_ENT);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        foreach ($this->_currentBlogFollowersList as $eid) {
+            if (isset($this->_instanceCurrentBlogListOwners[$eid]))
+                continue;
+            $entityInstance = $this->_cacheInstance->newNode($eid);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($entityInstance);
+            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
 
         $this->_displayNotImplemented(); // TODO
     }
@@ -1659,39 +1787,40 @@ class ModuleNeblog extends \Nebule\Library\Modules
     /**
      * @return void
      */
-    public function _displayOwner(): void
-    {
-        if (is_a($this->_instanceCurrentBlogOwner, '\Nebule\Library\Entity')) {
-            $this->_displaySimpleTitle('::owner', Displays::DEFAULT_ICON_ENT);
-            $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setSocial('all');
-            $instance->setNID($this->_instanceCurrentBlogOwner);
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setEnableRefs(false);
-            $instance->setEnableFlags(true);
-            $instance->setEnableFlagUnlocked(true);
-            $instance->setEnableFlagProtection(false);
-            $instance->setEnableFlagObfuscate(false);
-            $instance->setEnableFlagState(true);
-            $instance->setEnableFlagEmotions(false);
-            $instance->setEnableStatus(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableLink(true);
-            $instance->setFlagUnlocked($this->_instanceCurrentBlogOwner->getHavePrivateKeyPassword());
-            $instance->setRatio(DisplayItem::RATIO_SHORT);
-            $instance->setIcon($instanceIcon);
-            $instance->display();
-        } else {
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setMessage('::::err_NotPermit');
-            $instance->setSocial('all');
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $instance->setRatio(DisplayItem::RATIO_SHORT);
+    public function _displayOwner(): void {
+        $this->_displaySimpleTitle('::owners', Displays::DEFAULT_ICON_ENT);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        foreach ($this->_instanceCurrentBlogListOwners as $instanceOwner) {
+            if (is_a($instanceOwner, '\Nebule\Library\Entity')) {
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setSocial('all');
+                $instance->setNID($instanceOwner);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableRefs(false);
+                $instance->setEnableFlags(true);
+                $instance->setEnableFlagUnlocked(true);
+                $instance->setEnableFlagProtection(false);
+                $instance->setEnableFlagObfuscate(false);
+                $instance->setEnableFlagState(true);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableLink(true);
+                $instance->setFlagUnlocked($instanceOwner->getHavePrivateKeyPassword());
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setIcon($instanceIcon);
+                $instance->display();
+                $instanceList->addItem($instance);
+            }
         }
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->setOnePerLine(true);
+        $instanceList->display();
     }
 
 
@@ -1707,7 +1836,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::answers' => 'Réponses',
             '::confirm' => 'Confirmation',
             '::rights' => 'Permissions',
-            '::owner' => 'Propriétaire',
+            '::owners' => 'Propriétaires',
+            '::members' => 'Membres',
+            '::followers' => 'Abonnés',
             '::objects:ModuleName' => 'Module des blogs',
             '::objects:MenuName' => 'Blogs',
             '::objects:ModuleDescription' => 'Module de gestion des blogs.',
@@ -1751,7 +1882,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::answers' => 'Answers',
             '::confirm' => 'Confirmation',
             '::rights' => 'Authorizations',
-            '::owner' => 'Owner',
+            '::owners' => 'Owners',
+            '::members' => 'Members',
+            '::followers' => 'Followers',
             '::objects:ModuleName' => 'Blogs module',
             '::objects:MenuName' => 'Blogs',
             '::objects:ModuleDescription' => 'Blogs management module.',
@@ -1795,7 +1928,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             '::answers' => 'Answers',
             '::confirm' => 'Confirmation',
             '::rights' => 'Authorizations',
-            '::owner' => 'Owner',
+            '::owners' => 'Owners',
+            '::members' => 'Members',
+            '::followers' => 'Followers',
             '::objects:ModuleName' => 'Módulo de blogs',
             '::objects:MenuName' => 'Blogs',
             '::objects:ModuleDescription' => 'Módulo de gestión de blogs.',
