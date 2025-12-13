@@ -71,7 +71,7 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('create group ' . $this->_id, Metrology::LOG_LEVEL_AUDIT);
         $this->_data = null;
         $this->_haveData = false;
-        $this->setGroup();
+        $this->setAsGroup();
     }
 
 
@@ -89,12 +89,11 @@ class Group extends Node implements nodeInterface {
 
 
     /**
-     * Ecrit l'objet comme étant un groupe.
-     *
+     * Mark as a group with a link.
      * @param bool $obfuscated
      * @return boolean
      */
-    public function setGroup(bool $obfuscated = false): bool {
+    public function setAsGroup(bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
         $this->_isGroup = true;
@@ -104,18 +103,17 @@ class Group extends Node implements nodeInterface {
     }
 
     /**
-     * Ecrit l'objet comme n'étant plus un groupe.
-     * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     *
+     * Remove the mark as a group with a link.
      * @param bool $obfuscated
      * @return boolean
      */
-    public function unsetGroup(bool $obfuscated = false): bool {
+    public function unsetAsGroup(bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
         $this->_isGroup = false;
+        // TODO detect previously obfuscated link.
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                'x>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
                 $obfuscated);
     }
 
@@ -393,17 +391,15 @@ class Group extends Node implements nodeInterface {
     }
 
 
-
     /**
-     * Retourne si l'objet est membre du groupe.
-     *
-     * @param Node $object
+     * Get if the object is a typed member of the group.
+     * @param string $nid
+     * @param string $type
      * @param string $socialClass
      * @return boolean
      */
-    public function getIsMember(Node $object, string $socialClass = ''): bool {
-        $id = $object->getID();
-        if ($id == 0)
+    public function getIsMemberTypedNID(string $nid, string $type, string $socialClass = ''): bool {
+        if (!Node::checkNID($nid) || !Node::checkNID($type))
             return false;
 
         $links = $this->getLinksOnFields(
@@ -411,8 +407,8 @@ class Group extends Node implements nodeInterface {
                 '',
                 'l',
                 $this->_id,
-                $id,
-                $this->_id
+                $nid,
+                $type
         );
 
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
@@ -423,205 +419,198 @@ class Group extends Node implements nodeInterface {
     }
 
     /**
-     * Ajoute un objet comme membre dans le groupe.
-     *
-     * @param Node $object
+     * Add the object as a typed member of the group.
+     * @param string  $nid
+     * @param string  $type
      * @param boolean $obfuscated
      * @return boolean
      */
-    public function setAsMember(Node $object, bool $obfuscated = false): bool {
+    public function setAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+            return false;
+        if (!Node::checkNID($nid) || !Node::checkNID($type))
             return false;
 
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
 
-        $id = $object->getID();
-        if ($id == 0)
-            return false;
-
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->_id,
+                'l>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
     }
 
     /**
-     * Retire un membre du groupe.
-     * TODo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     * TODO retirer la dissimulation déjà faite dans le code.
-     *
-     * @param Node $object
+     * Remove the object as a member of the group.
+     * @param string  $nid
+     * @param string  $type
      * @param boolean $obfuscated
      * @return boolean
      */
-    public function unsetAsMember(Node $object, bool $obfuscated = false): bool {
+    public function unsetAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+            return false;
+        if (!Node::checkNID($nid) || !Node::checkNID($type))
             return false;
 
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
-
-        $id = $object->getID();
-        if ($id == 0)
-            return false;
+        // TODO detect previously obfuscated link.
 
         return $this->writeLink(
-                'x>' . $this->_id . '>' . $id . '>' . $this->_id,
+                'x>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
     }
+
+    /**
+     * Get if the object is a typed member of the group.
+     * @param Node   $object
+     * @param string $type
+     * @param string $socialClass
+     * @return boolean
+     */
+    public function getIsMemberTyped(Node $object, string $type, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $type, $socialClass); }
+
+    /**
+     * Add the object as a typed member of the group.
+     * @param Node    $object
+     * @param string  $type
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function setAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $type, $obfuscated); }
+
+    /**
+     * Remove the object as a member of the group.
+     * @param Node    $object
+     * @param string  $type
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function unsetAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($object->getID(), $type, $obfuscated); }
 
 
 
     /**
-     * Extrait la liste des liens définissant les objets du groupe.
-     * Le calcul social se fait par rapport à la classe sociale demandée,
-     *   et donc utilise l'entité de _nebuleInstance ou de _applicationInstance en fonction.
-     *
+     * Get if the object is a member of the group.
+     * @param Node $object
+     * @param string $socialClass
+     * @return boolean
+     */
+    public function getIsMember(Node $object, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $this->_id, $socialClass); }
+
+    /**
+     * Get if the object is a member of the group.
+     * @param string $nid
+     * @param string $socialClass
+     * @return boolean
+     */
+    public function getIsMemberNID(string $nid, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($nid, $this->_id, $socialClass); }
+
+    /**
+     * Add the object as a member of the group.
+     * @param Node $object
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function setAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
+
+    /**
+     * Add the object as a member of the group.
+     * @param string  $nid
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function setAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
+
+    /**
+     * Remove the object as a member of the group.
+     * @param Node $object
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function unsetAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
+
+    /**
+     * Remove the object as a member of the group.
+     * @param string  $nid
+     * @param boolean $obfuscated
+     * @return boolean
+     */
+    public function unsetAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
+
+
+
+    /**
+     * Get the list of typed member's links on the group.
+     * @param string $type
      * @param string $socialClass
      * @param array  $socialListID
      * @return array:Link
      */
-    public function getListMembersLinks(string $socialClass = '', array $socialListID = array()): array {
-        // Liste tous les liens des membres de la conversation.
+    public function getListTypedMembersLinks(string $type, string $socialClass = '', array $socialListID = array()): array {
         $links = $this->getLinksOnFields(
                 '',
                 '',
                 'l',
                 $this->_id,
                 '',
-                $this->_id
+                $type
         );
-
         $this->_socialInstance->setList($socialListID);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         $this->_socialInstance->unsetList();
-
         return $links;
     }
 
     /**
-     * Extrait la liste des ID des objets du groupe.
-     *
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array:string
-     */
-    public function getListMembersID(string $socialClass = '', array $socialListID = array()): array {
-        $links = $this->getListMembersLinks($socialClass, $socialListID);
-
-        $list = array();
-        foreach ($links as $link)
-            $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
-
-        return $list;
-    }
-
-    /**
-     * Retourne le nombre d'objets dans le groupe.
-     *
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return float
-     */
-    public function getCountMembers(string $socialClass = '', array $socialListID = array()): float {
-        return sizeof($this->getListMembersLinks($socialClass, $socialListID));
-    }
-
-
-
-    /**
-     * Retourne si l'entité est à l'écoute du groupe.
-     *
-     * @param Node   $entity
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return boolean
-     */
-    public function getIsFollower(Node $entity, string $socialClass = '', array $socialListID = array()): bool {
-        $id = $entity->getID();
-        if ($id == 0)
-            return false;
-
-        $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $id,
-                $this->_id,
-                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI)
-        );
-
-        $this->_socialInstance->setList($socialListID);
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
-        $this->_socialInstance->unsetList();
-
-        if (sizeof($links) != 0)
-            return true;
-        return false;
-    }
-
-    /**
-     * Ajoute une entité comme à l'écoute du groupe.
-     *
-     * @param Entity  $entity
-     * @param boolean $obfuscated
-     * @return boolean
-     */
-    public function setAsFollower(Entity $entity, bool $obfuscated = false): bool {
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
-            return false;
-
-        if ($this->getMarkObfuscatedGroup())
-            $obfuscated = true;
-
-        $id = $entity->getID();
-        if ($id == 0)
-            return false;
-
-        return $this->writeLink(
-                'l>' . $id . '>' . $this->_id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI),
-                $obfuscated);
-    }
-
-    /**
-     * Retire une entité à l'écoute du groupe.
-     * TODO détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     * TODO retirer la dissimulation déjà faite dans le code.
-     *
-     * @param Entity  $entity
-     * @param boolean $obfuscated
-     * @return boolean
-     */
-    public function unsetAsFollower(Entity $entity, bool $obfuscated = false): bool {
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
-            return false;
-
-        if ($this->getMarkObfuscatedGroup())
-            $obfuscated = true;
-
-        $id = $entity->getID();
-        if ($id == 0)
-            return false;
-
-        return $this->writeLink(
-                'x>' . $id . '>' . $this->_id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI),
-                $obfuscated);
-    }
-
-
-
-    /**
-     * Extrait la liste des liens définissant les entités à l'écoute du groupe.
-     * On ne peut pas voir un groupe comme fermé si on regarde pour une autre entité.
-     * La pertinence sociale n'est pas utilisée pour un groupe fermé.
-     *
+     * Get the list of member's links on the group.
      * @param string $socialClass
      * @param array  $socialListID
      * @return array:Link
      */
-    public function getListFollowersLinks(string $socialClass = '', array $socialListID = array()): array {
-        return $this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
+    public function getListMembersLinks(string $socialClass = '', array $socialListID = array()): array { return $this->getListTypedMembersLinks($this->_id, $socialClass, $socialListID); }
+
+    /**
+     * Get the list of typed members (NID) on the group.
+     * @param string $type
+     * @param string $socialClass
+     * @param array  $socialListID
+     * @return array:string
+     */
+    public function getListTypedMembersID(string $type,string $socialClass = '', array $socialListID = array()): array {
+        $links = $this->getListTypedMembersLinks($type, $socialClass, $socialListID);
+        $list = array();
+        foreach ($links as $link)
+            $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
+        return $list;
     }
+
+    /**
+     * Get the list of members (NID) on the group.
+     * @param string $socialClass
+     * @param array  $socialListID
+     * @return array:string
+     */
+    public function getListMembersID(string $socialClass = '', array $socialListID = array()): array { return $this->getListTypedMembersID($this->_id, $socialClass, $socialListID); }
+
+    /**
+     * Get the count of members on the group.
+     * @param string $type
+     * @param string $socialClass
+     * @param array  $socialListID
+     * @return float
+     */
+    public function getCountTypedMembers(string $type, string $socialClass = '', array $socialListID = array()): float { return sizeof($this->getListTypedMembersLinks($type, $socialClass, $socialListID)); }
+
+    /**
+     * Get the count of members on the group.
+     * @param string $socialClass
+     * @param array  $socialListID
+     * @return float
+     */
+    public function getCountMembers(string $socialClass = '', array $socialListID = array()): float { return sizeof($this->getListMembersLinks($socialClass, $socialListID)); }
+
+
 
     /**
      * Extrait la liste des liens définissant les entités à l'écoute d'un objet et définit par une référence de suivi.
@@ -665,37 +654,6 @@ class Group extends Node implements nodeInterface {
         $list = array();
         foreach ($links as $link)
             $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
-
-        return $list;
-    }
-
-    /**
-     * Retourne le nombre d'entités à l'écoute du groupe.
-     *
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return float
-     */
-    public function getCountFollowers(string $socialClass = '', array $socialListID = array()): float {
-        return sizeof($this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID));
-    }
-
-    /**
-     * Retourne la liste des entités qui ont ajouté l'entité citée comme suiveuse du groupe.
-     *
-     * @param string $entity
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array:string
-     */
-    public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', array $socialListID = array()): array {
-        $links = $this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
-
-        $list = array();
-        foreach ($links as $link) {
-            if ($link->getParsed()['bl/rl/nid1'] == $entity)
-                $list[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
-        }
 
         return $list;
     }
@@ -748,10 +706,17 @@ abstract class HelpGroup {
                 <li><a href="#ogp">OGP / Protection</a></li>
                 <li><a href="#ogd">OGD / Dissimulation</a></li>
                 <li><a href="#ogf">OGF / Fermeture</a></li>
-                <li><a href="#ogm">OGP / Membres</a>
+                <li><a href="#ogm">OGM / Membres</a>
                     <ul>
-                <li><a href="#ogmp">OGMP / Protection des membres</a></li>
-                <li><a href="#ogmd">OGMD / Dissimulation des membres</a></li>
+                        <li><a href="#ogmt">OGMT / Membres typés</a></li>
+                        <li><a href="#ogmp">OGMP / Protection des membres</a></li>
+                        <li><a href="#ogmd">OGMD / Dissimulation des membres</a></li>
+                    </ul>
+                </li>
+                <li><a href="#oga">OGA / Abonnés</a>
+                    <ul>
+                        <li><a href="#ogap">OGAP / Protection des abonnés</a></li>
+                        <li><a href="#ogad">OGAD / Dissimulation des abonnés</a></li>
                     </ul>
                 </li>
                 <li><a href="#ogl">OGL / Liens</a></li>
@@ -777,13 +742,14 @@ abstract class HelpGroup {
         <?php Displays::docDispTitle(2, 'og', 'Groupe'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
-        <p>Le groupe est un objet définit comme tel, c'est-à-dire qu’il doit avoir un type mime <code>nebule/objet/groupe</code>.
-        </p>
+        <p>Le groupe en tant que tel est défini comme un objet (cf. <a href="#oo">OO</a>), c'est-à-dire qu’il doit
+            avoir un type mime <code><?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?></code>.</p>
         <p>Fondamentalement, le groupe est un ensemble de plusieurs objets. C'est-à-dire, c’est le regroupement d’au
             moins deux objets. Le lien peut donc à ce titre être vu comme la matérialisation d’un groupe. Mais la
-            définition du groupe doit être plus restrictive afin que celui-ci soit utilisable. Pour cela, dans <em>nebule</em>,
-            le groupe n’est reconnu comme tel uniquement s'il est marqué de son type mime. Il est cependant possible
-            d’instancier explicitement un objet comme groupe et de l’utiliser comme tel en cas de besoin.</p>
+            définition du groupe doit être plus restrictive afin que celui-ci soit utilisable. Pour cela, dans
+            <em>nebule</em>, le groupe n’est reconnu comme tel uniquement s'il est marqué de son type mime. Il est
+            cependant possible d’instancier explicitement un objet comme groupe et de l’utiliser comme tel en cas de
+            besoin.</p>
         <p>Le groupe va permettre de regrouper, et donc d’associer et de retrouver, des objets. L’objet du groupe va
             avoir des liens vers d’autres objets afin de les définir comme membres du groupe.</p>
         <p>Un groupe peut avoir des liens de membres vers des objets définis aussi comme groupes. Ces objets peuvent
@@ -797,10 +763,8 @@ abstract class HelpGroup {
             sûrement d’autres types mime propres. Dans ce cas l’identifiant de groupe est l’identifiant de l’objet
             utilisé.</p>
         <p>Soit c’est un objet dit virtuel qui n’a pas et n’aura jamais de contenu. Cela n’empêche pas qu’il puisse
-            avoir d’autres types mime. Dans ce cas l’identifiant de groupe a une forme commune aux objets virtuels.</p>
-        <p>La création d’un objet virtuel comme groupe se fait en créant pour identifiant la concaténation d’un hash
-            (<em>sha256</em>) d’une valeur aléatoire de 128bits et de la chaîne <code>006e6562756c652f6f626a65742f67726f757065</code>.
-            Soit un identifiant complet de la taille de 104 caractères.</p>
+            avoir d’autres types mime. Dans ce cas l’identifiant de groupe a une forme commune aux objets virtuels (cf.
+            <a href="#ooa">OOA</a>).</p>
 
         <?php Displays::docDispTitle(3, 'ogn', 'Nommage'); ?>
         <p>Le nommage à l’affichage du nom des groupes repose sur une seule propriété :</p>
@@ -839,9 +803,10 @@ abstract class HelpGroup {
             limiter le nombre des membres à utiliser dans un groupe en restreignant artificiellement les entités
             contributrices du groupe. Ainsi, on marque le groupe comme fermé et on filtre sur les membres uniquement
             ajoutés par des entités définies.</p>
-        <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/ferme</code> est dédié à la gestion des groupes
+        <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_FERME; ?></code>
+            est dédié à la gestion des groupes
             fermés. Un groupe est considéré comme fermé quand on a l’objet réservé en champs méta, l’entité en cours en
-            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs
+            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champ
             cible, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
             Dans ce cas, c’est une entité contributrice.</p>
         <p>C’est uniquement un affichage du groupe que l’on a et non la suppression de membres du groupe.</p>
@@ -855,18 +820,23 @@ abstract class HelpGroup {
             non de les ajouter.</p>
         <p>Lorsqu’un groupe est marqué comme fermé, l’interface de visualisation du groupe peut permettre de le
             visualiser temporairement comme un groupe ouvert.</p>
-        <p>Le traitement des liens de fermeture d’un groupe doit être fait exclusivement avec le traitement social <em>self</em>.
+        <p>Le traitement des liens de fermeture d’un groupe doit être fait exclusivement avec le traitement social
+            <em>self</em>.
         </p>
 
         <?php Displays::docDispTitle(3, 'ogm', 'Membres'); ?>
+        <?php Displays::docDispTitle(4, 'ogmt', 'Membres typés'); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
         <?php Displays::docDispTitle(4, 'ogmp', 'Protection des membres'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter la visibilité du contenu des membres utilisés dans un groupe en restreignant artificiellement les
             entités destinataires qui pourront les consulter.</p>
-        <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/protege</code> est dédié à la gestion des groupes
+        <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE; ?></code>
+            est dédié à la gestion des groupes
             protégés. Un groupe est considéré protégé quand on a l’objet réservé en champs méta, l’entité en cours en
-            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champs
+            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champ
             cible, on utilise une autre entité, cela revient à partager aussi les objets protégés créés pour ce groupe.
             Cela ne repartage pas la protection des objets déjà protégés.</p>
         <p>Dans un groupe marqué protégé, tous les nouveaux membres ajoutés au groupe ont leur contenu protégé. Ce n’est
@@ -879,7 +849,8 @@ abstract class HelpGroup {
         <p>Lorsque l’on a marqué un groupe comme protégé, on peut voir la liste des entités explicitement a qui on veut
             partager les contenus. On peut aussi voir les entités a qui les autres entités veulent partager les contenus
             et décider ou non de les ajouter.</p>
-        <p>Le traitement des liens de protection d’un groupe doit être fait exclusivement avec le traitement social <em>self</em>.
+        <p>Le traitement des liens de protection d’un groupe doit être fait exclusivement avec le traitement social
+            <em>self</em>.
         </p>
 
         <?php Displays::docDispTitle(4, 'ogmd', 'Dissimulation des membres'); ?>
@@ -887,16 +858,17 @@ abstract class HelpGroup {
         <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter la visibilité de l’appartenance des membres utilisés dans un groupe en restreignant artificiellement
             les entités destinataires qui pourront les voir.</p>
-        <p>Dans nebule, l’objet réservé <code>nebule/objet/groupe/dissimule</code> est dédié à la gestion des groupes
+        <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE; ?></code>
+            est dédié à la gestion des groupes
             dissimulés. Un groupe est considéré comme dissimulé quand on a l’objet réservé en champs méta, l’entité en
             cours en champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le
-            champs cible, on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce
+            champ cible, on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce
             groupe. Cela ne repartage pas la dissimulation des objets déjà dissimulés.</p>
         <p>Dans un groupe marqué dissimulé, tous les nouveaux membres ajoutés au groupe sont dissimulés. Ce n’est
             valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>
         <p>Lorsque l’on a marqué un groupe comme dissimulé, on doit explicitement ajouter des entités avec qui on veut
             partager les membres du groupe.</p>
-        <p>Il est possible indéfiniment de dissimuler et dé-dissimuler un groupe.</p>
+        <p>Il est possible indéfiniment de dissimuler et dé dissimuler un groupe.</p>
         <p>Il est possible de dissimuler un groupe qui ne nous appartient afin de masquer le contenu des membres que
             l’on y ajoute.</p>
         <p>Lorsque l’on a marqué un groupe comme dissimulé, on peut voir la liste des entités explicitement a qui on
@@ -904,6 +876,13 @@ abstract class HelpGroup {
             contenus et décider ou non de les ajouter.</p>
         <p>Le traitement des liens de dissimulation d’un groupe doit être fait exclusivement avec le traitement social
             <em>self</em>.</p>
+
+        <?php Displays::docDispTitle(3, 'oga', 'Abonnés'); ?>
+        <?php Displays::docDispTitle(4, 'ogap', 'Protection des abonnés'); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <?php Displays::docDispTitle(4, 'ogad', 'Dissimulation des abonnés'); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php Displays::docDispTitle(3, 'ogl', 'Liens'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>

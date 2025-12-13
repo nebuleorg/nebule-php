@@ -73,7 +73,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251211';
+    const MODULE_VERSION = '020251213';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -254,7 +254,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         if (!$instance->getMarkClosedGroup())
             return;
         $this->_currentBlogMembersList = $instance->getListMembersID();
-        $this->_currentBlogFollowersList = $instance->getListFollowersID();
+        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI);
     }
 
     private function _getCurrentBlogPostSocialList(): void {
@@ -1109,8 +1109,8 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                . '&' . 'delmember=' . $eid
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()); // FIXME
+                . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $eid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -1140,8 +1140,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                . '&' . 'addmember=' . $eid
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()); // FIXME
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $eid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);

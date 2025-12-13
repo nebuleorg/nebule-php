@@ -1916,7 +1916,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         if ($this->_actionInstance->getInstanceActionsGroups()->getCreateGroup()) {
             $createGroupID = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupInstance();
             $createGroupInstance = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupInstance();
-            $createGroupError = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupError();
+            $createGroupError = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupOK();
             $createGroupErrorMessage = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupErrorMessage();
 
             // Si la création a réussi.

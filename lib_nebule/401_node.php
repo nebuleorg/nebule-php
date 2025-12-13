@@ -270,7 +270,7 @@ class Node extends Functions implements nodeInterface {
     }
 
     /**
-     * Object - Verify name structure of the virtual node : hash.algo.size
+     * Object - Verify name structure of the virtual node: hash.algo.size
      * The part 'algo.size' is fixed.
      * There's a specific treatment for NID empty or '0'.
      *
@@ -3329,6 +3329,7 @@ abstract class HelpNode {
 
         <li><a href="#oo">OO / Objet</a>
             <ul>
+                <li><a href="#ooa">OOA / Objet vituel</a></li>
                 <li><a href="#oon">OON / Nommage</a></li>
                 <li><a href="#oop">OOP / Protection</a></li>
                 <li><a href="#ood">OOD / Dissimulation</a></li>
@@ -3386,8 +3387,18 @@ abstract class HelpNode {
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est un agglomérat de données numériques.</p>
         <p>Un objet numérique est identifié par une empreinte ou condensat (hash) numérique de type cryptographique.
-            Cette empreinte est à même d'empêcher la modification du contenu d'un objet, intentionnellement ou non (cf
+            Cette empreinte est à même d'empêcher la modification du contenu d'un objet, intentionnellement ou non (cf.
             <a href="#co">CO</a>).</p>
+        <?php Displays::docDispTitle(3, 'ooa', 'Objet virtuel'); ?>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>Un objet virtuel est un objet numérique qui ne contient pas de contenu, et donc pour lequel on ne peut pas
+            associer de contenu. La forme la plus simple de l'objet virtuel est une empreinte aléatoire avec un
+            algorithm de prise d'empreinte valide.</p>
+        <p>Afin de distinguer les objets virtuels des objets numériques avec contenus pour ne pas faire une recherche de
+            contenu inutile, l'identifiant est généré aléatoirement et est associé à l'algorithme <b>none</b>. Par
+            exemple :</p>
+        <p style="text-align:center"><b><?php echo References::RID_SECURITY_AUTHORITY; ?></b></p>
+        <p>La taille de l'empreinte aléatoire est cohérente avec le champ de taille avant l'algorithme.</p>
 
         <?php Displays::docDispTitle(3, 'oon', 'Nommage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -3447,7 +3458,7 @@ abstract class HelpNode {
             <li>cible : hash(type de l'objet)</li>
             <li>méta : hash(‘nebule/objet/type’)</li>
         </ul>
-        <p>A faire...</p>
+        <p>A faire objets virtuels...</p>
 
         <?php Displays::docDispTitle(3, 'oos', 'Stockage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -3497,6 +3508,7 @@ abstract class HelpNode {
             lui correspond pas doit être supprimé. Lors de la suppression d’un objet, les liens de cet objet ne sont pas
             supprimés. La vérification de la validité des liens est complètement indépendante de celle des objets, et
             inversement (CF <a href="#co">CO</a> et <a href="#lv">LV</a>).</p>
+        <p>A faire, sauf objet virtuel...</p>
 
         <?php Displays::docDispTitle(3, 'ooo', 'Oubli'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>

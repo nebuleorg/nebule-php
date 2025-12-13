@@ -46,7 +46,6 @@ class ActionsEntities extends Actions implements ActionsInterface {
 
     public function initialisation(): void {}
     public function genericActions(): void {
-
         if ($this->getHaveInput(self::SYNCHRONIZE))
             $this->_synchronize();
         if ($this->getHaveInput(self::CHANGE_NAME))
@@ -91,7 +90,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         // TODO DISABLED for refactor
         return;
 
-        $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
+        /*$arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
         if (!Node::checkNID($arg))
             return;
         $this->_actionSynchronizeEntityInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
@@ -123,7 +122,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
             // Synchronise l'objet.
             $object->syncObject();
         }
-        unset($links, $link, $object);
+        unset($links, $link, $object);*/
     }
 
     private string $_actionSynchronizeNewEntityID = '';
@@ -142,7 +141,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         $arg = $this->getFilterInput(self::SYNCHRONIZE_NEW, FILTER_FLAG_ENCODE_LOW);
 
         // Extraction de l'URL et stockage pour traitement.
-        if ($arg != ''
+        /*if ($arg != ''
             && strlen($arg) >= 9
             && ctype_print($arg)
         ) {
@@ -182,7 +181,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
                     $this->_metrologyInstance->addLog('extract action synchronize new entity - URL=' . $this->_actionSynchronizeNewEntityURL, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
                 }
             }
-        }
+        }*/
     }
     private function _SynchronizeNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -191,7 +190,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         return;
 
         // Vérifie si l'objet est déjà présent.
-        $present = $this->_ioInstance->checkObjectPresent($this->_actionSynchronizeNewEntityID);
+        /*$present = $this->_ioInstance->checkObjectPresent($this->_actionSynchronizeNewEntityID);
         // Lecture de l'objet.
         $data = $this->_ioInstance->getObject($this->_actionSynchronizeNewEntityID, Entity::ENTITY_MAX_SIZE, $this->_actionSynchronizeNewEntityURL);
         // Calcul de l'empreinte.
@@ -244,7 +243,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
             // Synchronise l'objet.
             $object->syncObject();
         }
-        unset($links, $link, $object);
+        unset($links, $link, $object);*/
     }
 
 
