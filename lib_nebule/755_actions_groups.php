@@ -20,7 +20,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const DELETE = 'grpdel';
     const ADD_MEMBER = 'grpaddmbr';
     const REMOVE_MEMBER = 'grpsupmbr';
-    const GROUP_TYPED = 'grptyp';
+    const TYPED = 'grptyp';
 
 
 
@@ -95,7 +95,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
         if ($instance === null || $instance->getID() == '0')
             return;
         $this->_actionAddMember = $this->getFilterInput(self::ADD_MEMBER, FILTER_FLAG_ENCODE_LOW);
-        $typed = $this->getFilterInput(self::GROUP_TYPED, FILTER_FLAG_ENCODE_LOW);
+        $typed = $this->getFilterInput(self::TYPED, FILTER_FLAG_ENCODE_LOW);
         if ($typed == '')
             $this->_actionAddMemberOK = $instance->setAsMemberNID($this->_actionAddMember);
         else
@@ -114,7 +114,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
         if ($instance === null || $instance->getID() == '0')
             return;
         $this->_actionRemoveMember = $this->getFilterInput(self::REMOVE_MEMBER, FILTER_FLAG_ENCODE_LOW);
-        $typed = $this->getFilterInput(self::GROUP_TYPED, FILTER_FLAG_ENCODE_LOW);
+        $typed = $this->getFilterInput(self::TYPED, FILTER_FLAG_ENCODE_LOW);
         if ($typed == '')
             $this->_actionRemoveMemberOK = $instance->unsetAsMemberNID($this->_actionRemoveMember);
         else

@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020251102';
+const BOOTSTRAP_VERSION = '020251214';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -1072,7 +1072,7 @@ function lib_getOptionFromFile(string $name): string {
  */
 function lib_incrementMetrology(string $type): void {
     global $nebuleMetrologyLinkRead, $nebuleMetrologyLinkVerify, $nebuleMetrologyObjectRead, $nebuleMetrologyObjectVerify;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions type=' . $type, 'debug', __FUNCTION__, '1111c0de');
 
     switch ($type) {
         case 'lr':
@@ -1980,7 +1980,7 @@ function crypto_asymmetricEncrypt(string $data, string $privateOid = '', string 
     unset($privateKeyBin);
     log_add('unable to sign', 'error', __FUNCTION__, '40a79ccb');
     while ($msg = openssl_error_string())
-        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, '00000551');
+        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, 'a16933a4');
     return '';
 }
 
@@ -2028,7 +2028,7 @@ function crypto_asymmetricVerify(string $sign, string $data, string $nid, string
     }
     log_add('invalid sign', 'error', __FUNCTION__, 'c0e97f3b');
     while ($msg = openssl_error_string())
-        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, '00000551');
+        log_add('openssl error : ' . $msg, 'debug', __FUNCTION__, 'b2371b6f');
     return false;
 }
 

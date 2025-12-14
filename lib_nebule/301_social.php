@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Nebule\Library;
 
 /**
- * Head class to manage social interacts with links for current entity.
+ * Top class to manage social interacts with links for the current entity.
  * Must be serialized on PHP session with nebule class.
  *
  * @author Projet nebule
@@ -42,15 +42,12 @@ class Social extends Functions implements SocialInterface
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($socialClass == ''
-                || !isset($this->_listClasses[$socialClass])
-                || !isset($this->_listInstances[$socialClass])
-        ) {
+        if ($socialClass != '' && isset($this->_listClasses[$socialClass]) && isset($this->_listInstances[$socialClass]))
+            $this->_listInstances[$socialClass]->arraySocialFilter($links, $socialClass);
+        elseif (is_a($this->_defaultInstance, 'SocialInterface'))
             $this->_defaultInstance->arraySocialFilter($links, '');
-            return;
-        }
-
-        $this->_listInstances[$socialClass]->arraySocialFilter($links, '');
+        else
+            $this->_metrologyInstance->addLog('error no default social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c04e8d5b');
     }
 
     /**
@@ -62,11 +59,13 @@ class Social extends Functions implements SocialInterface
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $result = 0.0;
         if ($socialClass != '')
             $result = $this->_listInstances[$socialClass]->linkSocialScore($link, '');
-            //$result = $this->_listInstances[get_class($this) . $this->_listTypes[$socialClass]]->linkSocialScore($link, '');
-        else
+        elseif (is_a($this->_defaultInstance, 'SocialInterface'))
             $result = $this->_defaultInstance->linkSocialScore($link, '');
+        else
+            $this->_metrologyInstance->addLog('error no default social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, '74686ed7');
         return $result;
     }
 

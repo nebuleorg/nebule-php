@@ -358,10 +358,13 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
         $publicKeyBin = openssl_pkey_get_public($publicKey);
 
 //while ($msg = openssl_error_string())
-//$this->_metrologyInstance->addLog('DEBUGGING error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+//$this->_metrologyInstance->addLog('DEBUGGING error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9a2113b9');
 
-        if ($publicKeyBin === false)
+        if ($publicKeyBin === false) {
+            while ($msg = openssl_error_string())
+                $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '04a98c79');
             return false;
+        }
         $signBin = pack('H*', $sign);
 //$this->_metrologyInstance->addLog('DEBUGGING pubkey=' . $publicKey, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 //$this->_metrologyInstance->addLog('DEBUGGING data=' . $data, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -375,7 +378,7 @@ class CryptoOpenssl extends Crypto implements CryptoInterface
             if (!$decodeOK) {
                 $this->_metrologyInstance->addLog('crypto verify error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c897dd6');
                 while ($msg = openssl_error_string())
-                    $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+                    $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'f3c64d77');
                 return false;
             }
             $decrypted = substr(bin2hex($decrypted), -strlen($data), strlen($data));
@@ -410,7 +413,7 @@ $this->_metrologyInstance->addLog('DEBUGGING algo=' . $opensslAlgo, Metrology::L
         $this->_metrologyInstance->addLog('crypto verify error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c897dd6');
 
         while ($msg = openssl_error_string())
-            $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000551');
+            $this->_metrologyInstance->addLog('openssl error : ' . $msg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5a30c149');
 
         return false;
     }

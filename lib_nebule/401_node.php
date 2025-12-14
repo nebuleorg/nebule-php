@@ -3316,7 +3316,8 @@ class Node extends Functions implements nodeInterface {
         if ($rl == '')
             return false;
         $newBlockLink = new BlocLink($this->_nebuleInstance, 'new');
-        $newBlockLink->addLink($rl);
+        if (!$newBlockLink->addLink($rl))
+            return false;
         //if ($obfuscated && !$newLink->setObfuscate()) FIXME obfuscation
         //    return false;
         return $newBlockLink->signwrite($this->_entitiesInstance->getGhostEntityInstance(), $date);

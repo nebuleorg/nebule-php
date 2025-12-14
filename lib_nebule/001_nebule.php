@@ -737,6 +737,7 @@ class nebule
     public function getHaveInput(string $name): bool {
         if ($name == '')
             return false;
+        $this->_metrologyInstance->addLog('get input=' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '92c42c34');
         if (filter_has_var(INPUT_GET, $name) || filter_has_var(INPUT_POST, $name))
             return true;
         return false;
