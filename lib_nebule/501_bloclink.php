@@ -680,6 +680,7 @@ class BlocLink extends Functions implements blocLinkInterface
         //$this->_metrologyInstance->addLog($sig . ' / ' . $nid . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($sig) > 4096) return false; // TODO à revoir.
+//$this->_metrologyInstance->addLog('DEBUGGING MARK1 ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Check hash value.
         $sign = strtok($sig, '.');
@@ -687,6 +688,7 @@ class BlocLink extends Functions implements blocLinkInterface
         if (strlen($sign) < self::NID_MIN_HASH_SIZE) return false;
         if (strlen($sign) > self::NID_MAX_HASH_SIZE) return false;
         if (!ctype_xdigit($sign)) return false;
+//$this->_metrologyInstance->addLog('DEBUGGING MARK2 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Check algo value.
         $algo = strtok('.');
@@ -694,6 +696,7 @@ class BlocLink extends Functions implements blocLinkInterface
         if (strlen($algo) < self::NID_MIN_ALGO_SIZE) return false;
         if (strlen($algo) > self::NID_MAX_ALGO_SIZE) return false;
         if (!ctype_alnum($algo)) return false;
+//$this->_metrologyInstance->addLog('DEBUGGING MARK3 ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Check size value.
         $size = strtok('.');
@@ -702,25 +705,31 @@ class BlocLink extends Functions implements blocLinkInterface
         if ((int)$size < self::NID_MIN_HASH_SIZE) return false;
         if ((int)$size > self::NID_MAX_HASH_SIZE) return false;
         //if (strlen($sign) != (int)$size) return false; // TODO can't be checked ?
+//$this->_metrologyInstance->addLog('DEBUGGING MARK4 ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         // Check item overflow
         if (strtok('.') !== false) return false;
+//$this->_metrologyInstance->addLog('DEBUGGING MARK5 ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckSignOnVerify')) return true;
         if ($this->_checkObjectContent($nid)) {
             $hash = $this->_cryptoInstance->hash($bh_bl, $algo . '.' . $size);
             $publicKey = $this->_ioInstance->getObject($nid);
 
+            $ok = false;
             if ($this->_cryptoInstance->verify($hash, $sign, $publicKey, $algo . '.' . $size)) {
                 $this->_parsed["bs/rs$i/sig"] = $sig;
-//$this->_metrologyInstance->addLog('DEBUGGING true1 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                return true;
-            } elseif (\Nebule\Bootstrap\crypto_asymmetricVerify($sig, $hash, $nid, $algo . '.' . $size)) {
-//$this->_metrologyInstance->addLog('DEBUGGING true2 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                $this->_parsed["bs/rs$i/sig"] = $sig;
+$this->_metrologyInstance->addLog('DEBUGGING true1 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $ok = true;
             }
+            /*if (\Nebule\Bootstrap\crypto_asymmetricVerify($sig, $hash, $nid, $algo . '.' . $size)) {
+$this->_metrologyInstance->addLog('DEBUGGING true2 ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $this->_parsed["bs/rs$i/sig"] = $sig;
+                $ok = true;
+            }*/
+            if ($ok) return true;
         }
-//$this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         return false;
     }
 

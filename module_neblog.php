@@ -164,8 +164,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private array $_currentBlogListOwners = array();
     private array $_currentBlogWritersList = array();
     private array $_currentBlogFollowersList = array();
-    private array $_currentBlogPostMembersList = array();
-    private array $_currentBlogPageMembersList = array();
 
     protected function _initialisation(): void {
         $this->_instanceBlogNodeRID = $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
@@ -178,8 +176,6 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_getCurrentBlogPage();
         $this->_getCurrentBlogOwner();
         $this->_getCurrentBlogSocialList();
-        //$this->_getCurrentBlogPostSocialList();
-        //$this->_getCurrentBlogPageSocialList();
     }
 
     private function _getCurrentBlog(): void {
@@ -256,34 +252,12 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
         if (!$instance->getMarkClosedGroup())
             return;
-        $this->_currentBlogListOwners = $instance->getListMembersID(self::RID_OWNER);
+        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER);
         foreach ($this->_currentBlogListOwnersRO as $eid)
             $this->_currentBlogListOwners[$eid] = $eid;
-        $this->_currentBlogWritersList = $instance->getListMembersID(self::RID_WRITER);
+        $this->_currentBlogWritersList = $instance->getListTypedMembersID(self::RID_WRITER);
         $this->_currentBlogFollowersList = $instance->getListTypedMembersID(self::RID_FOLLOWER);
     }
-
-    /*private function _getCurrentBlogPostSocialList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (sizeof($this->_instanceCurrentBlogListOwners) == 0)
-            return;
-
-        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlogPost->getID());
-        if (!$instance->getMarkClosedGroup())
-            return;
-        $this->_currentBlogPostMembersList = $instance->getListMembersID();
-    }
-
-    private function _getCurrentBlogPageSocialList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (sizeof($this->_instanceCurrentBlogListOwners) == 0)
-            return;
-
-        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlogPage->getID());
-        if (!$instance->getMarkClosedGroup())
-            return;
-        $this->_currentBlogPageMembersList = $instance->getListMembersID();
-    }*/
 
 
 
@@ -857,6 +831,16 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blogs');
     }
 
+    private function _getBlogListByRight(array &$links, string $right): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid3' => $this->_entitiesInstance->getGhostEntityEID(),
+            'bl/rl/nid4' => $right,
+        );
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
+    }
+
     private function _display_InlineBlogs(string $socialClass): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == 'all')
@@ -865,6 +849,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
             $this->_socialInstance->setList(array($this->_entitiesInstance->getGhostEntityEID()), 'onlist');
             $linksBlog = $this->_getLinksBlogOID('onlist');
             $this->_socialInstance->unsetList('onlist');
+            $this->_getBlogListByRight($linksBlog, self::RID_OWNER);
+            $this->_getBlogListByRight($linksBlog, self::RID_WRITER);
+            $this->_getBlogListByRight($linksBlog, self::RID_FOLLOWER);
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
