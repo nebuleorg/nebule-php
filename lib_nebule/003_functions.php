@@ -337,7 +337,6 @@ class Functions
         return $this->_nebuleInstance->getHaveInput($name);
     }
 
-    public function getIsRID(Node $nid): bool {
-        return str_contains($nid->getID(), '.none');
-    }
+    public function getIsRID(String $nid): bool { return $this->_nebuleInstance->getIsRID($nid); }
+    public function getNodeIsRID(Node $nid): bool { return $this->_nebuleInstance->getIsRID($nid->getID()); }
 }

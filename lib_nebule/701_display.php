@@ -2854,7 +2854,7 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
         if ($nid == '0')
             return '';
 
-        if ($this->_nebuleInstance->getIsRID($oid))
+        if ($this->_nebuleInstance->getNodeIsRID($oid))
             $oid = $oid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
 
         $uid = $this->_getImageUpdate($oid);

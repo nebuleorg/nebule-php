@@ -776,6 +776,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
             $this->_newBL .= '/' . $rl;
             $this->_newLinkCount++;
         }
+        //$this->_rawBlocLink .= $rl;
         $this->_lid = $this->_cryptoInstance->hash($this->_rawBlocLink);
 
         return true;

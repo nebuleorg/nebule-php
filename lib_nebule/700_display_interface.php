@@ -124,7 +124,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
     public function setIconRID(string $rid, bool $update = true): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->_cacheInstance->newNode($rid);
-        if ($this->_nebuleInstance->getIsRID($nid))
+        if ($this->_nebuleInstance->getNodeIsRID($nid))
             $oid = $nid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         else
             $oid = $nid;
@@ -185,7 +185,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
             $updateIcon = $nid->getUpdateNID(true, false, $this->_social);
             if ($updateIcon == '')
                 $updateIcon = $nid->getID();
-            if ($this->_nebuleInstance->getIsRID($nid))
+            if ($this->_nebuleInstance->getNodeIsRID($nid))
                 $updateIcon = Displays::DEFAULT_ICON_LO;
             return $updateIcon;
         }

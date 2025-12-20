@@ -14,7 +14,7 @@ class nebule
 {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251217';
+    const NEBULE_VERSION = '020251220';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';
@@ -709,7 +709,7 @@ class nebule
      * Extrait l'ID de l'entité, si demandé.
      * Liste les liens définissants les différentes conversations.
      * Retourne la liste.
-     * $entity : Permet de ne sélectionner que les conversations générés par une entité.
+     * $entity : Permet de ne sélectionner que les conversations générées par une entité.
      *
      * @param Entity $entity
      * @param string $socialClass
@@ -762,8 +762,11 @@ class nebule
         return '';
     }
 
-    public function getIsRID(Node $nid): bool {
-        return str_contains($nid->getID(), '.none');
+    public function getNodeIsRID(Node $node): bool { return $this->getIsRID($node->getID()); }
+    public function getIsRID(string $nid): bool {
+        if (!Node::checkNID($nid))
+            return false;
+        return str_contains($nid, '.none');
     }
 
     public function runApplication(): void {
