@@ -844,7 +844,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
             'bl/rl/nid3' => $right,
         );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all'); // FIXME $socialClass = self?
     }
 
     private function _display_InlineBlogs(string $socialClass): void {
@@ -861,17 +861,21 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $this->_getBlogListByRight($linksBlog2, self::RID_FOLLOWER);
         }
 
+        $list = array();
+        foreach ($linksBlog2 as $link)
+            $list[$link->getParsed()['bl/rl/nid1']] = $link->getSignersEID();
+        foreach ($linksBlog as $link)
+            $list[$link->getParsed()['bl/rl/nid2']] = $link->getSignersEID();
+
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        foreach ($linksBlog as $link) {
-            $parsedLink = $link->getParsed();
-            $blogNID = $parsedLink['bl/rl/nid2'];
-            $blogInstance = $this->_cacheInstance->newNode($blogNID);
+        foreach ($list as $linksBlog => $signers) {
+            $blogInstance = $this->_cacheInstance->newNode($linksBlog);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $linksBlog
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -883,37 +887,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setEnableContent(false);
             $instance->setEnableJS(false);
             $instance->setEnableRefs(true);
-            $instance->setRefs($link->getSignersEID());
-            $instance->setSelfHookName('selfMenuBlogs');
-            $instance->setEnableStatus(true);
-            $instance->setStatus(
-                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountPageNID($blogInstance, $socialClass)
-                . ' '
-                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountPostNID($blogInstance, $socialClass)
-            );
-            $instanceList->addItem($instance);
-        }
-        foreach ($linksBlog2 as $link) {
-            $parsedLink = $link->getParsed();
-            $blogNID = $parsedLink['bl/rl/nid1'];
-            $blogInstance = $this->_cacheInstance->newNode($blogNID);
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setNID($blogInstance);
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setName($blogInstance->getName('all'));
-            $instance->setEnableFlags(false);
-            $instance->setEnableFlagState(false);
-            $instance->setEnableFlagEmotions(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableRefs(true);
-            $instance->setRefs($link->getSignersEID());
+            $instance->setRefs($signers);
             $instance->setSelfHookName('selfMenuBlogs');
             $instance->setEnableStatus(true);
             $instance->setStatus(
