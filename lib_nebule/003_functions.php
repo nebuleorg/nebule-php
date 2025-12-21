@@ -180,7 +180,7 @@ class Functions
         return $instance;
     }
 
-    public function dateCompare($chr1, $mod1, $chr2, $mod2): bool|int
+    public function dateCompare($chr1, $mod1, $chr2, $mod2): false|int
     {
         // FIXME comparateur universel sur multiples formats de dates...
         if ($chr1 != '0') return false;
@@ -228,8 +228,7 @@ class Functions
         return 0;
     }
 
-    public function getYoungestLink(array $links): ?LinkRegister
-    {
+    public function getYoungestLink(array $links): ?LinkRegister {
         $resultLink=$links[0];
         foreach ($links as $link)
             if ($this->dateCompare($link->getParsed()['bl/rc/mod'],$link->getParsed()['bl/rc/chr'],$resultLink->getParsed()['bl/rc/mod'],$resultLink->getParsed()['bl/rc/chr']) > 0)

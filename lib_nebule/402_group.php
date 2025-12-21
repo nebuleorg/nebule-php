@@ -98,6 +98,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
         $this->_isGroup = true;
+        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
         return $this->writeLink(
                 'l>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
                 $obfuscated);
@@ -114,6 +115,7 @@ class Group extends Node implements nodeInterface {
             return false;
         $this->_isGroup = false;
         // TODO detect previously obfuscated link.
+        $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
         return $this->writeLink(
                 'x>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
                 $obfuscated);
@@ -132,13 +134,10 @@ class Group extends Node implements nodeInterface {
      */
     public function getMarkClosedGroup(?Entity $entity = null): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_metrologyInstance->addLog(__METHOD__ . ' ' . $this->_id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '00000000');
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -147,16 +146,13 @@ class Group extends Node implements nodeInterface {
                 $id,
                 $this->getReferenceObjectClosed()
         );
-
         $this->_socialInstance->arraySocialFilter($links, 'myself');
-
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkClosed = true;
             else
                 $this->_isMarkClosed = false;
         } // FIXME _isMarkClosed
-
         if (sizeof($links) != 0) {
             $this->_metrologyInstance->addLog('group ' . $this->_id . ' is closed', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9ace1a1c');
             return true;
@@ -176,18 +172,15 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if ($this->getMarkClosedGroup())
             return true;
-
+        $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as close', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5a5dcc0');
         return $this->writeLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(),
                 $obfuscated);
@@ -205,15 +198,13 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if (!$this->getMarkClosedGroup())
             return true;
-
+        $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as open', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27c698ab');
         return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(), $obfuscated);
     }
 
@@ -234,7 +225,6 @@ class Group extends Node implements nodeInterface {
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -243,9 +233,7 @@ class Group extends Node implements nodeInterface {
                 $id,
                 $this->getReferenceObjectProtected()
         );
-
         $this->_socialInstance->arraySocialFilter($links, 'myself');
-
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkProtected = true;
@@ -266,19 +254,15 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($this->getMarkObfuscatedGroup($entity))
             $obfuscated = true;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if ($this->getMarkProtectedGroup())
             return true;
         $this->_isMarkProtected = true;
-
         return $this->writeLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(),
                 $obfuscated);
@@ -296,16 +280,13 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if (!$this->getMarkProtectedGroup())
             return true;
         $this->_isMarkProtected = false;
-
         return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(), $obfuscated);
     }
 
@@ -324,12 +305,10 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             return false;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -338,9 +317,7 @@ class Group extends Node implements nodeInterface {
                 $id,
                 $this->getReferenceObjectObfuscated()
         );
-
         $this->_socialInstance->arraySocialFilter($links, 'myself');
-
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
             if (sizeof($links) != 0)
                 $this->_isMarkObfuscated = true;
@@ -361,19 +338,15 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if ($this->getMarkObfuscatedGroup())
             return true;
         $this->_isMarkObfuscated = true;
-
         return $this->writeLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(),
                 $obfuscated);
@@ -391,16 +364,13 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
             return false;
-
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-
         if (!$this->getMarkObfuscatedGroup())
             return true;
         $this->_isMarkObfuscated = false;
-
         return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(), $obfuscated);
     }
 
@@ -416,7 +386,6 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($nid) || !$this->getIsRID($type))
             return false;
-
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -425,9 +394,7 @@ class Group extends Node implements nodeInterface {
                 $nid,
                 $type
         );
-
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
-
         if (sizeof($links) != 0)
             return true;
         return false;
@@ -446,10 +413,9 @@ class Group extends Node implements nodeInterface {
             return false;
         if (!Node::checkNID($nid) || !$this->getIsRID($type))
             return false;
-
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
-
+        $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
         return $this->writeLink(
                 'l>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
@@ -468,91 +434,23 @@ class Group extends Node implements nodeInterface {
             return false;
         if (!Node::checkNID($nid) || !$this->getIsRID($type))
             return false;
-
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
         // TODO detect previously obfuscated link.
-
+        $this->_metrologyInstance->addLog('remove member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c23f3303');
         return $this->writeLink(
                 'x>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
     }
 
-    /**
-     * Get if the object is a typed member of the group.
-     * @param Node   $object
-     * @param string $type
-     * @param string $socialClass
-     * @return boolean
-     */
     public function getIsMemberTyped(Node $object, string $type, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $type, $socialClass); }
-
-    /**
-     * Add the object as a typed member of the group.
-     * @param Node    $object
-     * @param string  $type
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function setAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $type, $obfuscated); }
-
-    /**
-     * Remove the object as a member of the group.
-     * @param Node    $object
-     * @param string  $type
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function unsetAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($object->getID(), $type, $obfuscated); }
-
-
-
-    /**
-     * Get if the object is a member of the group.
-     * @param Node $object
-     * @param string $socialClass
-     * @return boolean
-     */
     public function getIsMember(Node $object, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $this->_id, $socialClass); }
-
-    /**
-     * Get if the object is a member of the group.
-     * @param string $nid
-     * @param string $socialClass
-     * @return boolean
-     */
     public function getIsMemberNID(string $nid, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($nid, $this->_id, $socialClass); }
-
-    /**
-     * Add the object as a member of the group.
-     * @param Node $object
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function setAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
-
-    /**
-     * Add the object as a member of the group.
-     * @param string  $nid
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function setAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
-
-    /**
-     * Remove the object as a member of the group.
-     * @param Node $object
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function unsetAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
-
-    /**
-     * Remove the object as a member of the group.
-     * @param string  $nid
-     * @param boolean $obfuscated
-     * @return boolean
-     */
     public function unsetAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
 
 
@@ -576,20 +474,11 @@ class Group extends Node implements nodeInterface {
                 '',
                 $type
         );
-$this->_metrologyInstance->addLog('DEBUGGING size1=' . sizeof($links) . ' rid=' . $type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_socialInstance->setList($socialListID);
+        $this->_socialInstance->setList($socialListID, $socialClass);
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
-        $this->_socialInstance->unsetList();
-$this->_metrologyInstance->addLog('DEBUGGING size2=' . sizeof($links) . ' rid=' . $type, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_socialInstance->unsetList($socialClass);
         return $links;
     }
-
-    /**
-     * Get the list of member's links on the group.
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array:Link
-     */
     public function getListMembersLinks(string $socialClass = '', array $socialListID = array()): array { return $this->getListTypedMembersLinks($this->_id, $socialClass, $socialListID); }
 
     /**
@@ -609,30 +498,8 @@ $this->_metrologyInstance->addLog('DEBUGGING size2=' . sizeof($links) . ' rid=' 
             $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
         return $list;
     }
-
-    /**
-     * Get the list of members (NID) on the group.
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array:string
-     */
     public function getListMembersID(string $socialClass = '', array $socialListID = array()): array { return $this->getListTypedMembersID($this->_id, $socialClass, $socialListID); }
-
-    /**
-     * Get the count of members on the group.
-     * @param string $type
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return float
-     */
     public function getCountTypedMembers(string $type, string $socialClass = '', array $socialListID = array()): float { return sizeof($this->getListTypedMembersLinks($type, $socialClass, $socialListID)); }
-
-    /**
-     * Get the count of members on the group.
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return float
-     */
     public function getCountMembers(string $socialClass = '', array $socialListID = array()): float { return sizeof($this->getListMembersLinks($socialClass, $socialListID)); }
 
 

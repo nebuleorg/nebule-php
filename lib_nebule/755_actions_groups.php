@@ -52,8 +52,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getCreateGroupOK(): bool { return $this->_createGroupOK; }
     protected function _createGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup'))
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '44f2509d');
             return;
+        }
         $this->_metrologyInstance->addLog('create group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
         $this->_createGroup = true;
         $this->_createGroupName = $this->getFilterInput(self::CREATE_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -71,6 +73,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getDeleteGroupOK(): bool { return $this->_deleteGroupOK; }
     protected function _deleteGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteGroup')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'db9a2f07');
+            return;
+        }
         $gid = $this->getFilterInput(self::DELETE, FILTER_FLAG_ENCODE_LOW);
         $instance = $this->_cacheInstance->newNode($gid, \Nebule\Library\Cache::TYPE_GROUP);
         if ($instance->getID() == '0')
@@ -89,8 +95,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getAddMemberOK(): bool { return $this->_actionAddMemberOK; }
     protected function _addMember(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup'))
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3e508b5f');
             return;
+        }
         $instance = $this->_nebuleInstance->getCurrentGroupInstance();
         if ($instance === null || $instance->getID() == '0')
             return;
@@ -108,8 +116,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getRemoveMemberOK(): bool { return $this->_actionRemoveMemberOK; }
     protected function _removeMember(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup'))
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '60c4aa2a');
             return;
+        }
         $instance = $this->_nebuleInstance->getCurrentGroupInstance();
         if ($instance === null || $instance->getID() == '0')
             return;

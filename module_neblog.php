@@ -73,7 +73,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251220';
+    const MODULE_VERSION = '020251221';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -250,19 +250,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
             return;
 
         $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
-        if (!$instance->getMarkClosedGroup())
-            return;
-        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER);
-        foreach ($this->_currentBlogListOwners as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        //if (!$instance->getMarkClosedGroup())
+        //    return;
+        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER, 'onlist', $this->_currentBlogListOwnersRO);
         foreach ($this->_currentBlogListOwnersRO as $eid)
             $this->_currentBlogListOwners[$eid] = $eid;
-        $this->_currentBlogWritersList = $instance->getListTypedMembersID(self::RID_WRITER);
-        foreach ($this->_currentBlogWritersList as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(self::RID_FOLLOWER);
-        foreach ($this->_currentBlogFollowersList as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+foreach ($this->_currentBlogListOwners as $eid)
+$this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_currentBlogWritersList = $instance->getListTypedMembersID(self::RID_WRITER, 'onlist', $this->_currentBlogListOwners);
+foreach ($this->_currentBlogWritersList as $eid)
+$this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(self::RID_FOLLOWER, 'onlist', $this->_currentBlogListOwners);
+foreach ($this->_currentBlogFollowersList as $eid)
+$this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
 

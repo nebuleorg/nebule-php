@@ -2606,14 +2606,14 @@ class Node extends Functions implements nodeInterface {
 
     /**
      * Link - Read links, parse and filter each link.
-     *
      * @param array  $links
      * @param array  $filter
      * @param string $socialClass
      * @param bool   $withInvalidLinks
+     * @param bool   $withLinkX
      * @return void
      */
-    public function getLinks(array &$links, array $filter, string $socialClass = '', bool $withInvalidLinks = false): void {
+    public function getLinks(array &$links, array $filter, string $socialClass = '', bool $withInvalidLinks = false, bool $withLinkX = false): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0'
                 || !$this->_ioInstance->checkLinkPresent($this->_id)
@@ -2640,14 +2640,39 @@ class Node extends Functions implements nodeInterface {
         }
 
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
-        $this->_filterLinksByX($links);
+        $this->_filterLinksByX($links, $withLinkX);
     }
 
-    protected function _filterLinksByX(array &$links): void {
-        foreach ($links as $k => $r) {
-            // FIXME manage x links
-            if ($r->getParsed('bl/rl/req'))
-                unset($k);
+    /**
+     * Filter links when a newer same link in X exists.
+     * @param array $links
+     * @param bool  $withLinkX
+     * @return void
+     */
+    protected function _filterLinksByX(array &$links, bool $withLinkX = false): void {
+        // Remove a common link when a newer same link in X exists.
+        foreach ($links as $i => $linkToCheck) {
+            if ($linkToCheck->getParsed()['bl/rl/req'] == 'x')
+                continue;
+            foreach ($links as $linkToCompare) {
+                if ($linkToCompare->getParsed()['bl/rl/req'] != 'x')
+                    continue;
+                if (substr($linkToCheck->getParsed()['bl/rl'], 1) != substr($linkToCompare->getParsed()['bl/rl'], 1))
+                    continue;
+                $compare = $this->dateCompare(
+                        $linkToCheck->getBlocLink()->getParsed()['bl/rc/mod'], $linkToCheck->getBlocLink()->getParsed()['bl/rc/chr'],
+                        $linkToCompare->getBlocLink()->getParsed()['bl/rc/mod'], $linkToCompare->getBlocLink()->getParsed()['bl/rc/chr']);
+                if ($compare === false || $compare < 0)
+                    continue;
+                unset($links[$i]);
+            }
+        }
+        // Cleaning x links
+        if (!$withLinkX) {
+            foreach ($links as $i => $link) {
+                if ($link->getParsed()['bl/rl/req'] == 'x')
+                    unset($links[$i]);
+            }
         }
     }
 
