@@ -60,8 +60,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251029';
-    const APPLICATION_LICENCE = 'GNU GPL 2025-2025';
+    const APPLICATION_VERSION = '020251222';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -71,6 +71,7 @@ class Application extends Applications
     const LIST_MODULES_INTERNAL = array(
         'ModuleHelp',
         'ModuleEntities',
+        'ModuleGroupEntities',
         'ModuleLang',
         'ModuleTranslateFRFR'
     );
@@ -119,7 +120,7 @@ zK0RGBoaguHhYahFBpkgCDhz5gwMDQ1BZ2dnrndIExMTj6anp9/IagdkFkkhhODhw4e28+fPD9Rz5icQ
 JceXqVTqk8VieRAIBJalam0ZK1sRpEAgsGyxWB6UU1pfVqns9va2dP/+/SjG+OOpU6dMSuYPi1k2m92amJh4dO3ateWtra2yOqPsWmFJkmBhYSH+5MmTvwcGBg7qdDqt2sXSV69e/XV6evpNJY5YNoDc
 JfL27dvPWltbP3Z3d//Q2tqq6KFKIpFITk1N/TY8PDz/8uXLinMWFQMA+JxInZ+fX7t79+6f+/fv/+fQoUNtGGNc7QsT9+7d+/3y5ctzs7OzsXwJzrLiCfh+ZUbZm6N78tLUThHlnro2ly+i/G/JqnkM
 UVYg1Gj2HcBeB/AvE200xGvbl50AAAAASUVORK5CYII=";
-    const DEFAULT_APPLICATION_LOGO_LINK = '?mod=log&view=about';
+    const DEFAULT_APPLICATION_LOGO_LINK = '?dm=log&dv=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
     const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 

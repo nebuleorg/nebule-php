@@ -66,11 +66,6 @@ class Conversation extends Group implements nodeInterface
         if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
             $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
-        $this->getReferenceObject();
-        $this->getReferenceObjectClosed();
-        $this->getReferenceObjectProtected();
-        $this->getReferenceObjectObfuscated();
-
         if ($this->_isNew)
             $this->_createNewConversation();
         elseif ($this->_id != '0')
@@ -111,7 +106,7 @@ class Conversation extends Group implements nodeInterface
 
                 $signer = $this->_entitiesInstance->getGhostEntityEID();
                 $date = date(DATE_ATOM);
-                $hashconversation = $this->getReferenceObject();
+                $hashconversation = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION);
 
                 // Création lien de hash.
                 $date2 = $date;
@@ -145,7 +140,7 @@ class Conversation extends Group implements nodeInterface
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
-                    $meta = $this->getReferenceObjectClosed();
+                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE);
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                     $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
@@ -161,7 +156,7 @@ class Conversation extends Group implements nodeInterface
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
-                    $meta = $this->getReferenceObjectProtected();
+                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE);
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                     $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
@@ -177,7 +172,7 @@ class Conversation extends Group implements nodeInterface
                     $action = 'l';
                     $source = $this->_id;
                     $target = $signer;
-                    $meta = $this->getReferenceObjectObfuscated();
+                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE);
                     $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
                     $newLink = $this->_cacheInstance->newBlockLink($link);
                     $newLink->sign();
@@ -406,11 +401,11 @@ class Conversation extends Group implements nodeInterface
     /**
      * Extrait la liste des liens définissant les entités à l'écoute de la conversation.
      *
-     * @param string $socialClass
-     * @param array:string $socialListID
+     * @param string     $socialClass
+     * @param array|null $socialListID
      * @return array:Link
      */
-    public function getListFollowersLinks(string $socialClass = '', $socialListID = null): array
+    public function getListFollowersLinks(string $socialClass = '', ?array $socialListID = null): array
     {
         return $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
     }
@@ -418,11 +413,11 @@ class Conversation extends Group implements nodeInterface
     /**
      * Extrait la liste des ID des entités à l'écoute du groupe.
      *
-     * @param string $socialClass
-     * @param array:string $socialListID
+     * @param string     $socialClass
+     * @param array|null $socialListID
      * @return array:string
      */
-    public function getListFollowersID(string $socialClass = '', $socialListID = null): array
+    public function getListFollowersID(string $socialClass = '', ?array $socialListID = null): array
     {
         // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
@@ -439,11 +434,11 @@ class Conversation extends Group implements nodeInterface
     /**
      * Retourne le nombre d'entités à l'écoute du groupe.
      *
-     * @param string $socialClass
-     * @param array:string $socialListID
+     * @param string     $socialClass
+     * @param array|null $socialListID
      * @return float
      */
-    public function getCountFollowers(string $socialClass = '', $socialListID = null): float
+    public function getCountFollowers(string $socialClass = '', ?array $socialListID = null): float
     {
         return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID));
     }
@@ -451,12 +446,12 @@ class Conversation extends Group implements nodeInterface
     /**
      * Retourne la liste des entités qui ont ajouté l'entité cité comme suiveuse de la conversation.
      *
-     * @param string $entity
-     * @param string $socialClass
-     * @param array:string $socialListID
+     * @param string     $entity
+     * @param string     $socialClass
+     * @param array|null $socialListID
      * @return array:string
      */
-    public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', $socialListID = null): array
+    public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', ?array $socialListID = null): array
     {
         // Extrait les liens des groupes.
         $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
@@ -470,87 +465,6 @@ class Conversation extends Group implements nodeInterface
         }
 
         return $list;
-    }
-
-
-    /**
-     * ID de référence de l'objet.
-     *
-     * @var string
-     */
-    private $_referenceObject = '';
-
-    /**
-     * Calcule et retourne la référence de l'objet.
-     *
-     * @return string
-     */
-    public function getReferenceObject(): string
-    {
-        if ($this->_referenceObject == '') {
-            $this->_referenceObject = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
-        return $this->_referenceObject;
-    }
-
-    /**
-     * ID de référence de l'objet de fermeture.
-     *
-     * @var string
-     */
-    private $_referenceObjectClosed = '';
-
-    /**
-     * Calcule et retourne la référence de l'objet de fermeture.
-     *
-     * @return string
-     */
-    public function getReferenceObjectClosed(): string
-    {
-        if ($this->_referenceObjectClosed == '') {
-            $this->_referenceObjectClosed = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
-        return $this->_referenceObjectClosed;
-    }
-
-    /**
-     * ID de référence de l'objet de protection des membres.
-     *
-     * @var string
-     */
-    private $_referenceObjectProtected = '';
-
-    /**
-     * Calcule et retourne la référence de l'objet de protection des membres.
-     *
-     * @return string
-     */
-    public function getReferenceObjectProtected(): string
-    {
-        if ($this->_referenceObjectProtected == '') {
-            $this->_referenceObjectProtected = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
-        return $this->_referenceObjectProtected;
-    }
-
-    /**
-     * ID de référence de l'objet de dissimulation des membres.
-     *
-     * @var string
-     */
-    private $_referenceObjectObfuscated = '';
-
-    /**
-     * Calcule et retourne la référence de l'objet de dissimulation des membres.
-     *
-     * @return string
-     */
-    public function getReferenceObjectObfuscated(): string
-    {
-        if ($this->_referenceObjectObfuscated == '') {
-            $this->_referenceObjectObfuscated = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
-        }
-        return $this->_referenceObjectObfuscated;
     }
 }
 

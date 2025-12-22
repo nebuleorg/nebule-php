@@ -28,7 +28,7 @@ class ModuleQantion extends \Nebule\Library\Modules
     const MODULE_DESCRIPTION = '::ModuleDescription';
     const MODULE_VERSION = '020251116';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

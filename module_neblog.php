@@ -16,7 +16,6 @@ use Nebule\Library\References;
 
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
- *
  *  - Definition of new blog with 'BlogOID' NID:
  *    - f>RID_BLOG_NODE>BlogOID>RID_BLOG_NODE :
  * BlogOID must have content with eid value.
@@ -49,16 +48,13 @@ use Nebule\Library\References;
  * PageOID must have content.
  * PageOID should not have name.
  * PageOID can have update.
- *  - A blog, a post or a page can be linked to entities (EID) or groups (GroupNID) TODO :
+ *  - A blog can be linked to entities (EID) or groups (GroupNID) to add rights:
+ *    - f>BlogOID>EID>RID_owner
  *    - f>BlogOID>EID>RID_writer
- *    - f>PostNID>EID>RID_writer
- *    - f>PageNID>EID>RID_writer
- *    - f>BlogOID>GroupNID>RID_writer
- *    - f>PostNID>GroupNID>RID_writer
- *    - f>PageNID>GroupNID>RID_writer
- *  - A post or a page can inherit entities (EID) or groups (GroupNID) from the blog :
- *    - f>BlogOID>EID>RID_writer_inherit
- *    - f>BlogOID>GroupNID>RID_writer_inherit
+ *    - f>BlogOID>EID>RID_follower
+ *    - f>BlogOID>GroupNID>RID_owner TODO
+ *    - f>BlogOID>GroupNID>RID_writer TODO
+ *    - f>BlogOID>GroupNID>RID_follower TODO
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -73,9 +69,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251221';
+    const MODULE_VERSION = '020251222';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2024-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     const MODULE_HELP = '::objects:ModuleHelp';
     const MODULE_INTERFACE = '3.0';
@@ -160,7 +156,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private ?node $_instanceCurrentBlog = null;
     private ?node $_instanceCurrentBlogPost = null;
     private ?node $_instanceCurrentBlogPage = null;
-    private array $_currentBlogListOwnersRO = array();
+    private array $_currentBlogListFounders = array();
     private array $_currentBlogListOwners = array();
     private array $_currentBlogWritersList = array();
     private array $_currentBlogFollowersList = array();
@@ -174,7 +170,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_getCurrentBlog();
         $this->_getCurrentBlogPost();
         $this->_getCurrentBlogPage();
-        $this->_getCurrentBlogOwner();
+        $this->_getCurrentBlogFounders();
         $this->_getCurrentBlogSocialList();
     }
 
@@ -217,7 +213,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
     }
 
-    private function _getCurrentBlogOwner(): void {
+    private function _getCurrentBlogFounders(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $oid = $this->_instanceCurrentBlog->getID();
         if ($oid == '0')
@@ -241,19 +237,19 @@ class ModuleNeblog extends \Nebule\Library\Modules
             return;
         $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
         $this->_currentBlogListOwners = array($eid => $eid);
-        $this->_currentBlogListOwnersRO = array($eid => $eid);
+        $this->_currentBlogListFounders = array($eid => $eid);
     }
 
     private function _getCurrentBlogSocialList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (sizeof($this->_currentBlogListOwnersRO) == 0)
+        if (sizeof($this->_currentBlogListFounders) == 0)
             return;
 
         $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
         //if (!$instance->getMarkClosedGroup())
         //    return;
-        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER, 'onlist', $this->_currentBlogListOwnersRO);
-        foreach ($this->_currentBlogListOwnersRO as $eid)
+        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER, 'onlist', $this->_currentBlogListFounders);
+        foreach ($this->_currentBlogListFounders as $eid)
             $this->_currentBlogListOwners[$eid] = $eid;
 foreach ($this->_currentBlogListOwners as $eid)
 $this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -270,6 +266,14 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
         $hookArray = array();
         switch ($hookName) {
+            /*case 'menu':
+                $hookArray[1]['name'] = '::blog:list';
+                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
+                $hookArray[1]['desc'] = '';
+                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                break;*/
             case 'selfMenu':
             case 'selfMenuNeblog':
                 # List blogs of ghost entity
@@ -1228,9 +1232,9 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $instance->setEnableStatus(true);
                 $instance->setEnableContent(false);
                 $instance->setEnableJS(false);
-                if (isset($this->_currentBlogListOwnersRO[$eid])) {
-                    $instance->setSelfHookName('rightsBlogOwnerRO');
-                    $instance->setStatus('::owner');
+                if (isset($this->_currentBlogListFounders[$eid])) {
+                    $instance->setSelfHookName('rightsBlogFounder');
+                    $instance->setStatus('::founder');
                 }
                 elseif (isset($this->_currentBlogListOwners[$eid])) {
                     $instance->setSelfHookName('rightsBlogOwner');
@@ -1907,6 +1911,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::rights' => 'Permissions',
             '::owners' => 'Propriétaires',
             '::owner' => 'Propriétaire',
+            '::founder' => 'Fondateur',
             '::writers' => 'Écrivains',
             '::writer' => 'Écrivain',
             '::followers' => 'Abonnés',
@@ -1962,6 +1967,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::rights' => 'Authorizations',
             '::owners' => 'Owners',
             '::owner' => 'Owner',
+            '::founder' => 'Founder',
             '::writers' => 'Writers',
             '::writer' => 'Writer',
             '::followers' => 'Followers',
@@ -2017,6 +2023,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::rights' => 'Authorizations',
             '::owners' => 'Owners',
             '::owner' => 'Owner',
+            '::founder' => 'Founder',
             '::writers' => 'Writers',
             '::writer' => 'Writer',
             '::followers' => 'Followers',

@@ -52,7 +52,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
     const APPLICATION_VERSION = '020250615';
-    const APPLICATION_LICENCE = 'GNU GPL 2013-2025';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -116,7 +116,7 @@ qOzAcDrs9Ho8bISSpulQqlXaPHz8+JaWnQJICcrlcORqNLjUiUpNzREaj0YTUhgrFyuJqKaDWsLnWsrj
 YKqKYEOVdjNbfI+Hy+1sePH3937NgxIzhEls/nCyMjI+GnT5/+Wcu4mm+HV1ZWdmw2W6G3t/f0YbkeF0URBYPBFw8ePPij1rGy+gPi8fiG1WrNOZ3OM4cBwPT09PPR0dFlOWNld4i8f
 Ply02Qy7TRSCaIoounp6ed3795d1rxFBiEEYrHYhsViyZ09e7aNIAhc6z0fDAZfjI6OLtdTQ6i7Sywej2+kUqlUd3e3hWEYixaLX11dfT82NvaLnD2vOICKY3z27NlbDMO27Xb7SbV6
 BXmeFx4+fPjryMjI/NLSkiJ1imarLFDprbF9zdJdDMOYj0yz9JfsMLfLawLgH07nKL4w8XnJK5/Pl/P5/KEIoZsvTTUBNAE0ATQBHGX7G6N1Cds7Fc/AAAAAAElFTkSuQmC";
-    const DEFAULT_APPLICATION_LOGO_LINK = '?mod=hlp&view=about';
+    const DEFAULT_APPLICATION_LOGO_LINK = '?dm=hlp&dv=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
     const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 

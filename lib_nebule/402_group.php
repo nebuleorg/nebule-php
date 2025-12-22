@@ -49,11 +49,6 @@ class Group extends Node implements nodeInterface {
 
     protected function _initialisation(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->getReferenceObject();
-        $this->getReferenceObjectClosed();
-        $this->getReferenceObjectProtected();
-        $this->getReferenceObjectObfuscated();
-
         if ($this->_isNew)
             $this->_createNewGroup();
         elseif ($this->_id != '0')
@@ -100,7 +95,9 @@ class Group extends Node implements nodeInterface {
         $this->_isGroup = true;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                'l>' . $this->_id
+                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE)
+                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
                 $obfuscated);
     }
 
@@ -117,8 +114,47 @@ class Group extends Node implements nodeInterface {
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
         return $this->writeLink(
-                'x>' . $this->_id . '>' . $this->getReferenceObject() . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                'x>' . $this->_id
+                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE)
+                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
                 $obfuscated);
+    }
+
+    /**
+     * Mark as a group of entities with links.
+     * @param bool $obfuscated
+     * @return boolean
+     */
+    public function setAsGroupOfEntities(bool $obfuscated = false): bool
+    {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'unlocked')))
+            return false;
+        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6636179a');
+        return ($this->setAsGroup($obfuscated)
+                && $this->writeLink(
+                        'l>' . $this->_id
+                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
+                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                        $obfuscated));
+    }
+
+    /**
+     * Remove the mark as a group of entities with links.
+     * @param bool $obfuscated
+     * @return boolean
+     */
+    public function unsetAsGroupOfEntities(bool $obfuscated = false): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+            return false;
+        $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'de5c0565');
+        return ($this->unsetAsGroup($obfuscated)
+                && $this->writeLink(
+                        'x>' . $this->_id
+                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
+                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                        $obfuscated));
     }
 
 
@@ -144,7 +180,7 @@ class Group extends Node implements nodeInterface {
                 'l',
                 $this->_id,
                 $id,
-                $this->getReferenceObjectClosed()
+                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME)
         );
         $this->_socialInstance->arraySocialFilter($links, 'myself');
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
@@ -182,7 +218,7 @@ class Group extends Node implements nodeInterface {
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as close', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5a5dcc0');
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(),
+                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME),
                 $obfuscated);
     }
 
@@ -205,7 +241,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkClosedGroup())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as open', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27c698ab');
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectClosed(), $obfuscated);
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME), $obfuscated);
     }
 
 
@@ -231,7 +267,7 @@ class Group extends Node implements nodeInterface {
                 'l',
                 $this->_id,
                 $id,
-                $this->getReferenceObjectProtected()
+                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE)
         );
         $this->_socialInstance->arraySocialFilter($links, 'myself');
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
@@ -264,7 +300,7 @@ class Group extends Node implements nodeInterface {
             return true;
         $this->_isMarkProtected = true;
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(),
+                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE),
                 $obfuscated);
     }
 
@@ -287,7 +323,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkProtectedGroup())
             return true;
         $this->_isMarkProtected = false;
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectProtected(), $obfuscated);
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE), $obfuscated);
     }
 
 
@@ -315,7 +351,7 @@ class Group extends Node implements nodeInterface {
                 'l',
                 $this->_id,
                 $id,
-                $this->getReferenceObjectObfuscated()
+                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE)
         );
         $this->_socialInstance->arraySocialFilter($links, 'myself');
         if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
@@ -348,7 +384,7 @@ class Group extends Node implements nodeInterface {
             return true;
         $this->_isMarkObfuscated = true;
         return $this->writeLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(),
+                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE),
                 $obfuscated);
     }
 
@@ -371,7 +407,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkObfuscatedGroup())
             return true;
         $this->_isMarkObfuscated = false;
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->getReferenceObjectObfuscated(), $obfuscated);
+        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE), $obfuscated);
     }
 
 
@@ -544,42 +580,7 @@ class Group extends Node implements nodeInterface {
         $list = array();
         foreach ($links as $link)
             $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
-
         return $list;
-    }
-
-
-
-    private string $_referenceObject = '';
-
-    public function getReferenceObject(): string {
-        if ($this->_referenceObject == '')
-            $this->_referenceObject = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE);
-        return $this->_referenceObject;
-    }
-
-    private string $_referenceObjectClosed = '';
-
-    public function getReferenceObjectClosed(): string {
-        if ($this->_referenceObjectClosed == '')
-            $this->_referenceObjectClosed = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
-        return $this->_referenceObjectClosed;
-    }
-
-    private string $_referenceObjectProtected = '';
-
-    public function getReferenceObjectProtected(): string {
-        if ($this->_referenceObjectProtected == '')
-            $this->_referenceObjectProtected = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE);
-        return $this->_referenceObjectProtected;
-    }
-
-    private string $_referenceObjectObfuscated = '';
-
-    public function getReferenceObjectObfuscated(): string {
-        if ($this->_referenceObjectObfuscated == '')
-            $this->_referenceObjectObfuscated = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE);
-        return $this->_referenceObjectObfuscated;
     }
 }
 

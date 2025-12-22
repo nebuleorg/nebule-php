@@ -145,6 +145,7 @@ class References
     public const REFERENCE_NEBULE_OBJET_EMOTION_COLERE = 'nebule/objet/emotion/colere';
     public const REFERENCE_NEBULE_OBJET_EMOTION_INTERET = 'nebule/objet/emotion/interet';
     public const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
+    public const REFERENCE_NEBULE_OBJET_GROUPE_ENTITE = 'nebule/objet/groupe/entite';
     public const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
     public const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';
     public const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';

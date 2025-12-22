@@ -10,8 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Modules extends Functions implements ModuleInterface
-{
+abstract class Modules extends Functions implements ModuleInterface {
     const MODULE_TYPE = 'Model'; // Model | Application | Traduction
     const MODULE_NAME = 'None';
     const MODULE_MENU_NAME = 'None';
@@ -38,20 +37,11 @@ abstract class Modules extends Functions implements ModuleInterface
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
 
-    public function __toString(): string
-    {
-        return $this::MODULE_NAME;
-    }
+    public function __toString(): string { return $this::MODULE_NAME; }
 
-    protected function _initialisation(): void
-    {
-        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
-    }
+    protected function _initialisation(): void { $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked(); }
 
-    public function getClassName(): string
-    {
-        return static::class;
-    }
+    public function getClassName(): string { return static::class; }
 
     /**
      * Add functionalities by hooks on menu (by module) and nodes (by type).
@@ -68,34 +58,25 @@ abstract class Modules extends Functions implements ModuleInterface
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
-    {
-        return array();
-    }
-
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
 
     /**
      * Part from this module to display on browser.
      *
      * @return void
      */
-    public function displayModule(): void
-    {
-    }
+    public function displayModule(): void {}
 
     /**
      * Inline part from this module to display on browser, called by primary page on displayModule().
      *
      * @return void
      */
-    public function displayModuleInline(): void
-    {
-    }
+    public function displayModuleInline(): void {}
 
     private ?string $_commandActionDisplayModuleCache = null;
 
-    public function getExtractCommandDisplayModule(): string
-    {
+    public function getExtractCommandDisplayModule(): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $return = '';
 
@@ -116,8 +97,7 @@ abstract class Modules extends Functions implements ModuleInterface
         return $return;
     }
 
-    public function getCSS(): void
-    {
+    public function getCSS(): void {
         echo '<style type="text/css">' . "\n";
         $this->headerStyle();
         echo '</style>' . "\n";
@@ -128,30 +108,23 @@ abstract class Modules extends Functions implements ModuleInterface
      *
      * @return void
      */
-    public function headerStyle(): void
-    {
-    }
+    public function headerStyle(): void {}
 
     /**
      * Part of JS script from this module to display on browser.
      *
      * @return void
      */
-    public function headerScript(): void
-    {
-    }
+    public function headerScript(): void {}
 
     /**
-     * Part of actions from this module to run before display.
+     * Part of the actions from this module to run before display.
      *
      * @return void
      */
-    public function actions(): void
-    {
-    }
+    public function actions(): void {}
 
-    public function getTranslate(string $text, string $lang = ''): string
-    {
+    public function getTranslate(string $text, string $lang = ''): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = $text;
         if ($this->_translateInstance === null)
@@ -160,8 +133,8 @@ abstract class Modules extends Functions implements ModuleInterface
         if ($lang == '')
             $lang = $this->_translateInstance->getCurrentLanguage();
 
-        if (isset(self::TRANSLATE_TABLE[$lang][$text]))
-            $result = self::TRANSLATE_TABLE[$lang][$text];
+        if (isset($this::TRANSLATE_TABLE[$lang][$text]))
+            $result = $this::TRANSLATE_TABLE[$lang][$text];
         return $result;
     }
 
@@ -178,8 +151,7 @@ abstract class Modules extends Functions implements ModuleInterface
      * @param boolean $obfuscate
      * @return void
      */
-    protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void
-    {
+    protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void {
         /*$link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
         $newLink = new Link($this->_nebuleInstance, $link);
         $newLink->sign($signer);
@@ -188,8 +160,7 @@ abstract class Modules extends Functions implements ModuleInterface
         $newLink->write();*/
     }
 
-    protected function _displaySimpleTitle(string $title, string $icon = ''): void
-    {
+    protected function _displaySimpleTitle(string $title, string $icon = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle($title);
@@ -198,8 +169,7 @@ abstract class Modules extends Functions implements ModuleInterface
         $instance->display();
     }
 
-    protected function _displayNotImplemented(): void
-    {
+    protected function _displayNotImplemented(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::notImplemented');
@@ -209,8 +179,7 @@ abstract class Modules extends Functions implements ModuleInterface
         $instance->display();
     }
 
-    protected function _displayNotSupported(): void
-    {
+    protected function _displayNotSupported(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::notSupported');

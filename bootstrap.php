@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020251214';
+const BOOTSTRAP_VERSION = '020251222';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2025';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -6445,12 +6445,6 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
             echo $nebuleGhostPublicEntity . '<br/>' . "\n";
             bootstrap_echoLineTitle('private ID');
             echo $nebuleGhostPrivateEntity . '<br/>' . "\n";
-/*            bootstrap_echoLineTitle('auto login');
-            echo '<a href="?' . LIB_ARG_SWITCH_APPLICATION . '=' . \Nebule\Library\References::DEFAULT_REDIRECT_AUTH_APP
-                . '&' . \Nebule\Library\References::COMMAND_APPLICATION_BACK . '=1' . '&view=desc'
-                . '&' . \Nebule\Library\References::COMMAND_SELECT_GHOST . '=' . $nebuleGhostPublicEntity
-                . '&pwd=' . bin2hex($nebuleGhostPasswordEntity) . '" target="_blank">&gt;open in new page</a><br/>' . "\n";
-*/
             ?>
 
             <div class="important">

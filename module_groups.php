@@ -22,17 +22,16 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleGroups extends \Nebule\Library\Modules
-{
+class ModuleGroups extends \Nebule\Library\Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251213';
+    const MODULE_VERSION = '020251222';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
@@ -47,6 +46,8 @@ class ModuleGroups extends \Nebule\Library\Modules
     const MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
+
+    const RESTRICTED_TYPE = '';
 
     private string $_hashGroup;
     private string $_hashGroupClosed;
@@ -79,8 +80,7 @@ class ModuleGroups extends \Nebule\Library\Modules
      * @param Node|null $nid
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array
-    {
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
@@ -88,64 +88,60 @@ class ModuleGroups extends \Nebule\Library\Modules
         $hookArray = array();
 
         switch ($hookName) {
+            /*case 'menu':
+                $hookArray[0]['name'] = '::display:MyGroups';
+                $hookArray[0]['icon'] = $this::MODULE_LOGO;
+                $hookArray[0]['desc'] = '';
+                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                break;*/
             case 'selfMenu':
             case 'typeMenuGroup':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
-                    // Voir les groupes de l'entité.
-                    $hookArray[0]['name'] = '::display:MyGroups';
-                    $hookArray[0]['icon'] = $this::MODULE_LOGO;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                } else {
-                    // Voir les groupes des autres entités.
-                    $hookArray[0]['name'] = '::display:Groups';
-                    $hookArray[0]['icon'] = $this::MODULE_LOGO;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                        'name' => '::display:MyGroups',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-                // Si l'entité est déverrouillée.
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
+                    $hookArray[] = array(
+                        'name' => '::display:Groups',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
                 if ($this->_unlocked) {
                     if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]) {
-                        // Créer un groupe.
-                        $hookArray[1]['name'] = '::display:createGroup';
-                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                        $hookArray[1]['desc'] = '';
-                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-
-                        // Recherche si il y a des objets marqués.
-                        $markList = $this->_applicationInstance->getMarkObjectList();
-
-                        // Si la liste des marques n'est pas vide.
-                        if (sizeof($markList) != 0) {
-                            // Ajouter les objets marqués.
-                            $hookArray[2]['name'] = '::display:AddMarkedObjects';
-                            $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                            $hookArray[2]['desc'] = '';
-                            $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                                . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                        }
-                        unset($markList);
+                        $hookArray[] = array(
+                            'name' => '::display:createGroup',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                            'desc' => '',
+                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
                     }
-                }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
-                    // Refuser l'objet comme un groupe.
-                    $hookArray[1]['name'] = '::display:unmakeGroup';
-                    $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
+                        $hookArray[] = array(
+                            'name' => '::display:unmakeGroup',
+                            'icon' => Displays::DEFAULT_ICON_LX,
+                            'desc' => '',
+                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
+                                    . '&' . \Nebule\Library\ActionsGroups::DELETE
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
+                    }
                 }
                 break;
 
@@ -159,39 +155,6 @@ class ModuleGroups extends \Nebule\Library\Modules
                     . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                break;
-
-            case '::sylabe:module:group:remove':
-                // Si l'entité est déverrouillée.
-                if ($this->_unlocked && $this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
-                    // Retourner à la liste des groupes.
-                    $hookArray[0]['name'] = '::display:MyGroups';
-                    $hookArray[0]['icon'] = $this::MODULE_LOGO;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                    // Supprimer le groupe.
-                    $hookArray[1]['name'] = '::display:deleteGroup';
-                    $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['css'] = 'oneAction-bg-warn';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . ActionsGroups::DELETE . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                }
-                break;
-
-            case '::sylabe:module:entities:MenuNameSelfMenu':
-                $hookArray[0]['name'] = '::display:MyGroups';
-                $hookArray[0]['icon'] = $this::MODULE_LOGO;
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
 
             case 'selfMenuObject':
@@ -275,14 +238,14 @@ class ModuleGroups extends \Nebule\Library\Modules
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
 
-            case 'typeMenuEntity':
+            /*case 'typeMenuEntity':
                 $hookArray[0]['name'] = '::display:Groups';
                 $hookArray[0]['icon'] = $this::MODULE_LOGO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                break;
+                break;*/
         }
         return $hookArray;
     }
@@ -1082,4 +1045,25 @@ class ModuleGroups extends \Nebule\Library\Modules
             '::display:thisIsNotGroup' => 'This is not a group.',
         ],
     ];
+}
+
+
+/**
+ * This module can manage groups of entities.
+ *
+ * @author Projet nebule
+ * @license GNU GPLv3
+ * @copyright Projet nebule
+ * @link www.nebule.org
+ */
+class ModuleGroupEntities extends ModuleGroups {
+    const MODULE_COMMAND_NAME = 'grpent';
+    const MODULE_LOGO = '425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272';
+    const MODULE_REGISTERED_ICONS = array(
+            '425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272', // 0 : Icône des groupes.
+            '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',     // 1 : Créer un groupe.
+            'a269514d2b940d8269993a6f0138f38bbb86e5ac387dcfe7b810bf871002edf3.sha2.256',     // 2 : Ajouter objets marqués.
+    );
+    const MODULE_APP_ICON_LIST = array('425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272');
+    const RESTRICTED_TYPE = 'Entity';
 }

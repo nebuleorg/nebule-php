@@ -55,10 +55,10 @@ g8rh1K/R4HNYBzwE/Ax40MwOKOklAAmhYfC7+zTgM8BcYDYwdZikijHRIduG+xTwOPCEmW081DkLCUAM
     const DEFAULT_BOOTSTRAP_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702m
 PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
     const DEFAULT_BOOTSTRAP_LINK = 'a=1';
-    const DEFAULT_DISPLAY_COMMAND_MODE = 'mod';
-    const DEFAULT_DISPLAY_COMMAND_VIEW = 'view';
+    const DEFAULT_DISPLAY_COMMAND_MODE = 'dm';
+    const DEFAULT_DISPLAY_COMMAND_VIEW = 'dv';
     const DEFAULT_NEXT_COMMAND = 'next';
-    const DEFAULT_INLINE_COMMAND = 'i';
+    const DEFAULT_INLINE_COMMAND = 'di';
     const DEFAULT_CSS_COMMAND = 'css';
     const DEFAULT_INLINE_CONTENT_COMMAND = 'incontent';
     const DEFAULT_DISPLAY_MODE = 'none';
@@ -1966,8 +1966,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected function _displayHeaderRight(): void {}
     protected function _displayHeaderCenter(): void {}
 
-    protected function _displayMenuApplications(): void
-    {
+    protected function _displayMenuApplications(): void {
         $linkApplicationWebsite = $this->_applicationInstance::APPLICATION_WEBSITE;
         if (strpos($this->_applicationInstance::APPLICATION_WEBSITE, '://') === false)
             $linkApplicationWebsite = 'http://' . $this->_applicationInstance::APPLICATION_WEBSITE;
@@ -1998,34 +1997,43 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         <?php
     }
 
-    protected function _displayInternalMenuApplications(): void
-    {
+    protected function _displayInternalMenuApplications(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
         $list = array();
-        $j = 0;
-        $currentModuleName = 'noModuleFind-';
+        $currentModuleName = 'noModuleFound-';
 
-        // Affiche le lien du menu seul (sans JS).
+        // Call for the first application (1)
+        $list[] = array(
+                'icon' => Displays::REFERENCE_DEFAULT_LOGO,
+                'title' => 'N1',
+                'htlink' => '?' . Displays::DEFAULT_BOOTSTRAP_LINK,
+                'desc' => $this->_translateInstance->getTranslate('::::allApplications'),
+                'ref' => 'nebule',
+                'class' => 'menuListContentActionModules'
+        );
+
+        // Call to display the menu only (without JS).
         if ($this->_currentDisplayView != 'menu') {
-            $list[$j]['icon'] = '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272';
-            $list[$j]['title'] = $this->_translateInstance->getTranslate('::menu');
-$this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$j]['title'], Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-            $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu';
-            $list[$j]['desc'] = $this->_translateInstance->getTranslate('::menuDesc');
-            $list[$j]['ref'] = $this->_applicationInstance::APPLICATION_NAME;
-            $list[$j]['class'] = 'menuListContentActionModules';
-            $j++;
+            $list[] = array(
+                    'icon' => '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272',
+                    'title' => $this->_translateInstance->getTranslate('::menu'),
+                    'htlink' => '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu'
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    'desc' => $this->_translateInstance->getTranslate('::menuDesc'),
+                    'ref' => $this->_applicationInstance::APPLICATION_NAME,
+                    'class' => 'menuListContentActionModules'
+            );
+            $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$j]['title'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
 
-        // Appelle les actions du module concerné par le mode d'affichage.
+        // Call for actions of the current module for this display mode
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode)
                 continue;
             $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
             $currentModuleName = $module::MODULE_MENU_NAME;
-
             $appHookList = $module->getHookList('selfMenu', $this->_nebuleInstance->getCurrentObjectInstance());
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
@@ -2038,27 +2046,25 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
                         $desc = $this->_translateInstance->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
-
-                        $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
-                        $list[$j]['htlink'] = $appHook['link'];
-                        $list[$j]['desc'] = $desc;
-                        $list[$j]['ref'] = $moduleName;
-                        $list[$j]['class'] = 'menuListContentActionHooks';
-                        $this->_metrologyInstance->addLog('disp on menu selfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '70704574');
-                        $j++;
+                        $list[] = array(
+                                'icon' => $icon,
+                                'title' => $this->_translateInstance->getTranslate($appHook['name']),
+                                'htlink' => $appHook['link'],
+                                'desc' => $desc,
+                                'ref' => $moduleName,
+                                'class' => 'menuListContentActionHooks'
+                        );
+                        $this->_metrologyInstance->addLog('disp on menu selfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '70704574');
                     }
                 }
             }
         }
 
-        // Appelle les actions d'autres modules pour le module concerné par le mode d'affichage.
+        // Call for actions of the others modules for this display mode
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode)
                 continue;
-            // Extrait le nom du module.
             $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
-
             $appHookList = $module->getHookList($currentModuleName . 'SelfMenu', $this->_nebuleInstance->getCurrentObjectInstance());
             if (sizeof($appHookList) != 0) {
                 foreach ($appHookList as $appHook) {
@@ -2068,29 +2074,27 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
                             $icon = $module::MODULE_LOGO;
                         if ($icon == '')
                             $icon = self::DEFAULT_ICON_IMLOG;
-                        $desc = $this->_translateInstance->getTranslate($appHook['desc']);
+                        $desc = $module->getTranslate($appHook['desc']);
                         if ($desc == '')
                             $desc = '&nbsp;';
-
-                        $list[$j]['icon'] = $icon;
-                        $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
-                        $list[$j]['htlink'] = $appHook['link'];
-                        $list[$j]['desc'] = $desc;
-                        $list[$j]['ref'] = $moduleName;
-                        $list[$j]['class'] = 'menuListContentActionHooks';
-                        $this->_metrologyInstance->addLog('disp on menu ' . $currentModuleName . 'SelfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c8b9734c');
-                        $j++;
+                        $list[] = array(
+                                'icon' => $icon,
+                                'title' => $module->getTranslate($appHook['name']),
+                                'htlink' => $appHook['link'],
+                                'desc' => $desc,
+                                'ref' => $moduleName,
+                                'class' => 'menuListContentActionHooks'
+                        );
+                        $this->_metrologyInstance->addLog('disp on menu ' . $currentModuleName . 'SelfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8b9734c');
                     }
                 }
             }
         }
 
-        // Appelle les actions d'autres modules pour le mode d'affichage.
+        /*// Call for actions of the others modules for this display mode
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
-                // Extrait le nom du module.
                 $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
-
                 $appHookList = $module->getHookList('menu', $this->_nebuleInstance->getCurrentObjectInstance());
                 if (sizeof($appHookList) != 0) {
                     foreach ($appHookList as $appHook) {
@@ -2100,66 +2104,56 @@ $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$
                                 $icon = $module::MODULE_LOGO;
                             if ($icon == '')
                                 $icon = self::DEFAULT_ICON_IMLOG;
-                            $desc = $this->_translateInstance->getTranslate($appHook['desc']);
+                            $desc = $module->getTranslate($appHook['desc']);
                             if ($desc == '')
                                 $desc = '&nbsp;';
-
                             $list[$j]['icon'] = $icon;
-                            $list[$j]['title'] = $this->_translateInstance->getTranslate($appHook['name']);
+                            $list[$j]['title'] = $module->getTranslate($appHook['name']);
                             $list[$j]['htlink'] = $appHook['link'];
                             $list[$j]['desc'] = $desc;
                             $list[$j]['ref'] = $moduleName;
                             $list[$j]['class'] = 'menuListContentActionHooks';
-                        $this->_metrologyInstance->addLog('disp on menu anywhere ' . $appHook['desc'] . ' - module=' . $moduleName . ' name=' . $appHook['name'], Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00fde855');
+                            $this->_metrologyInstance->addLog('disp on menu anywhere ' . $appHook['desc'] . ' - module=' . $moduleName . ' name=' . $appHook['name'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00fde855');
                             $j++;
                         }
                     }
                 }
             }
-        }
+        }*/
 
-        // Appelle la liste des modules.
+        // Call of the list of modules
         foreach ($modules as $module) {
-            // Extrait le nom du module.
-            $moduleName = $module->getTranslate($module::MODULE_NAME);
-
-            // Liste les options à afficher.
-            $appTitleList = $module::MODULE_APP_TITLE_LIST;
-            if (sizeof($appTitleList) != 0) {
-                $appIconList = $module::MODULE_APP_ICON_LIST;
-                $appDescList = $module::MODULE_APP_DESC_LIST;
-                $appViewList = $module::MODULE_APP_VIEW_LIST;
-                for ($i = 0; $i < sizeof($appTitleList); $i++) {
-                    $icon = $appIconList[$i];
-                    if ($icon == '')
-                        $icon = $module::MODULE_LOGO;
-                    if ($icon == '')
-                        $icon = self::DEFAULT_ICON_LSTOBJ;
-
-                    $desc = $module->getTranslate($appDescList[$i]);
-                    if ($desc == '')
-                        $desc = '&nbsp;';
-
-                    $list[$j]['icon'] = $icon;
-                    $list[$j]['title'] = $module->getTranslate($appTitleList[$i]);
-                    $list[$j]['htlink'] = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i];
-                    $list[$j]['desc'] = $desc;
-                    $list[$j]['ref'] = $moduleName;
-                    $list[$j]['class'] = 'menuListContentActionModules';
-                        $this->_metrologyInstance->addLog('disp on menu (module) ' . $appDescList[$i] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1b232fad');
-                    $j++;
+            if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
+                $moduleName = $module->getTranslate($module::MODULE_NAME);
+                $appTitleList = $module::MODULE_APP_TITLE_LIST;
+                if (sizeof($appTitleList) != 0) {
+                    $appIconList = $module::MODULE_APP_ICON_LIST;
+                    $appDescList = $module::MODULE_APP_DESC_LIST;
+                    $appViewList = $module::MODULE_APP_VIEW_LIST;
+                    for ($i = 0; $i < sizeof($appTitleList); $i++) {
+                        $icon = $appIconList[$i];
+                        if ($icon == '')
+                            $icon = $module::MODULE_LOGO;
+                        if ($icon == '')
+                            $icon = self::DEFAULT_ICON_LSTOBJ;
+                        $desc = $module->getTranslate($appDescList[$i]);
+                        if ($desc == '')
+                            $desc = '&nbsp;';
+                        $list[] = array(
+                                'icon' => $icon,
+                                'title' => $module->getTranslate($appTitleList[$i]),
+                                'htlink' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
+                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                                'desc' => $desc,
+                                'ref' => $moduleName,
+                                'class' => 'menuListContentActionModules'
+                                );
+                        $this->_metrologyInstance->addLog('disp on menu (module) ' . $appDescList[$i] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1b232fad');
+                    }
                 }
             }
         }
-
-        // Add application 1
-        $list[$j]['icon'] = Displays::REFERENCE_DEFAULT_LOGO;
-        $list[$j]['title'] = 'N1';
-        $list[$j]['htlink'] = '?' . Displays::DEFAULT_BOOTSTRAP_LINK;
-        $list[$j]['desc'] = $this->_translateInstance->getTranslate('::::allApplications');
-        $list[$j]['ref'] = 'nebule';
-        $list[$j]['class'] = 'menuListContentActionModules';
 
         echo $this->getDisplayMenuList($list, 'Medium');
     }

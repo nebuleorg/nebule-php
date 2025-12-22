@@ -28,7 +28,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     const MODULE_DESCRIPTION = '::ModuleDescription';
     const MODULE_VERSION = '020251116';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
