@@ -39,7 +39,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251222';
+    const MODULE_VERSION = '020251223';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -86,8 +86,8 @@ class ModuleEntities extends \Nebule\Library\Modules
     const DEFAULT_ENTITIES_DISPLAY_NUMBER = 12;
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
-    private string $_displayEntity;
-    private Entity $_displayEntityInstance;
+    private string $_displayEntityEID = '';
+    private ?Entity $_displayEntityInstance = null;
     private string $_hashEntity;
     private Node $_hashEntityObject;
     private string $_hashType;
@@ -199,7 +199,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[6]['desc'] = '::DescriptionEntityDesc';
                     $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
@@ -222,7 +222,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                     $hookArray[20]['desc'] = '::SearchEntityDesc';
                     $hookArray[20]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
@@ -234,7 +234,7 @@ class ModuleEntities extends \Nebule\Library\Modules
                             'desc' => '::EntityKeys',
                             'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
-                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntity
+                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -752,11 +752,11 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _findDisplayEntity(): void {
         //$this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
         //$this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
-        $this->_displayEntity = $this->_nebuleInstance->getCurrentEntityEID();
-        if ($this->_displayEntity != '0')
+        $this->_displayEntityEID = $this->_nebuleInstance->getCurrentEntityEID();
+        if ($this->_displayEntityEID != '0')
             $this->_displayEntityInstance = $this->_nebuleInstance->getCurrentEntityInstance();
         else {
-            $this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
+            $this->_displayEntityEID = $this->_entitiesInstance->getGhostEntityEID();
             $this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
         }
     }
@@ -1101,12 +1101,12 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityLogs(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
-            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntityEID);
         }
         $this->_displaySimpleTitle('::ObjectTitle1', $this::MODULE_REGISTERED_ICONS[7]);
 
         // Extrait des propriétés de l'objet.
-        $entity = $this->_displayEntity;
+        $entity = $this->_displayEntityEID;
         $instance = $this->_displayEntityInstance;
         ?>
 
@@ -1303,7 +1303,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityActs(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
-            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntity);
+            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntityEID);
         }
         $this->_displaySimpleTitle('::ObjectTitle2', $this::MODULE_REGISTERED_ICONS[8]);
 
@@ -1405,8 +1405,12 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _displayMyEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
+            $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
+            $this->_displayEntityCreateNew();
+        }
         $this->_displaySimpleTitle('::MyEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('myentities');
+        $this->_displayInstance->registerInlineContentID('my_entities');
     }
 
     private function _display_InlineMyEntitiesList(): void {
@@ -1420,7 +1424,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayKnownEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::KnownEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('known_entities');
     }
 
     private function _display_InlineKnownEntitiesList(): void {
@@ -1648,45 +1652,25 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
 
-    private bool $_createEntityAction = false;
-    private ?Entity $_createEntityInstance = Null;
-    private ?Node $_createEntityKeyInstance = Null;
-    private bool $_createEntityError = false;
-    private string $_createEntityErrorMessage = '';
-
     /**
      * Affiche la création d'une entité.
      */
     private function _displayEntityCreate(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate();
-        if ($this->_createEntityAction)
-            $this->_displayEntityCreateNew();
-
-        if ($this->_createEntityAction && !$this->_createEntityError)
-            $this->_displayEntityDisplay();
-        else
-            $this->_displayEntityCreateForm();
+        $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
+        $this->_displayEntityCreateForm();
+        // MyEntities() view displays the result of the creation
     }
 
     private function _displayEntityCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $this->_createEntityAction = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate();
-        $this->_createEntityInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateInstance();
-        $this->_createEntityKeyInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateKeyInstance();
-        $this->_createEntityError = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateError();
-        $this->_createEntityErrorMessage = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateErrorMessage();
-
-        if ($this->_createEntityAction) {
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
             $instanceList = new DisplayList($this->_applicationInstance);
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
-            if (!$this->_createEntityError) {
-                $this->_displayEntityInstance = $this->_createEntityInstance;
-                $this->_displayEntity = $this->_createEntityInstance->getID();
+            if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateError()) {
+                $this->_displayEntityInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateInstance();
+                $this->_displayEntityEID = $this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateEID();
 
                 $instance->setMessage('::EntityCreated');
                 $instance->setType(DisplayItemIconMessage::TYPE_OK);
@@ -1695,7 +1679,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 $instance = new DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
-                $instance->setNID($this->_createEntityInstance);
+                $instance->setNID($this->_displayEntityInstance);
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
                 $instance->setEnableName(true);
@@ -1712,7 +1696,8 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setEnableLink(true);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
-                $instance->setEnableFlagUnlocked(false);
+                $instance->setEnableFlagUnlocked(true);
+                $instance->setSelfHookName('typeMenuEntity');
                 $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['oent']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
                 $instance->setIcon($instanceIcon2);
@@ -1720,7 +1705,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
                 $instance = new DisplayObject($this->_applicationInstance);
                 $instance->setSocial('all');
-                $instance->setNID($this->_createEntityKeyInstance);
+                $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateKeyInstance());
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
                 $instance->setEnableName(true);
@@ -1755,9 +1740,10 @@ class ModuleEntities extends \Nebule\Library\Modules
                 $instance->setMessage('::EntityNotCreated');
                 $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(DisplayItem::RATIO_SHORT);
-                $instance->setIconText('$this->_createEntityErrorMessage');
+                $instance->setIconText($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreateErrorMessage());
             }
             $instanceList->addItem($instance);
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
@@ -1766,8 +1752,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _displayEntityCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
-
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitWriteEntity'))
             && ($this->_unlocked
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
@@ -1775,13 +1759,12 @@ class ModuleEntities extends \Nebule\Library\Modules
         ) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                     . '&' . ActionsEntities::CREATE
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
             $instanceList = new DisplayList($this->_applicationInstance);
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
@@ -1895,7 +1878,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
-            $instance->setLink($commonLink);
+            //$instance->setLink($commonLink);
             $instanceList->addItem($instance);
 
             $instance = new DisplayQuery($this->_applicationInstance);
@@ -1907,9 +1890,10 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
             $instance->setWithSubmit(true);
-            $instance->setLink($commonLink);
+            //$instance->setLink($commonLink);
             $instanceList->addItem($instance);
 
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         } else {

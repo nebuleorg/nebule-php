@@ -2025,7 +2025,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     'ref' => $this->_applicationInstance::APPLICATION_NAME,
                     'class' => 'menuListContentActionModules'
             );
-            $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $list[$j]['title'], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $this->_translateInstance->getTranslate('::menu'), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
 
         // Call for actions of the current module for this display mode

@@ -1913,10 +1913,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityGroupAdd()
     {
         // Si un groupe a été créé.
-        if ($this->_actionInstance->getInstanceActionsGroups()->getCreateGroup()) {
-            $createGroupID = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupInstance();
-            $createGroupInstance = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupInstance();
-            $createGroupError = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupOK();
+        if ($this->_actionInstance->getInstanceActionsGroups()->getCreate()) {
+            $createGroupID = $this->_actionInstance->getInstanceActionsGroups()->getCreateInstance();
+            $createGroupInstance = $this->_actionInstance->getInstanceActionsGroups()->getCreateInstance();
+            $createGroupError = $this->_actionInstance->getInstanceActionsGroups()->getCreateError();
             $createGroupErrorMessage = $this->_actionInstance->getInstanceActionsGroups()->getCreateGroupErrorMessage();
 
             // Si la création a réussi.

@@ -14,7 +14,7 @@ class nebule
 {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251222';
+    const NEBULE_VERSION = '020251223';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';

@@ -115,7 +115,7 @@ class Node extends Functions implements nodeInterface {
     }
 
     /**
-     * Local initialization for a node or derivatives.
+     * Local initialisation for a node or derivatives.
      * Called by function initialisation() but only one time, the first time.
      *
      * @return void
@@ -159,7 +159,7 @@ class Node extends Functions implements nodeInterface {
         if (!$this->setContent($data))
             return false;
 
-        // @FIXME
+        // FIXME
         if ($protect)
             $this->setProtected($obfuscated);
         else
@@ -167,50 +167,6 @@ class Node extends Functions implements nodeInterface {
 
         return true;
     }
-
-    /*public function setContentOld(string &$data, bool $protect = false, bool $obfuscated = false): bool {
-        if (!$this->_isNew
-            || $this->_id != '0'
-            || strlen($data) == 0
-            || get_class($this) != 'Nebule\Library\Node'
-        )
-            return false;
-
-        if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
-            // calcul l'ID.
-            $this->_id = $this->_nebuleInstance->getFromDataNID($data);
-            if ($protect)
-                $this->_metrology->addLog('Create protected object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1434b3ed');
-            else
-                $this->_metrology->addLog('Create object ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52b9e412');
-
-            // Mémorise les données.
-            $this->_data = $data;
-            $this->_haveData = true;
-
-            // Création lien de hash.
-            $date = '';
-            if ($obfuscated)
-                $date = '0';
-            $target = $this->_nebuleInstance->getFromDataNID($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_HASH);
-            $this->_writeLink('l>' . $this->_id . '>' . $target . '>' . $meta, $obfuscated, $date);
-
-            // Création du lien d'annulation de suppression.
-            $this->_writeLink('x>' . $this->_id, $obfuscated);
-
-            // Si l'objet doit être protégé.
-            if ($protect)
-                $this->setProtected($obfuscated);
-            else
-                $this->write();
-        } else {
-            $this->_metrology->addLog('Create object error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '83a27d1e');
-            $this->_id = '0';
-            return false;
-        }
-        return true;
-    }*/
 
     /**
      * Retourne l'ID de l'objet.
@@ -220,7 +176,7 @@ class Node extends Functions implements nodeInterface {
     public function getID(): string { return $this->_id; }
 
     /**
-     * Object - Verify name structure of the node : hash.algo.size
+     * Object - Verify name structure of the node: hash.algo.size
      * There's a specific treatment for NID empty or '0'.
      *
      * @param string $nid
@@ -229,7 +185,7 @@ class Node extends Functions implements nodeInterface {
      * @return boolean
      */
     static public function checkNID(string &$nid, bool $permitNull = false, bool $permitZero = false): bool {
-        // May be empty or zero in some case.
+        // Maybe empty or zero in some case.
         if ($permitNull && $nid == '') return true;
         if ($nid == '') return false;
         if ($permitZero && $nid == '0') return true;

@@ -16,6 +16,7 @@ use Nebule\Library\nebule;
 use Nebule\Library\Actions;
 use Nebule\Library\ActionsEntities;
 use Nebule\Library\ActionsLinks;
+use Nebule\Library\ActionsGroups;
 use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\Modules;
@@ -60,7 +61,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251222';
+    const APPLICATION_VERSION = '020251223';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
