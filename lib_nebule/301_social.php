@@ -41,7 +41,7 @@ class Social extends Functions implements SocialInterface
      * @return void
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('track functions links=' . sizeof($links) . ' social=' . $socialClass, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass != '' && isset($this->_listClasses[$socialClass]) && isset($this->_listInstances[$socialClass]))
             $this->_listInstances[$socialClass]->arraySocialFilter($links, $socialClass);
         elseif (is_a($this->_defaultInstance, 'SocialInterface'))

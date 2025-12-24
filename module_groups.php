@@ -367,7 +367,6 @@ $this->_metrologyInstance->addLog('DEBUGGING group nid=' . $instance->getID(), M
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
-            'bl/rl/nid1' => '',
             'bl/rl/nid2' => References::RID_OBJECT_GROUP,
             'bl/rl/nid3' => References::RID_OBJECT_TYPE,
         );
@@ -390,7 +389,7 @@ $this->_metrologyInstance->addLog('DEBUGGING group signer=' . $signer, Metrology
 $this->_metrologyInstance->addLog('DEBUGGING group groupsGID size=' . sizeof($groupsGID), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 $this->_metrologyInstance->addLog('DEBUGGING group groupsSigners size=' . sizeof($groupsSigners), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($groupsGID as $gid) {
 $this->_metrologyInstance->addLog('DEBUGGING group gid=' . $gid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');

@@ -2572,6 +2572,7 @@ class Node extends Functions implements nodeInterface {
             return;
 
         $lines = $this->_ioInstance->getBlockLinks($this->_id, '', 0);
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING lines=' . sizeof($lines), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (sizeof($lines) == 0)
             return;
 
@@ -2589,9 +2590,11 @@ class Node extends Functions implements nodeInterface {
             } else
                 $this->_cacheInstance->unsetOnCache($line, Cache::TYPE_BLOCLINK);
         }
-
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_filterLinksByX($links, $withLinkX);
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
     /**
@@ -2601,6 +2604,7 @@ class Node extends Functions implements nodeInterface {
      * @return void
      */
     protected function _filterLinksByX(array &$links, bool $withLinkX = false): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Remove a common link when a newer same link in X exists.
         foreach ($links as $i => $linkToCheck) {
             if ($linkToCheck->getParsed()['bl/rl/req'] == 'x')
