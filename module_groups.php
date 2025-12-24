@@ -362,14 +362,14 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     protected function _display_InlineAllGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE), \Nebule\Library\Cache::TYPE_NODE);
+        $instance = $this->_cacheInstance->newNode(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
 $this->_metrologyInstance->addLog('DEBUGGING group nid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
             'bl/rl/nid1' => '',
-            'bl/rl/nid2' => $instance->getID(),
-            'bl/rl/nid3' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+            'bl/rl/nid2' => References::RID_OBJECT_GROUP,
+            'bl/rl/nid3' => References::RID_OBJECT_TYPE,
         );
         $instance->getLinks($links, $filter, 'all', false);
 $this->_metrologyInstance->addLog('DEBUGGING group links size=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');

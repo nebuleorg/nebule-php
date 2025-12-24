@@ -90,6 +90,7 @@ class References
     public const REFERENCE_NEBULE_OBJET_HASH = 'nebule/objet/hash';
     public const REFERENCE_NEBULE_OBJET_HOMOMORPHE = 'nebule/objet/homomorphe';
     public const REFERENCE_NEBULE_OBJET_TYPE = 'nebule/objet/type';
+    public const RID_OBJECT_TYPE = '5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256';
     public const REFERENCE_NEBULE_OBJET_LOCALISATION = 'nebule/objet/localisation';
     public const REFERENCE_NEBULE_OBJET_TAILLE = 'nebule/objet/taille';
     public const REFERENCE_NEBULE_OBJET_PRENOM = 'nebule/objet/prenom';
@@ -145,6 +146,7 @@ class References
     public const REFERENCE_NEBULE_OBJET_EMOTION_COLERE = 'nebule/objet/emotion/colere';
     public const REFERENCE_NEBULE_OBJET_EMOTION_INTERET = 'nebule/objet/emotion/interet';
     public const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
+    public const RID_OBJECT_GROUP = '0234bf0d4e61a87d880247ef152655e86bef336a07cfb0ebbbb6fd50a420aeae.sha2.256';
     public const REFERENCE_NEBULE_OBJET_GROUPE_ENTITE = 'nebule/objet/groupe/entite';
     public const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
     public const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';

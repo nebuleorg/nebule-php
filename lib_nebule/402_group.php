@@ -96,8 +96,8 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
         return $this->writeLink(
                 'l>' . $this->_id
-                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE)
-                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                . '>' . References::RID_OBJECT_GROUP
+                . '>' . References::RID_OBJECT_TYPE,
                 $obfuscated);
     }
 
@@ -115,8 +115,8 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
         return $this->writeLink(
                 'x>' . $this->_id
-                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE)
-                . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                . '>' . References::RID_OBJECT_GROUP
+                . '>' . References::RID_OBJECT_TYPE,
                 $obfuscated);
     }
 
@@ -135,7 +135,7 @@ class Group extends Node implements nodeInterface {
                 && $this->writeLink(
                         'l>' . $this->_id
                         . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
-                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                        . '>' . References::RID_OBJECT_TYPE,
                         $obfuscated));
     }
 
@@ -153,7 +153,7 @@ class Group extends Node implements nodeInterface {
                 && $this->writeLink(
                         'x>' . $this->_id
                         . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
-                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+                        . '>' . References::RID_OBJECT_TYPE,
                         $obfuscated));
     }
 

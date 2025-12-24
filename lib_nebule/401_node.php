@@ -846,8 +846,7 @@ class Node extends Functions implements nodeInterface {
 
         if ($type == References::REFERENCE_OBJECT_ENTITY) {
             $refEntityID = $this->getNidFromData($type);
-            $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-            $this->_isEntity = $this->getHavePropertyID($refPropertyID, $refEntityID, $socialClass);
+            $this->_isEntity = $this->getHavePropertyID(References::RID_OBJECT_TYPE, $refEntityID, $socialClass);
         } else
             $this->_isEntity = true;
 
@@ -861,11 +860,7 @@ class Node extends Functions implements nodeInterface {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isGroup)
             return true;
-
-        $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $refGroupID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE);
-        $this->_isGroup = $this->getHaveProperty($refPropertyID, $refGroupID, $socialClass);
-
+        $this->_isGroup = $this->getHaveProperty(References::RID_OBJECT_TYPE, References::RID_OBJECT_GROUP, $socialClass);
         return $this->_isGroup;
     }
 
