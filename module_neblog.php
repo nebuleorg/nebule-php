@@ -69,7 +69,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251222';
+    const MODULE_VERSION = '020251224';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1211,7 +1211,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     private function _display_InlineRightsBlog(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
             $eid = $entityInstance->getID();
@@ -1253,6 +1252,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $instanceList->addItem($instance);
             }
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
     }

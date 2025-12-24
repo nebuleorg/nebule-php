@@ -39,7 +39,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251223';
+    const MODULE_VERSION = '020251224';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -2121,7 +2121,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _displayEntitiesList(
             array  $listEntities,
-            string $ratio=\Nebule\Library\DisplayItem::RATIO_SHORT,
+            string $ratio = \Nebule\Library\DisplayItem::RATIO_SHORT,
             array  $listOkEntities = array(),
             array  $listDesc = array(),
             array  $listSigners = array(),

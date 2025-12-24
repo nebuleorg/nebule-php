@@ -39,14 +39,22 @@ class ModuleGroups extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251223';
+    const MODULE_VERSION = '020251224';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
-    const MODULE_REGISTERED_VIEWS = array('list', 'listall', 'setgroup', 'unsetgroup', 'addmarked', 'disp');
+    const MODULE_REGISTERED_VIEWS = array(
+        'list',         // 0
+        'alist',        // 1
+        'setgroup',     // 2
+        'unsetgroup',   // 3
+        'addmarked',    // 4
+        'disp',         // 5
+        'olist',        // 6
+    );
     const MODULE_REGISTERED_ICONS = array(
         '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256',    // 0 : Icône des groupes.
         '819babe3072d50f126a90c982722568a7ce2ddd2b294235f40679f9d220e8a0a.sha2.256',    // 1 : Créer un groupe.
@@ -59,19 +67,11 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     const RESTRICTED_TYPE = '';
 
-    protected string $_displayGroup = '';
-    protected ?Group $_displayGroupInstance = null;
     protected string $_hashGroup;
     protected string $_hashGroupClosed;
     protected Node $_hashGroupObject;
     protected Node $_hashGroupClosedObject;
-
-
-    /**
-     * Configuration spécifique au module.
-     *
-     * @return void
-     */
+    
     protected function _initialisation(): void
     {
         $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
@@ -85,14 +85,9 @@ class ModuleGroups extends \Nebule\Library\Modules {
     }
 
 
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string    $hookName
-     * @param Node|null $nid
-     * @return array
-     */
+    
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
@@ -101,7 +96,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
         switch ($hookName) {
             /*case 'menu':
-                $hookArray[0]['name'] = '::MyGroups';
+                $hookArray[0]['name'] = '::myGroups';
                 $hookArray[0]['icon'] = $this::MODULE_LOGO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -112,17 +107,29 @@ class ModuleGroups extends \Nebule\Library\Modules {
             case 'typeMenuGroup':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[] = array(
-                        'name' => '::MyGroups',
+                        'name' => '::myGroups',
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
                                 . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[6]) {
+                    $hookArray[] = array(
+                        'name' => '::otherGroups',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[6]
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
-                        'name' => '::Groups',
+                        'name' => '::allGroups',
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -141,7 +148,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                         );
                     }
-                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
+                    /*if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
                         $hookArray[] = array(
                             'name' => '::unmakeGroup',
                             'icon' => Displays::DEFAULT_ICON_LX,
@@ -153,7 +160,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
                         );
-                    }
+                    }*/
                 }
                 break;
 
@@ -241,7 +248,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                 break;
 
             case 'selfMenuEntity':
-                $hookArray[0]['name'] = '::MyGroups';
+                $hookArray[0]['name'] = '::myGroups';
                 $hookArray[0]['icon'] = $this::MODULE_LOGO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -251,7 +258,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                 break;
 
             /*case 'typeMenuEntity':
-                $hookArray[0]['name'] = '::Groups';
+                $hookArray[0]['name'] = '::groups';
                 $hookArray[0]['icon'] = $this::MODULE_LOGO;
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -263,17 +270,13 @@ class ModuleGroups extends \Nebule\Library\Modules {
     }
 
 
-    /**
-     * Affichage principale.
-     *
-     * @return void
-     */
+    
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            case $this::MODULE_REGISTERED_VIEWS[0]:
+            /*case $this::MODULE_REGISTERED_VIEWS[0]:
                 $this->_displayMyGroups();
-                break;
+                break;*/
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayAllGroups();
                 break;
@@ -289,18 +292,15 @@ class ModuleGroups extends \Nebule\Library\Modules {
             case $this::MODULE_REGISTERED_VIEWS[5]:
                 $this->_displayGroup();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[6]:
+                $this->_displayOtherGroups();
+                break;
             default:
                 $this->_displayMyGroups();
                 break;
         }
     }
-
-
-    /**
-     * Affichage en ligne comme élément inseré dans une page web.
-     *
-     * @return void
-     */
+    
     public function displayModuleInline(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
@@ -316,6 +316,9 @@ class ModuleGroups extends \Nebule\Library\Modules {
             case $this::MODULE_REGISTERED_VIEWS[5]:
                 $this->_display_InlineGroup();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[6]:
+                $this->_display_InlineOtherGroups();
+                break;
         }
     }
 
@@ -327,198 +330,97 @@ class ModuleGroups extends \Nebule\Library\Modules {
             $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
             $this->_displayGroupCreateNew();
         }
-        $this->_displaySimpleTitle('::MyGroups', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_displaySimpleTitle('::myGroups', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayInstance->registerInlineContentID('my_groups');
     }
 
     protected function _display_InlineMyGroups(): void {
-        // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
-
-        // Prépare l'affichage.
-        $list = array();
-        $listOkGroups = array();
-        $i = 0;
-        foreach ($listGroups as $group) {
-            $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
-
-            // Extraction des entités signataires.
-            $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
-
-            if (!isset($listOkGroups[$group])) {
-                $list[$i]['object'] = $instance;
-                $list[$i]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => true,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => false,
-                    'enableDisplayFlagState' => false,
-                    'enableDisplayFlagEmotions' => true,
-                    'enableDisplayStatus' => false,
-                    'enableDisplayContent' => false,
-                    'enableDisplayJS' => false,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                    'objectRefs' => $signers,
-                );
-
-                // Marque comme vu.
-                $listOkGroups[$group] = true;
-                $i++;
-            }
-        }
-        unset($link, $instance);
-
-        // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-
-        unset($list, $links, $listOkGroups);
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
     }
 
 
-    /**
-     * Affiche les groupes de toutes les entités.
-     *
-     * @return void
-     */
-    protected function _displayAllGroups(): void
-    {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
-        $instance = new DisplayTitle($this->_applicationInstance);
-        $instance->setTitle('::otherGroups');
-        $instance->setIcon($icon);
-        $instance->display();
 
-        // Affiche le contenu.
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('allgroups');
+    protected function _displayOtherGroups(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displaySimpleTitle('::otherGroups', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('other_groups');
     }
 
-    /**
-     * Affiche les groupes de toutes les entités, en ligne.
-     *
-     * @todo filtrer sur tout sauf l'entité en cours.
-     *
-     * @return void
-     */
-    protected function _display_InlineAllGroups(): void
-    {
-        // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID('', '');
+    protected function _display_InlineOtherGroups(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
 
-        // Prépare l'affichage.
-        $list = array();
-        $listOkGroups = array();
-        $i = 0;
-        foreach ($listGroups as $group) {
-            $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
 
-            // Extraction des entités signataires.
-            $signers = $instance->getPropertySigners(References::REFERENCE_NEBULE_OBJET_GROUPE);
 
-            if (!isset($listOkGroups[$group])
-                && !isset($signers[$this->_entitiesInstance->getGhostEntityEID()])
-            ) {
-                $list[$i]['object'] = $instance;
-                $list[$i]['param'] = array(
-                    'enableDisplayColor' => true,
-                    'enableDisplayIcon' => true,
-                    'enableDisplayRefs' => true,
-                    'enableDisplayName' => true,
-                    'enableDisplayID' => false,
-                    'enableDisplayFlags' => true,
-                    'enableDisplayFlagProtection' => false,
-                    'enableDisplayFlagObfuscate' => false,
-                    'enableDisplayFlagUnlocked' => false,
-                    'enableDisplayFlagState' => false,
-                    'enableDisplayFlagEmotions' => true,
-                    'enableDisplayStatus' => false,
-                    'enableDisplayContent' => false,
-                    'enableDisplayJS' => false,
-                    'displaySize' => 'medium',
-                    'displayRatio' => 'short',
-                    'objectRefs' => $signers,
-                );
+    protected function _displayAllGroups(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displaySimpleTitle('::allGroups', $this::MODULE_REGISTERED_ICONS[0]);
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('all_groups');
+    }
 
-                // Marque comme vu.
-                $listOkGroups[$group] = true;
-                $i++;
-            }
-            unset($signers);
+    protected function _display_InlineAllGroups(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instance = $this->_cacheInstance->newNode($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE), \Nebule\Library\Cache::TYPE_NODE);
+$this->_metrologyInstance->addLog('DEBUGGING group nid=' . $instance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid1' => '',
+            'bl/rl/nid2' => $instance->getID(),
+            'bl/rl/nid3' => $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE),
+        );
+        $instance->getLinks($links, $filter, 'all', false);
+$this->_metrologyInstance->addLog('DEBUGGING group links size=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+
+        $groupsGID = array();
+        $groupsSigners = array();
+        foreach ($links as $link) {
+            $gid = $link->getParsed()['bl/rl/nid1'];
+$this->_metrologyInstance->addLog('DEBUGGING group gid=' . $gid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            if (!$this->_filterGroupByType($gid))
+                continue;
+            $signers = array($link->getParsed()['bs/rs1/eid']); // FIXME get all signers
+            $groupsGID[$gid] = $gid;
+            foreach ($signers as $signer)
+$this->_metrologyInstance->addLog('DEBUGGING group signer=' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                $groupsSigners[$gid][$signer] = $signer;
         }
-        unset($link, $instance);
+$this->_metrologyInstance->addLog('DEBUGGING group groupsGID size=' . sizeof($groupsGID), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+$this->_metrologyInstance->addLog('DEBUGGING group groupsSigners size=' . sizeof($groupsSigners), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
-        // Affichage.
-        echo $this->_displayInstance->getDisplayObjectsList_DEPRECATED($list, 'medium');
-
-        unset($list, $links, $listOkGroups);
-
-
-        /*		// Liste tous les groupes.
-		$links = $this->_nebuleInstance->getListGroupsLinks('', '');
-		if ( sizeof($links) != 0 )
-		{
-			$list = array();
-			$i=0;
-			foreach ( $links as $i => $link )
-			{
-				if ( $link->getParsed()['bs/rs1/eid'] != $this->_nebuleInstance->getCurrentEntity() )
-				{
-					$instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);   erreur de fonction !!!
-					$instanceEntity = $this->_nebuleInstance->newNode($link->getParsed()['bs/rs1/eid'], \Nebule\Library\Cache::TYPE_ENTITY);
-					$closed = '::GroupeOuvert';
-					if ( $instance->getMarkClosed() )
-						$closed = '::GroupeFerme';
-					$list[$i]['object'] = $instance;
-					$list[$i]['entity'] = $instanceEntity;
-					$list[$i]['icon'] = '';
-					$list[$i]['htlink'] = '';
-					$list[$i]['desc'] = $this->_translateInstance->getTranslate($closed);
-					$list[$i]['actions'] = array();
-					if ( $this->_unlocked )
-					{
-						// Supprimer le groupe.
-						$list[$i]['actions'][0]['name'] = '::unmakeGroup';
-						$list[$i]['actions'][0]['icon'] = Display::DEFAULT_ICON_LX;
-						$list[$i]['actions'][0]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
-							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[3]
-							.'&'.References::COMMAND_SELECT_OBJECT.'='.$link->getParsed()['bl/rl/nid1'];
-						// Utiliser comme groupe ouvert.
-						$list[$i]['actions'][1]['name'] = '::useAsGroupOpened';
-						$list[$i]['actions'][1]['icon'] = Display::DEFAULT_ICON_LL;
-						$list[$i]['actions'][1]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
-							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[1]
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroup.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
-							.$this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-						// Utiliser comme groupe fermé.
-						$list[$i]['actions'][2]['name'] = '::useAsGroupClosed';
-						$list[$i]['actions'][2]['icon'] = Display::DEFAULT_ICON_LL;
-						$list[$i]['actions'][2]['htlink'] = '?'.Displays::DEFAULT_DISPLAY_COMMAND_MODE.'='.$this::MODULE_COMMAND_NAME
-							.'&'.Displays::DEFAULT_DISPLAY_COMMAND_VIEW.'='.$this::MODULE_REGISTERED_VIEWS[1]
-							.'&'.Action::DEFAULT_COMMAND_ACTION_SIGN_LINK1.'=f_'.$this->_hashGroupClosed.'_'.$link->getParsed()['bl/rl/nid1'].'_0'
-							.$this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-					}
-					$i++;
-				}
-			}
-			unset($link, $type, $instance, $instanceEntity, $closed);
-			if ( sizeof($list) != 0 )
-				$this->_applicationInstance->getDisplayInstance()->displayItemList($list);
-			else
-				// Pas de groupe.
-				$this->_applicationInstance->getDisplayInstance()->displayMessageOk('::noGroup');
-			unset($list);
-		}
-		else
-		{
-			// Pas de groupe.
-			$this->_applicationInstance->getDisplayInstance()->displayMessageOk('::noGroup');
-		}
-		unset($links, $okobj, $count);*/
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        foreach ($groupsGID as $gid) {
+$this->_metrologyInstance->addLog('DEBUGGING group gid=' . $gid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+            $instanceGroup = $this->_cacheInstance->newNode($gid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            $instance->setNID($instanceGroup);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setIcon($instanceIcon);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableFlagUnlocked(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableRefs(true);
+            if (isset($groupsSigners[$gid]) && sizeof($groupsSigners[$gid]) > 0) {
+                $instance->setEnableRefs(true);
+                $instance->setRefs($groupsSigners[$gid]);
+            } else
+                $instance->setEnableRefs(false);
+            $instance->setSelfHookName('FIXME'); // FIXME
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instanceList->setEnableWarnIfEmpty(true);
+        $instanceList->display();
     }
 
 
@@ -537,16 +439,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             $instance = new DisplayInformation($this->_applicationInstance);
             $instance->setRatio(DisplayItem::RATIO_SHORT);
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
-$this->_metrologyInstance->addLog('DEBUGGING MARK 1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                $_displayGroupInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance();
-$this->_metrologyInstance->addLog('DEBUGGING MARK 2 nid=' . $_displayGroupInstance->getID(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-$this->_metrologyInstance->addLog('DEBUGGING MARK 2 type=' . gettype($_displayGroupInstance), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                //$this->_displayGroupInstance = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance();
-                //$this->_displayGroupInstance = $_displayGroupInstance; FIXME
-$this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                $this->_displayGroup = $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateGID();
-
-                $instance->setMessage('::OKCreateGroup');
+                $instance->setMessage('::createGroupOK');
                 $instance->setType(DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::::OK');
                 $instanceList->addItem($instance);
@@ -554,7 +447,7 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
                 $instance = new DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
                 //$instance->setNID($this->_displayGroupInstance); FIXME
-                $instance->setNID($_displayGroupInstance);
+                $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
                 $instance->setEnableName(true);
@@ -663,8 +556,8 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
         }
     }
 
-    protected function _displayRemoveGroup(): void
-    {
+    protected function _displayRemoveGroup(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Affichage de l'entête.
         $this->_applicationInstance->getDisplayInstance()->displayObjectDivHeaderH1($this->_applicationInstance->getCurrentObjectInstance());
 
@@ -678,32 +571,21 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
     }
 
 
-    /**
-     * Permet d'ajouter des objets marqués à un groupe.
-     *
-     * @return void
-     */
-    protected function _displayAddMarkedObjects(): void
-    {
+    
+    protected function _displayAddMarkedObjects(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
     }
 
-    /**
-     * Affichage en ligne de l'ajout des objets à un groupe.
-     *
-     * @return void
-     */
-    protected function _display_InlineAddMarkedObjects(): void
-    {
+    protected function _display_InlineAddMarkedObjects(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
     }
 
 
-    /**
-     * Affiche le groupe.
-     *
-     * @return void
-     */
-    protected function _displayGroup(): void
-    {
+    
+    protected function _displayGroup(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_nebuleInstance->getCurrentGroupInstance();
 
         $param = array(
@@ -730,18 +612,15 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
         unset($instance);
 
         // Affichage des membres du groupe.
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('grpdisp');
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('display_group');
     }
 
-    /**
-     * Affiche le groupe, en ligne.
-     *
-     * @return void
-     */
-    protected function _display_InlineGroup(): void
-    {
+    protected function _display_InlineGroup(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+
         // Détermine si c'est un groupe fermé.
-        if ($this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosedGroup()) {
+        /*if ($this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosedGroup()) {
             // Liste tous les objets du groupe fermé.
             $groupListID = $this->_nebuleInstance->getCurrentGroupInstance()->getListMembersID('self', null);
 
@@ -906,8 +785,12 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
                 // Pas d'entité.
                 $this->_applicationInstance->getDisplayInstance()->displayMessageInformation('::noGroupMember');
             }
-        }
+        }*/
     }
+
+
+
+    protected function _filterGroupByType(string $gid): bool { return true; }
 
 
     CONST TRANSLATE_TABLE = [
@@ -918,19 +801,20 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
             '::ModuleHelp' => "Ce module permet de voir et de gérer les groupes.",
             '::AppTitle1' => 'Groupes',
             '::AppDesc1' => 'Gestion des groupes.',
-            '::Groups' => 'Les groupes',
-            '::MyGroups' => 'Mes groupes',
+            '::groups' => 'Les groupes',
+            '::myGroups' => 'Mes groupes',
+            '::allGroups' => 'Tous les groupes',
             '::seeAsGroup' => 'Voir comme groupe',
             '::seenFromOthers' => 'Vu depuis les autres entités',
             '::otherGroups' => 'Les groupes des autres entités',
             '::createGroup' => 'Créer un groupe',
             '::createGroupClosed' => 'Créer un groupe fermé',
             '::createGroupObfuscated' => 'Créer un groupe dissimulé',
-            '::AddMarkedObjects' => 'Ajouter les objets marqués',
+            '::addMarkedObjects' => 'Ajouter les objets marqués',
             '::deleteGroup' => 'Supprimer le groupe',
             '::createTheGroup' => 'Créer le groupe',
             '::nom' => 'Nom',
-            '::OKCreateGroup' => 'Le groupe a été créé.',
+            '::createGroupOK' => 'Le groupe a été créé.',
             '::notOKCreateGroup' => "Le groupe n'a pas été créé ! %s",
             '::noGroup' => 'Pas de groupe.',
             '::noGroupMember' => 'Pas de membre.',
@@ -955,19 +839,20 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
             '::ModuleHelp' => 'This module permit to see and manage groups.',
             '::AppTitle1' => 'Groups',
             '::AppDesc1' => 'Manage groups.',
-            '::Groups' => 'The groups',
-            '::MyGroups' => 'My groups',
+            '::groups' => 'The groups',
+            '::myGroups' => 'My groups',
+            '::allGroups' => 'All groups',
             '::seeAsGroup' => 'See as group',
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
             '::createGroup' => 'Create a group',
             '::createGroupClosed' => 'Create a closed group',
             '::createGroupObfuscated' => 'Create an obfuscated group',
-            '::AddMarkedObjects' => 'Add marked objects',
+            '::addMarkedObjects' => 'Add marked objects',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
             '::nom' => 'Name',
-            '::OKCreateGroup' => 'The group have been created.',
+            '::createGroupOK' => 'The group have been created.',
             '::notOKCreateGroup' => 'The group have not been created! %s',
             '::noGroup' => 'No group.',
             '::noGroupMember' => 'No member.',
@@ -992,19 +877,20 @@ $this->_metrologyInstance->addLog('DEBUGGING MARK 3', Metrology::LOG_LEVEL_DEBUG
             '::ModuleHelp' => 'This module permit to see and manage groups.',
             '::AppTitle1' => 'Groups',
             '::AppDesc1' => 'Manage groups.',
-            '::Groups' => 'The groups',
-            '::MyGroups' => 'My groups',
+            '::groups' => 'The groups',
+            '::myGroups' => 'My groups',
+            '::allGroups' => 'All groups',
             '::seeAsGroup' => 'See as group',
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
             '::createGroup' => 'Create a group',
             '::createGroupClosed' => 'Create a closed group',
             '::createGroupObfuscated' => 'Create an obfuscated group',
-            '::AddMarkedObjects' => 'Add marked objects',
+            '::addMarkedObjects' => 'Add marked objects',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
             '::nom' => 'Name',
-            '::OKCreateGroup' => 'The group have been created.',
+            '::createGroupOK' => 'The group have been created.',
             '::notOKCreateGroup' => 'The group have not been created! %s',
             '::noGroup' => 'No group.',
             '::noGroupMember' => 'No member.',
@@ -1044,4 +930,9 @@ class ModuleGroupEntities extends ModuleGroups {
     );
     const MODULE_APP_ICON_LIST = array('425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272');
     const RESTRICTED_TYPE = 'Entity';
+
+    protected function _filterGroupByType(string $gid): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        return true; // FIXME for group of entities
+    }
 }

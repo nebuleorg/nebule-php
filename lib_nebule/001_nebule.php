@@ -14,7 +14,7 @@ class nebule
 {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251223';
+    const NEBULE_VERSION = '020251224';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';
@@ -628,7 +628,7 @@ class nebule
         if (is_a($entity, 'Node')) {
             $hashEntity = $entity->getID();
         } else {
-            // Si l'entité est un ID, l'utilise directement. Sinon calcul l'empreinte de l'entité.
+            // Si l'entité est un ID, l'utilise directement. Sinon calcul de l'empreinte de l'entité.
             if (Node::checkNID($entity)
                 && $this->getIoInstance()->checkLinkPresent($entity)
                 && $this->getIoInstance()->checkObjectPresent($entity)
@@ -665,10 +665,6 @@ class nebule
      * @return array:Link
      */
     public function getListIdByType($type = '', $entity = '', string $socialClass = ''): array {
-        /**
-         * Résultat de la recherche de liens à retourner.
-         * @var array:Link $result
-         */
         $result = $this->getListLinksByType($type, $entity, $socialClass);
 
         // Extrait les ID.
