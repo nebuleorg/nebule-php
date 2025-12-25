@@ -13,8 +13,7 @@ namespace Nebule\Library;
  * Si le signataire du lien est l'entité en cours, retourne un score de 0.
  * Sinon retourne un score de 1.
  */
-class SocialNotMyself extends SocialMySelf implements SocialInterface
-{
+class SocialNotMyself extends SocialMySelf implements SocialInterface {
     const TYPE='notmyself';
 
     /**
@@ -24,8 +23,7 @@ class SocialNotMyself extends SocialMySelf implements SocialInterface
      * @param string $socialClass
      * @return void
      */
-    public function arraySocialFilter(array &$links, string $socialClass = ''): void
-    {
+    public function arraySocialFilter(array &$links, string $socialClass = ''): void {
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
                 unset($links[$i]);
@@ -40,8 +38,7 @@ class SocialNotMyself extends SocialMySelf implements SocialInterface
      * @param string         $socialClass
      * @return float
      */
-    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float
-    {
+    public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=notmyself score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7abbca23');
 
         // Si l'entité signataire du lien est une des entités courante, retourne la valeur sociale 1.

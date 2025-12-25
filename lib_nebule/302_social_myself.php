@@ -13,8 +13,7 @@ namespace Nebule\Library;
  * Si le signataire du lien est l'entité en cours, retourne un score de 1.
  * Sinon retourne un score de 0.
  */
-class SocialMySelf extends Social implements SocialInterface
-{
+class SocialMySelf extends Social implements SocialInterface {
     const TYPE='myself';
 
     protected function _initialisation(): void {}

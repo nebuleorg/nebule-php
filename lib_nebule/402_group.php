@@ -18,6 +18,7 @@ use Nebule\Library\Node;
  *          To create a new group, create an instance with:
  *          - nebule instance;
  *          - node ID = '0'
+ *          - And call setAsGroup() to write it.
  *          Every node can become a group without having been previously marked as a group.
  *          Create a link from an object to the group node is enough to create the group.
  * ------------------------------------------------------------------------------------------
@@ -61,12 +62,13 @@ class Group extends Node implements nodeInterface {
             $this->_metrologyInstance->addLog('create group error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
             return;
         }
-        $nid = $this->_cacheInstance->newVirtualNode();
-        $this->_id = $nid->getID();
+        $instance = $this->_cacheInstance->newVirtualNode();
+        $this->_id = $instance->getID();
         $this->_metrologyInstance->addLog('create group ' . $this->_id, Metrology::LOG_LEVEL_AUDIT);
-        $this->_data = null;
-        $this->_haveData = false;
-        $this->setAsGroup();
+        if ($this->getIsRID($this->_id)) {
+            $this->_data = null;
+            $this->_haveData = false;
+        }
     }
 
 
@@ -94,7 +96,7 @@ class Group extends Node implements nodeInterface {
             return false;
         $this->_isGroup = true;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
-        return $this->writeLink(
+        return $this->addLink(
                 'l>' . $this->_id
                 . '>' . References::RID_OBJECT_GROUP
                 . '>' . References::RID_OBJECT_TYPE,
@@ -113,7 +115,7 @@ class Group extends Node implements nodeInterface {
         $this->_isGroup = false;
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
-        return $this->writeLink(
+        return $this->addLink(
                 'x>' . $this->_id
                 . '>' . References::RID_OBJECT_GROUP
                 . '>' . References::RID_OBJECT_TYPE,
@@ -132,7 +134,7 @@ class Group extends Node implements nodeInterface {
             return false;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6636179a');
         return ($this->setAsGroup($obfuscated)
-                && $this->writeLink(
+                && $this->addLink(
                         'l>' . $this->_id
                         . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
                         . '>' . References::RID_OBJECT_TYPE,
@@ -150,7 +152,7 @@ class Group extends Node implements nodeInterface {
             return false;
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'de5c0565');
         return ($this->unsetAsGroup($obfuscated)
-                && $this->writeLink(
+                && $this->addLink(
                         'x>' . $this->_id
                         . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
                         . '>' . References::RID_OBJECT_TYPE,
@@ -217,7 +219,7 @@ class Group extends Node implements nodeInterface {
         if ($this->getMarkClosedGroup())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as close', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5a5dcc0');
-        return $this->writeLink(
+        return $this->addLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME),
                 $obfuscated);
     }
@@ -241,7 +243,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkClosedGroup())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as open', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27c698ab');
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME), $obfuscated);
+        return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME), $obfuscated);
     }
 
 
@@ -299,7 +301,7 @@ class Group extends Node implements nodeInterface {
         if ($this->getMarkProtectedGroup())
             return true;
         $this->_isMarkProtected = true;
-        return $this->writeLink(
+        return $this->addLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE),
                 $obfuscated);
     }
@@ -323,7 +325,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkProtectedGroup())
             return true;
         $this->_isMarkProtected = false;
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE), $obfuscated);
+        return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE), $obfuscated);
     }
 
 
@@ -383,7 +385,7 @@ class Group extends Node implements nodeInterface {
         if ($this->getMarkObfuscatedGroup())
             return true;
         $this->_isMarkObfuscated = true;
-        return $this->writeLink(
+        return $this->addLink(
                 'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE),
                 $obfuscated);
     }
@@ -407,7 +409,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->getMarkObfuscatedGroup())
             return true;
         $this->_isMarkObfuscated = false;
-        return $this->writeLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE), $obfuscated);
+        return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE), $obfuscated);
     }
 
 
@@ -452,7 +454,7 @@ class Group extends Node implements nodeInterface {
         if ($this->getMarkObfuscatedGroup())
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
-        return $this->writeLink(
+        return $this->addLink(
                 'l>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
     }
@@ -474,7 +476,7 @@ class Group extends Node implements nodeInterface {
             $obfuscated = true;
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('remove member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c23f3303');
-        return $this->writeLink(
+        return $this->addLink(
                 'x>' . $this->_id . '>' . $nid . '>' . $type,
                 $obfuscated);
     }

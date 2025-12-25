@@ -503,7 +503,11 @@ class ActionsEntities extends Actions implements ActionsInterface {
                 $this->_nebuleInstance->getCacheInstance()->unsetEntityOnCache($this->_createEID);
                 $this->_createInstance = $this->_cacheInstance->newNode($this->_createEID, \Nebule\Library\Cache::TYPE_ENTITY);
                 $this->_createInstance->setNewPrivateKeyPassword($this->_createPassword);
-                $this->_nebuleInstance->setCurrentEntityInstance($instance);
+                $this->_nebuleInstance->setCurrentEntityInstance($this->_createInstance);
+                $this->_entitiesInstance->setGhostEntity($this->_createInstance);
+                $this->_entitiesInstance->setGhostEntityPassword($this->_createPassword);
+                $this->_entitiesInstance->setConnectedEntity($this->_createInstance);
+                $this->_entitiesInstance->setGhostEntity($this->_createInstance);
             } else {
                 $this->_applicationInstance->getDisplayInstance()->displayInlineErrorFace();
                 $this->_metrologyInstance->addLog('fail to generate', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'eec8ce0b');

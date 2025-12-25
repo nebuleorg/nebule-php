@@ -159,10 +159,17 @@ class Entities extends Functions
             $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_defaultEntityInstance;
-        $this->_ghostEntityInstance = $instance;
-        $this->_ghostEntityEID = $instance->getID();
+        $this->setGhostEntity($instance);
+    }
+
+    public function setGhostEntity(Entity $entity): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_cacheInstance->flushBufferStore();
+        $this->_ghostEntityInstance = $entity;
+        $this->_ghostEntityEID = $this->_ghostEntityInstance->getID();
+        $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
         $this->_metrologyInstance->addLog('ghost entity eid=' . $this->_ghostEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd026d625');
-        $this->_sessionInstance->setSessionStoreAsString('nebuleGhostEntityInstance', $this->_ghostEntityEID);
+        return $this->_sessionInstance->setSessionStoreAsString('nebuleGhostEntityInstance', $this->_ghostEntityEID);
     }
 
     private string $_ghostEntityPrivateKeyOID = '';
@@ -243,20 +250,6 @@ class Entities extends Functions
             $this->_metrologyInstance->addLog('login password for eid=' . $this->_ghostEntityEID . ' NOK', Metrology::LOG_LEVEL_ERROR, __METHOD__, '72a3452d');
     }
 
-    public function setGhostEntity(Entity $entity): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        session_start();
-
-        $this->_cacheInstance->flushBufferStore();
-
-        $this->_ghostEntityInstance = $entity;
-        $this->_ghostEntityEID = $this->_ghostEntityInstance->getID();
-        $this->_connectedEntityIsUnlocked = $this->_ghostEntityInstance->getHavePrivateKeyPassword();
-
-        session_write_close();
-        return true;
-    }
-
 
 
     private string $_connectedEntityEID = '';
@@ -281,25 +274,17 @@ class Entities extends Functions
             $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
             $instance = $this->_ghostEntityInstance;
-        $this->_connectedEntityInstance = $instance;
-        $this->_connectedEntityEID = $instance->getID();
-        $this->_connectedEntityIsUnlocked = $this->_connectedEntityInstance->getHavePrivateKeyPassword();
-        $this->_metrologyInstance->addLog('connected entity eid=' . $this->_connectedEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
-        $this->_sessionInstance->setSessionStoreAsString('nebuleConnectedEntityInstance', $this->_connectedEntityEID);
+        $this->setConnectedEntity($instance);
     }
 
     public function setConnectedEntity(Entity $entity): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        session_start();
-
         $this->_cacheInstance->flushBufferStore();
-
         $this->_connectedEntityInstance = $entity;
         $this->_connectedEntityEID = $this->_connectedEntityInstance->getID();
         $this->_connectedEntityIsUnlocked = $this->_connectedEntityInstance->getHavePrivateKeyPassword();
-
-        session_write_close();
-        return true;
+        $this->_metrologyInstance->addLog('connected entity eid=' . $this->_connectedEntityEID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '3a4c8867');
+        return $this->_sessionInstance->setSessionStoreAsString('nebuleConnectedEntityInstance', $this->_connectedEntityEID);
     }
 
 

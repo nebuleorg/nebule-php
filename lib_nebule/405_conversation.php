@@ -78,12 +78,12 @@ class Conversation extends Group implements nodeInterface
      * @param boolean $closed
      * @param boolean $protected
      * @param boolean $obfuscated
-     * @return boolean
+     * @return void
      */
-    protected function _createNewConversation(bool $closed = false, bool $protected = false, bool $obfuscated = false): bool
+    protected function _createNewConversation(bool $closed = false, bool $protected = false, bool $obfuscated = false): void
     {
         // Vérifie que l'on puisse créer une conversation.
-        if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
+        /*if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
@@ -203,8 +203,8 @@ class Conversation extends Group implements nodeInterface
             $this->_metrologyInstance->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
             $this->_id = '0';
             return false;
-        }
         return true;
+        }*/
     }
 
 

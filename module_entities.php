@@ -39,7 +39,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251224';
+    const MODULE_VERSION = '020251225';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -862,54 +862,58 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _displayEntityDisplay(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        echo '<div class="layout-list">' . "\n";
-        echo '<div class="textListObjects">' . "\n";
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
+            $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
+            $this->_displayEntityCreateNew();
+        } else {
+            echo '<div class="layout-list">' . "\n";
+            echo '<div class="textListObjects">' . "\n";
 
-        $entity = $this->_displayEntityInstance;
-        $messages = array();
-        $entityType = $entity->getKeyType();
-        if ($entityType != '')
-            $messages[] = 'Type: ' . $entityType;
-        if ($this->_authoritiesInstance->getIsGlobalAuthority($entity))
-            $messages[] = 'Global authority';
-        if ($this->_authoritiesInstance->getIsLocalAuthority($entity))
-            $messages[] = 'Local authority';
-        if ($this->_authoritiesInstance->getIsPuppetMaster($entity))
-            $messages[] = 'Master of all';
-        if ($this->_authoritiesInstance->getIsSecurityMaster($entity))
-            $messages[] = 'Master of security';
-        if ($this->_authoritiesInstance->getIsCodeMaster($entity))
-            $messages[] = 'Master of code';
-        if ($this->_authoritiesInstance->getIsDirectoryMaster($entity))
-            $messages[] = 'Master of directory';
-        if ($this->_authoritiesInstance->getIsTimeMaster($entity))
-            $messages[] = 'Master of time';
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instance->setSocial('self');
-        $instance->setNID($entity);
-        $instance->setEnableColor(true);
-        $instance->setEnableIcon(true);
-        $instance->setIcon($instanceIcon);
-        $instance->setEnableName(true);
-        $instance->setEnableFlags(true);
-        $instance->setEnableFlagUnlocked(true);
-        $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
-        $instance->setEnableFlagState(true);
-        $instance->setEnableFlagEmotions(true);
-        if (sizeof($messages) > 0)
-            $instance->setFlagMessageList($messages);
-        $instance->setEnableContent(false);
-        $instance->setEnableJS(false);
-        $instance->setSelfHookName('typeMenuEntity');
-        $instance->setEnableStatus(false);
-        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_LARGE);
-        $instance->setRatio(DisplayItem::RATIO_LONG);
-        $instance->display();
+            $entity = $this->_displayEntityInstance;
+            $messages = array();
+            $entityType = $entity->getKeyType();
+            if ($entityType != '')
+                $messages[] = 'Type: ' . $entityType;
+            if ($this->_authoritiesInstance->getIsGlobalAuthority($entity))
+                $messages[] = 'Global authority';
+            if ($this->_authoritiesInstance->getIsLocalAuthority($entity))
+                $messages[] = 'Local authority';
+            if ($this->_authoritiesInstance->getIsPuppetMaster($entity))
+                $messages[] = 'Master of all';
+            if ($this->_authoritiesInstance->getIsSecurityMaster($entity))
+                $messages[] = 'Master of security';
+            if ($this->_authoritiesInstance->getIsCodeMaster($entity))
+                $messages[] = 'Master of code';
+            if ($this->_authoritiesInstance->getIsDirectoryMaster($entity))
+                $messages[] = 'Master of directory';
+            if ($this->_authoritiesInstance->getIsTimeMaster($entity))
+                $messages[] = 'Master of time';
+            $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            $instance->setNID($entity);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setIcon($instanceIcon);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagUnlocked(true);
+            $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(true);
+            if (sizeof($messages) > 0)
+                $instance->setFlagMessageList($messages);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setSelfHookName('typeMenuEntity');
+            $instance->setEnableStatus(false);
+            $instance->setSize(\Nebule\Library\DisplayItem::SIZE_LARGE);
+            $instance->setRatio(DisplayItem::RATIO_LONG);
+            $instance->display();
 
-
-        echo '</div>' . "\n";
-        echo '</div>' . "\n";
+            echo '</div>' . "\n";
+            echo '</div>' . "\n";
+        }
     }
 
 
@@ -1405,10 +1409,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private function _displayMyEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
-            $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
-            $this->_displayEntityCreateNew();
-        }
         $this->_displaySimpleTitle('::MyEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('my_entities');
     }
@@ -1759,9 +1759,8 @@ class ModuleEntities extends \Nebule\Library\Modules
         ) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                     . '&' . ActionsEntities::CREATE
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
             $instanceList = new DisplayList($this->_applicationInstance);

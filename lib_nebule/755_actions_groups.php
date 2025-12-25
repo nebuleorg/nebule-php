@@ -61,8 +61,11 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $this->_createClosed = $this->getHaveInput(self::CREATE_CLOSED);
         $this->_createObfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
         $this->_createInstance = new Group($this->_nebuleInstance, '');
-        $this->_metrologyInstance->addLog('create group gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf18d77f');
+        $this->_metrologyInstance->addLog('create group name=' . $this->_createName . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf18d77f');
+        $this->_createInstance->setAsGroup($this->_createObfuscated);
         $this->_createInstance->setName($this->_createName);
+        if ($this->_createClosed)
+            $this->_createInstance->setMarkClosedGroup();
         $this->_createGID = $this->_createInstance->getID();
         $this->_createError = ($this->_createInstance->getID() == '0');
     }

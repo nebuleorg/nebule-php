@@ -1097,7 +1097,7 @@ class Node extends Functions implements nodeInterface {
 
         // Création lien de groupe.
         $nid2 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_DANGER);
-        $this->writeLink('l>' . $this->_id . '>' . $nid2);
+        $this->addLink('l>' . $this->_id . '>' . $nid2);
 
         $this->_cacheMarkDanger = true;
         return true;
@@ -1159,7 +1159,7 @@ class Node extends Functions implements nodeInterface {
 
         // Création lien de groupe.
         $nid2 = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_WARNING);
-        $this->writeLink('l>' . $this->_id . '>' . $nid2);
+        $this->addLink('l>' . $this->_id . '>' . $nid2);
 
         $this->_cacheMarkWarning = true;
         return true;
@@ -3102,7 +3102,7 @@ class Node extends Functions implements nodeInterface {
         else
             $id = $this->_id;
 
-        $this->writeLink('d>' . $this->_id);
+        $this->addLink('d>' . $this->_id);
 
         // Lit les liens.
         $links = array();
@@ -3131,7 +3131,7 @@ class Node extends Functions implements nodeInterface {
             $this->_metrologyInstance->addLog('Delete protected object ' . $this->_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df362406');
             $id = $this->_idProtected;
 
-            $this->writeLink('d>' . $this->_id);
+            $this->addLink('d>' . $this->_id);
 
             // Lit les liens.
             $links = array();
@@ -3170,7 +3170,7 @@ class Node extends Functions implements nodeInterface {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
             return false;
 
-        $this->writeLink('d>' . $this->_id);
+        $this->addLink('d>' . $this->_id);
 
         $links = array();
         $this->getLinks($links, array(), 'all', false);
@@ -3204,7 +3204,7 @@ class Node extends Functions implements nodeInterface {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitCreateLink', 'unlocked')))
             return false;
 
-        $this->writeLink('d>' . $this->_id);
+        $this->addLink('d>' . $this->_id);
 
         $r = $this->_ioInstance->unsetObject($this->_id);
 
@@ -3286,7 +3286,7 @@ class Node extends Functions implements nodeInterface {
         return $ok;
     }
 
-    public function writeLink(string $rl, bool $obfuscated = false, string $date = ''): bool {
+    public function addLink(string $rl, bool $obfuscated = false, string $date = ''): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('unlocked', 'permitWrite', 'permitWriteLink'))) {
             $this->_metrologyInstance->addLog('Write link not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '48b7be4e');
