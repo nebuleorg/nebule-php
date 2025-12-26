@@ -4953,8 +4953,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '  <div class="menuListContentAction-icon">';
             if (is_a($item['icon'], 'Nebule\Library\Node'))
                 $icon = $item['icon'];
-            else
-                $icon = $this->_cacheInstance->newNode((string)$item['icon']);
+            else {
+                $iconTmp = $this->_cacheInstance->newNode((string)$item['icon']);
+                if ($this->getNodeIsRID($iconTmp))
+                    $icon = $this->getImageByReference($iconTmp);
+                else
+                    $icon = $iconTmp;
+            }
             $result .= $this->convertUpdateImage($icon, $item['title']);
             $result .= '</div>' . "\n";
 

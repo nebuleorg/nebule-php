@@ -52,8 +52,8 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         $this->_hiddenValue1 = trim($value);
     }
     public function setHiddenInput2(string $name, string $value = ''): void {
-        $this->_hiddenName1 = trim($name);
-        $this->_hiddenValue1 = trim($value);
+        $this->_hiddenName2 = trim($name);
+        $this->_hiddenValue2 = trim($value);
     }
     public function setInputValue(string $value): void { $this->_inputValue = trim($value); }
     public function setInputName(string $name): void { $this->_inputName = trim($name); }

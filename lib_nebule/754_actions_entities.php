@@ -14,33 +14,33 @@ namespace Nebule\Library;
  */
 class ActionsEntities extends Actions implements ActionsInterface {
     // WARNING: contents of constants for actions must be uniq for all actions classes!
-    const SYNCHRONIZE = 'actsynent';
-    const SYNCHRONIZE_NEW = 'actsynnewent';
-    const CREATE = 'creaent';
-    const CREATE_PREFIX = 'creaentprefix';
-    const CREATE_SUFFIX = 'creaentsuffix';
-    const CREATE_FIRSTNAME = 'creaentfstnam';
-    const CREATE_NICKNAME = 'creaentniknam';
-    const CREATE_NAME = 'creaentnam';
-    const CREATE_PASSWORD1 = 'creaentpwd1';
-    const CREATE_PASSWORD2 = 'creaentpwd2';
-    const CREATE_ALGORITHM = 'creaentalgo';
-    const CREATE_TYPE = 'creaenttype';
-    const CREATE_AUTONOMY = 'creaentaut';
-    const CREATE_OBFUSCATE_LINKS = 'creaentobf';
-    const CHANGE_NAME = 'chentnam';
-    const CHANGE_PREFIX = 'chentprefix';
-    const CHANGE_SUFFIX = 'chentsuffix';
-    const CHANGE_FIRSTNAME = 'chentfnam';
-    const CHANGE_NICKNAME = 'chentnnam';
-    const CHANGE_PASSWORD = 'chentpwd';
-    const CHANGE_PASSWORD1 = 'chentpwd1';
-    const CHANGE_PASSWORD2 = 'chentpwd2';
-    const DELETE_NAME = 'delentnam';
-    const DELETE_PREFIX = 'delentprefix';
-    const DELETE_SUFFIX = 'delentsuffix';
-    const DELETE_FIRSTNAME = 'delentfnam';
-    const DELETE_NICKNAME = 'delentnnam';
+    const SYNCHRONIZE = 'action_entity_synchro';
+    const SYNCHRONIZE_NEW = 'action_entity_synchro_new';
+    const CREATE = 'action_entity_create';
+    const CREATE_PREFIX = 'action_entity_create_prefix';
+    const CREATE_SUFFIX = 'action_entity_create_suffix';
+    const CREATE_FIRSTNAME = 'action_entity_create_firstname';
+    const CREATE_NICKNAME = 'action_entity_create_nickname';
+    const CREATE_NAME = 'action_entity_create_name';
+    const CREATE_PASSWORD1 = 'action_entity_create_pwd1';
+    const CREATE_PASSWORD2 = 'action_entity_create_pwd2';
+    const CREATE_ALGORITHM = 'action_entity_create_algo';
+    const CREATE_TYPE = 'action_entity_create_type';
+    const CREATE_AUTONOMY = 'action_entity_create_autonomy';
+    const CREATE_OBFUSCATE_LINKS  = 'action_entity_create_obf';
+    const CHANGE_NAME  = 'action_entity_change_name';
+    const CHANGE_PREFIX  = 'action_entity_change_prefix';
+    const CHANGE_SUFFIX  = 'action_entity_change_suffix';
+    const CHANGE_FIRSTNAME  = 'action_entity_change_firstname';
+    const CHANGE_NICKNAME  = 'action_entity_change_nickname';
+    const CHANGE_PASSWORD  = 'action_entity_change_pwd';
+    const CHANGE_PASSWORD1  = 'action_entity_change_pwd1';
+    const CHANGE_PASSWORD2  = 'action_entity_change_pwd2';
+    const DELETE_NAME  = 'action_entity_del_name';
+    const DELETE_PREFIX  = 'action_entity_del_prefix';
+    const DELETE_SUFFIX  = 'action_entity_del_suffix';
+    const DELETE_FIRSTNAME  = 'action_entity_del_firstname';
+    const DELETE_NICKNAME  = 'action_entity_del_nickname';
 
 
 

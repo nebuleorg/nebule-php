@@ -14,25 +14,25 @@ namespace Nebule\Library;
  */
 class ActionsObjects extends Actions implements ActionsInterface {
     // WARNING: contents of constants for actions must be uniq for all actions classes!
-    const DELETE = 'actdelobj';
-    const DELETE_FORCE = 'actdelobjf';
-    const DELETE_OBFUSCATE = 'actdelobjo';
-    const PROTECT = 'actprtobj';
-    const UNPROTECT = 'actuprtobj';
-    const SHARE_PROTECT_TO_ENTITY = 'actshrprtent';
-    const SHARE_PROTECT_TO_GROUP_OPENED = 'actshrprtgrpo';
-    const SHARE_PROTECT_TO_GROUP_CLOSED = 'actshrprtgrpc';
-    const CANCEL_SHARE_PROTECT_TO_ENTITY = 'actushrprtent';
-    const SYNCHRONIZE = 'actsynobj';
-    const UPLOAD_FILE = 'upfile';
-    const UPLOAD_FILE_UPDATE = 'upfilemaj';
-    const UPLOAD_FILE_PROTECT = 'upfileprt';
-    const UPLOAD_FILE_OBFUSCATED = 'upfileobf';
-    const UPLOAD_TEXT = 'uptext';
-    const UPLOAD_TEXT_NAME = 'uptextname';
-    const UPLOAD_TEXT_TYPE = 'uptexttype';
-    const UPLOAD_TEXT_PROTECT = 'uptextprt';
-    const UPLOAD_TEXT_OBFUSCATED = 'uptextobf';
+    const DELETE = 'action_object_del';
+    const DELETE_FORCE = 'action_object_del_force';
+    const DELETE_OBFUSCATE = 'action_object_del_obf';
+    const PROTECT = 'action_object_protect';
+    const UNPROTECT = 'action_object_unprotect';
+    const SHARE_PROTECT_TO_ENTITY = 'action_object_share_protect_ent';
+    const SHARE_PROTECT_TO_GROUP_OPENED = 'action_object_share_protect_group_open';
+    const SHARE_PROTECT_TO_GROUP_CLOSED = 'action_object_share_protect_group_close';
+    const CANCEL_SHARE_PROTECT_TO_ENTITY = 'action_object_unshare_protect_ent';
+    const SYNCHRONIZE = 'action_object_synchro';
+    const UPLOAD_FILE = 'action_object_upload_file';
+    const UPLOAD_FILE_UPDATE = 'action_object_upload_file_update';
+    const UPLOAD_FILE_PROTECT = 'action_object_upload_file_protect';
+    const UPLOAD_FILE_OBFUSCATED = 'action_object_upload_file_obf';
+    const UPLOAD_TEXT = 'action_object_upload_text';
+    const UPLOAD_TEXT_NAME = 'action_object_upload_text_name';
+    const UPLOAD_TEXT_TYPE = 'action_object_upload_text_type';
+    const UPLOAD_TEXT_PROTECT = 'action_object_upload_text_protect';
+    const UPLOAD_TEXT_OBFUSCATED = 'action_object_upload_text_obf';
 
 
 

@@ -39,7 +39,7 @@ class ModuleEntities extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251225';
+    const MODULE_VERSION = '020251226';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
@@ -740,7 +740,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     public function headerStyle(): void {}
 
-    public function actions(): void {
+    public function actions(): void { // TODO refactor
         $this->_findSynchronizeEntity();
         $this->_actionSynchronizeEntity();
         $this->_findSearchEntity();
@@ -750,8 +750,6 @@ class ModuleEntities extends \Nebule\Library\Modules
 
 
     private function _findDisplayEntity(): void {
-        //$this->_displayEntity = $this->_entitiesInstance->getGhostEntityEID();
-        //$this->_displayEntityInstance = $this->_entitiesInstance->getGhostEntityInstance();
         $this->_displayEntityEID = $this->_nebuleInstance->getCurrentEntityEID();
         if ($this->_displayEntityEID != '0')
             $this->_displayEntityInstance = $this->_nebuleInstance->getCurrentEntityInstance();
@@ -765,7 +763,7 @@ class ModuleEntities extends \Nebule\Library\Modules
 
     private bool $_synchronizeEntity = false;
 
-    private function _findSynchronizeEntity(): void {
+    private function _findSynchronizeEntity(): void { // TODO refactor
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $arg = $this->getFilterInput(ActionsEntities::SYNCHRONIZE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -776,7 +774,7 @@ class ModuleEntities extends \Nebule\Library\Modules
         unset($arg);
     }
 
-    private function _actionSynchronizeEntity(): void {
+    private function _actionSynchronizeEntity(): void { // TODO refactor
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'))
             && $this->_synchronizeEntity
@@ -1889,6 +1887,7 @@ class ModuleEntities extends \Nebule\Library\Modules
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
             $instance->setWithSubmit(true);
+            $instance->setIconRID(DisplayItemIconMessage::ICON_PLAY_RID);
             //$instance->setLink($commonLink);
             $instanceList->addItem($instance);
 
@@ -1977,7 +1976,6 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityProp(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::Desc:AttribsTitle', $this::MODULE_REGISTERED_ICONS[3]);
-
         $this->_displayInstance->registerInlineContentID('properties');
     }
 
@@ -2076,7 +2074,6 @@ class ModuleEntities extends \Nebule\Library\Modules
     private function _displayEntityKeys(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::EntityKeys', $this::MODULE_REGISTERED_ICONS[3]);
-
         $this->_displayInstance->registerInlineContentID('keys');
     }
 

@@ -19,8 +19,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleObjects extends \Nebule\Library\Modules
-{
+class ModuleObjects extends \Nebule\Library\Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';

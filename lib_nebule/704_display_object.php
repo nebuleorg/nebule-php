@@ -1364,6 +1364,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->setFlagState('e');
         elseif ($this->_nid->getMarkWarning())
             $this->setFlagState('w');
+        elseif ($this->_nebuleInstance->getIsRID($this->_nid->getID()))
+            $this->setFlagState('r');
         elseif ($this->_nid->checkPresent())
             $this->setFlagState('o');
         else
@@ -1379,6 +1381,10 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_flagState = 'w';
             $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_WARN));
             $this->_flagStateText = '::::display:content:warningTaggedWarning';
+        } elseif ($state == 'r') {
+            $this->_flagState = 'r';
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_WARN));
+            $this->_flagStateText = '::::display:content:notAnObject';
         } elseif ($state == 'o') {
             $this->_flagState = 'o';
             $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_OK));

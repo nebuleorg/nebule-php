@@ -1613,7 +1613,7 @@ abstract class HelpCurrency {
             concurrentes.</p>
 
         <?php Displays::docDispTitle(3, 'omf', 'Fonctionnement'); ?>
-        <p>Une monnaie est un objet de référence qui va gérer des sac de jetons. La gestion se fait par différentes
+        <p>Une monnaie est un objet de référence qui va gérer des sacs de jetons. La gestion se fait par différentes
             entités détenant des rôles spécifiques aux monnaies.</p>
         <p>Une monnaie va disposer de plusieurs propriétés connues par leurs abréviations, voir <a href="#omcp">OMCP</a>.
         </p>

@@ -13,14 +13,15 @@ namespace Nebule\Library;
  */
 class ActionsGroups extends Actions implements ActionsInterface {
     // WARNING: contents of constants for actions must be uniq for all actions classes!
-    const CREATE = 'grpcrea';
-    const CREATE_NAME = 'grpcreanam';
-    const CREATE_CLOSED = 'grpcreacld';
-    const CREATE_OBFUSCATED = 'grpcreaobf';
-    const DELETE = 'grpdel';
-    const ADD_MEMBER = 'grpaddmbr';
-    const REMOVE_MEMBER = 'grpsupmbr';
-    const TYPED = 'grptyp';
+    const CREATE = 'action_group_create';
+    const CREATE_NAME = 'action_group_create_name';
+    const CREATE_CLOSED = 'action_group_create_close';
+    const CREATE_OBFUSCATED = 'action_group_create_obf';
+    const CREATE_TYPE = 'action_group_create_type';
+    const DELETE = 'action_group_del';
+    const ADD_MEMBER = 'action_group_add_membre';
+    const REMOVE_MEMBER = 'action_group_del_member';
+    const TYPED = 'action_group_typ';
 
 
 
@@ -58,6 +59,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
         }
         $this->_create = true;
         $this->_createName = $this->getFilterInput(self::CREATE_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $createType = $this->getFilterInput(self::CREATE_TYPE, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->_createClosed = $this->getHaveInput(self::CREATE_CLOSED);
         $this->_createObfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
         $this->_createInstance = new Group($this->_nebuleInstance, '');
@@ -65,7 +67,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $this->_createInstance->setAsGroup($this->_createObfuscated);
         $this->_createInstance->setName($this->_createName);
         if ($this->_createClosed)
-            $this->_createInstance->setMarkClosedGroup();
+            $this->_createInstance->setMarkClosedGroup(null, $this->_createObfuscated);
+        if ($createType == 'entity')
+            $this->_createInstance->setAsGroupOfEntities($this->_createObfuscated);
         $this->_createGID = $this->_createInstance->getID();
         $this->_createError = ($this->_createInstance->getID() == '0');
     }
