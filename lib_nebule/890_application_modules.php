@@ -87,7 +87,10 @@ class ApplicationModules
             if (! is_array($classImplement))
                 $classImplement = array();
 
-            if (str_starts_with($moduleName, 'ModuleTranslate') && in_array('Nebule\Library\ModuleTranslateInterface', $classImplement))
+            if (str_starts_with($moduleName, 'ModuleTranslate')
+                && in_array('Nebule\Library\ModuleTranslateInterface', $classImplement)
+                && get_parent_class($moduleFullName) == 'Nebule\Library\ModuleTranslates'
+            )
                 $this->_initInternalModuleTranslate($moduleName, $moduleFullName);
             elseif (str_starts_with($moduleName, 'Module') && in_array('Nebule\Library\ModuleInterface', $classImplement))
                 $this->_initInternalModuleApplication($moduleName, $moduleFullName);

@@ -159,7 +159,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 </a>
             </div>
             <div class="header-left">
-                <a href="/?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_MENU; ?>">
+                <a href="/?<?php echo Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_MENU; ?>">
                     <img title="Menu" alt="[]" src="<?php echo self::DEFAULT_LOGO_MENU; ?>"/>
                 </a>
             </div>
@@ -669,19 +669,19 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $list = array();
         $list[0]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LL);
         $list[0]['title'] = 'Options';
-        $list[0]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_OPTIONS;
+        $list[0]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_OPTIONS;
         $list[1]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
         $list[1]['title'] = 'Global authorities';
-        $list[1]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
+        $list[1]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
         $list[2]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
         $list[2]['title'] = 'Local authorities';
-        $list[2]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
+        $list[2]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
         $list[4]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LS);
         $list[4]['title'] = 'Applications';
-        $list[4]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_APPLICATIONS;
+        $list[4]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_APPLICATIONS;
         $list[5]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LK);
         $list[5]['title'] = 'Local recovery';
-        $list[5]['htlink'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::VIEW_RECOVERY;
+        $list[5]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_RECOVERY;
         ?>
 
         <div id="menuSelect">

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Nebule\Application\Sylabe;
 use Nebule\Library\applicationInterface;
+use Nebule\Library\DisplayItemIconMessage;
 use Nebule\Library\DisplayInformation;
 use Nebule\Library\DisplayTitle;
 use Nebule\Library\Metrology;
@@ -13,7 +14,7 @@ use Nebule\Library\Modules;
 use Nebule\Library\Node;
 use Nebule\Library\References;
 use Nebule\Library\Translates;
-use Nebule\Application\Modules\ModuleTranslateENEN;
+use Nebule\Library\ModuleTranslates;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
 use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
@@ -51,7 +52,7 @@ class Application extends Applications implements applicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250615';
+    const APPLICATION_VERSION = '020251228';
     const APPLICATION_LICENCE = 'GNU GPL v3 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -65,12 +66,17 @@ class Application extends Applications implements applicationInterface
         'ModuleAdmin',
         'ModuleObjects',
         'ModuleGroups',
+        'ModuleGroupEntities',
         'ModuleEntities',
+        'ModuleMessages',
+        'ModuleNeblog',
+        'ModuleQantion',
+        'ModuleLang',
         'ModuleTranslateFRFR',
+        'ModuleTranslateENEN',
+        'ModuleTranslateESCO',
     );
-    const LIST_MODULES_EXTERNAL = array(
-        'ModuleNeblog'
-    );
+    const LIST_MODULES_EXTERNAL = array();
 
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
     const APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS = false;
@@ -118,7 +124,7 @@ Ply02Qy7TRSCaIoounp6ed3795d1rxFBiEEYrHYhsViyZ09e7aNIAhc6z0fDAZfjI6OLtdTQ6i7Sywej
 BXmeFx4+fPjryMjI/NLSkiJ1imarLFDprbF9zdJdDMOYj0yz9JfsMLfLawLgH07nKL4w8XnJK5/Pl/P5/KEIoZsvTTUBNAE0ATQBHGX7G6N1Cds7Fc/AAAAAAElFTkSuQmC";
     const DEFAULT_APPLICATION_LOGO_LINK = '?dm=hlp&dv=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
-    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = '906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256';
 
     // Icônes de marquage.
     const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
@@ -165,15 +171,15 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     {
         $this->setUrlLinkPrefix('Nebule\Library\Node',
             '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Group',
             '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Entity',
             '?a=' . $this->_applicationInstance::APPLICATION_NODE . '&'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_ENTITY . '='); // TODO verify
         // FIXME continue...
     }
@@ -190,7 +196,9 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
      */
     public function displayCSS(): void {
         // Recherche l'image de fond.
-        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        if ($this->_nebuleInstance->getNodeIsRID($bgobj))
+            $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -864,7 +872,7 @@ class Translate extends Translates {}
 
 
 /**
- * This module manage the help pages and default first vue.
+ * This module manages the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -874,34 +882,40 @@ class Translate extends Translates {}
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250921';
+    const MODULE_VERSION = '020251227';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue sur <b>sylabe</b>.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
-Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.<br />
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne.",
+            '::Bienvenue' => 'Bienvenue sur <b>sylabe</b>.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => "Le projet <i>sylabe</i> est une implémentation logicielle basée sur le projet nebule.<br />
+Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels
+que définis dans nebule.<br />
 <br />
-Le projet <i>nebule</i> crée un réseau. Non un réseau de machines mais un réseau de données.<br />
+Le projet <i>nebule</i> crée un réseau. Non un réseau de machines, mais un réseau de données.<br />
 <br />
-Les systèmes informatiques actuels sont incapables de gérer directement les objets et les liens. Il n’est donc pas possible d’utiliser nebule nativement.
-Le projet sylabe permet un accès à cette nouvelle façon de gérer nos informations sans remettre en question fondamentalement l’organisation et notamment les systèmes d’exploitation de notre système d’information.<br />
+Les systèmes informatiques actuels sont incapables de gérer directement les objets et les liens. Il n’est donc pas
+possible d’utiliser nebule nativement.
+Le projet sylabe permet un accès à cette nouvelle façon de gérer nos informations sans remettre en question
+fondamentalement l’organisation et notamment les systèmes d’exploitation de notre système d’information.<br />
 <br />
 L’interface sylabe est une page web destinée à être mise en place sur un serveur pour manipuler des objets et des liens.
-Cela s’apparente tout à fait à ce qui se fait déjà communément : Google (et sa galaxie de sites), Facebook, Twitter, Outlook, Yahoo et leurs innombrables concurrents et prétendants…
-Tous ces sites sont globalement plus concurrents que complémentaires, et tous sans exception sont fermés à leurs concurrents.
-Cela se traduit pour l’utilisateur par la nécessité de, soit disposer d’un compte sur chaque site, soit de ne fréquenter que certains d’entre eux, voir un seul.
+Cela s’apparente tout à fait à ce qui se fait déjà communément : Google (et sa galaxie de sites), Facebook, Twitter,
+Outlook, Yahoo et leurs innombrables concurrents et prétendants…
+Tous ces sites sont globalement plus concurrents que complémentaires, et tous sans exception sont fermés à leurs
+concurrents.
+Cela se traduit pour l’utilisateur par la nécessité de, soit disposer d’un compte sur chaque site, soit de ne fréquenter
+que certains d’entre eux, voir un seul.
 Cela se traduit aussi par l’impossibilité d’échanger directement des données et informations d’un site à l’autre.<br />
 <br />
 Le projet sylabe reproduit la concentration des données vers des serveurs sur l’Internet.
@@ -913,45 +927,51 @@ Et, se basant sur les principes de nebule, tout serveur hébergeant sylabe peut 
  4. permettre à tout utilisateur (connu du serveur) de s’y connecter.<br />
 <br />
 Grâce à IPv6, nous avons la possibilité de réellement connecter toutes les machines sur l’Internet.
-Chacun peut ainsi mettre en place simplement sylabe chez lui, ou continuer à l’utiliser sur un autre serveur de l’Internet.
+Chacun peut ainsi mettre en place simplement sylabe chez lui, ou continuer à l’utiliser sur un autre serveur de
+l’Internet.
 Chacun peut devenir individuellement actif.<br />
 <br />
-Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le projet sylabe disparaîtra.
+Enfin, si un jour nebule s’étend à toutes les machines et que toutes ces machines l’implémentent nativement, alors le
+projet sylabe disparaîtra.
 Il aura rempli sa mission : permettre une transition douce vers nebule.<br />
 Il sera vu comme bizarrerie symptomatique d’une époque.",
-            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
 <br />
-D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on fait.<br />
+D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours
+d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on
+fait.<br />
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome to <b>sylabe</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help.',
+            '::Bienvenue' => 'Welcome to <b>sylabe</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'The <i>sylabe</i> project is a software implementation based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.<br />
 <br />
-The <i>nebule</i> project create a network. Not a network of computers but a network of datas.<br />
+The <i>nebule</i> project creates a network. Not a network of computers but a network of data.<br />
 <br />
 Current computer systems are unable to directly manage objects and links. It is thus not possible to use native nebule.
-The sylabe project provides access to this new way of managing our information without questioning fundamentally the organization including the operating system of our information systems.<br />
+The sylabe project provides access to this new way of managing our information without questioning fundamentally the
+organisation, including the operating system of our information systems.<br />
 <br />
 The sylabe interface is a web page to be set up on a server to handle objects and links.
-This all sounds a lot to what is already commonly exist: Google (and its galaxy of sites), Facebook, Twitter, Outlook, Yahoo and countless competitors and pretenders…
+This all sounds a lot to what is already commonly exists: Google (and its galaxy of sites), Facebook, Twitter, Outlook,
+Yahoo and countless competitors and pretenders…
 All these sites are generally more competitive than complementary, and all without exception are closed to competitors.
-This means to the user by the need to either have an account on each site, or attend only some of them, to see one.
+This means to the user by the need to either have an account on each site or attend only some of them, to see one.
 This also results in the inability to directly exchange data and information from one site to another.<br />
 <br />
 The project sylabe reproduced concentration data to servers on the Internet.
@@ -963,48 +983,57 @@ And, based on the principles of nebule, any server hosting sylabe can natively:<
  4. allow any user (known to the server) to connect to it.<br />
 <br />
 With IPv6, we have the ability to actually connect all the machines on the Internet.
-Everyone can simply set up sylabe at home, or continue using another Internet server.
+Everyone can simply set up sylabe at home or continue using another Internet server.
 Each individual can become active.<br />
 <br />
-Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project sylabe will disappear.
+Finally, if one day nebule extends to all machines and all these machines implement it natively, then the project sylabe
+will disappear.
 He will have served its purpose: to allow a smooth transition to nebule.<br />
-It will be seen as symptomatic of an era oddity.',
-            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+It will be seen as symptomatic of an era of oddity.',
+            '::AideGenerale:Text' => "The software is composed of three parts:<br />
 1. The top banner, which contains the application menu and the current entity.<br />
 2. The central part, which contains the content to display, objects, actions, etc...<br />
 3. The bottom banner, which appears when an action is performed.<br />
 <br />
-From a general point of view, everything on a light background relates to an ongoing action or the object currently in use. And everything on a dark background relates to the global interface or other actions unrelated to what you're doing.<br />
+From a general point of view, everything on a light background relates to an ongoing action or the object currently in
+use. And everything on a dark background relates to the global interface or other actions unrelated to what you're
+doing.<br />
 The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo en <b>sylabe</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
-Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.<br />
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea.',
+            '::Bienvenue' => 'Bienviedo en <b>sylabe</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'El proyecto <i>sylabe</i> es un proyecto basado nebule implementación de software.<br />
+Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en
+nebule.<br />
 <br />
-Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible utilizar nebule nativo.
-El proyecto sylabe proporciona acceso a esta nueva forma de gestionar nuestra información sin cuestionar en profundidad la organización incluyendo el sistema operativo de nuestros sistemas de información.<br />
+Sistemas informáticos actuales son incapaces de gestionar directamente los objetos y enlaces. Por tanto, no es posible
+utilizar nebule nativo.
+El proyecto sylabe proporciona acceso a esta nueva forma de gestionar nuestra información sin cuestionar en profundidad
+la organización incluyendo el sistema operativo de nuestros sistemas de información.<br />
 <br />
 La interfaz sylabe es una página web que se creará en el servidor para manejar objetos y enlaces.
-Todo esto suena muy parecido a lo que ya es común: Google (y su galaxia de sitios), Facebook, Twitter, Outlook, Yahoo e innumerables competidores y pretendientes…
-Todos estos sitios son generalmente más competitivas que complementarias, y todo sin excepción están cerrados a la competencia.
-Esto se traduce en el usuario por la necesidad, ya sea tener una cuenta en cada sitio, o asistir sólo a algunos de ellos, para ver uno.
+Todo esto suena muy parecido a lo que ya es común: Google (y su galaxia de sitios), Facebook, Twitter, Outlook, Yahoo e
+innumerables competidores y pretendientes…
+Todos estos sitios son generalmente más competitivas que complementarias, y todo sin excepción están cerrados a la
+competencia.
+Esto se traduce en el usuario por la necesidad, ya sea tener una cuenta en cada sitio, o asistir solo a algunos de
+ellos, para ver uno.
 Esto también resulta en la incapacidad para intercambiar directamente datos y la información de un sitio a otro.<br />
 <br />
 El sylabe proyecto reproduce datos de concentración a los servidores de Internet.
 Se espera que esté instalado de forma nativa en cualquier servidor web.
-Y, en base a los principios de nebule, cualquier servidor de alojamiento sylabe puede nativa:<br />
+Y, con base en los principios de nebule, cualquier servidor de alojamiento sylabe puede nativa:<br />
  1. gestionar las identidades generadas por el otro servidor, si un usuario o un robot;<br />
  2. el intercambio de datos e información con el resto de servidores de aplicación nebule;<br />
  3. la retransmisión de los datos y los otros servidores de datos;<br />
@@ -1014,15 +1043,18 @@ Con IPv6, tenemos la capacidad de conectarse en realidad todas las máquinas en 
 Todo el mundo puede simplemente configurar sylabe casa, o continuar utilizando otro servidor de Internet.
 Cada individuo puede llegar a ser activo.<br />
 <br />
-Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa, entonces el proyecto sylabe desaparecer.
+Por último, si un día nebule se extiende a todas las máquinas y todas estas máquinas implementar de forma nativa,
+entonces el proyecto sylabe desaparecer.
 Él habrá cumplido su propósito: permitir una transición suave a nebule.
 Se verá como un síntoma de una rareza era.',
-            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+            '::AideGenerale:Text' => "El software se compone de tres partes:<br />
 1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
 2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
 3. La banda inferior, que aparece cuando se realiza una acción.<br />
 <br />
-Desde un punto de vista general, todo lo que está sobre un fondo claro está relacionado con una acción en curso o el objeto que se está utilizando. Y todo lo que está sobre un fondo oscuro se refiere a la interfaz global u otras acciones no relacionadas con lo que se está haciendo.<br />
+Desde un punto de vista general, todo lo que está sobre un fondo claro está relacionado con una acción en curso o el
+objeto que se está utilizando. Y todo lo que está sobre un fondo oscuro se refiere a la interfaz global u otras acciones
+no relacionadas con lo que se está haciendo.<br />
 El menú en la parte superior izquierda es la mejor manera de navegar por la interfaz.",
         ],
     ];

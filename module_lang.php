@@ -3,8 +3,11 @@ declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Application\Sylabe\Action;
 use Nebule\Application\Sylabe\Display;
+use Nebule\Library\DisplayInformation;
+use Nebule\Library\DisplayItemIconMessage;
 use Nebule\Library\Displays;
 use Nebule\Library\DisplayTitle;
+use Nebule\Library\Metrology;
 use Nebule\Library\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\Node;
@@ -26,9 +29,9 @@ class ModuleLang extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'lang';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251116';
+    const MODULE_VERSION = '020251228';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
@@ -53,92 +56,72 @@ class ModuleLang extends \Nebule\Library\Modules
         $hookArray = array();
 
         switch ($hookName) {
-            case 'menu':
-                $hookArray[0]['name'] = '::AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::MODULE_DEFAULT_VIEW;
-                break;
+            case 'selfMenu':
+            case 'selfMenuLang':
+                $hookArray[] = array(
+                    'name' => '::AppTitle1',
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '::AppDesc1',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::MODULE_DEFAULT_VIEW
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
         }
-
         return $hookArray;
     }
 
 
 
-    public function displayModule(): void
-    {
-        //switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-        //    case $this::MODULE_REGISTERED_VIEWS[0]:
-        //        $this->_displayLangs();
-        //        break;
-        //    default:
-                $this->_displayLanguages();
-        //        break;
-        //}
-    }
+    public function displayModule(): void { $this->_displayLanguages(); }
 
-    public function displayModuleInline(): void
-    {
-        //switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-        //    case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_display_InlineLanguages();
-        //        break;
-        //}
-    }
+    public function displayModuleInline(): void { $this->_display_InlineLanguages(); }
 
 
 
-    private function _displayLanguages(): void
-    {
-        $this->_displaySimpleTitle('::display:Current', $this::MODULE_LOGO);
-
-        $this->_displayNotImplemented(); // TODO
-
+    private function _displayLanguages(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displaySimpleTitle('::display:List', $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('langs');
     }
 
-    /**
-     * Affiche les groupes de l'entité en cours de visualisation, en ligne.
-     *
-     * @return void
-     */
-    private function _display_InlineLanguages(): void
-    {
-        $this->_displaySimpleTitle('::display:List', $this::MODULE_LOGO);
-
-        $this->_displayNotImplemented(); // TODO
-
+    private function _display_InlineLanguages(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $list = $this->_applicationInstance->getApplicationModulesInstance()->getModulesTranslateListName();
         foreach ($list as $moduleName) {
-            $blogInstance = $moduleName::MODULE_LANGUAGE;
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setNID($blogInstance); // FIXME
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . References::COMMAND_SELECT_LANG . '=' . $moduleName);
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setEnableFlags(false);
-            $instance->setEnableFlagState(false);
-            $instance->setEnableFlagEmotions(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableRefs(true);
-            //$instance->setRefs(array($blogSID));
-            $instance->setSelfHookName('selfMenuBlogs');
-            $instance->setEnableStatus(true);
-            /*$instance->setStatus(
-                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountBlogPages($blogInstance)
-                . ' '
-                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountBlogPosts($blogInstance)
-            );*/
-            $instanceList->addItem($instance);
+            try {
+                $lang = $moduleName::MODULE_LANGUAGE;
+                if ($lang != '' && strlen($lang) != 5 && substr($lang, 2, 1) != '-')
+                    continue;
+                $name = $moduleName::TRANSLATE_TABLE[$lang][$moduleName::MODULE_NAME];
+                if (!is_string($name) || $name == '')
+                    continue;
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                if ($lang == $this->_translateInstance->getCurrentLanguage())
+                    $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
+                else
+                    $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceIcon = $this->_cacheInstance->newNode($moduleName::MODULE_LOGO);
+                if ($instanceIcon == '0')
+                    continue;
+                $instance->setIcon($instanceIcon);
+                $instance->setIconText($lang);
+                $instance->setMessage($name);
+                if ($lang != $this->_translateInstance->getCurrentLanguage()) {
+                    $instance->setLinkEnable(true);
+                    $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . Displays::COMMAND_DISPLAY_LANG . '=' . $lang
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                    );
+                }
+                $instanceList->addItem($instance);
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('display language error (' . $e->getCode() . ') : ' . $e->getFile() . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c0ae4709');
+            }
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setOnePerLine(true);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
     }
@@ -149,30 +132,30 @@ class ModuleLang extends \Nebule\Library\Modules
         'fr-fr' => [
             '::ModuleName' => 'Module des langues',
             '::MenuName' => 'Langages',
-            '::ModuleDescription' => 'Module de gestion des langues.',
-            '::ModuleHelp' => "Ce module permet de sélectionner une langue pour les applications.",
+            '::ModuleDescription' => 'Module de gestion des langues',
+            '::ModuleHelp' => 'Ce module permet de sélectionner une langue pour les applications.',
             '::AppTitle1' => 'Langues',
-            '::AppDesc1' => 'Gestion des langues.',
+            '::AppDesc1' => 'Gestion des langues',
             '::display:Current' => 'Language sélectionné',
             '::display:List' => 'Liste des langues',
         ],
         'en-en' => [
-            '::ModuleName' => 'Groups module',
-            '::MenuName' => 'Groups',
-            '::ModuleDescription' => 'Groups management module.',
-            '::ModuleHelp' => 'This module permit to see and manage groups.',
-            '::AppTitle1' => 'Groups',
-            '::AppDesc1' => 'Manage groups.',
+            '::ModuleName' => 'Languages module',
+            '::MenuName' => 'Languages',
+            '::ModuleDescription' => 'Languages management module',
+            '::ModuleHelp' => 'This module permit to manage and change languages.',
+            '::AppTitle1' => 'Languages',
+            '::AppDesc1' => 'Manage languages',
             '::display:Current' => 'Selected language',
             '::display:List' => 'List of languages',
         ],
         'es-co' => [
-            '::ModuleName' => 'Groups module',
-            '::MenuName' => 'Groups',
-            '::ModuleDescription' => 'Groups management module.',
-            '::ModuleHelp' => 'This module permit to see and manage groups.',
-            '::AppTitle1' => 'Groups',
-            '::AppDesc1' => 'Manage groups.',
+            '::ModuleName' => 'Languages module',
+            '::MenuName' => 'Languages',
+            '::ModuleDescription' => 'Languages management module.',
+            '::ModuleHelp' => 'This module permit to manage and change  languages.',
+            '::AppTitle1' => 'Languages',
+            '::AppDesc1' => 'Manage languages',
             '::display:Current' => 'Selected language',
             '::display:List' => 'List of languages',
         ],

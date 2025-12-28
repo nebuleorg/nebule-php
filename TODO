@@ -9,3 +9,4 @@
   - Fix buggy crypto_openssl::verify() with openssl_verify().
   - add warning and danger marks on object display.
   - Fix buggy crypto verify on other entity
+  - Fix buggy

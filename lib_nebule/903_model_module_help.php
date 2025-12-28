@@ -12,19 +12,18 @@ use Nebule\Application\Neblog\Display;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModelModuleHelp extends \Nebule\Library\Modules
-{
+class ModelModuleHelp extends \Nebule\Library\Modules {
     const MODULE_TYPE = 'Model';
-    const MODULE_NAME = '::module:help:ModuleName';
-    const MODULE_MENU_NAME = '::module:help:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'hlp';
     const MODULE_DEFAULT_VIEW = '1st';
-    const MODULE_DESCRIPTION = '::module:help:ModuleDescription';
-    const MODULE_VERSION = '020250222';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
+    const MODULE_VERSION = '020251227';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
     const MODULE_LOGO = '5b3afdf2eb971ce185930ad4accda23942d4495a638c2bdf27ae3e8e4537c1434697.none.272';
-    const MODULE_HELP = '::module:help:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array('1st', 'hlp', 'about');
@@ -32,9 +31,9 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         '5b3afdf2eb971ce185930ad4accda23942d4495a638c2bdf27ae3e8e4537c1434697.none.272', // 0 : icône d'aide.
         '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256',     // 1 : module
     );
-    const MODULE_APP_TITLE_LIST = array('::module:help:AppTitle1');
+    const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('5b3afdf2eb971ce185930ad4accda23942d4495a638c2bdf27ae3e8e4537c1434697.none.272');
-    const MODULE_APP_DESC_LIST = array('::module:help:AppDesc1');
+    const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('hlp');
 
 
@@ -47,26 +46,26 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         $hookArray = array();
         switch ($hookName) {
             case 'menu':
-                $hookArray[0]['name'] = '::module:help:AppTitle1';
+                $hookArray[0]['name'] = '::AppTitle1';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
+                $hookArray[0]['desc'] = '::AppDesc1';
+                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
                 break;
             case 'selfMenu':
                 // Affiche l'aide.
-                $hookArray[0]['name'] = '::module:help:AppTitle1';
+                $hookArray[0]['name'] = '::AppTitle1';
                 $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::module:help:AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
+                $hookArray[0]['desc'] = '::AppDesc1';
+                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1];
 
                 // A propos.
-                $hookArray[2]['name'] = '::module:help:About';
+                $hookArray[2]['name'] = '::About';
                 $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                 $hookArray[2]['desc'] = '';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
+                $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2];
                 break;
         }
         return $hookArray;
@@ -118,7 +117,7 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         ?>
         <div class="text">
             <p>
-                <?php echo $this->_translateInstance->getTranslate('::module:help:AideGenerale:Text') ?>
+                <?php echo $this->_translateInstance->getTranslate('::AideGenerale:Text') ?>
             </p>
         </div>
         <?php
@@ -194,7 +193,7 @@ class ModelModuleHelp extends \Nebule\Library\Modules
         ?>
         <div class="text">
             <p>
-                <?php echo $this->_translateInstance->getTranslate('::module:help:APropos:Text') ?>
+                <?php echo $this->_translateInstance->getTranslate('::APropos:Text') ?>
             </p>
         </div>
         <?php
@@ -204,49 +203,49 @@ class ModelModuleHelp extends \Nebule\Library\Modules
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => 'Todo',
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne.",
+            '::Bienvenue' => 'Bienvenue.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => 'Todo',
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'Todo',
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help.',
+            '::Bienvenue' => 'Welcome.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'Todo',
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'Todo',
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea.',
+            '::Bienvenue' => 'Bienviedo.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'Todo',
         ],
     ];
 }

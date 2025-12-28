@@ -60,8 +60,8 @@ class Application extends Applications
 {
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
-    const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251226';
+    const APPLICATION_AUTHOR = 'Project nebule';
+    const APPLICATION_VERSION = '020251228';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
@@ -74,15 +74,12 @@ class Application extends Applications
         'ModuleEntities',
         'ModuleGroupEntities',
         'ModuleLang',
-        'ModuleTranslateFRFR'
+        'ModuleTranslateFRFR',
+        'ModuleTranslateENEN',
+        'ModuleTranslateESCO',
     );
     const LIST_MODULES_EXTERNAL = array();
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }
-
+    public function __construct(nebule $nebuleInstance) { parent::__construct($nebuleInstance); }
     // All default.
 }
 
@@ -211,8 +208,8 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     {
         $this->setUrlLinkPrefix('Nebule\Library\Node', '?a=4&l=');
         $this->setUrlLinkPrefix('Nebule\Library\Entity', '?a=' . $this->_applicationInstance::APPLICATION_NODE
-            . '&'. self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . ModuleEntities::MODULE_COMMAND_NAME
-            . '&'. self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . ModuleEntities::MODULE_DEFAULT_VIEW
+            . '&'. self::COMMAND_DISPLAY_MODE . '=' . ModuleEntities::MODULE_COMMAND_NAME
+            . '&'. self::COMMAND_DISPLAY_VIEW . '=' . ModuleEntities::MODULE_DEFAULT_VIEW
             . '&' . References::COMMAND_SELECT_ENTITY . '=');
     }
 
@@ -229,7 +226,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        if ($this->_nebuleInstance->getNodeIsRID($bgobj))
+            $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -791,7 +790,7 @@ class Translate extends Translates
 
 
 /**
- * This module manage the help pages and default first vue.
+ * This module manages the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -801,25 +800,25 @@ class Translate extends Translates
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250921';
+    const MODULE_VERSION = '020251227';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue sur <b>weblog</b>.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>entity</i> est une implémentation logicielle de gestion des identités basée sur le projet nebule.<br />
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne",
+            '::Bienvenue' => 'Bienvenue sur <b>weblog</b>.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => "Le projet <i>entity</i> est une implémentation logicielle de gestion des identités basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
-            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
@@ -828,21 +827,21 @@ D'un point de vue général, tout ce qui est sur fond clair concerne une action 
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome to <b>weblog</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>entity</i> project is a software implementation to manage identities based on the nebule project.<br />
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help',
+            '::Bienvenue' => 'Welcome to <b>weblog</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'The <i>entity</i> project is a software implementation to manage identities based on the nebule project.<br />
 This PHP implementation is intended to serve as a reference for the possibilities offered by objects and links as defined in nebule.',
-            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+            '::AideGenerale:Text' => "The software is composed of three parts:<br />
 1. The top banner, which contains the application menu and the current entity.<br />
 2. The central part, which contains the content to display, objects, actions, etc...<br />
 3. The bottom banner, which appears when an action is performed.<br />
@@ -851,21 +850,21 @@ From a general point of view, everything on a light background relates to an ong
 The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo en <b>weblog</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>entity</i> es una implementación de software de gestión de identidad basado en el proyecto nebule.<br />
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea',
+            '::Bienvenue' => 'Bienviedo en <b>weblog</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'El proyecto <i>entity</i> es una implementación de software de gestión de identidad basado en el proyecto nebule.<br />
 Esta implementación en PHP está diseñada como una referencia de las posibilidades que ofrecen los objetos y los enlaces tal como se definen en nebule.',
-            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+            '::AideGenerale:Text' => "El software se compone de tres partes:<br />
 1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
 2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
 3. La banda inferior, que aparece cuando se realiza una acción.<br />

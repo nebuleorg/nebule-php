@@ -55,12 +55,13 @@ g8rh1K/R4HNYBzwE/Ax40MwOKOklAAmhYfC7+zTgM8BcYDYwdZikijHRIduG+xTwOPCEmW081DkLCUAM
     const DEFAULT_BOOTSTRAP_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAADkElEQVRo3u2ZT0hUQRzHP9sGgoEh0T8kL8/Ag+tBsUNdCpmKjA7VQdzKwg6pdIoOnkQKPHgUtUOGSrt0qIUORTGIXepgZAc9eJCFMgmUEj0IQotdlJ03b1779u2IK/k7vTfvN/P7zm9+8/v3YI/+d4oEZxUHaaaBCZJyw4cjQgvn+MwLuWIZgKijg9tEgTl6SJggiAhxuqkCMowwKKesARDPiSuvRgiK+C1KyBu2AOj7XWSaKJUcphRYY4nvZIhxxM0mI9sFICAFAbBvp2/BbgAg2sIuHmRmNOcigzwKvb0rztH0mwKMUJSQ4pLhwxTjTDLLAqtAGRVUc4pG6gy8b7kq10MBECW846w2uMYAY3LGZ0YNt+ikVBv+wEV/CP8C8Maz+z565XKOIyuni4e6FmRT3gDEIO2a2u/LTwGN7zT92nEMyY68jFC0aaaXpEl+C2p76XnnGVXElKEG50f6a04NaD4/S09ke4hLOMQ94wdXjIi4It4X44SkjIf0AwlajB/qs5FSdUTmU5qiNbQfaMUckjsMGhAH+WW0iDNBTc/HHD8ahjMc2kpZshpoNorvK0Q8yE/0GU2/2XsEDQbGNXoLjja9rBlGG7wAJpjzsA3kcjsBdLDMgGdwjgkvgCQ9HghjViLumEd8D0mzH7jGS9X+Zb2dmC++KH5xkQdqRunOB1KMK2/j1rIOdaVpd0LrAiA3XDdh0hoAdaWoO5/WM6JK5XnWGoBZHwkGAIeV5wVrABZ8JBgAqMnEqjUAqz4SijErVr1WmTUpZT4SDACWlOcKawAqfCQYAHxXnqutAaj2kaADEBEyyuspawDUlTIi4gNARIi78rhGawDUlWLEVQhRrb4/obAed16lFy1EghpXgnuAWn4702m
 PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf7Q4vfT7/xw0i2jaf6gUEjcx2joRUwaizYXZIUpad/OiepNbDHnGO52gw+pdkdn9JsIGd1LNp4qhWnrfJPXsof1cqyu3I4j+o4/dU56qoUYlx2ZtLzgU0vxXmtPH+82xoURdCi2fEmlU+rJj/ybc0EBmC4EcHJx/LzBLDXrN5eChto3lOi/bBY58L2AUho7bvr8pXBUtzFPSSsHYG8QT3DmxnzHDdJGdlS3NxscWQYpj7IH6Mi+G23R3v0FwbfFx3mQ2ZaAAAAAElFTkSuQmCC';
     const DEFAULT_BOOTSTRAP_LINK = 'a=1';
-    const DEFAULT_DISPLAY_COMMAND_MODE = 'dm';
-    const DEFAULT_DISPLAY_COMMAND_VIEW = 'dv';
-    const DEFAULT_NEXT_COMMAND = 'next';
-    const DEFAULT_INLINE_COMMAND = 'di';
-    const DEFAULT_CSS_COMMAND = 'css';
-    const DEFAULT_INLINE_CONTENT_COMMAND = 'incontent';
+    const COMMAND_DISPLAY_MODE = 'dm';
+    const COMMAND_DISPLAY_VIEW = 'dv';
+    const COMMAND_DISPLAY_LANG = 'dl';
+    const COMMAND_NEXT = 'next';
+    const COMMAND_INLINE = 'di';
+    const COMMAND_INLINE_CONTENT = 'incontent';
+    const COMMAND_CSS = 'css';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
     const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
@@ -199,6 +200,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     );
 
 
+
     protected bool $_unlocked = false;
     protected array $_urlLinkPrefix = array(
         'Nebule\Library\Node' => '?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4&l=',
@@ -221,10 +223,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected string $_urlLinkTokenPrefix = '?a=4&l=';
     protected string $_urlLinkTransactionPrefix = '?a=4&l=';
     protected string $_urlLinkWalletPrefix = '?a=4&l=';
-    protected string $_currentDisplayLanguage = '';
-    protected ?Translates $_currentDisplayLanguageInstance = null;
-    protected array $_displayLanguageList = array();
-    protected array $_displayLanguageInstanceList = array();
 
 
 
@@ -234,8 +232,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_metrologyInstance->addLog('initialisation display', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '46fcbf07');
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
@@ -248,18 +245,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_translateInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
-            $this->_currentDisplayLanguageInstance = $this->_translateInstance->getCurrentLanguageInstance();
-            $this->_displayLanguageList = $this->_translateInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_translateInstance->getLanguageModuleInstanceList();
-        }
     }
 
-    protected function _initUrlLinks(): void
-    {
+    protected function _initUrlLinks(): void {
         /*$this->setUrlLinkObjectPrefix('?'
             . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance::APPLICATION_NAME
             . '&' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
@@ -300,10 +288,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
 
-    public function getNeededObjectsList(): array
-    {
-        return $this->_neededObjectsList;
-    }
+    public function getNeededObjectsList(): array { return $this->_neededObjectsList; }
 
     protected string $_currentDisplayMode = '';
     protected array $_listDisplayModes = array();
@@ -332,7 +317,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return;
         }
 
-        // If we use modules, extract name of modes from modules.
+        // If we use modules, extract the name of modes from modules.
         if ($this->_applicationInstance::USE_MODULES) {
             // Extract list of modules, must not be empty.
             $listModules = $this->_applicationInstance->getModulesListInstances();
@@ -351,7 +336,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         // Find mode to display by reading GET or ask cache or keep default mode.
-        $modeARG = $this->getFilterInput(self::DEFAULT_DISPLAY_COMMAND_MODE, FILTER_FLAG_ENCODE_LOW);
+        $modeARG = $this->getFilterInput(self::COMMAND_DISPLAY_MODE, FILTER_FLAG_ENCODE_LOW);
         $okModeARG = false;
         foreach ($this->_listDisplayModes as $name) {
             if ($modeARG == $name)
@@ -387,10 +372,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function getCurrentDisplayMode(): string
-    {
-        return $this->_currentDisplayMode;
-    }
+    public function getCurrentDisplayMode(): string { return $this->_currentDisplayMode; }
 
     protected ?Modules $_currentModuleInstance = null;
 
@@ -415,10 +397,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return Modules
      */
-    public function getCurrentModuleInstance(): Modules
-    {
-        return $this->_currentModuleInstance;
-    }
+    public function getCurrentModuleInstance(): Modules { return $this->_currentModuleInstance; }
 
     protected string $_currentDisplayView = '';
     protected array $_listDisplayViews = array();
@@ -451,7 +430,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         // Lit et nettoie le contenu de la variable GET.
-        $arg_view = $this->getFilterInput(self::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_FLAG_ENCODE_LOW);
+        $arg_view = $this->getFilterInput(self::COMMAND_DISPLAY_VIEW, FILTER_FLAG_ENCODE_LOW);
 
         $list_views_names = array();
 
@@ -512,10 +491,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return string
      */
-    public function getCurrentDisplayView(): string
-    {
-        return $this->_currentDisplayView;
-    }
+    public function getCurrentDisplayView(): string { return $this->_currentDisplayView; }
 
 
     /**
@@ -523,28 +499,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     protected function _findInlineContentID(): void
     {
-        $arg_id = $this->getFilterInput(self::DEFAULT_INLINE_CONTENT_COMMAND, FILTER_FLAG_ENCODE_LOW);
+        $arg_id = $this->getFilterInput(self::COMMAND_INLINE_CONTENT, FILTER_FLAG_ENCODE_LOW);
         if ($arg_id != '')
             $this->_inlineContentID = $arg_id;
 
         $this->_metrologyInstance->addLog('find sub display : ' . $this->_inlineContentID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '046d378a');
     }
 
-    protected $_inlineContentID = '';
+    protected string $_inlineContentID = '';
 
-    protected $_inlineContentIndex = array();
+    protected array $_inlineContentIndex = array();
 
-    protected $_inlineContentOptions = array();
+    protected array $_inlineContentOptions = array();
 
     /**
      * Retourne l'ID html à traiter.
      *
      * @return string
      */
-    public function getInlineContentID(): string
-    {
-        return $this->_inlineContentID;
-    }
+    public function getInlineContentID(): string { return $this->_inlineContentID; }
 
     /**
      * Enregistre un ID de contenu html à remplacer.
@@ -585,8 +558,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             return true;
 
         echo "<script language=\"javascript\" type=\"text/javascript\">\n<!--\n";
-        $url = '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_currentDisplayView;
+        //$url = '?' . self::COMMAND_DISPLAY_MODE . '=' . $this->_currentDisplayMode
+        //    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_currentDisplayView;
+        $url = '?';
+        foreach ($_GET as $key => $value) {
+            if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN)
+                continue;
+            if ($url != '?')
+                $url .= '&';
+            $url .= $key;
+            if ($value != '')
+                $url .= '=' . $value;
+        }
         foreach ($this->_inlineContentIndex as $id) {
             $option = '';
             if (isset($this->_inlineContentOptions[$id])
@@ -594,7 +577,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $option = '&' . $this->_inlineContentOptions[$id];
             echo "setTimeout(replaceInlineContentFromURL('" . $id . "', '" . $url
-                . '&' . self::DEFAULT_INLINE_COMMAND . '&' . self::DEFAULT_INLINE_CONTENT_COMMAND . '=' . $id
+                . '&' . self::COMMAND_INLINE . '&' . self::COMMAND_INLINE_CONTENT . '=' . $id
                 . $option . "'), 20);\n";
         }
         echo "//-->\n</script>\n";
@@ -1448,10 +1431,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Affichage du style CSS de l'application.
      */
-    public function displayCSS(): void
-    {
-        // This function must be overloaded by applications.
-    }
+    public function displayCSS(): void {} // This function must be overloaded by applications.
 
 
     /**
@@ -1462,9 +1442,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function commonScripts(): void
     {
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             return;
-        }
         ?>
 
         <script language="javascript" type="text/javascript">
@@ -1774,10 +1753,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Code on apps before display.
      */
-    protected function _preDisplay(): void
-    {
-        // Nothing to do. This function must be rewritten on apps if needed.
-    }
+    protected function _preDisplay(): void {} // Nothing to do. This function must be rewritten on apps if needed.
 
     /**
      * Display page inline or not.
@@ -1787,7 +1763,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         //$this->_configureLinks();
         $this->_preDisplay();
 
-        if ($this->getHaveInput(self::DEFAULT_INLINE_COMMAND))
+        if ($this->getHaveInput(self::COMMAND_INLINE))
             $this->_displayInline();
         //elseif ($this->getHaveInput(self::DEFAULT_CSS_COMMAND))
         //    $this->commonCSS(); TODO
@@ -1803,7 +1779,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c3cdf3de');
         ?>
         <!DOCTYPE html>
-        <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
+        <html lang="<?php echo $this->_translateInstance->getCurrentLanguage(); ?>">
         <head>
             <meta charset="utf-8"/>
             <title><?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getGhostEntityInstance()->getFullName('all'); ?></title>
@@ -1897,21 +1873,21 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     protected function _findLogoApplication(): void
     {
         $this->_logoApplication = $this->_displayInstance::DEFAULT_APPLICATION_LOGO;
-        // @todo
+        // TODO
     }
 
     protected string $_logoApplicationLink = '';
     protected function _findLogoApplicationLink(): void
     {
         $this->_logoApplicationLink = $this->_displayInstance::DEFAULT_APPLICATION_LOGO_LINK;
-        // @todo
+        // TODO
     }
 
     protected string $_logoApplicationName = '';
     protected function _findLogoApplicationName(): void
     {
         $this->_logoApplicationName = $this->_applicationInstance::APPLICATION_NAME;
-        // @todo
+        // TODO
     }
 
 
@@ -1937,7 +1913,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     <?php
                 } else {
                     ?>
-                    <a href="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW; ?>=menu">
+                    <a href="?<?php echo Displays::COMMAND_DISPLAY_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::COMMAND_DISPLAY_VIEW; ?>=menu">
                         <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
                              title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"/>
                     </a>
@@ -2018,14 +1994,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $list[] = array(
                     'icon' => '8fffa9e30ca4e02f3b07f8447a4a23faaaf27bc5731b1e303e08c8ece79953a179b1.none.272',
                     'title' => $this->_translateInstance->getTranslate('::menu'),
-                    'htlink' => '?' . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_currentDisplayMode
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=menu'
+                    'htlink' => '?' . self::COMMAND_DISPLAY_MODE . '=' . $this->_currentDisplayMode
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=menu'
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     'desc' => $this->_translateInstance->getTranslate('::menuDesc'),
                     'ref' => $this->_applicationInstance::APPLICATION_NAME,
                     'class' => 'menuListContentActionModules'
             );
-            $this->_metrologyInstance->addLog('DEBUGGING translate in=::menu out=' . $this->_translateInstance->getTranslate('::menu'), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
 
         // Call for actions of the current module for this display mode
@@ -2124,7 +2099,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Call of the list of modules
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
-                $moduleName = $module->getTranslate($module::MODULE_NAME);
+                $moduleName = $module->getTranslate($module::MODULE_MENU_NAME);
                 $appTitleList = $module::MODULE_APP_TITLE_LIST;
                 if (sizeof($appTitleList) != 0) {
                     $appIconList = $module::MODULE_APP_ICON_LIST;
@@ -2142,8 +2117,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $list[] = array(
                                 'icon' => $icon,
                                 'title' => $module->getTranslate($appTitleList[$i]),
-                                'htlink' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $module::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $appViewList[$i]
+                                'htlink' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $module::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $appViewList[$i]
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                                 'desc' => $desc,
                                 'ref' => $moduleName,
@@ -2415,77 +2390,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return $result;
     }
 
-    /**
-     * Prépare à afficher le contenu d'un objet suivant son type. Version full.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertObjectContentFull(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet suivant son type. Version full.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayObjectContentFull(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertObjectContentSized($object, 'full', $permitWarnProtected);
-    }
-
-    /**
-     * Prépare à afficher le contenu d'un objet suivant son type. Version half.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertObjectContentHalf(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet suivant son type. Version half.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayObjectContentHalf(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertObjectContentSized($object, 'half', $permitWarnProtected);
-    }
-
-    /**
-     * Prépare à afficher le contenu d'un objet suivant son type. Version small.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertObjectContentSmall(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet suivant son type. Version small.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayObjectContentSmall(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertObjectContentSized($object, 'small', $permitWarnProtected);
-    }
 
 
     /**
@@ -2689,78 +2593,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
 
         return $result;
-    }
-
-    /**
-     * Prépare à afficher le contenu d'un objet comme objet pur. Version full.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertAsObjectContentFull(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet comme objet pur. Version full.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayAsObjectContentFull(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertAsObjectContentSized($object, 'full', $permitWarnProtected);
-    }
-
-    /**
-     * Prépare à afficher le contenu d'un objet comme objet pur. Version half.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertAsObjectContentHalf(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet comme objet pur. Version half.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayAsObjectContentHalf(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertAsObjectContentSized($object, 'half', $permitWarnProtected);
-    }
-
-    /**
-     * Prépare à afficher le contenu d'un objet comme objet pur. Version small.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return string
-     */
-    public function convertAsObjectContentSmall(Node $object, bool $permitWarnProtected = true): string
-    {
-        return $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
-    }
-
-    /**
-     * Afficher le contenu d'un objet comme objet pur. Version small.
-     *
-     * @param Node $object
-     * @param bool $permitWarnProtected
-     * @return void
-     */
-    public function displayAsObjectContentSmall(Node $object, bool $permitWarnProtected = true): void
-    {
-        echo $this->convertAsObjectContentSized($object, 'small', $permitWarnProtected);
     }
 
     /**
@@ -3010,19 +2842,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 	 *  Affichage des liens hypertextes.
 	 * -------------------------------------------------------------------------------- */
     /**
-     * ???
-     * @param string $htlink
-     * @return string
-     * TODO
-     */
-    public function convertHypertextShortLink(string $htlink): string
-    {
-        if ($htlink == '')
-            return '';
-        return $htlink;
-    }
-
-    /**
      * Convertit un texte et un lien web en un lien préformaté HTML.
      *
      * @param string $text
@@ -3101,11 +2920,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    /**
-     * Tableau de cache des mises à jour d'icônes déjà recherchées.
-     *
-     * @var array
-     */
     private array $_cacheIconUpdate = array();
 
     public function getImageUpdate($object, bool $useBuffer = true): string
@@ -3854,8 +3668,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         foreach ($listEmotions as $emotion) {
             // Génère la base du lien html pour revenir au bon endroit en toute situation.
-            $httpLink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+            $httpLink = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
@@ -5903,8 +5717,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         foreach ($listEmotions as $emotion) {
             // Génère la base du lien html pour revenir au bon endroit en toute situation.
-            $htlink = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+            $htlink = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()

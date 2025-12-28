@@ -18,10 +18,10 @@ class ModuleTranslateESCO extends \Nebule\Library\ModuleTranslates
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    const MODULE_VERSION = '020251116';
+    const MODULE_VERSION = '020251228';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
-    const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
+    const MODULE_LOGO = '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

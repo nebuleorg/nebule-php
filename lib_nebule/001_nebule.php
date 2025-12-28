@@ -14,7 +14,7 @@ class nebule
 {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251226';
+    const NEBULE_VERSION = '020251228';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';
@@ -751,7 +751,7 @@ class nebule
     public function getDisplayNextObject(): string {
         $this->_metrologyInstance->addLog('extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
 
-        $arg = trim(' ' . filter_input(INPUT_GET, Displays::DEFAULT_NEXT_COMMAND, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg = trim(' ' . filter_input(INPUT_GET, Displays::COMMAND_NEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
         if (Node::checkNID($arg))
             return $arg;

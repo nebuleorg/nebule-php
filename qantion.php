@@ -47,7 +47,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250615';
+    const APPLICATION_VERSION = '020251228';
     const APPLICATION_LICENCE = 'GNU GPL v3 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -59,7 +59,9 @@ class Application extends Applications
         'ModuleHelp',
         'ModuleQantion',
         'ModuleLang',
-        'ModuleTranslateFRFR'
+        'ModuleTranslateFRFR',
+        'ModuleTranslateENEN',
+        'ModuleTranslateESCO',
     );
     const LIST_MODULES_EXTERNAL = array();
 
@@ -136,13 +138,13 @@ JSVF6XS6yLi4uIiYmBhVRESESq1WP6dUKhXh4eHhcrlcLpPJpBKJRCqRSMIIIWRtbW19bW3t4erq6sNA
 oAAAAAUAACgAAEABAAAKAABQAACAAgCAkPo/0waFavM49GgAAAAASUVORK5CYII=
 	";
     const DEFAULT_APPLICATION_LOGO_LINK = '?dm=hlp&dv=about';
-    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690';
-    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499';
+    const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
     // Icônes de marquage.
-    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0';
-    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2';
-    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859';
+    const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
+    const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2.sha2.256';
+    const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859.sha2.256';
 
     const APPLICATION_LICENCE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAA
 sTAQCanBgAAAAHdElNRQfeDAYWDCX7YSGrAAABn0lEQVRIx62VPU8CQRCGn7toYWKCBRY0FNQe9CZ+dPwAt6AxkmgrJYX2JsaOVgtNTKQYfwCdYGKvUFOYGAooxJiYWHgWd5wL3C0Lc
@@ -180,33 +182,6 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         self::DEFAULT_ICON_HELP,
         self::DEFAULT_ICON_WORLD);
 
-    protected function _initialisation(): void
-    {
-        /*$this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_ioInstance = $this->_nebuleInstance->getIoInstance();
-        $this->_metrologyInstance = $this->_nebuleInstance->getMetrologyInstance();
-        $this->_metrologyInstance->addLog('Load displays', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
-        $this->_actionInstance = $this->_applicationInstance->getActionInstance();
-        $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();*/
-
-        $this->_findLogoApplication();
-        $this->_findLogoApplicationLink();
-        $this->_findLogoApplicationName();
-        $this->_findCurrentDisplayMode();
-        $this->_findCurrentModule();
-        $this->_findCurrentDisplayView();
-        $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_translateInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
-            $this->_currentDisplayLanguageInstance = $this->_translateInstance->getCurrentLanguageInstance();
-            $this->_displayLanguageList = $this->_translateInstance->getLanguageList();
-            $this->_displayLanguageInstanceList = $this->_translateInstance->getLanguageModuleInstanceList();
-        }
-    }
-
 
 
     /*
@@ -220,7 +195,9 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        if ($this->_nebuleInstance->getNodeIsRID($bgobj))
+            $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -880,7 +857,7 @@ class Translate extends Translates {}
 
 
 /**
- * This module manage the help pages and default first vue.
+ * This module manages the help pages and default first vue.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -890,25 +867,25 @@ class Translate extends Translates {}
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250921';
+    const MODULE_VERSION = '020251227';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue sur <b>qantion</b>.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>qantion</i> est une implémentation logicielle de gestion de monnaies basée sur le projet nebule.<br />
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne.",
+            '::Bienvenue' => 'Bienvenue sur <b>qantion</b>.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => "Le projet <i>qantion</i> est une implémentation logicielle de gestion de monnaies basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
-            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
@@ -917,21 +894,21 @@ D'un point de vue général, tout ce qui est sur fond clair concerne une action 
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome to <b>qantion</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>qantion</i> project is a software implementation to manage currencies based on nebule project.<br />
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help.',
+            '::Bienvenue' => 'Welcome to <b>qantion</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'The <i>qantion</i> project is a software implementation to manage currencies based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.',
-            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+            '::AideGenerale:Text' => "The software is composed of three parts:<br />
 1. The top banner, which contains the application menu and the current entity.<br />
 2. The central part, which contains the content to display, objects, actions, etc...<br />
 3. The bottom banner, which appears when an action is performed.<br />
@@ -940,21 +917,21 @@ From a general point of view, everything on a light background relates to an ong
 The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo en <b>qantion</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>qantion</i> es un proyecto basado nebule implementación de software para la gestión de monedas.<br />
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea.',
+            '::Bienvenue' => 'Bienviedo en <b>qantion</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'El proyecto <i>qantion</i> es un proyecto basado nebule implementación de software para la gestión de monedas.<br />
 Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.',
-            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+            '::AideGenerale:Text' => "El software se compone de tres partes:<br />
 1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
 2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
 3. La banda inferior, que aparece cuando se realiza una acción.<br />

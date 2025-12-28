@@ -64,16 +64,16 @@ use Nebule\Library\References;
 class ModuleNeblog extends \Nebule\Library\Modules
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::objects:ModuleName';
-    const MODULE_MENU_NAME = '::objects:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
-    const MODULE_DESCRIPTION = '::objects:ModuleDescription';
-    const MODULE_VERSION = '020251224';
-    const MODULE_AUTHOR = 'Projet nebule';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
+    const MODULE_VERSION = '020251228';
+    const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    const MODULE_HELP = '::objects:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array(
@@ -107,9 +107,9 @@ class ModuleNeblog extends \Nebule\Library\Modules
         Displays::DEFAULT_ICON_HELP,
         Displays::DEFAULT_ICON_LL,
     );
-    const MODULE_APP_TITLE_LIST = array('::objects:ModuleName');
+    const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256');
-    const MODULE_APP_DESC_LIST = array('::objects:ModuleDescription');
+    const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('blog');
 
     const COMMAND_SELECT_BLOG = 'blog';
@@ -281,8 +281,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[1]['name'] = '::blog:list';
                     $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # New blog
@@ -291,8 +291,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[2]['name'] = '::blog:new';
                     $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                     $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # Get existing blog
@@ -301,8 +301,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[3]['name'] = '::blog:getExisting';
                     $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
                     $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
+                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 # Come back to the blog
@@ -312,8 +312,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[4]['name'] = '::blog:disp';
                     $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[4]['desc'] = '';
-                    $hookArray[4]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                    $hookArray[4]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
@@ -323,8 +323,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[5]['name'] = '::page:list';
                     $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[5]['desc'] = '';
-                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                    $hookArray[5]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
@@ -335,8 +335,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[6]['name'] = '::page:new';
                     $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
                     $hookArray[6]['desc'] = '';
-                    $hookArray[6]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+                    $hookArray[6]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
@@ -346,8 +346,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::blog:listall',
                             'icon' => $this::MODULE_REGISTERED_ICONS[1],
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[16]
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[16]
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -358,8 +358,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::rights',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
                             'desc' => '::blog:rights',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[17]
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[17]
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -371,8 +371,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::rights',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
                             'desc' => '::post:rights',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[18]
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[18]
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
@@ -385,8 +385,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::rights',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
                             'desc' => '::page:rights',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[19]
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[19]
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
@@ -398,23 +398,23 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[1]['name'] = '::blog:mod';
                     $hookArray[1]['icon'] = Displays::DEFAULT_ICON_HELP;
                     $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     $hookArray[2]['name'] = '::blog:del';
                     $hookArray[2]['icon'] = Displays::DEFAULT_ICON_LD;
                     $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
                         $hookArray[3]['name'] = '::blog:sync';
                         $hookArray[3]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                         $hookArray[3]['desc'] = '';
-                        $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
                             . '&' . self::COMMAND_ACTION_SYNC_BLOG
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -427,16 +427,16 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[0]['name'] = '::post:new';
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_ADDOBJ;
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
                         $hookArray[1]['name'] = '::blog:sync';
                         $hookArray[1]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                         $hookArray[1]['desc'] = '';
-                        $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . self::COMMAND_ACTION_SYNC_BLOG
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -446,8 +446,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[3]['name'] = '::page:list';
                     $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LSTOBJ;
                     $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
@@ -458,8 +458,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[0]['name'] = '::post:sync';
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_POST
@@ -472,8 +472,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                     $hookArray[0]['name'] = '::page:sync';
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPage->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_PAGE
@@ -486,8 +486,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::removeAsOwner',
                             'icon' => Displays::DEFAULT_ICON_LX,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
@@ -503,8 +503,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::addAsOwner',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
@@ -516,8 +516,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::removeAsWriter',
                             'icon' => Displays::DEFAULT_ICON_LX,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
@@ -533,8 +533,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::addAsWriter',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
@@ -546,8 +546,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::removeAsFollower',
                             'icon' => Displays::DEFAULT_ICON_LX,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
@@ -563,8 +563,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::addAsWriter',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
@@ -576,8 +576,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                             'name' => '::addAsFollower',
                             'icon' => Displays::DEFAULT_ICON_ADDOBJ,
                             'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
@@ -586,14 +586,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
                 }
-                break;
-            case 'menu':
-                $hookArray[0]['name'] = '::blog:list';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
         }
         return $hookArray;
@@ -780,8 +772,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $postInstance = $this->_cacheInstance->newNode($postPostNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($postInstance);
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_POST . '=' . $postPostNID
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
@@ -816,8 +808,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::blog:new');
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
 
@@ -825,8 +817,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[6]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::blog:getExisting');
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
         } else {
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
@@ -855,10 +847,10 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $linksBlog2 = array();
         if ($socialClass == 'all')
-            $linksBlog = $this->_getLinksBlogOID('all');
+            $linksBlog1 = $this->_getLinksBlogOID('all');
         else {
             $this->_socialInstance->setList(array($this->_entitiesInstance->getGhostEntityEID()), 'onlist');
-            $linksBlog = $this->_getLinksBlogOID('onlist');
+            $linksBlog1 = $this->_getLinksBlogOID('onlist');
             $this->_socialInstance->unsetList('onlist');
             $this->_getBlogListByRight($linksBlog2, self::RID_OWNER);
             $this->_getBlogListByRight($linksBlog2, self::RID_WRITER);
@@ -868,18 +860,18 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $list = array();
         foreach ($linksBlog2 as $link)
             $list[$link->getParsed()['bl/rl/nid1']] = $link->getSignersEID();
-        foreach ($linksBlog as $link)
+        foreach ($linksBlog1 as $link)
             $list[$link->getParsed()['bl/rl/nid2']] = $link->getSignersEID();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        foreach ($list as $linksBlog => $signers) {
-            $blogInstance = $this->_cacheInstance->newNode($linksBlog);
+        foreach ($list as $nid => $signers) {
+            $blogInstance = $this->_cacheInstance->newNode($nid);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . self::COMMAND_SELECT_BLOG . '=' . $linksBlog
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -921,8 +913,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand());
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
@@ -983,8 +975,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 <h1>New blog</h1>
                 <div>
                     <form enctype="multipart/form-data" method="post"
-                        action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <label>
@@ -1037,8 +1029,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 <h1>New post</h1>
                 <div>
                     <form enctype="multipart/form-data" method="post"
-                        action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
@@ -1094,8 +1086,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $this->_displayAddButton($instanceList, '::blog:return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
-            '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+            '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
@@ -1103,8 +1095,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::page:new');
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
@@ -1133,8 +1125,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $blogInstance = $this->_cacheInstance->newNode($blogPageNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
-            $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_PAGE . '=' . $blogPageNID
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
@@ -1165,8 +1157,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 <h1>New page</h1>
                 <div>
                     <form enctype="multipart/form-data" method="post"
-                        action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                        action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
@@ -1462,8 +1454,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
         $instance->setMessage($backMessage);
-        $instance->setLink('?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $backView
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $backView
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . $addURL);
         $instanceList->addItem($instance);
@@ -1581,8 +1573,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 <h1>New answer</h1>
                 <div>
                     <form enctype="multipart/form-data" method="post"
-                          action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                          action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                              . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                               . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                               . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
                               . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -1900,6 +1892,12 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
+            '::ModuleName' => 'Module des blogs',
+            '::MenuName' => 'Blogs',
+            '::ModuleDescription' => 'Module de gestion des blogs',
+            '::ModuleHelp' => 'Ce module permet de voir et de gérer les blogs.',
+            '::AppTitle1' => 'Blogs',
+            '::AppDesc1' => 'Gestion des blogs',
             '::login' => 'Se connecter',
             '::posts' => 'Posts',
             '::post' => 'Post',
@@ -1922,10 +1920,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::removeAsOwner' => 'Retirer des propriétaires',
             '::removeAsWriter' => 'Retirer des écrivains',
             '::removeAsFollower' => 'Retirer des abonnés',
-            '::objects:ModuleName' => 'Module des blogs',
-            '::objects:MenuName' => 'Blogs',
-            '::objects:ModuleDescription' => 'Module de gestion des blogs.',
-            '::objects:ModuleHelp' => "Ce module permet de voir et de gérer les blogs.",
             '::blog:disp' => 'Affiche le blog',
             '::blog:list' => 'Liste des blogs',
             '::blog:listall' => 'Liste tous les blogs',
@@ -1956,6 +1950,12 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::about:title' => 'A propos',
         ],
         'en-en' => [
+            '::ModuleName' => 'Blogs module',
+            '::MenuName' => 'Blogs',
+            '::ModuleDescription' => 'Blogs management module',
+            '::ModuleHelp' => 'This module permit to see blogs, to manage related and to change of current content of a blog.',
+            '::AppTitle1' => 'Blogs',
+            '::AppDesc1' => 'Manage blogs',
             '::login' => 'Connecting',
             '::posts' => 'Posts',
             '::post' => 'Post',
@@ -1978,10 +1978,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::removeAsOwner' => 'Remove as owner',
             '::removeAsWriter' => 'Remove as writer',
             '::removeAsFollower' => 'Remove as follower',
-            '::objects:ModuleName' => 'Blogs module',
-            '::objects:MenuName' => 'Blogs',
-            '::objects:ModuleDescription' => 'Blogs management module.',
-            '::objects:ModuleHelp' => 'This module permit to see and manage blogs.',
             '::blog:disp' => 'Display the blog',
             '::blog:list' => 'List of blogs',
             '::blog:listall' => 'List of all blogs',
@@ -2012,60 +2008,62 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             '::about:title' => 'About',
         ],
         'es-co' => [
-            '::login' => 'Connecting',
-            '::posts' => 'Posts',
-            '::post' => 'Post',
-            '::content' => 'Content',
-            '::pages' => 'Pages',
-            '::page' => 'Page',
-            '::answers' => 'Answers',
-            '::confirm' => 'Confirmation',
-            '::rights' => 'Authorizations',
-            '::owners' => 'Owners',
-            '::owner' => 'Owner',
-            '::founder' => 'Founder',
-            '::writers' => 'Writers',
-            '::writer' => 'Writer',
-            '::followers' => 'Followers',
-            '::follower' => 'Follower',
-            '::addAsOwner' => 'Add as owner',
-            '::addAsWriter' => 'Add as writer',
-            '::addAsFollower' => 'Add as follower',
-            '::removeAsOwner' => 'Remove as owner',
-            '::removeAsWriter' => 'Remove as writer',
-            '::removeAsFollower' => 'Remove as follower',
-            '::objects:ModuleName' => 'Módulo de blogs',
-            '::objects:MenuName' => 'Blogs',
-            '::objects:ModuleDescription' => 'Módulo de gestión de blogs.',
-            '::objects:ModuleHelp' => 'This module permit to see and manage blogs.',
-            '::blog:disp' => 'Display the blog',
-            '::blog:list' => 'List of blogs',
-            '::blog:listall' => 'List of all blogs',
-            '::blog:new' => 'New blog',
-            '::CreateBlog' => 'Create the blog',
-            '::blog:getExisting' => 'Get an existing blog',
-            '::blog:mod' => 'Modify the blog',
-            '::blog:del' => 'Delete the blog',
-            '::blog:sync' => 'Synchronize the blog',
-            '::blog:return' => 'Return to the blog',
-            '::blog:default' => 'Default blog',
-            '::blog:rights' => 'Authorizations on blog',
-            '::post:list' => 'List of posts',
-            '::post:disp' => 'Display post',
-            '::post:new' => 'New post',
-            '::post:mod' => 'Modify the post',
-            '::post:del' => 'Delete the post',
-            '::post:sync' => 'Synchronize the post',
-            '::post:rights' => 'Authorizations on post',
-            '::page:list' => 'List of pages',
-            '::page:disp' => 'Display page',
-            '::page:new' => 'New page',
-            '::page:mod' => 'Modify the page',
-            '::page:del' => 'Delete the page',
-            '::page:sync' => 'Synchronize the page',
-            '::page:rights' => 'Authorizations on page',
-            '::answ:list' => 'List of answers',
-            '::about:title' => 'About',
+            '::ModuleName' => 'Módulo de blogs',
+            '::MenuName' => 'Blogs',
+            '::ModuleDescription' => 'Módulo de gestión de blogs',
+            '::ModuleHelp' => 'Este módulo permite ver blogs, gestionar los relacionados y cambiar el contenido actual de un blog.',
+            '::AppTitle1' => 'Blogs',
+            '::AppDesc1' => 'Administrar Blogs',
+            '::login' => 'Conectando',
+            '::posts' => 'Publicaciones',
+            '::post' => 'Publicación',
+            '::content' => 'Contenido',
+            '::pages' => 'Páginas',
+            '::page' => 'Página',
+            '::answers' => 'Respuestas',
+            '::confirm' => 'Confirmación',
+            '::rights' => 'Autorizaciones',
+            '::owners' => 'Propietarios',
+            '::owner' => 'Propietario',
+            '::founder' => 'Fundador',
+            '::writers' => 'Escritores',
+            '::writer' => 'Escritor',
+            '::followers' => 'Seguidores',
+            '::follower' => 'Seguidor',
+            '::addAsOwner' => 'Añadir como propietario',
+            '::addAsWriter' => 'Añadir como escritor',
+            '::addAsFollower' => 'Añadir como seguidor',
+            '::removeAsOwner' => 'Eliminar como propietario',
+            '::removeAsWriter' => 'Eliminar como escritor',
+            '::removeAsFollower' => 'Eliminar como seguidor',
+            '::blog:disp' => 'Mostrar el blog',
+            '::blog:list' => 'Lista de blogs',
+            '::blog:listall' => 'Lista de todos los blogs',
+            '::blog:new' => 'Nuevo blog',
+            '::CreateBlog' => 'Crear el blog',
+            '::blog:getExisting' => 'Obtener un blog existente',
+            '::blog:mod' => 'Modificar el blog',
+            '::blog:del' => 'Eliminar el blog',
+            '::blog:sync' => 'Sincronizar el blog',
+            '::blog:return' => 'Volver al blog',
+            '::blog:default' => 'Blog por defecto',
+            '::blog:rights' => 'Autorizaciones en el blog',
+            '::post:list' => 'Lista de publicaciones',
+            '::post:disp' => 'Mostrar publicación',
+            '::post:new' => 'Nueva publicación',
+            '::post:mod' => 'Modificar la publicación',
+            '::post:del' => 'Eliminar la publicación',
+            '::post:sync' => 'Sincronizar la publicación',
+            '::post:rights' => 'Autorizaciones en la publicación',
+            '::page:list' => 'Lista de páginas',
+            '::page:disp' => 'Mostrar página',
+            '::page:new' => 'Nueva página',
+            '::page:mod' => 'Modificar la página',
+            '::page:del' => 'Eliminar la página',
+            '::page:sync' => 'Sincronizar la página',
+            '::page:rights' => 'Autorizaciones en la página',
+            '::answ:list' => 'Lista de respuestas',
+            '::about:title' => 'Acerca de',
         ],
     ];
 }

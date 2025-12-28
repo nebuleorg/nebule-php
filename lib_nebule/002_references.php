@@ -45,7 +45,6 @@ class References
     public const COMMAND_AUTH_ENTITY_LOGOUT = 'logout';
     public const COMMAND_AUTH_ENTITY_MOD = 'auth';
     public const COMMAND_AUTH_ENTITY_INFO = 'info';
-    public const COMMAND_SELECT_LANG = 'lang';
     public const COMMAND_SELECT_OBJECT = 'obj';
     public const COMMAND_SELECT_ENTITY = 'ent';
     public const COMMAND_SELECT_GROUP = 'grp';

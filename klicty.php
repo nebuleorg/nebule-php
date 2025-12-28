@@ -49,8 +49,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251018';
-    const APPLICATION_LICENCE = 'GNU GPL 2015-2025';
+    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -579,31 +579,31 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_unlocked = $this->_entitiesInstance->getCurrentEntityIsUnlocked();*/
 
         $this->setUrlLinkPrefix('Nebule\Library\Node', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Group', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Conversation', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Entity', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Currency', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\TokenPool', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Token', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Transaction', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
         $this->setUrlLinkPrefix('Nebule\Library\Wallet', '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
             . '&' . References::COMMAND_SELECT_OBJECT . '=');
 
         $this->_findLogoApplication();
@@ -612,11 +612,6 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $this->_findCurrentDisplayView();
 //        $this->_findCurrentAction();
         $this->_findInlineContentID();
-
-        // Si en mode téléchargement d'objet ou de lien, pas de traduction.
-        if ($this->_translateInstance !== null) {
-            $this->_currentDisplayLanguage = $this->_translateInstance->getCurrentLanguage();
-        }
     }
 
 
@@ -668,7 +663,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         ?>
         <!DOCTYPE html>
-        <html lang="<?php echo $this->_currentDisplayLanguage; ?>">
+        <html lang="<?php echo $this->_translateInstance->getCurrentLanguage(); ?>">
         <head>
             <meta charset="utf-8"/>
             <title><?php echo Application::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getGhostEntityInstance()->getFullName('all'); ?></title>
@@ -1192,17 +1187,17 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $this->convertUpdateImage(
                             $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTENT),
                             '::EntitiesList'),
-                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
+                        '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
                             $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT),
                             '::EntityAdd'),
-                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
+                        '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
                             $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD),
                             ':::SelectLanguage'),
-                        '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
+                        '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
                     ?>
 
                 </div>
@@ -1236,7 +1231,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     '',
                                     '',
                                     'name="ico_lock"'),
-                                '?' . Display::DEFAULT_DISPLAY_COMMAND_VIEW . '=auth'
+                                '?' . Display::COMMAND_DISPLAY_VIEW . '=auth'
                                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
                         }
                     } // Sinon affiche le warning.
@@ -1364,7 +1359,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 foreach ($modulesName as $i => $module) {
                     $name = $this->_applicationInstance->getTranslateInstance()->getTranslate($module);
                     $icon = $this->_cacheInstance->newNode($modulesIcon[$i]);
-                    $link = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $modulesLink[$i];
+                    $link = '?' . self::COMMAND_DISPLAY_VIEW . '=' . $modulesLink[$i];
                     ?>
 
                     <div class="menu-applications-one">
@@ -1805,7 +1800,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['name'] = '::ConnectWith';
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $id;
 
@@ -1882,7 +1877,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['selfHookList'][0]['name'] = '::DeleteGroup';
                     $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
                     $param['selfHookList'][0]['link'] = '?'
-                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
+                        . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
                         . '&' . ActionsGroups::DELETE . '=' . $id
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -1981,7 +1976,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 
                     <form method="post"
-                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
+                          action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
                               '&' . ActionsGroups::CREATE
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="floatRight textAlignRight">
@@ -2094,7 +2089,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['desc'] = '';
                 $actionList[0]['css'] = 'oneAction-bg-warn';
                 $actionList[0]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                    . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . '&' . ActionsGroups::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2107,7 +2102,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[1]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $actionList[1]['desc'] = '';
                 $actionList[1]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $id;
             }
@@ -2118,7 +2113,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[2]['icon'] = self::DEFAULT_ICON_SYNENT;
                 $actionList[2]['desc'] = '';
                 $actionList[2]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                    . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . '&' . ActionsEntities::SYNCHRONIZE . '=' . $id
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2138,7 +2133,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $actionList[4]['icon'] = self::DEFAULT_ICON_LSTOBJ;
             $actionList[4]['desc'] = '';
             $actionList[4]['link'] = '?'
-                . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_LIST_COMMAND
+                . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_OBJECT_LIST_COMMAND
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
 
             // Voir les groupes.
@@ -2146,7 +2141,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $actionList[5]['icon'] = self::DEFAULT_ICON_GRPENT;
             $actionList[5]['desc'] = '';
             $actionList[5]['link'] = '?'
-                . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
+                . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $id;
         }
         if (!$isEntity
@@ -2169,7 +2164,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[1]['icon'] = self::DEFAULT_ICON_LK;
                     $actionList[1]['desc'] = '';
                     $actionList[1]['link'] = '?'
-                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                        . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                 }
 
@@ -2181,7 +2176,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[2]['desc'] = '';
                     $actionList[2]['css'] = 'oneAction-bg-warn';
                     $actionList[2]['link'] = '?'
-                        . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                         . '&' . ActionsObjects::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2197,7 +2192,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
                         $actionList[3]['desc'] = '';
                         $actionList[3]['link'] = '?'
-                            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                             . '&' . ActionsLinks::SIGN1 . '=l_' . $source . '_' . $target . '_' . $meta
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2209,7 +2204,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         unset($actionList);
 
         // Affiche le contenu de l'objet.
-        $this->displayObjectContentFull($object);
+        echo $this->convertObjectContentSized($object, 'full');
 
         // Affiche un complément d'information en fonction du type d'objet.
         if ($isEntity) {
@@ -2227,7 +2222,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 <div class="text">
                     <p>
                     <form method="post"
-                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                          action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                               . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <input type="submit"
@@ -2263,7 +2258,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['object'] = $instance;
                             $list[$i]['entity'] = '';
                             $list[$i]['icon'] = '';
-                            $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $group;
                             $list[$i]['desc'] = '';
                             $list[$i]['actions'] = array();
@@ -2276,7 +2271,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             ) {
                                 $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                                $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                     . '&' . ActionsGroups::REMOVE_FROM_GROUP . '=' . $group
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2318,7 +2313,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $item;
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
@@ -2331,7 +2326,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         ) {
                             $list[$i]['actions'][0]['name'] = '::RemoveFromGroup';
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                            $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                                 . '&' . ActionsGroups::REMOVE_ITEM_FROM_GROUP . '=' . $item
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2453,7 +2448,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $instance = $this->_cacheInstance->newNode($id);
                     $name = $instance->getName('all');
                     $desc = $instance->getType('all');
-                    $htlink = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                    $htlink = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id;
                     ?>
 
@@ -2498,7 +2493,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             <div class="text">
                 <form enctype="multipart/form-data" method="post"
-                      action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
+                      action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_OBJECT_ADD_COMMAND
                           . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                     <input type="hidden"
                            name="MAX_FILE_SIZE"
@@ -2623,7 +2618,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $param['selfHookList'][0]['name'] = '::ConnectWith';
                 $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_ENTITY_LOCK;
                 $param['selfHookList'][0]['link'] = '?'
-                    . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                    . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                     . '&' . References::COMMAND_AUTH_ENTITY_LOGOUT
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $createEntityInstance;
 
@@ -2662,7 +2657,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 
                     <form method="post"
-                          action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
+                          action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
                               . '&' . ActionsEntities::CREATE
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <table>
@@ -2751,7 +2746,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <div class="text">
 
                 <form method="post"
-                      action="?<?php echo self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
+                      action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_SYNC_COMMAND
                           . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                     <table>
                         <tr>
@@ -2887,7 +2882,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $entity;
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
@@ -2901,7 +2896,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 // Déprotéger l'objet.
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
-                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . ActionsObjects::UNPROTECT . '=' . $id
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2911,7 +2906,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 // Annuler le partage de protection. Non fiable...
                                 $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
-                                $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                                $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                     . '&' . ActionsObjects::CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2946,7 +2941,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['name'] = '::ProtectObject';
                 $actionList[0]['icon'] = self::DEFAULT_ICON_LK;
                 $actionList[0]['desc'] = '';
-                $actionList[0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                $actionList[0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                     . '&' . ActionsObjects::PROTECT . '=' . $id
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -2992,7 +2987,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $group;
                         if ($typeClosed)
                             $list[$i]['desc'] = '::GroupeFerme';
@@ -3004,12 +2999,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         if ($typeClosed)
-                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                            $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         else
-                            $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                            $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                                 . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -3056,7 +3051,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['object'] = $instance;
                         $list[$i]['entity'] = '';
                         $list[$i]['icon'] = '';
-                        $list[$i]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . References::COMMAND_SELECT_OBJECT
+                        $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $link->getParsed()['bl/rl/nid1'];
                         $list[$i]['desc'] = '';
                         $list[$i]['actions'] = array();
@@ -3064,7 +3059,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         // Se connecter avec cette entité.
                         $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
-                        $list[$i]['actions'][0]['link'] = '?' . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
+                        $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
                             . '&' . ActionsObjects::SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -3217,7 +3212,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo '<div class="objectTitleName objectTitleMediumName informationTitleName informationTitleName' . $idCheck . ' informationTitleMediumName" id="klictyModuleEntityConnect">' . "\n";
                 ?>
                 <form method="post"
-                      action="?<?php echo Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
+                      action="?<?php echo Displays::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_AUTH_COMMAND
                           . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(); ?>">
                     <input type="hidden" name="ent"
                            value="<?php echo $this->_entitiesInstance->getGhostEntityEID(); ?>">
@@ -3338,8 +3333,8 @@ private function _displayContentAbout()
         $actionList[$i]['icon'] = $this->_translateInstance->getLanguageIcon($lang);
         $actionList[$i]['desc'] = '';
         $actionList[$i]['htlink'] = '?'
-            . self::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND .
-            '&' . Translates::DEFAULT_COMMAND_LANGUAGE . '=' . $lang . '#about';
+            . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND .
+            '&' . Displays::COMMAND_DISPLAY_LANG . '=' . $lang . '#about';
         $i++;
     }
     // Affichage.
@@ -5195,21 +5190,21 @@ class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue sur <b>klicty</b>.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>klicty</i> est une implémentation logicielle basée sur le projet nebule.<br />
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne.",
+            '::Bienvenue' => 'Bienvenue sur <b>klicty</b>.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => "Le projet <i>klicty</i> est une implémentation logicielle basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
-            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
@@ -5218,21 +5213,21 @@ D'un point de vue général, tout ce qui est sur fond clair concerne une action 
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome to <b>klicty</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>klicty</i> project is a software implementation based on nebule project.<br />
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help.',
+            '::Bienvenue' => 'Welcome to <b>klicty</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'The <i>klicty</i> project is a software implementation based on nebule project.<br />
 This php implementation is intended to be a reference of the potential of objects and relationships as defined in nebule.',
-            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+            '::AideGenerale:Text' => "The software is composed of three parts:<br />
 1. The top banner, which contains the application menu and the current entity.<br />
 2. The central part, which contains the content to display, objects, actions, etc...<br />
 3. The bottom banner, which appears when an action is performed.<br />
@@ -5241,21 +5236,21 @@ From a general point of view, everything on a light background relates to an ong
 The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo en <b>klicty</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>klicty</i> es un proyecto basado nebule implementación de software.<br />
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea.',
+            '::Bienvenue' => 'Bienviedo en <b>klicty</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'El proyecto <i>klicty</i> es un proyecto basado nebule implementación de software.<br />
 Esta aplicación php está pensado como una referencia del potencial de los objetos y las relaciones como se define en nebule.',
-            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+            '::AideGenerale:Text' => "El software se compone de tres partes:<br />
 1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
 2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
 3. La banda inferior, que aparece cuando se realiza una acción.<br />

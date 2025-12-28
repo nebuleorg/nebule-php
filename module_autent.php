@@ -114,13 +114,13 @@ class ModuleAutent extends \Nebule\Library\Modules {
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
             $title = '::logout';
             $type = DisplayItemIconMessage::TYPE_WARN;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[1];
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[1];
             $title = '::login';
             $type = DisplayItemIconMessage::TYPE_PLAY;
         }
@@ -160,7 +160,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                     DisplayQuery::QUERY_PASSWORD,
                     '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                     References::COMMAND_PASSWORD);
@@ -195,7 +195,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
             '/?' . References::COMMAND_AUTH_ENTITY_LOGOUT
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
-            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
             . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         $this->_displayAddButton($instanceList,

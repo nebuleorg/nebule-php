@@ -26,9 +26,9 @@ class ModuleQantion extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'qantion';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251116';
+    const MODULE_VERSION = '020251228';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2019-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
@@ -53,12 +53,17 @@ class ModuleQantion extends \Nebule\Library\Modules
         $hookArray = array();
 
         switch ($hookName) {
-            case 'menu':
-                $hookArray[0]['name'] = '::AppTitle1';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                $hookArray[0]['desc'] = '::AppDesc1';
-                $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . self::MODULE_DEFAULT_VIEW;
+            case 'selfMenu':
+            case 'selfMenuQantion':
+                $hookArray[] = array(
+                    'name' => '::AppTitle1',
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '::AppDesc1',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::MODULE_DEFAULT_VIEW
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
                 break;
         }
 

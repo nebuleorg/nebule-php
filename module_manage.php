@@ -91,13 +91,14 @@ class ModuleManage extends \Nebule\Library\Modules
         $hookArray = array();
         switch ($hookName) {
             case 'selfMenu':
+            case 'selfMenuManage':
                 // Affichage des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[0]['name'] = '::AppTitle1';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '::AppDesc1';
-                    $hookArray[0]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
@@ -116,8 +117,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[0]['name'] = '::syncModules';
                     $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
                     $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                    $hookArray[0]['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . ActionsApplications::SYNCHRONIZE . '=0'
@@ -136,8 +137,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[1]['name'] = '::create:createModule';
                     $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
                     $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
 
@@ -157,8 +158,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[2]['name'] = '::syncModule';
                     $hookArray[2]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . ActionsApplications::SYNCHRONIZE . '=' . $object
@@ -176,8 +177,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     $hookArray[3]['name'] = '::changeCode';
                     $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LU;
                     $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -505,8 +506,8 @@ class ModuleManage extends \Nebule\Library\Modules
                             'enableDisplayLink2Object' => true,
                             'enableDisplayObjectActions' => false,
                             'enableDisplayJS' => true,
-                            'link2Object' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            'link2Object' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                 . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className,
                             'objectName' => $instance->getTranslate($name, $this->_applicationInstance->getTranslateInstance()->getCurrentLanguage()),
@@ -743,8 +744,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     );
                     if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleReferences'))
                     {
-                        $param['link2Object'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_REGISTERED_VIEWS[0]
+                        $param['link2Object'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_REGISTERED_VIEWS[0]
                             . '&' . $this->_applicationInstance->getModule('ModuleReferences')::MODULE_COMMAND_NAME . '=' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid;
                         $param['objectIcon'] = $this->_applicationInstance->getModule('ModuleReferences')::MODULE_LOGO;
@@ -821,8 +822,8 @@ class ModuleManage extends \Nebule\Library\Modules
                     if (isset($listModulesEnabled[$className])
                         && $listModulesEnabled[$className]
                     ) {
-                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        $dispHook['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
                             . '&' . ActionsLinks::SIGN1 . '=x>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -830,8 +831,8 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::ModuleEnabled');
                         $dispHook['desc'] = $this->_translateInstance->getTranslate('::ModuleDisable');
                     } else {
-                        $dispHook['link'] = '/?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        $dispHook['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
                             . '&' . ActionsLinks::SIGN1 . '=f>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -954,8 +955,8 @@ class ModuleManage extends \Nebule\Library\Modules
             <div class="layoutObjectsList">
                 <div class="objectsListContent">
                     <form enctype="multipart/form-data" method="post"
-                          action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                              . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                          action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                              . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <?php echo $this->_translateInstance->getTranslate('::create:nom'); ?><br/>
                         <input type="text"
@@ -1045,8 +1046,8 @@ class ModuleManage extends \Nebule\Library\Modules
                 <div class="layoutObjectsList">
                     <div class="objectsListContent">
                         <form enctype="multipart/form-data" method="post"
-                              action="<?php echo '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                  . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                              action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                  . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                                   . '&' . References::COMMAND_SELECT_OBJECT . '=' . $rid
                                   . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                             <input type="hidden"

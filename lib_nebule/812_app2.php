@@ -39,11 +39,11 @@ class App2 extends App0
             $this->_metrologyInstance->addLog('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
-        $argLogout = (filter_has_var(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW) && filter_input(INPUT_GET, Displays::DEFAULT_DISPLAY_COMMAND_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
+        $argLogout = (filter_has_var(INPUT_GET, Displays::COMMAND_DISPLAY_VIEW) && filter_input(INPUT_GET, Displays::COMMAND_DISPLAY_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
         $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . References::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
         $args .= '&' . References::COMMAND_SWITCH_GHOST . '=' . $argEnt;
-        $args .= '&' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=';
+        $args .= '&' . Displays::COMMAND_DISPLAY_MODE . '=' . References::COMMAND_AUTH_ENTITY_MOD . '&' . Displays::COMMAND_DISPLAY_VIEW . '=';
         if ($argLogout)
             $args .= References::COMMAND_AUTH_ENTITY_LOGOUT;
         else

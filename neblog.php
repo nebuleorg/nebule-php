@@ -56,8 +56,8 @@ class Application extends Applications
 {
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
-    const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251222';
+    const APPLICATION_AUTHOR = 'Project nebule';
+    const APPLICATION_VERSION = '020251228';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -69,23 +69,12 @@ class Application extends Applications
         'ModuleHelp',
         'ModuleNeblog',
         'ModuleLang',
-        'ModuleTranslateFRFR'
+        'ModuleTranslateFRFR',
+        'ModuleTranslateENEN',
+        'ModuleTranslateESCO',
     );
-    const LIST_MODULES_EXTERNAL = array(
-        'ModuleEntities'
-    );
-
-    /**
-     * Constructeur.
-     *
-     * @param nebule $nebuleInstance
-     * @return void
-     */
-    public function __construct(nebule $nebuleInstance)
-    {
-        parent::__construct($nebuleInstance);
-    }
-
+    const LIST_MODULES_EXTERNAL = array();
+    public function __construct(nebule $nebuleInstance) { parent::__construct($nebuleInstance); }
     // All default.
 }
 
@@ -126,7 +115,7 @@ JfL27dvPWltbP3Z3d//Q2tqq6KFKIpFITk1N/TY8PDz/8uXLinMWFQMA+JxInZ+fX7t79+6f+/fv/+fQ
 UVYg1Gj2HcBeB/AvE200xGvbl50AAAAASUVORK5CYII=";
     const DEFAULT_APPLICATION_LOGO_LINK = '?dm=log&dv=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
-    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = '8c40708bd7d89ba9e0bdb74a5300632100d4b660a99a11608930cb0ff56e132a.sha2.256';
 
     // Icônes de marquage.
     const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
@@ -188,7 +177,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        if ($this->_nebuleInstance->getNodeIsRID($bgobj))
+            $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
@@ -763,25 +754,25 @@ class Translate extends Translates
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250921';
+    const MODULE_VERSION = '020251227';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::module:help:ModuleName' => "Module d'aide",
-            '::module:help:MenuName' => 'Aide',
-            '::module:help:ModuleDescription' => "Module d'aide en ligne.",
-            '::module:help:ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
-            '::module:help:AppTitle1' => 'Aide',
-            '::module:help:AppDesc1' => "Affiche l'aide en ligne.",
-            '::module:help:Bienvenue' => 'Bienvenue sur <b>weblog</b>.',
-            '::module:help:About' => 'A propos',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Démarrage',
-            '::module:help:AideGenerale' => 'Aide générale',
-            '::module:help:APropos' => 'A propos',
-            '::module:help:APropos:Text' => "Le projet <i>neblog</i> est une implémentation logicielle de weblog (blog) basée sur le projet nebule.<br />
+            '::ModuleName' => "Module d'aide",
+            '::MenuName' => 'Aide',
+            '::ModuleDescription' => "Module d'aide en ligne.",
+            '::ModuleHelp' => "Ce module permet d'afficher de l'aide générale sur l'interface.",
+            '::AppTitle1' => 'Aide',
+            '::AppDesc1' => "Affiche l'aide en ligne.",
+            '::Bienvenue' => 'Bienvenue sur <b>weblog</b>.',
+            '::About' => 'A propos',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Démarrage',
+            '::AideGenerale' => 'Aide générale',
+            '::APropos' => 'A propos',
+            '::APropos:Text' => "Le projet <i>neblog</i> est une implémentation logicielle de weblog (blog) basée sur le projet nebule.<br />
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
-            '::module:help:AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
+            '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
 2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
@@ -790,21 +781,21 @@ D'un point de vue général, tout ce qui est sur fond clair concerne une action 
 Le menu en haut à gauche est le meilleur moyen de se déplacer dans l'interface.",
         ],
         'en-en' => [
-            '::module:help:ModuleName' => 'Help module',
-            '::module:help:MenuName' => 'Help',
-            '::module:help:ModuleDescription' => 'Online help module.',
-            '::module:help:ModuleHelp' => 'This module permit to display general help about the interface.',
-            '::module:help:AppTitle1' => 'Help',
-            '::module:help:AppDesc1' => 'Display online help.',
-            '::module:help:Bienvenue' => 'Welcome to <b>weblog</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Start',
-            '::module:help:AideGenerale' => 'General help',
-            '::module:help:APropos' => 'About',
-            '::module:help:APropos:Text' => 'The <i>neblog</i> project is a software implementation of a weblog (blog) based on the nebule project.<br />
+            '::ModuleName' => 'Help module',
+            '::MenuName' => 'Help',
+            '::ModuleDescription' => 'Online help module.',
+            '::ModuleHelp' => 'This module permit to display general help about the interface.',
+            '::AppTitle1' => 'Help',
+            '::AppDesc1' => 'Display online help.',
+            '::Bienvenue' => 'Welcome to <b>weblog</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Start',
+            '::AideGenerale' => 'General help',
+            '::APropos' => 'About',
+            '::APropos:Text' => 'The <i>neblog</i> project is a software implementation of a weblog (blog) based on the nebule project.<br />
 This PHP implementation is intended to serve as a reference for the possibilities offered by objects and links as defined in nebule.',
-            '::module:help:AideGenerale:Text' => "The software is composed of three parts:<br />
+            '::AideGenerale:Text' => "The software is composed of three parts:<br />
 1. The top banner, which contains the application menu and the current entity.<br />
 2. The central part, which contains the content to display, objects, actions, etc...<br />
 3. The bottom banner, which appears when an action is performed.<br />
@@ -813,21 +804,21 @@ From a general point of view, everything on a light background relates to an ong
 The menu at the top left is the best way to navigate the interface.",
         ],
         'es-co' => [
-            '::module:help:ModuleName' => 'Módulo de ayuda',
-            '::module:help:MenuName' => 'Ayuda',
-            '::module:help:ModuleDescription' => 'Módulo de ayuda en línea.',
-            '::module:help:ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
-            '::module:help:AppTitle1' => 'Ayuda',
-            '::module:help:AppDesc1' => 'Muestra la ayuda en línea.',
-            '::module:help:Bienvenue' => 'Bienviedo en <b>weblog</b>.',
-            '::module:help:About' => 'About',
-            '::module:help:Bootstrap' => 'Bootstrap',
-            '::module:help:Demarrage' => 'Comienzo',
-            '::module:help:AideGenerale' => 'Ayuda general',
-            '::module:help:APropos' => 'Acerca',
-            '::module:help:APropos:Text' => 'El proyecto <i>neblog</i> es una implementación de software de un weblog (blog) basado en el proyecto nebule.<br />
+            '::ModuleName' => 'Módulo de ayuda',
+            '::MenuName' => 'Ayuda',
+            '::ModuleDescription' => 'Módulo de ayuda en línea.',
+            '::ModuleHelp' => 'Esta modulo te permite ver la ayuda general sobre la interfaz.',
+            '::AppTitle1' => 'Ayuda',
+            '::AppDesc1' => 'Muestra la ayuda en línea.',
+            '::Bienvenue' => 'Bienviedo en <b>weblog</b>.',
+            '::About' => 'About',
+            '::Bootstrap' => 'Bootstrap',
+            '::Demarrage' => 'Comienzo',
+            '::AideGenerale' => 'Ayuda general',
+            '::APropos' => 'Acerca',
+            '::APropos:Text' => 'El proyecto <i>neblog</i> es una implementación de software de un weblog (blog) basado en el proyecto nebule.<br />
 Esta implementación en PHP está diseñada como una referencia de las posibilidades que ofrecen los objetos y los enlaces tal como se definen en nebule.',
-            '::module:help:AideGenerale:Text' => "El software se compone de tres partes:<br />
+            '::AideGenerale:Text' => "El software se compone de tres partes:<br />
 1. La banda superior, que contiene el menú de la aplicación y la entidad actual.<br />
 2. La parte central, que contiene el contenido a mostrar, los objetos, las acciones, etc...<br />
 3. La banda inferior, que aparece cuando se realiza una acción.<br />

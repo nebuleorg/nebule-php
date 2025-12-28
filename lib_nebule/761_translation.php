@@ -262,8 +262,10 @@ abstract class Translates extends Functions
     protected string $_currentLanguageIcon = '';
     protected string $_defaultLanguage = '';
     protected array $_languageList = array();
-    protected ?Translates $_currentLanguageInstance = null;
-    protected ?Translates $_defaultLanguageInstance = null;
+    //protected ?\Nebule\Library\ModuleTranslates $_currentLanguageInstance = null;
+    //protected ?\Nebule\Library\ModuleTranslates $_defaultLanguageInstance = null;
+    protected $_currentLanguageInstance = null;
+    protected $_defaultLanguageInstance = null;
 
     public function __toString() { return 'Traduction'; }
     public function __sleep() { return array(); } // TODO do not cache
@@ -285,10 +287,11 @@ abstract class Translates extends Functions
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_defaultLanguage = self::DEFAULT_LANGUAGE;
 
-        if ($this->_applicationInstance::USE_MODULES) {
+        if ($this->_applicationInstance::USE_MODULES && $this->_applicationInstance::USE_MODULES_TRANSLATE) {
             foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
-                $this->_metrologyInstance->addLog('compare module language ' . $module::MODULE_LANGUAGE . ' to current ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0bcdaa0d');
+                $this->_metrologyInstance->addLog('compare module language ' . $module::MODULE_LANGUAGE . ' to default ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0bcdaa0d');
                 if ($module::MODULE_LANGUAGE == $this->_defaultLanguage) {
+                    $this->_metrologyInstance->addLog('find module language ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '6bcf2c7e');
                     $this->_defaultLanguageInstance = $module;
                 }
             }
@@ -299,78 +302,57 @@ abstract class Translates extends Functions
 
     protected function _findLanguages(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance::USE_MODULES) { // FIXME find nothing
-            $this->_metrologyInstance->addLog('DEBUGGING ok use modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-            foreach ($this->_applicationModulesInstance->getModulesListInstances() as $module) {
-                $this->_metrologyInstance->addLog('DEBUGGING module name=' . $module::MODULE_NAME . ' type=' . $module::MODULE_TYPE, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                if ($module::MODULE_TYPE == 'traduction') {
-                    $this->_languageList[$module::MODULE_LANGUAGE] = $module::MODULE_LANGUAGE;
-                    $this->_applicationModulesInstance->getModulesTranslateListName()[$module::MODULE_LANGUAGE]; // FIXME
-                    $this->_metrologyInstance->addLog('find new language : ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
-                }
+        if ($this->_applicationInstance::USE_MODULES && $this->_applicationInstance::USE_MODULES_TRANSLATE) { // FIXME find nothing
+            foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
+                $this->_languageList[$module::MODULE_LANGUAGE] = $module::MODULE_LANGUAGE;
+                //$this->_applicationModulesInstance->getModulesTranslateListName()[$module::MODULE_LANGUAGE]; // FIXME
+                $this->_metrologyInstance->addLog('find new language : ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '7e21187d');
             }
         } else
             $this->_languageList = array(self::DEFAULT_LANGUAGE);
     }
 
 
-    /**
-     * La langue d'affichage de l'interface.
-     *
-     * La recherche de la langue se fait en lisant la langue demandée dans l'URL,
-     *   puis en la comparant aux modules de traductions présents.
-     *
-     * @return void
-     */
+
     protected function _findCurrentLanguage(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        //$arg_lang = filter_input(INPUT_GET, self::DEFAULT_COMMAND_LANGUAGE, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
-        $arg_lang = $this->getFilterInput(self::DEFAULT_COMMAND_LANGUAGE, FILTER_FLAG_ENCODE_LOW);
-        if ($arg_lang != ''
-            && strlen($arg_lang) != 5
-            && substr($arg_lang, 2, 1) != '-'
+        $arg_lang = $this->getFilterInput(Displays::COMMAND_DISPLAY_LANG, FILTER_FLAG_ENCODE_LOW);
+        $ok_lang = '';
+        if ($arg_lang == ''
+            || strlen($arg_lang) != 5
+            || substr($arg_lang, 2, 1) != '-'
         )
             $arg_lang = '';
-
-        $ok_lang = false;
-        $lang_instance = '';
         foreach ($this->_languageList as $lang) {
-            if ($arg_lang == $lang) {
-                $ok_lang = true;
-                if ($this->_applicationInstance::USE_MODULES)
-                    $lang_instance = $this->_applicationModulesInstance->getModulesTranslateListName()[$lang];
-                break;
-            }
+            if ($arg_lang == $lang)
+                $ok_lang = $arg_lang;
         }
-
-        if ($ok_lang) {
-            $this->_currentLanguage = $arg_lang;
-            $this->_currentLanguageInstance = $lang_instance;
-            $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage', $arg_lang);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage');
-            if ($cache != '') {
+        if ($ok_lang != '')
+            $this->_setLanguage($arg_lang);
+        else {
+            $cache = $this->_sessionInstance->getSessionStoreAsString('DisplayLanguage');
+            if ($cache != '')
                 $this->_currentLanguage = $cache;
-                $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListName()[$cache]; // FIXME en-en not exist
-            } else {
-                $this->_currentLanguage = $this->_defaultLanguage;
-                $this->_currentLanguageInstance = $this->_applicationModulesInstance->getModulesTranslateListName()[$this->_defaultLanguage];
-                $this->_sessionInstance->setSessionStoreAsString($this->_applicationInstance->getClassName() . 'DisplayLanguage', $this->_defaultLanguage);
-            }
-            unset($cache);
+            else
+                $this->_setLanguage($this->_defaultLanguage);
         }
-
-        $this->_metrologyInstance->addLog('find current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0edc11b2');
+        $this->_metrologyInstance->addLog('current language : ' . $this->_currentLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0edc11b2');
     }
+
+    protected function _setLanguage(string $lang): void {
+        $this->_currentLanguage = $lang;
+        // $this->_applicationInstance->getClassName() . 'DisplayLanguage'
+        $this->_sessionInstance->setSessionStoreAsString('DisplayLanguage', $lang);
+    }
+
+
 
     public function getLanguageList(): array { return $this->_languageList; }
     public function getDefaultLanguage(): string { return $this->_defaultLanguage; }
     public function getCurrentLanguage(): string { return $this->_currentLanguage; }
     public function getCurrentLanguageIcon(): string { return $this->_currentLanguageIcon; }
     public function getLanguageModuleInstanceList(): array { return $this->_applicationModulesInstance->getModulesTranslateListName(); }
-    public function getCurrentLanguageInstance(): ?Translates { return $this->_currentLanguageInstance; }
-    public function getDefaultLanguageInstance(): ?Translates  { return $this->_defaultLanguageInstance; }
+
 
 
     public function getTranslate(string $text, string $lang = ''): string {

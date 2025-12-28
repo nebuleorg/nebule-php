@@ -294,6 +294,7 @@ class Functions
         try {
             if (filter_has_var(INPUT_POST, $name)) {
                 $arg = filter_input(INPUT_POST, $name, FILTER_SANITIZE_STRING, $flag);
+                //$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING POST name=' . $name . ' arg=' . $arg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 if ($arg === false || $arg === null)
                     $arg = '';
                 if (! $noTrim)
@@ -310,6 +311,7 @@ class Functions
             try {
                 if (filter_has_var(INPUT_GET, $name)) {
                     $arg = filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING, $flag);
+                    //$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING GET name=' . $name . ' arg=' . $arg, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     if ($arg === false || $arg === null)
                         $arg = '';
                     if (! $noTrim)

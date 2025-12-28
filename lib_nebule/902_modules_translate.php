@@ -10,8 +10,7 @@ namespace Nebule\Library;
 * @copyright Projet nebule
 * @link www.nebule.org
 */
-abstract class ModuleTranslates implements ModuleTranslateInterface
-{
+abstract class ModuleTranslates implements ModuleTranslateInterface {
     const MODULE_TYPE = 'Traduction';
     const MODULE_LANGUAGE = '/';
     const MODULE_NAME = 'None';
@@ -25,15 +24,7 @@ abstract class ModuleTranslates implements ModuleTranslateInterface
     
     protected ?Applications $_applicationInstance = null;
 
-    /*public function __construct(Applications $applicationInstance)
-    {
-        $this->_applicationInstance = $applicationInstance;
-    }*/
-
-    public function __construct(nebule $nebuleInstance)
-    {
-        //$this->_applicationInstance = $nebuleInstance;
-    }
+    public function __construct(nebule $nebuleInstance) {}
 
     public function __destruct() { return true; }
     public function __toString(): string { return self::MODULE_TYPE; }
