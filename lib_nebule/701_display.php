@@ -58,10 +58,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const COMMAND_DISPLAY_MODE = 'dm';
     const COMMAND_DISPLAY_VIEW = 'dv';
     const COMMAND_DISPLAY_LANG = 'dl';
-    const COMMAND_NEXT = 'next';
+    const COMMAND_NEXT = 'dn';
     const COMMAND_INLINE = 'di';
-    const COMMAND_INLINE_CONTENT = 'incontent';
-    const COMMAND_CSS = 'css';
+    const COMMAND_INLINE_CONTENT = 'dj';
+    const COMMAND_CSS = 'dc';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
     const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
