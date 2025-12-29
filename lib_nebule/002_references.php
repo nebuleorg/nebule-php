@@ -153,6 +153,7 @@ class References
     public const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';
     public const REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE = 'nebule/objet/groupe/dissimule';
     public const REFERENCE_NEBULE_OBJET_CONVERSATION = 'nebule/objet/conversation';
+    public const RID_OBJECT_CONVERSATION = '91d34358fb97fe6f53726e52edd8264d73efb9d95cd515bed534b2febd4086ce.sha2.256';
     public const REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE = 'nebule/objet/conversation/suivie';
     public const REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE = 'nebule/objet/conversation/fermee';
     public const REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE = 'nebule/objet/conversation/protegee';

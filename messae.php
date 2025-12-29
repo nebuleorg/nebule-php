@@ -14,6 +14,8 @@ use Nebule\Library\Node;
 use Nebule\Library\References;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleTranslates;
+use Nebule\Library\Group;
+use Nebule\Library\Conversation;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
 use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
@@ -51,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_VERSION = '020251229';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';

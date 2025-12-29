@@ -2357,7 +2357,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
                 $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
-            $isClosed = $object->getMarkClosedGroup();
+            $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
@@ -2372,7 +2372,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         } elseif ($isConversation) {
             if (!is_a($object, 'Conversation'))
                 $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
-            $isClosed = $object->getMarkClosedGroup();
+            $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
@@ -2415,7 +2415,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $nid = $object->getID();
 
         // Vérifie s'il est protégé
-        $protected = $object->getMarkProtectedGroup();
+        $protected = $object->getMarkProtected();
 
         // Extrait les propriétés de l'objet.
         $name = $object->getFullName('all');
@@ -3781,7 +3781,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (!isset($param['flagProtection'])
                 || !is_bool($param['flagProtection'])
             )
-                $param['flagProtection'] = $messageInstance->getMarkProtectedGroup();
+                $param['flagProtection'] = $messageInstance->getMarkProtected();
 
             if (!isset($param['flagProtectionIcon'])
                 || $param['flagProtectionIcon'] == ''
@@ -4033,7 +4033,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Sinon rien.
 
         // Affiche le contenu, si pas protégé et présent.
-        if ($messageInstance->getMarkProtectedGroup()
+        if ($messageInstance->getMarkProtected()
             && !$this->_unlocked
         ) {
             $paramInfo = array(
@@ -4433,7 +4433,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosedGroup())
+            if ($object->getMarkClosed())
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
             else
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
@@ -4442,7 +4442,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
-            if ($object->getMarkClosedGroup())
+            if ($object->getMarkClosed())
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
             else
                 $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
@@ -4493,7 +4493,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $id = $object->getID();
 
         // Vérifie si il est protégé
-        $protected = $object->getMarkProtectedGroup();
+        $protected = $object->getMarkProtected();
 
         // Extrait les propriétés de l'objet.
         $name = $object->getFullName('all');
@@ -5926,7 +5926,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             <?php
             if ($object->getMarkWarning()
                 || $object->getMarkDanger()
-                || $object->getMarkProtectedGroup()
+                || $object->getMarkProtected()
                 || (isset($item['actions'])
                     && sizeof($item['actions']) != 0
                 )
@@ -5965,7 +5965,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         </div>
                         <?php
                     }
-                    if ($object->getMarkProtectedGroup()) {
+                    if ($object->getMarkProtected()) {
                         ?>
 
                         <div class="oneAction-ok">

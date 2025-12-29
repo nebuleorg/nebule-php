@@ -47,24 +47,27 @@ class Group extends Node implements nodeInterface {
             '_referenceObjectProtected',
             '_referenceObjectObfuscated',
     );
+    
+    protected string $_short_class_name = '';
 
     protected function _initialisation(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isNew)
-            $this->_createNewGroup();
-        elseif ($this->_id != '0')
-            $this->getIsGroup();
+            $this->_createNew();
+        $this->_isGroup = true;
+        $className = explode('\\', get_class($this));
+        $this->_short_class_name = end($className);
     }
 
-    protected function _createNewGroup(): void {
+    protected function _createNew(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked'))) {
-            $this->_metrologyInstance->addLog('create group error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked'))) {
+            $this->_metrologyInstance->addLog('create group (' . $this->_short_class_name . ') error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
             return;
         }
         $instance = $this->_cacheInstance->newVirtualNode();
         $this->_id = $instance->getID();
-        $this->_metrologyInstance->addLog('create group ' . $this->_id, Metrology::LOG_LEVEL_AUDIT);
+        $this->_metrologyInstance->addLog('create ' . $this->_short_class_name . ' ' . $this->_id, Metrology::LOG_LEVEL_AUDIT);
         if ($this->getIsRID($this->_id)) {
             $this->_data = null;
             $this->_haveData = false;
@@ -84,18 +87,13 @@ class Group extends Node implements nodeInterface {
     public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
 
-    /**
-     * Mark as a group with a link.
-     * @param bool   $obfuscated
-     * @param string $context
-     * @return boolean
-     */
+
     public function setAsGroup(bool $obfuscated = false, string $context = ''): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_isGroup = true;
-        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group with context=' . $context, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
+        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group (' . $this->_short_class_name . ') with context=' . $context, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
         if ($context != '')
             $context = '>' . $context;
         return $this->addLink(
@@ -106,47 +104,34 @@ class Group extends Node implements nodeInterface {
                 $obfuscated);
     }
 
-    /**
-     * Remove the mark as a group with a link.
-     * @param bool $obfuscated
-     * @return boolean
-     */
-    public function unsetAsGroup(bool $obfuscated = false): bool {
+    public function unsetAsGroup(bool $obfuscated = false, string $context = ''): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_isGroup = false;
         // TODO detect previously obfuscated link.
-        $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
+        $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group (' . $this->_short_class_name . ') with context=' . $context, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'ae79d237');
+        if ($context != '')
+            $context = '>' . $context;
         return $this->addLink(
                 'x>' . $this->_id
                 . '>' . References::RID_OBJECT_GROUP
-                . '>' . References::RID_OBJECT_TYPE,
+                . '>' . References::RID_OBJECT_TYPE
+                . $context,
                 $obfuscated);
     }
 
-    /**
-     * Mark as a group of entities with links.
-     * @param bool $obfuscated
-     * @return boolean
-     */
-    public function setAsGroupOfEntities(bool $obfuscated = false): bool
-    {
+    public function setAsGroupOfEntities(bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name, 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6636179a');
         return ($this->setAsGroup($obfuscated, References::RID_OBJECT_GROUP_ENTITY));
     }
 
-    /**
-     * Remove the mark as a group of entities with links.
-     * @param bool $obfuscated
-     * @return boolean
-     */
     public function unsetAsGroupOfEntities(bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'de5c0565');
         return ($this->unsetAsGroup($obfuscated, References::RID_OBJECT_GROUP_ENTITY));
@@ -163,7 +148,7 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkClosedGroup(?Entity $entity = null): bool {
+    public function getMarkClosed(?Entity $entity = null): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($entity != null)
             $id = $entity->getID();
@@ -199,17 +184,17 @@ class Group extends Node implements nodeInterface {
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setMarkClosedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if ($this->getMarkObfuscatedGroup())
+        if ($this->getMarkObfuscated())
             $obfuscated = true;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if ($this->getMarkClosedGroup())
+        if ($this->getMarkClosed())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as close', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5a5dcc0');
         return $this->addLink(
@@ -225,15 +210,15 @@ class Group extends Node implements nodeInterface {
      * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkClosedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function unsetMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if (!$this->getMarkClosedGroup())
+        if (!$this->getMarkClosed())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as open', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '27c698ab');
         return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME), $obfuscated);
@@ -250,7 +235,7 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkProtectedGroup(?Entity $entity = null): bool {
+    public function getMarkProtected(?Entity $entity = null): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($entity != null)
             $id = $entity->getID();
@@ -281,17 +266,17 @@ class Group extends Node implements nodeInterface {
      * @param boolean            $obfuscated
      * @return boolean
      */
-    public function setMarkProtectedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if ($this->getMarkObfuscatedGroup($entity))
+        if ($this->getMarkObfuscated($entity))
             $obfuscated = true;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if ($this->getMarkProtectedGroup())
+        if ($this->getMarkProtected())
             return true;
         $this->_isMarkProtected = true;
         return $this->addLink(
@@ -307,15 +292,15 @@ class Group extends Node implements nodeInterface {
      * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkProtectedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function unsetMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if (!$this->getMarkProtectedGroup())
+        if (!$this->getMarkProtected())
             return true;
         $this->_isMarkProtected = false;
         return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE), $obfuscated);
@@ -332,7 +317,7 @@ class Group extends Node implements nodeInterface {
      * @param Entity|null $entity
      * @return boolean
      */
-    public function getMarkObfuscatedGroup(?Entity $entity = null): bool {
+    public function getMarkObfuscated(?Entity $entity = null): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             return false;
@@ -365,17 +350,17 @@ class Group extends Node implements nodeInterface {
      * @param boolean     $obfuscated
      * @return boolean
      */
-    public function setMarkObfuscatedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function setMarkObfuscated(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if ($this->getMarkObfuscatedGroup())
+        if ($this->getMarkObfuscated())
             $obfuscated = true;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if ($this->getMarkObfuscatedGroup())
+        if ($this->getMarkObfuscated())
             return true;
         $this->_isMarkObfuscated = true;
         return $this->addLink(
@@ -391,15 +376,15 @@ class Group extends Node implements nodeInterface {
      * @param bool        $obfuscated
      * @return boolean
      */
-    public function unsetMarkObfuscatedGroup(?Entity $entity = null, bool $obfuscated = false): bool {
+    public function unsetMarkObfuscated(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
             $id = $entity->getID();
         else
             $id = $this->_entitiesInstance->getGhostEntityEID();
-        if (!$this->getMarkObfuscatedGroup())
+        if (!$this->getMarkObfuscated())
             return true;
         $this->_isMarkObfuscated = false;
         return $this->addLink('x>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE), $obfuscated);
@@ -440,11 +425,11 @@ class Group extends Node implements nodeInterface {
      */
     public function setAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if (!Node::checkNID($nid) || !$this->getIsRID($type))
             return false;
-        if ($this->getMarkObfuscatedGroup())
+        if ($this->getMarkObfuscated())
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
         return $this->addLink(
@@ -461,11 +446,11 @@ class Group extends Node implements nodeInterface {
      */
     public function unsetAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
+        if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if (!Node::checkNID($nid) || !$this->getIsRID($type))
             return false;
-        if ($this->getMarkObfuscatedGroup())
+        if ($this->getMarkObfuscated())
             $obfuscated = true;
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('remove member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c23f3303');
@@ -626,10 +611,9 @@ abstract class HelpGroup {
         ?>
 
         <?php Displays::docDispTitle(2, 'og', 'Groupe'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-
         <p>Le groupe en tant que tel est défini comme un objet (cf. <a href="#oo">OO</a>), c'est-à-dire qu’il doit
-            avoir un type mime <code><?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?></code>.</p>
+            avoir un type mime <code><?php echo References::REFERENCE_NEBULE_OBJET_TYPE; ?></code> de groupe
+            <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE; ?></code>.</p>
         <p>Fondamentalement, le groupe est un ensemble de plusieurs objets. C'est-à-dire, c’est le regroupement d’au
             moins deux objets. Le lien peut donc à ce titre être vu comme la matérialisation d’un groupe. Mais la
             définition du groupe doit être plus restrictive afin que celui-ci soit utilisable. Pour cela, dans
@@ -641,9 +625,10 @@ abstract class HelpGroup {
         <p>Un groupe peut avoir des liens de membres vers des objets définis aussi comme groupes. Ces objets peuvent
             être vus comme des sous-groupes. La bibliothèque <em>nebule</em> ne prend en compte qu’un seul niveau de
             groupe, c'est-à-dire que les sous-groupes sont gérés simplement comme des objets.</p>
+        <p>Lors de la suppression d'un groupe, c’est uniquement un affichage du groupe et non la suppression des membres
+            du groupe.</p>
 
         <?php Displays::docDispTitle(3, 'ogo', 'Objet'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet du groupe peut être de deux natures.</p>
         <p>Soit c’est un objet existant qui est en plus définit comme un groupe. L’objet peut avoir un contenu et a
             sûrement d’autres types mime propres. Dans ce cas l’identifiant de groupe est l’identifiant de l’objet
@@ -657,7 +642,7 @@ abstract class HelpGroup {
         <ol>
             <li>nom</li>
         </ol>
-        <p>Cette propriété est matérialisée par un lien de type <code>l</code> avec comme objets méta :</p>
+        <p>Cette propriété est matérialisée par un lien de type <code>l</code> avec comme objets nid3 :</p>
         <ol>
             <li><code>nebule/objet/nom</code></li>
         </ol>
@@ -667,13 +652,11 @@ abstract class HelpGroup {
         </ul>
 
         <?php Displays::docDispTitle(3, 'ogp', 'Protection'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>En tant que tel le groupe ne nécessite pas de protection puisque soit l’objet du groupe n’a pas de contenu
             soit on n’utilise pas son contenu directement.</p>
         <p>La gestion de la protection est désactivée dans une instance de groupe.</p>
 
         <?php Displays::docDispTitle(3, 'ogd', 'Dissimulation'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe peut en tant que tel être dissimulé, c'est-à-dire que l’on dissimule l’existence du groupe, donc sa
             création.</p>
         <p>La dissimulation devrait se faire lors de la création du groupe.</p>
@@ -684,18 +667,12 @@ abstract class HelpGroup {
             lien de suppression.</p>
 
         <?php Displays::docDispTitle(3, 'ogf', 'Fermeture'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le groupe va contenir un certain nombre de membres ajoutés par différentes entités. Il est possible de
             limiter le nombre des membres à utiliser dans un groupe en restreignant artificiellement les entités
-            contributrices du groupe. Ainsi, on marque le groupe comme fermé et on filtre sur les membres uniquement
-            ajoutés par des entités définies.</p>
-        <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_FERME; ?></code>
-            est dédié à la gestion des groupes
-            fermés. Un groupe est considéré comme fermé quand on a l’objet réservé en champs méta, l’entité en cours en
-            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champ
-            cible, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
-            Dans ce cas, c’est une entité contributrice.</p>
-        <p>C’est uniquement un affichage du groupe que l’on a et non la suppression de membres du groupe.</p>
+            contributrices du groupe. Ainsi, on marque le groupe comme fermé et cela filtre, par exemple les messages
+            d'une conversation, uniquement sur les membres que l'on a ajoutés.</p>
+        <p>Lorsqu'un groupe n'est pas marqué fermé, il est dit ouvert. Dans ce cas, on voit avec le groupe tous les
+            objets ajoutés par toutes les entités que l'on peut vérifier.</p>
         <p>Lorsque l’on a marqué un groupe comme fermé, on doit explicitement ajouter des entités que l’on veut voir
             contribuer.</p>
         <p>Il est possible indéfiniment de fermer et ouvrir un groupe.</p>
@@ -704,6 +681,12 @@ abstract class HelpGroup {
         <p>Lorsque l’on a marqué un groupe comme fermé, on peut voir la liste des entités explicitement que l’on veut
             voir contribuer. On peut aussi voir les entités que les autres entités veulent voir contribuer et décider ou
             non de les ajouter.</p>
+        <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_FERME; ?></code>
+            est dédié à la gestion des groupes
+            fermés. Un groupe est considéré comme fermé quand on a l’objet réservé en champs nid3, l’entité en cours en
+            champs nid2 et le NID du groupe en champs nid1. Si au lieu d’utiliser l’entité en cours pour le champ
+            cible, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
+            Dans ce cas, c’est une entité contributrice.</p>
         <p>Lorsqu’un groupe est marqué comme fermé, l’interface de visualisation du groupe peut permettre de le
             visualiser temporairement comme un groupe ouvert.</p>
         <p>Le traitement des liens de fermeture d’un groupe doit être fait exclusivement avec le traitement social
@@ -780,9 +763,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : hash(‘nebule/objet/groupe’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : hash(‘nebule/objet/groupe’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression d’un groupe :
@@ -791,9 +774,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : hash(‘nebule/objet/groupe’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : hash(‘nebule/objet/groupe’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de suivi du groupe :
@@ -802,9 +785,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID du groupe</li>
-                    <li>méta : hash(‘nebule/objet/groupe/suivi’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID du groupe</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/suivi’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de suivi du groupe :
@@ -813,9 +796,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID du groupe</li>
-                    <li>méta : hash(‘nebule/objet/groupe/suivi’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID du groupe</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/suivi’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation d’un groupe est le lien de définition caché dans une lien de type
@@ -827,9 +810,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’objet</li>
-                    <li>méta : ID du groupe</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID du groupe</li>
                 </ul>
             </li>
             <li>Le lien de suppression de rattachement d’un membre du groupe :
@@ -838,9 +821,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’objet</li>
-                    <li>méta : ID du groupe</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID du groupe</li>
                 </ul>
             </li>
             <li>Le lien de fermeture d’un groupe :
@@ -849,9 +832,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/ferme’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/ferme’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de fermeture d’un groupe :
@@ -860,9 +843,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/ferme’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/ferme’)</li>
                 </ul>
             </li>
             <li>Le lien de protection des membres d’un groupe :
@@ -871,9 +854,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/protege’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/protege’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de protection des membres d’un groupe :
@@ -882,9 +865,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/protege’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/protege’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation des membres d’un groupe :
@@ -893,9 +876,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/dissimule’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/dissimule’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de dissimulation des membres d’un groupe :
@@ -904,9 +887,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/dissimule’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/dissimule’)</li>
                 </ul>
             </li>
         </ul>
@@ -921,9 +904,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : hash(‘nebule/objet/groupe’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : hash(‘nebule/objet/groupe’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de nommage du groupe :
@@ -932,9 +915,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : hash(nom du groupe)</li>
-                    <li>méta : hash(‘nebule/objet/nom’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : hash(nom du groupe)</li>
+                    <li>nid3 : hash(‘nebule/objet/nom’)</li>
                 </ul>
             </li>
             <li>Le lien de suivi du groupe :
@@ -943,9 +926,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID du groupe</li>
-                    <li>méta : hash(‘nebule/objet/groupe/suivi’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID du groupe</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/suivi’)</li>
                 </ul>
             </li>
         </ul>
@@ -957,9 +940,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/ferme’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/ferme’)</li>
                 </ul>
             </li>
             <li>Le lien de protection des membres d’un groupe :
@@ -968,9 +951,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/protege’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/protege’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation des membres d’un groupe :
@@ -979,9 +962,9 @@ abstract class HelpGroup {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID du groupe</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/groupe/dissimule’)</li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/groupe/dissimule’)</li>
                 </ul>
             </li>
         </ul>

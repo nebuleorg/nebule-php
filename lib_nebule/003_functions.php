@@ -169,7 +169,7 @@ class Functions
             elseif ($instance->getIsGroup($social))
                 $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             else {
-                $protected = $instance->getMarkProtectedGroup();
+                $protected = $instance->getMarkProtected();
                 if ($protected)
                     $instance = $this->_cacheInstance->newNode($instance->getID(), \Nebule\Library\Cache::TYPE_NODE);
                 if ($instance->getType('all') == References::REFERENCE_OBJECT_ENTITY)

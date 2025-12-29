@@ -491,7 +491,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_OWNER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_OWNER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -508,7 +508,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_OWNER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_OWNER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -521,7 +521,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -538,7 +538,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -551,7 +551,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_FOLLOWER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_FOLLOWER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -568,7 +568,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -581,7 +581,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED . '=' . self::RID_FOLLOWER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_FOLLOWER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -802,7 +802,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_displaySimpleTitle('::blog:list', $this::MODULE_REGISTERED_ICONS[1]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
@@ -810,7 +809,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setMessage('::blog:new');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -819,14 +819,17 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setMessage('::blog:getExisting');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         } else {
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
             $instance->setMessage('::login');
             $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         }
         $instanceList->addItem($instance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
@@ -864,7 +867,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $list[$link->getParsed()['bl/rl/nid2']] = $link->getSignersEID();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         foreach ($list as $nid => $signers) {
             $blogInstance = $this->_cacheInstance->newNode($nid);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -893,6 +895,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             );
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
     }
@@ -904,7 +907,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
             $instanceList = new DisplayList($this->_applicationInstance);
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
 
             $instance = new DisplayQuery($this->_applicationInstance);
             $instance->setType(DisplayQuery::QUERY_STRING);
@@ -944,6 +946,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setWithSubmit(true);
             $instanceList->addItem($instance);
 
+            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
@@ -1084,7 +1087,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_displaySimpleTitle('::page:list', $this::MODULE_REGISTERED_ICONS[4]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $this->_displayAddButton($instanceList, '::blog:return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
@@ -1109,6 +1111,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
@@ -1118,7 +1121,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     private function _display_InlinePages(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
         $list = $this->_getListPageNID($this->_instanceCurrentBlog, 'all');
         foreach ($list as $blogPageNID) {
@@ -1141,6 +1143,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setEnableJS(false);
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
     }
@@ -1450,7 +1453,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $addURL = '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
         $instance->setMessage($backMessage);
@@ -1467,6 +1469,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
     }
@@ -1594,7 +1597,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
 
         // List of answers
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
         $list = $this->_getLinksAnswerOID($nid, 'all');
         foreach ($list as $link) {
@@ -1618,6 +1620,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setRefs(array($blogAnswerSID));
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->setOnePerLine(true);
         $instanceList->display();
@@ -1673,7 +1676,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         }
 
         $instanceGroup = new \Nebule\Library\Group($this->_nebuleInstance, $instanceNode->getID());
-        $instanceGroup->setMarkClosedGroup();
+        $instanceGroup->setMarkClosed();
     }
     private function _getBlogOID(string $nid, string $url): void {
         // TODO
@@ -1855,7 +1858,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     public function _displayOwner(): void {
         $this->_displaySimpleTitle('::owners', Displays::DEFAULT_ICON_ENT);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         foreach ($this->_currentBlogListOwners as $eid) {
             $instanceOwner = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
@@ -1883,6 +1885,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $instanceList->addItem($instance);
             }
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->setOnePerLine(true);
         $instanceList->display();

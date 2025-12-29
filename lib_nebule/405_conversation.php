@@ -55,417 +55,22 @@ class Conversation extends Group implements nodeInterface
             '_referenceObjectObfuscated',
     );
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
-            $this->_id = '0';
-            $this->_isNew = false;
-            return;
-        }
-        if (is_a($this->_entitiesInstance, 'Nebule\Library\Node'))
-            $this->_cacheCurrentEntityUnlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
-
         if ($this->_isNew)
-            $this->_createNewConversation();
-        elseif ($this->_id != '0')
-            $this->getIsConversation();
+            $this->_createNew();
+        $this->_isConversation = true;
     }
 
-    /**
-     * Création d'une nouvelle conversation.
-     *
-     * @param boolean $closed
-     * @param boolean $protected
-     * @param boolean $obfuscated
-     * @return void
-     */
-    protected function _createNewConversation(bool $closed = false, bool $protected = false, bool $obfuscated = false): void
-    {
-        // Vérifie que l'on puisse créer une conversation.
-        /*if ($this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-                && $this->_entitiesInstance->getConnectedEntityIsUnlocked()
-        ) {
-            // Génère un contenu aléatoire.
-            $data = $this->_cryptoInstance->getRandom(32, Crypto::RANDOM_PSEUDO);
-
-            // Si le contenu est valide.
-            if ($data != '') {
-                // Calcul l'ID référence de la conversation.
-                $this->_id = substr($this->_cryptoInstance->hash($data), 0, 32)
-                        . '0000656e7562656c6f2f6a627465632f6e6f6576737274616f690a6e';
-                $this->_metrologyInstance->addLog('Create conversation ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-
-                // Mémorise les données.
-                $this->_data = $data;
-                $this->_haveData = true;
-                $data = null;
-
-                $signer = $this->_entitiesInstance->getGhostEntityEID();
-                $date = date(DATE_ATOM);
-                $hashconversation = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION);
-
-                // Création lien de hash.
-                $date2 = $date;
-                if ($obfuscated) {
-                    $date2 = '0';
-                }
-                $action = 'l';
-                $source = $this->_id;
-                $target = $this->_cryptoInstance->hash($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_HASH);
-                $link = '0_' . $signer . '_' . $date2 . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_cacheInstance->newBlockLink($link);
-                $newLink->signWrite();
-
-                // Création lien de conversation.
-                $action = 'l';
-                $source = $this->_id;
-                $target = $hashconversation;
-                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_TYPE);
-                $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_cacheInstance->newBlockLink($link);
-                $newLink->sign();
-                if ($obfuscated) {
-                    $newLink->setObfuscate();
-                }
-                $newLink->write();
-
-                // Si besoin, marque la conversation comme fermée.
-                if ($closed) {
-                    $this->_metrologyInstance->addLog('Create closed conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                    $action = 'l';
-                    $source = $this->_id;
-                    $target = $signer;
-                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_FERMEE);
-                    $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_cacheInstance->newBlockLink($link);
-                    $newLink->sign();
-                    if ($obfuscated) {
-                        $newLink->setObfuscate();
-                    }
-                    $newLink->write();
-                }
-
-                // Si besoin, marque la conversation comme protégée.
-                if ($protected) {
-                    $this->_metrologyInstance->addLog('Create protected conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                    $action = 'l';
-                    $source = $this->_id;
-                    $target = $signer;
-                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_PROTEGEE);
-                    $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_cacheInstance->newBlockLink($link);
-                    $newLink->sign();
-                    if ($obfuscated) {
-                        $newLink->setObfuscate();
-                    }
-                    $newLink->write();
-                }
-
-                // Si besoin, marque la conversation comme dissimulée.
-                if ($obfuscated) {
-                    $this->_metrologyInstance->addLog('Create obfuscated conversation', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                    $action = 'l';
-                    $source = $this->_id;
-                    $target = $signer;
-                    $meta = $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_CONVERSATION_DISSIMULEE);
-                    $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                    $newLink = $this->_cacheInstance->newBlockLink($link);
-                    $newLink->sign();
-                    $newLink->setObfuscate();
-                    $newLink->write();
-                }
-
-                // Création du lien de l'entité originaire de la conversation.
-                $action = 'l';
-                $source = $signer;
-                $target = $this->_id;
-                $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
-                $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = $this->_cacheInstance->newBlockLink($link);
-                $newLink->sign();
-                if ($obfuscated) {
-                    $newLink->setObfuscate();
-                }
-                $newLink->write();
-
-                $this->_isConversation = true;
-            } else {
-                $this->_metrologyInstance->addLog('Create conversation error on generation', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_id = '0';
-                return false;
-            }
-        } else {
-            $this->_metrologyInstance->addLog('Create conversation error not authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_id = '0';
-            return false;
-        return true;
-        }*/
+    public function setAsConversation(bool $obfuscated = false): bool {
+        return $this->setAsGroup($obfuscated, References::RID_OBJECT_CONVERSATION);
+    }
+    public function unsetAsConversation(bool $obfuscated = false): bool {
+        return $this->unsetAsGroup($obfuscated, References::RID_OBJECT_CONVERSATION);
     }
 
-
-
-    /**
-     * Extrait l'ID de l'entité.
-     * Filtre l'entité et s'assure que c'est une entité.
-     * FIXME à supprimer
-     *
-     * @param string|Entity|Node $entity
-     * @return string
-     */
-    protected function _checkExtractEntityID(\Nebule\Library\Node|string|Entity $entity): string {
-        $entityInstance = null;
-        if (is_string($entity)) {
-            if (!Node::checkNID($entity, false, false))
-                $id = '';
-            else {
-                $id = $entity;
-                $entityInstance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
-            }
-        } elseif (is_a($entity, 'Node')) {
-            $id = $entity->getID();
-            if ($id == '0')
-                $id = '';
-            else
-                $entityInstance = $entity;
-        } else
-            $id = '';
-
-        if ($id == '0')
-            $id = '';
-
-        if ($id != '' && !$entityInstance->getIsEntity('all'))
-            $id = '';
-        unset($entityInstance);
-
-        return $id;
-    }
-
-
-
-    /**
-     * Retourne si l'entité est à l'écoute du groupe.
-     *
-     * @param string|Node $entity
-     * @param string      $socialClass
-     * @param array|null  $socialListID
-     * @return boolean
-     */
-    public function getIsFollower(Node|string $entity, string $socialClass = '', ?array $socialListID = null): bool
-    {
-        // Vérifie que c'est bien une entité.
-        if ($entity == '') {
-            return false;
-        }
-
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '') {
-            return false;
-        }
-
-        // Liste tous les liens de définition des entités à l'écoutes du groupe.
-        $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $id,
-                $this->_id,
-                $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE)
-        );
-
-        // Fait un tri par pertinance sociale.
-        $this->_socialInstance->setList($socialListID);
-        $this->_socialInstance->arraySocialFilter($links, $socialClass);
-        $this->_socialInstance->unsetList();
-
-        if (sizeof($links) != 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Ajoute une entité comme à l'écoute du groupe.
-     *
-     * @param string|Node $entity
-     * @param boolean     $obfuscated
-     * @return boolean
-     */
-    public function setAsFollower($entity, bool $obfuscated = false): bool
-    {
-        // Vérifie que la création de liens est possible.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
-        ) {
-            return false;
-        }
-
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscatedGroup('')) {
-            $obfuscated = true;
-        }
-
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '') {
-            return false;
-        }
-
-        // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getGhostEntityEID();
-        $date = date(DATE_ATOM);
-        $action = 'l';
-        $source = $id;
-        $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new BlocLink($this->_nebuleInstance, $link);
-        $newLink->sign();
-
-        // Si besoin, obfuscation du lien.
-        if ($obfuscated) {
-            $newLink->setObfuscate();
-        }
-
-        // Ecrit le lien.
-        return $newLink->write();
-    }
-
-    /**
-     * Retire un entité à l'écoute du groupe.
-     *
-     * @todo détecter le lien dissimulé d'origine, et dissimuler en conséquence.
-     * @todo retirer la dissimulation déjà faite dans le code.
-     * @param string|Node $entity
-     * @param boolean     $obfuscated
-     * @return boolean
-     */
-    public function unsetAsFollower($entity = '', bool $obfuscated = false): bool
-    {
-        // Vérifie que la création de liens est possible.
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitCreateLink')
-                || !$this->_configurationInstance->getOptionAsBoolean('permitWriteConversation')
-                || !$this->_entitiesInstance->getConnectedEntityIsUnlocked()
-        ) {
-            return false;
-        }
-
-        // Si la dissimulation est activée, la force.
-        if ($this->getMarkObfuscatedGroup('')) {
-            $obfuscated = true;
-        }
-
-        // Extrait l'ID de l'entité.
-        $id = $this->_checkExtractEntityID($entity);
-
-        // Vérifie que c'est bien une entité.
-        if ($id == '') {
-            return false;
-        }
-
-        // Création lien de groupe.
-        $signer = $this->_entitiesInstance->getGhostEntityEID();
-        $date = date(DATE_ATOM);
-        $action = 'x';
-        $source = $id;
-        $target = $this->_id;
-        $meta = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE);
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new BlocLink($this->_nebuleInstance, $link);
-        $newLink->sign();
-
-        // Si besoin, obfuscation du lien.
-        if ($obfuscated) {
-            $newLink->setObfuscate();
-        }
-
-        // Ecrit le lien.
-        return $newLink->write();
-    }
-
-
-    /**
-     * Extrait la liste des liens définissant les entités à l'écoute de la conversation.
-     *
-     * @param string     $socialClass
-     * @param array|null $socialListID
-     * @return array:Link
-     */
-    public function getListFollowersLinks(string $socialClass = '', ?array $socialListID = null): array
-    {
-        return $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
-    }
-
-    /**
-     * Extrait la liste des ID des entités à l'écoute du groupe.
-     *
-     * @param string     $socialClass
-     * @param array|null $socialListID
-     * @return array:string
-     */
-    public function getListFollowersID(string $socialClass = '', ?array $socialListID = null): array
-    {
-        // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
-
-        // Extraction des ID cibles.
-        $list = array();
-        foreach ($links as $link) {
-            $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
-        }
-
-        return $list;
-    }
-
-    /**
-     * Retourne le nombre d'entités à l'écoute du groupe.
-     *
-     * @param string     $socialClass
-     * @param array|null $socialListID
-     * @return float
-     */
-    public function getCountFollowers(string $socialClass = '', ?array $socialListID = null): float
-    {
-        return sizeof($this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID));
-    }
-
-    /**
-     * Retourne la liste des entités qui ont ajouté l'entité cité comme suiveuse de la conversation.
-     *
-     * @param string     $entity
-     * @param string     $socialClass
-     * @param array|null $socialListID
-     * @return array:string
-     */
-    public function getListFollowerAddedByID(string $entity, string $socialClass = 'all', ?array $socialListID = null): array
-    {
-        // Extrait les liens des groupes.
-        $links = $this->_getListFollowersLinks($this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_CONVERSATION_SUIVIE), $socialClass, $socialListID);
-
-        // Extraction des ID cibles.
-        $list = array();
-        foreach ($links as $link) {
-            if ($link->getParsed()['bl/rl/nid1'] == $entity) {
-                $list[$link->getParsed()['bs/rs1/eid']] = $link->getParsed()['bs/rs1/eid'];
-            }
-        }
-
-        return $list;
-    }
+    public function setAsGroupOfEntities(bool $obfuscated = false): bool { return false; }
+    public function unsetAsGroupOfEntities(bool $obfuscated = false): bool { return false; }
 }
 
 
@@ -502,18 +107,18 @@ abstract class HelpConversation {
         ?>
 
         <?php Displays::docDispTitle(2, 'oc', 'Conversation'); ?>
-        <p>La conversation est un objet définit comme tel, c’est à dire qu’il doit avoir un type mime <code>nebule/objet/conversation</code>.
+        <p>En tant que tel, la conversation est un objet, c'est-à-dire qu’elle doit avoir un type mime <code>nebule/objet/conversation</code>.
         </p>
         <p>Fondamentalement, la conversation est un groupe de plusieurs objets et est donc géré de la même façon qu'un
-            groupe. Ainsi, un membre de la conversation n'est pas une entité mais un message, une entité est dite entité
+            groupe. Ainsi, un membre de la conversation n'est pas une entité, mais un message, une entité est dite entité
             contributrice. Certains liens générés sont communs avec ceux des groupes et si un objet est marqué comme
             groupe et conversation, ses membres seront les mêmes.</p>
-        <p>La conversation va permettre de regrouper, et donc d’associer et de retrouver, des message. L’objet de la
+        <p>La conversation va permettre de regrouper, et donc d’associer et de retrouver, des messages. L’objet de la
             conversation va avoir des liens vers d’autres objets afin de les définir comme messages (membres) de la
             conversation.</p>
         <p>Une conversation peut avoir des liens de membres vers des objets définis aussi comme conversations. Ces
             objets peuvent être vus comme des sous-conversations. La bibliothèque <em>nebule</em> ne prend en compte
-            qu’un seul niveau de conversation, c’est à dire que les sous-conversations sont gérés simplement comme des
+            qu’un seul niveau de conversation, c'est-à-dire que les sous-conversations sont gérés simplement comme des
             objets.</p>
 
         <?php Displays::docDispTitle(3, 'oco', 'Objet'); ?>
@@ -533,7 +138,7 @@ abstract class HelpConversation {
         <ol>
             <li>nom</li>
         </ol>
-        <p>Cette propriété est matérialisée par un lien de type <code>l</code> avec comme objets méta :</p>
+        <p>Cette propriété est matérialisée par un lien de type <code>l</code> avec comme objets nid3 :</p>
         <ol>
             <li><code>nebule/objet/nom</code></li>
         </ol>
@@ -548,7 +153,7 @@ abstract class HelpConversation {
         <p>La gestion de la protection est désactivée dans une instance de conversation.</p>
 
         <?php Displays::docDispTitle(3, 'ocd', 'Dissimulation'); ?>
-        <p>La conversation peut en tant que tel être dissimulée, c’est à dire que l’on dissimule l’existence de la
+        <p>La conversation peut en tant que tel être dissimulée, c'est-à-dire que l’on dissimule l’existence de la
             conversation, donc sa création.</p>
         <p>La dissimulation devrait se faire lors de la création de la conversation.</p>
         <p>L’annulation de la dissimulation d’une conversation revient à révéler le lien de création de la
@@ -561,12 +166,12 @@ abstract class HelpConversation {
         <?php Displays::docDispTitle(3, 'ocf', 'Fermeture'); ?>
         <p>La conversation va contenir un certain nombre de membres (messages) ajouter par différentes entités. Il est
             possible de limiter le nombre des membres à utiliser dans une conversation en restreignant artificiellement
-            les entités contributrices de la conversation. Ainsi on marque la conversation comme fermée et on filtre sur
+            les entités contributrices de la conversation. Ainsi, on marque la conversation comme fermée et on filtre sur
             les membres uniquement ajoutés par des entités définies.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/conversation/fermee</code> est dédié à la gestion des
             conversations fermées. Une conversation est considéré fermée quand on a l’objet réservé en champs méta,
             l’entité en cours en champs cible et l’ID de la conversation en champs source. Si au lieu d’utiliser
-            l’entité en cours pour le champs cible on utilise une autre entité, cela revient à prendre aussi en compte
+            l’entité en cours pour le champ cible on utilise une autre entité, cela revient à prendre aussi en compte
             ses liens dans la conversation fermée. Dans ce cas c’est une entité contributrice.</p>
         <p>C’est uniquement un affichage de la conversation que l’on a et non la suppression de membres de la
             conversation.</p>
@@ -637,9 +242,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : hash(‘nebule/objet/conversation’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : hash(‘nebule/objet/conversation’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression d’une conversation :
@@ -648,9 +253,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : hash(‘nebule/objet/conversation’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : hash(‘nebule/objet/conversation’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de suivi de la conversation :
@@ -659,9 +264,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID de la conversation</li>
-                    <li>méta : hash(‘nebule/objet/conversation/suivie’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID de la conversation</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/suivie’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de suivi de la conversation :
@@ -670,9 +275,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID de la conversation</li>
-                    <li>méta : hash(‘nebule/objet/conversation/suivie’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID de la conversation</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/suivie’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation d’une conversation est le lien de définition caché dans une lien de type <code>c</code>.
@@ -683,9 +288,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’objet</li>
-                    <li>méta : ID de la conversation</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID de la conversation</li>
                 </ul>
             </li>
             <li>Le lien de suppression de rattachement d’un membre (message) de la conversation :
@@ -694,9 +299,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’objet</li>
-                    <li>méta : ID de la conversation</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID de la conversation</li>
                 </ul>
             </li>
             <li>Le lien de fermeture d’une conversation :
@@ -705,9 +310,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/fermee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/fermee’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de fermeture d’une conversation :
@@ -716,9 +321,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/fermee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/fermee’)</li>
                 </ul>
             </li>
             <li>Le lien de protection des membres d’une conversation :
@@ -727,9 +332,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/protegee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/protegee’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de protection des membres d’une conversation :
@@ -738,9 +343,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/protegee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/protegee’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation des membres d’une conversation :
@@ -749,9 +354,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/dissimulee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/dissimulee’)</li>
                 </ul>
             </li>
             <li>Le lien de suppression de dissimulation des membres d’une conversation :
@@ -760,9 +365,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>x</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire.</li>
-                    <li>méta : hash(‘nebule/objet/conversation/dissimulee’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire.</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/dissimulee’)</li>
                 </ul>
             </li>
         </ul>
@@ -776,9 +381,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : hash(‘nebule/objet/conversation’)</li>
-                    <li>méta : hash(‘nebule/objet/type’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : hash(‘nebule/objet/conversation’)</li>
+                    <li>nid3 : hash(‘nebule/objet/type’)</li>
                 </ul>
             </li>
             <li>Le lien de nommage de la conversation :
@@ -787,9 +392,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : hash(nom de la conversation)</li>
-                    <li>méta : hash(‘nebule/objet/nom’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : hash(nom de la conversation)</li>
+                    <li>nid3 : hash(‘nebule/objet/nom’)</li>
                 </ul>
             </li>
             <li>Le lien de suivi de la conversation :
@@ -798,9 +403,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de l'entité, par défaut l’entité signataire</li>
-                    <li>cible : ID de la conversation</li>
-                    <li>méta : hash(‘nebule/objet/conversation/suivie’)</li>
+                    <li>nid1 : ID de l'entité, par défaut l’entité signataire</li>
+                    <li>nid2 : ID de la conversation</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/suivie’)</li>
                 </ul>
             </li>
         </ul>
@@ -812,9 +417,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/conversation/ferme’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/ferme’)</li>
                 </ul>
             </li>
             <li>Le lien de protection des membres d’une conversation :
@@ -823,9 +428,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/conversation/protege’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/protege’)</li>
                 </ul>
             </li>
             <li>Le lien de dissimulation des membres d’une conversation :
@@ -834,9 +439,9 @@ abstract class HelpConversation {
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
                     <li>action : <code>l</code></li>
-                    <li>source : ID de la conversation</li>
-                    <li>cible : ID de l’entité, par défaut l’entité signataire</li>
-                    <li>méta : hash(‘nebule/objet/conversation/dissimule’)</li>
+                    <li>nid1 : ID de la conversation</li>
+                    <li>nid2 : ID de l’entité, par défaut l’entité signataire</li>
+                    <li>nid3 : hash(‘nebule/objet/conversation/dissimule’)</li>
                 </ul>
             </li>
         </ul>

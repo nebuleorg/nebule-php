@@ -288,7 +288,7 @@ class nebule
         }
 
         $this->_metrologyInstance->addLog('find current object ' . $this->_currentObject, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '7b4f89ef');
-        $this->_currentObjectInstance->getMarkProtectedGroup();
+        $this->_currentObjectInstance->getMarkProtected();
     }
 
 

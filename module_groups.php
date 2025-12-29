@@ -67,7 +67,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
-    const RESTRICTED_TYPE = 'node';
+    const RESTRICTED_TYPE = 'Node';
     const RESTRICTED_CONTEXT = '';
 
     protected string $_hashGroup;
@@ -471,6 +471,29 @@ class ModuleGroups extends \Nebule\Library\Modules {
             $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
             $this->_displayGroupCreateNew();
         }
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::createGroup');
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        } else {
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+            $instance->setMessage('::login');
+            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        }
+        $instanceList->addItem($instance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+
         $this->_displaySimpleTitle('::myGroups', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayInstance->registerInlineContentID('my_groups');
     }
@@ -500,6 +523,29 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _displayAllGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::allGroups', $this::MODULE_REGISTERED_ICONS[0]);
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::createGroup');
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        } else {
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+            $instance->setMessage('::login');
+            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        }
+        $instanceList->addItem($instance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('all_groups');
     }
 
@@ -518,6 +564,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         // MyGroups() view displays the result of the creation
     }
 
+    // Copy of ModuleConversations::_displayConversationCreateNew()
     protected function _displayGroupCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
@@ -569,13 +616,15 @@ class ModuleGroups extends \Nebule\Library\Modules {
         echo '<br />' . "\n";
     }
 
+    // Copy of ModuleConversations::_displayConversationCreateForm()
     protected function _displayGroupCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkBooleanOptions(array('unlocked','permitWrite','permitWriteLink','permitWriteObject','permitWriteGroup'))) {
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . ActionsGroups::CREATE
+                    . '&' . ActionsGroups::CREATE_TYPE_MIME . '=Group'
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -600,7 +649,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             } else {
                 $instance = new DisplayQuery($this->_applicationInstance);
                 $instance->setType(DisplayQuery::QUERY_SELECT);
-                $instance->setInputName(ActionsGroups::CREATE_TYPE);
+                $instance->setInputName(ActionsGroups::CREATE_CONTEXT);
                 $instance->setIconText('::membersType');
                 $instance->setSelectList(array(
                     '::::' . ModuleGroups::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::::' . ModuleGroups::RESTRICTED_TYPE),
@@ -644,7 +693,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             $instance->setInputValue('');
             $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
             if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE)
-                $instance->setHiddenInput1(ActionsGroups::CREATE_TYPE, $this::RESTRICTED_TYPE);
+                $instance->setHiddenInput1(ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_TYPE);
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
@@ -727,7 +776,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _display_InlineGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $closedGroup = $this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosedGroup();
+        $closedGroup = $this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosed();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         if ($closedGroup)
@@ -882,6 +931,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         return $this->_entitiesInstance->getListEntitiesID();
     }
 
+    // Copy of ModuleConversations::_listOfConversations()
     protected function _listOfGroups(array $links, string $socialClass = 'all', string $hookName = 'notMyGroups'): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $groupsGID = array();
@@ -927,8 +977,6 @@ class ModuleGroups extends \Nebule\Library\Modules {
         $instanceList->setEnableWarnIfEmpty(true);
         $instanceList->display();
     }
-
-
 
     protected function _filterGroupByType(string $gid): bool { return true; }
 
@@ -1088,7 +1136,7 @@ class ModuleGroupEntities extends ModuleGroups {
             'a269514d2b940d8269993a6f0138f38bbb86e5ac387dcfe7b810bf871002edf3.sha2.256',     // 2 : Ajouter objets marqués.
     );
     const MODULE_APP_ICON_LIST = array('425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272');
-    const RESTRICTED_TYPE = 'entity';
+    const RESTRICTED_TYPE = 'Entity';
     const RESTRICTED_CONTEXT = References::RID_OBJECT_GROUP_ENTITY;
 
     protected function _filterGroupByType(string $gid): bool {

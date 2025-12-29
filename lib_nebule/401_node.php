@@ -1172,7 +1172,7 @@ class Node extends Functions implements nodeInterface {
      *
      * @return boolean
      */
-    public function getMarkProtectedGroup(): bool {
+    public function getMarkProtected(): bool {
         $this->_getMarkProtected();
         return $this->_cacheMarkProtected;
     }
@@ -2024,9 +2024,9 @@ class Node extends Functions implements nodeInterface {
     /**
      * Ecrit une émotion pour l'objet.
      * La marque d'un émotion sur l'objet est un lien de type f avec :
-     *  - source : l'ID de l'objet
-     *  - cible : le hash de l'émotion
-     *  - méta : le signataire ou l'objet de contexte (conversation par exemple)
+     *  - nid1 : l'ID de l'objet
+     *  - nid2 : le hash de l'émotion
+     *  - nid3 : le signataire ou l'objet de contexte (conversation par exemple)
      * Le lien peut être dissimulé.
      * L'émotion peut être rattachée en contexte à
      *  - une autre entité @param string $emotion
@@ -3425,9 +3425,9 @@ abstract class HelpNode {
             <li>Identifiant du signataire</li>
             <li>Horodatage</li>
             <li>action : <code>l</code></li>
-            <li>source : ID de l’objet</li>
-            <li>cible : hash du nom de l’algorithme de prise d’empreinte</li>
-            <li>méta : hash(‘nebule/objet/hash’)</li>
+            <li>nid1 : ID de l’objet</li>
+            <li>nid2 : hash du nom de l’algorithme de prise d’empreinte</li>
+            <li>nid3 : hash(‘nebule/objet/hash’)</li>
         </ul>
         <p>Le lien de définition du type est optionnel. Le type est généralement le type mime reconnu de l’objet.</p>
         <ul>
@@ -3435,9 +3435,9 @@ abstract class HelpNode {
             <li>Identifiant du signataire</li>
             <li>Horodatage</li>
             <li>action : <code>l</code></li>
-            <li>source : ID de l'objet</li>
-            <li>cible : hash(type de l'objet)</li>
-            <li>méta : hash(‘nebule/objet/type’)</li>
+            <li>nid1 : ID de l'objet</li>
+            <li>nid2 : hash(type de l'objet)</li>
+            <li>nid3 : hash(‘nebule/objet/type’)</li>
         </ul>
         <p>A faire objets virtuels...</p>
 
