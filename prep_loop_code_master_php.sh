@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020251228
+# Version 020251229
 
 echo ' > start'
 
@@ -684,6 +684,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_lang_en_en_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_es_co_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_fr_fr_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
     # names
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
