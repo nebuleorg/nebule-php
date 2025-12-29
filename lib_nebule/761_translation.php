@@ -289,9 +289,9 @@ abstract class Translates extends Functions
 
         if ($this->_applicationInstance::USE_MODULES && $this->_applicationInstance::USE_MODULES_TRANSLATE) {
             foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
-                $this->_metrologyInstance->addLog('compare module language ' . $module::MODULE_LANGUAGE . ' to default ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0bcdaa0d');
+                //$this->_metrologyInstance->addLog('compare module language ' . $module::MODULE_LANGUAGE . ' to default ' . $this->_defaultLanguage, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '0bcdaa0d');
                 if ($module::MODULE_LANGUAGE == $this->_defaultLanguage) {
-                    $this->_metrologyInstance->addLog('find module language ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '6bcf2c7e');
+                    //$this->_metrologyInstance->addLog('find module language ' . $module::MODULE_LANGUAGE, Metrology::LOG_LEVEL_DEVELOP, __METHOD__, '6bcf2c7e');
                     $this->_defaultLanguageInstance = $module;
                 }
             }
@@ -351,12 +351,13 @@ abstract class Translates extends Functions
     public function getDefaultLanguage(): string { return $this->_defaultLanguage; }
     public function getCurrentLanguage(): string { return $this->_currentLanguage; }
     public function getCurrentLanguageIcon(): string { return $this->_currentLanguageIcon; }
-    public function getLanguageModuleInstanceList(): array { return $this->_applicationModulesInstance->getModulesTranslateListName(); }
+    public function getLanguageModuleList(): array { return $this->_applicationModulesInstance->getModulesTranslateListName(); }
 
 
 
     public function getTranslate(string $text, string $lang = ''): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        //$this->_nebuleInstance->getMetrologyInstance()->addLog('ask translate (' . $lang .  ') : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($lang == '')
             $lang = $this->_currentLanguage;
@@ -393,17 +394,18 @@ abstract class Translates extends Functions
         )
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
 
-        $this->_metrologyInstance->addLog('no translate, keep same value : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
+        $this->_metrologyInstance->addLog('no translate, keep same value : ' . strtok(substr($result, 0, 100), "\n"), Metrology::LOG_LEVEL_ERROR, __METHOD__, '74bd1f3a');
         return $text;
     }
 
     private function _getTranslateFromModules(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('translate (' . $lang .  ') : ' . substr($text, 0, 250), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        //$this->_nebuleInstance->getMetrologyInstance()->addLog('ask translate (' . $lang .  ') : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $result = '';
         foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
             if ($module::MODULE_LANGUAGE == $lang && isset($module::TRANSLATE_TABLE[$lang][$text])) {
                 $result = $module::TRANSLATE_TABLE[$lang][$text];
-                $this->_metrologyInstance->addLog('find translate : ' . $result, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
+                //$this->_metrologyInstance->addLog('find translate : ' . strtok(substr($result, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '65349a7b');
             }
         }
         return $result;
