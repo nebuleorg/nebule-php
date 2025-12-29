@@ -21,7 +21,6 @@ class Router extends Functions
     private string $_hashType;
     private string $_codeBranchNID = '';
     private bool $_needUpdate = false;
-    //private string $_libraryRID = '';
     private string $_libraryIID = '';
     private string $_libraryOID = '';
     private array $_librarySID = array();
@@ -121,7 +120,7 @@ class Router extends Functions
         $this->_metrologyInstance->addLog('track functions IID=' . $iid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($iid) == 0) {
-            $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3f8451cb');
+            $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3f8451cb');
             return '';
         }
         if (strlen($iid) == 1) {
@@ -129,22 +128,22 @@ class Router extends Functions
             if ($this->_configurationInstance->getOptionAsBoolean('permitApplication' . $iid))
                 return $iid;
             else {
-                $this->_metrologyInstance->addLog('invalid short app', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '954a99c4');
+                $this->_metrologyInstance->addLog('invalid short app', Metrology::LOG_LEVEL_ERROR, __METHOD__, '954a99c4');
                 return '';
             }
         }
         if (!Node::checkVirtualNID($iid)) {
-            $this->_metrologyInstance->addLog('invalid virtual IID', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '43e6baa9');
+            $this->_metrologyInstance->addLog('invalid virtual IID', Metrology::LOG_LEVEL_ERROR, __METHOD__, '43e6baa9');
             return '';
         }
 
         $instance = $this->_cacheInstance->newNode($iid);
         if ($instance->getID() == '0') {
-            $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ff07a565');
+            $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ff07a565');
             return '';
         }
         if (!$this->_ioInstance->checkLinkPresent($iid)) {
-            $this->_metrologyInstance->addLog('without link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e0171206');
+            $this->_metrologyInstance->addLog('without link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e0171206');
             return '';
         }
 
@@ -159,7 +158,7 @@ class Router extends Functions
         );
         $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
-            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '081f9805');
+            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_ERROR, __METHOD__, '081f9805');
             return '';
         }
 
@@ -186,7 +185,7 @@ class Router extends Functions
         $this->_metrologyInstance->addLog('track functions OID=' . $oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($oid) == 0) {
-            $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9e55ac4a');
+            $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9e55ac4a');
             return '';
         }
         if (strlen($oid) == 1) {
@@ -194,25 +193,25 @@ class Router extends Functions
             if ($this->_configurationInstance->getOptionAsBoolean('permitApplication' . $oid))
                 return $oid;
             else {
-                $this->_metrologyInstance->addLog('invalid short app', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '953c5254');
+                $this->_metrologyInstance->addLog('invalid short app', Metrology::LOG_LEVEL_ERROR, __METHOD__, '953c5254');
                 return '';
             }
         }
         if (!Node::checkNID($oid)) {
-            $this->_metrologyInstance->addLog('invalid OID', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b5568936');
+            $this->_metrologyInstance->addLog('invalid OID', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b5568936');
             return '';
         }
         $instance = $this->_cacheInstance->newNode($oid);
         if ($instance->getID() == '0') {
-            $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '61d0b13c');
+            $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '61d0b13c');
             return '';
         }
         if (!$this->_ioInstance->checkLinkPresent($oid)) {
-            $this->_metrologyInstance->addLog('without link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8a83ad5f');
+            $this->_metrologyInstance->addLog('without link', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8a83ad5f');
             return '';
         }
         if (!$this->_ioInstance->checkObjectPresent($oid)) {
-            $this->_metrologyInstance->addLog('without content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5b2dc1ed');
+            $this->_metrologyInstance->addLog('without content', Metrology::LOG_LEVEL_ERROR, __METHOD__, '5b2dc1ed');
             return '';
         }
 
@@ -226,7 +225,7 @@ class Router extends Functions
         );
         $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
-            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4df6e410');
+            $this->_metrologyInstance->addLog('no definition link', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4df6e410');
             return '';
         }
 
@@ -240,7 +239,7 @@ class Router extends Functions
         );
         $instance->getLinks($links, $filter, 'authority');
         if (sizeof($links) == 0) {
-            $this->_metrologyInstance->addLog('no type link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a52b9363');
+            $this->_metrologyInstance->addLog('no type link', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a52b9363');
             return '';
         }
 
