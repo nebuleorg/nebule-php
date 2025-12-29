@@ -53,7 +53,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251018';
+    const APPLICATION_VERSION = '020251229';
     const APPLICATION_LICENCE = 'GNU GPL v3 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -159,7 +159,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 </a>
             </div>
             <div class="header-left">
-                <a href="/?<?php echo Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_MENU; ?>">
+                <a href="/?<?php echo Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_MENU . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(); ?>">
                     <img title="Menu" alt="[]" src="<?php echo self::DEFAULT_LOGO_MENU; ?>"/>
                 </a>
             </div>
@@ -669,19 +669,24 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $list = array();
         $list[0]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LL);
         $list[0]['title'] = 'Options';
-        $list[0]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_OPTIONS;
+        $list[0]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_OPTIONS
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
         $list[1]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
         $list[1]['title'] = 'Global authorities';
-        $list[1]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES;
+        $list[1]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
         $list[2]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
         $list[2]['title'] = 'Local authorities';
-        $list[2]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES;
+        $list[2]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
         $list[4]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LS);
         $list[4]['title'] = 'Applications';
-        $list[4]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_APPLICATIONS;
+        $list[4]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_APPLICATIONS
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
         $list[5]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LK);
         $list[5]['title'] = 'Local recovery';
-        $list[5]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_RECOVERY;
+        $list[5]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_RECOVERY
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
         ?>
 
         <div id="menuSelect">
@@ -848,7 +853,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refAuthority
+                            . ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refAuthority
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -927,7 +933,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refAuthority
+                            . ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refAuthority
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
 
@@ -1225,8 +1232,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    
-    private string $_referenceAppID = \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS;
+
     private string $_referenceNoPreload = '';
     private string $_referenceActivated = '';
 
@@ -1244,8 +1250,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         echo '<div id="apps">' . "\n";
 
-        $instanceAppsID = $this->_cacheInstance->newNode($this->_referenceAppID);
-$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . $this->_referenceAppID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
+        $instanceAppsID = $this->_cacheInstance->newNode(\Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS);
+$this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $referencePHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceAppsID->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
@@ -1254,7 +1260,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceA
         $appListed = array();
         $linksList = array();
         foreach ($this->_authoritiesInstance->getCodeAuthoritiesEID() as $eid) {
-            $linksList = $instanceAppsID->getLinksOnFields($eid, '', 'f', $this->_referenceAppID, '', $referencePHP);
+            $linksList = $instanceAppsID->getLinksOnFields($eid, '', 'f', \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, '', $referencePHP); // FIXME
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK5 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             foreach ($linksList as $link) {
                 $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1299,7 +1305,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority')
             && !$this->_rescueInstance->getModeRescue()
         ) {
-            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityEID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getServerEntityEID(), '', 'f', \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             foreach ($linksList as $link) {
                 $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1338,7 +1344,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority')
             && !$this->_rescueInstance->getModeRescue()
         ) {
-            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityEID(), '', 'f', $this->_referenceAppID, '', $referencePHP);
+            $linksList = $instanceAppsID->getLinksOnFields($this->_entitiesInstance->getDefaultEntityEID(), '', 'f', \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, '', $referencePHP);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($linksList), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
             foreach ($linksList as $link) {
                 $hashTarget = $link->getParsed()['bl/rl/nid2'];
@@ -1390,6 +1396,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 $this->displayHypertextLink(
                     $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
                     '/?' . ActionsApplications::SYNCHRONIZE . '=0'
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand()
                 );
                 ?>
@@ -1481,7 +1488,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=x_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $instance->getID() . '_' . $refRecovery
+                            . ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refRecovery
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
                     }
@@ -1557,7 +1565,8 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=f_' . $this->_entitiesInstance->getServerEntityEID() . '_' . $id . '_' . $refRecovery
+                            . ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refRecovery
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
 
