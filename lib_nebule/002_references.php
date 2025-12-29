@@ -147,6 +147,7 @@ class References
     public const REFERENCE_NEBULE_OBJET_GROUPE = 'nebule/objet/groupe';
     public const RID_OBJECT_GROUP = '0234bf0d4e61a87d880247ef152655e86bef336a07cfb0ebbbb6fd50a420aeae.sha2.256';
     public const REFERENCE_NEBULE_OBJET_GROUPE_ENTITE = 'nebule/objet/groupe/entite';
+    public const RID_OBJECT_GROUP_ENTITY = '1b77cb5b819b3e6b226368848e2f32bc8731413762e5988b7a9b065b83357ad1.sha2.256';
     public const REFERENCE_NEBULE_OBJET_GROUPE_SUIVI = 'nebule/objet/groupe/suivi';
     public const REFERENCE_NEBULE_OBJET_GROUPE_FERME = 'nebule/objet/groupe/ferme';
     public const REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE = 'nebule/objet/groupe/protege';

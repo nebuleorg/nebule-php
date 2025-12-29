@@ -68,6 +68,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     const MODULE_APP_VIEW_LIST = array('list');
 
     const RESTRICTED_TYPE = 'node';
+    const RESTRICTED_CONTEXT = '';
 
     protected string $_hashGroup;
     protected string $_hashGroupClosed;
@@ -156,7 +157,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                     }
                     if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
                         $hookArray[] = array(
-                            'name' => '::addToGroup',
+                            'name' => '::addMember',
                             'icon' => $this::MODULE_REGISTERED_ICONS[1],
                             'desc' => '',
                             'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -376,6 +377,23 @@ class ModuleGroups extends \Nebule\Library\Modules {
                     );
                 }
                 break;
+
+            case 'addMember':
+                if ($this->_unlocked) {
+                    $hookArray[] = array(
+                        'name' => '::addMember',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                            . '&' . ActionsGroups::ADD_MEMBER . '=' . $object
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                }
+                break;
         }
         return $hookArray;
     }
@@ -459,14 +477,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     protected function _display_InlineMyGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid2' => References::RID_OBJECT_GROUP,
-            'bl/rl/nid3' => References::RID_OBJECT_TYPE,
-        );
-        $instance->getLinks($links, $filter, 'myself', false);
+        $links = $this->_nebuleInstance->getListGroupsLinks($this::RESTRICTED_CONTEXT, 'myself');
         $this->_listOfGroups($links, 'myself', 'myGroups');
     }
 
@@ -480,14 +491,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     protected function _display_InlineOtherGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid2' => References::RID_OBJECT_GROUP,
-            'bl/rl/nid3' => References::RID_OBJECT_TYPE,
-        );
-        $instance->getLinks($links, $filter, 'notmyself', false);
+        $links = $this->_nebuleInstance->getListGroupsLinks($this::RESTRICTED_CONTEXT, 'notmyself');
         $this->_listOfGroups($links, 'all', 'notMyGroups');
     }
 
@@ -501,14 +505,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     protected function _display_InlineAllGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid2' => References::RID_OBJECT_GROUP,
-            'bl/rl/nid3' => References::RID_OBJECT_TYPE,
-        );
-        $instance->getLinks($links, $filter, 'all', false);
+        $links = $this->_nebuleInstance->getListGroupsLinks($this::RESTRICTED_CONTEXT, 'all');
         $this->_listOfGroups($links, 'all', 'notMyGroups');
     }
 
@@ -698,7 +695,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _displayGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instance = new DisplayObject($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
         //$instance->setNID($this->_displayGroupInstance); FIXME
         $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
@@ -716,7 +713,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         //$instance->setStatus('');
         $instance->setEnableFlagUnlocked(false);
         $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
@@ -829,7 +826,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         $instance->setEnableFlagProtection(false);
         $instance->setEnableFlagObfuscate(false);
         $instance->setEnableFlagState(true);
-        $instance->setEnableFlagEmotions(true);
+        $instance->setEnableFlagEmotions(false);
         $instance->setEnableStatus(false);
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
@@ -848,7 +845,41 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _display_InlineAddMembers(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $this->_displayNotImplemented();
+        $listEntities = $this->_listMembersToAdd();
+        $listOkEntities = array();
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        foreach ($listEntities as $nid) {
+            $node = $this->_cacheInstance->newNode($nid);
+            if ((isset($listOkEntities[$nid])) || $this->_nebuleInstance->getCurrentGroupInstance()->getIsMemberNID($nid, 'myself'))
+                continue;
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            $instance->setNID($node);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setIcon($instanceIcon);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableFlagUnlocked(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableRefs(true);
+            $instance->setSelfHookName('addMember');
+            $instance->setEnableStatus(false);
+            $instanceList->addItem($instance);
+            $listOkEntities[$nid] = true;
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+    }
+
+    protected function _listMembersToAdd(): array {
+        return $this->_entitiesInstance->getListEntitiesID();
     }
 
     protected function _listOfGroups(array $links, string $socialClass = 'all', string $hookName = 'notMyGroups'): void {
@@ -923,6 +954,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             '::createGroupObfuscated' => 'Créer un groupe dissimulé',
             '::addMarkedObjects' => 'Ajouter les objets marqués',
             '::addToGroup' => 'Ajouter au groupe',
+            '::addMember' => 'Ajouter un membre',
             '::deleteGroup' => 'Supprimer le groupe',
             '::createTheGroup' => 'Créer le groupe',
             '::nom' => 'Nom',
@@ -966,6 +998,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             '::createGroupObfuscated' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToGroup' => 'Add to group',
+            '::addMember' => 'Add a member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
             '::nom' => 'Name',
@@ -1009,6 +1042,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
             '::createGroupObfuscated' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToGroup' => 'Add to group',
+            '::addMember' => 'Add a member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
             '::nom' => 'Name',
@@ -1055,10 +1089,15 @@ class ModuleGroupEntities extends ModuleGroups {
     );
     const MODULE_APP_ICON_LIST = array('425d033815bd76844fc5100ad0ccb2c3d6cd981315794b95210d6c6ec8da22e8faaf.none.272');
     const RESTRICTED_TYPE = 'entity';
+    const RESTRICTED_CONTEXT = References::RID_OBJECT_GROUP_ENTITY;
 
     protected function _filterGroupByType(string $gid): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return true; // FIXME for group of entities
+    }
+
+    protected function _listMembersToAdd(): array {
+        return $this->_entitiesInstance->getListEntitiesID();
     }
 
     CONST TRANSLATE_TABLE = [

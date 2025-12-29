@@ -1847,7 +1847,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $listOkGroups = array();
 
         // Liste tous les groupes.
-        $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
+        $listGroups = $this->_nebuleInstance->getListGroupsID('', 'myself');
 
         // Affiche les groupes.
         foreach ($listGroups as $id) {
@@ -2209,7 +2209,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche un complément d'information en fonction du type d'objet.
         if ($isEntity) {
             // Liste des groupes fermés dont l'objet est membre.
-            $listGroupsMember = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
+            $listGroupsMember = $this->_nebuleInstance->getListGroupsID('', 'myself');
             $listOkGroups = array();
             $i = 0;
 
@@ -2970,7 +2970,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
         ) {
             // Liste tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID('', 'myself');
 
             //Prépare l'affichage des groupes.
             $list = array();

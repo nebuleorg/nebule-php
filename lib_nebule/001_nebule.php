@@ -587,71 +587,39 @@ class nebule
     }
 
 
-
     /**
      * Recherche des liens par rapport à une référence qui est le type d'objet.
      * La recherche se fait dans les liens de l'objet type.
-     * Cette recherche est utilisée pour retrouver les groupes et les conversations.
-     * Toutes les références et propriétés sont hachées avec un algorithme fixe.
-     * $entity Permet de ne sélectionner que les liens générés par une entité.
+     * Cette recherche est utilisée pour retrouver les groupes et assimilés.
      *
-     * @param string|Node   $type // FIXME
-     * @param string        $socialClass
-     * @param string|Entity $entity // FIXME
+     * @param string $type
+     * @param string $context
+     * @param string $socialClass
+     * @param array  $socialListID
      * @return array:Link
-     * TODO ajouter un filtre sur le type mime des objets.
+     *                              TODO ajouter un filtre sur le type mime des objets.
      */
-    public function getListLinksByType(Node|string $type, string|Entity $entity = '', string $socialClass = ''): array {
-        $result = array();
-        $hashType = '';
-        $hashEntity = '';
+    public function getListLinksByType(string $type, string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        if (! Node::checkNID($type))
+            $type = $this->getFromDataNID($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
+        if ($type == '0')
+            return array();
 
-        // Si le type est une instance, récupère l'ID de l'instance de l'objet du type.
-        if (is_a($type, 'Node')) {
-            $hashType = $type->getID();
-        } else {
-            // Si le type est un ID, l'utilise directement. Sinon calcul l'empreinte du type.
-            if (Node::checkNID($type))
-                $hashType = $type;
-            else
-                $hashType = $this->getFromDataNID($type, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
-            // $type doit être une instance d'objet au final.
-            $type =$this->_cacheInstance->newNode($hashType);
-        }
-        // Si l'ID de l'instance du type est null ou vide, quitte en renvoyant un résultat vide.
-        if ($hashType == '0'
-            || $hashType == ''
-        )
-            return $result;
-
-        // Si l'entité est une instance, récupère l'ID de l'instance de l'entité.
-        if (is_a($entity, 'Node')) {
-            $hashEntity = $entity->getID();
-        } else {
-            // Si l'entité est un ID, l'utilise directement. Sinon calcul de l'empreinte de l'entité.
-            if (Node::checkNID($entity)
-                && $this->getIoInstance()->checkLinkPresent($entity)
-                && $this->getIoInstance()->checkObjectPresent($entity)
-            )
-                $hashEntity = $entity;
-            else
-                $hashEntity = '';
-        }
-
-        // Lit les liens de l'objet de référence.
-        $result = $type->getLinksOnFields(
-            $hashEntity,
+        $instance = $this->_cacheInstance->newNode($type);
+        $result = $instance->getLinksOnFields(
+            '',
             '',
             'l',
             '',
-            $hashType,
-            $this->getFromDataNID(References::REFERENCE_NEBULE_OBJET_TYPE, References::REFERENCE_CRYPTO_HASH_ALGORITHM)
+            $type,
+            References::RID_OBJECT_TYPE,
+            $context,
         );
 
-        // Fait un tri par pertinence sociale.
+        $this->_socialInstance->setList($socialListID, $socialClass);
         $this->_socialInstance->arraySocialFilter($result, $socialClass);
+        $this->_socialInstance->unsetList($socialClass);
 
-        // retourne le résultat.
         return $result;
     }
 
@@ -659,13 +627,14 @@ class nebule
      * Recherche des ID d'objets par rapport à une référence qui est le type d'objet.
      * $entity Permet de ne sélectionner que les liens générés par une entité.
      *
-     * @param string|Node   $type
-     * @param string        $socialClass
-     * @param string|Entity $entity
+     * @param string $type
+     * @param string $context
+     * @param string $socialClass
+     * @param array  $socialListID
      * @return array:Link
      */
-    public function getListIdByType($type = '', $entity = '', string $socialClass = ''): array {
-        $result = $this->getListLinksByType($type, $entity, $socialClass);
+    public function getListIdByType(string $type = '', string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        $result = $this->getListLinksByType($type, $context, $socialClass, $socialListID);
 
         // Extrait les ID.
         foreach ($result as $i => $l)
@@ -679,40 +648,43 @@ class nebule
      * Extrait la liste des liens définissant les groupes d'objets.
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
+     * @param string $context
      * @param string $socialClass
-     * @param Entity $entity
+     * @param array  $socialListID
      * @return array:Link
      */
-    public function getListGroupsLinks(Entity $entity, string $socialClass = ''): array {
-        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
+    public function getListGroupsLinks(string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $context, $socialClass, $socialListID);
     }
 
     /**
      * Extrait la liste des ID des groupes d'objets.
      * $entity Permet de ne sélectionner que les groupes générés par une entité.
      *
-     * @param Entity $entity
+     * @param string $context
      * @param string $socialClass
+     * @param array  $socialListID
      * @return array
      */
-    public function getListGroupsID(Entity $entity, string $socialClass = ''): array {
-        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $entity, $socialClass);
+    public function getListGroupsID(string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $context, $socialClass, $socialListID);
     }
 
     /**
      * Extrait la liste des liens définissant les conversations.
-     * Précalcul le hash de l'objet définissant une conversation.
+     * Pré-calcul le hash de l'objet définissant une conversation.
      * Extrait l'ID de l'entité, si demandé.
      * Liste les liens définissants les différentes conversations.
      * Retourne la liste.
      * $entity : Permet de ne sélectionner que les conversations générées par une entité.
      *
-     * @param Entity $entity
+     * @param string $context
      * @param string $socialClass
+     * @param array  $socialListID
      * @return array
      */
-    public function getListConversationsLinks(Entity $entity, string $socialClass = ''): array {
-        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
+    public function getListConversationsLinks(string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $context, $socialClass, $socialListID);
     }
 
     /**
@@ -720,12 +692,13 @@ class nebule
      * Géré comme des groupes d'objets.
      * $entity Permet de ne sélectionner que les conversations générées par une entité.
      *
-     * @param Entity $entity
+     * @param string $context
      * @param string $socialClass
+     * @param array  $socialListID
      * @return array
      */
-    public function getListConversationsID(Entity $entity, string $socialClass = ''): array {
-        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $entity, $socialClass);
+    public function getListConversationsID(string $context = '', string $socialClass = '', array $socialListID = array()): array {
+        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $context, $socialClass, $socialListID);
     }
 
 

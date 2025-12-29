@@ -84,22 +84,25 @@ class Group extends Node implements nodeInterface {
     public function getProtectedTo(string $socialClass = ''): array { return array(); }
 
 
-
     /**
      * Mark as a group with a link.
-     * @param bool $obfuscated
+     * @param bool   $obfuscated
+     * @param string $context
      * @return boolean
      */
-    public function setAsGroup(bool $obfuscated = false): bool {
+    public function setAsGroup(bool $obfuscated = false, string $context = ''): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
         $this->_isGroup = true;
-        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
+        $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group with context=' . $context, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '763e0c40');
+        if ($context != '')
+            $context = '>' . $context;
         return $this->addLink(
                 'l>' . $this->_id
                 . '>' . References::RID_OBJECT_GROUP
-                . '>' . References::RID_OBJECT_TYPE,
+                . '>' . References::RID_OBJECT_TYPE
+                . $context,
                 $obfuscated);
     }
 
@@ -133,12 +136,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6636179a');
-        return ($this->setAsGroup($obfuscated)
-                && $this->addLink(
-                        'l>' . $this->_id
-                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
-                        . '>' . References::RID_OBJECT_TYPE,
-                        $obfuscated));
+        return ($this->setAsGroup($obfuscated, References::RID_OBJECT_GROUP_ENTITY));
     }
 
     /**
@@ -151,12 +149,7 @@ class Group extends Node implements nodeInterface {
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup' , 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'de5c0565');
-        return ($this->unsetAsGroup($obfuscated)
-                && $this->addLink(
-                        'x>' . $this->_id
-                        . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_ENTITE)
-                        . '>' . References::RID_OBJECT_TYPE,
-                        $obfuscated));
+        return ($this->unsetAsGroup($obfuscated, References::RID_OBJECT_GROUP_ENTITY));
     }
 
 

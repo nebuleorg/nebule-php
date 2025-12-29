@@ -1248,7 +1248,7 @@ class ModuleObjects extends \Nebule\Library\Modules {
             }
 
             // Liste et ajoute tous les groupes.
-            $listGroups = $this->_nebuleInstance->getListGroupsID($this->_entitiesInstance->getGhostEntityInstance(), '');
+            $listGroups = $this->_nebuleInstance->getListGroupsID('', 'myself');
             $typeGroup = false;
             $group = null;
             foreach ($listGroups as $group) {
