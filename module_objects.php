@@ -1,15 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\Actions;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet gérer les objets.
@@ -19,14 +21,14 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleObjects extends \Nebule\Library\Modules {
+class ModuleObjects extends Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -53,7 +55,7 @@ class ModuleObjects extends \Nebule\Library\Modules {
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string    $hookName
-     * @param Node|null $nid
+     * @param \Nebule\Library\Node|null $nid
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
@@ -1182,7 +1184,7 @@ class ModuleObjects extends \Nebule\Library\Modules {
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
                 $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
-                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::ShareObjectProtection');
                 $instance->setIcon($icon);
                 $instance->display();

@@ -1,25 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Option;
-use Nebule\Library\ActionsLinks;use Nebule\Library\Configuration;
-use Nebule\Library\Crypto;use Nebule\Library\DisplayBlankLine;use Nebule\Library\DisplayColor;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayNotify;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Entity;
-use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -53,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251229';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2016-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -717,39 +713,39 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
      */
     private function _displayGlobalAuthorities(): void
     {
-        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Global authorities');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
         $instanceTitle->display();
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceEntity = new DisplayObject($this->_applicationInstance);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceEntity = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $this->_setCommonEntityFlags($instanceEntity, $this->_authoritiesInstance->getPuppetmasterInstance());
         $instanceEntity->setFlagProtection(true);
         $instanceEntity->setEnableRefs(false);
         $instanceList->addItem($instanceEntity);
         foreach (array_merge($this->_authoritiesInstance->getSecurityAuthoritiesInstance(), $this->_authoritiesInstance->getCodeAuthoritiesInstance()) as $instance)
         {
-            $instanceEntity = new DisplayObject($this->_applicationInstance);
+            $instanceEntity = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $this->_setCommonEntityFlags($instanceEntity, $instance);
             $instanceEntity->setEnableRefs(true);
             $instanceEntity->setRefs(array('0' => $this->_authoritiesInstance->getPuppetmasterInstance(),));
             $instanceList->addItem($instanceEntity);
         }
-        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->display();
 
-        $instanceMessage = new DisplayInformation($this->_applicationInstance);
+        $instanceMessage = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instanceMessage->setMessage("The global authorities are entities with specials capabilities on common
             things like code. Global authorities can't be removed or disabled.<br/>&nbsp;");
-        $instanceMessage->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage->setDisplayAlone(true);
-        $instanceMessage->setSize(DisplayItem::SIZE_SMALL);
+        $instanceMessage->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage->display();
     }
 
-    private function _setCommonEntityFlags(DisplayObject $instance, Entity $eid):void {
+    private function _setCommonEntityFlags(\Nebule\Library\DisplayObject $instance, \Nebule\Library\Entity $eid):void {
         $instance->setNID($eid);
         $instance->setEnableNID(false);
         $instance->setEnableName(true);
@@ -769,11 +765,11 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instance->setEnableLink(true);
         $instance->setStatus('');
         $instance->setFlagMessage($this->_getIsInstanceOrDefault($eid)); // FIXME me fonctionne pas
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
-        $instance->setSize(DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
     }
 
-    private function _getIsInstanceOrDefault(Entity $eid): string {
+    private function _getIsInstanceOrDefault(\Nebule\Library\Entity $eid): string {
         $message = '';
         if ($eid->getID() == $this->_entitiesInstance->getServerEntityEID())
             $message = 'Instance entity';
@@ -798,7 +794,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $refAuthority = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_AUTORITE_LOCALE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
         // Primary local authorities
-        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Primary local authorities');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
@@ -814,13 +810,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 $this->_authoritiesInstance->getTimeAuthoritiesEID()) as $id)
             $listOkEntities[$id] = true;
 
-        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($this->_authoritiesInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
             if (!isset($listOkEntities[$instance->getID()])
-                && $instance->getType('all') == Entity::ENTITY_TYPE
+                && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
-                $instanceEntity = new DisplayObject($this->_applicationInstance);
+                $instanceEntity = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $this->_setCommonEntityFlags($instanceEntity, $instance);
                 $instanceEntity->setFlagProtection(true);
                 $instanceEntity->setEnableRefs(false);
@@ -828,7 +824,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             }
             $listOkEntities[$instance->getID()] = true;
         }
-        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->display();
 
         // Secondary local authorities
@@ -836,13 +832,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $instanceTitle->display();
 
         if ($this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')) {
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             foreach ($this->_authoritiesInstance->getLocalPrimaryAuthoritiesInstance() as $instance) {
                 if (!isset($listOkEntities[$instance->getID()])
-                    && $instance->getType('all') == Entity::ENTITY_TYPE
+                    && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
-                    $instanceEntity = new DisplayObject($this->_applicationInstance);
+                    $instanceEntity = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $this->_setCommonEntityFlags($instanceEntity, $instance);
                     $instanceEntity->setFlagProtection(true);
                     $instanceEntity->setEnableRefs(true);
@@ -853,7 +849,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refAuthority
+                            . \Nebule\Library\ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refAuthority
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
@@ -863,20 +859,20 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 $listOkEntities[$instance->getID()] = true;
             }
             if ($this->_unlocked) {
-                $instanceWarn = new DisplayInformation($this->_applicationInstance);
-                $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
                 $instanceWarn->setMessage('On authority removing, need a second page reload to update the liste.');
-                $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+                $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instanceList->addItem($instanceWarn);
             }
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setEnableWarnIfEmpty(true);
             $instanceList->display();
         } else {
-            $instanceWarn = new DisplayInformation($this->_applicationInstance);
-            $instanceWarn->setType(DisplayItemIconMessage::TYPE_WARN);
+            $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
             $instanceWarn->setMessage('::::err_NotPermit');
-            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instanceWarn->display();
         }
 
@@ -885,7 +881,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
         ) {
             $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('Add entities as local authority');
             $instance->setIcon($icon);
             $instance->display();
@@ -901,7 +897,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             foreach ($listEntities as $instance) {
                 $id = $instance->getID();
                 if (!isset($listOkEntities[$id])
-                    && $instance->getType('all') == Entity::ENTITY_TYPE
+                    && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
                     $list[$i]['object'] = $instance;
@@ -933,7 +929,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refAuthority
+                            . \Nebule\Library\ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refAuthority
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
@@ -957,37 +953,37 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             unset($list, $listEntities, $listSigners);
         }
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage1->setMessage("The local authorities are entities with specials capabilities on local
             server.<br/>&nbsp;");
-        $instanceMessage1->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage1->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage1->setIconText('Type');
         $instanceList->addItem($instanceMessage1);
-        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage2 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage2->setMessage("There are two levels of local authorities:<br />
             1: Local forced authorities defined by options, known as primary local authorities.<br />
             2: Local authorities defined by links from primary local authorities, known as secondary local authorities.
             <br/>&nbsp;");
-        $instanceMessage2->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage2->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage2->setIconText('Type');
         $instanceList->addItem($instanceMessage2);
-        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage3->setMessage("An entity can be added as secondary authority and later can be removed.
             <br />
             Primary authorities can't be removed, they are forced by two options on the environment file :
             'permitServerEntityAsAuthority' and 'permitDefaultEntityAsAuthority'.<br/>&nbsp;");
-        $instanceMessage3->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage3->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage3->setIconText('Type');
         $instanceList->addItem($instanceMessage3);
-        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->display();
     }
 
-    private function _permitAction(Entity $eid): bool {
+    private function _permitAction(\Nebule\Library\Entity $eid): bool {
         if ($this->_unlocked
             && (
                 ($eid->getID() == $this->_entitiesInstance->getServerEntityEID()
@@ -1007,7 +1003,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
     private function _displayOptions(): void
     {
-        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Options');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
@@ -1016,22 +1012,22 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         <div id="options">
             <?php
-            foreach (Configuration::OPTIONS_CATEGORIES as $optionCategory) {
+            foreach (\Nebule\Library\Configuration::OPTIONS_CATEGORIES as $optionCategory) {
                 $instanceTitle->setTitle($optionCategory);
                 $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LL);
                 $instanceTitle->setIcon($icon);
                 $instanceTitle->setEnableEntity(false);
                 $instanceTitle->display();
 
-                foreach (Configuration::OPTIONS_LIST as $optionName) {
-                    if (Configuration::OPTIONS_CATEGORY[$optionName] != $optionCategory)
+                foreach (\Nebule\Library\Configuration::OPTIONS_LIST as $optionName) {
+                    if (\Nebule\Library\Configuration::OPTIONS_CATEGORY[$optionName] != $optionCategory)
                         continue;
 
-                    $instanceList = new DisplayList($this->_applicationInstance);
+                    $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
                     $instanceID = $this->_nebuleInstance->getCacheInstance()->newNode('0');
                     $instanceID->setContent($optionName);
-                    $instanceOption = new DisplayObject($this->_applicationInstance);
+                    $instanceOption = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $instanceOption->setNID($instanceID);
                     $instanceOption->setEnableNID(false);
                     $instanceOption->setEnableName(true);
@@ -1040,91 +1036,91 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                     $instanceOption->setEnableIcon(false);
                     $instanceOption->setEnableLink(false);
                     $instanceOption->setEnableJS(false);
-                    $instanceOption->setRatio(DisplayItem::RATIO_LONG);
+                    $instanceOption->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
                     $instanceList->addItem($instanceOption);
 
-                    $instanceState = new DisplayInformation($this->_applicationInstance);
-                    if ($this->_configurationInstance->getOptionAsString($optionName) == Configuration::OPTIONS_DEFAULT_VALUE[$optionName]) {
-                        $instanceState->setType(DisplayItemIconMessage::TYPE_OK);
-                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', by default');
-                    } elseif (Configuration::OPTIONS_CRITICALITY[$optionName] == 'critical') {
-                        $instanceState->setType(DisplayItemIconMessage::TYPE_ERROR);
-                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
-                    } elseif (Configuration::OPTIONS_CRITICALITY[$optionName] == 'careful') {
-                        $instanceState->setType(DisplayItemIconMessage::TYPE_WARN);
-                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                    $instanceState = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                    if ($this->_configurationInstance->getOptionAsString($optionName) == \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$optionName]) {
+                        $instanceState->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
+                        $instanceState->setMessage(\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] . ', by default');
+                    } elseif (\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] == 'critical') {
+                        $instanceState->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+                        $instanceState->setMessage(\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                    } elseif (\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] == 'careful') {
+                        $instanceState->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
+                        $instanceState->setMessage(\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
                     } else {
-                        $instanceState->setType(DisplayItemIconMessage::TYPE_PLAY);
-                        $instanceState->setMessage(Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
+                        $instanceState->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                        $instanceState->setMessage(\Nebule\Library\Configuration::OPTIONS_CRITICALITY[$optionName] . ', changed');
                     }
-                    $instanceState->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceState->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                     $instanceState->setIconText('Status');
                     $instanceList->addItem($instanceState);
 
                     $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
+                        \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
                         $optionCategory,
-                        DisplayItem::RATIO_SHORT,
+                        \Nebule\Library\DisplayItem::RATIO_SHORT,
                         'Category'));
 
                     $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        Configuration::OPTIONS_TYPE[$optionName],
-                        DisplayItem::RATIO_SHORT,
+                        \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
+                        \Nebule\Library\Configuration::OPTIONS_TYPE[$optionName],
+                        \Nebule\Library\DisplayItem::RATIO_SHORT,
                         'Type'));
 
-                    if (!Configuration::OPTIONS_WRITABLE[$optionName]) {
-                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
-                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
+                    if (! \Nebule\Library\Configuration::OPTIONS_WRITABLE[$optionName]) {
+                        $instanceQuery = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
                         $instanceQuery->setMessage('Not writeable');
-                    } elseif (Configuration::getOptionFromEnvironmentAsStringStatic($optionName) != '') { // FIXME ne fonctionne pas
-                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
-                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_WARN);
+                    } elseif (\Nebule\Library\Configuration::getOptionFromEnvironmentAsStringStatic($optionName) != '') { // FIXME ne fonctionne pas
+                        $instanceQuery = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
                         $instanceQuery->setMessage('Forced on config file');
                     } elseif ($this->_unlocked
                         && $this->_entitiesInstance->getGhostEntityEID() == $this->_entitiesInstance->getServerEntityEID() // FIXME doit être dans la liste des entités autorisées
                     ) {
-                        $instanceQuery = new DisplayQuery($this->_applicationInstance);
-                        $instanceQuery->setType(DisplayQuery::QUERY_STRING);
+                        $instanceQuery = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                        $instanceQuery->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
                         $instanceQuery->setMessage('Change value');
                     } else {
-                        $instanceQuery = new DisplayInformation($this->_applicationInstance);
-                        $instanceQuery->setType(DisplayItemIconMessage::TYPE_BACK);
+                        $instanceQuery = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                        $instanceQuery->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
                         $instanceQuery->setLink('?'
                             . References::COMMAND_SWITCH_APPLICATION . '=' . self::REFERENCE_AUTHENTICATION_APPLICATION
                             . '&' . References::COMMAND_APPLICATION_BACK . '=' . Application::APPLICATION_NODE);
                         $instanceQuery->setMessage('Not connected');
                     }
-                    $instanceQuery->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceQuery->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                     $instanceQuery->setIconText('Change value');
                     $instanceList->addItem($instanceQuery);
 
-                    if ($this->_configurationInstance->getOptionAsString($optionName) == Configuration::OPTIONS_DEFAULT_VALUE[$optionName])
+                    if ($this->_configurationInstance->getOptionAsString($optionName) == \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$optionName])
                         $instanceList->addItem($this->_addInfoShort(
-                            DisplayItemIconMessage::TYPE_OK,
+                            \Nebule\Library\DisplayItemIconMessage::TYPE_OK,
                             'Is default value',
-                            DisplayItem::RATIO_SHORT,
+                            \Nebule\Library\DisplayItem::RATIO_SHORT,
                             'Curent value'));
                     else
                         $instanceList->addItem($this->_addInfoShort(
-                            DisplayItemIconMessage::TYPE_INFORMATION,
+                            \Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION,
                             '"' . $this->_configurationInstance->getOptionAsString($optionName) . '"',
-                            DisplayItem::RATIO_LONG,
+                            \Nebule\Library\DisplayItem::RATIO_LONG,
                             'Curent value'));
 
                     $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        '"' . Configuration::OPTIONS_DEFAULT_VALUE[$optionName] . '"',
-                        DisplayItem::RATIO_LONG,
+                        \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
+                        '"' . \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE[$optionName] . '"',
+                        \Nebule\Library\DisplayItem::RATIO_LONG,
                         'Default value'));
 
                     $instanceList->addItem($this->_addInfoShort(
-                        DisplayItemIconMessage::TYPE_MESSAGE,
-                        Configuration::OPTIONS_DESCRIPTION[$optionName],
-                        DisplayItem::RATIO_LONG,
+                        \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
+                        \Nebule\Library\Configuration::OPTIONS_DESCRIPTION[$optionName],
+                        \Nebule\Library\DisplayItem::RATIO_LONG,
                         'Description'));
 
-                    $instanceList->setSize(DisplayItem::SIZE_SMALL);
+                    $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
                     $instanceList->display();
 
                     echo "<br /><br />\n";
@@ -1133,42 +1129,42 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 }
             }
 
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-            $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage1 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceMessage1->setMessage("The type of option can be 'string', 'boolean' or 'integer'. The type
                 is defined by construct and can't be changed.<br/>&nbsp;");
-            $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-            $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
+            $instanceMessage1->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $instanceMessage1->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage1);
 
-            $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage2 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceMessage2->setMessage("Status of an option can be :<br/>
                 - useful : it's value have to be changed for normal operation.<br/>
                 - careful : it's value can be changed for normal operation but be careful this may reduce availability
                 or stability.<br/>
                 - critical : it's value should not be changed for normal operation, it's critical for the security. Be
                 sure it's not an error.<br/>&nbsp;");
-            $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-            $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
+            $instanceMessage2->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $instanceMessage2->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage2);
 
-            $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
+            $instanceMessage3 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceMessage3->setMessage("Protection of an option can be :<br/>
                 - writable : the value can be changed with a link.<br/>
                 - forced : the value have been changed in the local environment file. It can't be changed by link.<br/>
                 - locked : the option is defined as it's value can't be changed by link. It can be overridden in the
                 local environment file.<br/>&nbsp;");
-            $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-            $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
+            $instanceMessage3->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $instanceMessage3->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
             $instanceList->addItem($instanceMessage3);
 
-            $instanceList->setSize(DisplayItem::SIZE_SMALL);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
             $instanceList->display();
     }
 
-    private function _addInfoShort(string $type, string $message, string $ratio, string $iconText):DisplayInformation {
-                    $instanceType = new DisplayInformation($this->_applicationInstance);
+    private function _addInfoShort(string $type, string $message, string $ratio, string $iconText):\Nebule\Library\DisplayInformation {
+                    $instanceType = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                     $instanceType->setType($type);
                     $instanceType->setMessage($message);
                     $instanceType->setRatio($ratio);
@@ -1177,8 +1173,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     }
 
 
-    private function _getInfoAppNoPreload(string $application):DisplayInformation {
-        $instance = new Node($this->_nebuleInstance, $application);
+    private function _getInfoAppNoPreload(string $application):\Nebule\Library\DisplayInformation {
+        $instance = new \Nebule\Library\Node($this->_nebuleInstance, $application);
         $linksList = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -1190,13 +1186,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NoPreload', DisplayItem::RATIO_SHORT, 'Preload');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NoPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
         }
-        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::OkPreload', DisplayItem::RATIO_SHORT, 'Preload');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::OkPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
     }
 
-    private function _getInfoAppActivated(string $application):DisplayInformation {
-        $instance = new Node($this->_nebuleInstance, $application);
+    private function _getInfoAppActivated(string $application):\Nebule\Library\DisplayInformation {
+        $instance = new \Nebule\Library\Node($this->_nebuleInstance, $application);
         $linksList = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -1208,13 +1204,13 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', DisplayItem::RATIO_SHORT, 'Activation');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
         }
-        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', DisplayItem::RATIO_SHORT, 'Activation');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
     }
 
-    private function _getInfoAppRun(string $application):DisplayInformation {
-        $instance = new Node($this->_nebuleInstance, $application);
+    private function _getInfoAppRun(string $application):\Nebule\Library\DisplayInformation {
+        $instance = new \Nebule\Library\Node($this->_nebuleInstance, $application);
         $linksList = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -1226,9 +1222,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', DisplayItem::RATIO_SHORT, 'Activation');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
         }
-        return $this->_addInfoShort(DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', DisplayItem::RATIO_SHORT, 'Activation');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
     }
 
 
@@ -1242,7 +1238,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         $this->_referenceNoPreload = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_DIRECT, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         $this->_referenceActivated = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_ACTIVE, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
         
-        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Applications');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
@@ -1255,7 +1251,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . \Neb
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $referencePHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceAppsID->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-        $instanceList = new DisplayList($this->_applicationInstance);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
         $appListed = array();
         $linksList = array();
@@ -1267,10 +1263,10 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK5 size=' . sizeof($l
                 if (isset($appListed[$hashTarget]))
                     continue;
                 $appListed[$hashTarget] = true;
-                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+                $hashTargetInstance = new \Nebule\Library\Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instanceApplication->setNID($hashTargetInstance);
                 $instanceApplication->setEnableNID(false);
                 $instanceApplication->setEnableName(true);
@@ -1279,24 +1275,24 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 $instanceApplication->setEnableIcon(false);
                 $instanceApplication->setEnableLink(false);
                 $instanceApplication->setEnableJS(false);
-                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceApplication->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
                 $instanceList->addItem($instanceApplication);
 
                 $instanceList->addItem($this->_addInfoShort(
-                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
                     $eid,
-                    DisplayItem::RATIO_SHORT,
+                    \Nebule\Library\DisplayItem::RATIO_SHORT,
                     'Signer EID'));
                 $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
                 $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
 
-                $instanceOpen = new DisplayInformation($this->_applicationInstance);
-                $instanceOpen->setType(DisplayItemIconMessage::TYPE_PLAY);
+                $instanceOpen = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instanceOpen->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
                 $instanceOpen->setLink('?' . References::COMMAND_SWITCH_APPLICATION . '=' . $hashTarget);
                 $instanceOpen->setMessage(':::Open');
                 $instanceList->addItem($instanceOpen);
 
-                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceLB = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
                 $instanceList->addItem($instanceLB);
             }
         }
@@ -1312,10 +1308,10 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK7 size=' . sizeof($l
                 if (isset($appListed[$hashTarget]))
                     continue;
                 $appListed[$hashTarget] = true;
-                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+                $hashTargetInstance = new \Nebule\Library\Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instanceApplication->setNID($hashTargetInstance);
                 $instanceApplication->setEnableNID(false);
                 $instanceApplication->setEnableName(true);
@@ -1324,18 +1320,18 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK8 target=' . $hashTa
                 $instanceApplication->setEnableIcon(false);
                 $instanceApplication->setEnableLink(false);
                 $instanceApplication->setEnableJS(false);
-                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceApplication->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
                 $instanceList->addItem($instanceApplication);
 
                 $instanceList->addItem($this->_addInfoShort(
-                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
                     $this->_entitiesInstance->getServerEntityEID(),
-                    DisplayItem::RATIO_SHORT,
+                    \Nebule\Library\DisplayItem::RATIO_SHORT,
                     'Signer EID'));
                 $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
                 $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
 
-                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceLB = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
                 $instanceList->addItem($instanceLB);
             }
         }
@@ -1351,10 +1347,10 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK9 size=' . sizeof($l
                 if (isset($appListed[$hashTarget]))
                     continue;
                 $appListed[$hashTarget] = true;
-                $hashTargetInstance = new Node($this->_nebuleInstance, $hashTarget);
+                $hashTargetInstance = new \Nebule\Library\Node($this->_nebuleInstance, $hashTarget);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashTarget, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 
-                $instanceApplication = new DisplayObject($this->_applicationInstance);
+                $instanceApplication = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instanceApplication->setNID($hashTargetInstance);
                 $instanceApplication->setEnableNID(false);
                 $instanceApplication->setEnableName(true);
@@ -1363,24 +1359,24 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 $instanceApplication->setEnableIcon(false);
                 $instanceApplication->setEnableLink(false);
                 $instanceApplication->setEnableJS(false);
-                $instanceApplication->setRatio(DisplayItem::RATIO_LONG);
+                $instanceApplication->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
                 $instanceList->addItem($instanceApplication);
 
                 $instanceList->addItem($this->_addInfoShort(
-                    DisplayItemIconMessage::TYPE_MESSAGE,
+                    \Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE,
                     $this->_entitiesInstance->getDefaultEntityEID(),
-                    DisplayItem::RATIO_SHORT,
+                    \Nebule\Library\DisplayItem::RATIO_SHORT,
                     'Signer EID'));
                 $instanceList->addItem($this->_getInfoAppNoPreload($hashTarget));
                 $instanceList->addItem($this->_getInfoAppActivated($hashTarget));
 
-                $instanceLB = new DisplayBlankLine($this->_applicationInstance);
+                $instanceLB = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
                 $instanceList->addItem($instanceLB);
             }
         }
         unset($linksList);
 
-        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->display();
 
         /* TODO synchro all apps updates
@@ -1395,7 +1391,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 <?php
                 $this->displayHypertextLink(
                     $this->convertInlineIconFace(Displays::DEFAULT_ICON_SYNOBJ) . 'Synchronize all applications',
-                    '/?' . ActionsApplications::SYNCHRONIZE . '=0'
+                    '/?' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand()
                 );
@@ -1405,45 +1401,45 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             <?php
         }*/
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage1->setMessage('Many different applications can be used. The application to use can
             be selected from the list on <a href="?a=1">application 1</a> or here on this list.<br/>
             At any time you can switch to another application and come back later to the first one without losing work
             in progress or authentication.<br/>&nbsp;');
-        $instanceMessage1->setRatio(DisplayItem::RATIO_LONG);
+        $instanceMessage1->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
         $instanceList->addItem($instanceMessage1);
 
-        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage2 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage2->setMessage("An application can be enabled or disabled.<br/>
             To be usable, each application have to be enabled on the list here. Without activation, the bootstrap
             refuse to load an application.<br/>
             To be enabled, an application have to be activated with a link generated by a local authority.<br/>
             By default, the application 'option' is automatically enabled and can't be disabled.<br/>&nbsp;");
-        $instanceMessage2->setRatio(DisplayItem::RATIO_LONG);
+        $instanceMessage2->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
         $instanceList->addItem($instanceMessage2);
 
-        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage3->setMessage('All applications can be synchronized to get last updates.<br/>
             Synchronization must be enabled with the option <i>permitSynchronizeApplication</i> and if needed with
             the option <i>permitPublicSynchronizeApplication</i>.<br/>&nbsp;');
-        $instanceMessage3->setRatio(DisplayItem::RATIO_LONG);
+        $instanceMessage3->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
         $instanceList->addItem($instanceMessage3);
 
-        $instanceMessage4 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage4->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage4 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage4->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage4->setMessage('Each application is declared by the
             <a href="http://code.master.nebule.org">code master</a> or by a local authority and can be updated by a
             local authority.<br/>
             On first loading of an application, a preload permit to enhance the user experience. The preload can be
             disabled for an application by the code master or by a local authority.<br/>&nbsp;');
-        $instanceMessage4->setRatio(DisplayItem::RATIO_LONG);
+        $instanceMessage4->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
         $instanceList->addItem($instanceMessage4);
 
-        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->display();
 
         echo "</div>\n";
@@ -1457,7 +1453,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
      */
     private function _displayRecoveryEntities(): void
     {
-        $instanceTitle = new DisplayTitle($this->_applicationInstance);
+        $instanceTitle = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instanceTitle->setTitle('Local recovery');
         $instanceTitle->setIcon(null);
         $instanceTitle->setEnableEntity(true);
@@ -1471,13 +1467,13 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         if ($this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')) {
             $refRecovery = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_RECOUVREMENT, References::REFERENCE_CRYPTO_HASH_ALGORITHM);
 
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             foreach ($this->_recoveryInstance->getRecoveryEntitiesInstance() as $instance) {
                 if (!isset($listOkEntities[$instance->getID()])
-                    && $instance->getType('all') == Entity::ENTITY_TYPE
+                    && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
-                    $instanceEntity = new DisplayObject($this->_applicationInstance);
+                    $instanceEntity = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $this->_setCommonEntityFlags($instanceEntity, $instance);
                     $instanceEntity->setFlagProtection(true);
                     $instanceEntity->setEnableRefs(true);
@@ -1488,7 +1484,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[0]['name'] = 'Remove';
                         $list[0]['icon'] = Displays::DEFAULT_ICON_LX;
                         $list[0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refRecovery
+                            . \Nebule\Library\ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $instance->getID() . '>' . $refRecovery
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $instanceEntity->setSelfHookList($list);
@@ -1498,19 +1494,19 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                 $listOkEntities[$instance->getID()] = true;
             }
             if ($this->_unlocked) {
-                $instanceWarn = new DisplayInformation($this->_applicationInstance);
-                $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
                 $instanceWarn->setMessage('On authority removing, need a second page reload to update the liste.');
                 $instanceList->addItem($instanceWarn);
             }
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setEnableWarnIfEmpty(true);
             $instanceList->display();
         } else {
-            $instanceWarn = new DisplayInformation($this->_applicationInstance);
-            $instanceWarn->setType(DisplayItemIconMessage::TYPE_WARN);
+            $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
             $instanceWarn->setMessage('::::err_NotPermit');
-            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instanceWarn->display();
         }
 
@@ -1519,7 +1515,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
             $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('Add entities as recovery');
             $instance->setIcon($icon);
             $instance->display();
@@ -1535,7 +1531,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             foreach ($listEntities as $instance) {
                 $id = $instance->getID();
                 if (!isset($listOkEntities[$id])
-                    && $instance->getType('all') == Entity::ENTITY_TYPE
+                    && $instance->getType('all') == \Nebule\Library\Entity::ENTITY_TYPE
                     && $instance->getIsPublicKey()
                 ) {
                     $list[$i]['object'] = $instance;
@@ -1565,7 +1561,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
                         $list[$i]['param']['selfHookList'][0]['name'] = 'Add';
                         $list[$i]['param']['selfHookList'][0]['icon'] = Displays::DEFAULT_ICON_LL;
                         $list[$i]['param']['selfHookList'][0]['link'] = '/?'
-                            . ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refRecovery
+                            . \Nebule\Library\ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getServerEntityEID() . '>' . $id . '>' . $refRecovery
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
@@ -1587,26 +1583,26 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             unset($list);
         }
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceMessage1 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage1->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceMessage1 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage1->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage1->setMessage("The recovery entities can, if needed, unprotect an object. This can be a security choose in an enterprise or legal contraint in some countries.");
-        $instanceMessage1->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage1->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage1->setIconText('Type');
         $instanceList->addItem($instanceMessage1);
-        $instanceMessage2 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage2->setType(DisplayItemIconMessage::TYPE_WARN);
+        $instanceMessage2 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage2->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
         $instanceMessage2->setMessage("Whatever the entity that protect an object, the protection is automatically and silently shared with recovery entities. All recovery entities are displayed here, none are hidden.");
-        $instanceMessage2->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage2->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage2->setIconText('Type');
         $instanceList->addItem($instanceMessage2);
-        $instanceMessage3 = new DisplayInformation($this->_applicationInstance);
-        $instanceMessage3->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+        $instanceMessage3 = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceMessage3->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
         $instanceMessage3->setMessage("An entity can be added as recovery entity and later can be removed. Entities marqued as instance entity or default entity can't be removed, they are forced by two options on the environment file : 'permitServerEntityAsRecovery' and 'permitDefaultEntityAsRecovery'.");
-        $instanceMessage3->setRatio(DisplayItem::SIZE_SMALL);
+        $instanceMessage3->setRatio(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceMessage3->setIconText('Type');
         $instanceList->addItem($instanceMessage3);
-        $instanceList->setSize(DisplayItem::SIZE_SMALL);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->display();
     }
 

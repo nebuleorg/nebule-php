@@ -1,19 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Qantion;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\Entity;
-use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
-use const Nebule\Bootstrap\BOOTSTRAP_NAME;
-use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
-use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
-use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -47,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -732,8 +734,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         }
 
         // Détermine si c'est une entité.
-        $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
+        $objHead = $object->readOneLineAsText(\Nebule\Library\Entity::ENTITY_MAX_SIZE);
+        $isEntity = ($typemime == \Nebule\Library\Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');
@@ -864,7 +866,7 @@ class Translate extends Translates {}
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp
+class ModuleHelp extends ModelModuleHelp
 {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251227';

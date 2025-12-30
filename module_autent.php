@@ -1,18 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Library\DisplayBlankLine;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplaySecurity;
-use Nebule\Library\Metrology;
-use Nebule\Library\Node;
+use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet gérer les objets.
@@ -22,14 +21,14 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleAutent extends \Nebule\Library\Modules {
+class ModuleAutent extends Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::autent:module:objects:ModuleName';
     const MODULE_MENU_NAME = '::autent:module:objects:MenuName';
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
     const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
-    const MODULE_VERSION = '020251026';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -110,29 +109,29 @@ class ModuleAutent extends \Nebule\Library\Modules {
         ) {
             $urlLink = '/?f';
             $title = '::::err_NotPermit';
-            $type = DisplayItemIconMessage::TYPE_ERROR;
+            $type = \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR;
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[2];
             $title = '::logout';
-            $type = DisplayItemIconMessage::TYPE_WARN;
+            $type = \Nebule\Library\DisplayItemIconMessage::TYPE_WARN;
         } else {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '='. $this::MODULE_REGISTERED_VIEWS[1];
             $title = '::login';
-            $type = DisplayItemIconMessage::TYPE_PLAY;
+            $type = \Nebule\Library\DisplayItemIconMessage::TYPE_PLAY;
         }
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         if (!$this->_unlocked)
             $this->_displayAddButton($instanceList, $title, $type, $urlLink, '::connexion');
-        $this->_displayAddButton($instanceList, '::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $this->_displayAddButton($instanceList, '::return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         if ($this->_unlocked)
             $this->_displayAddButton($instanceList, $title, $type, $urlLink, '::connexion');
         $instanceList->setOnePerLine();
@@ -146,8 +145,8 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_metrologyInstance->addLog('Display login ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '61a2b0dd');
         $this->_displaySimpleTitle('::login');
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
@@ -157,7 +156,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
                 && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
                 $this->_displayAddButtonQuery($instanceList,
                     '::::Password',
-                    DisplayQuery::QUERY_PASSWORD,
+                    \Nebule\Library\DisplayQuery::QUERY_PASSWORD,
                     '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
@@ -165,13 +164,13 @@ class ModuleAutent extends \Nebule\Library\Modules {
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                     References::COMMAND_PASSWORD);
             else
-                $this->_displayAddButton($instanceList, '::::err_NotPermit', DisplayItemIconMessage::TYPE_ERROR, '');
+                $this->_displayAddButton($instanceList, '::::err_NotPermit', \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR, '');
         } else
-            $this->_displayAddButton($instanceList, '::err_NoPrivKey', DisplayItemIconMessage::TYPE_ERROR, '');
+            $this->_displayAddButton($instanceList, '::err_NoPrivKey', \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
         $this->_displayAddButton($instanceList,
             '::return',
-            DisplayItemIconMessage::TYPE_BACK,
+            \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->setOnePerLine();
         $instanceList->display();
@@ -184,14 +183,14 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $this->_metrologyInstance->addLog('Display logout ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '833de289');
         $this->_displaySimpleTitle('::logout');
 
-        $instanceList = new DisplayList($this->_applicationInstance);
-        $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $this->_displayAddSecurity($instanceList, false);
         $this->_addBlankLine($instanceList);
         $this->_displayAddEID($instanceList, $this->_entitiesInstance->getGhostEntityInstance(), false);
         $this->_displayAddButton($instanceList,
             '::selfLogout',
-            DisplayItemIconMessage::TYPE_PLAY,
+            \Nebule\Library\DisplayItemIconMessage::TYPE_PLAY,
             '/?' . References::COMMAND_AUTH_ENTITY_LOGOUT
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
@@ -200,18 +199,18 @@ class ModuleAutent extends \Nebule\Library\Modules {
             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         $this->_displayAddButton($instanceList,
             '::flush',
-            DisplayItemIconMessage::TYPE_ERROR,
+            \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR,
             '/?f',
             '::flush');
         $this->_addBlankLine($instanceList);
-        $this->_displayAddButton($instanceList, '::return', DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
+        $this->_displayAddButton($instanceList, '::return', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK, '/?'. References::COMMAND_SWITCH_APPLICATION . '=' . $this->_comebackAppId);
         $instanceList->setOnePerLine();
         $instanceList->display();
     }
 
-    private function _displayAddEID(DisplayList $instanceList, Node $eid, bool $isKey): void {
+    private function _displayAddEID(\Nebule\Library\DisplayList $instanceList, \Nebule\Library\Node $eid, bool $isKey): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = new DisplayObject($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($eid);
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
@@ -227,7 +226,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setStatus('');
         if ($isKey) {
             $instance->setEnableFlagUnlocked(false);
@@ -243,30 +242,30 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddSecurity(DisplayList $instanceList, bool $displayFull): void {
-        $instance = new DisplaySecurity($this->_applicationInstance);
+    private function _displayAddSecurity(\Nebule\Library\DisplayList $instanceList, bool $displayFull): void {
+        $instance = new \Nebule\Library\DisplaySecurity($this->_applicationInstance);
         $instance->setSocial('all');
         $instance->setDisplayOK(!$displayFull);
         $instance->setDisplayFull($displayFull);
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddButton(DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
+    private function _displayAddButton(\Nebule\Library\DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = new DisplayInformation($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
         $instance->setSocial('all');
         $instance->setType($type);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setLink($link);
         if ($title != '')
             $instance->setIconText($title);
         $instanceList->addItem($instance);
     }
 
-    private function _displayAddButtonQuery(DisplayList $instanceList, string $message, string $type, string $link, string $inputName): void {
+    private function _displayAddButtonQuery(\Nebule\Library\DisplayList $instanceList, string $message, string $type, string $link, string $inputName): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = new DisplayQuery($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
         $instance->setIconText($message);
         $instance->setSocial('all'); // FIXME ne marche pas
         $instance->setType($type);
@@ -276,7 +275,7 @@ class ModuleAutent extends \Nebule\Library\Modules {
         $instanceList->addItem($instance);
     }
 
-    private function _addBlankLine(DisplayList $instanceList): void
+    private function _addBlankLine(\Nebule\Library\DisplayList $instanceList): void
     {
         $instance = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
         $instanceList->addItem($instance);

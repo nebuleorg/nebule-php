@@ -1,18 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\Actions;
-use Nebule\Library\ActionsApplications;
-use Nebule\Library\ActionsLinks;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet de gérer les applications.
@@ -25,7 +24,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleManage extends \Nebule\Library\Modules
+class ModuleManage extends Modules
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -33,7 +32,7 @@ class ModuleManage extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251116';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -77,7 +76,7 @@ class ModuleManage extends \Nebule\Library\Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string    $hookName
-     * @param Node|null $nid
+     * @param \Nebule\Library\Node|null $nid
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
@@ -121,7 +120,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . ActionsApplications::SYNCHRONIZE . '=0'
+                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=0'
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -162,7 +161,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . ActionsApplications::SYNCHRONIZE . '=' . $object
+                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -298,7 +297,7 @@ class ModuleManage extends \Nebule\Library\Modules
                 $this->_actionAddModuleName = $arg_name;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module NAME:' . $arg_name, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8e89341e');
             }
-            if (Node::checkNID($arg_rid)) {
+            if (\Nebule\Library\Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module RID:' . $arg_rid, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8b454112');
             }
@@ -328,11 +327,11 @@ class ModuleManage extends \Nebule\Library\Modules
             $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             $arg_id = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
 
-            if (Node::checkNID($arg_rid)) {
+            if (\Nebule\Library\Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
                 $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module RID:' . $arg_id, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c7317945');
             }
-            if (Node::checkNID($arg_id)
+            if (\Nebule\Library\Node::checkNID($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($arg_id)
                 && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($arg_id)
@@ -367,7 +366,7 @@ class ModuleManage extends \Nebule\Library\Modules
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add module', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '25403222');
 
             // Crée l'objet de la référence de l'application.
-            $instance = new Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
+            $instance = new \Nebule\Library\Node($this->_nebuleInstance, $this->_actionAddModuleRID, '', false, false);
 
             // Création du type mime.
             $instance->setType(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
@@ -432,7 +431,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayModules(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::Modules');
         $instance->setIcon($icon);
         $instance->display();
@@ -580,7 +579,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayModule(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::Module');
         $instance->setIcon($icon);
         $instance->display();
@@ -825,7 +824,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . ActionsLinks::SIGN1 . '=x>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IOK;
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::ModuleEnabled');
@@ -834,7 +833,7 @@ class ModuleManage extends \Nebule\Library\Modules
                         $dispHook['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $className
-                            . '&' . ActionsLinks::SIGN1 . '=f>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=f>' . $rid . '>' . References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_ACTIVE . '>' . $rid // FIXME
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         $dispHook['icon'] = Displays::DEFAULT_ICON_IERR;
                         $dispHook['name'] = $this->_translateInstance->getTranslate('::ModuleDisabled');
@@ -939,7 +938,7 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayCreateModule(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::create:createModule');
         $instance->setIcon($icon);
         $instance->display();
@@ -992,14 +991,14 @@ class ModuleManage extends \Nebule\Library\Modules
     private function _displayChangeCode(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::create:addModuleCode');
         $instance->setIcon($icon);
         $instance->display();
 
         // Extrait le RID si nouveau module créé.
         $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if (Node::checkNID($arg_rid)) {
+        if (\Nebule\Library\Node::checkNID($arg_rid)) {
             $rid = $arg_rid;
             $newCode = true;
         } else {

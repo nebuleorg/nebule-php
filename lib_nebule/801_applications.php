@@ -13,7 +13,7 @@ use Nebule\Application\Option\Translate;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Applications extends Functions implements applicationInterface
+abstract class Applications extends Functions implements ApplicationInterface
 {
     const APPLICATION_NAME = 'undef';
     const APPLICATION_SURNAME = 'undef';

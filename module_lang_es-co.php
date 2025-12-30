@@ -3,22 +3,31 @@ declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
- * This module add translation in Spanish ES-CO.
+ * This module adds translation in Spanish ES-CO.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleTranslateESCO extends \Nebule\Library\ModuleTranslates
+class ModuleTranslateESCO extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'es-co';
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd.sha2.256';

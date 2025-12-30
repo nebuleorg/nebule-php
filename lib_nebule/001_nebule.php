@@ -10,11 +10,10 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class nebule
-{
+class nebule {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251229';
+    const NEBULE_VERSION = '020251230';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';

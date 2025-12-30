@@ -1,23 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Autent;
-use Nebule\Library\DisplayItemIconMessage; // For application and module autent
-use Nebule\Library\DisplayNotify;
-use Nebule\Library\Metrology;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
+use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
-use Nebule\Library\Node; // For module autent
-use Nebule\Library\Modules; // For module autent
-use Nebule\Library\DisplayInformation; // For module autent
-use Nebule\Library\DisplayItem; // For module autent
-use Nebule\Library\DisplayList; // For module autent
-use Nebule\Library\DisplayObject; // For module autent
-use Nebule\Library\DisplayQuery; // For module autent
-use Nebule\Library\DisplaySecurity; // For module autent
-use Nebule\Library\DisplayTitle; // For module autent
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -51,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251116';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2023-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';

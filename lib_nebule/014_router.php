@@ -30,7 +30,7 @@ class Router extends Functions
     private array $_applicationSID = array();
     private string $_applicationNameSpace = '';
     private bool $_applicationNoPreload = false;
-    private ?applicationInterface $applicationInstance = null;
+    private ?ApplicationInterface $applicationInstance = null;
     private bool $_initStatus = false;
 
     protected function _initialisation(): void {

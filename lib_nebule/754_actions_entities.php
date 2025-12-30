@@ -375,7 +375,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     private function _changePassword(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changePasswordTry = true;
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity'))
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntityAction'))
             return;
         $instance = $this->_entitiesInstance->getConnectedEntityInstance();
         $_changePassword1 = $this->getFilterInput(self::CHANGE_PASSWORD1, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -414,7 +414,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ((!$this->_entitiesInstance->getConnectedEntityIsUnlocked() && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
             || !$this->_tokenizeInstance->checkActionToken()
-            || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
+            || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntityAction')
         )
             return;
 

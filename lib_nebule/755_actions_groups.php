@@ -56,12 +56,12 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $createTypeMime = $this->getFilterInput(self::CREATE_TYPE_MIME, FILTER_FLAG_NO_ENCODE_QUOTES);
         if ($createTypeMime == 'Conversation') {
-            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversation')) {
+            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversationAction')) {
                 $this->_metrologyInstance->addLog('unauthorized to use conversations', Metrology::LOG_LEVEL_ERROR, __METHOD__, '33a74144');
                 return;
             }
         } else {
-            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroupAction')) {
                 $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '44f2509d');
                 return;
             }

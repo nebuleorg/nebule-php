@@ -1,29 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Neblog;
-use Nebule\Library\ModelModuleHelp;
-use Nebule\Library\applicationInterface;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\Entity;
-use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
-use Nebule\Library\Modules;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
-use const Nebule\Bootstrap\BOOTSTRAP_NAME;
-use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
-use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
-use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -57,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';

@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet de gérer les languages.
@@ -21,7 +21,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleLang extends \Nebule\Library\Modules
+class ModuleLang extends Modules
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -29,7 +29,7 @@ class ModuleLang extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'lang';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';

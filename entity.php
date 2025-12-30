@@ -1,33 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Entity;
-use Nebule\Library\ModelModuleHelp;
-use Nebule\Library\applicationInterface;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\Entity;
-use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
-use Nebule\Library\Actions;
-use Nebule\Library\ActionsEntities;
-use Nebule\Library\ActionsLinks;
-use Nebule\Library\ActionsGroups;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
-use Nebule\Library\Modules;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
-use const Nebule\Bootstrap\BOOTSTRAP_NAME;
-use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
-use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
-use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -61,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
@@ -208,8 +196,8 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
     {
         $this->setUrlLinkPrefix('Nebule\Library\Node', '?a=4&l=');
         $this->setUrlLinkPrefix('Nebule\Library\Entity', '?a=' . $this->_applicationInstance::APPLICATION_NODE
-            . '&'. self::COMMAND_DISPLAY_MODE . '=' . ModuleEntities::MODULE_COMMAND_NAME
-            . '&'. self::COMMAND_DISPLAY_VIEW . '=' . ModuleEntities::MODULE_DEFAULT_VIEW
+            . '&'. self::COMMAND_DISPLAY_MODE . '=' . self::DEFAULT_DISPLAY_MODE
+            . '&'. self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_DISPLAY_VIEW
             . '&' . References::COMMAND_SELECT_ENTITY . '=');
     }
 

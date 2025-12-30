@@ -1,28 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\Actions;
-use Nebule\Library\ActionsEntities;
-use Nebule\Library\ActionsGroups;
-use Nebule\Library\ActionsLinks;
-use Nebule\Library\Cache;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayNotify;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Group;
-use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * This module can manage groups of everything.
@@ -32,14 +21,14 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleGroups extends \Nebule\Library\Modules {
+class ModuleGroups extends Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -72,8 +61,8 @@ class ModuleGroups extends \Nebule\Library\Modules {
 
     protected string $_hashGroup;
     protected string $_hashGroupClosed;
-    protected Node $_hashGroupObject;
-    protected Node $_hashGroupClosedObject;
+    protected \Nebule\Library\Node $_hashGroupObject;
+    protected \Nebule\Library\Node $_hashGroupClosedObject;
     
     protected function _initialisation(): void
     {
@@ -189,7 +178,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                 $hookArray[1]['desc'] = '';
                 $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                    . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                    . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
@@ -213,7 +202,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                            . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
@@ -235,7 +224,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         $hookArray[1]['desc'] = '';
                         $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -245,7 +234,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         $hookArray[2]['desc'] = '';
                         $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                            . '&' . ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
@@ -258,7 +247,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         $hookArray[0]['desc'] = '';
                         $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=f_' . $this->_hashGroup . '_' . $object . '_0'
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
@@ -369,7 +358,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
-                            . '&' . ActionsGroups::ADD_MEMBER . '=' . $this->_nebuleInstance->getCurrentEntityEID()
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -386,7 +375,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
-                            . '&' . ActionsGroups::ADD_MEMBER . '=' . $object
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $object
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -568,16 +557,16 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _displayGroupCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $instanceList = new DisplayList($this->_applicationInstance);
-            $instance = new DisplayInformation($this->_applicationInstance);
-            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
                 $instance->setMessage('::createGroupOK');
-                $instance->setType(DisplayItemIconMessage::TYPE_OK);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::::OK');
                 $instanceList->addItem($instance);
 
-                $instance = new DisplayObject($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
                 //$instance->setNID($this->_displayGroupInstance); FIXME
                 $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
@@ -595,21 +584,21 @@ class ModuleGroups extends \Nebule\Library\Modules {
                 $instance->setEnableContent(false);
                 $instance->setEnableJS(false);
                 $instance->setEnableLink(true);
-                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
                 $instance->setEnableFlagUnlocked(false);
                 $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['grpobj']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
                 $instance->setIcon($instanceIcon2);
             } else {
-                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                 $instance->setMessage('::createGroupNOK');
-                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
-                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::::ERROR');
             }
             $instanceList->addItem($instance);
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
@@ -623,37 +612,37 @@ class ModuleGroups extends \Nebule\Library\Modules {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . ActionsGroups::CREATE
-                    . '&' . ActionsGroups::CREATE_TYPE_MIME . '=Group'
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Group'
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
             $instance->setInputValue('');
-            $instance->setInputName(ActionsGroups::CREATE_NAME);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_NAME);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
             $instance->setLink($commonLink);
             $instance->setWithSubmit(false);
-            $instance->setIconRID(DisplayItemIconMessage::ICON_WARN_RID);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
             
             if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE) {
-                $instance = new DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::limitedType', $this->_translateInstance->getTranslate('::::' . $this::RESTRICTED_TYPE));
-                $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::limitedType', $this->_translateInstance->getTranslate('::' . $this::RESTRICTED_TYPE));
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION);
             } else {
-                $instance = new DisplayQuery($this->_applicationInstance);
-                $instance->setType(DisplayQuery::QUERY_SELECT);
-                $instance->setInputName(ActionsGroups::CREATE_CONTEXT);
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CONTEXT);
                 $instance->setIconText('::membersType');
                 $instance->setSelectList(array(
-                    '::::' . ModuleGroups::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::::' . ModuleGroups::RESTRICTED_TYPE),
-                    '::::' . ModuleGroupEntities::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::::' . ModuleGroupEntities::RESTRICTED_TYPE),
+                    ModuleGroups::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::' . ModuleGroups::RESTRICTED_TYPE),
+                    ModuleGroupEntities::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::' . ModuleGroupEntities::RESTRICTED_TYPE),
                 ));
                 $instance->setWithFormOpen(false);
                 $instance->setWithFormClose(false);
@@ -661,53 +650,53 @@ class ModuleGroups extends \Nebule\Library\Modules {
             }
             $instanceList->addItem($instance);
             
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(ActionsGroups::CREATE_CLOSED);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
             $instance->setIconText('::createGroupClosed');
             $instance->setSelectList(array(
-                'y' => $this->_translateInstance->getTranslate('::::yes'),
-                'n' => $this->_translateInstance->getTranslate('::::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+                'n' => $this->_translateInstance->getTranslate('::no'),
             ));
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(ActionsGroups::CREATE_OBFUSCATED);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
             $instance->setIconText('::createGroupObfuscated');
             $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::::no'),
-                'y' => $this->_translateInstance->getTranslate('::::yes'),
+                'n' => $this->_translateInstance->getTranslate('::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
             ));
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_TEXT);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
             $instance->setMessage('::createTheGroup');
             $instance->setInputValue('');
             $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
             if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE)
-                $instance->setHiddenInput1(ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_TYPE);
+                $instance->setHiddenInput1(\Nebule\Library\ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_TYPE);
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
             $instance->setWithSubmit(true);
-            $instance->setIconRID(DisplayItemIconMessage::ICON_PLAY_RID);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
             $instanceList->addItem($instance);
 
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         } else {
-            $instance = new DisplayNotify($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
             $instance->setMessage('::::err_NotPermit');
-            $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }
     }
@@ -814,7 +803,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _displayAddToGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instance = new DisplayObject($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
         $instance->setNID($this->_nebuleInstance->getCurrentEntityInstance());
         $instance->setEnableColor(true);
@@ -831,7 +820,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setStatus('');
         $instance->setEnableFlagUnlocked(true);
         //$instance->setSelfHookName('typeMenuEntity');
@@ -862,7 +851,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
     protected function _displayAddMembers(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instance = new DisplayObject($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
         //$instance->setNID($this->_displayGroupInstance); FIXME
         $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
@@ -880,7 +869,7 @@ class ModuleGroups extends \Nebule\Library\Modules {
         $instance->setEnableContent(false);
         $instance->setEnableJS(false);
         $instance->setEnableLink(true);
-        $instance->setRatio(DisplayItem::RATIO_SHORT);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         //$instance->setStatus('');
         $instance->setEnableFlagUnlocked(false);
         $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);

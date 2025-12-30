@@ -3,6 +3,15 @@ declare(strict_types=1);
 namespace Nebule\Application\Modules;
 use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet la traduction en français FR-FR.
@@ -12,13 +21,13 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleTranslateFRFR extends \Nebule\Library\ModuleTranslates
+class ModuleTranslateFRFR extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'fr-fr';
     const MODULE_NAME = '::translateModule:fr-fr:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:fr-fr:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';

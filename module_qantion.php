@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet de gérer les groupes.
@@ -18,7 +21,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleQantion extends \Nebule\Library\Modules
+class ModuleQantion extends Modules
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -26,7 +29,7 @@ class ModuleQantion extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'qantion';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2019-2025';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
@@ -165,7 +168,7 @@ class archiveActionsQantion {
 
     protected bool $_actionCreateCurrency = false;
     protected string $_actionCreateCurrencyID = '';
-    protected ?Currency $_actionCreateCurrencyInstance = null;
+    protected ?\Nebule\Library\Currency $_actionCreateCurrencyInstance = null;
     protected array $_actionCreateCurrencyParam = array();
     protected bool $_actionCreateCurrencyError = false;
     protected string $_actionCreateCurrencyErrorMessage = 'Initialisation de la création.';
@@ -177,7 +180,7 @@ class archiveActionsQantion {
     {
         return $this->_actionCreateCurrencyID;
     }
-    public function getCreateCurrencyInstance(): ?Currency
+    public function getCreateCurrencyInstance(): ?\Nebule\Library\Currency
     {
         return $this->_actionCreateCurrencyInstance;
     }
@@ -269,7 +272,7 @@ class archiveActionsQantion {
     {
         $this->_metrologyInstance->addLog('action create currency', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instance = new Currency($this->_nebuleInstance, 'new', $this->_actionCreateCurrencyParam, false, false);
+        $instance = new \Nebule\Library\Currency($this->_nebuleInstance, 'new', $this->_actionCreateCurrencyParam, false, false);
 
         if (is_a($instance, 'Nebule\Library\Currency')
             && $instance->getID() != '0'
@@ -291,7 +294,7 @@ class archiveActionsQantion {
 
     protected bool $_actionCreateTokenPool = false;
     protected string $_actionCreateTokenPoolID = '';
-    protected ?TokenPool $_actionCreateTokenPoolInstance = null;
+    protected ?\Nebule\Library\TokenPool $_actionCreateTokenPoolInstance = null;
     protected array $_actionCreateTokenPoolParam = array();
     protected bool $_actionCreateTokenPoolError = false;
     protected string $_actionCreateTokenPoolErrorMessage = 'Initialisation de la création.';
@@ -303,7 +306,7 @@ class archiveActionsQantion {
     {
         return $this->_actionCreateTokenPoolID;
     }
-    public function getCreateTokenPoolInstance(): TokenPool
+    public function getCreateTokenPoolInstance(): \Nebule\Library\TokenPool
     {
         return $this->_actionCreateTokenPoolInstance;
     }
@@ -373,7 +376,7 @@ class archiveActionsQantion {
     {
         $this->_metrologyInstance->addLog('action create token pool', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '00000000');
 
-        $instance = new TokenPool($this->_nebuleInstance, 'new', $this->_actionCreateTokenPoolParam, false, false);
+        $instance = new \Nebule\Library\TokenPool($this->_nebuleInstance, 'new', $this->_actionCreateTokenPoolParam, false, false);
 
         if (is_a($instance, 'Nebule\Library\TokenPool')
             && $instance->getID() != '0'

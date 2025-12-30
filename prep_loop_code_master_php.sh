@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020251229
+# Version 020251230
 
 echo ' > start'
 
@@ -515,7 +515,7 @@ EOF
     tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_messages.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -541,7 +541,7 @@ EOF
   cp "/tmp/klicty.php" "${CODE_MASTER_SPACE}/o/${klicty_hash}"
 
   cat "${WORKSPACE}/messae.php" > "/tmp/messae.php"
-  { tail +4 "${WORKSPACE}/module_messages.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  { tail +4 "${WORKSPACE}/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -592,7 +592,7 @@ EOF
   echo " > new belzbu : ${belzbu_hash}"
   cp "${WORKSPACE}/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
 
-  for module in module_admin module_autent module_entities module_groups module_manage module_messages module_neblog module_objects module_qantion module_lang_en-en module_lang_es-co module_lang_fr-fr
+  for module in module_admin module_autent module_entities module_groups module_manage module_conversations module_neblog module_objects module_qantion module_lang_en-en module_lang_es-co module_lang_fr-fr
   do
     module_hash=$(sha256sum "${WORKSPACE}/${module}.php" | cut -d' ' -f1)'.sha2.256'
     varName=$(echo "${module}" | tr '-' '_')
@@ -620,7 +620,7 @@ EOF
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_entities_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_groups_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_manage_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_messages_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_conversations_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_neblog_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_objects_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_qantion_hash}>${phpOID}>${NID_CODE_BRANCH}"
@@ -644,7 +644,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_entities_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_groups_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_manage_hash}>${phpOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${module_messages_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_conversations_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_neblog_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_objects_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_qantion_hash}>${phpOID}>${typeRID}"
@@ -677,7 +677,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_entities_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_groups_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_manage_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${module_messages_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/l>${module_conversations_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_neblog_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_objects_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_qantion_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"

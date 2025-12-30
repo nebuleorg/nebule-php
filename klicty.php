@@ -1,20 +1,23 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Klicty;
-use DateTime;
-use Nebule\Library\ActionsEntities;
-use Nebule\Library\ActionsLinks;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayTitle;
 use Nebule\Library\nebule;
-use Nebule\Library\Metrology;
-use Nebule\Library\Entity;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
+
+use DateTime;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
 /*
@@ -49,7 +52,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251228';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL v3 2015-2025';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -167,10 +170,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit le temps de vie de l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return string
      */
-    public function getObjectLifetime(Node $object): string
+    public function getObjectLifetime(\Nebule\Library\Node $object): string
     {
         return $object->getProperty(Application::APPLICATION_EXPIRATION_DATE, 'all');
     }
@@ -178,10 +181,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit le nombre de vues de l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return string
      */
-    public function getObjectShowtime(Node $object): string
+    public function getObjectShowtime(\Nebule\Library\Node $object): string
     {
         return $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all');
     }
@@ -190,10 +193,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
      * Lit si l'objet est expiré en temps de vie.
      * Un objet sans durée de vie n'expire jamais.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return boolean
      */
-    public function getObjectLifetimeExpired(Node $object): bool
+    public function getObjectLifetimeExpired(\Nebule\Library\Node $object): bool
     {
         // Liste les liens à la recherche de la propriété.
         $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -254,10 +257,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit si l'objet a ou avait une expiration en temps de vie.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return boolean
      */
-    public function getObjectHaveLifetime(Node $object): bool
+    public function getObjectHaveLifetime(\Nebule\Library\Node $object): bool
     {
         // Liste les liens à la recherche de la propriété.
         $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -270,10 +273,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit si l'objet est expiré en nombre de vues.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return boolean
      */
-    public function getObjectShowtimeExpired(Node $object): bool
+    public function getObjectShowtimeExpired(\Nebule\Library\Node $object): bool
     {
 //        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all'); FIXME
         return false;
@@ -282,10 +285,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit le temps de vie restant de l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return string
      */
-    public function getObjectLifetimeToLive(Node $object): string
+    public function getObjectLifetimeToLive(\Nebule\Library\Node $object): string
     {
         // Liste les liens à la recherche de la propriété.
         $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -411,10 +414,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit le temps de vie limite de l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return string
      */
-    public function getObjectLifetimeEnd(Node $object): string
+    public function getObjectLifetimeEnd(\Nebule\Library\Node $object): string
     {
         // Liste les liens à la recherche de la propriété.
         $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
@@ -467,10 +470,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit nombre de vues de l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return integer
      */
-    public function getObjectShowtimeCount(Node $object): int
+    public function getObjectShowtimeCount(\Nebule\Library\Node $object): int
     {
 //        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all'); FIXME
         return 0;
@@ -479,10 +482,10 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
     /**
      * Lit les entités qui ont vu l'objet.
      *
-     * @param Node $object
+     * @param \Nebule\Library\Node $object
      * @return array
      */
-    public function getObjectShowtimeList(Node $object): array
+    public function getObjectShowtimeList(\Nebule\Library\Node $object): array
     {
 //        $count = $object->getProperty(Application::APPLICATION_EXPIRATION_COUNT, 'all'); FIXME
         return array();
@@ -1218,7 +1221,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1227,7 +1230,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1238,7 +1241,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_cacheInstance->newNode(DisplayInformation::ICON_WARN_RID),
+                                $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT);
                     }
@@ -1246,7 +1249,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(DisplayInformation::ICON_ERROR_RID),
+                            $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_FLUSH);
                 }
@@ -1540,7 +1543,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentObjectList()
     {
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTOBJ);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::ObjectList');
         $instance->setIcon($icon);
         $instance->display();
@@ -1739,7 +1742,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityList()
     {
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTENT);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitiesList');
         $instance->setIcon($icon);
         $instance->display();
@@ -1778,7 +1781,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             $id = $link->getParsed()['bl/rl/nid1'];
             $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkEntities[$id])
-                && $instance->getType('all') == Entity::ENTITY_TYPE
+                && $instance->getType('all') ==\Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
             ) {
                 $param = array(
@@ -1829,7 +1832,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntityGroupList()
     {
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitiesGroupList');
         $instance->setIcon($icon);
         $instance->display();
@@ -1878,7 +1881,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $param['selfHookList'][0]['icon'] = self::DEFAULT_ICON_LX;
                     $param['selfHookList'][0]['link'] = '?'
                         . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_GROUP_LIST_COMMAND
-                        . '&' . ActionsGroups::DELETE . '=' . $id
+                        . '&' . \Nebule\Library\ActionsGroups::DELETE . '=' . $id
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
 
@@ -1919,7 +1922,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 && is_a($createGroupInstance, 'Group') // FIXME la classe
             ) {
                 $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
-                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::CreatedGroup');
                 $instance->setIcon($icon);
                 $instance->display();
@@ -1957,7 +1960,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENTADD);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::EntitiesGroupAdd');
             $instance->setIcon($icon);
             $instance->display();
@@ -1977,17 +1980,17 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                     <form method="post"
                           action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_GROUP_ENTITY_ADD_COMMAND .
-                              '&' . ActionsGroups::CREATE
+                              '&' . \Nebule\Library\ActionsGroups::CREATE
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <div class="floatRight textAlignRight">
                             <input type="checkbox"
-                                   name="<?php echo ActionsGroups::CREATE_CLOSED; ?>"
+                                   name="<?php echo \Nebule\Library\ActionsGroups::CREATE_CLOSED; ?>"
                                    value="y" checked>
                             <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::GroupeFerme'); ?>
                         </div>
                         <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nom'); ?>
                         <input type="text"
-                               name="<?php echo ActionsGroups::CREATE_NAME; ?>"
+                               name="<?php echo \Nebule\Library\ActionsGroups::CREATE_NAME; ?>"
                                size="20" value="" class="klictyModuleEntityInput"><br/>
                         <input type="submit"
                                value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::CreateTheGroup'); ?>"
@@ -2091,7 +2094,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['link'] = '?'
                     . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                    . '&' . ActionsGroups::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
+                    . '&' . \Nebule\Library\ActionsGroups::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             }
         }
@@ -2115,7 +2118,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[2]['link'] = '?'
                     . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
-                    . '&' . ActionsEntities::SYNCHRONIZE . '=' . $id
+                    . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE . '=' . $id
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             }
 
@@ -2177,7 +2180,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $actionList[2]['css'] = 'oneAction-bg-warn';
                     $actionList[2]['link'] = '?'
                         . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
-                        . '&' . ActionsObjects::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
+                        . '&' . \Nebule\Library\ActionsObjects::DELETE . '=' . $this->_applicationInstance->getCurrentObjectID()
                         . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -2194,7 +2197,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $actionList[3]['link'] = '?'
                             . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                            . '&' . ActionsLinks::SIGN1 . '=l_' . $source . '_' . $target . '_' . $meta
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=l_' . $source . '_' . $target . '_' . $meta
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
                 }
@@ -2229,7 +2232,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                value="<?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::AddToGroup'); ?>"
                                class="klictyModuleEntityInput">
                         <select
-                                name="<?php echo ActionsGroups::ADD_TO_GROUP; ?>"
+                                name="<?php echo \Nebule\Library\ActionsGroups::ADD_MEMBER; ?>"
                                 class="klictyModuleEntityInput">
                             <?php
                             foreach ($listGroupsMember as $group) {
@@ -2273,7 +2276,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                                    . '&' . ActionsGroups::REMOVE_FROM_GROUP . '=' . $group
+                                    . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $group
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             }
                         }
@@ -2328,7 +2331,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                             $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                                . '&' . ActionsGroups::REMOVE_ITEM_FROM_GROUP . '=' . $item
+                                . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $item
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         }
 
@@ -2499,11 +2502,11 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                            name="MAX_FILE_SIZE"
                            value="<?php echo $this->_configurationInstance->getOptionUntyped('klictyIOReadMaxDataPHP'); ?>"/>
                     <input type="file"
-                           name="<?php echo ActionsObjects::UPLOAD_FILE; ?>"/><br/>
+                           name="<?php echo \Nebule\Library\ActionsObjects::UPLOAD_FILE; ?>"/><br/>
                     <div class="floatRight textAlignRight">
                         <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SubmitProtectFile'); ?>
                         <input type="checkbox"
-                               name="<?php echo ActionsObjects::UPLOAD_FILE_PROTECT; ?>"
+                               name="<?php echo \Nebule\Library\ActionsObjects::UPLOAD_FILE_PROTECT; ?>"
                                value="y"><br/>
                         <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::SubmitLiveTimeFile'); ?>
                         :
@@ -2590,7 +2593,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 && is_a($createEntityInstance, 'Entity') // FIXME la classe
             ) {
                 $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
-                $instance = new DisplayTitle($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::NewEntityCreated');
                 $instance->setIcon($icon);
                 $instance->display();
@@ -2637,7 +2640,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
         } else {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::CreateEntity');
             $instance->setIcon($icon);
             $instance->display();
@@ -2658,7 +2661,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                     <form method="post"
                           action="?<?php echo self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND
-                              . '&' . ActionsEntities::CREATE
+                              . '&' . \Nebule\Library\ActionsEntities::CREATE
                               . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
                         <table>
                             <tr>
@@ -2671,10 +2674,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nommage'); ?></b>
                                 </td>
                                 <td><input type="text"
-                                           name="<?php echo ActionsEntities::CREATE_FIRSTNAME; ?>"
+                                           name="<?php echo \Nebule\Library\ActionsEntities::CREATE_FIRSTNAME; ?>"
                                            size="10" value="" class="klictyModuleEntityInput"></td>
                                 <td><input type="text"
-                                           name="<?php echo ActionsEntities::CREATE_NAME; ?>"
+                                           name="<?php echo \Nebule\Library\ActionsEntities::CREATE_NAME; ?>"
                                            size="20" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2685,7 +2688,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::::Password'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo ActionsEntities::CREATE_PASSWORD1; ?>"
+                                                     name="<?php echo \Nebule\Library\ActionsEntities::CREATE_PASSWORD1; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2693,7 +2696,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                     <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Confirmation'); ?></b>
                                 </td>
                                 <td colspan=2><input type="password"
-                                                     name="<?php echo ActionsEntities::CREATE_PASSWORD2; ?>"
+                                                     name="<?php echo \Nebule\Library\ActionsEntities::CREATE_PASSWORD2; ?>"
                                                      size="30" value="" class="klictyModuleEntityInput"></td>
                             </tr>
                             <tr>
@@ -2729,7 +2732,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     private function _displayContentEntitySync()
     {
         $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_SYNENT);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitySync');
         $instance->setIcon($icon);
         $instance->display();
@@ -2758,7 +2761,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 <b><?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::URL'); ?> </b>
                             </td>
                             <td><input type="text"
-                                       name="<?php echo ActionsEntities::SYNCHRONIZE_NEW; ?>"
+                                       name="<?php echo \Nebule\Library\ActionsEntities::SYNCHRONIZE_NEW; ?>"
                                        size="40" value="" class="klictyModuleEntityInput"></td>
                         </tr>
                         <tr>
@@ -2793,7 +2796,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     {
     }
 
-    private function _displayContentProtection()
+    private function _displayContentProtection(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
         $protect = $object->getMarkProtected();
@@ -2856,7 +2859,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
     }
 
-    private function _displayInlineContentProtectionShared()
+    private function _displayInlineContentProtectionShared(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
@@ -2897,7 +2900,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['name'] = '::UnprotectObject';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LK;
                                 $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                    . '&' . ActionsObjects::UNPROTECT . '=' . $id
+                                    . '&' . \Nebule\Library\ActionsObjects::UNPROTECT . '=' . $id
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             } elseif (!$this->_recoveryInstance->getIsRecoveryEntity($entity)
@@ -2907,7 +2910,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 $list[$i]['actions'][0]['name'] = '::RemoveShareProtect';
                                 $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LX;
                                 $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                    . '&' . ActionsObjects::CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
+                                    . '&' . \Nebule\Library\ActionsObjects::CANCEL_SHARE_PROTECT_TO_ENTITY . '=' . $entity
                                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                             }
@@ -2942,7 +2945,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $actionList[0]['icon'] = self::DEFAULT_ICON_LK;
                 $actionList[0]['desc'] = '';
                 $actionList[0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                    . '&' . ActionsObjects::PROTECT . '=' . $id
+                    . '&' . \Nebule\Library\ActionsObjects::PROTECT . '=' . $id
                     . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 $this->displayActionList($actionList);
@@ -2953,7 +2956,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
     }
 
-    private function _displayInlineContentProtectionShareTo()
+    private function _displayInlineContentProtectionShareTo(): void
     {
         $object = $this->_applicationInstance->getCurrentObjectInstance();
 
@@ -3000,12 +3003,12 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         if ($typeClosed)
                             $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
+                                . '&' . \Nebule\Library\ActionsObjects::SHARE_PROTECT_TO_GROUP_CLOSED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                         else
                             $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                                . '&' . ActionsObjects::SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
+                                . '&' . \Nebule\Library\ActionsObjects::SHARE_PROTECT_TO_GROUP_OPENED . '=' . $group
                                 . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -3060,7 +3063,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['actions'][0]['name'] = '::ShareProtectObject';
                         $list[$i]['actions'][0]['icon'] = self::DEFAULT_ICON_LL;
                         $list[$i]['actions'][0]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_PROTEC_COMMAND
-                            . '&' . ActionsObjects::SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
+                            . '&' . \Nebule\Library\ActionsObjects::SHARE_PROTECT_TO_ENTITY . '=' . $link->getParsed()['bl/rl/nid1']
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $id
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -3082,7 +3085,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
     }
 
-    private function _displayContentAuth()
+    private function _displayContentAuth(): void
     {
         echo '<div class="layoutAloneItem">' . "\n";
         echo '<div class="aloneItemContent">' . "\n";
@@ -3114,13 +3117,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             )
         ) {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_KEY);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::::entity:unlocked');
             $instance->setIcon($icon);
             $instance->display();
         } else {
             $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENTITY_LOCK);
-            $instance = new DisplayTitle($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::::entity:locked');
             $instance->setIcon($icon);
             $instance->display();
@@ -3257,7 +3260,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         }
     }
 
-private function _displayContentAbout()
+private function _displayContentAbout():void
 {
     $iconLL = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LL);
     $iconLK = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
@@ -3323,7 +3326,7 @@ private function _displayContentAbout()
     <div class="sequence" id="lang"></div>
     <?php
     $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD);
-    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle(':::SelectLanguage');
     $instance->setIcon($icon);
     $instance->display();
@@ -3344,7 +3347,7 @@ private function _displayContentAbout()
 
     <div class="sequence" id="help"></div>
     <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_HELP);
-    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle('::Help');
     $instance->setIcon($icon);
     $instance->display(); ?>
@@ -3361,7 +3364,7 @@ private function _displayContentAbout()
 
     <div class="sequence" id="recovery"></div>
     <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LC);
-    $instance = new DisplayTitle($this->_applicationInstance);
+    $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle('::ProtectionRecovery');
     $instance->setIcon($icon);
     $instance->display(); ?>
@@ -3377,11 +3380,11 @@ private function _displayContentAbout()
     echo $this->getDisplayInformation_DEPRECATED('::HelpRecoveryEntity', $param);
 
     $linkApplicationWebsite = Application::APPLICATION_WEBSITE;
-    if (strpos(Application::APPLICATION_WEBSITE, '://') === false)
+    if (!str_contains(Application::APPLICATION_WEBSITE, '://'))
         $linkApplicationWebsite = 'http://' . Application::APPLICATION_WEBSITE;
 
     $linkNebuleWebsite = nebule::NEBULE_WEBSITE;
-    if (strpos(nebule::NEBULE_WEBSITE, '://') === false)
+    if (!str_contains(nebule::NEBULE_WEBSITE, '://'))
         $linkNebuleWebsite = 'http://' . nebule::NEBULE_WEBSITE;
 
     ?>
@@ -3401,7 +3404,7 @@ private function _displayContentAbout()
     <?php
 }
 
-    private function _displayInlineContentAbout()
+    private function _displayInlineContentAbout(): void
     {
         // Lit les entités de recouvrement.
         $listEntities = $this->_recoveryInstance->getRecoveryEntitiesInstance();
@@ -3449,7 +3452,7 @@ private function _displayContentAbout()
     /**
      * Affiche la métrologie.
      */
-    private function _displayMetrology()
+    private function _displayMetrology(): void
     {
         if ($this->_configurationInstance->getOptionUntyped('klictyDisplayMetrology')) {
             ?>
@@ -3523,7 +3526,7 @@ private function _displayContentAbout()
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = '')
+    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = ''): void
     {
         $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
@@ -3532,7 +3535,7 @@ private function _displayContentAbout()
             $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($typemime);
 
         // Détermine si c'est une entité.
-        $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
+        $objHead = $object->readOneLineAsText(\Nebule\Library\Entity::ENTITY_MAX_SIZE);
         $isEntity = ($typemime == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
@@ -3633,7 +3636,7 @@ private function _displayContentAbout()
         unset($name, $typemime, $isEntity, $isGroup);
     }
 
-    public function displayActionList($actionList)
+    public function displayActionList($actionList): void
     {
         if (sizeof($actionList) == 0)
             return;
@@ -3683,7 +3686,7 @@ private function _displayContentAbout()
      *
      * @param array $item
      */
-    private function _displayArboItem(array $item)
+    private function _displayArboItem(array $item): void
     {
         if (sizeof($item) == 0) {
             return;
@@ -3704,7 +3707,7 @@ private function _displayContentAbout()
         if (is_a($item['entity'], 'entity')) { // FIXME la classe
             $entity = $item['entity'];
             $entityID = $entity->getID();
-        } elseif (Node::checkNID($item['entity'])
+        } elseif (\Nebule\Library\Node::checkNID($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
         ) {
@@ -4351,17 +4354,17 @@ class Action extends Actions
 			 *  ------------------------------------------------------------------------------------------
 			 */
             // Lit le contenu de la variable _FILE si un fichier est téléchargé.
-            if (isset($_FILES[ActionsObjects::UPLOAD_FILE]['error'])
-                && $_FILES[ActionsObjects::UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
-                && trim($_FILES[ActionsObjects::UPLOAD_FILE]['name']) != ''
+            if (isset($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['error'])
+                && $_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['error'] == UPLOAD_ERR_OK
+                && trim($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['name']) != ''
             ) {
                 // Extraction des méta données du fichier.
-                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[ActionsObjects::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
                 $upinfo = pathinfo($upfname);
                 $upext = $upinfo['extension'];
                 $upname = basename($upfname, '.' . $upext);
-                $upsize = $_FILES[ActionsObjects::UPLOAD_FILE]['size'];
-                $uppath = $_FILES[ActionsObjects::UPLOAD_FILE]['tmp_name'];
+                $upsize = $_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['size'];
+                $uppath = $_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['tmp_name'];
                 $uptype = '';
                 // Si le fichier est bien téléchargé.
                 if (file_exists($uppath)) {
@@ -4375,9 +4378,9 @@ class Action extends Actions
                             $uptype = $this->_getFilenameTypeMime("$upname.$upext");
 
                         // Extrait les options de téléchargement.
-                        $argUpd = filter_has_var(INPUT_POST, ActionsObjects::UPLOAD_FILE_UPDATE);
-                        $argPrt = filter_has_var(INPUT_POST, ActionsObjects::UPLOAD_FILE_PROTECT);
-                        $argObf = filter_has_var(INPUT_POST, ActionsObjects::UPLOAD_FILE_OBFUSCATED);
+                        $argUpd = filter_has_var(INPUT_POST, \Nebule\Library\ActionsObjects::UPLOAD_FILE_UPDATE);
+                        $argPrt = filter_has_var(INPUT_POST, \Nebule\Library\ActionsObjects::UPLOAD_FILE_PROTECT);
+                        $argObf = filter_has_var(INPUT_POST, \Nebule\Library\ActionsObjects::UPLOAD_FILE_OBFUSCATED);
 
                         // Spécifique klicty.
                         $argLifeTime = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
@@ -4434,10 +4437,10 @@ class Action extends Actions
             $this->_metrologyInstance->addLog('Action upload file', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000'); // Log
 
             // Lit le contenu du fichier.
-            $data = file_get_contents($_FILES[ActionsObjects::UPLOAD_FILE]['tmp_name']);
+            $data = file_get_contents($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['tmp_name']);
 
             // Ecrit le contenu dans l'objet.
-            $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
+            $instance = new \Nebule\Library\Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
             if ($instance === false) {
                 $this->_actionUploadFileError = true;
                 $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
@@ -4547,7 +4550,7 @@ class Action extends Actions
     /**
      * Create new link.
      *
-     * @param Entity $eid1
+     * @param\Nebule\Library\Entity $eid1
      * @param string $req
      * @param string $nid1
      * @param string $nid2
@@ -4555,7 +4558,7 @@ class Action extends Actions
      * @param bool   $obfuscate
      * @return boolean
      */
-    protected function _createLink(Entity $eid1, string $req, string $nid1, string $nid2, string $nid3, bool $obfuscate = false): bool
+    protected function _createLink(\Nebule\Library\Entity $eid1, string $req, string $nid1, string $nid2, string $nid3, bool $obfuscate = false): bool
     {
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
         $instanceBL->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);

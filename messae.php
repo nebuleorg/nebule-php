@@ -1,25 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Messae;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Entity;
-use Nebule\Library\Metrology;
 use Nebule\Library\nebule;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
-use Nebule\Library\Modules;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
-use Nebule\Library\Group;
-use Nebule\Library\Conversation;
-use const Nebule\Bootstrap\BOOTSTRAP_NAME;
-use const Nebule\Bootstrap\BOOTSTRAP_SURNAME;
-use const Nebule\Bootstrap\BOOTSTRAP_WEBSITE;
-use const Nebule\Bootstrap\LIB_BOOTSTRAP_ICON;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -53,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251229';
+    const APPLICATION_VERSION = '020251230';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
@@ -779,8 +775,8 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         }
 
         // Détermine si c'est une entité.
-        $objHead = $object->readOneLineAsText(Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
+        $objHead = $object->readOneLineAsText(\Nebule\Library\Entity::ENTITY_MAX_SIZE);
+        $isEntity = ($typemime == \Nebule\Library\Entity::ENTITY_TYPE && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');

@@ -1,18 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Autent\Display;
-use Nebule\Application\Neblog\Action;
-use Nebule\Library;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\Displays;
-use nebule\Library\linkInterface;
-use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
-use Nebule\Library\Node;
+use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
@@ -61,7 +60,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleNeblog extends \Nebule\Library\Modules
+class ModuleNeblog extends Modules
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -69,7 +68,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -149,13 +148,13 @@ class ModuleNeblog extends \Nebule\Library\Modules
     private string $_actionAddAnswerContent = '';
     private string $_actionAddPageName = '';
     private string $_actionAddPageContent = '';
-    private ?node $_instanceBlogNodeRID = null;
-    private ?node $_instanceBlogPostRID = null;
-    private ?node $_instanceBlogAnswerRID = null;
-    private ?node $_instanceBlogPageRID = null;
-    private ?node $_instanceCurrentBlog = null;
-    private ?node $_instanceCurrentBlogPost = null;
-    private ?node $_instanceCurrentBlogPage = null;
+    private ?\Nebule\Library\node $_instanceBlogNodeRID = null;
+    private ?\Nebule\Library\node $_instanceBlogPostRID = null;
+    private ?\Nebule\Library\node $_instanceBlogAnswerRID = null;
+    private ?\Nebule\Library\node $_instanceBlogPageRID = null;
+    private ?\Nebule\Library\node $_instanceCurrentBlog = null;
+    private ?\Nebule\Library\node $_instanceCurrentBlogPost = null;
+    private ?\Nebule\Library\node $_instanceCurrentBlogPage = null;
     private array $_currentBlogListFounders = array();
     private array $_currentBlogListOwners = array();
     private array $_currentBlogWritersList = array();
@@ -233,7 +232,7 @@ class ModuleNeblog extends \Nebule\Library\Modules
             if ($nameOnFile == 'eid')
                 $eid = $value;
         }
-        if (! Node::checkNID($eid, false, false))
+        if (! \Nebule\Library\Node::checkNID($eid, false, false))
             return;
         $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
         $this->_currentBlogListOwners = array($eid => $eid);
@@ -906,10 +905,10 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_displayBackOrLogin('::blog:list', $this::MODULE_REGISTERED_VIEWS[1]);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
             $instance->setInputName(self::COMMAND_ACTION_NEW_BLOG_NAME);
             $instance->setIconText('nebule/objet/nom');
             $instance->setWithFormOpen(true);
@@ -922,8 +921,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_SELECT);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(self::COMMAND_ACTION_NEW_BLOG_DEFAULT);
             $instance->setIconText('::blog:default');
             $instance->setSelectList(array(
@@ -935,8 +934,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_TEXT);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
             $instance->setMessage('::CreateBlog');
             $instance->setInputValue('');
             $instance->setInputName(self::COMMAND_ACTION_NEW_BLOG_DEFAULT);
@@ -946,7 +945,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $instance->setWithSubmit(true);
             $instanceList->addItem($instance);
 
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
@@ -1383,7 +1382,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
 
 
     // Common functions
-    private function _getLinksF(array &$links, Node $nid1, string $nid3, bool $withOrder = false, string $socialClass = ''): void {
+    private function _getLinksF(array &$links, \Nebule\Library\Node $nid1, string $nid3, bool $withOrder = false, string $socialClass = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $filter = array(
             'bl/rl/req' => 'f',
@@ -1402,7 +1401,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $this->_socialInstance->unsetList('onlist');
     }
 
-    private function _getLinkL(Node $nid1, string $nid3): ?linkInterface {
+    private function _getLinkL(\Nebule\Library\Node $nid1, string $nid3): ?\Nebule\Library\linkInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
@@ -1431,13 +1430,13 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         return $list;
     }
 
-    private function _getOnLinkNID2(?linkInterface $link): string {
+    private function _getOnLinkNID2(?\Nebule\Library\linkInterface $link): string {
         if ($link === null)
             return '';
         return $link->getParsed()['bl/rl/nid2'];
     }
 
-    private function _getContentNID(Node $nid): Node {
+    private function _getContentNID(\Nebule\Library\Node $nid): \Nebule\Library\Node {
         $link = $this->_getLinkL($nid, self::RID_BLOG_CONTENT);
         if ($link !== null)
             $oid = $this->_getOnLinkNID2($link);
@@ -1486,7 +1485,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceList->addItem($instance);
     }
 
-    private function _displayContent(Node $nid, string $hook, string $type = 'post'): void {
+    private function _displayContent(\Nebule\Library\Node $nid, string $hook, string $type = 'post'): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($nid);
@@ -1517,7 +1516,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         }
     }
 
-    private function _displayContentBlock(Node $oid): void {
+    private function _displayContentBlock(\Nebule\Library\Node $oid): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($oid);
@@ -1552,7 +1551,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         }
     }
 
-    private function _displayContentText(Node $nid): void {
+    private function _displayContentText(\Nebule\Library\Node $nid): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = \Nebule\Library\DisplayWikiSimple::parse($nid->getContent());
         echo '<div class="text"><p>' . "\n";
@@ -1560,12 +1559,12 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         echo '</p></div>' . "\n";
     }
 
-    private function _displayContentImage(Node $nid): void {
+    private function _displayContentImage(\Nebule\Library\Node $nid): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
-    private function _displayContentAnswers(Node $nid): void {
+    private function _displayContentAnswers(\Nebule\Library\Node $nid): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::answ:list', $this::MODULE_REGISTERED_ICONS[1]);
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) { // FIXME add inside the list
@@ -1655,7 +1654,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     private function _setNewBlogOID(string $name, string $default): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = 'eid=' . $this->_entitiesInstance->getConnectedEntityEID() . "\nsalt=" . bin2hex($this->_cryptoInstance->getRandom(64, \Nebule\Library\Crypto::RANDOM_PSEUDO));
-        $instanceNode = new Node($this->_nebuleInstance, '0');
+        $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, '0');
         $instanceNode->setContent($content);
         if ($instanceNode->getID() == '0')
             return;
@@ -1707,19 +1706,19 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
      * ContentOID can have update.
      * OrderNID reflects the order of a content on the list of contents to display.
      */
-    private function _getLinksPostNID(Node $blog, string $socialClass = 'self'): array {
+    private function _getLinksPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $this->_getLinksF($links, $blog, self::RID_BLOG_POST, true, $socialClass);
         $this->_metrologyInstance->addLog('size of post list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b81aeb71');
         return $links;
     }
-    private function _getListPostNID(Node $blog, string $socialClass = 'self'): array {
+    private function _getListPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksPostNID($blog, $socialClass);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountPostNID(Node $blog, string $socialClass = 'self'): int {
+    private function _getCountPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): int {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPostNID($blog, $socialClass));
     }
@@ -1746,17 +1745,17 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         // Create type
         $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _getPostNID(Node $blog, Node $post): void {
+    private function _getPostNID(\Nebule\Library\Node $blog, \Nebule\Library\Node $post): void {
         // TODO
     }
-    private function _getLinksContentOID(Node $post, string $socialClass = 'self'): array {
+    private function _getLinksContentOID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $this->_getLinksF($links, $post, self::RID_BLOG_CONTENT, true, $socialClass);
         $this->_metrologyInstance->addLog('size of content list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '1ce94445');
         return $links;
     }
-    private function _getListContentOID(Node $post, string $socialClass = 'self'): array {
+    private function _getListContentOID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksContentOID($post, $socialClass);
         return $this->_getOnLinksNID2($links);
@@ -1774,16 +1773,16 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
      * AnswerOID can have update.
      * Only one level of answer for now. TODO
      */
-    private function _getLinksAnswerOID(Node $post, string $socialClass = 'self'): array {
+    private function _getLinksAnswerOID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
         $links = array();
         $this->_getLinksF($links, $post, self::RID_BLOG_ANSWER, false, $socialClass);
         return $links;
     }
-    private function _getListAnswerNID(Node $post, string $socialClass = 'self'): array {
+    private function _getListAnswerNID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
         $links = $this->_getLinksAnswerOID($post, $socialClass);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountAnswerOID(Node $post, string $socialClass = 'self'): int {
+    private function _getCountAnswerOID(\Nebule\Library\Node $post, string $socialClass = 'self'): int {
         return sizeof($this->_getLinksAnswerOID($post, $socialClass));
     }
     private function _setNewAnswerOID(string $content): void {
@@ -1795,7 +1794,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceBL->signWrite();
         $instanceNode->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _getAnswerOID(Node $blog, Node $post): void {
+    private function _getAnswerOID(\Nebule\Library\Node $blog, \Nebule\Library\Node $post): void {
         // TODO
     }
 
@@ -1815,16 +1814,16 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
      * ContentOID can have update.
      * OrderNID reflects the order of a content on the list of contents to display.
      */
-    private function _getLinksPageNID(Node $blog, string $socialClass = 'self'): array {
+    private function _getLinksPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
         $links = array();
         $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE, true, $socialClass);
         return $links;
     }
-    private function _getListPageNID(Node $blog, string $socialClass = 'self'): array {
+    private function _getListPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
         $links = $this->_getLinksPageNID($blog, $socialClass);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountPageNID(Node $blog, string $socialClass = 'self'): int {
+    private function _getCountPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): int {
         return sizeof($this->_getLinksPageNID($blog, $socialClass));
     }
     private function _setNewPageNID(string $name, string $content): void {
@@ -1848,7 +1847,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceBL->signWrite();
         $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
     }
-    private function _getPageNID(Node $blog, Node $page): void {
+    private function _getPageNID(\Nebule\Library\Node $blog, \Nebule\Library\Node $page): void {
         // TODO
     }
 
@@ -1880,7 +1879,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $instance->setEnableJS(false);
                 $instance->setEnableLink(true);
                 $instance->setFlagUnlocked($instanceOwner->getHavePrivateKeyPassword());
-                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setIcon($instanceIcon);
                 $instanceList->addItem($instance);
             }

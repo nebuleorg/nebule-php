@@ -20,8 +20,7 @@ use const Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER;
  * @link www.nebule.org
  *
  */
-interface applicationInterface
-{
+interface ApplicationInterface {
     public function __construct(nebule $nebuleInstance);
     public function __toString(): string;
     public function __sleep(): array;

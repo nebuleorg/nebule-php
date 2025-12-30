@@ -1,24 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Action;
-use Nebule\Application\Sylabe\Display;
-use Nebule\Library\ActionsGroups;
-use Nebule\Library\Conversation;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayList;
-use Nebule\Library\DisplayNotify;
-use Nebule\Library\DisplayObject;
-use Nebule\Library\DisplayQuery;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Metrology;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * This module can manage messengers. Messages can be attached to groups (or objects) in a related conversation.
@@ -28,14 +21,14 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleMessages extends \Nebule\Library\Modules {
+class ModuleConversations extends Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251229';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -210,16 +203,16 @@ class ModuleMessages extends \Nebule\Library\Modules {
     protected function _displayConversationCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $instanceList = new DisplayList($this->_applicationInstance);
-            $instance = new DisplayInformation($this->_applicationInstance);
-            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
                 $instance->setMessage('::createGroupOK');
-                $instance->setType(DisplayItemIconMessage::TYPE_OK);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::::OK');
                 $instanceList->addItem($instance);
 
-                $instance = new DisplayObject($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
                 //$instance->setNID($this->_displayGroupInstance); FIXME
                 $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
@@ -237,21 +230,21 @@ class ModuleMessages extends \Nebule\Library\Modules {
                 $instance->setEnableContent(false);
                 $instance->setEnableJS(false);
                 $instance->setEnableLink(true);
-                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
                 $instance->setEnableFlagUnlocked(false);
                 $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['grpobj']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
                 $instance->setIcon($instanceIcon2);
             } else {
-                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                 $instance->setMessage('::createGroupNOK');
-                $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
-                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::::ERROR');
             }
             $instanceList->addItem($instance);
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         }
@@ -265,28 +258,28 @@ class ModuleMessages extends \Nebule\Library\Modules {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . ActionsGroups::CREATE
-                . '&' . ActionsGroups::CREATE_TYPE_MIME . '=Conversation'
+                . '&' . \Nebule\Library\ActionsGroups::CREATE
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Conversation'
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-            $instanceList = new DisplayList($this->_applicationInstance);
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_STRING);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
             $instance->setInputValue('');
-            $instance->setInputName(ActionsGroups::CREATE_NAME);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_NAME);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
             $instance->setLink($commonLink);
             $instance->setWithSubmit(false);
-            $instance->setIconRID(DisplayItemIconMessage::ICON_WARN_RID);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(ActionsGroups::CREATE_CLOSED);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
             $instance->setIconText('::createGroupClosed');
             $instance->setSelectList(array(
                 'y' => $this->_translateInstance->getTranslate('::::yes'),
@@ -297,9 +290,9 @@ class ModuleMessages extends \Nebule\Library\Modules {
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(ActionsGroups::CREATE_OBFUSCATED);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
             $instance->setIconText('::createGroupObfuscated');
             $instance->setSelectList(array(
                 'n' => $this->_translateInstance->getTranslate('::::no'),
@@ -310,8 +303,8 @@ class ModuleMessages extends \Nebule\Library\Modules {
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new DisplayQuery($this->_applicationInstance);
-            $instance->setType(DisplayQuery::QUERY_TEXT);
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
             $instance->setMessage('::createTheGroup');
             $instance->setInputValue('');
             $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
@@ -319,16 +312,16 @@ class ModuleMessages extends \Nebule\Library\Modules {
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
             $instance->setWithSubmit(true);
-            $instance->setIconRID(DisplayItemIconMessage::ICON_PLAY_RID);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
             $instanceList->addItem($instance);
 
-            $instanceList->setSize(DisplayItem::SIZE_MEDIUM);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
         } else {
-            $instance = new DisplayNotify($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
             $instance->setMessage('::::err_NotPermit');
-            $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }
     }
@@ -482,7 +475,7 @@ class archiveActionsMessages {
     protected bool $_actionCreateConversationClosed = false;
     protected bool $_actionCreateConversationProtected = false;
     protected bool $_actionCreateConversationObfuscateLinks = false;
-    protected ?Conversation $_actionCreateConversationInstance = null;
+    protected ?\Nebule\Library\Conversation $_actionCreateConversationInstance = null;
     protected bool $_actionCreateConversationError = false;
     protected string $_actionCreateConversationErrorMessage = 'Initialisation de la création.';
     public function getCreateConversation(): bool
@@ -493,7 +486,7 @@ class archiveActionsMessages {
     {
         return $this->_actionCreateConversationID;
     }
-    public function getCreateConversationInstance(): ?Conversation
+    public function getCreateConversationInstance(): ?\Nebule\Library\Conversation
     {
         return $this->_actionCreateConversationInstance;
     }
@@ -594,8 +587,8 @@ class archiveActionsMessages {
         $argDelete = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_DELETE_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
         if ($argDelete !== ''
-            && strlen($argDelete) >= BlocLink::NID_MIN_HASH_SIZE
-            && Node::checkNID($argDelete)
+            && strlen($argDelete) >= \Nebule\Library\BlocLink::NID_MIN_HASH_SIZE
+            && \Nebule\Library\Node::checkNID($argDelete)
         ) {
             $this->_actionDeleteConversation = true;
             $this->_actionDeleteConversationID = $argDelete;
@@ -649,7 +642,7 @@ class archiveActionsMessages {
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_TO_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
-        if (Node::checkNID($arg))
+        if (\Nebule\Library\Node::checkNID($arg))
             $this->_actionAddMessageOnConversation = $arg;
     }
     protected function _actionAddMessageOnConversation(): void
@@ -674,7 +667,7 @@ class archiveActionsMessages {
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_FROM_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
-        if (Node::checkNID($arg))
+        if (\Nebule\Library\Node::checkNID($arg))
             $this->_actionRemoveMessageOnConversation = $arg;
     }
     protected function _actionRemoveMessageOnConversation(): void
@@ -699,7 +692,7 @@ class archiveActionsMessages {
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ADD_ITEM_TO_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
-        if (Node::checkNID($arg))
+        if (\Nebule\Library\Node::checkNID($arg))
             $this->_actionAddMemberOnConversation = $arg;
     }
     protected function _actionAddMemberOnConversation(): void
@@ -724,7 +717,7 @@ class archiveActionsMessages {
 
         $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_REMOVE_ITEM_FROM_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
 
-        if (Node::checkNID($arg))
+        if (\Nebule\Library\Node::checkNID($arg))
             $this->_actionRemoveMemberOnConversation = $arg;
     }
     protected function _actionRemoveMemberOnConversation(): void

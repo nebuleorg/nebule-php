@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Application\Sylabe\Application;
-use Nebule\Library\Configuration;
-use Nebule\Library\Displays;
-use Nebule\Library\DisplayTitle;
-use Nebule\Library\Modules;
 use Nebule\Library\nebule;
-use Nebule\Library\Node;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\Applications;
+use Nebule\Library\Displays;
+use Nebule\Library\Actions;
+use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /**
  * Ce module permet de gérer les options de l'application ainsi que certains rôles d'entités.
@@ -18,7 +21,7 @@ use Nebule\Library\References;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleAdmin extends \Nebule\Library\Modules
+class ModuleAdmin extends Modules
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -26,7 +29,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251116';
+    const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -53,7 +56,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
      * Ajout de fonctionnalités à des points d'ancrage.
      *
      * @param string    $hookName
-     * @param Node|null $nid
+     * @param \Nebule\Library\Node|null $nid
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
@@ -222,7 +225,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayAppOptions(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:AppOptions');
         $instance->setIcon($icon);
         $instance->display();
@@ -283,20 +286,20 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayNebOptions(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:NebOptions');
         $instance->setIcon($icon);
         $instance->display();
 
         if ($this->_unlocked) {
-            $listOptions = Configuration::OPTIONS_LIST;
-            $listCategoriesOptions = Configuration::OPTIONS_CATEGORIES;
-            $listOptionsCategory = Configuration::OPTIONS_CATEGORY;
-            $listOptionsType = Configuration::OPTIONS_TYPE;
-            $listOptionsWritable = Configuration::OPTIONS_WRITABLE;
-            $listOptionsDefaultValue = Configuration::OPTIONS_DEFAULT_VALUE;
-            $listOptionsCriticality = Configuration::OPTIONS_CRITICALITY;
-            $listOptionsDescription = Configuration::OPTIONS_DESCRIPTION;
+            $listOptions = \Nebule\Library\Configuration::OPTIONS_LIST;
+            $listCategoriesOptions = \Nebule\Library\Configuration::OPTIONS_CATEGORIES;
+            $listOptionsCategory = \Nebule\Library\Configuration::OPTIONS_CATEGORY;
+            $listOptionsType = \Nebule\Library\Configuration::OPTIONS_TYPE;
+            $listOptionsWritable = \Nebule\Library\Configuration::OPTIONS_WRITABLE;
+            $listOptionsDefaultValue = \Nebule\Library\Configuration::OPTIONS_DEFAULT_VALUE;
+            $listOptionsCriticality = \Nebule\Library\Configuration::OPTIONS_CRITICALITY;
+            $listOptionsDescription = \Nebule\Library\Configuration::OPTIONS_DESCRIPTION;
 
             // Prépare le rendu des options.
             $param = array(
@@ -352,7 +355,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayAdmins(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:seeAdmins');
         $instance->setIcon($icon);
         $instance->display();
@@ -424,7 +427,7 @@ class ModuleAdmin extends \Nebule\Library\Modules
     private function _displayRecoveryEntities(): void
     {
         $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-        $instance = new DisplayTitle($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:seeRecovery');
         $instance->setIcon($icon);
         $instance->display();
