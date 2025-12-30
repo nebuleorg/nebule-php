@@ -210,6 +210,9 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::flush' => 'Disconnecting all',
             '::return' => 'Return to application',
             '::err_NoPrivKey' => 'No private key!',
+            '::previousPage' => 'Previous page',
+            '::nextPage' => 'Next page',
+            '::page%s%s%s%s' => 'Page %s/%s (%s on %s)',
         ],
         'es-co' => [
             '::translateModule:en-en:ModuleName' => 'Inglés (Inglaterra)',

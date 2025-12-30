@@ -543,7 +543,7 @@ class ModuleObjects extends Modules {
         $display = $this->_applicationInstance->getDisplayInstance();
 
         // Préparation de la gestion de l'affichage par parties.
-        $startLinkSigne = $this->_nebuleInstance->getDisplayNextObject();
+        $startLinkSigne = $this->_nebuleInstance->getDisplayNextObject_obsolete();
         $displayCount = 0;
         $okDisplay = false;
         if ($startLinkSigne == '')

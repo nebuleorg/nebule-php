@@ -59,6 +59,7 @@ abstract class Modules extends Functions implements ModuleInterface {
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
+    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable { return null; }
 
     /**
      * Part from this module to display on browser.

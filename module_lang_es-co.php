@@ -216,6 +216,9 @@ class ModuleTranslateESCO extends ModuleTranslates
             '::flush' => 'Disconnecting all',
             '::return' => 'Return to application',
             '::err_NoPrivKey' => 'No private key!',
+            '::previousPage' => 'Previous page',
+            '::nextPage' => 'Next page',
+            '::page%s%s%s%s' => 'Page %s/%s (%s en %s)',
         ],
     ];
 }

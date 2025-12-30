@@ -1619,6 +1619,7 @@ class ModuleEntities extends Modules
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->setListSize(12);
         $instanceList->display();
 
         if (($this->_authoritiesInstance->getIsPuppetMaster($this->_entitiesInstance->getConnectedEntityInstance())
@@ -2155,6 +2156,7 @@ class ModuleEntities extends Modules
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setRatio($ratio);
         $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->setListSize(12);
         $instanceList->display();
     }
 

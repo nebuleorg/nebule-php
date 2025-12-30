@@ -58,12 +58,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const COMMAND_DISPLAY_MODE = 'dm';
     const COMMAND_DISPLAY_VIEW = 'dv';
     const COMMAND_DISPLAY_LANG = 'dl';
-    const COMMAND_NEXT = 'dn';
+    const COMMAND_NEXT = 'dn'; // TODO to remove
     const COMMAND_INLINE = 'di';
     const COMMAND_INLINE_CONTENT = 'dj';
     const COMMAND_CSS = 'dc';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
+    const DEFAULT_DISPLAY_SIZE_LIST = 24;
+    const COMMAND_DISPLAY_PAGE_LIST = 'ds';
     const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
 
     // Les icônes.
@@ -245,6 +247,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_findCurrentModule();
         $this->_findCurrentDisplayView();
         $this->_findInlineContentID();
+        $this->_findCurrentPage();
     }
 
     protected function _initUrlLinks(): void {
@@ -562,7 +565,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         //    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_currentDisplayView;
         $url = '?';
         foreach ($_GET as $key => $value) {
-            if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN)
+            if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN || $key == Displays::COMMAND_INLINE)
                 continue;
             if ($url != '?')
                 $url .= '&';
@@ -588,6 +591,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         return true;
     }
+
+
+
+    private float $_currentPage = 0.0;
+
+    private function _findCurrentPage(): void {
+        $this->_currentPage = (float)$this->getFilterInput(Displays::COMMAND_DISPLAY_PAGE_LIST);
+    }
+
+    public function getCurrentPage(): float { return $this->_currentPage; }
 
 
     /**
@@ -1986,7 +1999,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'htlink' => '?' . Displays::DEFAULT_BOOTSTRAP_LINK,
                 'desc' => $this->_translateInstance->getTranslate('::allApplications'),
                 'ref' => 'nebule',
-                'class' => 'menuListContentActionModules'
+                'class' => 'menuListContentActionModules',
         );
 
         // Call to display the menu only (without JS).
@@ -1999,7 +2012,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     'desc' => $this->_translateInstance->getTranslate('::menuDesc'),
                     'ref' => $this->_applicationInstance::APPLICATION_NAME,
-                    'class' => 'menuListContentActionModules'
+                    'class' => 'menuListContentActionModules',
             );
         }
 
@@ -2027,7 +2040,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 'htlink' => $appHook['link'],
                                 'desc' => $desc,
                                 'ref' => $moduleName,
-                                'class' => 'menuListContentActionHooks'
+                                'class' => 'menuListContentActionHooks',
                         );
                         $this->_metrologyInstance->addLog('disp on menu selfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '70704574');
                     }
@@ -2058,7 +2071,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 'htlink' => $appHook['link'],
                                 'desc' => $desc,
                                 'ref' => $moduleName,
-                                'class' => 'menuListContentActionHooks'
+                                'class' => 'menuListContentActionHooks',
                         );
                         $this->_metrologyInstance->addLog('disp on menu ' . $currentModuleName . 'SelfMenu ' . $appHook['name'] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8b9734c');
                     }
@@ -2122,7 +2135,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                                 'desc' => $desc,
                                 'ref' => $moduleName,
-                                'class' => 'menuListContentActionModules'
+                                'class' => 'menuListContentActionModules',
                                 );
                         $this->_metrologyInstance->addLog('disp on menu (module) ' . $appDescList[$i] . ' - module=' . $moduleName, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '1b232fad');
                     }

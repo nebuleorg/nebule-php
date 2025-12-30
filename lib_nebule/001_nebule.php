@@ -717,10 +717,10 @@ class nebule {
      * Extrait l'argument pour continuer un affichage en ligne à partir d'un objet particulier.
      * Retourne tout type de chaine de texte nécessaire à l'affichage
      * ou une chaine vide si pas d'argument valable trouvé.
-     *
+     * TODO to remove
      * @return string
      */
-    public function getDisplayNextObject(): string {
+    public function getDisplayNextObject_obsolete(): string {
         $this->_metrologyInstance->addLog('extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
 
         $arg = trim(' ' . filter_input(INPUT_GET, Displays::COMMAND_NEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));

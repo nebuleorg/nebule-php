@@ -375,6 +375,7 @@ class ModuleGroups extends Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                            . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . $this->_displayInstance->getCurrentPage()
                             . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $object
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
@@ -385,6 +386,39 @@ class ModuleGroups extends Modules {
                 break;
         }
         return $hookArray;
+    }
+
+
+
+    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch ($hookName) {
+            case 'addMember':
+                $node = $this->_cacheInstance->newNode($item);
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setSocial('self');
+                $instance->setNID($node);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                if ($this::RESTRICTED_TYPE == 'Entity') {
+                    $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+                    $instance->setIcon($instanceIcon);
+                }
+                $instance->setEnableName(true);
+                $instance->setEnableFlags(false);
+                $instance->setEnableFlagState(false);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableFlagUnlocked(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableRefs(true);
+                $instance->setSelfHookName('addMember');
+                $instance->setEnableStatus(false);
+                return $instance;
+                break;
+            default:
+                return null;
+        }
     }
 
 
@@ -881,38 +915,21 @@ class ModuleGroups extends Modules {
 
     protected function _display_InlineAddMembers(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $listEntities = $this->_listMembersToAdd();
-        $listOkEntities = array();
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        foreach ($listEntities as $nid) {
-            $node = $this->_cacheInstance->newNode($nid);
-            if ((isset($listOkEntities[$nid])) || $this->_nebuleInstance->getCurrentGroupInstance()->getIsMemberNID($nid, 'myself'))
-                continue;
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setSocial('self');
-            $instance->setNID($node);
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setIcon($instanceIcon);
-            $instance->setEnableName(true);
-            $instance->setEnableFlags(false);
-            $instance->setEnableFlagState(false);
-            $instance->setEnableFlagEmotions(false);
-            $instance->setEnableFlagUnlocked(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableRefs(true);
-            $instance->setSelfHookName('addMember');
-            $instance->setEnableStatus(false);
-            $instanceList->addItem($instance);
-            $listOkEntities[$nid] = true;
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+            $instanceList->setListHookName('addMember');
+            $instanceList->setListSize(12);
+            $instanceList->setListItems($this->_listMembersToAdd());
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instanceList->setEnableWarnIfEmpty(false);
+            $instanceList->display();
+        } else {
+            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
+            $instance->setMessage('::err_NotPermit');
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+            $instance->display();
         }
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-        $instanceList->setEnableWarnIfEmpty(false);
-        $instanceList->display();
     }
 
     protected function _listMembersToAdd(): array { return $this->_ioInstance->getList(); }
@@ -1147,11 +1164,12 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seeAsGroup' => 'Voir comme groupe',
             '::seenFromOthers' => 'Vu depuis les autres entités',
             '::otherGroups' => 'Les groupes des autres entités',
-            '::createGroup' => 'Créer un groupe',
+            '::createGroup' => "Créer un groupe d'entités",
             '::createGroupClosed' => 'Créer un groupe fermé',
             '::createGroupObfuscated' => 'Créer un groupe dissimulé',
-            '::addMarkedObjects' => 'Ajouter les objets marqués',
+            '::addMarkedObjects' => 'Ajouter les entités marqués',
             '::addToGroup' => 'Ajouter au groupe',
+            '::addMember' => 'Ajouter une entité membre',
             '::deleteGroup' => 'Supprimer le groupe',
             '::createTheGroup' => 'Créer le groupe',
             '::nom' => 'Nom',
@@ -1190,11 +1208,12 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seeAsGroup' => 'See as group',
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
-            '::createGroup' => 'Create a group',
+            '::createGroup' => 'Create a group of entities',
             '::createGroupClosed' => 'Create a closed group',
             '::createGroupObfuscated' => 'Create an obfuscated group',
-            '::addMarkedObjects' => 'Add marked objects',
+            '::addMarkedObjects' => 'Add marked entities',
             '::addToGroup' => 'Add to group',
+            '::addMember' => 'Add an entity as member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
             '::nom' => 'Name',
@@ -1233,11 +1252,12 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seeAsGroup' => 'Ver como grupo',
             '::seenFromOthers' => 'Visto desde otras entidades',
             '::otherGroups' => 'Grupos de otras entidades',
-            '::createGroup' => 'Crear un grupo',
+            '::createGroup' => 'Crear un grupo de entidades',
             '::createGroupClosed' => 'Crear un grupo cerrado',
             '::createGroupObfuscated' => 'Crear un grupo oculto',
-            '::addMarkedObjects' => 'Añadir objetos marcados',
+            '::addMarkedObjects' => 'Añadir objetos entidades',
             '::addToGroup' => 'Añadir al grupo',
+            '::addMember' => 'Add an entity as member',
             '::deleteGroup' => 'Eliminar grupo',
             '::createTheGroup' => 'Crear el grupo',
             '::nom' => 'Nombre',

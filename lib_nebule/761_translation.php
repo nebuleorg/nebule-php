@@ -104,6 +104,9 @@ abstract class Translates extends Functions
             '::entity:locked' => 'Entity locked. Unlock?',
             '::entity:unlocked' => 'Entity unlocked. Lock?',
             '::allApplications' => 'Bootstrap and applications',
+            '::previousPage' => 'Previous page',
+            '::nextPage' => 'Next page',
+            '::page %s/%s' => 'Page %s/%s',
         ],
     ];
 

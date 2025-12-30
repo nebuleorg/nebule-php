@@ -204,6 +204,9 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::flush' => 'Tout déconnecter',
             '::return' => "Revenir à l'application",
             '::err_NoPrivKey' => 'Pas de clé privée !',
+            '::previousPage' => 'Page précédente',
+            '::nextPage' => 'Page suivante',
+            '::page%s%s%s%s' => 'Page %s/%s (%s sur %s)',
         ],
         'en-en' => [
             '::translateModule:fr-fr:ModuleName' => 'French (France)',

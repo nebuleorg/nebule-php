@@ -2,7 +2,7 @@
   - Manage types of nodes as modules.
   - Create entity with différent crypto algo.
   - Sync all on first bootstrap from code entity.
-  - Fix bugg load translate modules.
+  - Fix load external modules.
   - Finish display for links and permit them on list: /Nebule/Library/DisplayLink
   - 701_display modify filter_var() to $this->getFilterInput().
   - Fix buggy crypto_openssl::verify() with openssl_verify().
@@ -10,4 +10,3 @@
   - Fix buggy crypto verify on other entity
   - Add and use code branch on bootstrap and apps.
   - Fix Option app.
-  - Fix translate to have only one level of ::

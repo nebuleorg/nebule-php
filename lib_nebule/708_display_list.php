@@ -18,29 +18,66 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayList extends DisplayItem implements DisplayInterface
-{
-    private array $_list = array();
-    private bool $_onPerLine = false;
+class DisplayList extends DisplayItem implements DisplayInterface {
+    protected array $_fullList = array();
+    protected array $_listAdd = array();
+    protected array $_listItem = array();
+    protected bool $_onPerLine = false;
+    protected float $_currentPage = 0;
+    protected float $_lastPage = 0;
+    protected float $_fullSize = 0;
 
     public function getHTML(): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (sizeof($this->_list) == 0 && $this->_enableWarnIfEmpty)
+        $this->_prepareList();
+        if (sizeof($this->_fullList) == 0 && $this->_enableWarnIfEmpty)
         {
-            $instanceWarn = new DisplayInformation($this->_applicationInstance);
-            $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
+            $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
             $instanceWarn->setMessage('::list:empty');
-            $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
-            $this->_list[] = $instanceWarn;
+            $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $this->_fullList[] = $instanceWarn;
         }
-        if (sizeof($this->_list) == 0)
+        if (sizeof($this->_fullList) == 0)
             return '';
 
         $result = '<div class="layoutList">' . "\n";
         $result .= '<div class="listContent">' . "\n";
-        $result .= "\n";
-        foreach ($this->_list as $item){
+        if ($this->_lastPage > 1) {
+            $url = $this->_prepareURL();
+            if ($this->_currentPage > 1) {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+                $instance->setMessage('::previousPage', (string)$this->_currentPage, (string)$this->_lastPage);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setSize($this->_sizeCSS);
+                $instance->setIconText('');
+                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage - 1));
+                $result .= $instance->getHTML();
+                $result .= "\n";
+            }
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $instance->setMessage('::page%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)($this->_currentPage * $this->_listSize), (string)$this->_fullSize);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->setSize($this->_sizeCSS);
+            $instance->setIconText('');
+            $result .= $instance->getHTML();
+            $result .= "\n";
+            if ($this->_currentPage < $this->_lastPage) {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                $instance->setMessage('::nextPage', (string)$this->_currentPage, (string)$this->_lastPage);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setSize($this->_sizeCSS);
+                $instance->setIconText('');
+                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage + 1));
+                $result .= $instance->getHTML();
+            }
+            $result .= "<br />\n";
+        }
+        foreach ($this->_fullList as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
             if ($item instanceof \Nebule\Library\DisplayInformation) {
                 $item->setSize($this->_sizeCSS);
@@ -53,10 +90,6 @@ class DisplayList extends DisplayItem implements DisplayInterface
                 $item->setSize($this->_sizeCSS);
                 $item->setDisplayAlone(false);
                 $result .= $item->getHTML();
-            /*} elseif ($item instanceof \Nebule\Library\DisplayQuery) {
-                $item->setSize($this->_sizeCSS);
-                $item->setDisplayAlone(false);
-                $result .= $item->getHTML();*/
             } elseif ($item instanceof \Nebule\Library\DisplayBlankLine)
                 $result .= $item->getHTML();
             else
@@ -75,24 +108,67 @@ class DisplayList extends DisplayItem implements DisplayInterface
     public function addItem(DisplayItem $item): void {
         if ($item instanceof \Nebule\Library\DisplayInformation
             || $item instanceof \Nebule\Library\DisplayObject
-            || $item instanceof \Nebule\Library\DisplaySecurity
-            //|| $item instanceof \Nebule\Library\DisplayQuery
+            || $item instanceof \Nebule\Library\DisplaySecurity // and \Nebule\Library\DisplayQuery
             || $item instanceof \Nebule\Library\DisplayBlankLine
         )
-            $this->_list[] = $item;
+            $this->_listAdd[] = $item;
         else
             $this->_nebuleInstance->getMetrologyInstance()->addLog('invalid instance ' . get_class($item) . ' to add on display list', Metrology::LOG_LEVEL_ERROR, __METHOD__, '93aa0cae');
     }
 
-    private bool $_enableWarnIfEmpty = false;
+    protected bool $_enableWarnIfEmpty = false;
+    protected string $_listHookName = '';
+    protected int $_listSize = Displays::DEFAULT_DISPLAY_SIZE_LIST;
 
-    public function setEnableWarnIfEmpty(bool $enable = true): void
-    {
-        $this->_enableWarnIfEmpty = $enable;
+    public function setEnableWarnIfEmpty(bool $enable = true): void { $this->_enableWarnIfEmpty = $enable; }
+
+    public function setOnePerLine(bool $onePerLine = true): void { $this->_onPerLine = $onePerLine; }
+
+    public function setListHookName(string $hookName): void { $this->_listHookName = $hookName; }
+
+    public function setListSize(int $size = Displays::DEFAULT_DISPLAY_SIZE_LIST): void { $this->_listSize = $size; }
+
+    public function setListItems(array $list): void { $this->_listItem = $list; }
+
+    protected function _prepareList(): void {
+        $this->_currentPage = $this->_displayInstance->getCurrentPage();
+        if ($this->_currentPage < 1)
+            $this->_currentPage = 1;
+        $this->_fullSize = sizeof($this->_listItem) + sizeof($this->_listAdd);
+        $this->_lastPage = ceil($this->_fullSize / $this->_listSize);
+        if ($this->_currentPage > $this->_lastPage)
+            $this->_currentPage = $this->_lastPage;
+
+        $count = 0;
+        foreach ($this->_listAdd as $instance) {
+            if (intval($count / $this->_listSize) == ($this->_currentPage - 1))
+                $this->_fullList[$count] = $instance;
+            $count++;
+        }
+        foreach ($this->_listItem as $item) {
+            if (intval($count / $this->_listSize) == ($this->_currentPage - 1)) {
+                $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
+                if ($instance != null)
+                    $this->_fullList[$count] = $instance;
+            }
+            $count++;
+        }
+        $this->_listAdd = array();
+        $this->_listItem = array();
     }
 
-    public function setOnePerLine(bool $onePerLine = true): void {
-        $this->_onPerLine = $onePerLine;
+    protected function _prepareURL(): string  {
+        $url = '?';
+        foreach ($_GET as $key => $value) {
+            if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN || $key == Displays::COMMAND_INLINE)
+                continue;
+            if ($url != '?')
+                $url .= '&';
+            $url .= $key;
+            if ($value != '')
+                $url .= '=' . $value;
+        }
+        return $url;
     }
 
     public static function displayCSS(): void {
@@ -125,11 +201,7 @@ class DisplayList extends DisplayItem implements DisplayInterface
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayBlankLine extends DisplayItem implements DisplayInterface
-{
-    public function getHTML(): string {
-        return "<br />&nbsp;<br />\n";
-    }
-
+class DisplayBlankLine extends DisplayItem implements DisplayInterface {
+    public function getHTML(): string { return "<br />&nbsp;<br />\n"; }
     public static function displayCSS(): void {}
 }
