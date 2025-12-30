@@ -4,15 +4,14 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * La classe ioNetworkHTTP.
+ * The class ioNetworkHTTP.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ioNetworkHTTP extends io implements ioInterface
-{
+class ioNetworkHTTP extends io implements ioInterface {
     const TYPE = 'HTTP';
     const FILTER = '/^http:/i';
     const LOCALISATION = 'http://localhost';
@@ -21,8 +20,7 @@ class ioNetworkHTTP extends io implements ioInterface
     private int $_maxData = 0;
     private string $_defaultLocalisation = '';
 
-    protected function _initialisation(): void
-    {
+    protected function _initialisation(): void {
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         // Détermination de l'URL par défaut.
@@ -40,26 +38,19 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getMode()
      */
-    public function getMode(): string
-    {
-        return 'RO';
-    }
+    public function getMode(): string { return 'RO'; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(string &$key): void
-    {
-        $this->_filesTrancodeKey = $key;
-    }
+    public function setFilesTranscodeKey(string &$key): void { $this->_filesTrancodeKey = $key; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::unsetFilesTranscodeKey()
      */
-    public function unsetFilesTranscodeKey(): void
-    {
+    public function unsetFilesTranscodeKey(): void {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTrancodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTrancodeKey = '';
@@ -69,8 +60,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getLocation()
      */
-    public function getLocation(): string
-    {
+    public function getLocation(): string {
         //return self::LOCALISATION;
         return $this->_defaultLocalisation;
     }
@@ -79,8 +69,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID(string $url = ''): string
-    {
+    public function getInstanceEntityID(string $url = ''): string {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         $url = $url . '/' . References::LOCAL_ENTITY_FILE;
@@ -93,8 +82,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory(string $url = ''): bool
-    {
+    public function checkLinksDirectory(string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         $url = $url . '/' . References::LINKS_FOLDER . '/';
@@ -105,8 +93,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory(string $url = ''): bool
-    {
+    public function checkObjectsDirectory(string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         $url = $url . '/' . References::OBJECTS_FOLDER . '/';
@@ -117,8 +104,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead(string $url = ''): bool
-    {
+    public function checkLinksRead(string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         $url = $url . '/' . References::LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
@@ -129,17 +115,13 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite(string $url = ''): bool
-    {
-        return false;
-    }
+    public function checkLinksWrite(string $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead(string $url = ''): bool
-    {
+    public function checkObjectsRead(string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         $url = $url . '/' . References::OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
@@ -150,17 +132,13 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite(string $url = ''): bool
-    {
-        return false;
-    }
+    public function checkObjectsWrite(string $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(string $oid, string $url = ''): bool
-    {
+    public function checkLinkPresent(string $oid, string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false))
@@ -173,8 +151,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(string $oid, string $url = ''): bool
-    {
+    public function checkObjectPresent(string $oid, string $url = ''): bool {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false))
@@ -187,8 +164,7 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getBlockLinks()
      */
-    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
-    {
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false)
@@ -222,18 +198,13 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObfuscatedLinks()
      */
-    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
-    {
-        // @todo
-        return array();
-    }
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array { return array(); }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::getObject()
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string
-    {
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string {
         if ($url == '')
             $url = $this->_defaultLocalisation;
         if (!Node::checkNID($oid, false)
@@ -250,50 +221,37 @@ class ioNetworkHTTP extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setBlockLink()
      */
-    public function setBlockLink(string $oid, string &$link, string $url = ''): bool
-    {
-        return false;
-    }
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::setObject()
      */
-    public function setObject(string $oid, string &$data, string $url = ''): bool
-    {
-        // Disabled on HTTP
-        return false;
-    }
+    public function setObject(string $oid, string &$data, string $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::unsetObject()
      */
-    public function unsetObject(string $oid, $url = ''): bool
-    {
-        // Disabled on HTTP
-        return false;
-    }
+    public function unsetObject(string $oid, $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::unsetLink()
      */
-    public function unsetLink(string $oid, string &$link, $url = ''): bool
-    {
-        // Disabled on HTTP
-        return false;
-    }
+    public function unsetLink(string $oid, string &$link, $url = ''): bool { return false; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::flushLinks()
      */
-    public function flushLinks(string $oid, $url = ''): bool
-    {
-        // Disabled on HTTP
-        return false;
-    }
+    public function flushLinks(string $oid, $url = ''): bool { return false; }
+
+    /**
+     * {@inheritDoc}
+     * @see ioInterface::getList()
+     */
+    public function getList(string $url = ''): array { return array(); }
 
     /**
      * Vérifie la présence d'un fichier ou dossier via HTTP.
@@ -329,7 +287,6 @@ class ioNetworkHTTP extends io implements ioInterface
         $code = substr($response, $pos + 1, 3);
         if ($code == '200')
             return true;
-
         return false;
     }
 }

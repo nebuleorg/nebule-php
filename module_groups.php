@@ -456,17 +456,15 @@ class ModuleGroups extends Modules {
 
     protected function _displayMyGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate())
             $this->_displayGroupCreateNew();
-        }
 
         $this->_displaySimpleTitle('::myGroups', $this::MODULE_REGISTERED_ICONS[0]);
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::createGroup');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -517,7 +515,7 @@ class ModuleGroups extends Modules {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::createGroup');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -917,9 +915,7 @@ class ModuleGroups extends Modules {
         $instanceList->display();
     }
 
-    protected function _listMembersToAdd(): array {
-        return $this->_entitiesInstance->getListEntitiesID();
-    }
+    protected function _listMembersToAdd(): array { return $this->_ioInstance->getList(); }
 
     // Copy of ModuleConversations::_listOfConversations()
     protected function _listOfGroups(array $links, string $socialClass = 'all', string $hookName = 'notMyGroups'): void {
@@ -1134,9 +1130,7 @@ class ModuleGroupEntities extends ModuleGroups {
         return true; // FIXME for group of entities
     }
 
-    protected function _listMembersToAdd(): array {
-        return $this->_entitiesInstance->getListEntitiesID();
-    }
+    protected function _listMembersToAdd(): array { return $this->_entitiesInstance->getListEntitiesID(); }
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

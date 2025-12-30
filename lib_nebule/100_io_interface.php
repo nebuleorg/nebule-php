@@ -264,4 +264,12 @@ interface ioInterface
      * @return boolean
      */
     public function unsetObject(string $oid, string $url = ''): bool;
+
+    /**
+     * Retourne la liste des NID de tous les objets présents et ayant des liens.
+     *
+     * @param string $url
+     * @return array
+     */
+    public function getList(string $url = ''): array;
 }

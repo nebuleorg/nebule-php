@@ -4,7 +4,7 @@ namespace Nebule\Library;
 use Nebule\Library\nebule;
 
 /**
- * La classe ioDisk.
+ * The class ioDisk.
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -37,8 +37,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getMode()
      */
-    public function getMode(): string
-    {
+    public function getMode(): string {
         if ($this->_mode == '') {
             $this->_mode = 'RO';
             if ($this->checkObjectsWrite()
@@ -53,17 +52,13 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setFilesTranscodeKey()
      */
-    public function setFilesTranscodeKey(string &$key): void
-    {
-        $this->_filesTranscodeKey = $key;
-    }
+    public function setFilesTranscodeKey(string &$key): void { $this->_filesTranscodeKey = $key; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::unsetFilesTranscodeKey()
      */
-    public function unsetFilesTranscodeKey(): void
-    {
+    public function unsetFilesTranscodeKey(): void {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
         $this->_filesTranscodeKey = '';
@@ -73,17 +68,13 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getLocation()
      */
-    public function getLocation(): string
-    {
-        return self::LOCALISATION;
-    }
+    public function getLocation(): string { return self::LOCALISATION; }
 
     /**
      * {@inheritDoc}
      * @see ioInterface::getInstanceEntityID()
      */
-    public function getInstanceEntityID(string $url = ''): string
-    {
+    public function getInstanceEntityID(string $url = ''): string {
         $filesize = filesize(References::LOCAL_ENTITY_FILE);
         return file_get_contents(References::LOCAL_ENTITY_FILE, false, null, 0, $filesize);
     }
@@ -92,13 +83,11 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksDirectory()
      */
-    public function checkLinksDirectory(string $url = ''): bool
-    {
+    public function checkLinksDirectory(string $url = ''): bool {
         if (!file_exists(References::LINKS_FOLDER)
             || !is_dir(References::LINKS_FOLDER)
         )
             return false;
-
         return true;
     }
 
@@ -106,14 +95,11 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsDirectory()
      */
-    public function checkObjectsDirectory(string $url = ''): bool
-    {
+    public function checkObjectsDirectory(string $url = ''): bool {
         if (!file_exists(References::OBJECTS_FOLDER)
             || !is_dir(References::OBJECTS_FOLDER)
-        ) {
+        )
             return false;
-        }
-
         return true;
     }
 
@@ -121,8 +107,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksRead()
      */
-    public function checkLinksRead(string $url = ''): bool
-    {
+    public function checkLinksRead(string $url = ''): bool {
         $file = References::LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
@@ -130,7 +115,6 @@ class ioDisk extends io implements ioInterface
         $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false)
             return false;
-
         return true;
     }
 
@@ -138,12 +122,10 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinksWrite()
      */
-    public function checkLinksWrite(string $url = ''): bool
-    {
+    public function checkLinksWrite(string $url = ''): bool {
         $file = References::LINKS_FOLDER . '/0';
         $resultDelete = false;
 
-        // Test la création si pas déjà présent.
         if (file_exists($file))
             $resultCreate = true;
         else {
@@ -152,7 +134,6 @@ class ioDisk extends io implements ioInterface
                 'checkLinksWrite');
         }
 
-        // Test la suppression si le fichier a pu être créé.
         if (file_exists($file))
             unlink($file);
         if (!file_exists($file))
@@ -165,8 +146,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsRead()
      */
-    public function checkObjectsRead(string $url = ''): bool
-    {
+    public function checkObjectsRead(string $url = ''): bool {
         $file = References::OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
@@ -174,7 +154,6 @@ class ioDisk extends io implements ioInterface
         $data = file_get_contents($file, false, null, 0, 16);
         if ($data === false)
             return false;
-
         return true;
     }
 
@@ -182,8 +161,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectsWrite()
      */
-    public function checkObjectsWrite(string $url = ''): bool
-    {
+    public function checkObjectsWrite(string $url = ''): bool {
         $file = References::OBJECTS_FOLDER . '/0';
         $resultDelete = false;
 
@@ -209,14 +187,12 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkLinkPresent()
      */
-    public function checkLinkPresent(string $oid, string $url = ''): bool
-    {
+    public function checkLinkPresent(string $oid, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || !file_exists(References::LINKS_FOLDER . '/' . $oid)
             || is_dir(References::LINKS_FOLDER . '/' . $oid)
         )
             return false;
-
         return true;
     }
 
@@ -224,14 +200,12 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::checkObjectPresent()
      */
-    public function checkObjectPresent(string $oid, string $url = ''):bool
-    {
+    public function checkObjectPresent(string $oid, string $url = ''):bool {
         if (!Node::checkNID($oid, false)
             || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
             || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
         )
             return false;
-
         return true;
     }
 
@@ -239,8 +213,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getBlockLinks()
      */
-    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array
-    {
+    public function getBlockLinks(string $oid, string $url = '', int $offset = 0): array {
         $linkRead = 0;
         $linkList = array();
 
@@ -266,8 +239,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObfuscatedLinks()
      */
-    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array
-    {
+    public function getObfuscatedLinks(string $entity, string $signer = '0', string $url = ''): array {
         $linksRead = 0;
         $fileList = array();
         $linksList = array();
@@ -333,8 +305,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getObject()
      */
-    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string
-    {
+    public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string {
         if (!Node::checkNID($oid, false)
             || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
             || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
@@ -355,8 +326,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setBlockLink()
      */
-    public function setBlockLink(string $oid, string &$link, string $url = ''): bool
-    {
+    public function setBlockLink(string $oid, string &$link, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || $link == ''
             || !$this->_checkFileLink($oid, $link)
@@ -368,19 +338,12 @@ class ioDisk extends io implements ioInterface
             return false;
 
         if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
-            // If the link file is present, check for the presence of the link.
-            // Extract an array with one element per line.
             $l = file(References::LINKS_FOLDER . '/' . $oid);
             foreach ($l as $k) {
                 // Si déjà présent, on quitte.
                 if (trim($k) == trim($link))
                     return true;
             }
-        /*} else {
-            // If the link file is not present, create it.
-            file_put_contents(
-                nebule::NEBULE_LOCAL_LINKS_FOLDER . '/' . $oid,
-                'nebule/liens/version/' . $this->_configuration->getOptionUntyped('defaultLinksVersion') . "\n");*/
         }
 
         if (file_put_contents(References::LINKS_FOLDER . '/' . $oid, $link . "\n", FILE_APPEND) !== false)
@@ -394,8 +357,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::setObject()
      */
-    public function setObject(string $oid, string &$data, string $url = ''): bool
-    {
+    public function setObject(string $oid, string &$data, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
@@ -418,8 +380,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::unsetObject()
      */
-    public function unsetObject(string $oid, string $url = ''): bool
-    {
+    public function unsetObject(string $oid, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
@@ -445,8 +406,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::unsetLink()
      */
-    public function unsetLink(string $oid, string &$link, string $url = ''): bool
-    {
+    public function unsetLink(string $oid, string &$link, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || !$this->_checkFileLink($oid, $link)
             || $link == ''
@@ -470,8 +430,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::flushLinks()
      */
-    public function flushLinks(string $oid, string $url = ''): bool
-    {
+    public function flushLinks(string $oid, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -494,6 +453,12 @@ class ioDisk extends io implements ioInterface
     }
 
     /**
+     * {@inheritDoc}
+     * @see ioInterface::getList()
+     */
+    public function getList(string $url = ''): array { return array_diff(scandir(References::LINKS_FOLDER . '/'), array('.', '..')); }
+
+    /**
      * Returns a translated object identifier based on the translation key.
      * Translation is done by hashing the concatenation of object ID, entity ID and translation key.
      * The hash of just the object ID is already irreversible by itself.
@@ -505,10 +470,7 @@ class ioDisk extends io implements ioInterface
      * @param string $id
      * @return string
      */
-    private function _getTranlateID(string $id): string
-    {
-        return $this->getNidFromData($id . $this->_entitiesInstance->getGhostEntityEID() . $this->_filesTranscodeKey);
-    }
+    private function _getTranslateID(string $id): string { return $this->getNidFromData($id . $this->_entitiesInstance->getGhostEntityEID() . $this->_filesTranscodeKey); }
 
     /**
      * Checking the links file we need to use.
@@ -520,70 +482,44 @@ class ioDisk extends io implements ioInterface
      * @param string $link
      * @return boolean
      */
-    private function _checkFileLink(string &$oid, string &$link): bool
-    {
-        /**
-         * Index of field being read, from 1 to 7.
-         */
+    private function _checkFileLink(string &$oid, string &$link): bool {
         $j = 1;
-
-        /**
-         * Action detected.
-         */
         $action = '';
-
-        /**
-         * First read of fields, first field.
-         *
-         * @var string $e
-         */
         $e = strtok(trim($link), '_');
 
-        // Extract if link type c.
         while ($e !== false) {
-            if ($j == 4) {
+            if ($j == 4)
                 $action = trim($e);
-            }
-            if ($j < 8) {
-                // Reading the following fields, next field.
+            if ($j < 8)
                 $e = strtok('_');
-            } else {
-                // Must not have more than 7 fields.
+            else
                 return false;
-            }
             $j++;
         }
 
-        // Check the object if obscured link or not.
         if ($action == 'c') {
             $hashentsign = '';
             $hashentdest = '';
             $j = 1;
             $e = strtok(trim($link), '-');
             while ($e !== false) {
-                if ($j == 1) {
+                if ($j == 1)
                     $hashentsign = trim($e);
-                } else {
+                else
                     $hashentdest = trim($e);
-                }
-                if ($j < 3) {
-                    // Lecture de la suite des champs, champs suivant.
+                if ($j < 3)
                     $e = strtok('-');
-                } else {
-                    // Ne doit pas avoir plus de 2 champs.
+                else
                     return false;
-                }
                 $j++;
             }
 
-            if ($hashentsign = ''
-                || $hashentdest = ''
+            if ($hashentsign == ''
+                || $hashentdest == ''
                 || $hashentsign . '-' . $hashentdest != $oid
-            ) {
+            )
                 return false;
-            }
         }
-
         return true;
     }
 }
