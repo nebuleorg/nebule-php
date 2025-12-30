@@ -1,17 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Upload;
-use Nebule\Library\ActionsLinks;
-use Nebule\Library\DisplayInformation;
-use Nebule\Library\DisplayItem;
-use Nebule\Library\DisplayItemIconMessage;
-use Nebule\Library\DisplayNotify;
-use Nebule\Library\Metrology;
-use Nebule\Library\Actions;
-use Nebule\Library\Applications;
-use Nebule\Library\Displays;
+use Nebule\Library\nebule;
 use Nebule\Library\References;
+use Nebule\Library\Metrology;
+use Nebule\Library\ApplicationInterface;
+use Nebule\Library\Applications;
+use Nebule\Library\DisplayInterface;
+use Nebule\Library\Displays;
+use Nebule\Library\ActionsInterface;
+use Nebule\Library\Actions;
+use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
+use Nebule\Library\ModuleInterface;
+use Nebule\Library\Modules;
+use Nebule\Library\ModelModuleHelp;
+use Nebule\Library\ModuleTranslates;
 
 /*
 |------------------------------------------------------------------------------------------
@@ -170,9 +174,9 @@ class Display extends Displays
                         $instanceMessage->setDisplayAlone(true);
                         $instanceMessage->setRatio(DisplayItem::RATIO_SHORT);
                         if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink'))
-                            $instanceMessage->setMessage('::::info_OnlySignedLinks');
+                            $instanceMessage->setMessage('::info_OnlySignedLinks');
                         else
-                            $instanceMessage->setMessage('::::info_OnlyLinksFromCodeMaster');
+                            $instanceMessage->setMessage('::info_OnlyLinksFromCodeMaster');
                         $instanceMessage->display();
                     }
                     ?>
@@ -249,7 +253,7 @@ class Display extends Displays
                     $instanceList->addItem($instanceMessageUnlock);
 
                     $instanceMessageError = new DisplayInformation($this->_applicationInstance);
-                    $instanceMessageError->setMessage('::::err_NotPermit');
+                    $instanceMessageError->setMessage('::err_NotPermit');
                     $instanceMessageError->setType(DisplayItemIconMessage::TYPE_ERROR);
                     $instanceMessageError->setIconText('Final result of conditions');
                     $instanceList->addItem($instanceMessageError);
@@ -340,79 +344,79 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'ATTENTION !',
-            '::::ERROR' => 'ERREUR !',
-            '::::RESCUE' => 'Mode de sauvetage !',
-            '::::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
-            '::::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
-            '::::info_OnlySignedLinks' => 'Uniquement des liens signés !',
-            '::::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
-            '::::err_NotPermit' => 'Non autorisé !',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Message',
+            '::WARN' => 'ATTENTION !',
+            '::ERROR' => 'ERREUR !',
+            '::RESCUE' => 'Mode de sauvetage !',
+            '::warn_ServNotPermitWrite' => "Ce serveur n'autorise pas les modifications !",
+            '::warn_flushSessionAndCache' => "Toutes les données de connexion ont été effacées !",
+            '::info_OnlySignedLinks' => 'Uniquement des liens signés !',
+            '::info_OnlyLinksFromCodeMaster' => 'Uniquement les liens signés du maître du code !',
+            '::err_NotPermit' => 'Non autorisé !',
+            '::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'en-en' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'WARNING!',
-            '::::ERROR' => 'ERROR!',
-            '::::RESCUE' => 'Rescue mode!',
-            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            '::::info_OnlySignedLinks' => 'Only signed links!',
-            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            '::::err_NotPermit' => 'Not authorized!',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Message',
+            '::WARN' => 'WARNING!',
+            '::ERROR' => 'ERROR!',
+            '::RESCUE' => 'Rescue mode!',
+            '::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::info_OnlySignedLinks' => 'Only signed links!',
+            '::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::err_NotPermit' => 'Not authorized!',
+            '::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
         'es-co' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Mensaje',
-            '::::WARN' => '¡ADVERTENCIA!',
-            '::::ERROR' => '¡ERROR!',
-            '::::RESCUE' => '¡Modo de rescate!',
-            '::::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
-            '::::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
-            '::::info_OnlySignedLinks' => 'Only signed links!',
-            '::::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
-            '::::err_NotPermit' => 'Not authorized!',
-            '::::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
-            '::::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
-            '::::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
-            '::::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
-            '::::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
-            '::::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
-            '::::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
-            '::::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
-            '::::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
-            '::::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Mensaje',
+            '::WARN' => '¡ADVERTENCIA!',
+            '::ERROR' => '¡ERROR!',
+            '::RESCUE' => '¡Modo de rescate!',
+            '::warn_ServNotPermitWrite' => 'This server do not permit modifications!',
+            '::warn_flushSessionAndCache' => 'All datas of this connexion have been flushed!',
+            '::info_OnlySignedLinks' => 'Only signed links!',
+            '::info_OnlyLinksFromCodeMaster' => 'Only links signed by the code master!',
+            '::err_NotPermit' => 'Not authorized!',
+            '::act_chk_errCryptHash' => "La fonction de prise d'empreinte cryptographique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptHashkey' => "La taille de l'empreinte cryptographique est trop petite !",
+            '::act_chk_errCryptHashkey' => "La taille de l'empreinte cryptographique est invalide !",
+            '::act_chk_errCryptSym' => "La fonction de chiffrement cryptographique symétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est trop petite !",
+            '::act_chk_errCryptSymkey' => "La taille de clé de chiffrement cryptographique symétrique est invalide !",
+            '::act_chk_errCryptAsym' => "La fonction de chiffrement cryptographique asymétrique ne fonctionne pas correctement !",
+            '::act_chk_warnCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est trop petite !",
+            '::act_chk_errCryptAsymkey' => "La taille de clé de chiffrement cryptographique asymétrique est invalide !",
+            '::act_chk_errBootstrap' => "L'empreinte cryptographique du bootstrap est invalide !",
+            '::act_chk_warnSigns' => 'La vérification des signatures de liens est désactivée !',
+            '::act_chk_errSigns' => 'La vérification des signatures de liens ne fonctionne pas !',
         ],
     ];
 }

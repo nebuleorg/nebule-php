@@ -272,37 +272,37 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
         switch (strtolower($type)) {
             case self::TYPE_OK:
                 $this->_type = 'Ok';
-                $this->_iconText = '::::OK';
+                $this->_iconText = '::OK';
                 $icon = self::ICON_OK_RID;
                 break;
             case self::TYPE_WARN:
                 $this->_type = 'Warn';
-                $this->_iconText = '::::WARN';
+                $this->_iconText = '::WARN';
                 $icon = self::ICON_WARN_RID;
                 break;
             case self::TYPE_ERROR:
                 $this->_type = 'Error';
-                $this->_iconText = '::::ERROR';
+                $this->_iconText = '::ERROR';
                 $icon = self::ICON_ERROR_RID;
                 break;
             case self::TYPE_MESSAGE:
                 $this->_type = 'Message';
-                $this->_iconText = '::::INFORMATION';
+                $this->_iconText = '::INFORMATION';
                 $icon = self::ICON_INFORMATION_RID;
                 break;
             case self::TYPE_PLAY:
                 $this->_type = 'Go';
-                $this->_iconText = '::::GO';
+                $this->_iconText = '::GO';
                 $icon = self::ICON_PLAY_RID;
                 break;
             case self::TYPE_BACK:
                 $this->_type = 'Back';
-                $this->_iconText = '::::BACK';
+                $this->_iconText = '::BACK';
                 $icon = self::ICON_BACK_RID;
                 break;
             default:
                 $this->_type = 'Information';
-                $this->_iconText = '::::INFORMATION';
+                $this->_iconText = '::INFORMATION';
                 $icon = self::ICON_INFORMATION_RID;
                 break;
         }

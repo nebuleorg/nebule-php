@@ -719,16 +719,16 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            ':::version' => 'Version',
-            '::::err_NotPermit' => 'Non autorisé !',
+            '::version' => 'Version',
+            '::err_NotPermit' => 'Non autorisé !',
         ],
         'en-en' => [
-            ':::version' => 'Version',
-            '::::err_NotPermit' => 'Not authorized!',
+            '::version' => 'Version',
+            '::err_NotPermit' => 'Not authorized!',
         ],
         'es-co' => [
-            ':::version' => 'Version',
-            '::::err_NotPermit' => 'Not authorized!',
+            '::version' => 'Version',
+            '::err_NotPermit' => 'Not authorized!',
         ],
     ];
 }

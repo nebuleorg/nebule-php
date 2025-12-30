@@ -764,13 +764,13 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
         'en-en' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
         'es-co' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
     ];
 }

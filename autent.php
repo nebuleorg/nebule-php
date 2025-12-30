@@ -223,9 +223,9 @@ class Display extends Displays
             $this->_displayInlineContentID();
         } else {
             $this->_metrologyInstance->addLog('Error loading ModuleAutent', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57b017ad');
-            $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-            $notify->setMessage('::::ERROR');
+            $notify = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
+            $notify->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+            $notify->setMessage('::ERROR');
             $notify->display();
         }
     }
@@ -281,13 +281,13 @@ class Translate extends Translates
 {
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
         'en-en' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
         'es-co' => [
-            ':::version' => 'Version',
+            '::version' => 'Version',
         ],
     ];
 }

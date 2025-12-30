@@ -461,6 +461,8 @@ class ModuleGroups extends Modules {
             $this->_displayGroupCreateNew();
         }
 
+        $this->_displaySimpleTitle('::myGroups', $this::MODULE_REGISTERED_ICONS[0]);
+
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
@@ -483,7 +485,6 @@ class ModuleGroups extends Modules {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
-        $this->_displaySimpleTitle('::myGroups', $this::MODULE_REGISTERED_ICONS[0]);
         $this->_displayInstance->registerInlineContentID('my_groups');
     }
 
@@ -563,7 +564,7 @@ class ModuleGroups extends Modules {
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
                 $instance->setMessage('::createGroupOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
-                $instance->setIconText('::::OK');
+                $instance->setIconText('::OK');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -595,7 +596,7 @@ class ModuleGroups extends Modules {
                 $instance->setMessage('::createGroupNOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIconText('::::ERROR');
+                $instance->setIconText('::ERROR');
             }
             $instanceList->addItem($instance);
             $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
@@ -695,7 +696,7 @@ class ModuleGroups extends Modules {
             $instanceList->display();
         } else {
             $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::::err_NotPermit');
+            $instance->setMessage('::err_NotPermit');
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }

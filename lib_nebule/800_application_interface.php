@@ -541,25 +541,25 @@ class Traduction extends Traductions
 	 */
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'ATTENTION !',
-            '::::ERROR' => 'ERREUR !',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Message',
+            '::WARN' => 'ATTENTION !',
+            '::ERROR' => 'ERREUR !',
         ],
         'en-en' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Message',
-            '::::WARN' => 'WARNING!',
-            '::::ERROR' => 'ERROR!',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Message',
+            '::WARN' => 'WARNING!',
+            '::ERROR' => 'ERROR!',
         ],
         'es-co' => [
-            '::::INFO' => 'Information',
-            '::::OK' => 'OK',
-            '::::INFORMATION' => 'Mensaje',
-            '::::WARN' => '¡ADVERTENCIA!',
-            '::::ERROR' => '¡ERROR!',
+            '::INFO' => 'Information',
+            '::OK' => 'OK',
+            '::INFORMATION' => 'Mensaje',
+            '::WARN' => '¡ADVERTENCIA!',
+            '::ERROR' => '¡ERROR!',
         ],
     ];
 }

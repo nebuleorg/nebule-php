@@ -1031,7 +1031,7 @@ class ModuleEntities extends Modules
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
-            $instance->setIconText('::::Password');
+            $instance->setIconText('::Password');
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
@@ -1044,7 +1044,7 @@ class ModuleEntities extends Modules
             $instance->setIconText('::confirm');
         } else {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setMessage('::::err_NotPermit');
+            $instance->setMessage('::err_NotPermit');
             $instance->setSocial('all');
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
@@ -1065,7 +1065,7 @@ class ModuleEntities extends Modules
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
-            $instance->setIconText('::::Password');
+            $instance->setIconText('::Password');
             $instanceList->addItem($instance);
 
             $instance = new DisplayQuery($this->_applicationInstance);
@@ -1662,7 +1662,7 @@ class ModuleEntities extends Modules
 
                 $instance->setMessage('::EntityCreated');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
-                $instance->setIconText('::::OK');
+                $instance->setIconText('::OK');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -1721,7 +1721,7 @@ class ModuleEntities extends Modules
                 $instance->setMessage('::EntityNotCreated');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIconText('::::ERROR');
+                $instance->setIconText('::ERROR');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -1838,8 +1838,8 @@ class ModuleEntities extends Modules
                 $instance->setInputName(\Nebule\Library\ActionsEntities::CREATE_AUTONOMY);
                 $instance->setIconText('::CreateEntityAutonomy');
                 $instance->setSelectList(array(
-                        'y' => $this->_translateInstance->getTranslate('::::yes'),
-                        'n' => $this->_translateInstance->getTranslate('::::no'),
+                        'y' => $this->_translateInstance->getTranslate('::yes'),
+                        'n' => $this->_translateInstance->getTranslate('::no'),
                 ));
                 $instance->setWithFormOpen(false);
                 $instance->setWithFormClose(false);
@@ -1851,7 +1851,7 @@ class ModuleEntities extends Modules
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_PASSWORD);
             $instance->setInputValue('');
             $instance->setInputName(\Nebule\Library\ActionsEntities::CREATE_PASSWORD1);
-            $instance->setIconText('::::Password');
+            $instance->setIconText('::Password');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
@@ -1886,7 +1886,7 @@ class ModuleEntities extends Modules
             $instanceList->display();
         } else {
             $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::::err_NotPermit');
+            $instance->setMessage('::err_NotPermit');
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }
@@ -2200,7 +2200,6 @@ class ModuleEntities extends Modules
             '::ListEntitiesDesc' => 'Lister les entités',
             '::CreateEntity' => 'Créer',
             '::naming' => 'Nommage',
-            '::confirm' => 'Confirmation',
             '::CreateEntityOther' => 'Autre',
             '::CreateEntityAlgorithm' => 'Algorithme',
             '::CreateEntityTypeUndefined' => '(Indéfini)',
@@ -2300,7 +2299,6 @@ class ModuleEntities extends Modules
             '::ListEntitiesDesc' => 'Show list of entities',
             '::CreateEntity' => 'Create',
             '::naming' => 'Naming',
-            '::confirm' => 'Confirm',
             '::CreateEntityOther' => 'Other',
             '::CreateEntityAlgorithm' => 'Algorithm',
             '::CreateEntityTypeUndefined' => '(Undefined)',
@@ -2400,7 +2398,6 @@ class ModuleEntities extends Modules
             '::ListEntitiesDesc' => 'Mostrar lista de entidades',
             '::CreateEntity' => 'Crear',
             '::naming' => 'Nombramiento',
-            '::confirm' => 'Confirmar',
             '::CreateEntityOther' => 'Otro',
             '::CreateEntityAlgorithm' => 'Algoritmo',
             '::CreateEntityTypeUndefined' => '(Indefinido)',

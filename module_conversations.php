@@ -209,7 +209,7 @@ class ModuleConversations extends Modules {
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
                 $instance->setMessage('::createGroupOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
-                $instance->setIconText('::::OK');
+                $instance->setIconText('::OK');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -241,7 +241,7 @@ class ModuleConversations extends Modules {
                 $instance->setMessage('::createGroupNOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIconText('::::ERROR');
+                $instance->setIconText('::ERROR');
             }
             $instanceList->addItem($instance);
             $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
@@ -282,8 +282,8 @@ class ModuleConversations extends Modules {
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
             $instance->setIconText('::createGroupClosed');
             $instance->setSelectList(array(
-                'y' => $this->_translateInstance->getTranslate('::::yes'),
-                'n' => $this->_translateInstance->getTranslate('::::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+                'n' => $this->_translateInstance->getTranslate('::no'),
             ));
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
@@ -295,8 +295,8 @@ class ModuleConversations extends Modules {
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
             $instance->setIconText('::createGroupObfuscated');
             $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::::no'),
-                'y' => $this->_translateInstance->getTranslate('::::yes'),
+                'n' => $this->_translateInstance->getTranslate('::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
             ));
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
@@ -320,7 +320,7 @@ class ModuleConversations extends Modules {
             $instanceList->display();
         } else {
             $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::::err_NotPermit');
+            $instance->setMessage('::err_NotPermit');
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }
@@ -414,11 +414,9 @@ class ModuleConversations extends Modules {
             '::ModuleDescription' => 'Module de gestion des messages',
             '::ModuleHelp' => 'Ce module permet de voir et de gérer les messages.',
             '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Gestion des messages.',
+            '::AppDesc1' => 'Gestion des messages',
             '::myConversations' => 'Liste des conversations',
             '::listMessages' => 'Liste des messages',
-            '::login' => 'Se connecter',
-            '::confirm' => 'Confirmation',
         ],
         'en-en' => [
             '::ModuleName' => 'Messages module',
@@ -426,11 +424,9 @@ class ModuleConversations extends Modules {
             '::ModuleDescription' => 'Messages management module',
             '::ModuleHelp' => 'This module permit to see and manage messages.',
             '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Manage messages.',
+            '::AppDesc1' => 'Manage messages',
             '::myConversations' => 'List of conversations',
             '::listMessages' => 'List of messages',
-            '::login' => 'Connecting',
-            '::confirm' => 'Confirm',
         ],
         'es-co' => [
             '::ModuleName' => 'Messages module',
@@ -438,11 +434,9 @@ class ModuleConversations extends Modules {
             '::ModuleDescription' => 'Messages management module',
             '::ModuleHelp' => 'This module permit to see and manage messages.',
             '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Manage messages.',
+            '::AppDesc1' => 'Manage messages',
             '::myConversations' => 'List of conversations',
             '::listMessages' => 'List of messages',
-            '::login' => 'Conectando',
-            '::confirm' => 'Confirmación',
         ],
     ];
 }

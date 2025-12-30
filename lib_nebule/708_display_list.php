@@ -30,7 +30,7 @@ class DisplayList extends DisplayItem implements DisplayInterface
         {
             $instanceWarn = new DisplayInformation($this->_applicationInstance);
             $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
-            $instanceWarn->setMessage('::::list:empty');
+            $instanceWarn->setMessage('::list:empty');
             $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
             $this->_list[] = $instanceWarn;
         }

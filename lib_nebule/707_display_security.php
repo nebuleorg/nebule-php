@@ -41,12 +41,12 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
 
         if ($this->_rescueInstance->getModeRescue()) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
-            $instance->setMessage('::::RESCUE');
+            $instance->setMessage('::RESCUE');
             $error = 'wr';
             $result .= $instance->getHTML();
         } elseif ($this->_displayFull) {
             $instance->setType(DisplayItemIconMessage::TYPE_OK);
-            $instance->setMessage('::::RESCUE');
+            $instance->setMessage('::RESCUE');
             $result .= $instance->getHTML();
         }
 
@@ -130,7 +130,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $result .= $instance->getHTML();
         }
 
-        $instance->setMessage('::::warn_ServNotPermitWrite');
+        $instance->setMessage('::warn_ServNotPermitWrite');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $error = 'wr';
@@ -140,7 +140,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
             $result .= $instance->getHTML();
         }
 
-        $instance->setMessage('::::warn_flushSessionAndCache');
+        $instance->setMessage('::warn_flushSessionAndCache');
         if ($this->_nebuleInstance->getCacheInstance()->getFlushCache()) {
             $instance->setType(DisplayItemIconMessage::TYPE_WARN);
             $error = 'wr';
@@ -153,7 +153,7 @@ class DisplaySecurity extends DisplayItemIconMessageSizeable implements DisplayI
         if ( $this->_displayOk && $error == 'ok')
         {
             $instance->setType(DisplayItemIconMessage::TYPE_OK);
-            $instance->setMessage('::::SecurityChecks');
+            $instance->setMessage('::SecurityChecks');
             $result .= $instance->getHTML();
         }
 

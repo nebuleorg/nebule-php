@@ -23,16 +23,16 @@ use Nebule\Library\ModuleTranslates;
  */
 class ModuleAutent extends Modules {
     const MODULE_TYPE = 'Application';
-    const MODULE_NAME = '::autent:module:objects:ModuleName';
-    const MODULE_MENU_NAME = '::autent:module:objects:MenuName';
+    const MODULE_NAME = '::ModuleName';
+    const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
-    const MODULE_DESCRIPTION = '::autent:module:objects:ModuleDescription';
+    const MODULE_DESCRIPTION = '::ModuleDescription';
     const MODULE_VERSION = '020251230';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
-    const MODULE_HELP = '::autent:module:objects:ModuleHelp';
+    const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array('desc', 'login', 'logout');
@@ -100,7 +100,7 @@ class ModuleAutent extends Modules {
      */
     private function _displayInfo(): void {
         $this->_metrologyInstance->addLog('display desc ' . $this->_entitiesInstance->getGhostEntityEID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1f00a8b1');
-        $this->_displaySimpleTitle('::::INFO');
+        $this->_displaySimpleTitle('::INFO');
 
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
 
@@ -108,7 +108,7 @@ class ModuleAutent extends Modules {
             || $this->_applicationInstance->getCheckSecurityAll() != 'OK'
         ) {
             $urlLink = '/?f';
-            $title = '::::err_NotPermit';
+            $title = '::err_NotPermit';
             $type = \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR;
         } elseif ($this->_unlocked) {
             $urlLink = '/?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -155,7 +155,7 @@ class ModuleAutent extends Modules {
             if ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')
                 && $this->_applicationInstance->getCheckSecurityAll() == 'OK')
                 $this->_displayAddButtonQuery($instanceList,
-                    '::::Password',
+                    '::Password',
                     \Nebule\Library\DisplayQuery::QUERY_PASSWORD,
                     '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_comebackAppId
@@ -164,7 +164,7 @@ class ModuleAutent extends Modules {
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID(),
                     References::COMMAND_PASSWORD);
             else
-                $this->_displayAddButton($instanceList, '::::err_NotPermit', \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR, '');
+                $this->_displayAddButton($instanceList, '::err_NotPermit', \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR, '');
         } else
             $this->_displayAddButton($instanceList, '::err_NoPrivKey', \Nebule\Library\DisplayItemIconMessage::TYPE_ERROR, '');
         $this->_addBlankLine($instanceList);
@@ -283,34 +283,28 @@ class ModuleAutent extends Modules {
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::privateKey' => 'Clé privée',
-            '::connexion' => 'Connexion',
-            '::login' => 'Se connecter',
-            '::logout' => 'Déconnecter',
-            '::selfLogout' => 'Se déconnecter',
-            '::flush' => 'Tout déconnecter',
-            '::return' => "Revenir à l'application",
-            '::err_NoPrivKey' => 'Pas de clé privée !',
+            '::ModuleName' => "Module d'authentification",
+            '::MenuName' => 'Authentification',
+            '::ModuleDescription' => "Module de gestion de l'authentification",
+            '::ModuleHelp' => "Ce module permet de s'authentifier avec une entité.",
+            '::AppTitle1' => 'Authentification',
+            '::AppDesc1' => "Gestion de l'authentification",
         ],
         'en-en' => [
-            '::privateKey' => 'Private key',
-            '::connexion' => 'Connection',
-            '::login' => 'Connecting',
-            '::logout' => 'Disconnecting',
-            '::selfLogout' => 'Disconnecting myself',
-            '::flush' => 'Disconnecting all',
-            '::return' => 'Return to application',
-            '::err_NoPrivKey' => 'No private key!',
+            '::ModuleName' => 'Authentication module',
+            '::MenuName' => 'Authenticate',
+            '::ModuleDescription' => 'Authentication management module',
+            '::ModuleHelp' => 'This module permit to authenticate with an entity.',
+            '::AppTitle1' => 'Authentication',
+            '::AppDesc1' => 'Manage authentication',
         ],
         'es-co' => [
-            '::privateKey' => 'Private key',
-            '::connexion' => 'Connection',
-            '::login' => 'Connecting',
-            '::logout' => 'Disconnecting',
-            '::selfLogout' => 'Disconnecting myself',
-            '::flush' => 'Disconnecting all',
-            '::return' => 'Return to application',
-            '::err_NoPrivKey' => 'No private key!',
+            '::ModuleName' => 'Authentication module',
+            '::MenuName' => 'Authenticate',
+            '::ModuleDescription' => 'Authentication management module',
+            '::ModuleHelp' => 'This module permit to authenticate with an entity.',
+            '::AppTitle1' => 'Authentication',
+            '::AppDesc1' => 'Manage authentication',
         ],
     ];
 }

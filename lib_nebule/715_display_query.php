@@ -144,31 +144,31 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         switch (strtolower($type)) {
             case self::QUERY_PASSWORD:
                 $this->_type = 'Password';
-                $this->_iconText = $this->_translateInstance->getTranslate('::::Password');
+                $this->_iconText = $this->_translateInstance->getTranslate('::Password');
                 $icon = self::ICON_PASSWORD_RID;
                 $this->_inputType = 'password';
                 break;
             case self::QUERY_BOOLEAN:
                 $this->_type = 'Boolean';
-                $this->_iconText = $this->_translateInstance->getTranslate('::::Switch');
+                $this->_iconText = $this->_translateInstance->getTranslate('::Switch');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'checkbox';
                 break;
             case self::QUERY_SELECT:
                 $this->_type = 'Select';
-                $this->_iconText = $this->_translateInstance->getTranslate('::::Switch');
+                $this->_iconText = $this->_translateInstance->getTranslate('::Switch');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'select';
                 break;
             case self::QUERY_STRING:
                 $this->_type = 'Query';
-                $this->_iconText = $this->_translateInstance->getTranslate('::::Query');
+                $this->_iconText = $this->_translateInstance->getTranslate('::Query');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
                 break;
             case self::QUERY_TEXT:
                 $this->_type = 'Text';
-                $this->_iconText = $this->_translateInstance->getTranslate('::::Query');
+                $this->_iconText = $this->_translateInstance->getTranslate('::Query');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
                 break;

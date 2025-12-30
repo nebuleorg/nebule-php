@@ -186,7 +186,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         // Vérifie les tests de sécurité. Pas d'affichage des options si problème.
         if ($this->_applicationInstance->getCheckSecurityAll() == 'OK') {
             if ($this->_rescueInstance->getModeRescue())
-                $this->displayMessageWarning('::::RESCUE');
+                $this->displayMessageWarning('::RESCUE');
             $this->_displayActions();
 
             switch ($this->getCurrentDisplayView()) {
@@ -871,7 +871,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         } else {
             $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
-            $instanceWarn->setMessage('::::err_NotPermit');
+            $instanceWarn->setMessage('::err_NotPermit');
             $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instanceWarn->display();
         }
@@ -1186,9 +1186,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NoPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, '::NoPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
         }
-        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::OkPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, '::OkPreload', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Preload');
     }
 
     private function _getInfoAppActivated(string $application):\Nebule\Library\DisplayInformation {
@@ -1204,9 +1204,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, '::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
         }
-        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, '::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
     }
 
     private function _getInfoAppRun(string $application):\Nebule\Library\DisplayInformation {
@@ -1222,9 +1222,9 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         foreach ($linksList as $link) {
             $signer = $link->getParsed()['bs/rs1/eid'];
             if (in_array($signer, $this->_authoritiesInstance->getLocalAuthoritiesID()))
-                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, ':::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
+                return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY, '::NotActivated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
         }
-        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, ':::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
+        return $this->_addInfoShort(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION, '::Activated', \Nebule\Library\DisplayItem::RATIO_SHORT, 'Activation');
     }
 
 
@@ -1289,7 +1289,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK6 target=' . $hashTa
                 $instanceOpen = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                 $instanceOpen->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
                 $instanceOpen->setLink('?' . References::COMMAND_SWITCH_APPLICATION . '=' . $hashTarget);
-                $instanceOpen->setMessage(':::Open');
+                $instanceOpen->setMessage('::Open');
                 $instanceList->addItem($instanceOpen);
 
                 $instanceLB = new \Nebule\Library\DisplayBlankLine($this->_applicationInstance);
@@ -1505,7 +1505,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         } else {
             $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
-            $instanceWarn->setMessage('::::err_NotPermit');
+            $instanceWarn->setMessage('::err_NotPermit');
             $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instanceWarn->display();
         }
@@ -1641,9 +1641,9 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
             if ($this->_applicationInstance->getCheckSecurityURL() == 'WARN')
                 $this->displayMessageWarning($this->_applicationInstance->getCheckSecurityURLMessage());
             if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite'))
-                $this->displayMessageWarning('::::warn_ServNotPermitWrite');
+                $this->displayMessageWarning('::warn_ServNotPermitWrite');
             if ($this->_nebuleInstance->getCacheInstance()->getFlushCache())
-                $this->displayMessageWarning('::::warn_flushSessionAndCache');
+                $this->displayMessageWarning('::warn_flushSessionAndCache');
             ?>
 
         </div>
@@ -1804,27 +1804,27 @@ class Translate extends Translates
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
             '::INFO' => 'Information',
-            ':::NoPreload' => 'Non préchargé',
-            ':::OkPreload' => 'Préchargé',
-            ':::Activated' => 'Activé',
-            ':::NotActivated' => 'Désactivé',
-            ':::Open' => "Lancer l'application",
+            '::NoPreload' => 'Non préchargé',
+            '::OkPreload' => 'Préchargé',
+            '::Activated' => 'Activé',
+            '::NotActivated' => 'Désactivé',
+            '::Open' => "Lancer l'application",
         ],
         'en-en' => [
             '::INFO' => 'Information',
-            ':::NoPreload' => 'Not preloaded',
-            ':::OkPreload' => 'Preloaded',
-            ':::Activated' => 'Activated',
-            ':::NotActivated' => 'Not activated',
-            ':::Open' => 'Open application',
+            '::NoPreload' => 'Not preloaded',
+            '::OkPreload' => 'Preloaded',
+            '::Activated' => 'Activated',
+            '::NotActivated' => 'Not activated',
+            '::Open' => 'Open application',
         ],
         'es-co' => [
             '::INFO' => 'Information',
-            ':::NoPreload' => 'Not preloaded',
-            ':::OkPreload' => 'Preloaded',
-            ':::Activated' => 'Activated',
-            ':::NotActivated' => 'Not activated',
-            ':::Open' => 'Open application',
+            '::NoPreload' => 'Not preloaded',
+            '::OkPreload' => 'Preloaded',
+            '::Activated' => 'Activated',
+            '::NotActivated' => 'Not activated',
+            '::Open' => 'Open application',
         ],
     ];
 }

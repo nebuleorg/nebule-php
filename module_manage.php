@@ -456,7 +456,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
 
             return;
         }
@@ -627,7 +627,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
 
             return;
         }
@@ -647,7 +647,7 @@ class ModuleManage extends Modules
                 'displayRatio' => 'short',
                 'informationType' => 'error',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
 
             return;
         }
@@ -978,7 +978,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 
@@ -1078,7 +1078,7 @@ class ModuleManage extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'short',
             );
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 

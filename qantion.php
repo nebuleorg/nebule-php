@@ -783,13 +783,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         // Prépare l'aide en ligne.
         if ($help == '') {
             if ($isEntity) {
-                $help = ':::display:default:help:Entity';
+                $help = '::display:default:help:Entity';
             } elseif ($isConversation) {
-                $help = ':::display:default:help:Conversation';
+                $help = '::display:default:help:Conversation';
             } elseif ($isGroup) {
-                $help = ':::display:default:help:Group';
+                $help = '::display:default:help:Group';
             } else {
-                $help = ':::display:default:help:Object';
+                $help = '::display:default:help:Object';
             }
         }
         ?>
@@ -803,32 +803,32 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
                 <?php
                 switch ($status) {
                     case 'notPresent':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorNotAvailable');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:errorNotAvailable');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'tooBig':
                         if ($this->_configurationInstance->getOptionUntyped('qantionDisplayUnverifyLargeContent')) {
-                            $msg = $this->_translateInstance->getTranslate('::::display:content:warningTooBig');
+                            $msg = $this->_translateInstance->getTranslate('::display:content:warningTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         } else {
-                            $msg = $this->_translateInstance->getTranslate(':::display:content:errorTooBig');
+                            $msg = $this->_translateInstance->getTranslate('::display:content:errorTooBig');
                             $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         }
                         break;
                     case 'warning':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:warningTaggedWarning');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:warningTaggedWarning');
                         $this->displayIcon(self::DEFAULT_ICON_IWARN, $msg, 'iconNormalDisplay');
                         break;
                     case 'danger':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:errorBan');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:errorBan');
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'notAnObject':
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:notAnObject');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:notAnObject');
                         $this->displayIcon(self::DEFAULT_ICON_ALPHA_COLOR, $msg, 'iconNormalDisplay');
                         break;
                     default:
-                        $msg = $this->_translateInstance->getTranslate('::::display:content:OK');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:OK');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                 }

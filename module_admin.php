@@ -274,7 +274,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 
@@ -343,7 +343,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 
@@ -415,7 +415,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 
@@ -488,7 +488,7 @@ class ModuleAdmin extends Modules
                 'informationType' => 'error',
                 'displayRatio' => 'long',
             );
-            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::::err_NotPermit', $param);
+            echo $this->_displayInstance->getDisplayInformation_DEPRECATED('::err_NotPermit', $param);
         }
     }
 
