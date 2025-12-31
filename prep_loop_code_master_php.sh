@@ -437,6 +437,7 @@ function work_refresh()
   echo " > date : ${current_date}"
 
   phpOID=$(echo -n 'application/x-httpd-php' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  pngOID=$(echo -n 'image/png' | sha256sum | cut -d' ' -f1)'.sha2.256'
   textOID=$(echo -n 'text/plain' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
   autentNameOID=$(echo -n 'autent' | sha256sum | cut -d' ' -f1)'.sha2.256'
@@ -487,26 +488,26 @@ EOF
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
 
-  cat "${WORKSPACE}/autent.php" > "/tmp/autent.php"
-  { tail +4 "${WORKSPACE}/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/autent.php" > "/tmp/autent.php"
+  { tail +4 "${WORKSPACE}/modules/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/autent.php"
   autent_hash=$(sha256sum "/tmp/autent.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new autent : ${autent_hash}"
   cp "/tmp/autent.php" "${CODE_MASTER_SPACE}/o/${autent_hash}"
 
-  cat "${WORKSPACE}/entity.php" > "/tmp/entity.php"
-  { tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/entity.php" > "/tmp/entity.php"
+  { tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/entity.php"
   entity_hash=$(sha256sum "/tmp/entity.php" | cut -d' ' -f1)'.sha2.256'
@@ -514,99 +515,90 @@ EOF
   cp "/tmp/entity.php" "${CODE_MASTER_SPACE}/o/${entity_hash}"
   cp ~/Images/klicty_neige20100101.jpg "${CODE_MASTER_SPACE}/o/f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256"
 
-  cat "${WORKSPACE}/sylabe.php" > "/tmp/sylabe.php"
-  { tail +4 "${WORKSPACE}/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/sylabe.php" > "/tmp/sylabe.php"
+  { tail +4 "${WORKSPACE}/modules/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/sylabe.php"
   sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
   cp "/tmp/sylabe.php" "${CODE_MASTER_SPACE}/o/${sylabe_hash}"
   cp ~/Images/bg1.jpg "${CODE_MASTER_SPACE}/o/906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256"
-  cp ~/Images/de-de.png "${CODE_MASTER_SPACE}/o/66af532d9627b29e83e4a55d518eec5be73ebec31e82ec5d5d1315b32e68ad3f.sha2.256"
-  cp ~/Images/en-en.png "${CODE_MASTER_SPACE}/o/7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256"
-  cp ~/Images/es-co.png "${CODE_MASTER_SPACE}/o/7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd.sha2.256"
-  cp ~/Images/es-es.png "${CODE_MASTER_SPACE}/o/501a2e49c23fd101dd8ba361881c75e1fb5cdc061e0232148513aea162ff107b.sha2.256"
-  cp ~/Images/fr-fr.png "${CODE_MASTER_SPACE}/o/b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256"
-  cp ~/Images/it-it.png "${CODE_MASTER_SPACE}/o/204ff03071481f222d9f801f7c2cd15a7a4c07162b6d911fbeccda6c7397b976.sha2.256"
-  cp ~/Images/pl-pl.png "${CODE_MASTER_SPACE}/o/cb5d3baf0ff8af0e88f13e8caf42bfed0ff1a83b9a00cb92910bea874b9afa58.sha2.256"
-  cp ~/Images/ua-ua.png "${CODE_MASTER_SPACE}/o/ca405d670fb5a386e43a71169cd4d10288032c081912f7e83e140d3244d3b222.sha2.256"
 
-  cat "${WORKSPACE}/klicty.php" > "/tmp/klicty.php"
-  { tail +4 "${WORKSPACE}/klicty.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/klicty.php" > "/tmp/klicty.php"
+  { tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/klicty.php"
   klicty_hash=$(sha256sum "/tmp/klicty.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new klicty : ${klicty_hash}"
   cp "/tmp/klicty.php" "${CODE_MASTER_SPACE}/o/${klicty_hash}"
 
-  cat "${WORKSPACE}/messae.php" > "/tmp/messae.php"
-  { tail +4 "${WORKSPACE}/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/messae.php" > "/tmp/messae.php"
+  { tail +4 "${WORKSPACE}/modules/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/messae.php"
   messae_hash=$(sha256sum "/tmp/messae.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new messae : ${messae_hash}"
   cp "/tmp/messae.php" "${CODE_MASTER_SPACE}/o/${messae_hash}"
 
-  cat "${WORKSPACE}/qantion.php" > "/tmp/qantion.php"
-  { tail +4 "${WORKSPACE}/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/qantion.php" > "/tmp/qantion.php"
+  { tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/qantion.php"
   qantion_hash=$(sha256sum "/tmp/qantion.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new qantion : ${qantion_hash}"
   cp "/tmp/qantion.php" "${CODE_MASTER_SPACE}/o/${qantion_hash}"
 
-  upload_hash=$(sha256sum "${WORKSPACE}/upload.php" | cut -d' ' -f1)'.sha2.256'
+  upload_hash=$(sha256sum "${WORKSPACE}/applications/upload.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new upload : ${upload_hash}"
-  cp "${WORKSPACE}/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
+  cp "${WORKSPACE}/applications/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
 
-  cat "${WORKSPACE}/neblog.php" > "/tmp/neblog.php"
-  { tail +4 "${WORKSPACE}/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  cat "${WORKSPACE}/applications/neblog.php" > "/tmp/neblog.php"
+  { tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
   } >> "/tmp/neblog.php"
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
@@ -614,23 +606,41 @@ EOF
   cp "/tmp/neblog.php" "${CODE_MASTER_SPACE}/o/${neblog_hash}"
   cp ~/Images/bg2.jpg "${CODE_MASTER_SPACE}/o/8c40708bd7d89ba9e0bdb74a5300632100d4b660a99a11608930cb0ff56e132a.sha2.256"
 
-  option_hash=$(sha256sum "${WORKSPACE}/option.php" | cut -d' ' -f1)'.sha2.256'
+  option_hash=$(sha256sum "${WORKSPACE}/applications/option.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new option : ${option_hash}"
-  cp "${WORKSPACE}/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
+  cp "${WORKSPACE}/applications/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
 
-  belzbu_hash=$(sha256sum "${WORKSPACE}/belzbu.php" | cut -d' ' -f1)'.sha2.256'
+  belzbu_hash=$(sha256sum "${WORKSPACE}/applications/belzbu.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new belzbu : ${belzbu_hash}"
-  cp "${WORKSPACE}/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
+  cp "${WORKSPACE}/applications/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
 
   for module in module_admin module_autent module_entities module_groups module_manage module_conversations \
-    module_neblog module_objects module_qantion module_lang_de-de module_lang_en-en module_lang_es-co module_lang_es-es \
-    module_lang_fr-fr module_lang_it-it module_lang_pl-pl module_lang_ua-ua
+    module_neblog module_objects module_qantion
   do
-    module_hash=$(sha256sum "${WORKSPACE}/${module}.php" | cut -d' ' -f1)'.sha2.256'
+    module_hash=$(sha256sum "${WORKSPACE}/modules/${module}.php" | cut -d' ' -f1)'.sha2.256'
     varName=$(echo "${module}" | tr '-' '_')
     declare "${varName}"_hash="${module_hash}"
     echo " > new ${module} : ${module_hash}"
-    cp "${WORKSPACE}/${module}.php" "${CODE_MASTER_SPACE}/o/${module_hash}"
+    cp "${WORKSPACE}/modules/${module}.php" "${CODE_MASTER_SPACE}/o/${module_hash}"
+  done
+
+  for module in module_lang_de-de module_lang_en-en module_lang_es-co module_lang_es-es \
+    module_lang_fr-fr module_lang_it-it module_lang_pl-pl module_lang_ua-ua
+  do
+    module_hash=$(sha256sum "${WORKSPACE}/modules/langs/${module}.php" | cut -d' ' -f1)'.sha2.256'
+    varName=$(echo "${module}" | tr '-' '_')
+    declare "${varName}"_hash="${module_hash}"
+    echo " > new ${module} : ${module_hash}"
+    cp "${WORKSPACE}/modules/langs/${module}.php" "${CODE_MASTER_SPACE}/o/${module_hash}"
+  done
+
+  for lang in de-de en-en es-co es-es fr-fr it-it pl-pl ua-ua
+  do
+    icon_hash=$(sha256sum "${WORKSPACE}/modules/langs/flags/${lang}.png" | cut -d' ' -f1)'.sha2.256'
+    varName=$(echo "${lang}" | tr '-' '_')
+    declare "flags_${varName}"_hash="${icon_hash}"
+    echo " > new ${lang} : ${icon_hash}"
+    cp "${WORKSPACE}/modules/langs/flags/${lang}.png" "${CODE_MASTER_SPACE}/o/${icon_hash}"
   done
 
   echo ' > links'
@@ -772,6 +782,15 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${uploadNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${uploadSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/f>6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272>94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256>${imageRID}"
+    # Flags
+    "nebule:link/2:0_0>${current_date}/l>${flag_de_de_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_en_en_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_es_co_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_es_es_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_fr_fr_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_it_it_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_pl_pl_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${flag_ua_ua_hash}>${pngOID}>${typeRID}"
   )
   for link in "${links[@]}"
   do
