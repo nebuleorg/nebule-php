@@ -49,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251230';
+    const APPLICATION_VERSION = '020251231';
     const APPLICATION_LICENCE = 'GNU GPL v3 2019-2025';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -61,9 +61,14 @@ class Application extends Applications
         'ModuleHelp',
         'ModuleQantion',
         'ModuleLang',
-        'ModuleTranslateFRFR',
+        'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
         'ModuleTranslateESCO',
+        'ModuleTranslateESES',
+        'ModuleTranslateFRFR',
+        'ModuleTranslateITIT',
+        'ModuleTranslatePLPL',
+        'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
 
@@ -858,16 +863,7 @@ class Translate extends Translates {}
 
 
 
-/**
- * This module manages the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends ModelModuleHelp
-{
+class ModuleHelp extends ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251227';
 

@@ -24,26 +24,26 @@ use Nebule\Library\ModuleTranslates;
 class ModuleTranslateITIT extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'it-it';
-    const MODULE_NAME = '::translateModule:en-en:ModuleName';
-    const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
-    const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
+    const MODULE_NAME = '::translateModule:it-it:ModuleName';
+    const MODULE_MENU_NAME = '::translateModule:it-it:MenuName';
+    const MODULE_DESCRIPTION = '::translateModule:it-it:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
-    const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
+    const MODULE_LOGO = '204ff03071481f222d9f801f7c2cd15a7a4c07162b6d911fbeccda6c7397b976.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'en-en' => [
-            '::translateModule:en-en:ModuleName' => 'Italian (Italia)',
-            '::translateModule:en-en:MenuName' => 'Italian (Italia)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in Italian.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in Italian.',
+            '::translateModule:it-it:ModuleName' => 'Italian (Italia)',
+            '::translateModule:it-it:MenuName' => 'Italian (Italia)',
+            '::translateModule:it-it:ModuleDescription' => 'Interface translation in Italian.',
+            '::translateModule:it-it:ModuleHelp' => 'This module permit to translate the nebule applications in Italian.',
         ],
         'it-it' => [
-            '::translateModule:en-en:ModuleName' => 'Italiano (Italia)',
-            '::translateModule:en-en:MenuName' => 'Italiano (Italia)',
-            '::translateModule:en-en:ModuleDescription' => 'Traduzione dell\'interfaccia in italiano.',
-            '::translateModule:en-en:ModuleHelp' => 'Questo modulo permette di tradurre le applicazioni nebule in italiano.',
+            '::translateModule:it-it:ModuleName' => 'Italiano (Italia)',
+            '::translateModule:it-it:MenuName' => 'Italiano (Italia)',
+            '::translateModule:it-it:ModuleDescription' => 'Traduzione dell\'interfaccia in italiano.',
+            '::translateModule:it-it:ModuleHelp' => 'Questo modulo permette di tradurre le applicazioni nebule in italiano.',
 
             'nebule/objet' => 'Object',
             'nebule/objet/hash' => 'Hash type',

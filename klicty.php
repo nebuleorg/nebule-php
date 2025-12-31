@@ -5178,16 +5178,7 @@ All recovery entities are displayed here, none are hidden.",
 
 
 
-/**
- * This module manage the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp
-{
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020250921';
 

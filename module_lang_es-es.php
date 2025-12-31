@@ -24,26 +24,26 @@ use Nebule\Library\ModuleTranslates;
 class ModuleTranslateESES extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'es-es';
-    const MODULE_NAME = '::translateModule:es-co:ModuleName';
-    const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
-    const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
+    const MODULE_NAME = '::translateModule:es-es:ModuleName';
+    const MODULE_MENU_NAME = '::translateModule:es-es:MenuName';
+    const MODULE_DESCRIPTION = '::translateModule:es-es:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
-    const MODULE_LOGO = '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd.sha2.256';
+    const MODULE_LOGO = '501a2e49c23fd101dd8ba361881c75e1fb5cdc061e0232148513aea162ff107b.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'en-en' => [
-            '::translateModule:es-co:ModuleName' => 'Spanish (Spain)',
-            '::translateModule:es-co:MenuName' => 'Spanish (Spain)',
-            '::translateModule:es-co:ModuleDescription' => 'Interface translation in Spanish.',
-            '::translateModule:es-co:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
+            '::translateModule:es-es:ModuleName' => 'Spanish (Spain)',
+            '::translateModule:es-es:MenuName' => 'Spanish (Spain)',
+            '::translateModule:es-es:ModuleDescription' => 'Interface translation in Spanish.',
+            '::translateModule:es-es:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
         ],
         'es-es' => [
-            '::translateModule:es-co:ModuleName' => 'Español (Spain)',
-            '::translateModule:es-co:MenuName' => 'Español (Spain)',
-            '::translateModule:es-co:ModuleDescription' => 'Interface translation in Spanish.',
-            '::translateModule:es-co:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
+            '::translateModule:es-es:ModuleName' => 'Español (Spain)',
+            '::translateModule:es-es:MenuName' => 'Español (Spain)',
+            '::translateModule:es-es:ModuleDescription' => 'Interface translation in Spanish.',
+            '::translateModule:es-es:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
 
             'nebule/objet' => 'Objeto',
             'nebule/objet/hash' => 'Typo huella',

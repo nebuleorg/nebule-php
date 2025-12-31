@@ -24,26 +24,26 @@ use Nebule\Library\ModuleTranslates;
 class ModuleTranslateUAUA extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'ua-ua';
-    const MODULE_NAME = '::translateModule:en-en:ModuleName';
-    const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
-    const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
+    const MODULE_NAME = '::translateModule:ua-ua:ModuleName';
+    const MODULE_MENU_NAME = '::translateModule:ua-ua:MenuName';
+    const MODULE_DESCRIPTION = '::translateModule:ua-ua:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
-    const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
+    const MODULE_LOGO = 'ca405d670fb5a386e43a71169cd4d10288032c081912f7e83e140d3244d3b222.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'en-en' => [
-            '::translateModule:en-en:ModuleName' => 'Ukrainian (Ukraine)',
-            '::translateModule:en-en:MenuName' => 'Ukrainian (Ukraine)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in Ukrainian.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in Ukrainian.',
+            '::translateModule:ua-ua:ModuleName' => 'Ukrainian (Ukraine)',
+            '::translateModule:ua-ua:MenuName' => 'Ukrainian (Ukraine)',
+            '::translateModule:ua-ua:ModuleDescription' => 'Interface translation in Ukrainian.',
+            '::translateModule:ua-ua:ModuleHelp' => 'This module permit to translate the nebule applications in Ukrainian.',
         ],
         'ua-ua' => [
-            '::translateModule:en-en:ModuleName' => 'Українська (Україна)',
-            '::translateModule:en-en:MenuName' => 'Українська (Україна)',
-            '::translateModule:en-en:ModuleDescription' => 'Переклад інтерфейсу українською мовою.',
-            '::translateModule:en-en:ModuleHelp' => 'Цей модуль дозволяє перекладати додатки nebule українською мовою.',
+            '::translateModule:ua-ua:ModuleName' => 'Українська (Україна)',
+            '::translateModule:ua-ua:MenuName' => 'Українська (Україна)',
+            '::translateModule:ua-ua:ModuleDescription' => 'Переклад інтерфейсу українською мовою.',
+            '::translateModule:ua-ua:ModuleHelp' => 'Цей модуль дозволяє перекладати додатки nebule українською мовою.',
 
             'nebule/objet' => 'Object',
             'nebule/objet/hash' => 'Hash type',

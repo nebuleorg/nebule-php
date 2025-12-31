@@ -49,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251230';
+    const APPLICATION_VERSION = '020251231';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
@@ -64,9 +64,14 @@ class Application extends Applications
         'ModuleObjects',
         'ModuleGroupEntities',
         'ModuleLang',
-        'ModuleTranslateFRFR',
+        'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
         'ModuleTranslateESCO',
+        'ModuleTranslateESES',
+        'ModuleTranslateFRFR',
+        'ModuleTranslateITIT',
+        'ModuleTranslatePLPL',
+        'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
 
@@ -892,45 +897,14 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 }
 
 
-/**
- * Classe Action
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Action extends Actions
-{
-    // Tout par défaut.
-}
 
+class Action extends Actions {}
 
-/**
- * Classe Traduction
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Translate extends Translates
-{
-    // Tout par défaut.
-}
+class Translate extends Translates {}
 
 
 
-/**
- * This module manages the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp
-{
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251228';
 

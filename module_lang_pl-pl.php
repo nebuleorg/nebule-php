@@ -24,26 +24,26 @@ use Nebule\Library\ModuleTranslates;
 class ModuleTranslatePLPL extends ModuleTranslates
 {
     const MODULE_LANGUAGE = 'pl-pl';
-    const MODULE_NAME = '::translateModule:en-en:ModuleName';
-    const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
-    const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
+    const MODULE_NAME = '::translateModule:pl-pl:ModuleName';
+    const MODULE_MENU_NAME = '::translateModule:pl-pl:MenuName';
+    const MODULE_DESCRIPTION = '::translateModule:pl-pl:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
-    const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
+    const MODULE_LOGO = 'cb5d3baf0ff8af0e88f13e8caf42bfed0ff1a83b9a00cb92910bea874b9afa58.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'en-en' => [
-            '::translateModule:en-en:ModuleName' => 'Polish (Poland)',
-            '::translateModule:en-en:MenuName' => 'Polish (Poland)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in Polish.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in Polish.',
+            '::translateModule:pl-pl:ModuleName' => 'Polish (Poland)',
+            '::translateModule:pl-pl:MenuName' => 'Polish (Poland)',
+            '::translateModule:pl-pl:ModuleDescription' => 'Interface translation in Polish.',
+            '::translateModule:pl-pl:ModuleHelp' => 'This module permit to translate the nebule applications in Polish.',
         ],
         'pl-pl' => [
-            '::translateModule:en-en:ModuleName' => 'Polski (Polska)',
-            '::translateModule:en-en:MenuName' => 'Polski (Polska)',
-            '::translateModule:en-en:ModuleDescription' => 'Tłumaczenie interfejsu na język polski.',
-            '::translateModule:en-en:ModuleHelp' => 'Ten moduł umożliwia tłumaczenie aplikacji nebule na język polski.',
+            '::translateModule:pl-pl:ModuleName' => 'Polski (Polska)',
+            '::translateModule:pl-pl:MenuName' => 'Polski (Polska)',
+            '::translateModule:pl-pl:ModuleDescription' => 'Tłumaczenie interfejsu na język polski.',
+            '::translateModule:pl-pl:ModuleHelp' => 'Ten moduł umożliwia tłumaczenie aplikacji nebule na język polski.',
 
             'nebule/objet' => 'Object',
             'nebule/objet/hash' => 'Hash type',

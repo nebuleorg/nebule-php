@@ -49,7 +49,7 @@ class Application extends Applications implements ApplicationInterface
     const APPLICATION_NAME = 'sylabe';
     const APPLICATION_SURNAME = 'nebule/sylabe';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251230';
+    const APPLICATION_VERSION = '020251231';
     const APPLICATION_LICENCE = 'GNU GPL v3 2013-2025';
     const APPLICATION_WEBSITE = 'www.sylabe.org';
     const APPLICATION_NODE = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288';
@@ -69,9 +69,14 @@ class Application extends Applications implements ApplicationInterface
         'ModuleNeblog',
         'ModuleQantion',
         'ModuleLang',
-        'ModuleTranslateFRFR',
+        'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
         'ModuleTranslateESCO',
+        'ModuleTranslateESES',
+        'ModuleTranslateFRFR',
+        'ModuleTranslateITIT',
+        'ModuleTranslatePLPL',
+        'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
 
@@ -845,39 +850,15 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     }
 }
 
-/**
- * Classe Action
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
+
+
 class Action extends Actions {}
 
-
-/**
- * Classe Traduction
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
 class Translate extends Translates {}
 
 
 
-/**
- * This module manages the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends ModelModuleHelp
-{
+class ModuleHelp extends ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251227';
 

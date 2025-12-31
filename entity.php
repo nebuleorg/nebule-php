@@ -49,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020251230';
+    const APPLICATION_VERSION = '020251231';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
@@ -62,9 +62,14 @@ class Application extends Applications
         'ModuleEntities',
         'ModuleGroupEntities',
         'ModuleLang',
-        'ModuleTranslateFRFR',
+        'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
         'ModuleTranslateESCO',
+        'ModuleTranslateESES',
+        'ModuleTranslateFRFR',
+        'ModuleTranslateITIT',
+        'ModuleTranslatePLPL',
+        'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
     public function __construct(nebule $nebuleInstance) { parent::__construct($nebuleInstance); }
@@ -740,53 +745,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
 
 
-/**
- * Classe Action
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
 class Action extends Actions {}
 
-
-
-/**
- * Classe Traduction
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Translate extends Translates
-{
-    CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::version' => 'Version',
-        ],
-        'en-en' => [
-            '::version' => 'Version',
-        ],
-        'es-co' => [
-            '::version' => 'Version',
-        ],
-    ];
-}
+class Translate extends Translates {}
 
 
 
-/**
- * This module manages the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp
-{
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251227';
 

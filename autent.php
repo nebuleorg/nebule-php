@@ -255,39 +255,7 @@ class Display extends Displays
 }
 
 
-/**
- * Classe Action
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Action extends Actions
-{
-    // Tout par défaut.
-}
 
+class Action extends Actions {}
 
-/**
- * Classe Traduction
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Translate extends Translates
-{
-    CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::version' => 'Version',
-        ],
-        'en-en' => [
-            '::version' => 'Version',
-        ],
-        'es-co' => [
-            '::version' => 'Version',
-        ],
-    ];
-}
+class Translate extends Translates {}

@@ -49,7 +49,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020251230';
+    const APPLICATION_VERSION = '020251231';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2025';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -61,9 +61,14 @@ class Application extends Applications
         'ModuleHelp',
         'ModuleNeblog',
         'ModuleLang',
-        'ModuleTranslateFRFR',
+        'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
         'ModuleTranslateESCO',
+        'ModuleTranslateESES',
+        'ModuleTranslateFRFR',
+        'ModuleTranslateITIT',
+        'ModuleTranslatePLPL',
+        'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
     public function __construct(nebule $nebuleInstance) { parent::__construct($nebuleInstance); }
@@ -695,56 +700,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
 
 
-/**
- * Classe Action
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
 class Action extends Actions {}
 
-
-
-/**
- * Classe Traduction
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class Translate extends Translates
-{
-    CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::version' => 'Version',
-            '::err_NotPermit' => 'Non autorisé !',
-        ],
-        'en-en' => [
-            '::version' => 'Version',
-            '::err_NotPermit' => 'Not authorized!',
-        ],
-        'es-co' => [
-            '::version' => 'Version',
-            '::err_NotPermit' => 'Not authorized!',
-        ],
-    ];
-}
+class Translate extends Translates {}
 
 
 
-/**
- * This module manages the help pages and default first vue.
- *
- * @author Projet nebule
- * @license GNU GPLv3
- * @copyright Projet nebule
- * @link www.nebule.org
- */
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp
-{
+class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020251227';
 
