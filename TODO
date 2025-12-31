@@ -10,3 +10,5 @@
   - Fix buggy crypto verify on other entity
   - Add and use code branch on bootstrap and apps.
   - Fix Option app.
+  - Add authentication to enter on sleeping state.
+  - Add trust management of entities.
