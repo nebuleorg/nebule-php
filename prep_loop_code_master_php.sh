@@ -34,14 +34,16 @@ export IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e
 export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
 export IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
+export IID_INTERFACE_ATRIUM='d09020c0df1b5746a11e2eb1446055526c84e85964ef86a53a5385122d2a90debda48270.none.288'
 export IID_INTERFACE_AUTENT='9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288'
 export IID_INTERFACE_ENTITY='206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288'
-export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
 export IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
 export IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
 export IID_INTERFACE_NEBLOG='05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288'
-export IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
 export IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288'
+export IID_INTERFACE_PORTFOLIO='60004013fb89ff390da02a1ca427eded51f09d8f6ef4affc192ad8de265155aa8046da6e.none.288'
+export IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
+export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
 export IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_DIRECT='f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288'
 export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
@@ -440,25 +442,29 @@ function work_refresh()
   pngOID=$(echo -n 'image/png' | sha256sum | cut -d' ' -f1)'.sha2.256'
   textOID=$(echo -n 'text/plain' | sha256sum | cut -d' ' -f1)'.sha2.256'
   typeRID=$(echo -n 'nebule/objet/type' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  atriumNameOID=$(echo -n 'atrium' | sha256sum | cut -d' ' -f1)'.sha2.256'
   autentNameOID=$(echo -n 'autent' | sha256sum | cut -d' ' -f1)'.sha2.256'
   entityNameOID=$(echo -n 'entity' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  sylabeNameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
   klictyNameOID=$(echo -n 'klicty' | sha256sum | cut -d' ' -f1)'.sha2.256'
   messaeNameOID=$(echo -n 'messae' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  qantionNameOID=$(echo -n 'qantion' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  optionNameOID=$(echo -n 'option' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
   neblogNameOID=$(echo -n 'neblog' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  optionNameOID=$(echo -n 'option' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  portfolioNameOID=$(echo -n 'portfolio' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  qantionNameOID=$(echo -n 'qantion' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeNameOID=$(echo -n 'sylabe' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  uploadNameOID=$(echo -n 'upload' | sha256sum | cut -d' ' -f1)'.sha2.256'
   nameRID=$(echo -n 'nebule/objet/nom' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  atriumSurnameOID=$(echo -n 'At' | sha256sum | cut -d' ' -f1)'.sha2.256'
   autentSurnameOID=$(echo -n 'Au' | sha256sum | cut -d' ' -f1)'.sha2.256'
   entitySurnameOID=$(echo -n 'En' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
   klictySurnameOID=$(echo -n 'Kl' | sha256sum | cut -d' ' -f1)'.sha2.256'
   messaeSurnameOID=$(echo -n 'Me' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  qantionSurnameOID=$(echo -n 'Qa' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  optionSurnameOID=$(echo -n 'Op' | sha256sum | cut -d' ' -f1)'.sha2.256'
-  uploadSurnameOID=$(echo -n 'Up' | sha256sum | cut -d' ' -f1)'.sha2.256'
   neblogSurnameOID=$(echo -n 'Ne' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  optionSurnameOID=$(echo -n 'Op' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  portfolioSurnameOID=$(echo -n 'Pf' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  qantionSurnameOID=$(echo -n 'Qa' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  sylabeSurnameOID=$(echo -n 'Sy' | sha256sum | cut -d' ' -f1)'.sha2.256'
+  uploadSurnameOID=$(echo -n 'Up' | sha256sum | cut -d' ' -f1)'.sha2.256'
   surnameRID=$(echo -n 'nebule/objet/surnom' | sha256sum | cut -d' ' -f1)'.sha2.256'
   imageRID=$(echo -n 'nebule/objet/image/reference' | sha256sum | cut -d' ' -f1)'.sha2.256'
 
@@ -488,6 +494,24 @@ EOF
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
 
+  cat "${WORKSPACE}/applications/atrium.php" > "/tmp/entity.php"
+  { tail +4 "${WORKSPACE}/modules/module_galleries.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  } >> "/tmp/atrium.php"
+  atrium_hash=$(sha256sum "/tmp/atrium.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new atrium : ${atrium_hash}"
+  cp "/tmp/atrium.php" "${CODE_MASTER_SPACE}/o/${atrium_hash}"
+
   cat "${WORKSPACE}/applications/autent.php" > "/tmp/autent.php"
   { tail +4 "${WORKSPACE}/modules/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -495,6 +519,10 @@ EOF
   autent_hash=$(sha256sum "/tmp/autent.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new autent : ${autent_hash}"
   cp "/tmp/autent.php" "${CODE_MASTER_SPACE}/o/${autent_hash}"
+
+  belzbu_hash=$(sha256sum "${WORKSPACE}/applications/belzbu.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new belzbu : ${belzbu_hash}"
+  cp "${WORKSPACE}/applications/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
 
   cat "${WORKSPACE}/applications/entity.php" > "/tmp/entity.php"
   { tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -514,31 +542,6 @@ EOF
   echo " > new entity : ${entity_hash}"
   cp "/tmp/entity.php" "${CODE_MASTER_SPACE}/o/${entity_hash}"
   cp ~/Images/klicty_neige20100101.jpg "${CODE_MASTER_SPACE}/o/f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256"
-
-  cat "${WORKSPACE}/applications/sylabe.php" > "/tmp/sylabe.php"
-  { tail +4 "${WORKSPACE}/modules/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-  } >> "/tmp/sylabe.php"
-  sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new sylabe : ${sylabe_hash}"
-  cp "/tmp/sylabe.php" "${CODE_MASTER_SPACE}/o/${sylabe_hash}"
-  cp ~/Images/bg1.jpg "${CODE_MASTER_SPACE}/o/906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256"
 
   cat "${WORKSPACE}/applications/klicty.php" > "/tmp/klicty.php"
   { tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -567,27 +570,6 @@ EOF
   echo " > new messae : ${messae_hash}"
   cp "/tmp/messae.php" "${CODE_MASTER_SPACE}/o/${messae_hash}"
 
-  cat "${WORKSPACE}/applications/qantion.php" > "/tmp/qantion.php"
-  { tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
-  } >> "/tmp/qantion.php"
-  qantion_hash=$(sha256sum "/tmp/qantion.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new qantion : ${qantion_hash}"
-  cp "/tmp/qantion.php" "${CODE_MASTER_SPACE}/o/${qantion_hash}"
-
-  upload_hash=$(sha256sum "${WORKSPACE}/applications/upload.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new upload : ${upload_hash}"
-  cp "${WORKSPACE}/applications/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
-
   cat "${WORKSPACE}/applications/neblog.php" > "/tmp/neblog.php"
   { tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -610,12 +592,74 @@ EOF
   echo " > new option : ${option_hash}"
   cp "${WORKSPACE}/applications/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
 
-  belzbu_hash=$(sha256sum "${WORKSPACE}/applications/belzbu.php" | cut -d' ' -f1)'.sha2.256'
-  echo " > new belzbu : ${belzbu_hash}"
-  cp "${WORKSPACE}/applications/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
+  cat "${WORKSPACE}/applications/portfolio.php" > "/tmp/entity.php"
+  { tail +4 "${WORKSPACE}/modules/module_folders.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  } >> "/tmp/portfolio.php"
+  portfolio_hash=$(sha256sum "/tmp/portfolio.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new portfolio : ${portfolio_hash}"
+  cp "/tmp/portfolio.php" "${CODE_MASTER_SPACE}/o/${portfolio_hash}"
+
+  cat "${WORKSPACE}/applications/qantion.php" > "/tmp/qantion.php"
+  { tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  } >> "/tmp/qantion.php"
+  qantion_hash=$(sha256sum "/tmp/qantion.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new qantion : ${qantion_hash}"
+  cp "/tmp/qantion.php" "${CODE_MASTER_SPACE}/o/${qantion_hash}"
+
+  cat "${WORKSPACE}/applications/sylabe.php" > "/tmp/sylabe.php"
+  { tail +4 "${WORKSPACE}/modules/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_admin.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_folders.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_galleries.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-co.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_es-es.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_fr-fr.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_it-it.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_pl-pl.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/langs/module_lang_ua-ua.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+  } >> "/tmp/sylabe.php"
+  sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new sylabe : ${sylabe_hash}"
+  cp "/tmp/sylabe.php" "${CODE_MASTER_SPACE}/o/${sylabe_hash}"
+  cp ~/Images/bg1.jpg "${CODE_MASTER_SPACE}/o/906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256"
+
+  upload_hash=$(sha256sum "${WORKSPACE}/applications/upload.php" | cut -d' ' -f1)'.sha2.256'
+  echo " > new upload : ${upload_hash}"
+  cp "${WORKSPACE}/applications/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
 
   for module in module_admin module_autent module_entities module_groups module_manage module_conversations \
-    module_neblog module_objects module_qantion
+    module_neblog module_objects module_qantion module_folders module_galleries
   do
     module_hash=$(sha256sum "${WORKSPACE}/modules/${module}.php" | cut -d' ' -f1)'.sha2.256'
     varName=$(echo "${module}" | tr '-' '_')
@@ -639,7 +683,7 @@ EOF
     icon_hash=$(sha256sum "${WORKSPACE}/modules/langs/flags/${lang}.png" | cut -d' ' -f1)'.sha2.256'
     varName=$(echo "${lang}" | tr '-' '_')
     declare "flags_${varName}"_hash="${icon_hash}"
-    echo " > new ${lang} : ${icon_hash}"
+    echo " > new module language ${lang} : ${icon_hash}"
     cp "${WORKSPACE}/modules/langs/flags/${lang}.png" "${CODE_MASTER_SPACE}/o/${icon_hash}"
   done
 
@@ -648,12 +692,14 @@ EOF
     # nodes
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${IID_INTERFACE_BOOTSTRAP}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_LIBRARY}>${IID_INTERFACE_LIBRARY}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_ATRIUM}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_AUTENT}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_ENTITY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_SYLABE}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_KLICTY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_MESSAE}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_NEBLOG}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_PORTFOLIO}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_QANTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_OPTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_UPLOAD}>${phpOID}>${NID_CODE_BRANCH}"
@@ -666,6 +712,8 @@ EOF
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_neblog_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_objects_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_qantion_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_folders_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_galleries_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_de_de_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_en_en_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_co_hash}>${phpOID}>${NID_CODE_BRANCH}"
@@ -677,12 +725,14 @@ EOF
     # type mime = application/x-httpd-php
     "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${atrium_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${autent_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${entity_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${sylabe_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${klicty_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${messae_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${neblog_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${portfolio_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantion_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${option_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${upload_hash}>${phpOID}>${typeRID}"
@@ -695,6 +745,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_neblog_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_objects_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_qantion_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_folders_hash}>${phpOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${module_galleries_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_de_de_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_en_en_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_es_co_hash}>${phpOID}>${typeRID}"
@@ -706,12 +758,14 @@ EOF
     # nebule/objet/interface/web/php/bootstrap in develop branch
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_BOOTSTRAP}>${bootstrap_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_LIBRARY}>${library_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_ATRIUM}>${atrium_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_AUTENT}>${autent_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_ENTITY}>${entity_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_SYLABE}>${sylabe_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_KLICTY}>${klicty_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_MESSAE}>${messae_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_NEBLOG}>${neblog_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_PORTFOLIO}>${portfolio_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
@@ -721,6 +775,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
@@ -733,6 +788,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_neblog_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_objects_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_qantion_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/l>${module_folders_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/l>${module_galleries_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_de_de_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_en_en_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_es_co_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
@@ -745,6 +802,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
     # names
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${atriumNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${atriumSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ENTITY}>${entityNameOID}>${nameRID}"
@@ -757,12 +816,16 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionSurnameOID}>${surnameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadNameOID}>${nameRID}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${current_date}/l>${atriumNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${atriumSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${autentNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${autentSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${entityNameOID}>${textOID}>${typeRID}"
@@ -775,6 +838,8 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${messaeSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${neblogNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${neblogSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${portfolioNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${current_date}/l>${portfolioSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantionNameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${qantionSurnameOID}>${textOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${optionNameOID}>${textOID}>${typeRID}"
@@ -799,6 +864,8 @@ EOF
   done
   echo
 
+  echo -n "atrium" > "${CODE_MASTER_SPACE}/o/${atriumNameOID}"
+  echo -n "At" > "${CODE_MASTER_SPACE}/o/${atriumSurnameOID}"
   echo -n "autent" > "${CODE_MASTER_SPACE}/o/${autentNameOID}"
   echo -n "Au" > "${CODE_MASTER_SPACE}/o/${autentSurnameOID}"
   echo -n "entity" > "${CODE_MASTER_SPACE}/o/${entityNameOID}"
@@ -811,6 +878,8 @@ EOF
   echo -n "Me" > "${CODE_MASTER_SPACE}/o/${messaeSurnameOID}"
   echo -n "neblog" > "${CODE_MASTER_SPACE}/o/${neblogNameOID}"
   echo -n "Ne" > "${CODE_MASTER_SPACE}/o/${neblogSurnameOID}"
+  echo -n "portfolio" > "${CODE_MASTER_SPACE}/o/${portfolioNameOID}"
+  echo -n "Pf" > "${CODE_MASTER_SPACE}/o/${portfolioSurnameOID}"
   echo -n "qantion" > "${CODE_MASTER_SPACE}/o/${qantionNameOID}"
   echo -n "Qa" > "${CODE_MASTER_SPACE}/o/${qantionSurnameOID}"
   echo -n "option" > "${CODE_MASTER_SPACE}/o/${optionNameOID}"

@@ -21,6 +21,8 @@ class App1 extends App0
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';
 
+    const COL = 7;
+
     public function display(): void
     {
         global $nebuleInstance;
@@ -35,24 +37,28 @@ class App1 extends App0
         $this->_htmlTop();
 
         echo '<div id="appslist">';
+        $count = 0 ;
 
         // Display interrupt page.
         echo '<a href="/?b">';
         echo '<div class="apps" style="background:#000000;">';
         echo '<span class="appstitle">Nb</span><br /><span class="appsname">break</span>';
         echo "</div></a>\n";
+        $count++;
 
         // Display flush page.
         echo '<a href="/?f">';
         echo '<div class="apps" style="background:#070707;">';
         echo '<span class="appstitle">Nf</span><br /><span class="appsname">flush</span>';
         echo "</div></a>\n";
+        $count++;
 
         // Display default page.
         echo '<a href="/?a=0">';
         echo '<div class="apps" style="background:#101010;">';
         echo '<span class="appstitle">N0</span><br /><span class="appsname">defolt</span>';
         echo "</div></a>\n";
+        $count++;
 
         // Display page of technical documentation.
         if ($this->_configurationInstance->getOptionAsBoolean('permitApplication3')) {
@@ -60,6 +66,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#171717;">';
             echo '<span class="appstitle">N3</span><br /><span class="appsname">doctec</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of app 4.
@@ -68,6 +77,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#202020;">';
             echo '<span class="appstitle">N4</span><br /><span class="appsname">app 4</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of app 5.
@@ -76,6 +88,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#272727;">';
             echo '<span class="appstitle">N5</span><br /><span class="appsname">app 5</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of app 6.
@@ -84,6 +99,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#303030;">';
             echo '<span class="appstitle">N6</span><br /><span class="appsname">app 6</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of app 7.
@@ -92,6 +110,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#373737;">';
             echo '<span class="appstitle">N7</span><br /><span class="appsname">app 7</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of app 8.
@@ -100,6 +121,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#404040;">';
             echo '<span class="appstitle">N8</span><br /><span class="appsname">app 8</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // Display page of sleeping state.
@@ -108,6 +132,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:#505050;">';
             echo '<span class="appstitle">N9</span><br /><span class="appsname">sleep</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         // List all applications.
@@ -150,6 +177,9 @@ class App1 extends App0
             echo '<div class="apps" style="background:' . $color . ';">';
             echo '<span class="appstitle">' . $subName . '</span><br /><span class="appsname">' . $title . '</span>';
             echo "</div></a>\n";
+            $count++;
+            if (($count % self::COL) == 0)
+                echo "<br />\n";
         }
 
         echo "</div>\n";

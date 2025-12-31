@@ -79,8 +79,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $context = '';
         if ($createContext == 'Entity')
             $context = References::RID_OBJECT_GROUP_ENTITY;
-        if ($createTypeMime == 'Conversation')
+        if ($createTypeMime == 'Conversation') {
             $this->_createInstance->setAsConversation($this->_createObfuscated);
+            // $context = References::RID_OBJECT_CONVERSATION; FIXME
+        }
         else
             $this->_createInstance->setAsGroup($this->_createObfuscated, $context);
         $this->_createInstance->setName($this->_createName);
