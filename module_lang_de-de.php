@@ -14,36 +14,30 @@ use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
 /**
- * This module adds translation in English EN-EN.
+ * This module adds translation in German DE-DE.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleTranslateENEN extends ModuleTranslates
+class ModuleTranslateDEDE extends ModuleTranslates
 {
-    const MODULE_LANGUAGE = 'en-en';
+    const MODULE_LANGUAGE = 'de-de';
     const MODULE_NAME = '::translateModule:en-en:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
     const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'de-de' => [
-            '::translateModule:en-en:ModuleName' => 'Englisch (England)',
-            '::translateModule:en-en:MenuName' => 'Englisch (England)',
-            '::translateModule:en-en:ModuleDescription' => 'Schnittstellenübersetzung auf Englisch.',
-            '::translateModule:en-en:ModuleHelp' => 'Dieses Modul ermöglicht es, die nebule-Anwendungen ins Englische zu übersetzen.',
-        ],
-        'en-en' => [
-            '::translateModule:en-en:ModuleName' => 'English (England)',
-            '::translateModule:en-en:MenuName' => 'English (England)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
+            '::translateModule:en-en:ModuleName' => 'Deutsch (Deutschland)',
+            '::translateModule:en-en:MenuName' => 'Deutsch (Deutschland)',
+            '::translateModule:en-en:ModuleDescription' => 'Schnittstellenübersetzung auf Deutsch.',
+            '::translateModule:en-en:ModuleHelp' => 'Dieses Modul ermöglicht es, die nebule-Anwendungen ins Deutsche zu übersetzen.',
 
             'nebule/objet' => 'Object',
             'nebule/objet/hash' => 'Hash type',
@@ -213,41 +207,11 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::nextPage' => 'Next page',
             '::page%s%s%s%s' => 'Page %s/%s (%s on %s)',
         ],
-        'es-co' => [
-            '::translateModule:en-en:ModuleName' => 'Inglés (Inglaterra)',
-            '::translateModule:en-en:MenuName' => 'Inglés (Inglaterra)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
-        ],
-        'es-es' => [
-            '::translateModule:en-en:ModuleName' => 'Inglés (Inglaterra)',
-            '::translateModule:en-en:MenuName' => 'Inglés (Inglaterra)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
-        ],
-        'fr-fr' => [
-            '::translateModule:en-en:ModuleName' => 'Anglais (Angleterre)',
-            '::translateModule:en-en:MenuName' => 'Anglais (Angleterre)',
-            '::translateModule:en-en:ModuleDescription' => "Traduction de l'interface en Anglais.",
-            '::translateModule:en-en:ModuleHelp' => "Ce module permet de mettre en place la traduction des applications de nebule et des applications en Anglais.",
-        ],
-        'it-it' => [
-            '::translateModule:en-en:ModuleName' => 'English (England)',
-            '::translateModule:en-en:MenuName' => 'English (England)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
-        ],
-        'pl-pl' => [
-            '::translateModule:en-en:ModuleName' => 'English (England)',
-            '::translateModule:en-en:MenuName' => 'English (England)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
-        ],
-        'ua-ua' => [
-            '::translateModule:en-en:ModuleName' => 'English (England)',
-            '::translateModule:en-en:MenuName' => 'English (England)',
-            '::translateModule:en-en:ModuleDescription' => 'Interface translation in English.',
-            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in English.',
+        'en-en' => [
+            '::translateModule:en-en:ModuleName' => 'German (Germany)',
+            '::translateModule:en-en:MenuName' => 'German (Germany)',
+            '::translateModule:en-en:ModuleDescription' => 'Interface translation in German.',
+            '::translateModule:en-en:ModuleHelp' => 'This module permit to translate the nebule applications in German.',
         ],
     ];
 }

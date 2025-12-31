@@ -14,34 +14,34 @@ use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
 /**
- * This module adds translation in Spanish de Colombia ES-CO.
+ * This module adds translation in Spanish ES-ES.
  *
  * @author Projet nebule
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleTranslateESCO extends ModuleTranslates
+class ModuleTranslateESES extends ModuleTranslates
 {
-    const MODULE_LANGUAGE = 'es-co';
+    const MODULE_LANGUAGE = 'es-es';
     const MODULE_NAME = '::translateModule:es-co:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-co:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-co:ModuleDescription';
     const MODULE_VERSION = '020251231';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
     const MODULE_LOGO = '7425a5a9dfdaaa084fba0dff69b3a6267a90ef42cb0fa093d5a4b47a8bc062dd.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [
         'en-en' => [
-            '::translateModule:es-co:ModuleName' => 'Spanish (Colombia)',
-            '::translateModule:es-co:MenuName' => 'Spanish (Colombia)',
+            '::translateModule:es-co:ModuleName' => 'Spanish (Spain)',
+            '::translateModule:es-co:MenuName' => 'Spanish (Spain)',
             '::translateModule:es-co:ModuleDescription' => 'Interface translation in Spanish.',
             '::translateModule:es-co:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
         ],
-        'es-co' => [
-            '::translateModule:es-co:ModuleName' => 'Español (Colombia)',
-            '::translateModule:es-co:MenuName' => 'Español (Colombia)',
+        'es-es' => [
+            '::translateModule:es-co:ModuleName' => 'Español (Spain)',
+            '::translateModule:es-co:MenuName' => 'Español (Spain)',
             '::translateModule:es-co:ModuleDescription' => 'Interface translation in Spanish.',
             '::translateModule:es-co:ModuleHelp' => 'This module permit to translate the nebule applications in Spanish.',
 
