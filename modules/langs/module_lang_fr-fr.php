@@ -211,7 +211,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::err_NoPrivKey' => 'Pas de clé privée !',
             '::previousPage' => 'Page précédente',
             '::nextPage' => 'Page suivante',
-            '::page%s%s%s%s' => 'Page %s/%s (%s sur %s)',
+            '::page%s%s%s%s%s' => 'Page %s/%s (%s-%s sur %s)',
         ],
     ];
 }

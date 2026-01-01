@@ -211,7 +211,7 @@ class ModuleTranslateESES extends ModuleTranslates
             '::err_NoPrivKey' => 'No private key!',
             '::previousPage' => 'Previous page',
             '::nextPage' => 'Next page',
-            '::page%s%s%s%s' => 'Page %s/%s (%s en %s)',
+            '::page%s%s%s%s%s' => 'Page %s/%s (%s-%s en %s)',
         ],
     ];
 }

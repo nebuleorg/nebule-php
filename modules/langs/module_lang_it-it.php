@@ -211,7 +211,7 @@ class ModuleTranslateITIT extends ModuleTranslates
             '::err_NoPrivKey' => 'No private key!',
             '::previousPage' => 'Previous page',
             '::nextPage' => 'Next page',
-            '::page%s%s%s%s' => 'Page %s/%s (%s on %s)',
+            '::page%s%s%s%s%s' => 'Page %s/%s (%s-%s on %s)',
         ],
     ];
 }

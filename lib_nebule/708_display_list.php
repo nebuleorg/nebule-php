@@ -59,7 +59,10 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             }
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
-            $instance->setMessage('::page%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)($this->_currentPage * $this->_listSize), (string)$this->_fullSize);
+            $first = ($this->_currentPage * $this->_listSize) - $this->_listSize + 1;
+            $last = $this->_currentPage * $this->_listSize;
+            if ($last > $this->_fullSize) $last = $this->_fullSize;
+            $instance->setMessage('::page%s%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)$first, (string)$last, (string)$this->_fullSize);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instance->setSize($this->_sizeCSS);
             $instance->setIconText('');
