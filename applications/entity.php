@@ -49,8 +49,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'entity';
     const APPLICATION_SURNAME = 'nebule/entity';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020251231';
-    const APPLICATION_LICENCE = 'GNU GPL v3 2025-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2025-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -753,7 +753,7 @@ class Translate extends Translates {}
 
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020251227';
+    const MODULE_VERSION = '020260101';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

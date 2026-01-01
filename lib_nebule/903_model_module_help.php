@@ -19,9 +19,9 @@ class ModelModuleHelp extends \Nebule\Library\Modules {
     const MODULE_COMMAND_NAME = 'hlp';
     const MODULE_DEFAULT_VIEW = '1st';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251227';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2026';
     const MODULE_LOGO = '5b3afdf2eb971ce185930ad4accda23942d4495a638c2bdf27ae3e8e4537c1434697.none.272';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

@@ -32,9 +32,9 @@ class ModuleManage extends Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251230';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

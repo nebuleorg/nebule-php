@@ -49,8 +49,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251230';
-    const APPLICATION_LICENCE = 'GNU GPL v3 2016-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2016-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';

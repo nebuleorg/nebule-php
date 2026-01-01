@@ -27,9 +27,9 @@ class ModuleTranslateITIT extends ModuleTranslates
     const MODULE_NAME = '::translateModule:it-it:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:it-it:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:it-it:ModuleDescription';
-    const MODULE_VERSION = '020251231';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '204ff03071481f222d9f801f7c2cd15a7a4c07162b6d911fbeccda6c7397b976.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [

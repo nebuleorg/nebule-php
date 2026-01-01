@@ -52,8 +52,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251230';
-    const APPLICATION_LICENCE = 'GNU GPL v3 2015-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2015-2026';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -5180,7 +5180,7 @@ All recovery entities are displayed here, none are hidden.",
 
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020250921';
+    const MODULE_VERSION = '020260101';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

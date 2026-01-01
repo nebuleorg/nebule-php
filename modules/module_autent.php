@@ -28,9 +28,9 @@ class ModuleAutent extends Modules {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251230';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2024-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

@@ -49,8 +49,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'messae';
     const APPLICATION_SURNAME = 'nebule/messae';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251231';
-    const APPLICATION_LICENCE = 'GNU GPL 2016-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL 2016-2026';
     const APPLICATION_WEBSITE = 'www.messae.org';
     const APPLICATION_NODE = '2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -906,7 +906,7 @@ class Translate extends Translates {}
 
 class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020251228';
+    const MODULE_VERSION = '020260101';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

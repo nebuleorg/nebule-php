@@ -29,9 +29,9 @@ class ModuleAdmin extends Modules
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251230';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

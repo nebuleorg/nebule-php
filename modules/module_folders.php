@@ -28,9 +28,9 @@ class ModuleFolders extends Modules {
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'root_folders';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251231';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

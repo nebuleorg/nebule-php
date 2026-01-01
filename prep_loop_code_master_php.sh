@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020251231
+# Version 020260101
 
 echo ' > start'
 
@@ -51,7 +51,7 @@ export LIB_RID_INTERFACE_MODULES='fd66cdc1edfa0285d6ce9d8419847e54ec7df2d2939216
 export LIB_RID_INTERFACE_MODULES_TRANSLATE='4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'
 export LIB_RID_INTERFACE_MODULES_ACTIVE='1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'
 export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
-export INIT_DATE='020250111'
+export INIT_DATE='020260101'
 
 # Prepare all links specifically for develop and tests.
 echo " > prep authorities"

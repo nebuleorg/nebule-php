@@ -27,9 +27,9 @@ class ModuleTranslateUAUA extends ModuleTranslates
     const MODULE_NAME = '::translateModule:ua-ua:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:ua-ua:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:ua-ua:ModuleDescription';
-    const MODULE_VERSION = '020251231';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2025-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = 'ca405d670fb5a386e43a71169cd4d10288032c081912f7e83e140d3244d3b222.sha2.256';
     const MODULE_INTERFACE = '3.0';
     CONST TRANSLATE_TABLE = [

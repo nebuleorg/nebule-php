@@ -29,9 +29,9 @@ class ModuleEntities extends Modules
     const MODULE_COMMAND_NAME = 'ent';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251230';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Project nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '94d5243e2b48bb89e91f2906bdd7f9006b1632203e831ff09615ad2ccaf20a60.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';

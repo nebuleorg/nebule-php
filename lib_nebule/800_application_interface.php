@@ -425,8 +425,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'share';
     const APPLICATION_SURNAME = 'nebule/share';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020250111';
-    const APPLICATION_LICENCE = 'GNU GPL 2024-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL 2024-2026';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '70428bfe9e818c0140c06fd681a669370158f1290e589594e9397e567b020796cb29.sha2.256';
     const APPLICATION_CODING = 'application/x-httpd-php';

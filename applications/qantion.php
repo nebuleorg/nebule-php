@@ -49,8 +49,8 @@ class Application extends Applications
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020251231';
-    const APPLICATION_LICENCE = 'GNU GPL v3 2019-2025';
+    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_LICENCE = 'GNU GPL v3 2019-2026';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
     const APPLICATION_CODING = 'application/x-httpd-php';
@@ -865,7 +865,7 @@ class Translate extends Translates {}
 
 class ModuleHelp extends ModelModuleHelp {
     const MODULE_TYPE = 'Application';
-    const MODULE_VERSION = '020251227';
+    const MODULE_VERSION = '020260101';
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [

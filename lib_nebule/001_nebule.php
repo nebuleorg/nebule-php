@@ -13,12 +13,12 @@ namespace Nebule\Library;
 class nebule {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020251231';
+    const NEBULE_VERSION = '020260101';
     const NEBULE_AUTHOR = 'Project nebule';
-    const NEBULE_LICENCE = 'GNU GPL v3 2010-2025';
+    const NEBULE_LICENCE = 'GNU GPL v3 2010-2026';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';
     const NEBULE_CODING = 'application/x-httpd-php';
-    const NEBULE_LICENCE_DATE = '2010-2025';
+    const NEBULE_LICENCE_DATE = '2010-2026';
     const NEBULE_FUNCTION_VERSION = '020251230';
 
     const SESSION_SAVED_VARS = array(

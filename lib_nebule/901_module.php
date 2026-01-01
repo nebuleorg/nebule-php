@@ -17,9 +17,9 @@ abstract class Modules extends Functions implements ModuleInterface {
     const MODULE_COMMAND_NAME = 'none';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = 'Description';
-    const MODULE_VERSION = '020250111';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
-    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2025';
+    const MODULE_LICENCE = '(c) GLPv3 nebule 2013-2026';
     const MODULE_LOGO = '47e168b254f2dfd0a4414a0b96f853eed3df0315aecb8c9e8e505fa5d0df0e9c.sha2.256';
     const MODULE_HELP = 'Help';
     const MODULE_INTERFACE = '3.0';

@@ -28,9 +28,9 @@ class ModuleGroups extends Modules {
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020251230';
+    const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Project nebule';
-    const MODULE_LICENCE = 'GNU GLP v3 2013-2025';
+    const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
