@@ -58,6 +58,9 @@ class ModuleFolders extends Modules {
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
+    const RESTRICTED_TYPE = 'Folders';
+    const RESTRICTED_CONTEXT = '2afeddf82c8f4171fc67b9073ba5be456abb2f4da7720bb6f0c903fb0b0a4231f7e3.none.272';
+
 
 
     protected function _initialisation(): void {}
@@ -171,7 +174,7 @@ class ModuleFolders extends Modules {
 
     private function _display_InlineMyRootFolders(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListConversationsLinks('', 'myself'); // FIXME get root folders by links
+        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
         $this->_listOfRootFolders($links, 'myself', 'myGroups');
     }
 
@@ -251,12 +254,12 @@ class ModuleFolders extends Modules {
     // Copy of ModuleGroups::_displayGroupCreateForm()
     protected function _displayRootFolderCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversation')) {
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . \Nebule\Library\ActionsGroups::CREATE
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Conversation'
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

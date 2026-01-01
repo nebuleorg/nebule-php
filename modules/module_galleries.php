@@ -58,8 +58,8 @@ class ModuleGalleries extends Modules {
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
-    const RESTRICTED_TYPE = 'Conversation';
-    const RESTRICTED_CONTEXT = '';
+    const RESTRICTED_TYPE = 'Gallery';
+    const RESTRICTED_CONTEXT = '583718a8303dbcb757a1d2acf463e2410c807ebd1e4f319d3a641d1a6686a096b018.none.272';
 
 
 
@@ -174,7 +174,7 @@ class ModuleGalleries extends Modules {
 
     private function _display_InlineMyGalleries(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListConversationsLinks('', 'myself'); // FIXME get galleries by links
+        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
         $this->_listOfGalleries($links, 'myself', 'myGroups');
     }
 
@@ -254,12 +254,12 @@ class ModuleGalleries extends Modules {
     // Copy of ModuleGroups::_displayGroupCreateForm()
     protected function _displayGalleryCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversation')) {
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . \Nebule\Library\ActionsGroups::CREATE
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Conversation'
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

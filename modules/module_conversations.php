@@ -59,7 +59,7 @@ class ModuleConversations extends Modules {
     const MODULE_APP_VIEW_LIST = array('list');
 
     const RESTRICTED_TYPE = 'Conversation';
-    const RESTRICTED_CONTEXT = '';
+    const RESTRICTED_CONTEXT = '9176d8c8cf0e89ef48f136a494af9b9c385d275c8d48c498d52206d7d4072eb0fb1f.none.272';
 
 
 
@@ -174,7 +174,7 @@ class ModuleConversations extends Modules {
 
     private function _display_InlineMyConversations(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListConversationsLinks($this::RESTRICTED_CONTEXT, 'myself');
+        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
         $this->_listOfConversations($links, 'myself', 'myGroups');
     }
 
@@ -254,12 +254,12 @@ class ModuleConversations extends Modules {
     // Copy of ModuleGroups::_displayGroupCreateForm()
     protected function _displayConversationCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversation')) {
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . \Nebule\Library\ActionsGroups::CREATE
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Conversation'
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

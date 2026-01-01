@@ -18,7 +18,6 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const CREATE_CLOSED = 'action_group_create_close';
     const CREATE_OBFUSCATED = 'action_group_create_obf';
     const CREATE_CONTEXT = 'action_group_create_context';
-    const CREATE_TYPE_MIME = 'action_group_create_type_mime';
     const DELETE = 'action_group_del';
     const ADD_MEMBER = 'action_group_add_membre';
     const REMOVE_MEMBER = 'action_group_del_member';
@@ -54,40 +53,29 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getCreateError(): bool { return $this->_createError; }
     protected function _createGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $createTypeMime = $this->getFilterInput(self::CREATE_TYPE_MIME, FILTER_FLAG_NO_ENCODE_QUOTES);
-        if ($createTypeMime == 'Conversation') {
-            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversationAction')) {
-                $this->_metrologyInstance->addLog('unauthorized to use conversations', Metrology::LOG_LEVEL_ERROR, __METHOD__, '33a74144');
-                return;
-            }
-        } else {
-            if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroupAction')) {
-                $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '44f2509d');
-                return;
-            }
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroupAction')) {
+            $this->_metrologyInstance->addLog('unauthorised to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '44f2509d');
+            return;
         }
         $this->_create = true;
+
         $this->_createName = $this->getFilterInput(self::CREATE_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
         $createContext = $this->getFilterInput(self::CREATE_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if (! Node::checkNID($createContext))
+            $createContext = '';
+        if ($createContext == '')
+            $this->_metrologyInstance->addLog('create group context=' . $createContext, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a4031625');
+
         $this->_createClosed = $this->getHaveInput(self::CREATE_CLOSED);
         $this->_createObfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
-        if ($createTypeMime == 'Conversation')
-            $this->_createInstance = new Conversation($this->_nebuleInstance, '');
-        else
-            $this->_createInstance = new Group($this->_nebuleInstance, '');
+
+        $this->_createInstance = new Group($this->_nebuleInstance, '');
         $this->_metrologyInstance->addLog('create group name=' . $this->_createName . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf18d77f');
-        $context = '';
-        if ($createContext == 'Entity')
-            $context = References::RID_OBJECT_GROUP_ENTITY;
-        if ($createTypeMime == 'Conversation') {
-            $this->_createInstance->setAsConversation($this->_createObfuscated);
-            // $context = References::RID_OBJECT_CONVERSATION; FIXME
-        }
-        else
-            $this->_createInstance->setAsGroup($this->_createObfuscated, $context);
+        $this->_createInstance->setAsGroup($this->_createObfuscated, $createContext);
         $this->_createInstance->setName($this->_createName);
         if ($this->_createClosed)
             $this->_createInstance->setMarkClosed(null, $this->_createObfuscated);
+
         $this->_createGID = $this->_createInstance->getID();
         $this->_createError = ($this->_createInstance->getID() == '0');
     }

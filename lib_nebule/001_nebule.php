@@ -596,7 +596,6 @@ class nebule {
      * @param string $socialClass
      * @param array  $socialListID
      * @return array:Link
-     *                              TODO ajouter un filtre sur le type mime des objets.
      */
     public function getListLinksByType(string $type, string $context = '', string $socialClass = '', array $socialListID = array()): array {
         if (! Node::checkNID($type))
@@ -667,37 +666,6 @@ class nebule {
      */
     public function getListGroupsID(string $context = '', string $socialClass = '', array $socialListID = array()): array {
         return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $context, $socialClass, $socialListID);
-    }
-
-    /**
-     * Extrait la liste des liens définissant les conversations.
-     * Pré-calcul le hash de l'objet définissant une conversation.
-     * Extrait l'ID de l'entité, si demandé.
-     * Liste les liens définissants les différentes conversations.
-     * Retourne la liste.
-     * $entity : Permet de ne sélectionner que les conversations générées par une entité.
-     *
-     * @param string $context
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array
-     */
-    public function getListConversationsLinks(string $context = '', string $socialClass = '', array $socialListID = array()): array {
-        return $this->getListLinksByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $context, $socialClass, $socialListID);
-    }
-
-    /**
-     * Extrait la liste des ID des conversations.
-     * Géré comme des groupes d'objets.
-     * $entity Permet de ne sélectionner que les conversations générées par une entité.
-     *
-     * @param string $context
-     * @param string $socialClass
-     * @param array  $socialListID
-     * @return array
-     */
-    public function getListConversationsID(string $context = '', string $socialClass = '', array $socialListID = array()): array {
-        return $this->getListIdByType(References::REFERENCE_NEBULE_OBJET_CONVERSATION, $context, $socialClass, $socialListID);
     }
 
 

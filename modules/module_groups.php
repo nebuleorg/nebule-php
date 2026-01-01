@@ -64,11 +64,10 @@ class ModuleGroups extends Modules {
     protected \Nebule\Library\Node $_hashGroupObject;
     protected \Nebule\Library\Node $_hashGroupClosedObject;
     
-    protected function _initialisation(): void
-    {
-        $this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
-        $this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
-        $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
+    protected function _initialisation(): void {
+        //$this->_nebuleInstance = $this->_applicationInstance->getNebuleInstance();
+        //$this->_displayInstance = $this->_applicationInstance->getDisplayInstance();
+        //$this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_hashGroup = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE);
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
@@ -522,7 +521,7 @@ class ModuleGroups extends Modules {
 
     protected function _display_InlineMyGroups(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListGroupsLinks($this::RESTRICTED_CONTEXT, 'myself');
+        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
         $this->_listOfGroups($links, 'myself', 'myGroups');
     }
 
@@ -646,7 +645,6 @@ class ModuleGroups extends Modules {
                     . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                     . '&' . \Nebule\Library\ActionsGroups::CREATE
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE_TYPE_MIME . '=Group'
                     . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
@@ -715,7 +713,7 @@ class ModuleGroups extends Modules {
             $instance->setInputValue('');
             $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
             if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE)
-                $instance->setHiddenInput1(\Nebule\Library\ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_TYPE);
+                $instance->setHiddenInput1(\Nebule\Library\ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_CONTEXT);
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
