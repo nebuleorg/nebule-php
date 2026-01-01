@@ -72,7 +72,7 @@ class ModuleGalleries extends Modules {
 
         switch ($hookName) {
             case 'selfMenu':
-            case 'selfMenuMessages':
+            case 'selfMenuGalleries':
                 $hookArray[] = array(
                     'name' => '::AppTitle1',
                     'icon' => $this::MODULE_LOGO,
@@ -93,22 +93,22 @@ class ModuleGalleries extends Modules {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayGallerie();
+                $this->_displayGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayCreateGallerie();
+                $this->_displayCreateGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyConversation();
+                $this->_displayModifyGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayDeleteConversation();
+                $this->_displayDeleteGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetConversation();
+                $this->_displayGetGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroConversation();
+                $this->_displaySynchroGallery();
                 break;
             default:
                 $this->_displayMyGalleries();
@@ -122,7 +122,7 @@ class ModuleGalleries extends Modules {
                 $this->_display_InlineMyGalleries();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineGallerie();
+                $this->_display_InlineGallery();
                 break;
         }
     }
@@ -133,7 +133,7 @@ class ModuleGalleries extends Modules {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
-            $this->_displayConversationCreateNew();
+            $this->_displayGalleryCreateNew();
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -180,27 +180,27 @@ class ModuleGalleries extends Modules {
 
 
 
-    private function _displayGallerie(): void {
+    private function _displayGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
-    private function _display_InlineGallerie(): void {
+    private function _display_InlineGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayCreateGallerie(): void {
+    private function _displayCreateGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
-        $this->_displayConversationCreateForm();
+        $this->_displayGalleryCreateForm();
         // MyGalleries() view displays the result of the creation
     }
 
     // Copy of ModuleGroups::_displayGroupCreateNew()
-    protected function _displayConversationCreateNew(): void {
+    protected function _displayGalleryCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -252,7 +252,7 @@ class ModuleGalleries extends Modules {
     }
 
     // Copy of ModuleGroups::_displayGroupCreateForm()
-    protected function _displayConversationCreateForm(): void {
+    protected function _displayGalleryCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateConversation')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -328,28 +328,28 @@ class ModuleGalleries extends Modules {
 
 
 
-    private function _displayModifyConversation(): void {
+    private function _displayModifyGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayDeleteConversation(): void {
+    private function _displayDeleteGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayGetConversation(): void {
+    private function _displayGetGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displaySynchroConversation(): void {
+    private function _displaySynchroGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
@@ -409,34 +409,34 @@ class ModuleGalleries extends Modules {
 
     CONST TRANSLATE_TABLE = [
         'fr-fr' => [
-            '::ModuleName' => 'Module des messages',
-            '::MenuName' => 'Messages',
-            '::ModuleDescription' => 'Module de gestion des messages',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les messages.',
-            '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Gestion des messages',
-            '::myGalleries' => 'Liste des galleries',
-            '::listMessages' => 'Liste des messages',
+            '::ModuleName' => 'Module des galeries',
+            '::MenuName' => 'Galeries',
+            '::ModuleDescription' => 'Module de gestion des galeries',
+            '::ModuleHelp' => 'Ce module permet de voir et de gérer les galeries.',
+            '::AppTitle1' => 'Galeries',
+            '::AppDesc1' => 'Gestion des galeries',
+            '::myGalleries' => 'Liste des galeries',
+            '::listMessages' => 'Liste des galeries',
         ],
         'en-en' => [
-            '::ModuleName' => 'Messages module',
-            '::MenuName' => 'Messages',
-            '::ModuleDescription' => 'Messages management module',
-            '::ModuleHelp' => 'This module permit to see and manage messages.',
-            '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Manage messages',
+            '::ModuleName' => 'Galleries module',
+            '::MenuName' => 'Galleries',
+            '::ModuleDescription' => 'Galleries management module',
+            '::ModuleHelp' => 'This module permit to see and manage galleries.',
+            '::AppTitle1' => 'Galleries',
+            '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'List of galleries',
-            '::listMessages' => 'List of messages',
+            '::listMessages' => 'List of galleries',
         ],
         'es-co' => [
-            '::ModuleName' => 'Messages module',
-            '::MenuName' => 'Messages',
-            '::ModuleDescription' => 'Messages management module',
-            '::ModuleHelp' => 'This module permit to see and manage messages.',
-            '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Manage messages',
+            '::ModuleName' => 'Galleries module',
+            '::MenuName' => 'Galleries',
+            '::ModuleDescription' => 'Galleries management module',
+            '::ModuleHelp' => 'This module permit to see and manage galleries.',
+            '::AppTitle1' => 'Galleries',
+            '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'List of galleries',
-            '::listMessages' => 'List of messages',
+            '::listMessages' => 'List of galleries',
         ],
     ];
 }

@@ -68,6 +68,8 @@ class Application extends Applications implements ApplicationInterface
         'ModuleMessages',
         'ModuleNeblog',
         'ModuleQantion',
+        'ModuleFolders',
+        'ModuleGalleries',
         'ModuleLang',
         'ModuleTranslateDEDE',
         'ModuleTranslateENEN',
