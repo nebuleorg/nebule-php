@@ -65,7 +65,7 @@ class Application extends Applications implements ApplicationInterface
         'ModuleGroups',
         'ModuleGroupEntities',
         'ModuleEntities',
-        'ModuleMessages',
+        'ModuleConversations',
         'ModuleNeblog',
         'ModuleQantion',
         'ModuleFolders',

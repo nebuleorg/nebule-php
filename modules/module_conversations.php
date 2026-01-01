@@ -72,7 +72,7 @@ class ModuleConversations extends Modules {
 
         switch ($hookName) {
             case 'selfMenu':
-            case 'selfMenuMessages':
+            case 'selfMenuConversations':
                 $hookArray[] = array(
                     'name' => '::AppTitle1',
                     'icon' => $this::MODULE_LOGO,
