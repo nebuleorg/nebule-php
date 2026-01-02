@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020260101
+# Version 020260102
 
 echo ' > start'
 
@@ -494,7 +494,7 @@ EOF
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
   mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
 
-  cat "${WORKSPACE}/applications/atrium.php" > "/tmp/entity.php"
+  cat "${WORKSPACE}/applications/atrium.php" > "/tmp/atrium.php"
   { tail +4 "${WORKSPACE}/modules/module_galleries.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -592,7 +592,7 @@ EOF
   echo " > new option : ${option_hash}"
   cp "${WORKSPACE}/applications/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
 
-  cat "${WORKSPACE}/applications/portfolio.php" > "/tmp/entity.php"
+  cat "${WORKSPACE}/applications/portfolio.php" > "/tmp/portfolio.php"
   { tail +4 "${WORKSPACE}/modules/module_folders.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -683,7 +683,7 @@ EOF
     icon_hash=$(sha256sum "${WORKSPACE}/modules/langs/flags/${lang}.png" | cut -d' ' -f1)'.sha2.256'
     varName=$(echo "${lang}" | tr '-' '_')
     declare "flags_${varName}"_hash="${icon_hash}"
-    echo " > new module language ${lang} : ${icon_hash}"
+    echo " > new flag ${lang} : ${icon_hash}"
     cp "${WORKSPACE}/modules/langs/flags/${lang}.png" "${CODE_MASTER_SPACE}/o/${icon_hash}"
   done
 
@@ -769,6 +769,7 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ENTITY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
