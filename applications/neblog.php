@@ -44,12 +44,11 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Application extends Applications
-{
+class Application extends Applications {
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_VERSION = '020260102';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2026';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';
@@ -85,8 +84,7 @@ class Application extends Applications
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Display extends Displays
-{
+class Display extends Displays {
     const DEFAULT_DISPLAY_MODE = 'blog';
     const DEFAULT_DISPLAY_VIEW = 'blog';
     const DEFAULT_LINK_COMMAND = 'lnk';
@@ -112,9 +110,8 @@ JfL27dvPWltbP3Z3d//Q2tqq6KFKIpFITk1N/TY8PDz/8uXLinMWFQMA+JxInZ+fX7t79+6f+/fv/+fQ
 UVYg1Gj2HcBeB/AvE200xGvbl50AAAAASUVORK5CYII=";
     const DEFAULT_APPLICATION_LOGO_LINK = '?dm=log&dv=about';
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
-    const DEFAULT_CSS_BACKGROUND = '8c40708bd7d89ba9e0bdb74a5300632100d4b660a99a11608930cb0ff56e132a.sha2.256';
+    const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
-    // Icônes de marquage.
     const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
     const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2.sha2.256';
     const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859.sha2.256';
@@ -133,11 +130,7 @@ MCCKYqs7SqVS+8fHx42uHdHu7m5saWlJajQaMDQ09KSk09zDsqzi8vLy4b/RkhFCIB6PFyzLKhJC3F6J
 jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJRU5ErkJggg==';
 
 
-    /**
-     * Liste des objets nécessaires au bon fonctionnement.
-     *
-     * @var array
-     */
+
     protected array $_neededObjectsList = array( // FIXME
         self::DEFAULT_LOGO_MENUS,
         self::DEFAULT_ICON_ALPHA_COLOR,
@@ -163,16 +156,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
 
 
-    /*
-	 * --------------------------------------------------------------------------------
-	 * La personnalisation.
-	 * --------------------------------------------------------------------------------
-
-    /**
-     * Affichage du style CSS.
-     */
-    public function displayCSS(): void
-    {
+    public function displayCSS(): void {
         // Recherche l'image de fond.
         $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
         if ($this->_nebuleInstance->getNodeIsRID($bgobj))
