@@ -25,7 +25,7 @@ class ModuleGalleries extends Modules {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
-    const MODULE_COMMAND_NAME = 'msg';
+    const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
     const MODULE_VERSION = '020260101';
@@ -132,7 +132,7 @@ class ModuleGalleries extends Modules {
     private function _displayMyGalleries(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
+            $this->_displaySimpleTitle('::createGallery', $this::MODULE_REGISTERED_ICONS[1]);
             $this->_displayGalleryCreateNew();
         }
 
@@ -168,7 +168,7 @@ class ModuleGalleries extends Modules {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
-        $this->_displaySimpleTitle('::myConversations', $this::MODULE_LOGO);
+        $this->_displaySimpleTitle('::myGalleries', $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
 
@@ -194,7 +194,7 @@ class ModuleGalleries extends Modules {
 
     private function _displayCreateGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
+        $this->_displaySimpleTitle('::createGallery', $this::MODULE_REGISTERED_ICONS[1]);
         $this->_displayGalleryCreateForm();
         // MyGalleries() view displays the result of the creation
     }
@@ -415,8 +415,9 @@ class ModuleGalleries extends Modules {
             '::ModuleHelp' => 'Ce module permet de voir et de gérer les galeries.',
             '::AppTitle1' => 'Galeries',
             '::AppDesc1' => 'Gestion des galeries',
-            '::myGalleries' => 'Liste des galeries',
-            '::listMessages' => 'Liste des galeries',
+            '::myGalleries' => 'Mes galeries',
+            '::listGalleries' => 'Liste des galeries',
+            '::createGallery' => 'Créer une galerie',
         ],
         'en-en' => [
             '::ModuleName' => 'Galleries module',
@@ -425,8 +426,9 @@ class ModuleGalleries extends Modules {
             '::ModuleHelp' => 'This module permit to see and manage galleries.',
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
-            '::myGalleries' => 'List of galleries',
-            '::listMessages' => 'List of galleries',
+            '::myGalleries' => 'My galleries',
+            '::listGalleries' => 'List of galleries',
+            '::createGallery' => 'Create a gallery',
         ],
         'es-co' => [
             '::ModuleName' => 'Galleries module',
@@ -435,8 +437,9 @@ class ModuleGalleries extends Modules {
             '::ModuleHelp' => 'This module permit to see and manage galleries.',
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
-            '::myGalleries' => 'List of galleries',
-            '::listMessages' => 'List of galleries',
+            '::myGalleries' => 'My galleries',
+            '::listGalleries' => 'List of galleries',
+            '::createGallery' => 'Create a gallery',
         ],
     ];
 }
