@@ -44,12 +44,11 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Application extends Applications
-{
+class Application extends Applications {
     const APPLICATION_NAME = 'qantion';
     const APPLICATION_SURNAME = 'nebule/qantion';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_VERSION = '020260102';
     const APPLICATION_LICENCE = 'GNU GPL v3 2019-2026';
     const APPLICATION_WEBSITE = 'www.qantion.org';
     const APPLICATION_NODE = '20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288';
@@ -71,22 +70,6 @@ class Application extends Applications
         'ModuleTranslateUAUA',
     );
     const LIST_MODULES_EXTERNAL = array();
-
-    const APPLICATION_ENVIRONMENT_FILE = 'nebule.env';
-    const APPLICATION_DEFAULT_DISPLAY_ONLINE_HELP = true;
-    const APPLICATION_DEFAULT_DISPLAY_ONLINE_OPTIONS = false;
-    const APPLICATION_DEFAULT_DISPLAY_METROLOGY = false;
-    const APPLICATION_DEFAULT_DISPLAY_UNSECURE_URL = true;
-    const APPLICATION_DEFAULT_DISPLAY_UNVERIFY_LARGE_CONTENT = false;
-    const APPLICATION_DEFAULT_DISPLAY_NAME_SIZE = 128;
-    const APPLICATION_DEFAULT_IO_READ_MAX_DATA = 1000000;
-    const APPLICATION_DEFAULT_PERMIT_UPLOAD_OBJECT = false;
-    const APPLICATION_DEFAULT_PERMIT_UPLOAD_LINKS = false;
-    const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_OBJECT = false;
-    const APPLICATION_DEFAULT_PERMIT_PUBLIC_UPLOAD_LINKS = false;
-    const APPLICATION_DEFAULT_LOG_UNLOCK_ENTITY = false;
-    const APPLICATION_DEFAULT_LOG_LOCK_ENTITY = false;
-    const APPLICATION_DEFAULT_LOAD_MODULES = 'd6105350a2680281474df5438ddcb3979e5575afba6fda7f646886e78394a4fb.sha2.256';
 }
 
 
@@ -98,8 +81,7 @@ class Application extends Applications
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class Display extends Displays
-{
+class Display extends Displays {
     const DEFAULT_DISPLAY_MODE = 'hlp';
     const DEFAULT_DISPLAY_VIEW = '1st';
     const DEFAULT_LINK_COMMAND = 'lnk';
@@ -148,7 +130,6 @@ oAAAAAUAACgAAEABAAAKAABQAACAAgCAkPo/0waFavM49GgAAAAASUVORK5CYII=
     const DEFAULT_LOGO_MENUS = '15eb7dcf0554d76797ffb388e4bb5b866e70a3a33e7d394a120e68899a16c690.sha2.256';
     const DEFAULT_CSS_BACKGROUND = 'f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256';
 
-    // Icônes de marquage.
     const DEFAULT_ICON_MARK = '65fb7dbaaa90465da5cb270da6d3f49614f6fcebb3af8c742e4efaa2715606f0.sha2.256';
     const DEFAULT_ICON_UNMARK = 'ee1d761617468ade89cd7a77ac96d4956d22a9d4cbedbec048b0c0c1bd3d00d2.sha2.256';
     const DEFAULT_ICON_UNMARKALL = 'fa40e3e73b9c11cb5169f3916b28619853023edbbf069d3bd9be76387f03a859.sha2.256';
@@ -161,11 +142,7 @@ IEReG/IFrUpsQUU1GSNcFegsjekEZG7MLnoBoBIAbm0sXi7gGF+SB/kKIvjRHvVXR+t2MONPcY12RnvF
 em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
-    /**
-     * Liste des objets nécessaires au bon fonctionnement.
-     *
-     * @var array
-     */
+
     protected array $_neededObjectsList = array(
         self::DEFAULT_LOGO_MENUS,
         self::DEFAULT_ICON_ALPHA_COLOR,
@@ -191,16 +168,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
 
 
-    /*
-	 * --------------------------------------------------------------------------------
-	 * La personnalisation.
-	 * --------------------------------------------------------------------------------
-
-    /**
-     * Affichage du style CSS.
-     */
-    public function displayCSS(): void
-    {
+    public function displayCSS(): void {
         // Recherche l'image de fond.
         $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
         if ($this->_nebuleInstance->getNodeIsRID($bgobj))
