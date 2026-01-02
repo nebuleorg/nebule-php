@@ -26,23 +26,23 @@ class ModuleFolders extends Modules {
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'fld';
-    const MODULE_DEFAULT_VIEW = 'root_folders';
+    const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260102';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
-    const MODULE_LOGO = 'c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.sha2.256';
+    const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array(
-        'root_folders',
-        'root_folder',
-        'new_root_folder',
-        'mod_root_folder',
-        'del_root_folder',
-        'get_root_folder',
-        'syn_root_folder',
+        'roots',
+        'root',
+        'new_root',
+        'mod_root',
+        'del_root',
+        'get_root',
+        'syn_root',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -63,29 +63,106 @@ class ModuleFolders extends Modules {
 
 
 
-    protected function _initialisation(): void {}
+    protected string $_socialClass = '';
+
+
+
+    protected function _initialisation(): void {
+        $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
+    }
 
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
         $hookArray = array();
 
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuFolders':
+                if ($this->_socialClass != 'myself') {
+                    $hookArray[] = array(
+                        'name' => '::myFolders',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'notmyself') {
+                    $hookArray[] = array(
+                        'name' => '::otherFolders',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'all') {
+                    $hookArray[] = array(
+                        'name' => '::allFolders',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                break;
+
+            case 'typeMenuEntity':
                 $hookArray[] = array(
-                    'name' => '::AppTitle1',
+                    'name' => '::myFolders',
                     'icon' => $this::MODULE_LOGO,
-                    'desc' => '::AppDesc1',
+                    'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::MODULE_DEFAULT_VIEW
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
                 break;
-        }
 
+        }
         return $hookArray;
+    }
+
+
+
+    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        /*switch ($hookName) {
+            case 'addMember':
+                $node = $this->_cacheInstance->newNode($item);
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setSocial('self');
+                $instance->setNID($node);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+                $instance->setIcon($instanceIcon);
+                $instance->setEnableName(true);
+                $instance->setEnableFlags(false);
+                $instance->setEnableFlagState(false);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableFlagUnlocked(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableRefs(true);
+                $instance->setSelfHookName('addMember');
+                $instance->setEnableStatus(false);
+                return $instance;
+                break;
+            default:*/
+                return null;
+        //}
     }
 
 
@@ -93,25 +170,25 @@ class ModuleFolders extends Modules {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayRootFolder();
+                $this->_displayRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayCreateRootFolder();
+                $this->_displayCreateRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyRootFolder();
+                $this->_displayModifyRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayDeleteRootFolder();
+                $this->_displayDeleteRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetRootFolder();
+                $this->_displayGetRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroRootFolder();
+                $this->_displaySynchroRoot();
                 break;
             default:
-                $this->_displayMyRootFolders();
+                $this->_displayMyRoots();
                 break;
         }
     }
@@ -119,21 +196,21 @@ class ModuleFolders extends Modules {
     public function displayModuleInline(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_display_InlineMyRootFolders();
+                $this->_display_InlineMyRoots();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineRootFolder();
+                $this->_display_InlineRoot();
                 break;
         }
     }
 
 
 
-    private function _displayMyRootFolders(): void {
+    private function _displayMyRoots(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
-            $this->_displayRootFolderCreateNew();
+            $this->_displaySimpleTitle('::createFolder', $this::MODULE_REGISTERED_ICONS[1]);
+            $this->_displayRootCreateNew();
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -141,7 +218,7 @@ class ModuleFolders extends Modules {
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
             $instance->setIcon($instanceIcon);
-            $instance->setMessage('::createConversation');
+            $instance->setMessage('::createFolder');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -168,53 +245,69 @@ class ModuleFolders extends Modules {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
-        $this->_displaySimpleTitle('::myConversations', $this::MODULE_LOGO);
+        $message = match ($this->_socialClass) {
+            'all' => '::allFolders',
+            'notmyself' => '::otherFolders',
+            default => '::myFolders',
+        };
+        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
 
-    private function _display_InlineMyRootFolders(): void {
+    private function _display_InlineMyRoots(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
-        $this->_listOfRootFolders($links, 'myself', 'myGroups');
+        switch ($this->_socialClass) {
+            case 'all':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'all');
+                $this->_listOfRoots($links, 'all', 'allFolders');
+                break;
+            case 'notmyself':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'notmyself');
+                $this->_listOfRoots($links, 'notmyself', 'otherFolders');
+                break;
+            default:
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
+                $this->_listOfRoots($links, 'myself', 'myFolders');
+        }
     }
 
 
 
-    private function _displayRootFolder(): void {
+    private function _displayRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
-    private function _display_InlineRootFolder(): void {
+    private function _display_InlineRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayCreateRootFolder(): void {
+    private function _displayCreateRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
-        $this->_displayRootFolderCreateForm();
+        $this->_displaySimpleTitle('::createFolder', $this::MODULE_REGISTERED_ICONS[1]);
+        $this->_displayRootCreateForm();
         // MyFolders() view displays the result of the creation
     }
 
     // Copy of ModuleGroups::_displayGroupCreateNew()
-    protected function _displayRootFolderCreateNew(): void {
+    protected function _displayRootCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
-                $instance->setMessage('::createGroupOK');
+                $instance->setMessage('::createFolderOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::OK');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
-                //$instance->setNID($this->_displayGroupInstance); FIXME
+                //$instance->setNID($this->_displayFolderInstance); FIXME
                 $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
@@ -238,7 +331,7 @@ class ModuleFolders extends Modules {
                 $instance->setIcon($instanceIcon2);
             } else {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::createGroupNOK');
+                $instance->setMessage('::createFolderNOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::ERROR');
@@ -252,7 +345,7 @@ class ModuleFolders extends Modules {
     }
 
     // Copy of ModuleGroups::_displayGroupCreateForm()
-    protected function _displayRootFolderCreateForm(): void {
+    protected function _displayRootCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -280,7 +373,7 @@ class ModuleFolders extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
-            $instance->setIconText('::createGroupClosed');
+            $instance->setIconText('::createFolderClosed');
             $instance->setSelectList(array(
                 'y' => $this->_translateInstance->getTranslate('::yes'),
                 'n' => $this->_translateInstance->getTranslate('::no'),
@@ -293,7 +386,7 @@ class ModuleFolders extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
-            $instance->setIconText('::createGroupObfuscated');
+            $instance->setIconText('::createFolderObfuscated');
             $instance->setSelectList(array(
                 'n' => $this->_translateInstance->getTranslate('::no'),
                 'y' => $this->_translateInstance->getTranslate('::yes'),
@@ -305,9 +398,9 @@ class ModuleFolders extends Modules {
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
-            $instance->setMessage('::createTheGroup');
+            $instance->setMessage('::createTheFolder');
             $instance->setInputValue('');
-            $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
+            $instance->setInputName($this->_translateInstance->getTranslate('::createTheFolder'));
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
@@ -328,28 +421,28 @@ class ModuleFolders extends Modules {
 
 
 
-    private function _displayModifyRootFolder(): void {
+    private function _displayModifyRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayDeleteRootFolder(): void {
+    private function _displayDeleteRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayGetRootFolder(): void {
+    private function _displayGetRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displaySynchroRootFolder(): void {
+    private function _displaySynchroRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
@@ -357,7 +450,7 @@ class ModuleFolders extends Modules {
 
 
     // Copy of ModuleGroups::_listOfGroups()
-    protected function _listOfRootFolders(array $links, string $socialClass = 'all', string $hookName = 'notMyFolders'): void {
+    protected function _listOfRoots(array $links, string $socialClass = 'all', string $hookName = 'notMyFolders'): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $foldersNID = array();
         $foldersSigners = array();
@@ -374,10 +467,10 @@ class ModuleFolders extends Modules {
         $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($foldersNID as $nid) {
-            $instanceGroup = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceFolder = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
-            $instance->setNID($instanceGroup);
+            $instance->setNID($instanceFolder);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -416,7 +509,18 @@ class ModuleFolders extends Modules {
             '::AppTitle1' => 'Dossiers',
             '::AppDesc1' => 'Gestion des dossiers',
             '::myFolders' => 'Liste des dossiers',
-            '::listMessages' => 'Liste des dossiers',
+            '::allFolders' => 'Tous les groupes',
+            '::otherFolders' => 'Les groupes des autres entités',
+            '::listFolders' => 'Liste des dossiers',
+            '::createFolderClosed' => 'Créer un groupe fermé',
+            '::createFolderObfuscated' => 'Créer un groupe dissimulé',
+            '::addMarkedObjects' => 'Ajouter les objets marqués',
+            '::addToFolder' => 'Ajouter au groupe',
+            '::addMember' => 'Ajouter un membre',
+            '::deleteFolder' => 'Supprimer le groupe',
+            '::createFolder' => 'Créer un dossier',
+            '::createFolderOK' => 'Le groupe a été créé',
+            '::createFolderNOK' => "Le groupe n'a pas été créé ! %s",
         ],
         'en-en' => [
             '::ModuleName' => 'Folders module',
@@ -426,7 +530,18 @@ class ModuleFolders extends Modules {
             '::AppTitle1' => 'Folders',
             '::AppDesc1' => 'Manage folders',
             '::myFolders' => 'List of folders',
-            '::listMessages' => 'List of folders',
+            '::allFolders' => 'All groups',
+            '::otherFolders' => 'Folders of other entities',
+            '::listFolders' => 'List of folders',
+            '::createFolderClosed' => 'Create a closed group',
+            '::createFolderObfuscated' => 'Create an obfuscated group',
+            '::addMarkedObjects' => 'Add marked objects',
+            '::addToFolder' => 'Add to group',
+            '::addMember' => 'Add a member',
+            '::deleteFolder' => 'Delete group',
+            '::createFolder' => 'Create a folder',
+            '::createFolderOK' => 'The group have been created',
+            '::createFolderNOK' => 'The group have not been created! %s',
         ],
         'es-co' => [
             '::ModuleName' => 'Folders module',
@@ -436,7 +551,18 @@ class ModuleFolders extends Modules {
             '::AppTitle1' => 'Folders',
             '::AppDesc1' => 'Manage folders',
             '::myFolders' => 'List of folders',
-            '::listMessages' => 'List of folders',
+            '::allFolders' => 'All groups',
+            '::otherFolders' => 'Folders of other entities',
+            '::listFolders' => 'List of folders',
+            '::createFolderClosed' => 'Create a closed group',
+            '::createFolderObfuscated' => 'Create an obfuscated group',
+            '::addMarkedObjects' => 'Add marked objects',
+            '::addToFolder' => 'Add to group',
+            '::addMember' => 'Add a member',
+            '::deleteFolder' => 'Delete group',
+            '::createFolder' => 'Create a folder',
+            '::createFolderOK' => 'The group have been created',
+            '::createFolderNOK' => 'The group have not been created! %s',
         ],
     ];
 }

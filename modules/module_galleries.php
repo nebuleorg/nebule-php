@@ -31,7 +31,7 @@ class ModuleGalleries extends Modules {
     const MODULE_VERSION = '020260101';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
-    const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
+    const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
@@ -63,28 +63,74 @@ class ModuleGalleries extends Modules {
 
 
 
-    protected function _initialisation(): void {}
+    protected string $_socialClass = '';
+
+
+
+    protected function _initialisation(): void {
+        $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
+    }
 
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
         $hookArray = array();
 
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuGalleries':
+                if ($this->_socialClass != 'myself') {
+                    $hookArray[] = array(
+                        'name' => '::myGalleries',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'notmyself') {
+                    $hookArray[] = array(
+                        'name' => '::otherGalleries',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'all') {
+                    $hookArray[] = array(
+                        'name' => '::allGalleries',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                break;
+
+            case 'typeMenuEntity':
                 $hookArray[] = array(
-                    'name' => '::AppTitle1',
+                    'name' => '::myGalleries',
                     'icon' => $this::MODULE_LOGO,
-                    'desc' => '::AppDesc1',
+                    'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::MODULE_DEFAULT_VIEW
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
                 break;
-        }
 
+        }
         return $hookArray;
     }
 
@@ -168,14 +214,30 @@ class ModuleGalleries extends Modules {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
-        $this->_displaySimpleTitle('::myGalleries', $this::MODULE_LOGO);
+        $message = match ($this->_socialClass) {
+            'all' => '::allGalleriess',
+            'notmyself' => '::otherGalleries',
+            default => '::myGalleries',
+        };
+        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
 
     private function _display_InlineMyGalleries(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
-        $this->_listOfGalleries($links, 'myself', 'myGroups');
+        switch ($this->_socialClass) {
+            case 'all':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'all');
+                $this->_listOfGalleries($links, 'all', 'allGalleriess');
+                break;
+            case 'notmyself':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'notmyself');
+                $this->_listOfGalleries($links, 'notmyself', 'otherGalleries');
+                break;
+            default:
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
+                $this->_listOfGalleries($links, 'myself', 'myGalleries');
+        }
     }
 
 
@@ -207,14 +269,14 @@ class ModuleGalleries extends Modules {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
-                $instance->setMessage('::createGroupOK');
+                $instance->setMessage('::createGalleryOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                 $instance->setIconText('::OK');
                 $instanceList->addItem($instance);
 
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
-                //$instance->setNID($this->_displayGroupInstance); FIXME
+                //$instance->setNID($this->_displayGalleryInstance); FIXME
                 $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
@@ -238,7 +300,7 @@ class ModuleGalleries extends Modules {
                 $instance->setIcon($instanceIcon2);
             } else {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::createGroupNOK');
+                $instance->setMessage('::createGalleryNOK');
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setIconText('::ERROR');
@@ -280,7 +342,7 @@ class ModuleGalleries extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
-            $instance->setIconText('::createGroupClosed');
+            $instance->setIconText('::createGalleryClosed');
             $instance->setSelectList(array(
                 'y' => $this->_translateInstance->getTranslate('::yes'),
                 'n' => $this->_translateInstance->getTranslate('::no'),
@@ -293,7 +355,7 @@ class ModuleGalleries extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
-            $instance->setIconText('::createGroupObfuscated');
+            $instance->setIconText('::createGalleryObfuscated');
             $instance->setSelectList(array(
                 'n' => $this->_translateInstance->getTranslate('::no'),
                 'y' => $this->_translateInstance->getTranslate('::yes'),
@@ -305,9 +367,9 @@ class ModuleGalleries extends Modules {
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
-            $instance->setMessage('::createTheGroup');
+            $instance->setMessage('::createTheGallery');
             $instance->setInputValue('');
-            $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
+            $instance->setInputName($this->_translateInstance->getTranslate('::createTheGallery'));
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
@@ -374,10 +436,10 @@ class ModuleGalleries extends Modules {
         $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($galleriesNID as $nid) {
-            $instanceGroup = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceGallery = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
-            $instance->setNID($instanceGroup);
+            $instance->setNID($instanceGallery);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -416,8 +478,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galeries',
             '::AppDesc1' => 'Gestion des galeries',
             '::myGalleries' => 'Mes galeries',
+            '::allGalleries' => 'Tous les groupes',
+            '::otherGalleries' => 'Les groupes des autres entités',
             '::listGalleries' => 'Liste des galeries',
+            '::createGalleryClosed' => 'Créer un groupe fermé',
+            '::createGalleryObfuscated' => 'Créer un groupe dissimulé',
+            '::addMarkedObjects' => 'Ajouter les objets marqués',
+            '::addToGallery' => 'Ajouter au groupe',
+            '::addMember' => 'Ajouter un membre',
+            '::deleteGallery' => 'Supprimer le groupe',
             '::createGallery' => 'Créer une galerie',
+            '::createGalleryOK' => 'Le groupe a été créé',
+            '::createGalleryNOK' => "Le groupe n'a pas été créé ! %s",
         ],
         'en-en' => [
             '::ModuleName' => 'Galleries module',
@@ -427,8 +499,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'My galleries',
+            '::allGalleries' => 'All groups',
+            '::otherGalleries' => 'Galleries of other entities',
             '::listGalleries' => 'List of galleries',
+            '::createGalleryClosed' => 'Create a closed group',
+            '::createGalleryObfuscated' => 'Create an obfuscated group',
+            '::addMarkedObjects' => 'Add marked objects',
+            '::addToGallery' => 'Add to group',
+            '::addMember' => 'Add a member',
+            '::deleteGallery' => 'Delete group',
             '::createGallery' => 'Create a gallery',
+            '::createGalleryOK' => 'The group have been created',
+            '::createGalleryNOK' => 'The group have not been created! %s',
         ],
         'es-co' => [
             '::ModuleName' => 'Galleries module',
@@ -438,8 +520,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'My galleries',
+            '::allGalleries' => 'All groups',
+            '::otherGalleries' => 'Galleries of other entities',
             '::listGalleries' => 'List of galleries',
+            '::createGalleryClosed' => 'Create a closed group',
+            '::createGalleryObfuscated' => 'Create an obfuscated group',
+            '::addMarkedObjects' => 'Add marked objects',
+            '::addToGallery' => 'Add to group',
+            '::addMember' => 'Add a member',
+            '::deleteGallery' => 'Delete group',
             '::createGallery' => 'Create a gallery',
+            '::createGalleryOK' => 'The group have been created',
+            '::createGalleryNOK' => 'The group have not been created! %s',
         ],
     ];
 }

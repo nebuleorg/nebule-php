@@ -60,6 +60,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $this->_create = true;
 
         $this->_createName = $this->getFilterInput(self::CREATE_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if ($this->_createName == '') {
+            $this->_createError = true;
+            return;
+        }
         $createContext = $this->getFilterInput(self::CREATE_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
         if (! Node::checkNID($createContext))
             $createContext = '';

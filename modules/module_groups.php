@@ -82,7 +82,6 @@ class ModuleGroups extends Modules {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
-
         $hookArray = array();
 
         switch ($hookName) {
@@ -95,7 +94,7 @@ class ModuleGroups extends Modules {
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;*/
             case 'selfMenu':
-            case 'typeMenuGroup':
+            case 'selfMenuGroup':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[] = array(
                         'name' => '::myGroups',
@@ -170,7 +169,7 @@ class ModuleGroups extends Modules {
                 }
                 break;
 
-            case 'selfMenuGroup':
+            case 'typeMenuGroup':
                 // Refuser l'objet comme un groupe.
                 $hookArray[1]['name'] = '::unmakeGroup';
                 $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -182,7 +181,7 @@ class ModuleGroups extends Modules {
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 break;
 
-            case 'selfMenuObject':
+            /*case 'selfMenuObject':
                 // Affiche si l'objet courant est un groupe.
                 if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('myself')) {
                     // Voir comme groupe.
@@ -251,19 +250,7 @@ class ModuleGroups extends Modules {
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
                 }
-                break;
-
-            case 'selfMenuEntity':
-                $hookArray[] = array(
-                    'name' => '::myGroups',
-                    'icon' => $this::MODULE_LOGO,
-                    'desc' => '',
-                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                );
-                break;
+                break;*/
 
             case 'typeMenuEntity':
                 $hookArray[] = array(
@@ -585,7 +572,7 @@ class ModuleGroups extends Modules {
         // MyGroups() view displays the result of the creation
     }
 
-    // Copy of ModuleConversations::_displayConversationCreateNew()
+    // Copy of ModuleConversations::_displayConversationCreateNew(), ModuleFolders::_displayFolderCreateNew(), ModuleGalleries::_displayGalleryCreateNew()
     protected function _displayGroupCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
@@ -637,16 +624,17 @@ class ModuleGroups extends Modules {
         echo '<br />' . "\n";
     }
 
-    // Copy of ModuleConversations::_displayConversationCreateForm()
+    // Copy of ModuleConversations::_displayConversationCreateForm(), ModuleFolders::_listOfFolders(), ModuleGalleries::_listOfGalleries()
     protected function _displayGroupCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                . '&' . \Nebule\Library\ActionsGroups::CREATE
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
@@ -712,8 +700,6 @@ class ModuleGroups extends Modules {
             $instance->setMessage('::createTheGroup');
             $instance->setInputValue('');
             $instance->setInputName($this->_translateInstance->getTranslate('::createTheGroup'));
-            if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE)
-                $instance->setHiddenInput1(\Nebule\Library\ActionsGroups::CREATE_CONTEXT, $this::RESTRICTED_CONTEXT);
             $instance->setIconText('::confirm');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(true);
@@ -932,7 +918,7 @@ class ModuleGroups extends Modules {
 
     protected function _listMembersToAdd(): array { return $this->_ioInstance->getList(); }
 
-    // Copy of ModuleConversations::_listOfConversations()
+    // Copy of ModuleConversations::_listOfConversations(), ModuleFolders::_listOfFolders(), ModuleGalleries::_listOfGalleries()
     protected function _listOfGroups(array $links, string $socialClass = 'all', string $hookName = 'notMyGroups'): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $groupsGID = array();
@@ -1006,7 +992,6 @@ class ModuleGroups extends Modules {
             '::addMember' => 'Ajouter un membre',
             '::deleteGroup' => 'Supprimer le groupe',
             '::createTheGroup' => 'Créer le groupe',
-            '::nom' => 'Nom',
             '::createGroupOK' => 'Le groupe a été créé',
             '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
             '::limitedType' => 'Le type des membres est limité à "%s"',
@@ -1026,7 +1011,6 @@ class ModuleGroups extends Modules {
             '::thisIsGroup' => "C'est un groupe",
             '::thisIsGroup4me' => "C'est un groupe pour moi",
             '::thisIsNotGroup' => "Ce n'est pas un groupe",
-            '::confirm' => 'Confirmation',
         ],
         'en-en' => [
             '::ModuleName' => 'Groups module',
@@ -1050,7 +1034,6 @@ class ModuleGroups extends Modules {
             '::addMember' => 'Add a member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
-            '::nom' => 'Name',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
             '::limitedType' => 'Type of members is limited to "%s"',
@@ -1070,7 +1053,6 @@ class ModuleGroups extends Modules {
             '::thisIsGroup' => 'This is a group',
             '::thisIsGroup4me' => 'This is a group for me',
             '::thisIsNotGroup' => 'This is not a group',
-            '::confirm' => 'Confirm',
         ],
         'es-co' => [
             '::ModuleName' => 'Groups module',
@@ -1094,7 +1076,6 @@ class ModuleGroups extends Modules {
             '::addMember' => 'Add a member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
-            '::nom' => 'Name',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
             '::limitedType' => 'Type of members is limited to "%s"',
@@ -1114,7 +1095,6 @@ class ModuleGroups extends Modules {
             '::thisIsGroup' => 'This is a group',
             '::thisIsGroup4me' => 'This is a group for me',
             '::thisIsNotGroup' => 'This is not a group',
-            '::confirm' => 'Confirm',
         ],
     ];
 }
@@ -1170,7 +1150,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::addMember' => 'Ajouter une entité membre',
             '::deleteGroup' => 'Supprimer le groupe',
             '::createTheGroup' => 'Créer le groupe',
-            '::nom' => 'Nom',
             '::createGroupOK' => 'Le groupe a été créé',
             '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
             '::limitedType' => 'Le type des membres est limité à "%s"',
@@ -1214,7 +1193,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::addMember' => 'Add an entity as member',
             '::deleteGroup' => 'Delete group',
             '::createTheGroup' => 'Create the group',
-            '::nom' => 'Name',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
             '::limitedType' => 'Type of members is limited to "%s"',
@@ -1258,7 +1236,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::addMember' => 'Add an entity as member',
             '::deleteGroup' => 'Eliminar grupo',
             '::createTheGroup' => 'Crear el grupo',
-            '::nom' => 'Nombre',
             '::createGroupOK' => 'El grupo ha sido creado',
             '::createGroupNOK' => '¡El grupo no ha sido creado! %s',
             '::limitedType' => 'El tipo de miembros está limitado a "%s"',
