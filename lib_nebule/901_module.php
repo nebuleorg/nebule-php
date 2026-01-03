@@ -36,10 +36,18 @@ abstract class Modules extends Functions implements ModuleInterface {
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
+    protected string $_socialClass = '';
 
     public function __toString(): string { return $this::MODULE_NAME; }
 
-    protected function _initialisation(): void { $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked(); }
+
+
+    protected function _initialisation(): void {
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
+        $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
+    }
+
+
 
     public function getClassName(): string { return static::class; }
 
@@ -59,6 +67,66 @@ abstract class Modules extends Functions implements ModuleInterface {
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
+    public function getCommonHookList(string $hookName, string $nid, string $name, int $indexView = 0, int $iconView = 0, int $indexAdd = 2, int $iconAdd = 1): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $hookArray = array();
+
+        switch ($hookName) {
+            case 'selfMenu':
+            case 'selfMenu' . $name:
+                if ($this->_socialClass != 'myself') {
+                    $hookArray[] = array(
+                        'name' => '::my' . $name,
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_SOCIAL . '=myself'
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'notmyself') {
+                    $hookArray[] = array(
+                        'name' => '::other' . $name,
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_socialClass != 'all') {
+                    $hookArray[] = array(
+                        'name' => '::all' . $name,
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_SOCIAL . '=all'
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                break;
+            case 'typeMenuEntity':
+                $hookArray[] = array(
+                    'name' => '::my' . $name,
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                        . '&' . Displays::COMMAND_SOCIAL . '=myself'
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
+                break;
+        }
+        return $hookArray;
+    }
+
     public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable { return null; }
 
     /**
@@ -189,6 +257,85 @@ abstract class Modules extends Functions implements ModuleInterface {
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->display();
     }
+
+    protected function _displayListItems(string $name, int $indexAdd = 2, int $iconAdd = 1, int $indexGet = 5, int $iconGet = 6): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
+            $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
+            $this->_displayItemCreateNew();
+        }
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconAdd]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::create' . $name);
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexAdd]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconGet]);
+            $instance->setIcon($instanceIcon);
+            $instance->setMessage('::getExisting' . $name);
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexGet]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        } else {
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+            $instance->setMessage('::login');
+            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        }
+        $instanceList->addItem($instance);
+
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instanceIcon = $this->_cacheInstance->newNode(References::OBJ_IMG['synobj']);
+        $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+        $instance->setIcon($instanceIcon2);
+        $instance->setMessage('::refreshList');
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+        $instanceList->addItem($instance);
+
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+
+        $message = match ($this->_socialClass) {
+            'all' => '::all' . $name . 's',
+            'notmyself' => '::other' . $name . 's',
+            default => '::my' . $name . 's',
+        };
+        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
+    }
+    protected function _displayItemCreateNew(): void {}
+
+    protected function _display_InlineMyItems(string $name): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        switch ($this->_socialClass) {
+            case 'all':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'all');
+                $this->_displayListOfItems($links, 'all', 'all' . $name);
+                break;
+            case 'notmyself':
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'notmyself');
+                $this->_displayListOfItems($links, 'notmyself', 'other' . $name);
+                break;
+            default:
+                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
+                $this->_displayListOfItems($links, 'myself', 'my' . $name);
+        }
+    }
+    protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {}
 
     const TRANSLATE_TABLE = [
             'fr-fr' => [

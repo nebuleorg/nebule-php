@@ -63,11 +63,8 @@ class ModuleGalleries extends Modules {
 
 
 
-    protected string $_socialClass = '';
-
-
-
     protected function _initialisation(): void {
+        $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
     }
 
@@ -78,9 +75,9 @@ class ModuleGalleries extends Modules {
         $object = $this->_applicationInstance->getCurrentObjectID();
         if ($nid !== null)
             $object = $nid->getID();
-        $hookArray = array();
+        $hookArray = $this->getCommonHookList($hookName, $object, 'Galleries');
 
-        switch ($hookName) {
+        /*switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuGalleries':
                 if ($this->_socialClass != 'myself') {
@@ -90,6 +87,7 @@ class ModuleGalleries extends Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . Displays::COMMAND_SOCIAL . '=myself'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -101,6 +99,7 @@ class ModuleGalleries extends Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -112,6 +111,7 @@ class ModuleGalleries extends Modules {
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . Displays::COMMAND_SOCIAL . '=all'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -125,12 +125,13 @@ class ModuleGalleries extends Modules {
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . Displays::COMMAND_SOCIAL . '=myself'
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
                 break;
 
-        }
+        }*/
         return $hookArray;
     }
 
@@ -157,7 +158,7 @@ class ModuleGalleries extends Modules {
                 $this->_displaySynchroGallery();
                 break;
             default:
-                $this->_displayMyGalleries();
+                $this->_displayListItems('Gallery', 2, 2, 5, 6);
                 break;
         }
     }
@@ -165,78 +166,11 @@ class ModuleGalleries extends Modules {
     public function displayModuleInline(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_display_InlineMyGalleries();
+                $this->_display_InlineMyItems('Galleries');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineGallery();
                 break;
-        }
-    }
-
-
-
-    private function _displayMyGalleries(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $this->_displaySimpleTitle('::createGallery', $this::MODULE_REGISTERED_ICONS[1]);
-            $this->_displayGalleryCreateNew();
-        }
-
-        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
-            $instance->setIcon($instanceIcon);
-            $instance->setMessage('::createConversation');
-            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
-            $instanceList->addItem($instance);
-
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[6]);
-            $instance->setIcon($instanceIcon);
-            $instance->setMessage('::gallery:getExisting');
-            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
-        } else {
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
-            $instance->setMessage('::login');
-            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
-                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
-        }
-        $instanceList->addItem($instance);
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        $instanceList->setEnableWarnIfEmpty(false);
-        $instanceList->display();
-
-        $message = match ($this->_socialClass) {
-            'all' => '::allGalleriess',
-            'notmyself' => '::otherGalleries',
-            default => '::myGalleries',
-        };
-        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
-    }
-
-    private function _display_InlineMyGalleries(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        switch ($this->_socialClass) {
-            case 'all':
-                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'all');
-                $this->_listOfGalleries($links, 'all', 'allGalleriess');
-                break;
-            case 'notmyself':
-                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'notmyself');
-                $this->_listOfGalleries($links, 'notmyself', 'otherGalleries');
-                break;
-            default:
-                $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
-                $this->_listOfGalleries($links, 'myself', 'myGalleries');
         }
     }
 
@@ -262,7 +196,7 @@ class ModuleGalleries extends Modules {
     }
 
     // Copy of ModuleGroups::_displayGroupCreateNew()
-    protected function _displayGalleryCreateNew(): void {
+    protected function _displayItemCreateNew(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -419,7 +353,7 @@ class ModuleGalleries extends Modules {
 
 
     // Copy of ModuleGroups::_listOfGroups()
-    protected function _listOfGalleries(array $links, string $socialClass = 'all', string $hookName = 'notMyConversations'): void {
+    protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $galleriesNID = array();
         $galleriesSigners = array();
