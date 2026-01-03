@@ -80,6 +80,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             }
             $result .= "<br />\n";
         }
+        $column = 0;
         foreach ($this->_fullList as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
             if ($item instanceof \Nebule\Library\DisplayInformation) {
@@ -97,8 +98,11 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 $result .= $item->getHTML();
             else
                 continue;
-            if ($this->_onPerLine)
+            $column++;
+            if ($this->_onPerLine || $column >= $this->_pageColumns) {
                 $result .= '<br />';
+                $column = 0;
+            }
             $result .= "\n";
         }
         $result .= '</div>';
@@ -122,6 +126,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     protected bool $_enableWarnIfEmpty = false;
     protected string $_listHookName = '';
     protected int $_listSize = Displays::DEFAULT_DISPLAY_SIZE_LIST;
+    protected int $_pageColumns = Displays::DEFAULT_DISPLAY_PAGE_COLUMN;
 
     public function setEnableWarnIfEmpty(bool $enable = true): void { $this->_enableWarnIfEmpty = $enable; }
 
@@ -130,6 +135,8 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public function setListHookName(string $hookName): void { $this->_listHookName = $hookName; }
 
     public function setListSize(int $size = Displays::DEFAULT_DISPLAY_SIZE_LIST): void { $this->_listSize = $size; }
+
+    public function setPageColumns(int $columns = Displays::DEFAULT_DISPLAY_PAGE_COLUMN): void { $this->_pageColumns = $columns; }
 
     public function setListItems(array $list): void { $this->_listItem = $list; }
 

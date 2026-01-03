@@ -65,8 +65,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const COMMAND_SOCIAL = 'ds';
     const DEFAULT_DISPLAY_MODE = 'none';
     const DEFAULT_DISPLAY_VIEW = 'none';
-    const DEFAULT_DISPLAY_SIZE_LIST = 24;
     const COMMAND_DISPLAY_PAGE_LIST = 'dp';
+    const DEFAULT_DISPLAY_SIZE_LIST = 24;
+    const COMMAND_DISPLAY_PAGE_COLUMN = 'dq';
+    const DEFAULT_DISPLAY_PAGE_COLUMN = 3;
     const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
 
     // Les icônes.
