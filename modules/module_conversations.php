@@ -28,7 +28,7 @@ class ModuleConversations extends Modules {
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260103';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
