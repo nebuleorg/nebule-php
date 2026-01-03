@@ -43,6 +43,7 @@ class ModuleGalleries extends Modules {
         'del_gallery',
         'get_gallery',
         'syn_gallery',
+        'rights_gallery',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -157,6 +158,9 @@ class ModuleGalleries extends Modules {
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroGallery();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_displayRightsGallery();
+                break;
             default:
                 $this->_displayListItems('Gallery', 2, 2, 5, 6);
                 break;
@@ -170,6 +174,9 @@ class ModuleGalleries extends Modules {
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineGallery();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_display_InlineRightsGallery();
                 break;
         }
     }
@@ -346,6 +353,18 @@ class ModuleGalleries extends Modules {
 
 
     private function _displaySynchroGallery(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    private function _displayRightsGallery(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+    private function _display_InlineRightsGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }

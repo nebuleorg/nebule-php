@@ -43,6 +43,7 @@ class ModuleFolders extends Modules {
         'del_root',
         'get_root',
         'syn_root',
+        'rights_root',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -188,6 +189,9 @@ class ModuleFolders extends Modules {
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroRoot();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_displayRightsRoot();
+                break;
             default:
                 $this->_displayListItems('Folder', 2, 2, 5, 6);
                 break;
@@ -202,6 +206,9 @@ class ModuleFolders extends Modules {
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineRoot();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_display_InlineRightsRoot();
+                break;
         }
     }
 
@@ -209,6 +216,7 @@ class ModuleFolders extends Modules {
 
     private function _displayRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        //$this->_displayBackOrLogin();
         $this->_displayNotImplemented(); // TODO
     }
 
@@ -377,6 +385,18 @@ class ModuleFolders extends Modules {
 
 
     private function _displaySynchroRoot(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    private function _displayRightsRoot(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+    private function _display_InlineRightsRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }

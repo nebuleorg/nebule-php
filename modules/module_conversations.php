@@ -43,6 +43,7 @@ class ModuleConversations extends Modules {
         'del_conversation',
         'get_conversation',
         'syn_conversation',
+        'rights_conversation',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -157,6 +158,9 @@ class ModuleConversations extends Modules {
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroConversation();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_displayRightsConversation();
+                break;
             default:
                 $this->_displayListItems('Conversation', 2, 2, 5, 6);
                 break;
@@ -170,6 +174,9 @@ class ModuleConversations extends Modules {
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineConversation();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_display_InlineRightsConversation();
                 break;
         }
     }
@@ -346,6 +353,18 @@ class ModuleConversations extends Modules {
 
 
     private function _displaySynchroConversation(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    private function _displayRightsConversation(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+    private function _display_InlineRightsConversation(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }

@@ -110,6 +110,19 @@ abstract class Modules extends Functions implements ModuleInterface {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
+                if ($this->_unlocked) {
+                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexView]) {
+                        $hookArray[] = array(
+                            'name' => '::create' . $name,
+                            'icon' => $this::MODULE_REGISTERED_ICONS[$iconAdd],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexAdd]
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                    }
+                }
                 break;
             case 'typeMenuEntity':
                 $hookArray[] = array(
@@ -278,8 +291,9 @@ abstract class Modules extends Functions implements ModuleInterface {
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconGet]);
-            $instance->setIcon($instanceIcon);
+            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['ll']);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
             $instance->setMessage('::getExisting' . $name);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexGet]
@@ -295,12 +309,13 @@ abstract class Modules extends Functions implements ModuleInterface {
         $instanceList->addItem($instance);
 
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNode(References::OBJ_IMG['synobj']);
+        $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['synobj']);
         $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
         $instance->setIcon($instanceIcon2);
         $instance->setMessage('::refreshList');
         $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+            . '&' . Displays::COMMAND_SOCIAL . $this->_socialClass
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         $instanceList->addItem($instance);
@@ -337,15 +352,31 @@ abstract class Modules extends Functions implements ModuleInterface {
     }
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {}
 
+    /*protected function _displayBackOrLogin(string $backMessage, string $backView, string $addURL = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+        $instance->setMessage($backMessage);
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $backView
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+            . $addURL);
+        $instanceList->addItem($instance);
+        if (!$this->_unlocked) {
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+            $instance->setMessage('::login');
+            $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+    }*/
+
     const TRANSLATE_TABLE = [
-            'fr-fr' => [
-                    '::nebule:modules::ModuleName' => 'Module des modules',
-                    '::nebule:modules::MenuName' => 'Modules',
-                    '::nebule:modules::ModuleDescription' => 'Module de gestion des modules.',
-                    '::nebule:modules::ModuleHelp' => 'Cette application permet de voir les modules détectés par sylabe.',
-                    '::nebule:modules::AppTitle1' => 'Modules',
-                    '::nebule:modules::AppDesc1' => 'Module de gestion des modules.',
-            ],
             'en-en' => [
                     '::nebule:modules::ModuleName' => 'Module of modules',
                     '::nebule:modules::MenuName' => 'Modules',
@@ -353,14 +384,6 @@ abstract class Modules extends Functions implements ModuleInterface {
                     '::nebule:modules::ModuleHelp' => 'This application permit to see modules detected by sylabe.',
                     '::nebule:modules::AppTitle1' => 'Modules',
                     '::nebule:modules::AppDesc1' => 'Manage modules.',
-            ],
-            'es-co' => [
-                    '::nebule:modules::ModuleName' => 'Module of modules',
-                    '::nebule:modules::MenuName' => 'Modules',
-                    '::nebule:modules::ModuleDescription' => 'Module to manage modules.',
-                    '::nebule:modules::ModuleHelp' => 'This application permit to see modules detected by sylabe.',
-                    '::nebule:modules::AppDesc1' => 'Manage modules.',
-                    '::nebule:modules::AppTitle1' => 'Modules',
             ],
     ];
 }
