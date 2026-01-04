@@ -18,6 +18,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const CREATE_CLOSED = 'action_group_create_close';
     const CREATE_OBFUSCATED = 'action_group_create_obf';
     const CREATE_CONTEXT = 'action_group_create_context';
+    const CREATE_WITH_CONTENT = 'action_group_with_content';
     const DELETE = 'action_group_del';
     const ADD_MEMBER = 'action_group_add_membre';
     const REMOVE_MEMBER = 'action_group_del_member';
@@ -45,6 +46,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     protected string $_createGID = '0';
     protected bool $_createClosed = false;
     protected bool $_createObfuscated = false;
+    protected bool $_createWithContent = false;
     protected ?Group $_createInstance = null;
     protected bool $_createError = false;
     public function getCreate(): bool { return $this->_create; }
@@ -72,8 +74,23 @@ class ActionsGroups extends Actions implements ActionsInterface {
 
         $this->_createClosed = $this->getHaveInput(self::CREATE_CLOSED);
         $this->_createObfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
+        $this->_createWithContent = $this->getHaveInput(self::CREATE_WITH_CONTENT);
 
-        $this->_createInstance = new Group($this->_nebuleInstance, '');
+        $nid = '';
+        if ($this->_createWithContent) {
+            $instance = new Node($this->_nebuleInstance, '');
+            $eid = $this->_entitiesInstance->getConnectedEntityEID();
+            $salt = bin2hex($this->_cryptoInstance->getRandom(64, \Nebule\Library\Crypto::RANDOM_PSEUDO));
+            $date = '0' . date('YmdHis');
+            $branch = $this->_configurationInstance->getOptionAsString('codeBranch');
+            $content = 'library=' . nebule::NEBULE_SURNAME . "\nbranch=" . $branch . "\nversion=" . nebule::NEBULE_VERSION . "\ntimestamp=" . $date . "\ntype=group\ncontext=" . $createContext . "\neid=" . $eid . "\nsalt=" . $salt;
+            $instance->setContent($content);
+            $instance->write();
+            $nid = $instance->getID();
+            $this->_metrologyInstance->addLog('create group with content nid=' . $nid . ' eid=' . $eid . ' salt=' . $salt, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4c921139');
+        }
+
+        $this->_createInstance = new Group($this->_nebuleInstance, $nid);
         $this->_metrologyInstance->addLog('create group name=' . $this->_createName . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf18d77f');
         $this->_createInstance->setAsGroup($this->_createObfuscated, $createContext);
         $this->_createInstance->setName($this->_createName);

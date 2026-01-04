@@ -67,7 +67,15 @@ abstract class Modules extends Functions implements ModuleInterface {
      * @return array
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
-    public function getCommonHookList(string $hookName, string $nid, string $name, int $indexView = 0, int $iconView = 0, int $indexAdd = 2, int $iconAdd = 1): array {
+    public function getCommonHookList(
+        string $hookName,
+        string $nid,
+        string $name,
+        int    $indexList = 0,
+        int    $iconList = 0,
+        int    $indexAdd = 2,
+        int    $iconAdd = 1,
+    ): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hookArray = array();
 
@@ -77,10 +85,10 @@ abstract class Modules extends Functions implements ModuleInterface {
                 if ($this->_socialClass != 'myself') {
                     $hookArray[] = array(
                         'name' => '::my' . $name,
-                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexList]
                             . '&' . Displays::COMMAND_SOCIAL . '=myself'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
@@ -89,10 +97,10 @@ abstract class Modules extends Functions implements ModuleInterface {
                 if ($this->_socialClass != 'notmyself') {
                     $hookArray[] = array(
                         'name' => '::other' . $name,
-                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexList]
                             . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
@@ -101,17 +109,17 @@ abstract class Modules extends Functions implements ModuleInterface {
                 if ($this->_socialClass != 'all') {
                     $hookArray[] = array(
                         'name' => '::all' . $name,
-                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconView],
+                        'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexList]
                             . '&' . Displays::COMMAND_SOCIAL . '=all'
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
                 if ($this->_unlocked) {
-                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexView]) {
+                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexList]) {
                         $hookArray[] = array(
                             'name' => '::create' . $name,
                             'icon' => $this::MODULE_REGISTERED_ICONS[$iconAdd],
@@ -130,7 +138,7 @@ abstract class Modules extends Functions implements ModuleInterface {
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexView]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexList]
                         . '&' . Displays::COMMAND_SOCIAL . '=myself'
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),

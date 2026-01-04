@@ -574,11 +574,15 @@ class ModuleGroups extends Modules {
     protected function _displayGroupCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $add_to_link = '';
+            if ($this::RESTRICTED_TYPE != ModuleGroups::RESTRICTED_TYPE)
+                $add_to_link = '&' . \Nebule\Library\ActionsGroups::CREATE_WITH_CONTENT;
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                 . '&' . \Nebule\Library\ActionsGroups::CREATE
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
+                . $add_to_link
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

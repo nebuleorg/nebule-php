@@ -621,6 +621,9 @@ abstract class HelpGroup {
             besoin.</p>
         <p>Le groupe va permettre de regrouper, et donc d’associer et de retrouver, des objets. L’objet du groupe va
             avoir des liens vers d’autres objets afin de les définir comme membres du groupe.</p>
+        <p>Il est possible de typer un groupe dans le lien de définition en positionnant le NID4 avec un NID ou RID
+            dont le traitement spécifique est laissé à la main des applications. C'est de cette façon que sont gérés les
+            conversations et les groupes d'entités.</p>
         <p>Un groupe peut avoir des liens de membres vers des objets définis aussi comme groupes. Ces objets peuvent
             être vus comme des sous-groupes. La bibliothèque <em>nebule</em> ne prend en compte qu’un seul niveau de
             groupe, c'est-à-dire que les sous-groupes sont gérés simplement comme des objets.</p>
