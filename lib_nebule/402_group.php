@@ -77,7 +77,6 @@ class Group extends Node implements nodeInterface {
 
 
     // Disable some functions.
-    public function checkConsistency(): bool { return true; }
     public function getReloadMarkProtected(): bool { return false; }
     public function getProtectedID(): string { return '0'; }
     public function getUnprotectedID(): string { return $this->_id; }

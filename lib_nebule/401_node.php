@@ -2208,6 +2208,7 @@ class Node extends Functions implements nodeInterface {
     /**
      * Vérifie la consistance de l'objet.
      * Retourne true  si l'objet a déjà été vérifié.
+     * Retourne true  si l'objet est un RID (objet virtuel ou référence sans contenu).
      * Retourne false si l'objet n'est pas présent.
      * Retourne false si la fonction de hash n'est pas reconnue ou invalide, l'objet n'est pas vérifié.
      * Retourne false si l'extraction de l'objet échoue, l'objet n'est pas vérifié.
@@ -2221,7 +2222,7 @@ class Node extends Functions implements nodeInterface {
      */
     public function checkConsistency(): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_haveData)
+        if ($this->_haveData || $this->_nebuleInstance->getIsRID($this->_id))
             return true;
 
         if (!$this->_ioInstance->checkObjectPresent($this->_id))
@@ -2231,8 +2232,7 @@ class Node extends Functions implements nodeInterface {
         if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
             $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '2644d3a7');
-            $nid = '0';
-            $this->_ioInstance->unsetObject($nid);
+            $this->_ioInstance->unsetObject('0');
             return false;
         }
 
@@ -2245,7 +2245,7 @@ class Node extends Functions implements nodeInterface {
             return false;
 
         // Extrait le contenu de l'objet, si possible.
-        $this->_metrologyInstance->addObjectRead(); // Metrologie.
+        $this->_metrologyInstance->addObjectRead();
         $this->_data = $this->_ioInstance->getObject($this->_id);
         if ($this->_data === false) {
             $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, '4f299627');
@@ -2265,7 +2265,7 @@ class Node extends Functions implements nodeInterface {
         $hash = $this->_nebuleInstance->getFromDataNID($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
-            $this->_metrologyInstance->addObjectVerify(); // Metrologie.
+            $this->_metrologyInstance->addObjectVerify();
             $this->_haveData = true;
             return true;
         }
