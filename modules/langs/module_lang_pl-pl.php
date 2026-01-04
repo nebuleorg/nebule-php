@@ -27,7 +27,7 @@ class ModuleTranslatePLPL extends ModuleTranslates
     const MODULE_NAME = '::translateModule:pl-pl:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:pl-pl:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:pl-pl:ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260104';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = 'cb5d3baf0ff8af0e88f13e8caf42bfed0ff1a83b9a00cb92910bea874b9afa58.sha2.256';
@@ -212,6 +212,7 @@ class ModuleTranslatePLPL extends ModuleTranslates
             '::previousPage' => 'Previous page',
             '::nextPage' => 'Next page',
             '::page%s%s%s%s%s' => 'Page %s/%s (%s-%s on %s)',
+            '::limitedType' => 'Type of members is limited to "%s"',
         ],
     ];
 }

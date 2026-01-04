@@ -32,6 +32,9 @@ abstract class Modules extends Functions implements ModuleInterface {
 
     const DEFAULT_COMMAND_ACTION_DISPLAY_MODULE = 'name';
 
+    const RESTRICTED_TYPE = '';
+    const RESTRICTED_CONTEXT = '';
+
     protected ?Applications $_applicationInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
@@ -359,6 +362,109 @@ abstract class Modules extends Functions implements ModuleInterface {
         }
     }
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {}
+
+    // Copy of ModuleGroups::_displayGroupCreateForm()
+    protected function _displayItemCreateForm(
+        string $name,
+        int    $returnView = 0,
+        int    $iconAdd = 1,
+        bool   $withContent = true
+    ): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                . '&' . \Nebule\Library\ActionsGroups::CREATE
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+            if ($withContent)
+                $commonLink .= '&' . \Nebule\Library\ActionsGroups::CREATE_WITH_CONTENT;
+
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_NAME);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setLink($commonLink);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            if ($this::RESTRICTED_CONTEXT != '') {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::limitedType', $this->_translateInstance->getTranslate('::' . $this::RESTRICTED_TYPE));
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_INFORMATION);
+                $instanceList->addItem($instance);
+            } /*else {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CONTEXT);
+                $instance->setIconText('::membersType');
+                $instance->setSelectList(array(
+                    ModuleGroups::RESTRICTED_CONTEXT => $this->_translateInstance->getTranslate('::' . ModuleGroups::RESTRICTED_TYPE),
+                    ModuleGroupEntities::RESTRICTED_CONTEXT => $this->_translateInstance->getTranslate('::' . ModuleGroupEntities::RESTRICTED_TYPE),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }*/
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
+            $instance->setIconText('::createClosed' . $name);
+            $instance->setSelectList(array(
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+                'n' => $this->_translateInstance->getTranslate('::no'),
+            ));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
+            $instance->setIconText('::createObfuscated' . $name);
+            $instance->setSelectList(array(
+                'n' => $this->_translateInstance->getTranslate('::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+            ));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::createThe' . $name);
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::createThe' . $name));
+            $instance->setIconText('::confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
+            $instanceList->addItem($instance);
+
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setOnePerLine();
+            $instanceList->display();
+        } else {
+            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
+            $instance->setMessage('::err_NotPermit');
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+            $instance->display();
+        }
+    }
 
     /*protected function _displayBackOrLogin(string $backMessage, string $backView, string $addURL = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');

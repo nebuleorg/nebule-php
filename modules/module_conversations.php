@@ -197,9 +197,7 @@ class ModuleConversations extends Modules {
 
     private function _displayCreateConversation(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::createConversation', $this::MODULE_REGISTERED_ICONS[1]);
-        $this->_displayConversationCreateForm();
-        // MyConversations() view displays the result of the creation
+        $this->_displayItemCreateForm('Conversation', 0, 1, true);
     }
 
     // Copy of ModuleGroups::_displayGroupCreateNew()
@@ -252,82 +250,6 @@ class ModuleConversations extends Modules {
             $instanceList->display();
         }
         echo '<br />' . "\n";
-    }
-
-    // Copy of ModuleGroups::_displayGroupCreateForm()
-    protected function _displayConversationCreateForm(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
-            $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                . '&' . \Nebule\Library\ActionsGroups::CREATE
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::RESTRICTED_CONTEXT
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_WITH_CONTENT
-                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-
-            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
-            $instance->setInputValue('');
-            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_NAME);
-            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
-            $instance->setWithFormOpen(true);
-            $instance->setWithFormClose(false);
-            $instance->setLink($commonLink);
-            $instance->setWithSubmit(false);
-            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
-            $instanceList->addItem($instance);
-
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
-            $instance->setIconText('::createConversationClosed');
-            $instance->setSelectList(array(
-                'y' => $this->_translateInstance->getTranslate('::yes'),
-                'n' => $this->_translateInstance->getTranslate('::no'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
-
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
-            $instance->setIconText('::createConversationObfuscated');
-            $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::no'),
-                'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
-
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
-            $instance->setMessage('::createTheConversation');
-            $instance->setInputValue('');
-            $instance->setInputName($this->_translateInstance->getTranslate('::createTheConversation'));
-            $instance->setIconText('::confirm');
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(true);
-            $instance->setWithSubmit(true);
-            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
-            $instanceList->addItem($instance);
-
-            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-            $instanceList->setOnePerLine();
-            $instanceList->display();
-        } else {
-            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::err_NotPermit');
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $instance->display();
-        }
     }
 
 
@@ -435,8 +357,8 @@ class ModuleConversations extends Modules {
             '::allConversations' => 'Tous les groupes',
             '::otherConversations' => 'Les groupes des autres entités',
             '::listMessages' => 'Liste des messages',
-            '::createConversationClosed' => 'Créer un groupe fermé',
-            '::createConversationObfuscated' => 'Créer un groupe dissimulé',
+            '::createClosedConversation' => 'Créer un groupe fermé',
+            '::createObfuscatedConversation' => 'Créer un groupe dissimulé',
             '::addMarkedObjects' => 'Ajouter les objets marqués',
             '::addToConversation' => 'Ajouter au groupe',
             '::addMember' => 'Ajouter un membre',
@@ -456,8 +378,8 @@ class ModuleConversations extends Modules {
             '::allConversations' => 'All groups',
             '::otherConversations' => 'Conversations of other entities',
             '::listMessages' => 'List of messages',
-            '::createConversationClosed' => 'Create a closed group',
-            '::createConversationObfuscated' => 'Create an obfuscated group',
+            '::createClosedConversation' => 'Create a closed group',
+            '::createObfuscatedConversation' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToConversation' => 'Add to group',
             '::addMember' => 'Add a member',
@@ -477,8 +399,8 @@ class ModuleConversations extends Modules {
             '::allConversations' => 'All groups',
             '::otherConversations' => 'Conversations of other entities',
             '::listMessages' => 'List of messages',
-            '::createConversationClosed' => 'Create a closed group',
-            '::createConversationObfuscated' => 'Create an obfuscated group',
+            '::createClosedConversation' => 'Create a closed group',
+            '::createObfuscatedConversation' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToConversation' => 'Add to group',
             '::addMember' => 'Add a member',

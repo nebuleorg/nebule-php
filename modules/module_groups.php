@@ -513,9 +513,7 @@ class ModuleGroups extends Modules {
 
     protected function _displayCreateGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::createGroup', $this::MODULE_REGISTERED_ICONS[1]);
-        $this->_displayGroupCreateForm();
-        // MyGroups() view displays the result of the creation
+        $this->_displayItemCreateForm('Group', 0, 1, ($this::RESTRICTED_CONTEXT != ''));
     }
 
     // Copy of ModuleConversations::_displayConversationCreateNew(), ModuleFolders::_displayFolderCreateNew(), ModuleGalleries::_displayGalleryCreateNew()
@@ -570,8 +568,7 @@ class ModuleGroups extends Modules {
         echo '<br />' . "\n";
     }
 
-    // Copy of ModuleConversations::_displayConversationCreateForm(), ModuleFolders::_listOfFolders(), ModuleGalleries::_listOfGalleries()
-    protected function _displayGroupCreateForm(): void {
+    /*protected function _displayGroupCreateForm(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $add_to_link = '';
@@ -610,8 +607,8 @@ class ModuleGroups extends Modules {
                 $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CONTEXT);
                 $instance->setIconText('::membersType');
                 $instance->setSelectList(array(
-                    ModuleGroups::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::' . ModuleGroups::RESTRICTED_TYPE),
-                    ModuleGroupEntities::RESTRICTED_TYPE => $this->_translateInstance->getTranslate('::' . ModuleGroupEntities::RESTRICTED_TYPE),
+                    ModuleGroups::RESTRICTED_CONTEXT => $this->_translateInstance->getTranslate('::' . ModuleGroups::RESTRICTED_TYPE),
+                    ModuleGroupEntities::RESTRICTED_CONTEXT => $this->_translateInstance->getTranslate('::' . ModuleGroupEntities::RESTRICTED_TYPE),
                 ));
                 $instance->setWithFormOpen(false);
                 $instance->setWithFormClose(false);
@@ -622,7 +619,7 @@ class ModuleGroups extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_CLOSED);
-            $instance->setIconText('::createGroupClosed');
+            $instance->setIconText('::createClosedGroup');
             $instance->setSelectList(array(
                 'y' => $this->_translateInstance->getTranslate('::yes'),
                 'n' => $this->_translateInstance->getTranslate('::no'),
@@ -635,7 +632,7 @@ class ModuleGroups extends Modules {
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
             $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
-            $instance->setIconText('::createGroupObfuscated');
+            $instance->setIconText('::createObfuscatedGroup');
             $instance->setSelectList(array(
                 'n' => $this->_translateInstance->getTranslate('::no'),
                 'y' => $this->_translateInstance->getTranslate('::yes'),
@@ -666,7 +663,7 @@ class ModuleGroups extends Modules {
             $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
             $instance->display();
         }
-    }
+    }*/
 
 
 
@@ -970,8 +967,8 @@ class ModuleGroups extends Modules {
             '::seenFromOthers' => 'Vu depuis les autres entités',
             '::otherGroups' => 'Les groupes des autres entités',
             '::createGroup' => 'Créer un groupe',
-            '::createGroupClosed' => 'Créer un groupe fermé',
-            '::createGroupObfuscated' => 'Créer un groupe dissimulé',
+            '::createClosedGroup' => 'Créer un groupe fermé',
+            '::createObfuscatedGroup' => 'Créer un groupe dissimulé',
             '::addMarkedObjects' => 'Ajouter les objets marqués',
             '::addToGroup' => 'Ajouter au groupe',
             '::addMember' => 'Ajouter un membre',
@@ -979,7 +976,6 @@ class ModuleGroups extends Modules {
             '::createTheGroup' => 'Créer le groupe',
             '::createGroupOK' => 'Le groupe a été créé',
             '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
-            '::limitedType' => 'Le type des membres est limité à "%s"',
             '::membersType' => 'Type des membres',
             '::noGroup' => 'Pas de groupe',
             '::noGroupMember' => 'Pas de membre',
@@ -1012,8 +1008,8 @@ class ModuleGroups extends Modules {
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
             '::createGroup' => 'Create a group',
-            '::createGroupClosed' => 'Create a closed group',
-            '::createGroupObfuscated' => 'Create an obfuscated group',
+            '::createClosedGroup' => 'Create a closed group',
+            '::createObfuscatedGroup' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToGroup' => 'Add to group',
             '::addMember' => 'Add a member',
@@ -1021,7 +1017,6 @@ class ModuleGroups extends Modules {
             '::createTheGroup' => 'Create the group',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
-            '::limitedType' => 'Type of members is limited to "%s"',
             '::membersType' => 'Type of members',
             '::noGroup' => 'No group',
             '::noGroupMember' => 'No member',
@@ -1054,8 +1049,8 @@ class ModuleGroups extends Modules {
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
             '::createGroup' => 'Create a group',
-            '::createGroupClosed' => 'Create a closed group',
-            '::createGroupObfuscated' => 'Create an obfuscated group',
+            '::createClosedGroup' => 'Create a closed group',
+            '::createObfuscatedGroup' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToGroup' => 'Add to group',
             '::addMember' => 'Add a member',
@@ -1063,7 +1058,6 @@ class ModuleGroups extends Modules {
             '::createTheGroup' => 'Create the group',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
-            '::limitedType' => 'Type of members is limited to "%s"',
             '::membersType' => 'Type of members',
             '::noGroup' => 'No group',
             '::noGroupMember' => 'No member',
@@ -1132,8 +1126,8 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seenFromOthers' => 'Vu depuis les autres entités',
             '::otherGroups' => 'Les groupes des autres entités',
             '::createGroup' => "Créer un groupe d'entités",
-            '::createGroupClosed' => 'Créer un groupe fermé',
-            '::createGroupObfuscated' => 'Créer un groupe dissimulé',
+            '::createClosedGroup' => 'Créer un groupe fermé',
+            '::createObfuscatedGroup' => 'Créer un groupe dissimulé',
             '::addMarkedObjects' => 'Ajouter les entités marqués',
             '::addToGroup' => 'Ajouter au groupe',
             '::addMember' => 'Ajouter une entité membre',
@@ -1141,7 +1135,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::createTheGroup' => 'Créer le groupe',
             '::createGroupOK' => 'Le groupe a été créé',
             '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
-            '::limitedType' => 'Le type des membres est limité à "%s"',
             '::membersType' => 'Type des membres',
             '::noGroup' => 'Pas de groupe',
             '::noGroupMember' => 'Pas de membre',
@@ -1175,8 +1168,8 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seenFromOthers' => 'Seen from others entities',
             '::otherGroups' => 'Groups of other entities',
             '::createGroup' => 'Create a group of entities',
-            '::createGroupClosed' => 'Create a closed group',
-            '::createGroupObfuscated' => 'Create an obfuscated group',
+            '::createClosedGroup' => 'Create a closed group',
+            '::createObfuscatedGroup' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked entities',
             '::addToGroup' => 'Add to group',
             '::addMember' => 'Add an entity as member',
@@ -1184,7 +1177,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::createTheGroup' => 'Create the group',
             '::createGroupOK' => 'The group have been created',
             '::createGroupNOK' => 'The group have not been created! %s',
-            '::limitedType' => 'Type of members is limited to "%s"',
             '::membersType' => 'Type of members',
             '::noGroup' => 'No group',
             '::noGroupMember' => 'No member',
@@ -1218,8 +1210,8 @@ class ModuleGroupEntities extends ModuleGroups {
             '::seenFromOthers' => 'Visto desde otras entidades',
             '::otherGroups' => 'Grupos de otras entidades',
             '::createGroup' => 'Crear un grupo de entidades',
-            '::createGroupClosed' => 'Crear un grupo cerrado',
-            '::createGroupObfuscated' => 'Crear un grupo oculto',
+            '::createClosedGroup' => 'Crear un grupo cerrado',
+            '::createObfuscatedGroup' => 'Crear un grupo oculto',
             '::addMarkedObjects' => 'Añadir objetos entidades',
             '::addToGroup' => 'Añadir al grupo',
             '::addMember' => 'Add an entity as member',
@@ -1227,7 +1219,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::createTheGroup' => 'Crear el grupo',
             '::createGroupOK' => 'El grupo ha sido creado',
             '::createGroupNOK' => '¡El grupo no ha sido creado! %s',
-            '::limitedType' => 'El tipo de miembros está limitado a "%s"',
             '::membersType' => 'Tipo de miembros',
             '::noGroup' => 'Sin grupo',
             '::noGroupMember' => 'Sin miembros',
