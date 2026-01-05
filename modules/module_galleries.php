@@ -28,7 +28,7 @@ class ModuleGalleries extends Modules {
     const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260104';
+    const MODULE_VERSION = '020260105';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -53,6 +53,8 @@ class ModuleGalleries extends Modules {
         Displays::DEFAULT_ICON_LD,
         Displays::DEFAULT_ICON_HELP,
         Displays::DEFAULT_ICON_LL,
+        Displays::DEFAULT_ICON_LX,
+        Displays::DEFAULT_ICON_SYNOBJ,
     );
     const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
@@ -61,12 +63,35 @@ class ModuleGalleries extends Modules {
 
     const RESTRICTED_TYPE = 'Gallery';
     const RESTRICTED_CONTEXT = '583718a8303dbcb757a1d2acf463e2410c807ebd1e4f319d3a641d1a6686a096b018.none.272';
+    const COMMAND_SELECT_GALLERY = 'glr';
+
+    protected ?\Nebule\Library\Node $_instanceCurrentGallery = null;
 
 
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
+        $this->_getCurrentGallery();
+    }
+
+    private function _getCurrentGallery(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $nid = $this->getFilterInput(self::COMMAND_SELECT_GALLERY, FILTER_FLAG_ENCODE_LOW);
+        if ($nid == '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentGallery');
+        /*if ($nid == '')
+            $nid = $this->_getDefaultConversationOID();
+        if ($nid == '') { // Default is the first blog
+            $list = $this->_getListConversationOID();
+            if (sizeof($list) != 0) {
+                reset($list);
+                $nid = current($list);
+            }
+        }*/
+        $this->_instanceCurrentGallery = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $this->_metrologyInstance->addLog('extract current gallery nid=' . $this->_instanceCurrentGallery->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'e9883f6e');
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentGallery', $nid);
     }
 
 
@@ -78,7 +103,7 @@ class ModuleGalleries extends Modules {
             $object = $nid->getID();
         $hookArray = $this->getCommonHookList($hookName, $object, 'Galleries');
 
-        /*switch ($hookName) {
+        switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuGalleries':
                 if ($this->_socialClass != 'myself') {
@@ -132,7 +157,20 @@ class ModuleGalleries extends Modules {
                 );
                 break;
 
-        }*/
+            case 'typeMenuGallery':
+                // Refuser l'objet comme un groupe.
+                $hookArray[1]['name'] = '::unmakeGroup';
+                $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
+                $hookArray[1]['desc'] = '';
+                $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                    . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                break;
+
+        }
+
         return $hookArray;
     }
 
@@ -144,25 +182,25 @@ class ModuleGalleries extends Modules {
                 $this->_displayGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayCreateGallery();
+                $this->_displayItemCreateForm('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyGallery();
+                $this->_displayModifyItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayDeleteGallery();
+                $this->_displayRemoveItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetGallery();
+                $this->_displayGetItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroGallery();
+                $this->_displaySynchroItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayRightsGallery();
+                $this->_displayRightsItem('Gallery');
                 break;
             default:
-                $this->_displayListItems('Gallery', 2, 2, 5, 6);
+                $this->_displayListItems('Gallery', 'Galleries');
                 break;
         }
     }
@@ -176,7 +214,7 @@ class ModuleGalleries extends Modules {
                 $this->_display_InlineGallery();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_display_InlineRightsGallery();
+                $this->_display_InlineRightsItem('Gallery');
                 break;
         }
     }
@@ -185,7 +223,37 @@ class ModuleGalleries extends Modules {
 
     private function _displayGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
+
+        if (is_a($this->_instanceCurrentGallery, 'Nebule\Library\Node')) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            //$instance->setNID($this->_displayGroupInstance); FIXME
+            $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(true);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            //$instance->setStatus('');
+            $instance->setEnableFlagUnlocked(false);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
+            $instance->display();
+
+            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('galley');
+        } else
+            $this->_displayNotSupported();
     }
 
     private function _display_InlineGallery(): void {
@@ -195,113 +263,14 @@ class ModuleGalleries extends Modules {
 
 
 
-    private function _displayCreateGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayItemCreateForm('Gallery', 0, 1, true);
-    }
-
-    // Copy of ModuleGroups::_displayGroupCreateNew()
-    protected function _displayItemCreateNew(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
-                $instance->setMessage('::createGalleryOK');
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
-                $instance->setIconText('::OK');
-                $instanceList->addItem($instance);
-
-                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                $instance->setSocial('self');
-                //$instance->setNID($this->_displayGalleryInstance); FIXME
-                $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
-                $instance->setEnableColor(true);
-                $instance->setEnableIcon(true);
-                $instance->setEnableName(true);
-                $instance->setEnableRefs(false);
-                $instance->setEnableNID(false);
-                $instance->setEnableFlags(false);
-                $instance->setEnableFlagProtection(false);
-                $instance->setEnableFlagObfuscate(false);
-                $instance->setEnableFlagState(false);
-                $instance->setEnableFlagEmotions(false);
-                $instance->setEnableStatus(false);
-                $instance->setEnableContent(false);
-                $instance->setEnableJS(false);
-                $instance->setEnableLink(true);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setStatus('');
-                $instance->setEnableFlagUnlocked(false);
-                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['grpobj']); // FIXME
-                $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
-                $instance->setIcon($instanceIcon2);
-            } else {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::createGalleryNOK');
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIconText('::ERROR');
-            }
-            $instanceList->addItem($instance);
-            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-            $instanceList->setOnePerLine();
-            $instanceList->display();
-        }
-        echo '<br />' . "\n";
-    }
-
-
-
-    private function _displayModifyGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayDeleteGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayGetGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displaySynchroGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayRightsGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-    private function _display_InlineRightsGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    // Copy of ModuleGroups::_listOfGroups()
+    // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $galleriesNID = array();
         $galleriesSigners = array();
         foreach ($links as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
-            if (!$this->_filterGalleryByType($nid))
+            if (!$this->_filterItemByType($nid))
                 continue;
             $signers = $link->getSignersEID(); // FIXME get all signers
             $galleriesNID[$nid] = $nid;
@@ -309,16 +278,21 @@ class ModuleGalleries extends Modules {
                 $galleriesSigners[$nid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
+        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($galleriesNID as $nid) {
             $instanceGallery = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceGallery);
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                . '&' . self::COMMAND_SELECT_GALLERY . '=' . $nid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
+            //$instance->setName($instanceGallery->getName('all'));
             $instance->setEnableFlags(false);
             $instance->setEnableFlagState(false);
             $instance->setEnableFlagEmotions(false);
@@ -331,7 +305,7 @@ class ModuleGalleries extends Modules {
                 $instance->setRefs($galleriesSigners[$nid]);
             } else
                 $instance->setEnableRefs(false);
-            $instance->setSelfHookName($hookName);
+            //$instance->setSelfHookName($hookName);
             $instance->setIcon($instanceIcon);
             $instanceList->addItem($instance);
         }
@@ -341,7 +315,7 @@ class ModuleGalleries extends Modules {
         $instanceList->display();
     }
 
-    protected function _filterGalleryByType(string $nid): bool { return true; }
+    protected function _filterItemByType(string $nid): bool { return true; }
 
 
 
@@ -354,18 +328,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galeries',
             '::AppDesc1' => 'Gestion des galeries',
             '::myGalleries' => 'Mes galeries',
-            '::allGalleries' => 'Tous les groupes',
-            '::otherGalleries' => 'Les groupes des autres entités',
+            '::allGalleries' => 'Toutes les galeries',
+            '::otherGalleries' => 'Les galeries des autres entités',
             '::listGalleries' => 'Liste des galeries',
-            '::createClosedGallery' => 'Créer un groupe fermé',
-            '::createObfuscatedGallery' => 'Créer un groupe dissimulé',
+            '::createClosedGallery' => 'Créer une galerie fermé',
+            '::createObfuscatedGallery' => 'Créer une galerie dissimulé',
             '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToGallery' => 'Ajouter au groupe',
-            '::addMember' => 'Ajouter un membre',
-            '::deleteGallery' => 'Supprimer le groupe',
+            '::addToGallery' => 'Ajouter à la galerie',
+            '::addMember' => 'Ajouter une galerie',
+            '::deleteGallery' => 'Supprimer la galerie',
             '::createGallery' => 'Créer une galerie',
-            '::createGalleryOK' => 'Le groupe a été créé',
-            '::createGalleryNOK' => "Le groupe n'a pas été créé ! %s",
+            '::createGalleryOK' => 'La galerie a été créé',
+            '::createGalleryNOK' => "La galerie n'a pas été créé ! %s",
         ],
         'en-en' => [
             '::ModuleName' => 'Galleries module',
@@ -375,18 +349,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'My galleries',
-            '::allGalleries' => 'All groups',
+            '::allGalleries' => 'All galleries',
             '::otherGalleries' => 'Galleries of other entities',
             '::listGalleries' => 'List of galleries',
-            '::createClosedGallery' => 'Create a closed group',
-            '::createObfuscatedGallery' => 'Create an obfuscated group',
+            '::createClosedGallery' => 'Create a closed gallery',
+            '::createObfuscatedGallery' => 'Create an obfuscated gallery',
             '::addMarkedObjects' => 'Add marked objects',
-            '::addToGallery' => 'Add to group',
+            '::addToGallery' => 'Add to gallery',
             '::addMember' => 'Add a member',
-            '::deleteGallery' => 'Delete group',
+            '::deleteGallery' => 'Delete gallery',
             '::createGallery' => 'Create a gallery',
-            '::createGalleryOK' => 'The group have been created',
-            '::createGalleryNOK' => 'The group have not been created! %s',
+            '::createGalleryOK' => 'The gallery have been created',
+            '::createGalleryNOK' => 'The gallery have not been created! %s',
         ],
         'es-co' => [
             '::ModuleName' => 'Galleries module',
@@ -396,18 +370,18 @@ class ModuleGalleries extends Modules {
             '::AppTitle1' => 'Galleries',
             '::AppDesc1' => 'Manage galleries',
             '::myGalleries' => 'My galleries',
-            '::allGalleries' => 'All groups',
+            '::allGalleries' => 'All galleries',
             '::otherGalleries' => 'Galleries of other entities',
             '::listGalleries' => 'List of galleries',
-            '::createClosedGallery' => 'Create a closed group',
-            '::createObfuscatedGallery' => 'Create an obfuscated group',
+            '::createClosedGallery' => 'Create a closed gallery',
+            '::createObfuscatedGallery' => 'Create an obfuscated gallery',
             '::addMarkedObjects' => 'Add marked objects',
-            '::addToGallery' => 'Add to group',
+            '::addToGallery' => 'Add to gallery',
             '::addMember' => 'Add a member',
-            '::deleteGallery' => 'Delete group',
+            '::deleteGallery' => 'Delete gallery',
             '::createGallery' => 'Create a gallery',
-            '::createGalleryOK' => 'The group have been created',
-            '::createGalleryNOK' => 'The group have not been created! %s',
+            '::createGalleryOK' => 'The gallery have been created',
+            '::createGalleryNOK' => 'The gallery have not been created! %s',
         ],
     ];
 }

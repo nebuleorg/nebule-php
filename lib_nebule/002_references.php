@@ -83,6 +83,9 @@ class References
     public const RID_INTERFACE_APPLICATIONS_DIRECT = 'f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288';
     public const RID_INTERFACE_APPLICATIONS_ACTIVE = 'ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288';
     public const DEFAULT_REDIRECT_AUTH_APP = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
+    public const RID_FOLLOWER = '3679a2435d005752d2698dafaa0a42f57f7bd4022e442a3b0fbb0d6191507b697fbd.none.272';
+    public const RID_OWNER = 'cf05011fbc65673e7da4c80072d24d8ecc00c900dc17a8141333e9324379ad6f667f.none.272';
+    public const RID_WRITER = '419b45938214772de54332940dc8606d99fe8a50961172b0717d960624502614c718.none.272';
 
     // Les objets références de nebule.
     public const REFERENCE_NEBULE_OBJET = 'nebule/objet';
@@ -3778,6 +3781,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
         'back' => '8ade584d3aa420335a7af82da4438654b891985777cc05bf6cbe86ebe328e31f1cc4.none.272',
         'query' => '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272',
     );
+
     static public function createNodeReferences($nebuleInstance): bool
     {
         $ok = true;

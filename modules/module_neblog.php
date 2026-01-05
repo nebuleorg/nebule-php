@@ -16,7 +16,7 @@ use Nebule\Library\ModuleTranslates;
 /**
  * This module can manage blogs with articles, pages, and messages in articles.
  *  - Definition of new blog with 'BlogOID' NID:
- *    - f>RID_BLOG_NODE>BlogOID>RID_BLOG_NODE :
+ *    - f>RID_BLOG_NODE>BlogOID>RID_BLOG_NODE : FIXME changed to a typed group
  * BlogOID must have content with eid value.
  * BlogOID should have name.
  * BlogOID must not have update.
@@ -68,7 +68,7 @@ class ModuleNeblog extends Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260103';
+    const MODULE_VERSION = '020260105';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -105,12 +105,16 @@ class ModuleNeblog extends Modules
         Displays::DEFAULT_ICON_LD,
         Displays::DEFAULT_ICON_HELP,
         Displays::DEFAULT_ICON_LL,
+        Displays::DEFAULT_ICON_LX,
+        Displays::DEFAULT_ICON_SYNOBJ,
     );
     const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256');
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('blog');
 
+    const RESTRICTED_TYPE = 'blog';
+    const RESTRICTED_CONTEXT = 'ad34c6d9368499b303927c616197f653e3a08d37e7803f3cd46fe163114d91d437d9.none.272';
     const COMMAND_SELECT_BLOG = 'blog';
     const COMMAND_SELECT_POST = 'post';
     const COMMAND_SELECT_ANSWER = 'answ';
@@ -134,9 +138,6 @@ class ModuleNeblog extends Modules
     const RID_BLOG_ANSWER = 'a3fe5534f7c9537145f5f5c7eba4a2c747cb781614f66898a4779a3ffaf6538856c7.none.272';
     const RID_BLOG_PAGE = '0188e8440a7cb80ade4affb0449ae92b089bed48d380024a625ab54826d4a2c2ca67.none.272';
     const RID_BLOG_CONTENT = '6178f3de25e2acad0a4dfe5b8bffabec8e5eac50898a8efcb52d2c635697f25d680a.none.272';
-    const RID_OWNER = 'cf05011fbc65673e7da4c80072d24d8ecc00c900dc17a8141333e9324379ad6f667f.none.272';
-    const RID_WRITER = '419b45938214772de54332940dc8606d99fe8a50961172b0717d960624502614c718.none.272';
-    const RID_FOLLOWER = '3679a2435d005752d2698dafaa0a42f57f7bd4022e442a3b0fbb0d6191507b697fbd.none.272';
 
     private string $_actionAddBlogName = '';
     private string $_actionAddBlogDefault = '';
@@ -177,7 +178,7 @@ class ModuleNeblog extends Modules
 
     private function _getCurrentBlog(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(self::COMMAND_SELECT_BLOG);
+        $nid = $this->getFilterInput(self::COMMAND_SELECT_BLOG, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlog');
         if ($nid == '')
@@ -214,7 +215,7 @@ class ModuleNeblog extends Modules
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
     }
 
-    private function _getCurrentBlogFounders(): void {
+    private function _getCurrentBlogFounders(): void { // TODO move to Modules::_getCurrentItemFounders()
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $oid = $this->_instanceCurrentBlog->getID();
         if ($oid == '0')
@@ -241,7 +242,7 @@ class ModuleNeblog extends Modules
         $this->_currentBlogListFounders = array($eid => $eid);
     }
 
-    private function _getCurrentBlogSocialList(): void {
+    private function _getCurrentBlogSocialList(): void { // TODO move to Modules::_getCurrentItemSocialList()
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (sizeof($this->_currentBlogListFounders) == 0)
             return;
@@ -249,15 +250,15 @@ class ModuleNeblog extends Modules
         $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
         //if (!$instance->getMarkClosedGroup())
         //    return;
-        $this->_currentBlogListOwners = $instance->getListTypedMembersID(self::RID_OWNER, 'onlist', $this->_currentBlogListFounders);
+        $this->_currentBlogListOwners = $instance->getListTypedMembersID(References::RID_OWNER, 'onlist', $this->_currentBlogListFounders);
         foreach ($this->_currentBlogListFounders as $eid)
             $this->_currentBlogListOwners[$eid] = $eid;
 foreach ($this->_currentBlogListOwners as $eid)
 $this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_currentBlogWritersList = $instance->getListTypedMembersID(self::RID_WRITER, 'onlist', $this->_currentBlogListOwners);
+        $this->_currentBlogWritersList = $instance->getListTypedMembersID(References::RID_WRITER, 'onlist', $this->_currentBlogListOwners);
 foreach ($this->_currentBlogWritersList as $eid)
 $this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(self::RID_FOLLOWER, 'onlist', $this->_currentBlogListOwners);
+        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(References::RID_FOLLOWER, 'onlist', $this->_currentBlogListOwners);
 foreach ($this->_currentBlogFollowersList as $eid)
 $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
@@ -492,7 +493,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_OWNER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -509,7 +510,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_OWNER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -522,7 +523,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -539,7 +540,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -552,7 +553,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_FOLLOWER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -569,7 +570,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_WRITER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -582,7 +583,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . self::RID_FOLLOWER
+                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                                     . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
@@ -600,7 +601,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 if ($this->_getDefaultBlogOID() != '' || $this->_instanceCurrentBlog->getID() != '0')
                     $this->_displayBlog();
                 else
-                    $this->_displayListItems('Blog', 2, 2, 5, 6);
+                    $this->_displayListItems('Blog', 'Blogs');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayNewBlog();
@@ -609,13 +610,13 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $this->_displayModBlog();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayDelBlog();
+                $this->_displayRemoveItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetBlog();
+                $this->_displayGetItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySyncBlog();
+                $this->_displaySynchroItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayPost();
@@ -646,7 +647,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 break;
             //case $this::MODULE_REGISTERED_VIEWS[16]: // Common parts
             case $this::MODULE_REGISTERED_VIEWS[17]:
-                $this->_displayRightsBlog();
+                $this->_displayRightsItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[18]:
                 $this->_displayRightsPost();
@@ -655,7 +656,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $this->_displayRightsPage();
                 break;
             default:
-                $this->_displayListItems('Blog', 2, 2, 5, 6);
+                $this->_displayListItems('Blog', 'Blogs');
                 break;
         }
     }
@@ -664,7 +665,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_display_InlineBlogs('onlist');
+                //$this->_display_InlineBlogs('onlist');
+                $this->_display_InlineMyItems('Blogs');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineBlog();
@@ -678,9 +680,9 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             case $this::MODULE_REGISTERED_VIEWS[12]:
                 $this->_display_InlinePages();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[16]:
+            /*case $this::MODULE_REGISTERED_VIEWS[16]:
                 $this->_display_InlineBlogs('all');
-                break;
+                break;*/
             case $this::MODULE_REGISTERED_VIEWS[17]:
                 $this->_display_InlineRightsBlog();
                 break;
@@ -719,38 +721,41 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::blog:disp', $this::MODULE_REGISTERED_ICONS[0]);
 
-        $list = $this->_getLinksBlogOID('all');
-        $refs = array();
-        foreach ($list as $link) {
-            $parsedLink = $link->getParsed();
-            $blogNID = $parsedLink['bl/rl/nid2'];
-            if ($blogNID == $this->_instanceCurrentBlog->getID())
-                $refs = $link->getSignersEID();
-        }
+        if (is_a($this->_instanceCurrentBlog, 'Nebule\Library\Node')) {
+            $list = $this->_getLinksBlogOID('all');
+            $refs = array();
+            foreach ($list as $link) {
+                $parsedLink = $link->getParsed();
+                $blogNID = $parsedLink['bl/rl/nid2'];
+                if ($blogNID == $this->_instanceCurrentBlog->getID())
+                    $refs = $link->getSignersEID();
+            }
 
-        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instance->setNID($this->_instanceCurrentBlog);
-        $instance->setEnableColor(true);
-        $instance->setEnableIcon(true);
-        $instance->setEnableName(true);
-        $instance->setName($this->_instanceCurrentBlog->getName('all'));
-        $instance->setEnableRefs(true);
-        $instance->setRefs($refs);
-        $instance->setEnableNID(false);
-        $instance->setEnableFlags(true);
-        $instance->setEnableFlagProtection(false);
-        $instance->setEnableFlagObfuscate(false);
-        $instance->setEnableFlagState(false);
-        $instance->setEnableFlagEmotions(false);
-        $instance->setEnableStatus(false);
-        $instance->setEnableContent(false);
-        $instance->setEnableJS(false);
-        $instance->setEnableLink(true);
-        $instance->setSelfHookName('selfMenuBlog');
-        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-        $instance->display();
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($this->_instanceCurrentBlog);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setName($this->_instanceCurrentBlog->getName('all'));
+            $instance->setEnableRefs(true);
+            $instance->setRefs($refs);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setSelfHookName('selfMenuBlog');
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->display();
 
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog');
+            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog');
+        } else
+            $this->_displayNotSupported();
     }
 
     private function _display_InlineBlog(): void {
@@ -837,17 +842,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blogs');
     }
 
-    private function _getBlogListByRight(array &$links, string $right): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
-            'bl/rl/nid3' => $right,
-        );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all'); // FIXME $socialClass = self?
-    }
-
-    private function _display_InlineBlogs(string $socialClass): void {
+    /*private function _display_InlineBlogs(string $socialClass): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $linksBlog2 = array();
         if ($socialClass == 'all')
@@ -856,9 +851,9 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
             $this->_socialInstance->setList(array($this->_entitiesInstance->getGhostEntityEID()), 'onlist');
             $linksBlog1 = $this->_getLinksBlogOID('onlist');
             $this->_socialInstance->unsetList('onlist');
-            $this->_getBlogListByRight($linksBlog2, self::RID_OWNER);
-            $this->_getBlogListByRight($linksBlog2, self::RID_WRITER);
-            $this->_getBlogListByRight($linksBlog2, self::RID_FOLLOWER);
+            $this->_getListByRight($linksBlog2, References::RID_OWNER);
+            $this->_getListByRight($linksBlog2, References::RID_WRITER);
+            $this->_getListByRight($linksBlog2, References::RID_FOLLOWER);
         }
 
         $list = array();
@@ -899,7 +894,66 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
+    }*/
+
+    // Called by Modules::_display_InlineMyItems()
+    protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $galleriesNID = array();
+        $galleriesSigners = array();
+        foreach ($links as $link) {
+            $nid = $link->getParsed()['bl/rl/nid1'];
+            if (!$this->_filterItemByType($nid))
+                continue;
+            $signers = $link->getSignersEID(); // FIXME get all signers
+            $galleriesNID[$nid] = $nid;
+            foreach ($signers as $signer) {
+                $galleriesSigners[$nid][$signer] = $signer;
+            }
+        }
+        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        foreach ($galleriesNID as $nid) {
+            $instanceBlog = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial($socialClass);
+            $instance->setNID($instanceBlog);
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            //$instance->setName($instanceBlog->getName('all'));
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableFlagUnlocked(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableRefs(true);
+            if (isset($galleriesSigners[$nid]) && sizeof($galleriesSigners[$nid]) > 0) {
+                $instance->setEnableRefs(true);
+                $instance->setRefs($galleriesSigners[$nid]);
+            } else
+                $instance->setEnableRefs(false);
+            //$instance->setSelfHookName($hookName);
+            $instance->setEnableStatus(true);
+            $instance->setStatus(
+                $this->_translateInstance->getTranslate('::pages') . ':' . $this->_getCountPageNID($instanceBlog, $socialClass)
+                . ' '
+                . $this->_translateInstance->getTranslate('::posts') . ':' . $this->_getCountPostNID($instanceBlog, $socialClass)
+            );
+            $instance->setIcon($instanceIcon);
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instanceList->setEnableWarnIfEmpty(true);
+        $instanceList->display();
     }
+    protected function _filterItemByType(string $nid): bool { return true; }
 
     private function _displayNewBlog(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -956,13 +1010,6 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
     private function _displayModBlog(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::blog:mod', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::blog:disp', $this::MODULE_REGISTERED_VIEWS[1], true);
-        $this->_displayNotImplemented(); // TODO
-    }
-
-    private function _displayDelBlog(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::blog:del', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayBackOrLoginLocal('::blog:disp', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_displayNotImplemented(); // TODO
     }

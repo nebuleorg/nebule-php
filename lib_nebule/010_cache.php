@@ -230,18 +230,16 @@ class Cache extends Functions
         return false;
     }
 
-    public function newVirtualNode(): Node
-    {
+    public function newVirtualNode(): Node {
         $nid = bin2hex($this->_cryptoInstance->getRandom(References::VIRTUAL_NODE_SIZE)) . '.none.' . (References::VIRTUAL_NODE_SIZE * 8);
-        $this->_metrologyInstance->addLog('new virtual nid ' . $nid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c00832c2');
+        $this->_metrologyInstance->addLog('new virtual nid ' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new Node($this->_nebuleInstance, $nid);
         $this->_cache[self::TYPE_NODE][$nid] = $instance;
         $this->_writeCacheTimestamp($nid, self::TYPE_NODE);
         return $instance;
     }
 
-    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet
-    {
+    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet {
         $this->_metrologyInstance->addLog('new nod NID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_filterNodeType($type);
 

@@ -37,7 +37,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
                 $instanceWarn->setMessage('::list:empty');
                 $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $this->_fullList[] = $instanceWarn;
+                $instanceWarn->display();
             }
             return '';
         }
@@ -79,6 +79,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     }
 
     protected function _getNavHTML(string &$result): void {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_lastPage > 1) {
             $url = $this->_prepareURL();
             if ($this->_currentPage > 1) {

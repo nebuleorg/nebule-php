@@ -28,7 +28,7 @@ class ModuleConversations extends Modules {
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260104';
+    const MODULE_VERSION = '020260105';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -53,6 +53,8 @@ class ModuleConversations extends Modules {
         Displays::DEFAULT_ICON_LD,
         Displays::DEFAULT_ICON_HELP,
         Displays::DEFAULT_ICON_LL,
+        Displays::DEFAULT_ICON_LX,
+        Displays::DEFAULT_ICON_SYNOBJ,
     );
     const MODULE_APP_TITLE_LIST = array('::AppTitle1');
     const MODULE_APP_ICON_LIST = array('0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256');
@@ -61,12 +63,35 @@ class ModuleConversations extends Modules {
 
     const RESTRICTED_TYPE = 'Conversation';
     const RESTRICTED_CONTEXT = '9176d8c8cf0e89ef48f136a494af9b9c385d275c8d48c498d52206d7d4072eb0fb1f.none.272';
+    const COMMAND_SELECT_CONVERSATION = 'cvt';
+
+    protected ?\Nebule\Library\Node $_instanceCurrentConversation = null;
 
 
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
+        $this->_getCurrentConversation();
+    }
+
+    private function _getCurrentConversation(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $nid = $this->getFilterInput(self::COMMAND_SELECT_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
+        if ($nid == '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentConversation');
+        /*if ($nid == '')
+            $nid = $this->_getDefaultConversationOID();
+        if ($nid == '') { // Default is the first blog
+            $list = $this->_getListConversationOID();
+            if (sizeof($list) != 0) {
+                reset($list);
+                $nid = current($list);
+            }
+        }*/
+        $this->_instanceCurrentConversation = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $this->_metrologyInstance->addLog('extract current conversation nid=' . $this->_instanceCurrentConversation->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentConversation', $nid);
     }
 
 
@@ -144,25 +169,25 @@ class ModuleConversations extends Modules {
                 $this->_displayConversation();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayCreateConversation();
+                $this->_displayItemCreateForm('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyConversation();
+                $this->_displayModifyItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayDeleteConversation();
+                $this->_displayRemoveItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetConversation();
+                $this->_displayGetItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroConversation();
+                $this->_displaySynchroItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayRightsConversation();
+                $this->_displayRightsItem('Conversation');
                 break;
             default:
-                $this->_displayListItems('Conversation', 2, 2, 5, 6);
+                $this->_displayListItems('Conversation', 'Conversations');
                 break;
         }
     }
@@ -176,149 +201,85 @@ class ModuleConversations extends Modules {
                 $this->_display_InlineConversation();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_display_InlineRightsConversation();
+                $this->_display_InlineRightsItem('Conversation');
                 break;
         }
     }
 
 
 
-    private function _displayConversation(): void {
+    protected function _displayConversation(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
 
-    private function _display_InlineConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayCreateConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayItemCreateForm('Conversation', 0, 1, true);
-    }
-
-    // Copy of ModuleGroups::_displayGroupCreateNew()
-    protected function _displayItemCreateNew(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
-            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        if (is_a($this->_instanceCurrentConversation, 'Nebule\Library\Node')) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            //$instance->setNID($this->_displayGroupInstance); FIXME
+            $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(true);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
-                $instance->setMessage('::createConversationOK');
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
-                $instance->setIconText('::OK');
-                $instanceList->addItem($instance);
+            //$instance->setStatus('');
+            $instance->setEnableFlagUnlocked(false);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
+            $instance->display();
 
-                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                $instance->setSocial('self');
-                //$instance->setNID($this->_displayConversationInstance); FIXME
-                $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
-                $instance->setEnableColor(true);
-                $instance->setEnableIcon(true);
-                $instance->setEnableName(true);
-                $instance->setEnableRefs(false);
-                $instance->setEnableNID(false);
-                $instance->setEnableFlags(false);
-                $instance->setEnableFlagProtection(false);
-                $instance->setEnableFlagObfuscate(false);
-                $instance->setEnableFlagState(false);
-                $instance->setEnableFlagEmotions(false);
-                $instance->setEnableStatus(false);
-                $instance->setEnableContent(false);
-                $instance->setEnableJS(false);
-                $instance->setEnableLink(true);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setStatus('');
-                $instance->setEnableFlagUnlocked(false);
-                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['grpobj']); // FIXME
-                $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
-                $instance->setIcon($instanceIcon2);
-            } else {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setMessage('::createConversationNOK');
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIconText('::ERROR');
-            }
-            $instanceList->addItem($instance);
-            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-            $instanceList->setOnePerLine();
-            $instanceList->display();
-        }
-        echo '<br />' . "\n";
+            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('conversation');
+        } else
+            $this->_displayNotSupported();
     }
 
-
-
-    private function _displayModifyConversation(): void {
+    protected function _display_InlineConversation(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented(); // TODO
     }
 
 
 
-    private function _displayDeleteConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayGetConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displaySynchroConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    private function _displayRightsConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-    private function _display_InlineRightsConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
-    }
-
-
-
-    // Copy of ModuleGroups::_listOfGroups()
+    // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $conversationsGID = array();
+        $conversationsNID = array();
         $conversationsSigners = array();
         foreach ($links as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
-            if (!$this->_filterConversationByType($nid))
+            if (!$this->_filterItemByType($nid))
                 continue;
             $signers = $link->getSignersEID(); // FIXME get all signers
-            $conversationsGID[$nid] = $nid;
+            $conversationsNID[$nid] = $nid;
             foreach ($signers as $signer) {
                 $conversationsSigners[$nid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
+        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        foreach ($conversationsGID as $nid) {
+        foreach ($conversationsNID as $nid) {
             $instanceConversation = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceConversation);
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                . '&' . self::COMMAND_SELECT_CONVERSATION . '=' . $nid
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
+            //$instance->setName($instanceConversation->getName('all'));
             $instance->setEnableFlags(false);
             $instance->setEnableFlagState(false);
             $instance->setEnableFlagEmotions(false);
@@ -331,7 +292,7 @@ class ModuleConversations extends Modules {
                 $instance->setRefs($conversationsSigners[$nid]);
             } else
                 $instance->setEnableRefs(false);
-            $instance->setSelfHookName($hookName);
+            //$instance->setSelfHookName($hookName);
             $instance->setIcon($instanceIcon);
             $instanceList->addItem($instance);
         }
@@ -341,7 +302,7 @@ class ModuleConversations extends Modules {
         $instanceList->display();
     }
 
-    protected function _filterConversationByType(string $nid): bool { return true; }
+    protected function _filterItemByType(string $nid): bool { return true; }
 
 
 
@@ -353,19 +314,19 @@ class ModuleConversations extends Modules {
             '::ModuleHelp' => 'Ce module permet de voir et de gérer les messages.',
             '::AppTitle1' => 'Messages',
             '::AppDesc1' => 'Gestion des messages',
-            '::myConversations' => 'Liste des conversations',
-            '::allConversations' => 'Tous les groupes',
-            '::otherConversations' => 'Les groupes des autres entités',
+            '::myConversations' => 'Mes conversations',
+            '::allConversations' => 'Toutes les conversation',
+            '::otherConversations' => 'Les conversations des autres entités',
             '::listMessages' => 'Liste des messages',
-            '::createClosedConversation' => 'Créer un groupe fermé',
-            '::createObfuscatedConversation' => 'Créer un groupe dissimulé',
+            '::createClosedConversation' => 'Créer une conversation fermée',
+            '::createObfuscatedConversation' => 'Créer une conversation dissimulée',
             '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToConversation' => 'Ajouter au groupe',
+            '::addToConversation' => 'Ajouter à la conversation',
             '::addMember' => 'Ajouter un membre',
-            '::deleteConversation' => 'Supprimer le groupe',
-            '::createConversation' => 'Créer un dossier',
-            '::createConversationOK' => 'Le groupe a été créé',
-            '::createConversationNOK' => "Le groupe n'a pas été créé ! %s",
+            '::deleteConversation' => 'Supprimer la conversation',
+            '::createConversation' => 'Créer une conversation',
+            '::createConversationOK' => 'La conversation a été créée',
+            '::createConversationNOK' => "La conversation n'a pas été créée ! %s",
         ],
         'en-en' => [
             '::ModuleName' => 'Messages module',
@@ -374,19 +335,19 @@ class ModuleConversations extends Modules {
             '::ModuleHelp' => 'This module permit to see and manage messages.',
             '::AppTitle1' => 'Messages',
             '::AppDesc1' => 'Manage messages',
-            '::myConversations' => 'List of conversations',
-            '::allConversations' => 'All groups',
+            '::myConversations' => 'My conversations',
+            '::allConversations' => 'All conversations',
             '::otherConversations' => 'Conversations of other entities',
             '::listMessages' => 'List of messages',
-            '::createClosedConversation' => 'Create a closed group',
-            '::createObfuscatedConversation' => 'Create an obfuscated group',
+            '::createClosedConversation' => 'Create a closed conversation',
+            '::createObfuscatedConversation' => 'Create an obfuscated conversation',
             '::addMarkedObjects' => 'Add marked objects',
-            '::addToConversation' => 'Add to group',
+            '::addToConversation' => 'Add to conversation',
             '::addMember' => 'Add a member',
-            '::deleteConversation' => 'Delete group',
+            '::deleteConversation' => 'Delete conversation',
             '::createConversation' => 'Create a folder',
-            '::createConversationOK' => 'The group have been created',
-            '::createConversationNOK' => 'The group have not been created! %s',
+            '::createConversationOK' => 'The conversation have been created',
+            '::createConversationNOK' => 'The conversation have not been created! %s',
         ],
         'es-co' => [
             '::ModuleName' => 'Messages module',
@@ -395,19 +356,19 @@ class ModuleConversations extends Modules {
             '::ModuleHelp' => 'This module permit to see and manage messages.',
             '::AppTitle1' => 'Messages',
             '::AppDesc1' => 'Manage messages',
-            '::myConversations' => 'List of conversations',
-            '::allConversations' => 'All groups',
+            '::myConversations' => 'My conversations',
+            '::allConversations' => 'All conversations',
             '::otherConversations' => 'Conversations of other entities',
             '::listMessages' => 'List of messages',
-            '::createClosedConversation' => 'Create a closed group',
-            '::createObfuscatedConversation' => 'Create an obfuscated group',
+            '::createClosedConversation' => 'Create a closed conversation',
+            '::createObfuscatedConversation' => 'Create an obfuscated conversation',
             '::addMarkedObjects' => 'Add marked objects',
-            '::addToConversation' => 'Add to group',
+            '::addToConversation' => 'Add to conversation',
             '::addMember' => 'Add a member',
-            '::deleteConversation' => 'Delete group',
+            '::deleteConversation' => 'Delete conversation',
             '::createConversation' => 'Create a folder',
-            '::createConversationOK' => 'The group have been created',
-            '::createConversationNOK' => 'The group have not been created! %s',
+            '::createConversationOK' => 'The conversation have been created',
+            '::createConversationNOK' => 'The conversation have not been created! %s',
         ],
     ];
 }

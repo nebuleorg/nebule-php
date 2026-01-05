@@ -282,17 +282,19 @@ abstract class Modules extends Functions implements ModuleInterface {
         $instance->display();
     }
 
-    protected function _displayListItems(string $name, int $indexAdd = 2, int $iconAdd = 1, int $indexGet = 5, int $iconGet = 6): void {
+
+
+    protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $iconGet = 6, int $iconItem = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
-            $this->_displayItemCreateNew();
+            $this->_displayItemCreateNew($name, $iconItem);
         }
 
         $message = match ($this->_socialClass) {
-            'all' => '::all' . $name . 's',
-            'notmyself' => '::other' . $name . 's',
-            default => '::my' . $name . 's',
+            'all' => '::all' . $names,
+            'notmyself' => '::other' . $names,
+            default => '::my' . $names,
         };
         $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
 
@@ -344,7 +346,6 @@ abstract class Modules extends Functions implements ModuleInterface {
 
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
-    protected function _displayItemCreateNew(): void {}
 
     protected function _display_InlineMyItems(string $name): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -359,10 +360,25 @@ abstract class Modules extends Functions implements ModuleInterface {
                 break;
             default:
                 $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'myself');
+                $this->_getListByRight($links, References::RID_OWNER);
+                $this->_getListByRight($links, References::RID_WRITER);
+                $this->_getListByRight($links, References::RID_FOLLOWER);
                 $this->_displayListOfItems($links, 'myself', 'my' . $name);
         }
     }
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {}
+
+    protected function _getListByRight(array &$links, string $right): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $filter = array(
+            'bl/rl/req' => 'l',
+            'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
+            'bl/rl/nid3' => $right,
+        );
+        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all'); // FIXME $socialClass = self?
+    }
+
+
 
     // Copy of ModuleGroups::_displayGroupCreateForm()
     protected function _displayItemCreateForm(
@@ -467,14 +483,117 @@ abstract class Modules extends Functions implements ModuleInterface {
         }
     }
 
-    /*protected function _displayBackOrLogin(string $backMessage, string $backView, string $addURL = ''): void {
+    protected function _displayItemCreateNew(string $name, int $iconItem = 0): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateError()) {
+                $instance->setMessage('::create' . $name . 'OK');
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
+                $instance->setIconText('::OK');
+                $instanceList->addItem($instance);
+
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setSocial('myself');
+                //$instance->setNID($this->_displayFolderInstance); FIXME
+                $instance->setNID($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreateInstance());
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableRefs(false);
+                $instance->setEnableNID(false);
+                $instance->setEnableFlags(false);
+                $instance->setEnableFlagProtection(false);
+                $instance->setEnableFlagObfuscate(false);
+                $instance->setEnableFlagState(false);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableLink(true);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setStatus('');
+                $instance->setEnableFlagUnlocked(false);
+                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+                $instance->setIcon($instanceIcon);
+            } else {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::create' . $name . 'NOK');
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setIconText('::ERROR');
+            }
+            $instanceList->addItem($instance);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            //$instanceList->setOnePerLine();
+            $instanceList->display();
+        }
+        echo '<br />' . "\n";
+    }
+
+
+
+    protected function _displayModifyItem(string $name, int $icon = 3, int $returnView = 1): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    protected function _displayRemoveItem(string $name, int $icon = 7, int $returnView = 1): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayNotImplemented(); // TODO
+        /*$this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$iconDel]);
+
+        if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
+            echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::sylabe:module:group:remove');
+        } else {
+            $this->_applicationInstance->getDisplayInstance()->displayMessageError('::thisIsNotGroup');
+        }*/
+    }
+
+
+
+    protected function _displayGetItem(string $name, int $icon = 6, int $returnView = 1): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    protected function _displaySynchroItem(string $name, int $icon = 8, int $returnView = 1): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayNotImplemented(); // TODO
+    }
+
+
+
+    protected function _displayRightsItem(string $name, int $icon = 3, int $returnView = 1): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[$icon]);
+        $this->_displayBackOrLogin($name, $returnView);
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('rights');
+    }
+
+    protected function _display_InlineRightsItem(string $name): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented(); // TODO
+    }
+
+    protected function _displayBackOrLogin(string $name, int $returnView = 1, string $addURL = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
-        $instance->setMessage($backMessage);
+        $instance->setMessage('::return' . $name);
         $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $backView
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
             . $addURL);
         $instanceList->addItem($instance);
@@ -489,7 +608,7 @@ abstract class Modules extends Functions implements ModuleInterface {
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
-    }*/
+    }
 
     const TRANSLATE_TABLE = [
             'en-en' => [
