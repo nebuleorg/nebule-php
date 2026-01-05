@@ -31,55 +31,20 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $this->_prepareList();
-        if (sizeof($this->_fullList) == 0 && $this->_enableWarnIfEmpty)
-        {
-            $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
-            $instanceWarn->setMessage('::list:empty');
-            $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            $this->_fullList[] = $instanceWarn;
-        }
-        if (sizeof($this->_fullList) == 0)
+        if (sizeof($this->_fullList) == 0) {
+            if ($this->_enableWarnIfEmpty) {
+                $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn->setMessage('::list:empty');
+                $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $this->_fullList[] = $instanceWarn;
+            }
             return '';
+        }
 
         $result = '<div class="layoutList">' . "\n";
         $result .= '<div class="listContent">' . "\n";
-        if ($this->_lastPage > 1) {
-            $url = $this->_prepareURL();
-            if ($this->_currentPage > 1) {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
-                $instance->setMessage('::previousPage', (string)$this->_currentPage, (string)$this->_lastPage);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setSize($this->_sizeCSS);
-                $instance->setIconText('');
-                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage - 1));
-                $result .= $instance->getHTML();
-                $result .= "\n";
-            }
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
-            $first = ($this->_currentPage * $this->_listSize) - $this->_listSize + 1;
-            $last = $this->_currentPage * $this->_listSize;
-            if ($last > $this->_fullSize) $last = $this->_fullSize;
-            $instance->setMessage('::page%s%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)$first, (string)$last, (string)$this->_fullSize);
-            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            $instance->setSize($this->_sizeCSS);
-            $instance->setIconText('');
-            $result .= $instance->getHTML();
-            $result .= "\n";
-            if ($this->_currentPage < $this->_lastPage) {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
-                $instance->setMessage('::nextPage', (string)$this->_currentPage, (string)$this->_lastPage);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setSize($this->_sizeCSS);
-                $instance->setIconText('');
-                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage + 1));
-                $result .= $instance->getHTML();
-            }
-            $result .= "<br />\n";
-        }
+        $this->_getNavHTML($result);
         $column = 0;
         foreach ($this->_fullList as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
@@ -105,11 +70,51 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             }
             $result .= "\n";
         }
+        $this->_getNavHTML($result);
         $result .= '</div>';
         $result .= '</div>';
         $result .= "\n";
 
         return $result;
+    }
+
+    protected function _getNavHTML(string &$result): void {
+        if ($this->_lastPage > 1) {
+            $url = $this->_prepareURL();
+            if ($this->_currentPage > 1) {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+                $instance->setMessage('::previousPage', (string)$this->_currentPage, (string)$this->_lastPage);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+                $instance->setIconText('');
+                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage - 1));
+                $result .= $instance->getHTML();
+                $result .= "\n";
+            }
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $first = ($this->_currentPage * $this->_listSize) - $this->_listSize + 1;
+            $last = $this->_currentPage * $this->_listSize;
+            if ($last > $this->_fullSize) $last = $this->_fullSize;
+            $instance->setMessage('::page%s%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)$first, (string)$last, (string)$this->_fullSize);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+            $instance->setIconText('');
+            $result .= $instance->getHTML();
+            $result .= "\n";
+            if ($this->_currentPage < $this->_lastPage) {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                $instance->setMessage('::nextPage', (string)$this->_currentPage, (string)$this->_lastPage);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+                $instance->setIconText('');
+                $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage + 1));
+                $result .= $instance->getHTML();
+            }
+            $result .= "<br />\n";
+        }
     }
 
     public function addItem(DisplayItem $item): void {

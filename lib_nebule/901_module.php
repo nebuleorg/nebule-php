@@ -289,6 +289,13 @@ abstract class Modules extends Functions implements ModuleInterface {
             $this->_displayItemCreateNew();
         }
 
+        $message = match ($this->_socialClass) {
+            'all' => '::all' . $name . 's',
+            'notmyself' => '::other' . $name . 's',
+            default => '::my' . $name . 's',
+        };
+        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
+
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
@@ -335,12 +342,6 @@ abstract class Modules extends Functions implements ModuleInterface {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
 
-        $message = match ($this->_socialClass) {
-            'all' => '::all' . $name . 's',
-            'notmyself' => '::other' . $name . 's',
-            default => '::my' . $name . 's',
-        };
-        $this->_displaySimpleTitle($message, $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('list');
     }
     protected function _displayItemCreateNew(): void {}
