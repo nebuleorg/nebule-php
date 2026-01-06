@@ -359,12 +359,12 @@ abstract class Applications extends Functions implements ApplicationInterface
         return $this->_applicationModulesInstance->getIsModuleLoaded($name);
     }
 
-    public function getCurrentModuleInstance(): ?Modules
+    public function getCurrentModuleInstance(): ?Module
     {
         return $this->_applicationModulesInstance->getCurrentModuleInstance();
     }
 
-    public function getModule(string $name): ?Modules
+    public function getModule(string $name): ?Module
     {
         return $this->_applicationModulesInstance->getModule($name);
     }

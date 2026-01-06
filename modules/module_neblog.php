@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -60,7 +60,7 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleNeblog extends Modules
+class ModuleNeblog extends Module
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -68,7 +68,7 @@ class ModuleNeblog extends Modules
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260105';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -116,6 +116,7 @@ class ModuleNeblog extends Modules
     const RESTRICTED_TYPE = 'blog';
     const RESTRICTED_CONTEXT = 'ad34c6d9368499b303927c616197f653e3a08d37e7803f3cd46fe163114d91d437d9.none.272';
     const COMMAND_SELECT_BLOG = 'blog';
+    const COMMAND_SELECT_ITEM = 'blog';
     const COMMAND_SELECT_POST = 'post';
     const COMMAND_SELECT_ANSWER = 'answ';
     const COMMAND_SELECT_PAGE= 'page';
@@ -156,10 +157,6 @@ class ModuleNeblog extends Modules
     private ?\Nebule\Library\node $_instanceCurrentBlog = null;
     private ?\Nebule\Library\node $_instanceCurrentBlogPost = null;
     private ?\Nebule\Library\node $_instanceCurrentBlogPage = null;
-    private array $_currentBlogListFounders = array();
-    private array $_currentBlogListOwners = array();
-    private array $_currentBlogWritersList = array();
-    private array $_currentBlogFollowersList = array();
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
@@ -169,18 +166,21 @@ class ModuleNeblog extends Modules
         $this->_instanceBlogAnswerRID = $this->_cacheInstance->newNode(self::RID_BLOG_ANSWER);
         $this->_instanceBlogPageRID = $this->_cacheInstance->newNode(self::RID_BLOG_PAGE);
 
-        $this->_getCurrentBlog();
+        $this->_getCurrentItem(self::COMMAND_SELECT_BLOG, 'Blog', $this->_instanceCurrentBlog);
+        if (! is_a($this->_instanceCurrentBlog, 'Nebule\Library\Node') || $this->_instanceCurrentBlog->getID() == '0')
+            $this->_instanceCurrentBlog = null;
         $this->_getCurrentBlogPost();
         $this->_getCurrentBlogPage();
-        $this->_getCurrentBlogFounders();
-        $this->_getCurrentBlogSocialList();
+        $this->_getCurrentItemFounders($this->_instanceCurrentBlog);
+        $this->_getCurrentItemSocialList($this->_instanceCurrentBlog);
+        $this->_instanceCurrentItem = $this->_instanceCurrentBlog;
     }
 
-    private function _getCurrentBlog(): void {
+    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(self::COMMAND_SELECT_BLOG, FILTER_FLAG_ENCODE_LOW);
+        $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
-            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlog');
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
         if ($nid == '')
             $nid = $this->_getDefaultBlogOID();
         if ($nid == '') { // Default is the first blog
@@ -190,9 +190,9 @@ class ModuleNeblog extends Modules
                 $nid = current($list);
             }
         }
-        $this->_instanceCurrentBlog = $this->_cacheInstance->newNode($nid);
-        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '184e42c6');
-        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlog', $nid);
+        $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
+        $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
     }
 
     private function _getCurrentBlogPost(): void {
@@ -215,58 +215,10 @@ class ModuleNeblog extends Modules
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
     }
 
-    private function _getCurrentBlogFounders(): void { // TODO move to Modules::_getCurrentItemFounders()
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $oid = $this->_instanceCurrentBlog->getID();
-        if ($oid == '0')
-            return;
-        $content = $this->_ioInstance->getObject($oid);
-        if ($content == '')
-            return;
-        $eid = '';
-        foreach (explode("\n", $content) as $line) {
-            $l = trim($line);
-
-            if ($l == '' || str_starts_with($l, '#'))
-                continue;
-
-            $nameOnFile = trim((string)filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
-            $value = trim((string)filter_var(strtok('='), FILTER_SANITIZE_STRING));
-            if ($nameOnFile == 'eid')
-                $eid = $value;
-        }
-        if (! \Nebule\Library\Node::checkNID($eid, false, false))
-            return;
-        $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
-        $this->_currentBlogListOwners = array($eid => $eid);
-        $this->_currentBlogListFounders = array($eid => $eid);
-    }
-
-    private function _getCurrentBlogSocialList(): void { // TODO move to Modules::_getCurrentItemSocialList()
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (sizeof($this->_currentBlogListFounders) == 0)
-            return;
-
-        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $this->_instanceCurrentBlog->getID());
-        //if (!$instance->getMarkClosedGroup())
-        //    return;
-        $this->_currentBlogListOwners = $instance->getListTypedMembersID(References::RID_OWNER, 'onlist', $this->_currentBlogListFounders);
-        foreach ($this->_currentBlogListFounders as $eid)
-            $this->_currentBlogListOwners[$eid] = $eid;
-foreach ($this->_currentBlogListOwners as $eid)
-$this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_currentBlogWritersList = $instance->getListTypedMembersID(References::RID_WRITER, 'onlist', $this->_currentBlogListOwners);
-foreach ($this->_currentBlogWritersList as $eid)
-$this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-        $this->_currentBlogFollowersList = $instance->getListTypedMembersID(References::RID_FOLLOWER, 'onlist', $this->_currentBlogListOwners);
-foreach ($this->_currentBlogFollowersList as $eid)
-$this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-    }
-
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
-        $hookArray = array();
+        $hookArray = array(); // FIXME $this->getCommonHookList($hookName, $object, 'Blogs');
         switch ($hookName) {
             /*case 'menu':
                 $hookArray[1]['name'] = '::blog:list';
@@ -500,7 +452,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 }
                 break;
             case 'rightsBlogWriter':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentBlogListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
                     $hookArray[] = array(
                             'name' => '::addAsOwner',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
@@ -530,7 +482,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 }
                 break;
             case 'rightsBlogFollower':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentBlogListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
                     $hookArray[] = array(
                             'name' => '::addAsWriter',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
@@ -560,7 +512,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 }
                 break;
             case 'rightsBlogAny':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentBlogListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
                     $hookArray[] = array(
                             'name' => '::addAsWriter',
                             'icon' => Displays::DEFAULT_ICON_ADDENT,
@@ -762,8 +714,8 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // TODO sync blog with arg self::COMMAND_ACTION_SYNC_BLOG
 
-        if (sizeof($this->_currentBlogListOwners) != 0) {
-            $this->_socialInstance->setList(array($this->_currentBlogListOwners), 'onlist');
+        if (sizeof($this->_currentItemListOwners) != 0) {
+            $this->_socialInstance->setList(array($this->_currentItemListOwners), 'onlist');
             $linksPost = $this->_getLinksPostNID($this->_instanceCurrentBlog, 'onlist');
             $this->_socialInstance->unsetList('onlist');
         } else
@@ -1257,10 +1209,10 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
         foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
             $eid = $entityInstance->getID();
-            if (($this->_entitiesInstance->getConnectedEntityIsUnlocked() && isset($this->_currentBlogListOwners[$this->_entitiesInstance->getConnectedEntityEID()]))
-                    || isset($this->_currentBlogListOwners[$eid])
-                    || isset($this->_currentBlogWritersList[$eid])
-                    || isset($this->_currentBlogFollowersList[$eid])
+            if (($this->_entitiesInstance->getConnectedEntityIsUnlocked() && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()]))
+                    || isset($this->_currentItemListOwners[$eid])
+                    || isset($this->_currentItemWritersList[$eid])
+                    || isset($this->_currentItemFollowersList[$eid])
             ) {
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setNID($entityInstance);
@@ -1274,19 +1226,19 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
                 $instance->setEnableStatus(true);
                 $instance->setEnableContent(false);
                 $instance->setEnableJS(false);
-                if (isset($this->_currentBlogListFounders[$eid])) {
+                if (isset($this->_currentItemListFounders[$eid])) {
                     $instance->setSelfHookName('rightsBlogFounder');
                     $instance->setStatus('::founder');
                 }
-                elseif (isset($this->_currentBlogListOwners[$eid])) {
+                elseif (isset($this->_currentItemListOwners[$eid])) {
                     $instance->setSelfHookName('rightsBlogOwner');
                     $instance->setStatus('::owner');
                 }
-                elseif (isset($this->_currentBlogWritersList[$eid])) {
+                elseif (isset($this->_currentItemWritersList[$eid])) {
                     $instance->setSelfHookName('rightsBlogWriter');
                     $instance->setStatus('::writer');
                 }
-                elseif (isset($this->_currentBlogFollowersList[$eid])) {
+                elseif (isset($this->_currentItemFollowersList[$eid])) {
                     $instance->setSelfHookName('rightsBlogFollower');
                     $instance->setStatus('::follower');
                 }
@@ -1907,7 +1859,7 @@ $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrolo
         $this->_displaySimpleTitle('::owners', Displays::DEFAULT_ICON_ENT);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-        foreach ($this->_currentBlogListOwners as $eid) {
+        foreach ($this->_currentItemListOwners as $eid) {
             $instanceOwner = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
             if (is_a($instanceOwner, '\Nebule\Library\Entity') && $instanceOwner->getID() != '0') {
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);

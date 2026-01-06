@@ -13,7 +13,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -48,7 +48,7 @@ class Application extends Applications {
     const APPLICATION_NAME = 'portfolio';
     const APPLICATION_SURNAME = 'nebule/portfolio';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020260102';
+    const APPLICATION_VERSION = '020260106';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '60004013fb89ff390da02a1ca427eded51f09d8f6ef4affc192ad8de265155aa8046da6e.none.288';

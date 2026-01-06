@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -21,14 +21,14 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleGroups extends Modules {
+class ModuleGroups extends Module {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'groups';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260105';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -65,6 +65,7 @@ class ModuleGroups extends Modules {
 
     const RESTRICTED_TYPE = 'Node';
     const RESTRICTED_CONTEXT = '';
+    const COMMAND_SELECT_ITEM = References::COMMAND_SELECT_GROUP;
 
     protected string $_hashGroup;
     protected string $_hashGroupClosed;
@@ -79,26 +80,12 @@ class ModuleGroups extends Modules {
         $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
         $this->_hashGroupClosed = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
         $this->_hashGroupClosedObject = $this->_cacheInstance->newNode($this->_hashGroupClosed);
-        $this->_getCurrentGroup();
-    }
-
-    private function _getCurrentGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(References::COMMAND_SELECT_GROUP, FILTER_FLAG_ENCODE_LOW);
-        if ($nid == '')
-            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentGroup');
-        /*if ($nid == '')
-            $nid = $this->_getDefaultConversationOID();
-        if ($nid == '') { // Default is the first blog
-            $list = $this->_getListConversationOID();
-            if (sizeof($list) != 0) {
-                reset($list);
-                $nid = current($list);
-            }
-        }*/
-        $this->_instanceCurrentGroup = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
-        $this->_metrologyInstance->addLog('extract current Group nid=' . $this->_instanceCurrentGroup->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '95676284');
-        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentGroup', $nid);
+        $this->_getCurrentItem(References::COMMAND_SELECT_GROUP, 'Group', $this->_instanceCurrentGroup);
+        if (! is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node') || $this->_instanceCurrentGroup->getID() == '0')
+            $this->_instanceCurrentGroup = null;
+        $this->_getCurrentItemFounders($this->_instanceCurrentGroup);
+        $this->_getCurrentItemSocialList($this->_instanceCurrentGroup);
+        $this->_instanceCurrentItem = $this->_instanceCurrentGroup;
     }
 
 
@@ -111,51 +98,22 @@ class ModuleGroups extends Modules {
         $hookArray = $this->getCommonHookList($hookName, $object, 'Groups');
 
         switch ($hookName) {
-            /*case 'selfMenu':
+            case 'selfMenu':
             case 'selfMenuGroups':
-                if ($this->_unlocked) {
-                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
-                        || $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
-                        || $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[6]
-                    ) {
-                        $hookArray[] = array(
-                            'name' => '::createGroup',
-                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                        );
-                    }
-                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
-                        $hookArray[] = array(
-                            'name' => '::addMember',
-                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                        );
-                    }
-                    if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[5]) {
-                        $hookArray[] = array(
-                            'name' => '::unmakeGroup',
-                            'icon' => Displays::DEFAULT_ICON_LX,
-                            'desc' => '',
-                            'link' => '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_nebuleInstance->getCurrentGroupOID()
-                                    . '&' . \Nebule\Library\ActionsGroups::DELETE
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
-                        );
-                    }
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
+                    $hookArray[] = array(
+                        'name' => '::rights',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentGroup->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-                break;*/
+                break;
 
-            case 'typeMenuGroups':
+            /*case 'typeMenuGroups':
                 // Refuser l'objet comme un groupe.
                 $hookArray[1]['name'] = '::unmakeGroup';
                 $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -165,7 +123,7 @@ class ModuleGroups extends Modules {
                     . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                break;
+                break;*/
 
             /*case 'selfMenuObject':
                 // Affiche si l'objet courant est un groupe.
@@ -245,7 +203,7 @@ class ModuleGroups extends Modules {
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -320,7 +278,7 @@ class ModuleGroups extends Modules {
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                             . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
                             . '&' . References::COMMAND_SELECT_GROUP . '=' . $object
@@ -337,7 +295,7 @@ class ModuleGroups extends Modules {
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
                             . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . $this->_displayInstance->getCurrentPage()
                             . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $object
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_nebuleInstance->getCurrentEntityEID()
@@ -410,10 +368,10 @@ class ModuleGroups extends Modules {
                 $this->_displayRightsItem('Group');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[8]:
-                $this->_displayAddToGroup();
+                $this->_displayAddMembers();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[9]:
-                $this->_displayAddMembers();
+                $this->_displayAddToGroup();
                 break;
             default:
                 $this->_displayListItems('Group', 'Groups');
@@ -433,10 +391,10 @@ class ModuleGroups extends Modules {
                 $this->_display_InlineRightsItem('Group');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[8]:
-                $this->_display_InlineAddToGroup();
+                $this->_display_InlineAddMembers();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[9]:
-                $this->_display_InlineAddMembers();
+                $this->_display_InlineAddToGroup();
                 break;
         }
     }

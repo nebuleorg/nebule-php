@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -21,7 +21,7 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleQantion extends Modules
+class ModuleQantion extends Module
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -29,7 +29,7 @@ class ModuleQantion extends Modules
     const MODULE_COMMAND_NAME = 'qantion';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2019-2026';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';

@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -21,14 +21,14 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleConversations extends Modules {
+class ModuleConversations extends Module {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260105';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -64,6 +64,7 @@ class ModuleConversations extends Modules {
     const RESTRICTED_TYPE = 'Conversation';
     const RESTRICTED_CONTEXT = '9176d8c8cf0e89ef48f136a494af9b9c385d275c8d48c498d52206d7d4072eb0fb1f.none.272';
     const COMMAND_SELECT_CONVERSATION = 'cvt';
+    const COMMAND_SELECT_ITEM = 'cvt';
 
     protected ?\Nebule\Library\Node $_instanceCurrentConversation = null;
 
@@ -72,26 +73,11 @@ class ModuleConversations extends Modules {
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
-        $this->_getCurrentConversation();
-    }
-
-    private function _getCurrentConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(self::COMMAND_SELECT_CONVERSATION, FILTER_FLAG_ENCODE_LOW);
-        if ($nid == '')
-            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentConversation');
-        /*if ($nid == '')
-            $nid = $this->_getDefaultConversationOID();
-        if ($nid == '') { // Default is the first blog
-            $list = $this->_getListConversationOID();
-            if (sizeof($list) != 0) {
-                reset($list);
-                $nid = current($list);
-            }
-        }*/
-        $this->_instanceCurrentConversation = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
-        $this->_metrologyInstance->addLog('extract current conversation nid=' . $this->_instanceCurrentConversation->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
-        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentConversation', $nid);
+        $this->_getCurrentItem(self::COMMAND_SELECT_CONVERSATION, 'Conversation', $this->_instanceCurrentConversation);
+        if (! is_a($this->_instanceCurrentConversation, 'Nebule\Library\Node') || $this->_instanceCurrentConversation->getID() == '0')
+            $this->_instanceCurrentConversation = null;
+        $this->_getCurrentItemFounders($this->_instanceCurrentConversation);
+        $this->_getCurrentItemSocialList($this->_instanceCurrentConversation);
     }
 
 
@@ -103,42 +89,17 @@ class ModuleConversations extends Modules {
             $object = $nid->getID();
         $hookArray = $this->getCommonHookList($hookName, $object, 'Conversations');
 
-        /*switch ($hookName) {
+        switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuConversations':
-                if ($this->_socialClass != 'myself') {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
-                        'name' => '::myConversations',
-                        'icon' => $this::MODULE_LOGO,
+                        'name' => '::rights',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=myself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'notmyself') {
-                    $hookArray[] = array(
-                        'name' => '::otherConversations',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'all') {
-                    $hookArray[] = array(
-                        'name' => '::allConversations',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=all'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . self::COMMAND_SELECT_CONVERSATION . '=' . $this->_instanceCurrentConversation->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -157,7 +118,7 @@ class ModuleConversations extends Modules {
                 );
                 break;
 
-        }*/
+        }
         return $hookArray;
     }
 

@@ -13,7 +13,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 

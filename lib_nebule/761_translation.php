@@ -223,7 +223,7 @@ abstract class Translates extends Functions
 
         if (isset(Translates::TRANSLATE_TABLE[$lang][$text]))
             return Translates::TRANSLATE_TABLE[$lang][$text];
-        if (is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
+        if (is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Module')
             && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text])
         )
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[$lang][$text];
@@ -241,7 +241,7 @@ abstract class Translates extends Functions
             return Translates::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
         if (isset($classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text]))
             return $classAppTranslate::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
-        if (is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Modules')
+        if (is_a($this->_applicationModulesInstance->getCurrentModuleInstance(), '\Nebule\Library\Module')
             && isset($this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text])
         )
             return $this->_applicationModulesInstance->getCurrentModuleInstance()::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];

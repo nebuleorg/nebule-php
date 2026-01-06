@@ -13,7 +13,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -48,7 +48,7 @@ class Application extends Applications {
     const APPLICATION_NAME = 'atrium';
     const APPLICATION_SURNAME = 'nebule/atrium';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020260102';
+    const APPLICATION_VERSION = '020260106';
     const APPLICATION_LICENCE = 'GNU GPL v3 2025-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = 'd09020c0df1b5746a11e2eb1446055526c84e85964ef86a53a5385122d2a90debda48270.none.288';

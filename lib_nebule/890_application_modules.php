@@ -39,7 +39,7 @@ class ApplicationModules
     protected array $_listModulesTranslateName = array();
     protected array $_listModulesValid = array();
     protected array $_listModulesEnabled = array();
-    protected ?Modules $_currentModuleInstance = null;
+    protected ?Module $_currentModuleInstance = null;
     protected bool $_loadModulesOK = false;
 
     public function __construct(Applications $applicationInstance)
@@ -400,7 +400,7 @@ class ApplicationModules
             // Ne regarde que les classes qui sont des modules d'après le nom.
             if (substr('\\' . $class, 0, $sizeModuleHead) == $searchModuleHead
                 && ($moduleNamespace == $this->_applicationNamespace || $moduleNamespace == 'Nebule\\Modules\\')
-                && $class != 'Nebule\\Library\\Modules'
+                && $class != 'Nebule\\Library\\Module'
                 && $class != 'Modules'
                 && $class != $searchModuleHead . 's'
                 && !isset($this->_listModulesName[$moduleName])
@@ -412,7 +412,7 @@ class ApplicationModules
                 $this->_listModulesEnabled[$moduleFullName] = false; // @todo à revoir...
 
                 // Vérifie si c'est une dépendance de la classe Modules.
-                if (is_a($instance, 'Nebule\\Library\\Modules')) {
+                if (is_a($instance, 'Nebule\\Library\\Module')) {
                     $this->_metrologyInstance->addLog('loaded module ' . $moduleFullName, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '130bc586');
                     $instance->initialisation();
                     $this->_listModulesName[$moduleName] = $moduleFullName;
@@ -489,15 +489,15 @@ class ApplicationModules
      * Retourne le module en cours d'utilisation.
      * Si les modules ne sont pas utilisés, retourne null.
      *
-     * @return Modules|null
+     * @return Module|null
      */
-    public function getCurrentModuleInstance(): ?Modules {
+    public function getCurrentModuleInstance(): ?Module {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES)
             return null;
 
         if ($this->_currentModuleInstance != null
-            && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules')
+            && is_a($this->_currentModuleInstance, 'Nebule\Library\Module')
         )
             return $this->_currentModuleInstance;
 
@@ -514,13 +514,12 @@ class ApplicationModules
     /**
      * Return the instance of a module with this name.
      * Can use long name (with namespace) or short name.
-     *
      * If not found, return null... but sure this will be a problem after...
      *
      * @param string $name
-     * @return Modules|null
+     * @return Module|null
      */
-    public function getModule(string $name): ?Modules {
+    public function getModule(string $name): ?Module {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_applicationInstance::USE_MODULES || $name == '')
             return null;

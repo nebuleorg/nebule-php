@@ -10,7 +10,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-abstract class Modules extends Functions implements ModuleInterface {
+abstract class Module extends Functions implements ModuleInterface {
     const MODULE_TYPE = 'Model'; // Model | Application | Traduction
     const MODULE_NAME = 'None';
     const MODULE_MENU_NAME = 'None';
@@ -34,12 +34,14 @@ abstract class Modules extends Functions implements ModuleInterface {
 
     const RESTRICTED_TYPE = '';
     const RESTRICTED_CONTEXT = '';
+    const COMMAND_SELECT_ITEM = '';
 
     protected ?Applications $_applicationInstance = null;
     protected ?Displays $_displayInstance = null;
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
     protected string $_socialClass = '';
+    protected ?\Nebule\Library\Node $_instanceCurrentItem = null;
 
     public function __toString(): string { return $this::MODULE_NAME; }
 
@@ -81,6 +83,7 @@ abstract class Modules extends Functions implements ModuleInterface {
     ): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hookArray = array();
+        $this->_metrologyInstance->addLog('DEBUGGING getCommonHookList hookName=' . $hookName . ' name=' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -146,6 +149,116 @@ abstract class Modules extends Functions implements ModuleInterface {
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
+                break;
+
+            case 'rightsOwner':
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked'))) {
+                    $hookArray[] = array(
+                        'name' => '::removeAsOwner',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                }
+                break;
+            case 'rightsWriter':
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                    $hookArray[] = array(
+                        'name' => '::addAsOwner',
+                        'icon' => Displays::DEFAULT_ICON_ADDENT,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                    $hookArray[] = array(
+                        'name' => '::removeAsWriter',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                }
+                break;
+            case 'rightsFollower':
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                    $hookArray[] = array(
+                        'name' => '::addAsWriter',
+                        'icon' => Displays::DEFAULT_ICON_ADDENT,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                    $hookArray[] = array(
+                        'name' => '::removeAsFollower',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                }
+                break;
+            case 'rightsAny':
+                $this->_metrologyInstance->addLog('DEBUGGING rightsAny MARK1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                    $this->_metrologyInstance->addLog('DEBUGGING rightsAny MARK2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                    $hookArray[] = array(
+                        'name' => '::addAsWriter',
+                        'icon' => Displays::DEFAULT_ICON_ADDENT,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                    $hookArray[] = array(
+                        'name' => '::addAsFollower',
+                        'icon' => Displays::DEFAULT_ICON_ADDOBJ,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentItem->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
+                            . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_tokenizeInstance->getActionTokenCommand(),
+                    );
+                }
                 break;
         }
         return $hookArray;
@@ -283,6 +396,25 @@ abstract class Modules extends Functions implements ModuleInterface {
     }
 
 
+
+    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
+        if ($nid == '')
+            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
+        /*if ($nid == '')
+            $nid = $this->_getDefaultConversationOID();
+        if ($nid == '') { // Default is the first blog
+            $list = $this->_getListConversationOID();
+            if (sizeof($list) != 0) {
+                reset($list);
+                $nid = current($list);
+            }
+        }*/
+        $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
+        $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
+    }
 
     protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $iconGet = 6, int $iconItem = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -574,6 +706,63 @@ abstract class Modules extends Functions implements ModuleInterface {
 
 
 
+    protected array $_currentItemListFounders = array();
+    protected array $_currentItemListOwners = array();
+    protected array $_currentItemWritersList = array();
+    protected array $_currentItemFollowersList = array();
+
+    protected function _getCurrentItemFounders(?\Nebule\Library\Node $currentItem): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($currentItem == null)
+            return;
+        $oid = $currentItem->getID();
+        if ($oid == '0')
+            return;
+        $content = $this->_ioInstance->getObject($oid);
+        if ($content == '')
+            return;
+        $eid = '';
+        foreach (explode("\n", $content) as $line) {
+            $l = trim($line);
+
+            if ($l == '' || str_starts_with($l, '#'))
+                continue;
+
+            $nameOnFile = trim((string)filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
+            $value = trim((string)filter_var(strtok('='), FILTER_SANITIZE_STRING));
+            if ($nameOnFile == 'eid')
+                $eid = $value;
+        }
+        if (! \Nebule\Library\Node::checkNID($eid, false, false))
+            return;
+        $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
+        $this->_currentItemListOwners = array($eid => $eid);
+        $this->_currentItemListFounders = array($eid => $eid);
+    }
+
+    protected function _getCurrentItemSocialList(?\Nebule\Library\Node $currentItem): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($currentItem == null)
+            return;
+        if (sizeof($this->_currentItemListFounders) == 0)
+            return;
+
+        $instance = new \Nebule\Library\Group($this->_nebuleInstance, $currentItem->getID());
+        //if (!$instance->getMarkClosedGroup())
+        //    return;
+        $this->_currentItemListOwners = $instance->getListTypedMembersID(References::RID_OWNER, 'onlist', $this->_currentItemListFounders);
+        foreach ($this->_currentItemListFounders as $eid)
+            $this->_currentItemListOwners[$eid] = $eid;
+        foreach ($this->_currentItemListOwners as $eid)
+            $this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_currentItemWritersList = $instance->getListTypedMembersID(References::RID_WRITER, 'onlist', $this->_currentItemListOwners);
+        foreach ($this->_currentItemWritersList as $eid)
+            $this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        $this->_currentItemFollowersList = $instance->getListTypedMembersID(References::RID_FOLLOWER, 'onlist', $this->_currentItemListOwners);
+        foreach ($this->_currentItemFollowersList as $eid)
+            $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+    }
+
     protected function _displayRightsItem(string $name, int $icon = 3, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[$icon]);
@@ -583,7 +772,51 @@ abstract class Modules extends Functions implements ModuleInterface {
 
     protected function _display_InlineRightsItem(string $name): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
+            $eid = $entityInstance->getID();
+            if (($this->_entitiesInstance->getConnectedEntityIsUnlocked() && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()]))
+                || isset($this->_currentItemListOwners[$eid])
+                || isset($this->_currentItemWritersList[$eid])
+                || isset($this->_currentItemFollowersList[$eid])
+            ) {
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setNID($entityInstance);
+                $instance->setIcon($instanceIcon);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableFlags(false);
+                $instance->setEnableFlagState(false);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(true);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                if (isset($this->_currentItemListFounders[$eid])) {
+                    $instance->setSelfHookName('rightsFounder');
+                    $instance->setStatus('::founder');
+                }
+                elseif (isset($this->_currentItemListOwners[$eid])) {
+                    $instance->setSelfHookName('rightsOwner');
+                    $instance->setStatus('::owner');
+                }
+                elseif (isset($this->_currentItemWritersList[$eid])) {
+                    $instance->setSelfHookName('rightsWriter');
+                    $instance->setStatus('::writer');
+                }
+                elseif (isset($this->_currentItemFollowersList[$eid])) {
+                    $instance->setSelfHookName('rightsFollower');
+                    $instance->setStatus('::follower');
+                }
+                else
+                    $instance->setSelfHookName('rightsAny');
+                $instanceList->addItem($instance);
+            }
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
     }
 
     protected function _displayBackOrLogin(string $name, int $returnView = 1, string $addURL = ''): void {

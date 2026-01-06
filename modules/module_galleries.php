@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -21,14 +21,14 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleGalleries extends Modules {
+class ModuleGalleries extends Module {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260105';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -64,6 +64,7 @@ class ModuleGalleries extends Modules {
     const RESTRICTED_TYPE = 'Gallery';
     const RESTRICTED_CONTEXT = '583718a8303dbcb757a1d2acf463e2410c807ebd1e4f319d3a641d1a6686a096b018.none.272';
     const COMMAND_SELECT_GALLERY = 'glr';
+    const COMMAND_SELECT_ITEM = 'glr';
 
     protected ?\Nebule\Library\Node $_instanceCurrentGallery = null;
 
@@ -72,26 +73,12 @@ class ModuleGalleries extends Modules {
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
-        $this->_getCurrentGallery();
-    }
-
-    private function _getCurrentGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(self::COMMAND_SELECT_GALLERY, FILTER_FLAG_ENCODE_LOW);
-        if ($nid == '')
-            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentGallery');
-        /*if ($nid == '')
-            $nid = $this->_getDefaultConversationOID();
-        if ($nid == '') { // Default is the first blog
-            $list = $this->_getListConversationOID();
-            if (sizeof($list) != 0) {
-                reset($list);
-                $nid = current($list);
-            }
-        }*/
-        $this->_instanceCurrentGallery = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
-        $this->_metrologyInstance->addLog('extract current gallery nid=' . $this->_instanceCurrentGallery->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'e9883f6e');
-        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentGallery', $nid);
+        $this->_getCurrentItem(self::COMMAND_SELECT_GALLERY, 'Gallery', $this->_instanceCurrentGallery);
+        if (! is_a($this->_instanceCurrentGallery, 'Nebule\Library\Node') || $this->_instanceCurrentGallery->getID() == '0')
+            $this->_instanceCurrentGallery = null;
+        $this->_getCurrentItemFounders($this->_instanceCurrentGallery);
+        $this->_getCurrentItemSocialList($this->_instanceCurrentGallery);
+        $this->_instanceCurrentItem = $this->_instanceCurrentGallery;
     }
 
 
@@ -106,39 +93,14 @@ class ModuleGalleries extends Modules {
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuGalleries':
-                if ($this->_socialClass != 'myself') {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
-                        'name' => '::myGalleries',
-                        'icon' => $this::MODULE_LOGO,
+                        'name' => '::rights',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=myself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'notmyself') {
-                    $hookArray[] = array(
-                        'name' => '::otherGalleries',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'all') {
-                    $hookArray[] = array(
-                        'name' => '::allGalleries',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=all'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }

@@ -12,7 +12,7 @@ use Nebule\Application\Neblog\Display;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModelModuleHelp extends \Nebule\Library\Modules {
+class ModelModuleHelp extends \Nebule\Library\Module {
     const MODULE_TYPE = 'Model';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
@@ -40,7 +40,7 @@ class ModelModuleHelp extends \Nebule\Library\Modules {
 
     /**
      * {@inheritDoc}
-     * @see Modules::getHookList()
+     * @see Module::getHookList()
      */
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
         $hookArray = array();
@@ -73,7 +73,7 @@ class ModelModuleHelp extends \Nebule\Library\Modules {
 
     /**
      * {@inheritDoc}
-     * @see Modules::displayModule()
+     * @see Module::displayModule()
      */
     public function displayModule(): void {
         $this->_displayHlpHeader();
@@ -92,13 +92,13 @@ class ModelModuleHelp extends \Nebule\Library\Modules {
 
     /**
      * {@inheritDoc}
-     * @see Modules::displayModuleInline()
+     * @see Module::displayModuleInline()
      */
     public function displayModuleInline(): void {}
 
     /**
      * {@inheritDoc}
-     * @see Modules::headerStyle()
+     * @see Module::headerStyle()
      */
     public function headerStyle(): void {
         echo ".moduleHelpText1stI1 { position:absolute; left:50%; top:33%; margin-left:-32px; }\n";

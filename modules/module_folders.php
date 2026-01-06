@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -21,14 +21,14 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleFolders extends Modules {
+class ModuleFolders extends Module {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260105';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -64,34 +64,27 @@ class ModuleFolders extends Modules {
     const RESTRICTED_TYPE = 'Folders';
     const RESTRICTED_CONTEXT = '2afeddf82c8f4171fc67b9073ba5be456abb2f4da7720bb6f0c903fb0b0a4231f7e3.none.272';
     const COMMAND_SELECT_ROOT = 'root';
+    const COMMAND_SELECT_ITEM = 'root';
+    const COMMAND_SELECT_FOLDER = 'fld';
 
     protected ?\Nebule\Library\Node $_instanceCurrentRoot = null;
+    protected ?\Nebule\Library\Node $_instanceCurrentFolder = null;
+    protected array $_listFolders = array();
 
 
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
-        $this->_getCurrentFolder();
-    }
-
-    private function _getCurrentFolder(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->getFilterInput(self::COMMAND_SELECT_ROOT, FILTER_FLAG_ENCODE_LOW);
-        if ($nid == '')
-            $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentRoot');
-        /*if ($nid == '')
-            $nid = $this->_getDefaultConversationOID();
-        if ($nid == '') { // Default is the first blog
-            $list = $this->_getListConversationOID();
-            if (sizeof($list) != 0) {
-                reset($list);
-                $nid = current($list);
-            }
-        }*/
-        $this->_instanceCurrentRoot = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
-        $this->_metrologyInstance->addLog('extract current root folder nid=' . $this->_instanceCurrentRoot->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '87e1e4dd');
-        $this->_sessionInstance->setSessionStoreAsString('instanceCurrentRoot', $nid);
+        $this->_getCurrentItem(self::COMMAND_SELECT_ROOT, 'Root', $this->_instanceCurrentRoot);
+        if (! is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node') || $this->_instanceCurrentRoot->getID() == '0')
+            $this->_instanceCurrentRoot = null;
+        $this->_getCurrentItem(self::COMMAND_SELECT_FOLDER, 'Folder', $this->_instanceCurrentFolder);
+        if (! is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node') || $this->_instanceCurrentFolder->getID() == '0')
+            $this->_instanceCurrentFolder = $this->_instanceCurrentRoot;
+        $this->_getCurrentItemFounders($this->_instanceCurrentRoot);
+        $this->_getCurrentItemSocialList($this->_instanceCurrentRoot);
+        $this->_instanceCurrentItem = $this->_instanceCurrentFolder;
     }
 
 
@@ -103,42 +96,17 @@ class ModuleFolders extends Modules {
             $object = $nid->getID();
         $hookArray = $this->getCommonHookList($hookName, $object, 'Folders');
 
-        /*switch ($hookName) {
+        switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuFolders':
-                if ($this->_socialClass != 'myself') {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
-                        'name' => '::myFolders',
-                        'icon' => $this::MODULE_LOGO,
+                        'name' => '::rights',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=myself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'notmyself') {
-                    $hookArray[] = array(
-                        'name' => '::otherFolders',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=notmyself'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_socialClass != 'all') {
-                    $hookArray[] = array(
-                        'name' => '::allFolders',
-                        'icon' => $this::MODULE_LOGO,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . Displays::COMMAND_SOCIAL . '=all'
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -157,7 +125,7 @@ class ModuleFolders extends Modules {
                 );
                 break;
 
-        }*/
+        }
         return $hookArray;
     }
 

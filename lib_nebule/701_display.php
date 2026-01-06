@@ -380,7 +380,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     public function getCurrentDisplayMode(): string { return $this->_currentDisplayMode; }
 
-    protected ?Modules $_currentModuleInstance = null;
+    protected ?Module $_currentModuleInstance = null;
 
     /**
      * @return void
@@ -401,9 +401,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Retourne le mode d'affichage en cours.
      *
-     * @return Modules
+     * @return Module
      */
-    public function getCurrentModuleInstance(): Modules { return $this->_currentModuleInstance; }
+    public function getCurrentModuleInstance(): Module { return $this->_currentModuleInstance; }
 
     protected string $_currentDisplayView = '';
     protected array $_listDisplayViews = array();
@@ -441,7 +441,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $list_views_names = array();
 
         // Si activé, extrait les modes.
-        if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, '\Nebule\Library\Modules')) {
+        if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, '\Nebule\Library\Module')) {
             $this->_metrologyInstance->addLog('search view on ' . $this->_currentModuleInstance::MODULE_NAME, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '0acf655b');
             // Lit les vues déclarées.
             $list_views_names = $this->_currentModuleInstance::MODULE_REGISTERED_VIEWS;
@@ -478,7 +478,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             else // Sinon active la vue par defaut.
             {
                 // Si activé, extrait les modes.
-                if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, 'Nebule\Library\Modules'))
+                if ($this->_applicationInstance::USE_MODULES && is_a($this->_currentModuleInstance, 'Nebule\Library\Module'))
                     $this->_currentDisplayView = $this->_currentModuleInstance::MODULE_DEFAULT_VIEW;
                 else
                     $this->_currentDisplayView = self::DEFAULT_DISPLAY_VIEW;

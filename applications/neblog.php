@@ -13,7 +13,7 @@ use Nebule\Library\Actions;
 use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -48,7 +48,7 @@ class Application extends Applications {
     const APPLICATION_NAME = 'neblog';
     const APPLICATION_SURNAME = 'nebule/neblog';
     const APPLICATION_AUTHOR = 'Project nebule';
-    const APPLICATION_VERSION = '020260102';
+    const APPLICATION_VERSION = '020260106';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2026';
     const APPLICATION_WEBSITE = 'www.neblog.org';
     const APPLICATION_NODE = '05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288';

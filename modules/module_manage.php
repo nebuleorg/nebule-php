@@ -9,7 +9,7 @@ use Nebule\Library\Displays;
 use Nebule\Library\Actions;
 use Nebule\Library\Translates;
 use Nebule\Library\ModuleInterface;
-use Nebule\Library\Modules;
+use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
@@ -24,7 +24,7 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleManage extends Modules
+class ModuleManage extends Module
 {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
@@ -32,7 +32,7 @@ class ModuleManage extends Modules
     const MODULE_COMMAND_NAME = 'modmanager';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260106';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '8dc6a54b72778131a427e2b36df04d4a3fa036b1275868bd060e9dbf8b7493e4.sha2.256';
@@ -479,7 +479,7 @@ class ModuleManage extends Modules
                 // Affiche les différentes applications.
                 foreach ($listModules as $moduleName => $instance) {
                     $name = $instance::MODULE_NAME;
-                    if (is_a($instance, '\Nebule\Library\Modules')
+                    if (is_a($instance, '\Nebule\Library\Module')
                         && !isset($listOkModules[$name])
                     ) {
                         $className = get_class($instance);
