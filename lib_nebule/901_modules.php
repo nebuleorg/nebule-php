@@ -35,6 +35,7 @@ abstract class Module extends Functions implements ModuleInterface {
     const RESTRICTED_TYPE = '';
     const RESTRICTED_CONTEXT = '';
     const COMMAND_SELECT_ITEM = '';
+    const COMMAND_SYNC_ALL = 'synchro_all';
 
     protected ?Applications $_applicationInstance = null;
     protected ?Displays $_displayInstance = null;
@@ -395,6 +396,16 @@ abstract class Module extends Functions implements ModuleInterface {
         $instance->display();
     }
 
+    protected function _displayNotPermit(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setMessage('::err_NotPermit');
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+        $instance->display();
+    }
+
 
 
     protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance, string $defaultNID = ''): void {
@@ -465,6 +476,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexSync]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . $this::COMMAND_SYNC_ALL
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
             $instanceList->addItem($instance);
 
@@ -671,12 +683,8 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
-        } else {
-            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::err_NotPermit');
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $instance->display();
-        }
+        } else
+            $this->_displayNotPermit();
     }
 
     protected function _displayItemCreateNew(string $name, int $iconItem = 0): void {
@@ -734,7 +742,10 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _displayModifyItem(string $name, int $icon = 3, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackOrLogin($name, $returnView);
-        $this->_displayNotImplemented(); // TODO
+        if ($this->_unlocked)
+            $this->_displayNotImplemented(); // TODO
+        else
+            $this->_displayNotPermit();
     }
 
 
@@ -822,7 +833,10 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _displayGetItem(string $name, int $icon = 6, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackOrLogin($name, $returnView);
-        $this->_displayNotImplemented(); // TODO
+        if ($this->_unlocked)
+            $this->_displayNotImplemented(); // TODO
+        else
+            $this->_displayNotPermit();
     }
 
 
@@ -830,7 +844,10 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _displaySynchroItem(string $name, int $icon = 8, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackOrLogin($name, $returnView);
-        $this->_displayNotImplemented(); // TODO
+        if ($this->_unlocked)
+            $this->_displayNotImplemented(); // TODO
+        else
+            $this->_displayNotPermit();
     }
 
 
