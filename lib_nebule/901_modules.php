@@ -397,11 +397,13 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance): void {
+    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance, string $defaultNID = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
+        if ($nid == '' && \Nebule\Library\Node::checkNID($defaultNID))
+            $nid = $defaultNID;
         /*if ($nid == '')
             $nid = $this->_getDefaultConversationOID();
         if ($nid == '') { // Default is the first blog
@@ -411,6 +413,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 $nid = current($list);
             }
         }*/
+        if ($nid == '')
+            return;
         $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
@@ -828,6 +832,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
             . $addURL);
         $instanceList->addItem($instance);
         if (!$this->_unlocked) {

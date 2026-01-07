@@ -190,7 +190,7 @@ class ModuleGalleries extends Module {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
             //$instance->setNID($this->_displayGroupInstance); FIXME
-            $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+            $instance->setNID($this->_instanceCurrentGallery);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);

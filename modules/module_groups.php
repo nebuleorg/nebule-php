@@ -71,7 +71,7 @@ class ModuleGroups extends Module {
     protected string $_hashGroupClosed;
     protected \Nebule\Library\Node $_hashGroupObject;
     protected \Nebule\Library\Node $_hashGroupClosedObject;
-    protected ?\Nebule\Library\Node $_instanceCurrentGroup = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentGroup = null;
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
@@ -100,7 +100,9 @@ class ModuleGroups extends Module {
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuGroups':
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]
+                    && !is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node')
+                ) {
                     $hookArray[] = array(
                         'name' => '::rights',
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
@@ -534,7 +536,7 @@ class ModuleGroups extends Module {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
             //$instance->setNID($this->_displayGroupInstance); FIXME
-            $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+            $instance->setNID($this->_instanceCurrentGroup);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
@@ -564,14 +566,16 @@ class ModuleGroups extends Module {
 
     protected function _display_InlineGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node'))
+            $this->_displayNotSupported();
 
-        $closedGroup = $this->_nebuleInstance->getCurrentGroupInstance()->getMarkClosed();
+        $closedGroup = $this->_instanceCurrentGroup->getMarkClosed();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         if ($closedGroup)
-            $memberLinks = $this->_nebuleInstance->getCurrentGroupInstance()->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'myself');
+            $memberLinks = $this->_instanceCurrentGroup->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'myself');
         else
-            $memberLinks = $this->_nebuleInstance->getCurrentGroupInstance()->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'all');
+            $memberLinks = $this->_instanceCurrentGroup->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'all');
 
         $list = array();
         foreach ($memberLinks as $link)
@@ -650,11 +654,13 @@ class ModuleGroups extends Module {
 
     protected function _displayAddMembers(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node'))
+            $this->_displayNotSupported();
 
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
         //$instance->setNID($this->_displayGroupInstance); FIXME
-        $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+        $instance->setNID($this->_instanceCurrentGroup);
         $instance->setEnableColor(true);
         $instance->setEnableIcon(true);
         $instance->setEnableName(true);

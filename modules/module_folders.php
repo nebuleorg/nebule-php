@@ -28,7 +28,7 @@ class ModuleFolders extends Module {
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260107';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -65,7 +65,7 @@ class ModuleFolders extends Module {
     const RESTRICTED_CONTEXT = '2afeddf82c8f4171fc67b9073ba5be456abb2f4da7720bb6f0c903fb0b0a4231f7e3.none.272';
     const COMMAND_SELECT_ROOT = 'root';
     const COMMAND_SELECT_ITEM = 'root';
-    const COMMAND_SELECT_FOLDER = 'fld';
+    const COMMAND_SELECT_FOLDER = 'folder';
 
     protected ?\Nebule\Library\Node $_instanceCurrentRoot = null;
     protected ?\Nebule\Library\Node $_instanceCurrentFolder = null;
@@ -79,9 +79,11 @@ class ModuleFolders extends Module {
         $this->_getCurrentItem(self::COMMAND_SELECT_ROOT, 'Root', $this->_instanceCurrentRoot);
         if (! is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node') || $this->_instanceCurrentRoot->getID() == '0')
             $this->_instanceCurrentRoot = null;
-        $this->_getCurrentItem(self::COMMAND_SELECT_FOLDER, 'Folder', $this->_instanceCurrentFolder);
-        if (! is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node') || $this->_instanceCurrentFolder->getID() == '0')
-            $this->_instanceCurrentFolder = $this->_instanceCurrentRoot;
+        if (is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node')) {
+            $this->_getCurrentItem(self::COMMAND_SELECT_FOLDER, 'Folder', $this->_instanceCurrentFolder, $this->_instanceCurrentRoot->getID());
+            if (!is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node') || $this->_instanceCurrentFolder->getID() == '0')
+                $this->_instanceCurrentFolder = $this->_instanceCurrentRoot;
+        }
         $this->_getCurrentItemFounders($this->_instanceCurrentRoot);
         $this->_getCurrentItemSocialList($this->_instanceCurrentRoot);
         $this->_instanceCurrentItem = $this->_instanceCurrentFolder;
@@ -210,11 +212,11 @@ class ModuleFolders extends Module {
     private function _displayRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        if (is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node')) {
+        if (is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node')) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
             //$instance->setNID($this->_displayGroupInstance); FIXME
-            $instance->setNID($this->_nebuleInstance->getCurrentGroupInstance());
+            $instance->setNID($this->_instanceCurrentFolder);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
