@@ -68,7 +68,7 @@ class ModuleNeblog extends Module
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260107';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -176,7 +176,7 @@ class ModuleNeblog extends Module
         $this->_instanceCurrentItem = $this->_instanceCurrentBlog;
     }
 
-    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance): void {
+    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance, string $defaultNID = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
@@ -190,6 +190,10 @@ class ModuleNeblog extends Module
                 $nid = current($list);
             }
         }
+        if ($nid == '' && \Nebule\Library\Node::checkNID($defaultNID))
+            $nid = $defaultNID;
+        if ($nid == '')
+            return;
         $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
@@ -197,21 +201,29 @@ class ModuleNeblog extends Module
 
     private function _getCurrentBlogPost(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! is_a($this->_instanceCurrentBlog, 'Nebule\Library\Node'))
+            return;
         $nid = $this->getFilterInput(self::COMMAND_SELECT_POST);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPost');
+        if ($nid == '')
+            return;
         $this->_instanceCurrentBlogPost = $this->_cacheInstance->newNode($nid);
-        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'df3fcf87');
+        $this->_metrologyInstance->addLog('extract current blog post nid=' . $this->_instanceCurrentBlogPost->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'df3fcf87');
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPost', $nid);
     }
 
     private function _getCurrentBlogPage(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! is_a($this->_instanceCurrentBlog, 'Nebule\Library\Node'))
+            return;
         $nid = $this->getFilterInput(self::COMMAND_SELECT_PAGE);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPage');
+        if ($nid == '')
+            return;
         $this->_instanceCurrentBlogPage = $this->_cacheInstance->newNode($nid);
-        $this->_metrologyInstance->addLog('extract current blog nid=' . $this->_instanceCurrentBlog->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c7298189');
+        $this->_metrologyInstance->addLog('extract current blog page nid=' . $this->_instanceCurrentBlogPage->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c7298189');
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
     }
 
@@ -550,10 +562,10 @@ class ModuleNeblog extends Module
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                if ($this->_getDefaultBlogOID() != '' || $this->_instanceCurrentBlog->getID() != '0')
-                    $this->_displayBlog();
-                else
-                    $this->_displayListItems('Blog', 'Blogs');
+                //if ($this->_getDefaultBlogOID() != '' || $this->_instanceCurrentBlog->getID() != '0')
+                    $this->_displayItem('Blog');
+                //else
+                //    $this->_displayListItems('Blog', 'Blogs');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayNewBlog();

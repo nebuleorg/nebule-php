@@ -28,7 +28,7 @@ class ModuleGalleries extends Module {
     const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260107';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -44,6 +44,7 @@ class ModuleGalleries extends Module {
         'get_gallery',
         'syn_gallery',
         'rights_gallery',
+        'options',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -103,6 +104,26 @@ class ModuleGalleries extends Module {
                             . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
+                    $hookArray[] = array(
+                        'name' => '::modify',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                            . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                    $hookArray[] = array(
+                        'name' => '::remove',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                            . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
 
@@ -119,7 +140,7 @@ class ModuleGalleries extends Module {
                 );
                 break;
 
-            case 'typeMenuGallery':
+            /*case 'typeMenuGallery':
                 // Refuser l'objet comme un groupe.
                 $hookArray[1]['name'] = '::unmakeGroup';
                 $hookArray[1]['icon'] = Displays::DEFAULT_ICON_LX;
@@ -129,7 +150,7 @@ class ModuleGalleries extends Module {
                     . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x_' . $this->_hashGroup . '_' . $object . '_0'
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                     . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                break;
+                break;*/
 
         }
 
@@ -141,7 +162,7 @@ class ModuleGalleries extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayGallery();
+                $this->_displayItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('Gallery');
@@ -160,6 +181,9 @@ class ModuleGalleries extends Module {
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Gallery');
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[8]:
+                $this->_displayOptions();
                 break;
             default:
                 $this->_displayListItems('Gallery', 'Galleries');
@@ -183,44 +207,26 @@ class ModuleGalleries extends Module {
 
 
 
-    private function _displayGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        if (is_a($this->_instanceCurrentGallery, 'Nebule\Library\Node')) {
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setSocial('self');
-            //$instance->setNID($this->_displayGroupInstance); FIXME
-            $instance->setNID($this->_instanceCurrentGallery);
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setEnableRefs(false);
-            $instance->setEnableNID(false);
-            $instance->setEnableFlags(true);
-            $instance->setEnableFlagProtection(false);
-            $instance->setEnableFlagObfuscate(false);
-            $instance->setEnableFlagState(true);
-            $instance->setEnableFlagEmotions(true);
-            $instance->setEnableStatus(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableLink(true);
-            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            //$instance->setStatus('');
-            $instance->setEnableFlagUnlocked(false);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
-            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
-            $instance->setIcon($instanceIcon2);
-            $instance->display();
-
-            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('galley');
-        } else
-            $this->_displayNotSupported();
-    }
-
     private function _display_InlineGallery(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
+            $this->_displayNotSupported();
+            return;
+        }
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        if ($this->_instanceCurrentItem->getMarkClosed())
+            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'myself');
+        else
+            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'all');
+
+
         $this->_displayNotImplemented(); // TODO
+    }
+
+    protected function _displayOptions(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented();
     }
 
 

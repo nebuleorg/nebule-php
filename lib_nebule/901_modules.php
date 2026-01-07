@@ -402,8 +402,6 @@ abstract class Module extends Functions implements ModuleInterface {
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
-        if ($nid == '' && \Nebule\Library\Node::checkNID($defaultNID))
-            $nid = $defaultNID;
         /*if ($nid == '')
             $nid = $this->_getDefaultConversationOID();
         if ($nid == '') { // Default is the first blog
@@ -413,6 +411,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 $nid = current($list);
             }
         }*/
+        if ($nid == '' && \Nebule\Library\Node::checkNID($defaultNID))
+            $nid = $defaultNID;
         if ($nid == '')
             return;
         $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
@@ -420,7 +420,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
     }
 
-    protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $iconGet = 6, int $iconItem = 0): void {
+    protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $indexSync = 6, int $indexOption = 8, int $iconItem = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
@@ -453,6 +453,28 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setMessage('::getExisting' . $name);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexGet]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['synobj']);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
+            $instance->setMessage('::synchroAll');
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexSync]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['module']);
+            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon2);
+            $instance->setMessage('::options');
+            $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexOption]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID());
         } else {
@@ -512,6 +534,44 @@ abstract class Module extends Functions implements ModuleInterface {
             'bl/rl/nid3' => $right,
         );
         $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all'); // FIXME $socialClass = self?
+    }
+
+
+
+    protected function _displayItem(string $name, int $icon = 0): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+
+        if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('self');
+            //$instance->setNID($this->_displayGroupInstance); FIXME
+            $instance->setNID($this->_instanceCurrentItem);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(true);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            //$instance->setStatus('');
+            $instance->setEnableFlagUnlocked(false);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$icon]);
+            //$instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
+            $instance->setIcon($instanceIcon);
+            //$instance->setSelfHookName('typeMenu' . $name);
+            $instance->display();
+
+            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID($name);
+        } else
+            $this->_displayNotSupported();
     }
 
 
@@ -679,10 +739,75 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _displayRemoveItem(string $name, int $icon = 7, int $returnView = 1): void {
+    protected function _displayRemoveItem(string $name, int $iconDelete = 7, int $iconItem = 0, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$iconDelete]);
         $this->_displayNotImplemented(); // TODO
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+        $instance->setMessage('::return' . $name);
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID());
+        $instanceList->addItem($instance);
+        if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setSocial('myself');
+            $instance->setNID($this->_instanceCurrentItem);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(false);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(false);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->setStatus('');
+            $instance->setEnableFlagUnlocked(false);
+            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+            $instance->setIcon($instanceIcon);
+            $instanceList->addItem($instance);
+            if ($this->_unlocked) {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                $instance->setMessage('::remove' . $name);
+                $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME // FIXME
+                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                    . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID());
+                $instanceList->addItem($instance);
+            } else {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                $instance->setMessage('::login');
+                $instance->setLink('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=2'
+                    . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
+                $instanceList->addItem($instance);
+            }
+        } else {
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setMessage('::notSupported');
+            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->setIconText('::ERROR');
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->setOnePerLine();
+        $instanceList->display();
+
+
         /*$this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$iconDel]);
 
         if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {

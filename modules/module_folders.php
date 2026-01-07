@@ -44,6 +44,9 @@ class ModuleFolders extends Module {
         'get_root',
         'syn_root',
         'rights_root',
+        'options',
+        'add_folder',
+        'add_file',
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -111,6 +114,26 @@ class ModuleFolders extends Module {
                             . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
+                    $hookArray[] = array(
+                        'name' => '::modify',
+                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                            . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                    $hookArray[] = array(
+                        'name' => '::remove',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                            . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
 
@@ -167,7 +190,7 @@ class ModuleFolders extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayRoot();
+                $this->_displayItem('Folder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('Folder');
@@ -186,6 +209,15 @@ class ModuleFolders extends Module {
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Folder');
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[8]:
+                $this->_displayOptions();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[9]:
+                $this->_displayAddFolder();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[10]:
+                $this->_displayAddFile();
                 break;
             default:
                 $this->_displayListItems('Folder', 'Folders');
@@ -209,44 +241,59 @@ class ModuleFolders extends Module {
 
 
 
-    private function _displayRoot(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        if (is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node')) {
-            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setSocial('self');
-            //$instance->setNID($this->_displayGroupInstance); FIXME
-            $instance->setNID($this->_instanceCurrentFolder);
-            $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
-            $instance->setEnableName(true);
-            $instance->setEnableRefs(false);
-            $instance->setEnableNID(false);
-            $instance->setEnableFlags(true);
-            $instance->setEnableFlagProtection(false);
-            $instance->setEnableFlagObfuscate(false);
-            $instance->setEnableFlagState(true);
-            $instance->setEnableFlagEmotions(true);
-            $instance->setEnableStatus(false);
-            $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
-            $instance->setEnableLink(true);
-            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            //$instance->setStatus('');
-            $instance->setEnableFlagUnlocked(false);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
-            $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
-            $instance->setIcon($instanceIcon2);
-            $instance->display();
-
-            $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('root');
-        } else
-            $this->_displayNotSupported();
-    }
-
     private function _display_InlineRoot(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented(); // TODO
+        if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
+            $this->_displayNotSupported();
+            return;
+        }
+
+        if ($this->_instanceCurrentItem->getMarkClosed())
+            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'myself');
+        else
+            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'all');
+
+        $list = array();
+        foreach ($memberLinks as $link)
+            $list[$link->getParsed()['bl/rl/nid1']] = $link->getSignersEID();
+
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        foreach ($list as $nid => $signers) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instanceMember = $this->_cacheInstance->newNode($nid);
+            $instance->setSocial('self');
+            $instance->setNID($instanceMember);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            //$instance->setIcon($instanceIcon);
+            $instance->setEnableName(true);
+            $instance->setEnableFlags(false);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableRefs(true);
+            $instance->setRefs($signers);
+            $instanceList->addItem($instance);
+        }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instanceList->setEnableWarnIfEmpty();
+        $instanceList->display();
+    }
+
+
+
+    protected function _displayOptions(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented();
+    }
+
+    protected function _displayAddFolder(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented();
+    }
+
+    protected function _displayAddFile(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented();
     }
 
 
