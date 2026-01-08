@@ -68,7 +68,7 @@ class ModuleNeblog extends Module
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260107';
+    const MODULE_VERSION = '020260108';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -76,26 +76,24 @@ class ModuleNeblog extends Module
     const MODULE_INTERFACE = '3.0';
 
     const MODULE_REGISTERED_VIEWS = array(
-        'blogs',    // 0
-        'blog',     // 1
-        'newblog',  // 2
-        'modblog',  // 3
-        'delblog',  // 4
-        'getblog',  // 5
-        'synblog',  // 6
-        'post',     // 7
-        'newpost',  // 8
-        'modpost',  // 9
-        'delpost',  // 10
-        'page',     // 11
-        'pages',    // 12
-        'newpage',  // 13
-        'modpage',  // 14
-        'delpage',  // 15
-        'allblogs', // 16
-        'rblog',    // 17
-        'rpost',    // 18
-        'rpage',    // 19
+        'blogs',        // 0
+        'blog',         // 1
+        'new_blog',     // 2
+        'mod_blog',     // 3
+        'del_blog',     // 4
+        'get_blog',     // 5
+        'syn_blog',     // 6
+        'rights_blog',  // 7
+        'options',      // 8
+        'post',         // 9
+        'new_post',     // 10
+        'mod_post',     // 11
+        'del_post',     // 12
+        'page',         // 13
+        'pages',        // 14
+        'new_page',     // 15
+        'mod_page',     // 16
+        'del_page',     // 17
     );
     const MODULE_REGISTERED_ICONS = array(
         Displays::DEFAULT_ICON_LO,
@@ -230,135 +228,85 @@ class ModuleNeblog extends Module
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
-        $hookArray = array(); // FIXME $this->getCommonHookList($hookName, $object, 'Blogs');
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $object = $this->_applicationInstance->getCurrentObjectID();
+        if ($nid !== null)
+            $object = $nid->getID();
+        $hookArray = $this->getCommonHookList($hookName, $object, 'Blogs');
         switch ($hookName) {
-            /*case 'menu':
-                $hookArray[1]['name'] = '::blog:list';
-                $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                $hookArray[1]['desc'] = '';
-                $hookArray[1]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                break;*/
             case 'selfMenu':
             case 'selfMenuNeblog':
-                # List blogs of ghost entity
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[1]['name'] = '::blog:list';
-                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # New blog
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-                    $hookArray[2]['name'] = '::blog:new';
-                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                    $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # Get existing blog
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]
-                    && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-                    $hookArray[3]['name'] = '::blog:getExisting';
-                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                    $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[5]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # Come back to the blog
-                if (($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[7]
-                    || $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[11])
-                    && $this->_instanceCurrentBlog->getID() != '0') {
-                    $hookArray[4]['name'] = '::blog:disp';
-                    $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[4]['desc'] = '';
-                    $hookArray[4]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # List pages
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]
-                    && $this->_instanceCurrentBlog->getID() != '0') {
-                    $hookArray[5]['name'] = '::page:list';
-                    $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                    $hookArray[5]['desc'] = '';
-                    $hookArray[5]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # New page
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[12]
-                    && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
-                    && $this->_instanceCurrentBlog->getID() != '0') {
-                    $hookArray[6]['name'] = '::page:new';
-                    $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                    $hookArray[6]['desc'] = '';
-                    $hookArray[6]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                # List all blogs for all entities
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[0]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
-                            'name' => '::blog:listall',
-                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                            'name' => '::rights',
+                            'icon' => Displays::DEFAULT_ICON_IMODIFY,
                             'desc' => '',
                             'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[16]
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
-                }
-
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
-                    // Blog rights
                     $hookArray[] = array(
-                            'name' => '::rights',
+                            'name' => '::modify',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
-                            'desc' => '::blog:rights',
+                            'desc' => '',
                             'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[17]
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
                                     . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-
                 if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
-                    // Blog rights
                     $hookArray[] = array(
-                            'name' => '::rights',
-                            'icon' => Displays::DEFAULT_ICON_IMODIFY,
-                            'desc' => '::post:rights',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[18]
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        'name' => '::remove',
+                        'icon' => Displays::DEFAULT_ICON_LX,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[11]) {
-                    // Blog rights
+                /*if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     $hookArray[] = array(
-                            'name' => '::rights',
-                            'icon' => Displays::DEFAULT_ICON_IMODIFY,
-                            'desc' => '::page:rights',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[19]
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        'name' => '::page:list',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[14]
+                    && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
+                    && $this->_instanceCurrentBlog->getID() != '0'
+                ) {
+                    $hookArray[] = array(
+                        'name' => '::page:new',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[15]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }*/
                 break;
+
+            case 'typeMenuEntity':
+                $hookArray[] = array(
+                    'name' => '::myBlogs',
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . Displays::COMMAND_SOCIAL . '=myself'
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
+                break;
+
             case 'selfMenuBlogs':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
                     $hookArray[1]['name'] = '::blog:mod';
@@ -394,7 +342,7 @@ class ModuleNeblog extends Module
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_ADDOBJ;
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
@@ -413,7 +361,7 @@ class ModuleNeblog extends Module
                     $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LSTOBJ;
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
@@ -425,7 +373,7 @@ class ModuleNeblog extends Module
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_POST
@@ -439,123 +387,17 @@ class ModuleNeblog extends Module
                     $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                         . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                         . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPage->getID()
                         . '&' . self::COMMAND_ACTION_SYNC_PAGE
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }
                 break;
-            case 'rightsBlogOwner':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked'))) {
-                    $hookArray[] = array(
-                            'name' => '::removeAsOwner',
-                            'icon' => Displays::DEFAULT_ICON_LX,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                }
-                break;
-            case 'rightsBlogWriter':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
-                    $hookArray[] = array(
-                            'name' => '::addAsOwner',
-                            'icon' => Displays::DEFAULT_ICON_ADDENT,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_OWNER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                    $hookArray[] = array(
-                            'name' => '::removeAsWriter',
-                            'icon' => Displays::DEFAULT_ICON_LX,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                }
-                break;
-            case 'rightsBlogFollower':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
-                    $hookArray[] = array(
-                            'name' => '::addAsWriter',
-                            'icon' => Displays::DEFAULT_ICON_ADDENT,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                    $hookArray[] = array(
-                            'name' => '::removeAsFollower',
-                            'icon' => Displays::DEFAULT_ICON_LX,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                }
-                break;
-            case 'rightsBlogAny':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
-                    $hookArray[] = array(
-                            'name' => '::addAsWriter',
-                            'icon' => Displays::DEFAULT_ICON_ADDENT,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_WRITER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                    $hookArray[] = array(
-                            'name' => '::addAsFollower',
-                            'icon' => Displays::DEFAULT_ICON_ADDOBJ,
-                            'desc' => '',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
-                                    . '&' . \Nebule\Library\ActionsGroups::ADD_MEMBER . '=' . $nid
-                                    . '&' . \Nebule\Library\ActionsGroups::TYPED_MEMBER . '=' . References::RID_FOLLOWER
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                    . $this->_tokenizeInstance->getActionTokenCommand(),
-                    );
-                }
-                break;
         }
         return $hookArray;
     }
+    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable { return null; }
 
 
     public function displayModule(): void {
@@ -583,41 +425,37 @@ class ModuleNeblog extends Module
                 $this->_displaySynchroItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayPost();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[8]:
-                $this->_displayNewPost();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[9]:
-                $this->_displayModPost();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[10]:
-                $this->_displayDelPost();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[11]:
-                $this->_displayPage();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[12]:
-                $this->_displayPages();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[13]:
-                $this->_displayNewPage();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[14]:
-                $this->_displayModPage();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[15]:
-                $this->_displayDelPage();
-                break;
-            //case $this::MODULE_REGISTERED_VIEWS[16]: // Common parts
-            case $this::MODULE_REGISTERED_VIEWS[17]:
                 $this->_displayRightsItem('Blog');
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[18]:
-                $this->_displayRightsPost();
+            case $this::MODULE_REGISTERED_VIEWS[8]:
+                $this->_displayOptions();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[19]:
-                $this->_displayRightsPage();
+            case $this::MODULE_REGISTERED_VIEWS[9]:
+                $this->_displayPost();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[10]:
+                $this->_displayNewPost();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[11]:
+                $this->_displayModPost();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[12]:
+                $this->_displayDelPost();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[13]:
+                $this->_displayPage();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[14]:
+                $this->_displayPages();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[15]:
+                $this->_displayNewPage();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[16]:
+                $this->_displayModPage();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[17]:
+                $this->_displayDelPage();
                 break;
             default:
                 $this->_displayListItems('Blog', 'Blogs');
@@ -629,32 +467,22 @@ class ModuleNeblog extends Module
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
-                //$this->_display_InlineBlogs('onlist');
                 $this->_display_InlineMyItems('Blogs');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineBlog();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[7]:
+            case $this::MODULE_REGISTERED_VIEWS[9]:
                 $this->_display_InlinePost();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[11]:
+            case $this::MODULE_REGISTERED_VIEWS[13]:
                 $this->_display_InlinePage();
                 break;
-            case $this::MODULE_REGISTERED_VIEWS[12]:
+            case $this::MODULE_REGISTERED_VIEWS[14]:
                 $this->_display_InlinePages();
                 break;
-            /*case $this::MODULE_REGISTERED_VIEWS[16]:
-                $this->_display_InlineBlogs('all');
-                break;*/
-            case $this::MODULE_REGISTERED_VIEWS[17]:
-                $this->_display_InlineRightsBlog();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[18]:
-                $this->_display_InlineRightsPost();
-                break;
-            case $this::MODULE_REGISTERED_VIEWS[19]:
-                $this->_display_InlineRightsPage();
+            case $this::MODULE_REGISTERED_VIEWS[7]:
+                $this->_display_InlineRightsItem('Blog');
                 break;
         }
     }
@@ -743,7 +571,7 @@ class ModuleNeblog extends Module
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($postInstance);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_POST . '=' . $postPostNID
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
@@ -1019,6 +847,11 @@ class ModuleNeblog extends Module
         $this->_displayNotImplemented(); // TODO
     }
 
+    protected function _displayOptions(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_displayNotImplemented();
+    }
+
     private function _displayPost(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::post:disp', $this::MODULE_REGISTERED_ICONS[0]);
@@ -1070,7 +903,7 @@ class ModuleNeblog extends Module
     private function _displayModPost(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::post:mod', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[7], true);
+        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[9], true);
         $this->_displayNotImplemented(); // TODO
     }
 
@@ -1110,7 +943,7 @@ class ModuleNeblog extends Module
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::page:new');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[15]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
@@ -1140,7 +973,7 @@ class ModuleNeblog extends Module
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_PAGE . '=' . $blogPageNID
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
@@ -1163,7 +996,7 @@ class ModuleNeblog extends Module
     private function _displayNewPage(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::page:new', $this::MODULE_REGISTERED_ICONS[2]);
-        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
+        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
 
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
             ?>
@@ -1173,7 +1006,7 @@ class ModuleNeblog extends Module
                 <div>
                     <form enctype="multipart/form-data" method="post"
                         action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
@@ -1197,14 +1030,14 @@ class ModuleNeblog extends Module
     private function _displayModPage(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::page:mod', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
+        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPage(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::page:del', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[12], true);
+        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
         $this->_displayNotImplemented(); // TODO
     }
 
@@ -1213,83 +1046,6 @@ class ModuleNeblog extends Module
         $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog_rights');
-    }
-
-    private function _display_InlineRightsBlog(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
-        foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
-            $eid = $entityInstance->getID();
-            if (($this->_entitiesInstance->getConnectedEntityIsUnlocked() && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()]))
-                    || isset($this->_currentItemListOwners[$eid])
-                    || isset($this->_currentItemWritersList[$eid])
-                    || isset($this->_currentItemFollowersList[$eid])
-            ) {
-                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                $instance->setNID($entityInstance);
-                $instance->setIcon($instanceIcon);
-                $instance->setEnableColor(true);
-                $instance->setEnableIcon(true);
-                $instance->setEnableName(true);
-                $instance->setEnableFlags(false);
-                $instance->setEnableFlagState(false);
-                $instance->setEnableFlagEmotions(false);
-                $instance->setEnableStatus(true);
-                $instance->setEnableContent(false);
-                $instance->setEnableJS(false);
-                if (isset($this->_currentItemListFounders[$eid])) {
-                    $instance->setSelfHookName('rightsBlogFounder');
-                    $instance->setStatus('::founder');
-                }
-                elseif (isset($this->_currentItemListOwners[$eid])) {
-                    $instance->setSelfHookName('rightsBlogOwner');
-                    $instance->setStatus('::owner');
-                }
-                elseif (isset($this->_currentItemWritersList[$eid])) {
-                    $instance->setSelfHookName('rightsBlogWriter');
-                    $instance->setStatus('::writer');
-                }
-                elseif (isset($this->_currentItemFollowersList[$eid])) {
-                    $instance->setSelfHookName('rightsBlogFollower');
-                    $instance->setStatus('::follower');
-                }
-                else
-                    $instance->setSelfHookName('rightsBlogAny');
-                $instanceList->addItem($instance);
-            }
-        }
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
-        $instanceList->setEnableWarnIfEmpty();
-        $instanceList->display();
-    }
-
-    private function _displayRightsPost(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::post:list', $this::MODULE_REGISTERED_VIEWS[7], true);
-        $this->_displayOwner();
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post_rights');
-    }
-
-    private function _display_InlineRightsPost(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $this->_displayNotImplemented(); // TODO
-    }
-
-    private function _displayRightsPage(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[11], true);
-        $this->_displayOwner();
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('page_rights');
-    }
-
-    private function _display_InlineRightsPage(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        $this->_displayNotImplemented(); // TODO
     }
 
 
@@ -1589,7 +1345,7 @@ class ModuleNeblog extends Module
                 <div>
                     <form enctype="multipart/form-data" method="post"
                           action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                              . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                              . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                               . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                               . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
                               . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
