@@ -75,15 +75,15 @@ class ModuleManage extends Module
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string    $hookName
-     * @param \Nebule\Library\Node|null $nid
+     * @param string                $hookName
+     * @param ?\Nebule\Library\Node $instance
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array
     {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
+        $nid = $this->_applicationInstance->getCurrentObjectID();
+        if ($instance !== null)
+            $nid = $instance->getID();
 
         $listModulesRID = $this->_applicationInstance->getModulesListRID();
 
@@ -118,7 +118,7 @@ class ModuleManage extends Module
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=0'
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -159,9 +159,9 @@ class ModuleManage extends Module
                     $hookArray[2]['desc'] = '';
                     $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=' . $object
+                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
@@ -178,7 +178,7 @@ class ModuleManage extends Module
                     $hookArray[3]['desc'] = '';
                     $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
                         . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 }

@@ -28,7 +28,7 @@ class ModuleAutent extends Module {
     const MODULE_COMMAND_NAME = 'autent';
     const MODULE_DEFAULT_VIEW = 'desc';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260109';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -48,17 +48,17 @@ class ModuleAutent extends Module {
 
     private string $_comebackAppId = '';
 
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array {
+        $nid = $this->_applicationInstance->getCurrentObjectID();
+        if ($instance !== null)
+            $nid = $instance->getID();
 
         $hookArray = array();
 
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuBlog':
-                $instance = $this->_cacheInstance->newNode($object);
+                $instance = $this->_cacheInstance->newNode($nid);
                 $id = $instance->getID();
 
                 break;

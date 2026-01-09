@@ -29,7 +29,7 @@ class ModuleQantion extends Module
     const MODULE_COMMAND_NAME = 'qantion';
     const MODULE_DEFAULT_VIEW = 'list';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260109';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2019-2026';
     const MODULE_LOGO = '3638230cde600865159d5b5f7993d8a3310deb35aa1f6f8f57429b16472e03d6.sha2.256';
@@ -51,7 +51,7 @@ class ModuleQantion extends Module
 
 
 
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null):array
     {
         $hookArray = array();
 

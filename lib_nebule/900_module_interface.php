@@ -7,7 +7,7 @@ interface ModuleInterface {
     public function __toString(): string;
 
     public function getClassName(): string;
-    public function getHookList(string $hookName, ?Node $nid = null): array;
+    public function getHookList(string $hookName, ?Node $instance = null): array;
     public function displayModule(): void;
 }
 

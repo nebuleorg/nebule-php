@@ -29,7 +29,7 @@ class ModuleAdmin extends Module
     const MODULE_COMMAND_NAME = 'adm';
     const MODULE_DEFAULT_VIEW = 'options';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260101';
+    const MODULE_VERSION = '020260109';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '1408c87c876ff05cb392b990fcc54ad46dbee69a45c07cdb1b60d6fe4b0a0ae3.sha2.256';
@@ -55,15 +55,15 @@ class ModuleAdmin extends Module
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string    $hookName
-     * @param \Nebule\Library\Node|null $nid
+     * @param string                    $hookName
+     * @param \Nebule\Library\Node|null $instance
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array
     {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
+        $nid = $this->_applicationInstance->getCurrentObjectID();
+        if ($instance !== null)
+            $nid = $instance->getID();
 
         $hookArray = array();
         switch ($hookName) {

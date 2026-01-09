@@ -28,7 +28,7 @@ class ModuleFolders extends Module {
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260107';
+    const MODULE_VERSION = '020260109';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -94,12 +94,12 @@ class ModuleFolders extends Module {
 
 
 
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null):array {
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null):array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
-        $hookArray = $this->getCommonHookList($hookName, $object, 'Folders');
+        $nid = $this->_applicationInstance->getCurrentObjectID();
+        if ($instance !== null)
+            $nid = $instance->getID();
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Folders');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -145,7 +145,7 @@ class ModuleFolders extends Module {
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . Displays::COMMAND_SOCIAL . '=myself'
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $object
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
                 break;

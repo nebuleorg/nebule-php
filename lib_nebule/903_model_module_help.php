@@ -42,7 +42,7 @@ class ModelModuleHelp extends \Nebule\Library\Module {
      * {@inheritDoc}
      * @see Module::getHookList()
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array {
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array {
         $hookArray = array();
         switch ($hookName) {
             case 'menu':

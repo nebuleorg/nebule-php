@@ -28,7 +28,7 @@ class ModuleObjects extends Module {
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260106';
+    const MODULE_VERSION = '020260109';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -54,15 +54,15 @@ class ModuleObjects extends Module {
     /**
      * Ajout de fonctionnalités à des points d'ancrage.
      *
-     * @param string    $hookName
-     * @param \Nebule\Library\Node|null $nid
+     * @param string                    $hookName
+     * @param \Nebule\Library\Node|null $instance
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array
     {
-        $object = $this->_applicationInstance->getCurrentObjectID();
-        if ($nid !== null)
-            $object = $nid->getID();
+        $nid = $this->_applicationInstance->getCurrentObjectID();
+        if ($instance !== null)
+            $nid = $instance->getID();
 
         $hookArray = array();
 
@@ -70,7 +70,7 @@ class ModuleObjects extends Module {
             case 'selfMenu':
             case 'selfMenuObject':
                 //$instance = $this->_applicationInstance->getCurrentObjectInstance();
-                $instance = $this->_cacheInstance->newNode($object);
+                $instance = $this->_cacheInstance->newNode($nid);
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
@@ -228,7 +228,7 @@ class ModuleObjects extends Module {
                     $hookArray[9]['desc'] = '';
                     $hookArray[9]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
+                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
                         . '&' . \Nebule\Library\ActionsMarks::UNMARK_ALL
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -261,7 +261,7 @@ class ModuleObjects extends Module {
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
 
@@ -291,7 +291,7 @@ class ModuleObjects extends Module {
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
 
                 $instance = $this->_entitiesInstance->getGhostEntityInstance();
@@ -344,7 +344,7 @@ class ModuleObjects extends Module {
                 $hookArray[0]['desc'] = '';
                 $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $object
+                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
 

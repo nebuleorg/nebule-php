@@ -69,10 +69,10 @@ abstract class Module extends Functions implements ModuleInterface {
      *    - ... FIXME
      *
      * @param string    $hookName
-     * @param Node|null $nid
+     * @param Node|null $instance
      * @return array
      */
-    public function getHookList(string $hookName, ?\Nebule\Library\Node $nid = null): array { return array(); }
+    public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array { return array(); }
     public function getCommonHookList(
         string $hookName,
         string $nid,
@@ -84,7 +84,6 @@ abstract class Module extends Functions implements ModuleInterface {
     ): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hookArray = array();
-        $this->_metrologyInstance->addLog('DEBUGGING getCommonHookList hookName=' . $hookName . ' name=' . $name, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -125,7 +124,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_unlocked) {
+                //if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
                     if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexList]) {
                         $hookArray[] = array(
                             'name' => '::create' . $name,
@@ -137,9 +136,9 @@ abstract class Module extends Functions implements ModuleInterface {
                                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                         );
                     }
-                }
+                //}
                 break;
-            case 'typeMenuEntity':
+            /*case 'typeMenuEntity':
                 $hookArray[] = array(
                     'name' => '::my' . $name,
                     'icon' => $this::MODULE_LOGO,
@@ -260,7 +259,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
                 }
-                break;
+                break;*/
         }
         return $hookArray;
     }
@@ -413,15 +412,6 @@ abstract class Module extends Functions implements ModuleInterface {
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
-        /*if ($nid == '')
-            $nid = $this->_getDefaultConversationOID();
-        if ($nid == '') { // Default is the first blog
-            $list = $this->_getListConversationOID();
-            if (sizeof($list) != 0) {
-                reset($list);
-                $nid = current($list);
-            }
-        }*/
         if ($nid == '' && \Nebule\Library\Node::checkNID($defaultNID))
             $nid = $defaultNID;
         if ($nid == '')
@@ -830,11 +820,34 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _displayGetItem(string $name, int $icon = 6, int $returnView = 1): void {
+    protected function _displayGetItem(string $name, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackOrLogin($name, $returnView);
-        if ($this->_unlocked)
-            $this->_displayNotImplemented(); // TODO
+        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
+            $this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$icon]);
+            ?>
+
+            <div>
+                <form enctype="multipart/form-data" method="post"
+                      action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                          . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                          . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
+                    <label>
+                        <input type="text" class="getItem"
+                               name="<?php echo $commandNID; ?>"
+                               value="NID"/>
+                    </label><br/>
+                    <label>
+                        <input type="text" class="getItem"
+                               name="<?php echo $commandURL; ?>"
+                               value="URL"/>
+                    </label><br/>
+                    <input type="submit" value="Get"/>
+                </form>
+            </div>
+            <?php
+        }
         else
             $this->_displayNotPermit();
     }
@@ -988,6 +1001,13 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
+    }
+
+    protected function _getDefaultItem(string $rid): string {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! is_a($this->_entitiesInstance->getGhostEntityInstance(), '\Nebule\Library\Node'))
+            return '';
+        return $this->_entitiesInstance->getGhostEntityInstance()->getPropertyID($rid, 'self');
     }
 
     const TRANSLATE_TABLE = [
