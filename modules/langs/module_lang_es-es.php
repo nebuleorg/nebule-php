@@ -27,7 +27,7 @@ class ModuleTranslateESES extends ModuleTranslates
     const MODULE_NAME = '::translateModule:es-es:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:es-es:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:es-es:ModuleDescription';
-    const MODULE_VERSION = '020260104';
+    const MODULE_VERSION = '020260110';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '501a2e49c23fd101dd8ba361881c75e1fb5cdc061e0232148513aea162ff107b.sha2.256';
@@ -213,6 +213,9 @@ class ModuleTranslateESES extends ModuleTranslates
             '::nextPage' => 'Next page',
             '::page%s%s%s%s%s' => 'Page %s/%s (%s-%s en %s)',
             '::limitedType' => 'El tipo de miembros está limitado a "%s"',
+            '::options' => 'Options',
+            '::synchronize' => 'Synchronize',
+            '::synchroAll' => 'Synchronize all',
         ],
     ];
 }
