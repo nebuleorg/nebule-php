@@ -28,7 +28,7 @@ class ModuleFolders extends Module {
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260110';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -69,6 +69,8 @@ class ModuleFolders extends Module {
     const COMMAND_SELECT_ROOT = 'root';
     const COMMAND_SELECT_ITEM = 'root';
     const COMMAND_SELECT_FOLDER = 'folder';
+    const COMMAND_ACTION_GET_FLD_NID = 'actiongetnid';
+    const COMMAND_ACTION_GET_FLD_URL = 'actiongeturl';
 
     protected ?\Nebule\Library\Node $_instanceCurrentRoot = null;
     protected ?\Nebule\Library\Node $_instanceCurrentFolder = null;
@@ -202,10 +204,10 @@ class ModuleFolders extends Module {
                 $this->_displayRemoveItem('Folder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Folder');
+                $this->_displayGetItem('Folder', $this::COMMAND_ACTION_GET_FLD_NID, $this::COMMAND_ACTION_GET_FLD_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Folder');
+                $this->_displaySynchroItem('Folder', $this::COMMAND_ACTION_GET_FLD_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Folder');

@@ -19,6 +19,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const CREATE_OBFUSCATED = 'action_group_create_obf';
     const CREATE_CONTEXT = 'action_group_create_context';
     const CREATE_WITH_CONTENT = 'action_group_with_content';
+    const SYNCHRO = 'action_group_synchro';
+    const SYNCHRO_NID = 'action_group_synchro_nid';
+    const SYNCHRO_URL = 'action_group_synchro_url';
     const DELETE = 'action_group_del';
     const ADD_MEMBER = 'action_group_add_membre';
     const REMOVE_MEMBER = 'action_group_del_member';
@@ -32,6 +35,8 @@ class ActionsGroups extends Actions implements ActionsInterface {
             $this->_createGroup();
         if ($this->getHaveInput(self::DELETE))
             $this->_deleteGroup();
+        if ($this->getHaveInput(self::SYNCHRO))
+            $this->_synchroGroup();
         if ($this->getHaveInput(self::ADD_MEMBER))
             $this->_addMember();
         if ($this->getHaveInput(self::REMOVE_MEMBER))
@@ -102,9 +107,9 @@ class ActionsGroups extends Actions implements ActionsInterface {
     }
 
     protected bool $_deleteGroup = false;
-    protected bool $_deleteGroupError = false;
-    public function getDeleteGroup(): bool { return $this->_deleteGroup; }
-    public function getDeleteGroupError(): bool { return $this->_deleteGroupError; }
+    protected bool $_deleteError = false;
+    public function getDelete(): bool { return $this->_deleteGroup; }
+    public function getDeleteError(): bool { return $this->_deleteError; }
     protected function _deleteGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteGroup')) {
@@ -118,8 +123,31 @@ class ActionsGroups extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('delete group gid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '03a28196');
         if ($instance->getMarkClosed())
             $instance->unsetMarkClosed();
-        $this->_deleteGroupError = (!$instance->unsetAsGroup());
+        $this->_deleteGroup = true;
+        $this->_deleteError = (!$instance->unsetAsGroup());
     }
+
+
+
+    protected bool $_synchroGroup = false;
+    protected string $_synchroNID = '';
+    protected bool $_synchroError = false;
+    public function getSynchro(): bool { return $this->_synchroGroup; }
+    public function getSynchroNID(): string { return $this->_synchroNID; }
+    public function getSynchroError(): bool { return $this->_synchroError; }
+    protected function _synchroGroup(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeItem')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ece92f46');
+            return;
+        }
+        $gid = $this->getFilterInput(self::SYNCHRO_NID, FILTER_FLAG_ENCODE_LOW);
+        $url = $this->getFilterInput(self::SYNCHRO_URL, FILTER_FLAG_ENCODE_LOW);
+        $this->_synchroGroup = true;
+        $this->_synchroNID = $gid;
+        // TODO
+    }
+
 
 
 

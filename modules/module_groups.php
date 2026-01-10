@@ -28,7 +28,7 @@ class ModuleGroups extends Module {
     const MODULE_COMMAND_NAME = 'grp';
     const MODULE_DEFAULT_VIEW = 'groups';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260110';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -67,6 +67,8 @@ class ModuleGroups extends Module {
     const RESTRICTED_TYPE = 'Node';
     const RESTRICTED_CONTEXT = '';
     const COMMAND_SELECT_ITEM = References::COMMAND_SELECT_GROUP;
+    const COMMAND_ACTION_GET_GRP_NID = 'actiongetnid';
+    const COMMAND_ACTION_GET_GRP_URL = 'actiongeturl';
 
     protected string $_hashGroup;
     protected string $_hashGroupClosed;
@@ -382,10 +384,10 @@ class ModuleGroups extends Module {
                 $this->_displayRemoveItem('Group');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Group');
+                $this->_displayGetItem('Group', $this::COMMAND_ACTION_GET_GRP_NID, $this::COMMAND_ACTION_GET_GRP_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Group');
+                $this->_displaySynchroItem('Group', $this::COMMAND_ACTION_GET_GRP_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Group');

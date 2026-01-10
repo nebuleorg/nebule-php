@@ -1286,6 +1286,7 @@ class Configuration extends Functions
         'GroupSynchronizeObjectLinks' => ['permitWrite','permitWriteLink'],
         'GroupSynchronizeApplication' => ['permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink','permitSynchronizeApplication'],
         'GroupSynchronizeNewEntity' => ['permitWrite','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
+        'GroupSynchronizeItem' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject','permitSynchronizeObject','permitSynchronizeLink'],
         'GroupUploadFileLinks' => ['permitWrite','permitWriteLink','permitUploadLink'],
         'GroupUploadFile' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],
         'GroupUploadText' => ['unlocked','permitWrite','permitWriteLink','permitWriteObject'],

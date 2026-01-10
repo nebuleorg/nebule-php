@@ -389,7 +389,7 @@ class ModuleNeblog extends Module
                 $this->_displayGetItem('Blog', $this::COMMAND_ACTION_GET_BLOG_NID, $this::COMMAND_ACTION_GET_BLOG_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Blog');
+                $this->_displaySynchroItem('Blog', $this::COMMAND_ACTION_GET_BLOG_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Blog');

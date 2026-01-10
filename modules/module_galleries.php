@@ -28,7 +28,7 @@ class ModuleGalleries extends Module {
     const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260110';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -66,6 +66,8 @@ class ModuleGalleries extends Module {
     const RESTRICTED_CONTEXT = '583718a8303dbcb757a1d2acf463e2410c807ebd1e4f319d3a641d1a6686a096b018.none.272';
     const COMMAND_SELECT_GALLERY = 'glr';
     const COMMAND_SELECT_ITEM = 'glr';
+    const COMMAND_ACTION_GET_GLR_NID = 'actiongetnid';
+    const COMMAND_ACTION_GET_GLR_URL = 'actiongeturl';
 
     protected ?\Nebule\Library\Node $_instanceCurrentGallery = null;
 
@@ -174,10 +176,10 @@ class ModuleGalleries extends Module {
                 $this->_displayRemoveItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Gallery');
+                $this->_displayGetItem('Gallery', $this::COMMAND_ACTION_GET_GLR_NID, $this::COMMAND_ACTION_GET_GLR_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Gallery');
+                $this->_displaySynchroItem('Gallery', $this::COMMAND_ACTION_GET_GLR_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Gallery');

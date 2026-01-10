@@ -28,7 +28,7 @@ class ModuleConversations extends Module {
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260110';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -66,6 +66,8 @@ class ModuleConversations extends Module {
     const RESTRICTED_CONTEXT = '9176d8c8cf0e89ef48f136a494af9b9c385d275c8d48c498d52206d7d4072eb0fb1f.none.272';
     const COMMAND_SELECT_CONVERSATION = 'cvt';
     const COMMAND_SELECT_ITEM = 'cvt';
+    const COMMAND_ACTION_GET_CVT_NID = 'actiongetnid';
+    const COMMAND_ACTION_GET_CVT_URL = 'actiongeturl';
 
     protected ?\Nebule\Library\Node $_instanceCurrentConversation = null;
 
@@ -160,10 +162,10 @@ class ModuleConversations extends Module {
                 $this->_displayRemoveItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Conversation');
+                $this->_displayGetItem('Conversation', $this::COMMAND_ACTION_GET_CVT_NID, $this::COMMAND_ACTION_GET_CVT_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Conversation');
+                $this->_displaySynchroItem('Conversation', $this::COMMAND_ACTION_GET_CVT_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_displayRightsItem('Conversation');

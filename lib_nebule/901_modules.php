@@ -138,7 +138,7 @@ abstract class Module extends Functions implements ModuleInterface {
                     }
                 //}
                 break;
-            /*case 'typeMenuEntity':
+            case 'typeMenuEntity':
                 $hookArray[] = array(
                     'name' => '::my' . $name,
                     'icon' => $this::MODULE_LOGO,
@@ -152,7 +152,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 break;
 
             case 'rightsOwner':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked'))) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked'))
+                    && $this->_instanceCurrentItem->getID() !== null) {
                     $hookArray[] = array(
                         'name' => '::removeAsOwner',
                         'icon' => Displays::DEFAULT_ICON_LX,
@@ -169,7 +170,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 }
                 break;
             case 'rightsWriter':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])
+                    && $this->_instanceCurrentItem->getID() !== null) {
                     $hookArray[] = array(
                         'name' => '::addAsOwner',
                         'icon' => Displays::DEFAULT_ICON_ADDENT,
@@ -199,7 +201,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 }
                 break;
             case 'rightsFollower':
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])
+                    && $this->_instanceCurrentItem->getID() !== null) {
                     $hookArray[] = array(
                         'name' => '::addAsWriter',
                         'icon' => Displays::DEFAULT_ICON_ADDENT,
@@ -230,7 +233,8 @@ abstract class Module extends Functions implements ModuleInterface {
                 break;
             case 'rightsAny':
                 $this->_metrologyInstance->addLog('DEBUGGING rightsAny MARK1', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'unlocked')) && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])
+                    && $this->_instanceCurrentItem->getID() !== null) {
                     $this->_metrologyInstance->addLog('DEBUGGING rightsAny MARK2', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $hookArray[] = array(
                         'name' => '::addAsWriter',
@@ -259,7 +263,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . $this->_tokenizeInstance->getActionTokenCommand(),
                     );
                 }
-                break;*/
+                break;
         }
         return $hookArray;
     }
@@ -421,11 +425,15 @@ abstract class Module extends Functions implements ModuleInterface {
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
     }
 
-    protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $indexSync = 6, int $indexOption = 8, int $iconItem = 0): void {
+    protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $indexSync = 6, int $indexOption = 8, int $iconItem = 0, int $iconGet = 6): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
             $this->_displayItemCreateNew($name, $iconItem);
+        }
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchro()) {
+            $this->_displaySimpleTitle('::get' . $name, $this::MODULE_REGISTERED_ICONS[$iconGet]);
+            $this->_displayItemGetNew($name, $iconItem);
         }
 
         $message = match ($this->_socialClass) {
@@ -727,11 +735,62 @@ abstract class Module extends Functions implements ModuleInterface {
         echo '<br />' . "\n";
     }
 
+    protected function _displayItemGetNew(string $name, int $iconItem = 0): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchro()) {
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchroError()) {
+                $instance->setMessage('::get' . $name . 'OK');
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
+                $instance->setIconText('::OK');
+                $instanceList->addItem($instance);
+
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance->setSocial('myself');
+                //$instance->setNID($this->_displayFolderInstance); FIXME
+                $instanceNID = new \Nebule\Library\Group($this->_nebuleInstance, $this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchroNID());
+                $instance->setNID($instanceNID);
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableRefs(false);
+                $instance->setEnableNID(false);
+                $instance->setEnableFlags(false);
+                $instance->setEnableFlagProtection(false);
+                $instance->setEnableFlagObfuscate(false);
+                $instance->setEnableFlagState(false);
+                $instance->setEnableFlagEmotions(false);
+                $instance->setEnableStatus(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(false);
+                $instance->setEnableLink(true);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setStatus('');
+                $instance->setEnableFlagUnlocked(false);
+                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+                $instance->setIcon($instanceIcon);
+            } else {
+                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                $instance->setMessage('::get' . $name . 'NOK');
+                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
+                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instance->setIconText('::ERROR');
+            }
+            $instanceList->addItem($instance);
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            //$instanceList->setOnePerLine();
+            $instanceList->display();
+        }
+        echo '<br />' . "\n";
+    }
+
 
 
     protected function _displayModifyItem(string $name, int $icon = 3, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayBackItemOrLogin($name, $returnView);
         if ($this->_unlocked)
             $this->_displayNotImplemented(); // TODO
         else
@@ -749,10 +808,12 @@ abstract class Module extends Functions implements ModuleInterface {
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
         $instance->setMessage('::return' . $name);
-        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
-            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID());
+        $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                if ($this->_instanceCurrentItem !== null)
+                        $link .= '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID();
+        $instance->setLink($link);
         $instanceList->addItem($instance);
         if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
@@ -782,10 +843,12 @@ abstract class Module extends Functions implements ModuleInterface {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                 $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
                 $instance->setMessage('::remove' . $name);
-                $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME // FIXME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID());
+                $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME // FIXME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                if ($this->_instanceCurrentItem !== null)
+                        $link .= '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID();
+                $instance->setLink($link);
                 $instanceList->addItem($instance);
             } else {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -820,33 +883,59 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _displayGetItem(string $name, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 1): void {
+    protected function _displayGetItem(string $name, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayBackOrLogin($name, $returnView);
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-            $this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$icon]);
-            ?>
+        $this->_displayBackItems($name, $returnView);
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeItem')) {
+            $this->_displaySimpleTitle('::get' . $name, $this::MODULE_REGISTERED_ICONS[$icon]);
+            $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                . '&' . \Nebule\Library\ActionsGroups::SYNCHRO
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
-            <div>
-                <form enctype="multipart/form-data" method="post"
-                      action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                          . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                          . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                          . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                    <label>
-                        <input type="text" class="getItem"
-                               name="<?php echo $commandNID; ?>"
-                               value="NID"/>
-                    </label><br/>
-                    <label>
-                        <input type="text" class="getItem"
-                               name="<?php echo $commandURL; ?>"
-                               value="URL"/>
-                    </label><br/>
-                    <input type="submit" value="Get"/>
-                </form>
-            </div>
-            <?php
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName($commandNID);
+            $instance->setIconText('NID');
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setLink($commonLink);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName($commandURL);
+            $instance->setIconText('URL');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::get' . $name);
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::getThe' . $name));
+            $instance->setIconText('::confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
+            $instanceList->addItem($instance);
+
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setOnePerLine();
+            $instanceList->display();
+
         }
         else
             $this->_displayNotPermit();
@@ -854,9 +943,9 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _displaySynchroItem(string $name, int $icon = 8, int $returnView = 1): void {
+    protected function _displaySynchroItem(string $name, string $commandNID, int $icon = 8, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayBackItemOrLogin($name, $returnView);
         if ($this->_unlocked)
             $this->_displayNotImplemented(); // TODO
         else
@@ -925,7 +1014,7 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _displayRightsItem(string $name, int $icon = 3, int $returnView = 1): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[$icon]);
-        $this->_displayBackOrLogin($name, $returnView);
+        $this->_displayBackItemOrLogin($name, $returnView);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('rights');
     }
 
@@ -978,17 +1067,19 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList->display();
     }
 
-    protected function _displayBackOrLogin(string $name, int $returnView = 1, string $addURL = ''): void {
+    protected function _displayBackItemOrLogin(string $name, int $returnView = 1, string $addURL = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
         $instance->setMessage('::return' . $name);
-        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
-            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-            . '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID()
-            . $addURL);
+        $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . $addURL;
+        if ($this->_instanceCurrentItem !== null)
+            $link .= '&' . $this::COMMAND_SELECT_ITEM . '=' . $this->_instanceCurrentItem->getID();
+        $instance->setLink($link);
         $instanceList->addItem($instance);
         if (!$this->_unlocked) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -998,6 +1089,22 @@ abstract class Module extends Functions implements ModuleInterface {
                 . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID());
             $instanceList->addItem($instance);
         }
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->display();
+    }
+
+    protected function _displayBackItems(string $name, int $returnView = 0, string $addURL = ''): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+        $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+        $instance->setMessage('::my' . $name);
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . $addURL);
+        $instanceList->addItem($instance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->display();
