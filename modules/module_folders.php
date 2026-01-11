@@ -64,7 +64,7 @@ class ModuleFolders extends Module {
     const MODULE_APP_DESC_LIST = array('::AppDesc1');
     const MODULE_APP_VIEW_LIST = array('list');
 
-    const RESTRICTED_TYPE = 'Folders';
+    const RESTRICTED_TYPE = 'Folder';
     const RESTRICTED_CONTEXT = '2afeddf82c8f4171fc67b9073ba5be456abb2f4da7720bb6f0c903fb0b0a4231f7e3.none.272';
     const COMMAND_SELECT_ROOT = 'root';
     const COMMAND_SELECT_ITEM = 'root';
@@ -101,7 +101,7 @@ class ModuleFolders extends Module {
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Folders');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Folders', 'Folder');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -117,7 +117,7 @@ class ModuleFolders extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                        'name' => '::modify',
+                        'name' => '::modifyFolder',
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -126,9 +126,10 @@ class ModuleFolders extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
+                    && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::remove',
+                        'name' => '::removeFolder',
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -204,7 +205,7 @@ class ModuleFolders extends Module {
                 $this->_displayRemoveItem('Folder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Folder', $this::COMMAND_ACTION_GET_FLD_NID, $this::COMMAND_ACTION_GET_FLD_URL);
+                $this->_displayGetItem('Folder', 'Folders', $this::COMMAND_ACTION_GET_FLD_NID, $this::COMMAND_ACTION_GET_FLD_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroItem('Folder', $this::COMMAND_ACTION_GET_FLD_NID);
@@ -325,6 +326,7 @@ class ModuleFolders extends Module {
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                 . '&' . self::COMMAND_SELECT_ROOT . '=' . $nid
+                . '&' . self::COMMAND_SELECT_FOLDER . '=' . $nid
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -357,49 +359,7 @@ class ModuleFolders extends Module {
 
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => 'Module des dossiers',
-            '::MenuName' => 'Dossiers',
-            '::ModuleDescription' => 'Module de gestion des dossiers',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les dossiers.',
-            '::AppTitle1' => 'Dossiers',
-            '::AppDesc1' => 'Gestion des dossiers',
-            '::myFolders' => 'Mes dossiers',
-            '::allFolders' => 'Tous les dossiers',
-            '::otherFolders' => 'Les dossiers des autres entités',
-            '::listFolders' => 'Liste des dossiers',
-            '::createClosedFolder' => 'Créer un dossier fermé',
-            '::createObfuscatedFolder' => 'Créer un dossier dissimulé',
-            '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToFolder' => 'Ajouter au dossier',
-            '::addMember' => 'Ajouter un membre',
-            '::deleteFolder' => 'Supprimer le dossier',
-            '::createFolder' => 'Créer un dossier',
-            '::createFolderOK' => 'Le dossier a été créé',
-            '::createFolderNOK' => "Le dossier n'a pas été créé ! %s",
-        ],
         'en-en' => [
-            '::ModuleName' => 'Folders module',
-            '::MenuName' => 'Folders',
-            '::ModuleDescription' => 'Folders management module',
-            '::ModuleHelp' => 'This module permit to see and manage folders.',
-            '::AppTitle1' => 'Folders',
-            '::AppDesc1' => 'Manage folders',
-            '::myFolders' => 'My folders',
-            '::allFolders' => 'All folders',
-            '::otherFolders' => 'Folders of other entities',
-            '::listFolders' => 'List of folders',
-            '::createClosedFolder' => 'Create a closed folder',
-            '::createObfuscatedFolder' => 'Create an obfuscated folder',
-            '::addMarkedObjects' => 'Add marked objects',
-            '::addToFolder' => 'Add to folder',
-            '::addMember' => 'Add a member',
-            '::deleteFolder' => 'Delete folder',
-            '::createFolder' => 'Create a folder',
-            '::createFolderOK' => 'The folder have been created',
-            '::createFolderNOK' => 'The folder have not been created! %s',
-        ],
-        'es-co' => [
             '::ModuleName' => 'Folders module',
             '::MenuName' => 'Folders',
             '::ModuleDescription' => 'Folders management module',

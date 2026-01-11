@@ -28,7 +28,7 @@ class ModuleObjects extends Module {
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260111';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -1290,9 +1290,9 @@ class ModuleObjects extends Module {
                     );
 
                     if ($typeClosed) {
-                        $list[$i]['param']['status'] = '::GroupeFerme';
+                        $list[$i]['param']['status'] = '::closeGroup';
                     } else {
-                        $list[$i]['param']['status'] = '::GroupeOuvert';
+                        $list[$i]['param']['status'] = '::openGroup';
                     }
 
                     // Ajout l'action de partage d eprotection au groupe.
@@ -1430,8 +1430,8 @@ class ModuleObjects extends Module {
             '::WarningDoNotProtectEntity' => "La protection d'une entité la rend indisponible !",
             '::ErrorCantProtectObject' => 'Cet objet ne peut pas être protégé.',
             '::AttribNotDisplayable' => 'Propriété non affichable !',
-            '::GroupeFerme' => 'Groupe fermé',
-            '::GroupeOuvert' => 'Groupe ouvert',
+            '::closeGroup' => 'Groupe fermé',
+            '::openGroup' => 'Groupe ouvert',
         ],
         'en-en' => [
             '::ModuleName' => 'Objects module',
@@ -1477,8 +1477,8 @@ class ModuleObjects extends Module {
             '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
             '::ErrorCantProtectObject' => "This object can't be protected.",
             '::AttribNotDisplayable' => 'Attribut not displayable!',
-            '::GroupeFerme' => 'Closed group',
-            '::GroupeOuvert' => 'Opened group',
+            '::closeGroup' => 'Closed group',
+            '::openGroup' => 'Opened group',
         ],
         'es-co' => [
             '::ModuleName' => 'Módulo de objetos',
@@ -1524,8 +1524,8 @@ class ModuleObjects extends Module {
             '::WarningDoNotProtectEntity' => 'The protection of an entity make it unavailable!',
             '::ErrorCantProtectObject' => "This object can't be protected.",
             '::AttribNotDisplayable' => 'Attribut not displayable!',
-            '::GroupeFerme' => 'Closed group',
-            '::GroupeOuvert' => 'Opened group',
+            '::closeGroup' => 'Closed group',
+            '::openGroup' => 'Opened group',
         ],
     ];
 }

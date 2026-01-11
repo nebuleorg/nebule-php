@@ -91,7 +91,7 @@ class ModuleGalleries extends Module {
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Galleries');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Galleries', 'Gallery');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -107,7 +107,7 @@ class ModuleGalleries extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                        'name' => '::modify',
+                        'name' => '::modifyGallery',
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -116,9 +116,10 @@ class ModuleGalleries extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
+                    && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::remove',
+                        'name' => '::removeGallery',
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -176,7 +177,7 @@ class ModuleGalleries extends Module {
                 $this->_displayRemoveItem('Gallery');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Gallery', $this::COMMAND_ACTION_GET_GLR_NID, $this::COMMAND_ACTION_GET_GLR_URL);
+                $this->_displayGetItem('Gallery', 'Galleries', $this::COMMAND_ACTION_GET_GLR_NID, $this::COMMAND_ACTION_GET_GLR_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroItem('Gallery', $this::COMMAND_ACTION_GET_GLR_NID);
@@ -290,49 +291,7 @@ class ModuleGalleries extends Module {
 
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => 'Module des galeries',
-            '::MenuName' => 'Galeries',
-            '::ModuleDescription' => 'Module de gestion des galeries',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les galeries.',
-            '::AppTitle1' => 'Galeries',
-            '::AppDesc1' => 'Gestion des galeries',
-            '::myGalleries' => 'Mes galeries',
-            '::allGalleries' => 'Toutes les galeries',
-            '::otherGalleries' => 'Les galeries des autres entités',
-            '::listGalleries' => 'Liste des galeries',
-            '::createClosedGallery' => 'Créer une galerie fermé',
-            '::createObfuscatedGallery' => 'Créer une galerie dissimulé',
-            '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToGallery' => 'Ajouter à la galerie',
-            '::addMember' => 'Ajouter une galerie',
-            '::deleteGallery' => 'Supprimer la galerie',
-            '::createGallery' => 'Créer une galerie',
-            '::createGalleryOK' => 'La galerie a été créé',
-            '::createGalleryNOK' => "La galerie n'a pas été créé ! %s",
-        ],
         'en-en' => [
-            '::ModuleName' => 'Galleries module',
-            '::MenuName' => 'Galleries',
-            '::ModuleDescription' => 'Galleries management module',
-            '::ModuleHelp' => 'This module permit to see and manage galleries.',
-            '::AppTitle1' => 'Galleries',
-            '::AppDesc1' => 'Manage galleries',
-            '::myGalleries' => 'My galleries',
-            '::allGalleries' => 'All galleries',
-            '::otherGalleries' => 'Galleries of other entities',
-            '::listGalleries' => 'List of galleries',
-            '::createClosedGallery' => 'Create a closed gallery',
-            '::createObfuscatedGallery' => 'Create an obfuscated gallery',
-            '::addMarkedObjects' => 'Add marked objects',
-            '::addToGallery' => 'Add to gallery',
-            '::addMember' => 'Add a member',
-            '::deleteGallery' => 'Delete gallery',
-            '::createGallery' => 'Create a gallery',
-            '::createGalleryOK' => 'The gallery have been created',
-            '::createGalleryNOK' => 'The gallery have not been created! %s',
-        ],
-        'es-co' => [
             '::ModuleName' => 'Galleries module',
             '::MenuName' => 'Galleries',
             '::ModuleDescription' => 'Galleries management module',

@@ -199,7 +199,7 @@ class ModuleNeblog extends Module
         $blogNID = '0';
         if ($this->_instanceCurrentBlog !== null)
             $blogNID = $this->_instanceCurrentBlog->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Blogs');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Blogs', 'Blog');
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuNeblog':
@@ -214,7 +214,7 @@ class ModuleNeblog extends Module
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                            'name' => '::modify',
+                            'name' => '::modifyBlog',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
                             'desc' => '',
                             'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -223,9 +223,10 @@ class ModuleNeblog extends Module
                                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
+                    && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::remove',
+                        'name' => '::removeBlog',
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -386,7 +387,7 @@ class ModuleNeblog extends Module
                 $this->_displayRemoveItem('Blog');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Blog', $this::COMMAND_ACTION_GET_BLOG_NID, $this::COMMAND_ACTION_GET_BLOG_URL);
+                $this->_displayGetItem('Blog', 'Blogs', $this::COMMAND_ACTION_GET_BLOG_NID, $this::COMMAND_ACTION_GET_BLOG_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroItem('Blog', $this::COMMAND_ACTION_GET_BLOG_NID);
@@ -1376,62 +1377,6 @@ class ModuleNeblog extends Module
 
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => 'Module des blogs',
-            '::MenuName' => 'Blogs',
-            '::ModuleDescription' => 'Module de gestion des blogs',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les blogs.',
-            '::AppTitle1' => 'Blogs',
-            '::AppDesc1' => 'Gestion des blogs',
-            '::posts' => 'Posts',
-            '::post' => 'Post',
-            '::content' => 'Content',
-            '::pages' => 'Pages',
-            '::page' => 'Page',
-            '::answers' => 'Réponses',
-            '::rights' => 'Permissions',
-            '::owners' => 'Propriétaires',
-            '::owner' => 'Propriétaire',
-            '::founder' => 'Fondateur',
-            '::writers' => 'Écrivains',
-            '::writer' => 'Écrivain',
-            '::followers' => 'Abonnés',
-            '::follower' => 'Abonné',
-            '::addAsOwner' => 'Ajouter comme propriétaire',
-            '::addAsWriter' => 'Ajouter comme écrivain',
-            '::addAsFollower' => 'Ajouter comme abonné',
-            '::removeAsOwner' => 'Retirer des propriétaires',
-            '::removeAsWriter' => 'Retirer des écrivains',
-            '::removeAsFollower' => 'Retirer des abonnés',
-            '::blog:disp' => 'Affiche le blog',
-            '::blog:list' => 'Liste des blogs',
-            '::blog:listall' => 'Liste tous les blogs',
-            '::blog:new' => 'Nouveau blog',
-            '::CreateBlog' => 'Créer le blog',
-            '::blog:getExisting' => 'Prend un blog existant',
-            '::blog:mod' => 'Modifier le blog',
-            '::blog:del' => 'Supprimer le blog',
-            '::blog:sync' => 'Synchronise le blog',
-            '::returnBlog' => 'Revenir au blog',
-            '::blog:default' => 'Blog par défaut',
-            '::blog:rights' => 'Permissions sur le blog',
-            '::post:list' => 'Liste des posts',
-            '::post:disp' => 'Affiche le post',
-            '::post:new' => 'Nouveau post',
-            '::post:mod' => 'Modifier le post',
-            '::post:del' => 'Supprimer le post',
-            '::post:sync' => 'Synchronise le post',
-            '::post:rights' => 'Permissions sur le post',
-            '::page:list' => 'Liste des pages',
-            '::page:disp' => 'Affiche la page',
-            '::page:new' => 'Nouvelle page',
-            '::page:mod' => 'Modifier la page',
-            '::page:del' => 'Supprimer la page',
-            '::page:sync' => 'Synchronise la page',
-            '::page:rights' => 'Permissions sur la page',
-            '::answ:list' => 'Liste des réponses',
-            '::about:title' => 'A propos',
-        ],
         'en-en' => [
             '::ModuleName' => 'Blogs module',
             '::MenuName' => 'Blogs',
@@ -1445,20 +1390,6 @@ class ModuleNeblog extends Module
             '::pages' => 'Pages',
             '::page' => 'Page',
             '::answers' => 'Answers',
-            '::rights' => 'Authorizations',
-            '::owners' => 'Owners',
-            '::owner' => 'Owner',
-            '::founder' => 'Founder',
-            '::writers' => 'Writers',
-            '::writer' => 'Writer',
-            '::followers' => 'Followers',
-            '::follower' => 'Follower',
-            '::addAsOwner' => 'Add as owner',
-            '::addAsWriter' => 'Add as writer',
-            '::addAsFollower' => 'Add as follower',
-            '::removeAsOwner' => 'Remove as owner',
-            '::removeAsWriter' => 'Remove as writer',
-            '::removeAsFollower' => 'Remove as follower',
             '::blog:disp' => 'Display the blog',
             '::blog:list' => 'List of blogs',
             '::blog:listall' => 'List of all blogs',
@@ -1487,62 +1418,6 @@ class ModuleNeblog extends Module
             '::page:rights' => 'Authorizations on page',
             '::answ:list' => 'List of answers',
             '::about:title' => 'About',
-        ],
-        'es-co' => [
-            '::ModuleName' => 'Módulo de blogs',
-            '::MenuName' => 'Blogs',
-            '::ModuleDescription' => 'Módulo de gestión de blogs',
-            '::ModuleHelp' => 'Este módulo permite ver blogs, gestionar los relacionados y cambiar el contenido actual de un blog.',
-            '::AppTitle1' => 'Blogs',
-            '::AppDesc1' => 'Administrar Blogs',
-            '::posts' => 'Publicaciones',
-            '::post' => 'Publicación',
-            '::content' => 'Contenido',
-            '::pages' => 'Páginas',
-            '::page' => 'Página',
-            '::answers' => 'Respuestas',
-            '::rights' => 'Autorizaciones',
-            '::owners' => 'Propietarios',
-            '::owner' => 'Propietario',
-            '::founder' => 'Fundador',
-            '::writers' => 'Escritores',
-            '::writer' => 'Escritor',
-            '::followers' => 'Seguidores',
-            '::follower' => 'Seguidor',
-            '::addAsOwner' => 'Añadir como propietario',
-            '::addAsWriter' => 'Añadir como escritor',
-            '::addAsFollower' => 'Añadir como seguidor',
-            '::removeAsOwner' => 'Eliminar como propietario',
-            '::removeAsWriter' => 'Eliminar como escritor',
-            '::removeAsFollower' => 'Eliminar como seguidor',
-            '::blog:disp' => 'Mostrar el blog',
-            '::blog:list' => 'Lista de blogs',
-            '::blog:listall' => 'Lista de todos los blogs',
-            '::blog:new' => 'Nuevo blog',
-            '::CreateBlog' => 'Crear el blog',
-            '::blog:getExisting' => 'Obtener un blog existente',
-            '::blog:mod' => 'Modificar el blog',
-            '::blog:del' => 'Eliminar el blog',
-            '::blog:sync' => 'Sincronizar el blog',
-            '::returnBlog' => 'Volver al blog',
-            '::blog:default' => 'Blog por defecto',
-            '::blog:rights' => 'Autorizaciones en el blog',
-            '::post:list' => 'Lista de publicaciones',
-            '::post:disp' => 'Mostrar publicación',
-            '::post:new' => 'Nueva publicación',
-            '::post:mod' => 'Modificar la publicación',
-            '::post:del' => 'Eliminar la publicación',
-            '::post:sync' => 'Sincronizar la publicación',
-            '::post:rights' => 'Autorizaciones en la publicación',
-            '::page:list' => 'Lista de páginas',
-            '::page:disp' => 'Mostrar página',
-            '::page:new' => 'Nueva página',
-            '::page:mod' => 'Modificar la página',
-            '::page:del' => 'Eliminar la página',
-            '::page:sync' => 'Sincronizar la página',
-            '::page:rights' => 'Autorizaciones en la página',
-            '::answ:list' => 'Lista de respuestas',
-            '::about:title' => 'Acerca de',
         ],
     ];
 }

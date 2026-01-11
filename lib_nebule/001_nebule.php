@@ -13,7 +13,7 @@ namespace Nebule\Library;
 class nebule {
     const NEBULE_NAME = 'library';
     const NEBULE_SURNAME = 'nebule/library';
-    const NEBULE_VERSION = '020260110';
+    const NEBULE_VERSION = '020260111';
     const NEBULE_AUTHOR = 'Project nebule';
     const NEBULE_LICENCE = 'GNU GPL v3 2010-2026';
     const NEBULE_WEBSITE = 'http://www.nebule.org/';

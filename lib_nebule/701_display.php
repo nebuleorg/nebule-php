@@ -2379,9 +2379,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($isClosed)
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeGroup') . ".\n";
             else
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openGroup') . ".\n";
             $result .= "\t</p>\n</div>\n";
 
             unset($isOpened, $isClosed);
@@ -2394,9 +2394,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($isClosed)
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeConversation') . ".\n";
             else
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openConversation') . ".\n";
             $result .= "\t</p>\n</div>\n";
 
             unset($isClosed);
@@ -4450,18 +4450,18 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($object->getMarkClosed())
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeGroup') . ".\n";
             else
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openGroup') . ".\n";
             $result .= "\t</p>\n</div>\n";
         } elseif (is_a($object, 'Nebule\Library\Conversation')) {
             $result .= '<div class="objectContentConversation">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                     $this->convertInlineObjectColorIcon($object) . ' ' . '<b>' . $object->getID() . "</b>\n");
             if ($object->getMarkClosed())
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeConversation') . ".\n";
             else
-                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
+                $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openConversation') . ".\n";
             $result .= "\t</p>\n</div>\n";
         } else
             $result .= $this->getDisplayAsObjectContent($object, $sizeCSS, $ratioCSS, $permitWarnProtected);

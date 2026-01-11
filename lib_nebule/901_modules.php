@@ -76,11 +76,14 @@ abstract class Module extends Functions implements ModuleInterface {
     public function getCommonHookList(
         string $hookName,
         string $nid,
+        string $names,
         string $name,
         int    $indexList = 0,
-        int    $iconList = 0,
+        int    $iconList = 1,
         int    $indexAdd = 2,
-        int    $iconAdd = 1,
+        int    $iconAdd = 2,
+        int    $indexGet = 5,
+        int    $iconGet = 6,
     ): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hookArray = array();
@@ -90,7 +93,7 @@ abstract class Module extends Functions implements ModuleInterface {
             case 'selfMenu' . $name:
                 if ($this->_socialClass != 'myself') {
                     $hookArray[] = array(
-                        'name' => '::my' . $name,
+                        'name' => '::my' . $names,
                         'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -102,7 +105,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 }
                 if ($this->_socialClass != 'notmyself') {
                     $hookArray[] = array(
-                        'name' => '::other' . $name,
+                        'name' => '::other' . $names,
                         'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -114,7 +117,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 }
                 if ($this->_socialClass != 'all') {
                     $hookArray[] = array(
-                        'name' => '::all' . $name,
+                        'name' => '::all' . $names,
                         'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -124,7 +127,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                //if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+                if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
                     if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexList]) {
                         $hookArray[] = array(
                             'name' => '::create' . $name,
@@ -135,12 +138,21 @@ abstract class Module extends Functions implements ModuleInterface {
                                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                         );
+                        $hookArray[] = array(
+                            'name' => '::get' . $name,
+                            'icon' => $this::MODULE_REGISTERED_ICONS[$iconGet],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexGet]
+                                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
                     }
-                //}
+                }
                 break;
             case 'typeMenuEntity':
                 $hookArray[] = array(
-                    'name' => '::my' . $name,
+                    'name' => '::my' . $names,
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -459,7 +471,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['ll']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
-            $instance->setMessage('::getExisting' . $name);
+            $instance->setMessage('::get' . $name);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$indexGet]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -807,7 +819,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
-        $instance->setMessage('::return' . $name);
+        $instance->setMessage('::returnTo' . $name);
         $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -883,9 +895,9 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _displayGetItem(string $name, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 0): void {
+    protected function _displayGetItem(string $name, string $names, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayBackItems($name, $returnView);
+        $this->_displayBackItems($names, $returnView);
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeItem')) {
             $this->_displaySimpleTitle('::get' . $name, $this::MODULE_REGISTERED_ICONS[$icon]);
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -1072,7 +1084,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
-        $instance->setMessage('::return' . $name);
+        $instance->setMessage('::returnTo' . $name);
         $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[$returnView]
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()

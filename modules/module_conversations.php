@@ -90,7 +90,7 @@ class ModuleConversations extends Module {
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Conversations');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Conversations', 'Conversation');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -106,7 +106,7 @@ class ModuleConversations extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                        'name' => '::modify',
+                        'name' => '::modifyConversation',
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -115,9 +115,10 @@ class ModuleConversations extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
+                    && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::remove',
+                        'name' => '::removeConversation',
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -162,7 +163,7 @@ class ModuleConversations extends Module {
                 $this->_displayRemoveItem('Conversation');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Conversation', $this::COMMAND_ACTION_GET_CVT_NID, $this::COMMAND_ACTION_GET_CVT_URL);
+                $this->_displayGetItem('Conversation', 'Conversations', $this::COMMAND_ACTION_GET_CVT_NID, $this::COMMAND_ACTION_GET_CVT_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
                 $this->_displaySynchroItem('Conversation', $this::COMMAND_ACTION_GET_CVT_NID);
@@ -276,49 +277,7 @@ class ModuleConversations extends Module {
 
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => 'Module des messages',
-            '::MenuName' => 'Messages',
-            '::ModuleDescription' => 'Module de gestion des messages',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les messages.',
-            '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Gestion des messages',
-            '::myConversations' => 'Mes conversations',
-            '::allConversations' => 'Toutes les conversation',
-            '::otherConversations' => 'Les conversations des autres entités',
-            '::listMessages' => 'Liste des messages',
-            '::createClosedConversation' => 'Créer une conversation fermée',
-            '::createObfuscatedConversation' => 'Créer une conversation dissimulée',
-            '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToConversation' => 'Ajouter à la conversation',
-            '::addMember' => 'Ajouter un membre',
-            '::deleteConversation' => 'Supprimer la conversation',
-            '::createConversation' => 'Créer une conversation',
-            '::createConversationOK' => 'La conversation a été créée',
-            '::createConversationNOK' => "La conversation n'a pas été créée ! %s",
-        ],
         'en-en' => [
-            '::ModuleName' => 'Messages module',
-            '::MenuName' => 'Messages',
-            '::ModuleDescription' => 'Messages management module',
-            '::ModuleHelp' => 'This module permit to see and manage messages.',
-            '::AppTitle1' => 'Messages',
-            '::AppDesc1' => 'Manage messages',
-            '::myConversations' => 'My conversations',
-            '::allConversations' => 'All conversations',
-            '::otherConversations' => 'Conversations of other entities',
-            '::listMessages' => 'List of messages',
-            '::createClosedConversation' => 'Create a closed conversation',
-            '::createObfuscatedConversation' => 'Create an obfuscated conversation',
-            '::addMarkedObjects' => 'Add marked objects',
-            '::addToConversation' => 'Add to conversation',
-            '::addMember' => 'Add a member',
-            '::deleteConversation' => 'Delete conversation',
-            '::createConversation' => 'Create a conversation',
-            '::createConversationOK' => 'The conversation have been created',
-            '::createConversationNOK' => 'The conversation have not been created! %s',
-        ],
-        'es-co' => [
             '::ModuleName' => 'Messages module',
             '::MenuName' => 'Messages',
             '::ModuleDescription' => 'Messages management module',

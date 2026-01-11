@@ -52,7 +52,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_VERSION = '020260111';
     const APPLICATION_LICENCE = 'GNU GPL v3 2015-2026';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
@@ -1986,7 +1986,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             <input type="checkbox"
                                    name="<?php echo \Nebule\Library\ActionsGroups::CREATE_CLOSED; ?>"
                                    value="y" checked>
-                            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::GroupeFerme'); ?>
+                            <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::closeGroup'); ?>
                         </div>
                         <?php echo $this->_applicationInstance->getTranslateInstance()->getTranslate('::Nom'); ?>
                         <input type="text"
@@ -2993,9 +2993,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         $list[$i]['link'] = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $group;
                         if ($typeClosed)
-                            $list[$i]['desc'] = '::GroupeFerme';
+                            $list[$i]['desc'] = '::closeGroup';
                         else
-                            $list[$i]['desc'] = '::GroupeOuvert';
+                            $list[$i]['desc'] = '::openGroup';
                         $list[$i]['actions'] = array();
 
                         // Partager la protection avec le groupe.
@@ -4674,8 +4674,8 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Créer une entité',
             '::CreateTheGroup' => 'Créer le groupe',
-            '::GroupeFerme' => 'Groupe fermé',
-            '::GroupeOuvert' => 'Groupe ouvert',
+            '::closeGroup' => 'Groupe fermé',
+            '::openGroup' => 'Groupe ouvert',
             '::CreatedGroup' => 'Groupe créé',
             '::OKCreateGroup' => 'Le groupe a été créé.',
             '::NOKCreateGroup' => "Le groupe n'a pas été créé ! %s",
@@ -4872,8 +4872,8 @@ All recovery entities are displayed here, none are hidden.",
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Create an entity',
             '::CreateTheGroup' => 'Create the group',
-            '::GroupeFerme' => 'Closed group',
-            '::GroupeOuvert' => 'Opened group',
+            '::closeGroup' => 'Closed group',
+            '::openGroup' => 'Opened group',
             '::CreatedGroup' => 'Created group',
             '::OKCreateGroup' => 'The group have been created.',
             '::NOKCreateGroup' => 'The group have not been created! %s',
@@ -5070,8 +5070,8 @@ All recovery entities are displayed here, none are hidden.",
             '::Confirmation' => 'Confirmation',
             '::CreateAnEntity' => 'Create an entity',
             '::CreateTheGroup' => 'Create the group',
-            '::GroupeFerme' => 'Closed group',
-            '::GroupeOuvert' => 'Opened group',
+            '::closeGroup' => 'Closed group',
+            '::openGroup' => 'Opened group',
             '::CreatedGroup' => 'Created group',
             '::OKCreateGroup' => 'The group have been created.',
             '::NOKCreateGroup' => 'The group have not been created! %s',

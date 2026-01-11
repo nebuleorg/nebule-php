@@ -98,7 +98,7 @@ class ModuleGroups extends Module {
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Groups');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'Groups' . $this::RESTRICTED_TYPE, 'Group' . $this::RESTRICTED_TYPE);
 
         switch ($hookName) {
             case 'selfMenu':
@@ -116,7 +116,7 @@ class ModuleGroups extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                        'name' => '::modify',
+                        'name' => '::modifyGroup' . $this::RESTRICTED_TYPE,
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -125,9 +125,10 @@ class ModuleGroups extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[7]) {
+                if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
+                    && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::remove',
+                        'name' => '::removeGroup' . $this::RESTRICTED_TYPE,
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -196,7 +197,7 @@ class ModuleGroups extends Module {
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 
                         // Refuser l'objet comme un groupe.
-                        $hookArray[2]['name'] = '::refuseGroup';
+                        $hookArray[2]['name'] = '::refuseGroup' . $this::RESTRICTED_TYPE;
                         $hookArray[2]['icon'] = Displays::DEFAULT_ICON_LX;
                         $hookArray[2]['desc'] = '';
                         $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
@@ -237,7 +238,7 @@ class ModuleGroups extends Module {
 
             case 'myGroups':
                 $hookArray[] = array(
-                    'name' => '::seeGroup',
+                    'name' => '::seeTheGroup' . $this::RESTRICTED_TYPE,
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -247,7 +248,7 @@ class ModuleGroups extends Module {
                 );
                 if ($this->_unlocked && is_a($nid, 'Nebule\Library\Node'))
                     $hookArray[] = array(
-                        'name' => '::deleteGroup',
+                        'name' => '::deleteGroup' . $this::RESTRICTED_TYPE,
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -261,7 +262,7 @@ class ModuleGroups extends Module {
 
             case 'notMyGroups':
                 $hookArray[] = array(
-                    'name' => '::seeGroup',
+                    'name' => '::seeTheGroup' . $this::RESTRICTED_TYPE,
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -272,7 +273,7 @@ class ModuleGroups extends Module {
                 if ($this->_unlocked) {
                     if (is_a($nid, 'Nebule\Library\Node') && $nid->getIsGroup('myself')) // FIXME
                         $hookArray[] = array(
-                            'name' => '::refuseGroup',
+                            'name' => '::refuseGroup' . $this::RESTRICTED_TYPE,
                             'icon' => Displays::DEFAULT_ICON_LX,
                             'desc' => '',
                             'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -316,7 +317,7 @@ class ModuleGroups extends Module {
             case 'addMember':
                 if ($this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::addMember',
+                        'name' => '::addMember' . $this::RESTRICTED_TYPE,
                         'icon' => $this::MODULE_LOGO,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -372,25 +373,25 @@ class ModuleGroups extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('Group');
+                $this->_displayItem('Group' . $this::RESTRICTED_TYPE);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayItemCreateForm('Group', 0, 1, ($this::RESTRICTED_CONTEXT != ''));
+                $this->_displayItemCreateForm('Group' . $this::RESTRICTED_TYPE, 0, 1, ($this::RESTRICTED_CONTEXT != ''));
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyItem('Group');
+                $this->_displayModifyItem('Group' . $this::RESTRICTED_TYPE);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayRemoveItem('Group');
+                $this->_displayRemoveItem('Group' . $this::RESTRICTED_TYPE);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Group', $this::COMMAND_ACTION_GET_GRP_NID, $this::COMMAND_ACTION_GET_GRP_URL);
+                $this->_displayGetItem('Group' . $this::RESTRICTED_TYPE, 'Groups' . $this::RESTRICTED_TYPE, $this::COMMAND_ACTION_GET_GRP_NID, $this::COMMAND_ACTION_GET_GRP_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Group', $this::COMMAND_ACTION_GET_GRP_NID);
+                $this->_displaySynchroItem('Group' . $this::RESTRICTED_TYPE, $this::COMMAND_ACTION_GET_GRP_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayRightsItem('Group');
+                $this->_displayRightsItem('Group' . $this::RESTRICTED_TYPE);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[8]:
                 $this->_displayOptions();
@@ -402,7 +403,7 @@ class ModuleGroups extends Module {
                 $this->_displayAddToGroup();
                 break;
             default:
-                $this->_displayListItems('Group', 'Groups');
+                $this->_displayListItems('Group' . $this::RESTRICTED_TYPE, 'Groups' . $this::RESTRICTED_TYPE);
                 break;
         }
     }
@@ -733,47 +734,6 @@ class ModuleGroups extends Module {
 
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => 'Module des groupes',
-            '::MenuName' => 'Groupes',
-            '::ModuleDescription' => 'Module de gestion des groupes',
-            '::ModuleHelp' => 'Ce module permet de voir et de gérer les groupes.',
-            '::AppTitle1' => 'Groupes',
-            '::AppDesc1' => 'Gestion des groupes',
-            '::groups' => 'Les groupes',
-            '::myGroups' => 'Mes groupes',
-            '::allGroups' => 'Tous les groupes',
-            '::seeGroup' => 'Voir le groupe',
-            '::seeAsGroup' => 'Voir comme groupe',
-            '::seenFromOthers' => 'Vu depuis les autres entités',
-            '::otherGroups' => 'Les groupes des autres entités',
-            '::createGroup' => 'Créer un groupe',
-            '::createClosedGroup' => 'Créer un groupe fermé',
-            '::createObfuscatedGroup' => 'Créer un groupe dissimulé',
-            '::addMarkedObjects' => 'Ajouter les objets marqués',
-            '::addToGroup' => 'Ajouter au groupe',
-            '::addMember' => 'Ajouter un membre',
-            '::deleteGroup' => 'Supprimer le groupe',
-            '::createTheGroup' => 'Créer le groupe',
-            '::createGroupOK' => 'Le groupe a été créé',
-            '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
-            '::membersType' => 'Type des membres',
-            '::noGroup' => 'Pas de groupe',
-            '::noGroupMember' => 'Pas de membre',
-            '::makeGroup' => 'Faire de cet objet un groupe',
-            '::makeGroupMe' => 'Faire de cet objet un groupe pour moi aussi',
-            '::unmakeGroup' => 'Ne plus faire de cet objet un groupe',
-            '::useAsGroupOpened' => 'Utiliser comme groupe ouvert',
-            '::useAsGroupClosed' => 'Utiliser comme groupe fermé',
-            '::refuseGroup' => 'Refuser cet objet comme un groupe',
-            '::removeFromGroup' => 'Retirer du groupe',
-            '::isGroup' => 'est un groupe',
-            '::isGroupToOther' => 'est un groupe de',
-            '::isNotGroup' => "n'est pas un groupe",
-            '::thisIsGroup' => "C'est un groupe",
-            '::thisIsGroup4me' => "C'est un groupe pour moi",
-            '::thisIsNotGroup' => "Ce n'est pas un groupe",
-        ],
         'en-en' => [
             '::ModuleName' => 'Groups module',
             '::MenuName' => 'Groups',
@@ -781,73 +741,13 @@ class ModuleGroups extends Module {
             '::ModuleHelp' => 'This module permit to see and manage groups.',
             '::AppTitle1' => 'Groups',
             '::AppDesc1' => 'Manage groups',
-            '::groups' => 'The groups',
-            '::myGroups' => 'My groups',
-            '::allGroups' => 'All groups',
-            '::seeGroup' => 'See the group',
             '::seeAsGroup' => 'See as group',
             '::seenFromOthers' => 'Seen from others entities',
-            '::otherGroups' => 'Groups of other entities',
-            '::createGroup' => 'Create a group',
-            '::createClosedGroup' => 'Create a closed group',
-            '::createObfuscatedGroup' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked objects',
             '::addToGroup' => 'Add to group',
-            '::addMember' => 'Add a member',
-            '::deleteGroup' => 'Delete group',
-            '::createTheGroup' => 'Create the group',
-            '::createGroupOK' => 'The group have been created',
-            '::createGroupNOK' => 'The group have not been created! %s',
-            '::membersType' => 'Type of members',
-            '::noGroup' => 'No group',
-            '::noGroupMember' => 'No member',
             '::makeGroup' => 'Make this object a group',
             '::makeGroupMe' => 'Make this object a group for me too',
             '::unmakeGroup' => 'Unmake this object a group',
-            '::useAsGroupOpened' => 'Use as group opened',
-            '::useAsGroupClosed' => 'Use as group closed',
-            '::refuseGroup' => 'Refuse this object as group',
-            '::removeFromGroup' => 'Remove from group',
-            '::isGroup' => 'is a group',
-            '::isGroupToOther' => 'is a group of',
-            '::isNotGroup' => 'is not a group',
-            '::thisIsGroup' => 'This is a group',
-            '::thisIsGroup4me' => 'This is a group for me',
-            '::thisIsNotGroup' => 'This is not a group',
-        ],
-        'es-co' => [
-            '::ModuleName' => 'Groups module',
-            '::MenuName' => 'Groups',
-            '::ModuleDescription' => 'Groups management module',
-            '::ModuleHelp' => 'This module permit to see and manage groups.',
-            '::AppTitle1' => 'Groups',
-            '::AppDesc1' => 'Manage groups',
-            '::groups' => 'The groups',
-            '::myGroups' => 'My groups',
-            '::allGroups' => 'All groups',
-            '::seeGroup' => 'See the group',
-            '::seeAsGroup' => 'See as group',
-            '::seenFromOthers' => 'Seen from others entities',
-            '::otherGroups' => 'Groups of other entities',
-            '::createGroup' => 'Create a group',
-            '::createClosedGroup' => 'Create a closed group',
-            '::createObfuscatedGroup' => 'Create an obfuscated group',
-            '::addMarkedObjects' => 'Add marked objects',
-            '::addToGroup' => 'Add to group',
-            '::addMember' => 'Add a member',
-            '::deleteGroup' => 'Delete group',
-            '::createTheGroup' => 'Create the group',
-            '::createGroupOK' => 'The group have been created',
-            '::createGroupNOK' => 'The group have not been created! %s',
-            '::membersType' => 'Type of members',
-            '::noGroup' => 'No group',
-            '::noGroupMember' => 'No member',
-            '::makeGroup' => 'Make this object a group',
-            '::makeGroupMe' => 'Make this object a group for me too',
-            '::unmakeGroup' => 'Unmake this object a group',
-            '::useAsGroupOpened' => 'Use as group opened',
-            '::useAsGroupClosed' => 'Use as group closed',
-            '::refuseGroup' => 'Refuse this object as group',
             '::removeFromGroup' => 'Remove from group',
             '::isGroup' => 'is a group',
             '::isGroupToOther' => 'is a group of',
@@ -892,48 +792,6 @@ class ModuleGroupEntities extends ModuleGroups {
     protected function _listMembersToAdd(): array { return $this->_entitiesInstance->getListEntitiesID(); }
 
     CONST TRANSLATE_TABLE = [
-        'fr-fr' => [
-            '::ModuleName' => "Module des groupes d'entités",
-            '::MenuName' => "Groupes d'entités",
-            '::ModuleDescription' => "Module de gestion des groupes d'entités",
-            '::ModuleHelp' => "Ce module permet de voir et de gérer les groupes d'entités.",
-            '::AppTitle1' => "Groupes d'entités",
-            '::AppDesc1' => "Gestion des groupes d'entités",
-            '::groups' => 'Les groupes',
-            '::myGroups' => 'Mes groupes',
-            '::allGroups' => 'Tous les groupes',
-            '::seeGroup' => 'Voir le groupe',
-            '::seeAsGroup' => 'Voir comme groupe',
-            '::seenFromOthers' => 'Vu depuis les autres entités',
-            '::otherGroups' => 'Les groupes des autres entités',
-            '::createGroup' => "Créer un groupe d'entités",
-            '::createClosedGroup' => 'Créer un groupe fermé',
-            '::createObfuscatedGroup' => 'Créer un groupe dissimulé',
-            '::addMarkedObjects' => 'Ajouter les entités marqués',
-            '::addToGroup' => 'Ajouter au groupe',
-            '::addMember' => 'Ajouter une entité membre',
-            '::deleteGroup' => 'Supprimer le groupe',
-            '::createTheGroup' => 'Créer le groupe',
-            '::createGroupOK' => 'Le groupe a été créé',
-            '::createGroupNOK' => "Le groupe n'a pas été créé ! %s",
-            '::membersType' => 'Type des membres',
-            '::noGroup' => 'Pas de groupe',
-            '::noGroupMember' => 'Pas de membre',
-            '::makeGroup' => 'Faire de cet objet un groupe',
-            '::makeGroupMe' => 'Faire de cet objet un groupe pour moi aussi',
-            '::unmakeGroup' => 'Ne plus faire de cet objet un groupe',
-            '::useAsGroupOpened' => 'Utiliser comme groupe ouvert',
-            '::useAsGroupClosed' => 'Utiliser comme groupe fermé',
-            '::refuseGroup' => 'Refuser cet objet comme un groupe',
-            '::removeFromGroup' => 'Retirer du groupe',
-            '::isGroup' => 'est un groupe',
-            '::isGroupToOther' => 'est un groupe de',
-            '::isNotGroup' => "n'est pas un groupe",
-            '::thisIsGroup' => "C'est un groupe",
-            '::thisIsGroup4me' => "C'est un groupe pour moi",
-            '::thisIsNotGroup' => "Ce n'est pas un groupe",
-            '::confirm' => 'Confirmation',
-        ],
         'en-en' => [
             '::ModuleName' => 'Entities groups module',
             '::MenuName' => 'Entities groups',
@@ -941,32 +799,13 @@ class ModuleGroupEntities extends ModuleGroups {
             '::ModuleHelp' => 'This module permit to see and manage groups of entities.',
             '::AppTitle1' => 'Entities groups',
             '::AppDesc1' => 'Manage groups of entities',
-            '::groups' => 'The groups',
-            '::myGroups' => 'My groups',
-            '::allGroups' => 'All groups',
-            '::seeGroup' => 'See the group',
             '::seeAsGroup' => 'See as group',
             '::seenFromOthers' => 'Seen from others entities',
-            '::otherGroups' => 'Groups of other entities',
-            '::createGroup' => 'Create a group of entities',
-            '::createClosedGroup' => 'Create a closed group',
-            '::createObfuscatedGroup' => 'Create an obfuscated group',
             '::addMarkedObjects' => 'Add marked entities',
             '::addToGroup' => 'Add to group',
-            '::addMember' => 'Add an entity as member',
-            '::deleteGroup' => 'Delete group',
-            '::createTheGroup' => 'Create the group',
-            '::createGroupOK' => 'The group have been created',
-            '::createGroupNOK' => 'The group have not been created! %s',
-            '::membersType' => 'Type of members',
-            '::noGroup' => 'No group',
-            '::noGroupMember' => 'No member',
             '::makeGroup' => 'Make this object a group',
             '::makeGroupMe' => 'Make this object a group for me too',
             '::unmakeGroup' => 'Unmake this object a group',
-            '::useAsGroupOpened' => 'Use as group opened',
-            '::useAsGroupClosed' => 'Use as group closed',
-            '::refuseGroup' => 'Refuse this object as group',
             '::removeFromGroup' => 'Remove from group',
             '::isGroup' => 'is a group',
             '::isGroupToOther' => 'is a group of',
@@ -975,48 +814,6 @@ class ModuleGroupEntities extends ModuleGroups {
             '::thisIsGroup4me' => 'This is a group for me',
             '::thisIsNotGroup' => 'This is not a group',
             '::confirm' => 'Confirm',
-        ],
-        'es-co' => [
-            '::ModuleName' => 'Módulo de grupos de entidades',
-            '::MenuName' => 'Grupos de entidades',
-            '::ModuleDescription' => 'Módulo de gestión de grupos de entidades',
-            '::ModuleHelp' => 'Este módulo permite ver y gestionar grupos de entidades.',
-            '::AppTitle1' => 'Grupos de entidades',
-            '::AppDesc1' => 'Gestionar grupos de entidades',
-            '::groups' => 'Los grupos',
-            '::myGroups' => 'Mis grupos',
-            '::allGroups' => 'Todos los grupos',
-            '::seeGroup' => 'Ver el grupo',
-            '::seeAsGroup' => 'Ver como grupo',
-            '::seenFromOthers' => 'Visto desde otras entidades',
-            '::otherGroups' => 'Grupos de otras entidades',
-            '::createGroup' => 'Crear un grupo de entidades',
-            '::createClosedGroup' => 'Crear un grupo cerrado',
-            '::createObfuscatedGroup' => 'Crear un grupo oculto',
-            '::addMarkedObjects' => 'Añadir objetos entidades',
-            '::addToGroup' => 'Añadir al grupo',
-            '::addMember' => 'Add an entity as member',
-            '::deleteGroup' => 'Eliminar grupo',
-            '::createTheGroup' => 'Crear el grupo',
-            '::createGroupOK' => 'El grupo ha sido creado',
-            '::createGroupNOK' => '¡El grupo no ha sido creado! %s',
-            '::membersType' => 'Tipo de miembros',
-            '::noGroup' => 'Sin grupo',
-            '::noGroupMember' => 'Sin miembros',
-            '::makeGroup' => 'Convertir este objeto en un grupo',
-            '::makeGroupMe' => 'Convertir este objeto en un grupo para mí también',
-            '::unmakeGroup' => 'Dejar de usar este objeto como un grupo',
-            '::useAsGroupOpened' => 'Usar como grupo abierto',
-            '::useAsGroupClosed' => 'Usar como grupo cerrado',
-            '::refuseGroup' => 'Rechazar este objeto como grupo',
-            '::removeFromGroup' => 'Eliminar del grupo',
-            '::isGroup' => 'es un grupo',
-            '::isGroupToOther' => 'es un grupo de',
-            '::isNotGroup' => 'no es un grupo',
-            '::thisIsGroup' => 'Esto es un grupo',
-            '::thisIsGroup4me' => 'Esto es un grupo para mí',
-            '::thisIsNotGroup' => 'Esto no es un grupo',
-            '::confirm' => 'Confirmar',
         ],
     ];
 }

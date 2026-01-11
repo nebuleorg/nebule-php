@@ -81,9 +81,9 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
             . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                 $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
         if ($this->_nid->getMarkClosed())
-            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeFerme') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeGroup') . ".\n";
         else
-            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::GroupeOuvert') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openGroup') . ".\n";
         $result .= "\t</p>\n</div>\n";
         return $result;
     }
@@ -95,9 +95,9 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
             . sprintf($this->_translateInstance->getTranslate('::UniqueID'),
                 $this->convertInlineObjectColorIcon($this->_nid) . ' ' . '<b>' . $this->_nid->getID() . "</b>\n");
         if ($this->_nid->getMarkClosed())
-            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationFermee') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::closeConversation') . ".\n";
         else
-            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::ConversationOuverte') . ".\n";
+            $result .= "<br />\n" . $this->_translateInstance->getTranslate('::openConversation') . ".\n";
         $result .= "\t</p>\n</div>\n";
         return $result;
     }
