@@ -26,6 +26,12 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const ADD_MEMBER = 'action_group_add_membre';
     const REMOVE_MEMBER = 'action_group_del_member';
     const TYPED_MEMBER = 'action_group_typ_member';
+    const CREATE_MEMBER = 'action_group_create_membre';
+    const CREATE_MEMBER_NAME = 'action_group_create_membre_name';
+    const CREATE_MEMBER_TYPED = 'action_group_create_membre_type';
+    const CREATE_MEMBER_CONTEXT = 'action_group_create_membre_context';
+    const CREATE_MEMBER_OBFUSCATED = 'action_group_create_membre_obf';
+    const CREATE_MEMBER_IS_GROUP = 'action_group_create_membre_is_group';
 
 
 
@@ -41,6 +47,8 @@ class ActionsGroups extends Actions implements ActionsInterface {
             $this->_addMember();
         if ($this->getHaveInput(self::REMOVE_MEMBER))
             $this->_removeMember();
+        if ($this->getHaveInput(self::CREATE_MEMBER))
+            $this->_addCreateMember();
     }
     public function specialActions(): void {}
 
@@ -191,5 +199,38 @@ class ActionsGroups extends Actions implements ActionsInterface {
             $this->_actionRemoveMemberError = (!$instance->unsetAsMemberNID($this->_actionRemoveMember));
         else
             $this->_actionRemoveMemberError = (!$instance->unsetAsTypedMemberNID($this->_actionRemoveMember, $typed));
+    }
+
+    protected string $_actionAddCreateMember = '';
+    protected bool $_actionAddCreateMemberError = true;
+    public function getAddCreateMember(): string { return $this->_actionAddCreateMember; }
+    public function getAddCreateMemberError(): bool { return $this->_actionAddCreateMemberError; }
+    protected function _addCreateMember(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
+            $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c10459a6');
+            return;
+        }
+        $instanceGroup = $this->_nebuleInstance->getCurrentGroupInstance();
+        if ($instanceGroup === null || $instanceGroup->getID() == '0')
+            return;
+        $this->_actionAddCreateMember = $this->getFilterInput(self::CREATE_MEMBER, FILTER_FLAG_ENCODE_LOW);
+        $name = $this->getFilterInput(self::CREATE_MEMBER_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $context = $this->getFilterInput(self::CREATE_MEMBER_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $typed = $this->getFilterInput(self::CREATE_MEMBER_TYPED, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $obfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_MEMBER_OBFUSCATED));
+        $isGroup = $this->getHaveInput(self::CREATE_MEMBER_IS_GROUP);
+
+        $this->_createInstance = new Group($this->_nebuleInstance, '');
+        $this->_metrologyInstance->addLog('create group name=' . $name . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'eff13303');
+        if ($name != '')
+            $this->_createInstance->setName($name);
+        if ($isGroup)
+            $this->_createInstance->setAsGroup($this->_createObfuscated, $context);
+
+        if ($typed == '')
+            $this->_actionAddMemberError = (!$instanceGroup->setAsMemberNID($this->_actionAddMember));
+        else
+            $this->_actionAddMemberError = (!$instanceGroup->setAsTypedMemberNID($this->_actionAddMember, $typed));
     }
 }

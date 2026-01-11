@@ -566,7 +566,6 @@ abstract class Module extends Functions implements ModuleInterface {
         if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
-            //$instance->setNID($this->_displayGroupInstance); FIXME
             $instance->setNID($this->_instanceCurrentItem);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -588,7 +587,8 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$icon]);
             //$instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon);
-            //$instance->setSelfHookName('typeMenu' . $name);
+            $instance->setSelfHookName('self' . $name);
+            $instance->setTypeHookName('type' . $name);
             $instance->display();
 
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID($name);

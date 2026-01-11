@@ -101,7 +101,7 @@ class ModuleFolders extends Module {
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
-        $hookArray = $this->getCommonHookList($hookName, $nid, 'Folders', 'Folder');
+        $hookArray = $this->getCommonHookList($hookName, $nid, 'RootFolders', 'RootFolder');
 
         switch ($hookName) {
             case 'selfMenu':
@@ -117,7 +117,7 @@ class ModuleFolders extends Module {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                     $hookArray[] = array(
-                        'name' => '::modifyFolder',
+                        'name' => '::modifyRootFolder',
                         'icon' => Displays::DEFAULT_ICON_IMODIFY,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -129,7 +129,7 @@ class ModuleFolders extends Module {
                 if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
                     && $this->_unlocked) {
                     $hookArray[] = array(
-                        'name' => '::removeFolder',
+                        'name' => '::removeRootFolder',
                         'icon' => Displays::DEFAULT_ICON_LX,
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -142,7 +142,7 @@ class ModuleFolders extends Module {
 
             case 'typeMenuEntity':
                 $hookArray[] = array(
-                    'name' => '::myFolders',
+                    'name' => '::myRootFolders',
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -151,6 +151,33 @@ class ModuleFolders extends Module {
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
+                break;
+
+            case 'typeRootFolders':
+            case 'typeRootFolder':
+                break;
+
+            case 'selfRootFolder':
+                if ($this->_unlocked) {
+                    $hookArray[] = array(
+                        'name' => '::addFolder',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                    $hookArray[] = array(
+                        'name' => '::addObject',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
                 break;
 
         }
@@ -193,25 +220,25 @@ class ModuleFolders extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('Folder');
+                $this->_displayItem('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
-                $this->_displayItemCreateForm('Folder');
+                $this->_displayItemCreateForm('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[3]:
-                $this->_displayModifyItem('Folder');
+                $this->_displayModifyItem('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[4]:
-                $this->_displayRemoveItem('Folder');
+                $this->_displayRemoveItem('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[5]:
-                $this->_displayGetItem('Folder', 'Folders', $this::COMMAND_ACTION_GET_FLD_NID, $this::COMMAND_ACTION_GET_FLD_URL);
+                $this->_displayGetItem('RootFolder', 'RootFolders', $this::COMMAND_ACTION_GET_FLD_NID, $this::COMMAND_ACTION_GET_FLD_URL);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[6]:
-                $this->_displaySynchroItem('Folder', $this::COMMAND_ACTION_GET_FLD_NID);
+                $this->_displaySynchroItem('RootFolder', $this::COMMAND_ACTION_GET_FLD_NID);
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_displayRightsItem('Folder');
+                $this->_displayRightsItem('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[8]:
                 $this->_displayOptions();
@@ -223,7 +250,7 @@ class ModuleFolders extends Module {
                 $this->_displayAddFile();
                 break;
             default:
-                $this->_displayListItems('Folder', 'Folders');
+                $this->_displayListItems('RootFolder', 'RootFolders');
                 break;
         }
     }
@@ -231,13 +258,13 @@ class ModuleFolders extends Module {
     public function displayModuleInline(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_display_InlineMyItems('Folders');
+                $this->_display_InlineMyItems('RootFolders');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_display_InlineRoot();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
-                $this->_display_InlineRightsItem('Folder');
+                $this->_display_InlineRightsItem('RootFolder');
                 break;
         }
     }
@@ -268,11 +295,10 @@ class ModuleFolders extends Module {
             $instance->setNID($instanceMember);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
-            //$instance->setIcon($instanceIcon);
             $instance->setEnableName(true);
             $instance->setEnableFlags(false);
             $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
+            $instance->setEnableJS(true);
             $instance->setEnableRefs(true);
             $instance->setRefs($signers);
             $instanceList->addItem($instance);
@@ -291,7 +317,61 @@ class ModuleFolders extends Module {
 
     protected function _displayAddFolder(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNotImplemented();
+        $this->_displaySimpleTitle('::createFolder', $this::MODULE_REGISTERED_ICONS[2]);
+        $this->_displayBackItemOrLogin('Folder');
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_IS_GROUP
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_NAME);
+            $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setLink($commonLink);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_OBFUSCATED);
+            $instance->setIconText('::createObfuscatedFolder');
+            $instance->setSelectList(array(
+                'n' => $this->_translateInstance->getTranslate('::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+            ));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::createTheFolder');
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::createTheFolder'));
+            $instance->setIconText('::confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
+            $instanceList->addItem($instance);
+
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setOnePerLine();
+            $instanceList->display();
+        } else
+            $this->_displayNotPermit();
     }
 
     protected function _displayAddFile(): void {
@@ -344,7 +424,7 @@ class ModuleFolders extends Module {
                 $instance->setRefs($conversationsSigners[$nid]);
             } else
                 $instance->setEnableRefs(false);
-            //$instance->setSelfHookName($hookName);
+            $instance->setSelfHookName($hookName);
             $instance->setIcon($instanceIcon);
             $instanceList->addItem($instance);
         }
@@ -366,19 +446,6 @@ class ModuleFolders extends Module {
             '::ModuleHelp' => 'This module permit to see and manage folders.',
             '::AppTitle1' => 'Folders',
             '::AppDesc1' => 'Manage folders',
-            '::myFolders' => 'My folders',
-            '::allFolders' => 'All folders',
-            '::otherFolders' => 'Folders of other entities',
-            '::listFolders' => 'List of folders',
-            '::createClosedFolder' => 'Create a closed folder',
-            '::createObfuscatedFolder' => 'Create an obfuscated folder',
-            '::addMarkedObjects' => 'Add marked objects',
-            '::addToFolder' => 'Add to folder',
-            '::addMember' => 'Add a member',
-            '::deleteFolder' => 'Delete folder',
-            '::createFolder' => 'Create a folder',
-            '::createFolderOK' => 'The folder have been created',
-            '::createFolderNOK' => 'The folder have not been created! %s',
         ],
     ];
 }
