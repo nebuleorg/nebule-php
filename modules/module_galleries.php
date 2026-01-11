@@ -106,15 +106,17 @@ class ModuleGalleries extends Module {
                             . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
-                    $hookArray[] = array(
-                        'name' => '::modifyGallery',
-                        'icon' => Displays::DEFAULT_ICON_IMODIFY,
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                            . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
+                    if ($this->_unlocked) {
+                        $hookArray[] = array(
+                            'name' => '::modifyGallery',
+                            'icon' => Displays::DEFAULT_ICON_IMODIFY,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                                . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                    }
                 }
                 if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
                     && $this->_unlocked) {
