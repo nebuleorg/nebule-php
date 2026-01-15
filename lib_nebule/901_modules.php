@@ -42,7 +42,7 @@ abstract class Module extends Functions implements ModuleInterface {
     protected ?Translates $_translateInstance = null;
     protected bool $_unlocked = false;
     protected string $_socialClass = '';
-    protected ?\Nebule\Library\Node $_instanceCurrentItem = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentItem = null;
 
     public function __toString(): string { return $this::MODULE_NAME; }
 
@@ -423,7 +423,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
 
-    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Node &$instance, string $defaultNID = ''): void {
+    protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Group &$instance, string $defaultNID = ''): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
@@ -446,6 +446,10 @@ abstract class Module extends Functions implements ModuleInterface {
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchro()) {
             $this->_displaySimpleTitle('::get' . $name, $this::MODULE_REGISTERED_ICONS[$iconGet]);
             $this->_displayItemGetNew($name, $iconItem);
+        }
+        if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getAddCreateMember()) { // FIXME test to remove
+            $this->_displaySimpleTitle('::addMember' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
+            //$this->_displayItemGetNew($name, $iconItem);
         }
 
         $message = match ($this->_socialClass) {

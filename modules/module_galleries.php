@@ -28,7 +28,7 @@ class ModuleGalleries extends Module {
     const MODULE_COMMAND_NAME = 'glr';
     const MODULE_DEFAULT_VIEW = 'galleries';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260110';
+    const MODULE_VERSION = '020260112';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -69,7 +69,7 @@ class ModuleGalleries extends Module {
     const COMMAND_ACTION_GET_GLR_NID = 'actiongetnid';
     const COMMAND_ACTION_GET_GLR_URL = 'actiongeturl';
 
-    protected ?\Nebule\Library\Node $_instanceCurrentGallery = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentGallery = null;
 
 
 

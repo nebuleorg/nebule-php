@@ -399,8 +399,14 @@ class Group extends Node implements nodeInterface {
      */
     public function getIsMemberTypedNID(string $nid, string $type, string $socialClass = ''): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!Node::checkNID($nid) || !$this->getIsRID($type))
+        if (!Node::checkNID($nid)) {
+            $this->_metrologyInstance->addLog('nid=' . $nid . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ac6a7b0b');
             return false;
+        }
+        if (!Node::checkNID($type)) {
+            $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bb3085fc');
+            return false;
+        }
         $links = $this->getLinksOnFields(
                 '',
                 '',
@@ -426,8 +432,14 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if (!Node::checkNID($nid) || !$this->getIsRID($type))
+        if (!Node::checkNID($nid)) {
+            $this->_metrologyInstance->addLog('nid=' . $nid . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd340eb03');
             return false;
+        }
+        if (!Node::checkNID($type)) {
+            $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a346f4b3');
+            return false;
+        }
         if ($this->getMarkObfuscated())
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
@@ -447,8 +459,14 @@ class Group extends Node implements nodeInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if (!Node::checkNID($nid) || !$this->getIsRID($type))
+        if (!Node::checkNID($nid)) {
+            $this->_metrologyInstance->addLog('nid=' . $nid . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd2fb1fef');
             return false;
+        }
+        if (!Node::checkNID($type)) {
+            $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, '18ee9ded');
+            return false;
+        }
         if ($this->getMarkObfuscated())
             $obfuscated = true;
         // TODO detect previously obfuscated link.
@@ -479,7 +497,7 @@ class Group extends Node implements nodeInterface {
      */
     public function getListTypedMembersLinks(string $type, string $socialClass = '', array $socialListID = array()): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->getIsRID($type))
+        if (!Node::checkNID($type))
             return array();
         $links = $this->getLinksOnFields(
                 '',
@@ -505,7 +523,7 @@ class Group extends Node implements nodeInterface {
      */
     public function getListTypedMembersID(string $type,string $socialClass = '', array $socialListID = array()): array {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->getIsRID($type))
+        if (!Node::checkNID($type))
             return array();
         $links = $this->getListTypedMembersLinks($type, $socialClass, $socialListID);
         $list = array();

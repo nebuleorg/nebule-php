@@ -28,7 +28,7 @@ class ModuleFolders extends Module {
     const MODULE_COMMAND_NAME = 'fld';
     const MODULE_DEFAULT_VIEW = 'roots';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260110';
+    const MODULE_VERSION = '020260112';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2025-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -72,8 +72,8 @@ class ModuleFolders extends Module {
     const COMMAND_ACTION_GET_FLD_NID = 'actiongetnid';
     const COMMAND_ACTION_GET_FLD_URL = 'actiongeturl';
 
-    protected ?\Nebule\Library\Node $_instanceCurrentRoot = null;
-    protected ?\Nebule\Library\Node $_instanceCurrentFolder = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentRoot = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentFolder = null;
     protected array $_listFolders = array();
 
 
@@ -82,11 +82,11 @@ class ModuleFolders extends Module {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
         $this->_getCurrentItem(self::COMMAND_SELECT_ROOT, 'Root', $this->_instanceCurrentRoot);
-        if (! is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node') || $this->_instanceCurrentRoot->getID() == '0')
+        if (! is_a($this->_instanceCurrentRoot, 'Nebule\Library\Group') || $this->_instanceCurrentRoot->getID() == '0')
             $this->_instanceCurrentRoot = null;
-        if (is_a($this->_instanceCurrentRoot, 'Nebule\Library\Node')) {
+        if (is_a($this->_instanceCurrentRoot, 'Nebule\Library\Group')) {
             $this->_getCurrentItem(self::COMMAND_SELECT_FOLDER, 'Folder', $this->_instanceCurrentFolder, $this->_instanceCurrentRoot->getID());
-            if (!is_a($this->_instanceCurrentFolder, 'Nebule\Library\Node') || $this->_instanceCurrentFolder->getID() == '0')
+            if (!is_a($this->_instanceCurrentFolder, 'Nebule\Library\Group') || $this->_instanceCurrentFolder->getID() == '0')
                 $this->_instanceCurrentFolder = $this->_instanceCurrentRoot;
         }
         $this->_getCurrentItemFounders($this->_instanceCurrentRoot);
@@ -280,14 +280,16 @@ class ModuleFolders extends Module {
             return;
         }
 
-        if ($this->_instanceCurrentItem->getMarkClosed())
-            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'myself');
-        else
-            $memberLinks = $this->_instanceCurrentItem->getListTypedMembersLinks(References::REFERENCE_NEBULE_OBJET_GROUPE, 'all');
+        if ($this->_instanceCurrentItem->getMarkClosed()) {
+            $memberLinks = $this->_instanceCurrentItem->getListMembersLinks('myself');
+        }
+        else {
+            $memberLinks = $this->_instanceCurrentItem->getListMembersLinks('all');
+        }
 
         $list = array();
         foreach ($memberLinks as $link)
-            $list[$link->getParsed()['bl/rl/nid1']] = $link->getSignersEID();
+            $list[$link->getParsed()['bl/rl/nid2']] = $link->getSignersEID();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($list as $nid => $signers) {
@@ -327,6 +329,7 @@ class ModuleFolders extends Module {
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_IS_GROUP
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentFolder->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
 

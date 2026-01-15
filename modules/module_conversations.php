@@ -28,7 +28,7 @@ class ModuleConversations extends Module {
     const MODULE_COMMAND_NAME = 'msg';
     const MODULE_DEFAULT_VIEW = 'conversations';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260110';
+    const MODULE_VERSION = '020260112';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2016-2026';
     const MODULE_LOGO = '0390b7edb0dc9d36b9674c8eb045a75a7380844325be7e3b9557c031785bc6a2.sha2.256';
@@ -69,7 +69,7 @@ class ModuleConversations extends Module {
     const COMMAND_ACTION_GET_CVT_NID = 'actiongetnid';
     const COMMAND_ACTION_GET_CVT_URL = 'actiongeturl';
 
-    protected ?\Nebule\Library\Node $_instanceCurrentConversation = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentConversation = null;
 
 
 

@@ -68,7 +68,7 @@ class ModuleNeblog extends Module
     const MODULE_COMMAND_NAME = 'blog';
     const MODULE_DEFAULT_VIEW = 'blog';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260109';
+    const MODULE_VERSION = '020260112';
     const MODULE_AUTHOR = 'Project nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2024-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -142,9 +142,9 @@ class ModuleNeblog extends Module
     protected string $_actionAddPageName = '';
     protected string $_actionAddPageContent = '';
     protected ?\Nebule\Library\node $_instanceBlogNodeRID = null;
-    protected ?\Nebule\Library\node $_instanceCurrentBlog = null;
-    protected ?\Nebule\Library\node $_instanceCurrentBlogPost = null;
-    protected ?\Nebule\Library\node $_instanceCurrentBlogPage = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentBlog = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentBlogPost = null;
+    protected ?\Nebule\Library\Group $_instanceCurrentBlogPage = null;
 
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
