@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260101';
+const BOOTSTRAP_VERSION = '020260116';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -468,9 +468,7 @@ const LIB_ARG_FLUSH_SESSION = 'f';
 const LIB_ARG_UPDATE_APPLICATION = 'u';
 const LIB_ARG_SWITCH_APPLICATION = 'a';
 const LIB_ARG_RESCUE_MODE = 'r';
-const LIB_ARG_INLINE_DISPLAY = 'i';
-/** @noinspection PhpUnusedLocalVariableInspection */
-const LIB_ARG_STATIC_DISPLAY = 's'; // TODO not used yet
+const LIB_ARG_INLINE_DISPLAY = 'di';
 const LIB_ARG_FIRST_PUPPETMASTER_EID = 'bootstrapfirstpuppetmastereid';
 const LIB_ARG_FIRST_PUPPETMASTER_LOCATION = 'bootstrapfirstpuppetmasterlocation';
 const LIB_ARG_FIRST_SUBORDINATION_EID = 'bootstrapfirstsubordinationeid';
