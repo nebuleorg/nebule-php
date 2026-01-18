@@ -31,6 +31,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     public const QUERY_BOOLEAN = 'boolean';
     public const QUERY_SELECT = 'select';
     public const QUERY_TEXT = 'text';
+    public const QUERY_FILE = 'file';
     public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
     public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
 
@@ -103,7 +104,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
         $padding = 0;
         $result  = '';
         if ($this->_withFormOpen)
-            $result .= '<form method="post" action="' . $this->_link . '">' . "\n";
+            $result .= '<form enctype="multipart/form-data" method="post" action="' . $this->_link . '">' . "\n";
         $result .= '<div class="layoutObject layoutInformation">';
         $result .= ' <div class="objectTitle objectDisplay' . $this->_sizeCSS . $this->_ratioCSS . ' queryDisplay queryDisplay' . $this->_sizeCSS . ' queryDisplay' . $this->_type . '">';
         $result .= '  <div class="objectTitleIcons queryTitleIcons queryTitleIcons' . $this->_type . '">';
@@ -128,6 +129,8 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
             foreach ($this->_selectList as $key => $value)
                 $result .= '      <option value="' . $key . '">' . $value . '</option>' . "\n";
             $result .= '     </select>' . "\n";
+        } elseif ($this->_type == 'File') {
+            $result .= '<input type="file" name="' . $this->_inputName . '" id="' . $this->_inputName . '"/>';
         } else
             $result .= $this->_message . "\n";
         if ($this->_withSubmit)
@@ -171,6 +174,12 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 $this->_iconText = $this->_translateInstance->getTranslate('::Query');
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
+                break;
+            case self::QUERY_FILE:
+                $this->_type = 'File';
+                $this->_iconText = $this->_translateInstance->getTranslate('::Query');
+                $icon = self::ICON_QUERY_RID;
+                $this->_inputType = 'file';
                 break;
             default:
                 $this->_type = '';

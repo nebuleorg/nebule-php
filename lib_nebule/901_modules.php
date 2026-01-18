@@ -568,6 +568,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
+            $this->_preDisplayItem();
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
             $instance->setNID($this->_instanceCurrentItem);
@@ -583,7 +584,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setEnableFlagEmotions(true);
             $instance->setEnableStatus(false);
             $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
+            $instance->setEnableJS(true);
             $instance->setEnableLink(true);
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             //$instance->setStatus('');
@@ -592,13 +593,13 @@ abstract class Module extends Functions implements ModuleInterface {
             //$instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon);
             $instance->setSelfHookName('self' . $name);
-            $instance->setTypeHookName('type' . $name);
             $instance->display();
 
             $this->_applicationInstance->getDisplayInstance()->registerInlineContentID($name);
         } else
             $this->_displayNotSupported();
     }
+    protected function _preDisplayItem(): void {}
 
 
 
@@ -1056,7 +1057,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 $instance->setEnableFlagEmotions(false);
                 $instance->setEnableStatus(true);
                 $instance->setEnableContent(false);
-                $instance->setEnableJS(false);
+                $instance->setEnableJS(true);
                 if (isset($this->_currentItemListFounders[$eid])) {
                     $instance->setSelfHookName('rightsFounder');
                     $instance->setStatus('::founder');

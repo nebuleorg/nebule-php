@@ -81,7 +81,9 @@ class ApplicationModules
             try {
                 $classImplement = class_implements($moduleFullName);
             } catch (\Exception $e) {
-                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' (' . $moduleName . ')' . ' lost', Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
+                $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' (' . $moduleName . ')' . ' lost ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
                 $classImplement = array();
             }
             if (! is_array($classImplement))
@@ -117,7 +119,9 @@ class ApplicationModules
             $this->_listModulesName[$moduleName] = $moduleFullName;
             $this->_listModulesTranslateName[$lang] = $moduleFullName;
         } catch (\Exception $e) {
-            $this->_metrologyInstance->addLog('translate module ' . $moduleFullName . ' (' . $moduleName . ')' . ' cannot been loaded', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57947e3f');
+            $this->_metrologyInstance->addLog('translate module ' . $moduleFullName . ' (' . $moduleName . ')' . ' cannot been loaded ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '57947e3f');
         }
     }
 
@@ -177,7 +181,13 @@ class ApplicationModules
                 continue;
             $moduleID = $moduleInstanceOID->getID();
             $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '06a13897');
-            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
+            try {
+                include('o/' . $moduleID);// @todo A modifier, passer par IO.
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error include external moduleID=' . $moduleID .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6cbb4fdd');
+            }
             $this->_listModulesRID[] = $moduleInstanceRID->getID();
             $this->_listModulesOID[] = $moduleID;
         }
@@ -205,7 +215,13 @@ class ApplicationModules
                 continue;
             $moduleID = $moduleInstanceOID->getID();
             $this->_metrologyInstance->addLog('Load translate module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6d2f16cb');
-            include('o/' . $moduleID);                // @todo A modifier, passer par IO.
+            try {
+                include('o/' . $moduleID);// @todo A modifier, passer par IO.
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error include translate moduleID=' . $moduleID .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6ed36db6');
+            }
             $this->_listModulesTranslateRID[] = $moduleInstanceRID->getID();
             $this->_listModulesTranslateOID[] = $moduleID;
         }

@@ -49,16 +49,34 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         foreach ($this->_fullList as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
             if ($item instanceof \Nebule\Library\DisplayInformation) {
-                $item->setSize($this->_sizeCSS);
-                $item->setDisplayAlone(false);
-                $result .= $item->getHTML();
+                try {
+                    $item->setSize($this->_sizeCSS);
+                    $item->setDisplayAlone(false);
+                    $result .= $item->getHTML();
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get display information ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3a188875');
+                }
             } elseif ($item instanceof \Nebule\Library\DisplayObject) {
-                $item->setSize($this->_sizeCSS);
-                $result .= $item->getHTML();
+                try {
+                    $item->setSize($this->_sizeCSS);
+                    $result .= $item->getHTML();
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get display object ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa1f3719');
+                }
             } elseif ($item instanceof \Nebule\Library\DisplaySecurity) {
-                $item->setSize($this->_sizeCSS);
-                $item->setDisplayAlone(false);
-                $result .= $item->getHTML();
+                try {
+                    $item->setSize($this->_sizeCSS);
+                    $item->setDisplayAlone(false);
+                    $result .= $item->getHTML();
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get display security ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a3a050a4');
+                }
             } elseif ($item instanceof \Nebule\Library\DisplayBlankLine)
                 $result .= $item->getHTML();
             else
@@ -70,7 +88,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             }
             $result .= "\n";
         }
-        $this->_getNavHTML($result);
+        $this->_getNavHTML($result, ($column != 0));
         $result .= '</div>';
         $result .= '</div>';
         $result .= "\n";
@@ -78,9 +96,11 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         return $result;
     }
 
-    protected function _getNavHTML(string &$result): void {
+    protected function _getNavHTML(string &$result, bool $needBR = false): void {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_lastPage > 1) {
+            if ($needBR)
+                $result .= "<br />\n";
             $url = $this->_prepareURL();
             if ($this->_currentPage > 1) {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -147,6 +167,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public function setListItems(array $list): void { $this->_listItem = $list; }
 
     protected function _prepareList(): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_currentPage = $this->_displayInstance->getCurrentPage();
         if ($this->_currentPage < 1)
             $this->_currentPage = 1;
@@ -163,7 +184,14 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         }
         foreach ($this->_listItem as $item) {
             if (intval($count / $this->_listSize) == ($this->_currentPage - 1)) {
-                $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
+                try {
+                    $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get hook function ' . $this->_listHookName .' ('  . $e->getCode() . ') : ' . $e->getFile()
+                            . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                            . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+                    $instance = null;
+                }
                 if ($instance != null)
                     $this->_fullList[$count] = $instance;
             }
@@ -174,6 +202,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     }
 
     protected function _prepareURL(): string  {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $url = '?';
         foreach ($_GET as $key => $value) {
             if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN || $key == Displays::COMMAND_INLINE)

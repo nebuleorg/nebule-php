@@ -59,6 +59,7 @@ class Application extends Applications {
     const LIST_MODULES_INTERNAL = array(
             'ModuleHelp',
             'ModuleFolders',
+            'ModuleObjects',
             'ModuleLang',
             'ModuleTranslateDEDE',
             'ModuleTranslateENEN',

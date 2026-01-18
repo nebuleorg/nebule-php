@@ -521,7 +521,7 @@ class Entity extends Node implements nodeInterface {
     }
 
 
-    public function getName(string $socialClass = ''): string
+    public function getName(string $socialClass = '', string $context = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
@@ -529,7 +529,7 @@ class Entity extends Node implements nodeInterface {
         }
 
         $refPropertyID = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_NOM);
-        $name = $this->getProperty($refPropertyID, $socialClass);
+        $name = $this->getProperty($refPropertyID, $socialClass, $context);
         if ($name == '')
             $name = $this->_id;
         return $name;
@@ -542,7 +542,7 @@ class Entity extends Node implements nodeInterface {
      * @param string $socialClass
      * @return string
      */
-    public function getFullName(string $socialClass = ''): string
+    public function getFullName(string $socialClass = '', string $context = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_id == '0')
@@ -552,11 +552,11 @@ class Entity extends Node implements nodeInterface {
         if ($socialClass == '')
             $socialClass = 'self';
 
-        $name = $this->getName($socialClass);
-        $prefix = $this->getPrefixName($socialClass);
-        $suffix = $this->getSuffixName($socialClass);
-        $firstname = $this->getFirstname($socialClass);
-        $surname = $this->getSurname($socialClass);
+        $name = $this->getName($socialClass, $context);
+        $prefix = $this->getPrefixName($socialClass, $context);
+        $suffix = $this->getSuffixName($socialClass, $context);
+        $firstname = $this->getFirstname($socialClass, $context);
+        $surname = $this->getSurname($socialClass, $context);
 
         $fullname = $name;
         if ($surname != '')
@@ -573,11 +573,11 @@ class Entity extends Node implements nodeInterface {
     }
 
     // Retourne les localisations de l'entité.
-    public function getLocations(string $socialClass = ''): array
+    public function getLocations(string $socialClass = '', string $context = ''): array
     {
         if ($this->_id == '0')
             return array();
-        return $this->getProperties(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getProperties(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass, $context);
     }
 
     public function getLocalisationsID(string $socialClass = ''): array
@@ -587,11 +587,11 @@ class Entity extends Node implements nodeInterface {
         return $this->getPropertiesID(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
     }
 
-    public function getLocation(string $socialClass = ''): string
+    public function getLocation(string $socialClass = '', string $context = ''): string
     {
         if ($this->_id == '0')
             return '';
-        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass);
+        return $this->getProperty(References::REFERENCE_NEBULE_OBJET_ENTITE_LOCALISATION, $socialClass, $context);
     }
 
     public function getLocalisationID(string $socialClass = ''): string

@@ -28,6 +28,8 @@ class ActionsObjects extends Actions implements ActionsInterface {
     const UPLOAD_FILE_UPDATE = 'action_object_upload_file_update';
     const UPLOAD_FILE_PROTECT = 'action_object_upload_file_protect';
     const UPLOAD_FILE_OBFUSCATED = 'action_object_upload_file_obf';
+    const UPLOAD_FILE_GROUP = 'action_object_upload_file_group';
+    const UPLOAD_FILE_GROUP_TYPED = 'action_object_upload_file_group_typed';
     const UPLOAD_TEXT = 'action_object_upload_text';
     const UPLOAD_TEXT_NAME = 'action_object_upload_text_name';
     const UPLOAD_TEXT_TYPE = 'action_object_upload_text_type';
@@ -38,6 +40,12 @@ class ActionsObjects extends Actions implements ActionsInterface {
 
     public function initialisation(): void {}
     public function genericActions(): void {
+        if ($this->_nebuleInstance->getHaveInput(self::UPLOAD_FILE))
+            $this->_uploadFile();
+
+
+
+        // FIXME
         $this->_extractActionDeleteObject();
         $this->_extractActionProtectObject();
         $this->_extractActionUnprotectObject();
@@ -46,7 +54,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_extractActionShareProtectObjectToGroupClosed();
         $this->_extractActionCancelShareProtectObjectToEntity();
         $this->_extractActionSynchronizeObject();
-        $this->_extractActionUploadFile();
+        //$this->_extractActionUploadFile();
         $this->_extractActionUploadText();
 
         if ($this->_actionDeleteObject
@@ -73,8 +81,8 @@ class ActionsObjects extends Actions implements ActionsInterface {
 
         if ($this->_actionSynchronizeObjectInstance != '')
             $this->_actionSynchronizeObject();
-        if ($this->_actionUploadFile)
-            $this->_actionUploadFile();
+        //if ($this->_uploadFile)
+        //    $this->_actionUploadFile();
         if ($this->_actionUploadText)
             $this->_actionUploadText();
     }
@@ -87,16 +95,9 @@ class ActionsObjects extends Actions implements ActionsInterface {
     protected ?Node $_actionDeleteObjectInstance = null;
     protected bool $_actionDeleteObjectForce = false;
     protected bool $_actionDeleteObjectObfuscate = false;
-    public function getDeleteObject(): bool
-    {
-        return $this->_actionDeleteObject;
-    }
-    public function getDeleteObjectID(): string
-    {
-        return $this->_actionDeleteObjectID;
-    }
-    protected function _extractActionDeleteObject(): void
-    {
+    public function getDeleteObject(): bool { return $this->_actionDeleteObject; }
+    public function getDeleteObjectID(): string { return $this->_actionDeleteObjectID; }
+    protected function _extractActionDeleteObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteObject'))
             return;
@@ -122,8 +123,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         )
             $this->_actionDeleteObjectObfuscate = true;
     }
-    protected function _actionDeleteObject(): void
-    {
+    protected function _actionDeleteObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Suppression de l'objet.
@@ -134,8 +134,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected ?Node $_actionProtectObjectInstance = null;
-    protected function _extractActionProtectObject(): void
-    {
+    protected function _extractActionProtectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupProtectObject'))
             return;
@@ -145,8 +144,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionProtectObjectInstance = $this->_cacheInstance->newNode($arg);
     }
-    protected function _actionProtectObject(): void
-    {
+    protected function _actionProtectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
@@ -154,8 +152,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected ?Node $_actionUnprotectObjectInstance = null;
-    protected function _extractActionUnprotectObject(): void
-    {
+    protected function _extractActionUnprotectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUnprotectObject'))
             return;
@@ -165,8 +162,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionUnprotectObjectInstance = $this->_cacheInstance->newNode($arg);
     }
-    protected function _actionUnprotectObject(): void
-    {
+    protected function _actionUnprotectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
@@ -174,8 +170,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected string $_actionShareProtectObjectToEntity = '';
-    protected function _extractActionShareProtectObjectToEntity(): void
-    {
+    protected function _extractActionShareProtectObjectToEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToEntity'))
             return;
@@ -185,8 +180,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToEntity = $arg;
     }
-    protected function _actionShareProtectObjectToEntity(): void
-    {
+    protected function _actionShareProtectObjectToEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
@@ -194,8 +188,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected string $_actionShareProtectObjectToGroupOpened = '';
-    protected function _extractActionShareProtectObjectToGroupOpened(): void
-    {
+    protected function _extractActionShareProtectObjectToGroupOpened(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToGroupOpened'))
             return;
@@ -205,8 +198,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToGroupOpened = $arg;
     }
-    protected function _actionShareProtectObjectToGroupOpened(): void
-    {
+    protected function _actionShareProtectObjectToGroupOpened(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
@@ -218,8 +210,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected string $_actionShareProtectObjectToGroupClosed = '';
-    protected function _extractActionShareProtectObjectToGroupClosed(): void
-    {
+    protected function _extractActionShareProtectObjectToGroupClosed(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupShareProtectObjectToGroupClosed'))
             return;
@@ -229,8 +220,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionShareProtectObjectToGroupClosed = $arg;
     }
-    protected function _actionShareProtectObjectToGroupClosed(): void
-    {
+    protected function _actionShareProtectObjectToGroupClosed(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
@@ -242,8 +232,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected string $_actionCancelShareProtectObjectToEntity = '';
-    protected function _extractActionCancelShareProtectObjectToEntity(): void
-    {
+    protected function _extractActionCancelShareProtectObjectToEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCancelShareProtectObjectToEntity'))
             return;
@@ -253,8 +242,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionCancelShareProtectObjectToEntity = $arg;
     }
-    protected function _actionCancelShareProtectObjectToEntity(): void
-    {
+    protected function _actionCancelShareProtectObjectToEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande d'annulation de protection de l'objet.
@@ -262,12 +250,8 @@ class ActionsObjects extends Actions implements ActionsInterface {
     }
 
     protected ?Node $_actionSynchronizeObjectInstance = null;
-    public function getSynchronizeObjectInstance(): ?Node
-    {
-        return $this->_actionSynchronizeObjectInstance;
-    }
-    protected function _extractActionSynchronizeObject(): void
-    {
+    public function getSynchronizeObjectInstance(): ?Node { return $this->_actionSynchronizeObjectInstance; }
+    protected function _extractActionSynchronizeObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeObject'))
             return;
@@ -277,8 +261,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         if (Node::checkNID($arg))
             $this->_actionSynchronizeObjectInstance = $this->_cacheInstance->newNode($arg);
     }
-    protected function _actionSynchronizeObject(): void
-    {
+    protected function _actionSynchronizeObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeObjectInstance);
@@ -287,139 +270,28 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_actionSynchronizeObjectInstance->syncObject();
     }
 
-    protected bool $_actionUploadFile = false;
-    protected string $_actionUploadFileID = '0';
-    protected string $_actionUploadFileName = '';
-    protected string $_actionUploadFileExtension = '';
-    protected string $_actionUploadFileType = '';
-    protected string $_actionUploadFileSize = '';
-    protected string $_actionUploadFilePath = '';
-    protected bool $_actionUploadFileUpdate = false;
-    protected bool $_actionUploadFileProtect = false;
-    protected bool $_actionUploadFileObfuscateLinks = false;
-    protected bool $_actionUploadFileError = false;
-    protected string $_actionUploadFileErrorMessage = 'Initialisation du transfert.';
-    public function getUploadObject(): bool
-    {
-        return $this->_actionUploadFile;
-    }
-    public function getUploadObjectID(): string
-    {
-        return $this->_actionUploadFileID;
-    }
-    public function getUploadObjectError(): bool
-    {
-        return $this->_actionUploadFileError;
-    }
-    public function getUploadObjectErrorMessage(): string
-    {
-        return $this->_actionUploadFileErrorMessage;
-    }
-    protected function _extractActionUploadFile(): void
-    {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadFile'))
-            return;
-
-        $uploadArgName = self::UPLOAD_FILE;
-        if (!isset($_FILES[$uploadArgName]))
-            return;
-        $uploadRawName = $_FILES[$uploadArgName]['name'];
-        $uploadError = $_FILES[$uploadArgName]['error'];
-
-        switch ($_FILES[self::UPLOAD_FILE]['error']) {
-            case UPLOAD_ERR_OK:
-                // Extraction des méta données du fichier.
-                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[self::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
-                $upinfo = pathinfo($upfname);
-                $upext = $upinfo['extension'];
-                $upname = basename($upfname, '.' . $upext);
-                $upsize = $_FILES[self::UPLOAD_FILE]['size'];
-                $uppath = $_FILES[self::UPLOAD_FILE]['tmp_name'];
-                $uptype = '';
-                // Si le fichier est bien téléchargé.
-                if (file_exists($uppath)) {
-                    // Si le fichier n'est pas trop gros.
-                    if ($upsize <= $this->_configurationInstance->getOptionUntyped('ioReadMaxData')) {
-                        // Lit le type mime.
-                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                        $uptype = finfo_file($finfo, $uppath);
-                        finfo_close($finfo);
-                        if ($uptype == 'application/octet-stream') {
-                            $uptype = $this->_getFilenameTypeMime("$upname.$upext");
-                        }
-
-                        // Extrait les options de téléchargement.
-                        $argUpd = filter_has_var(INPUT_POST, self::UPLOAD_FILE_UPDATE);
-                        $argPrt = filter_has_var(INPUT_POST, self::UPLOAD_FILE_PROTECT);
-                        $argObf = filter_has_var(INPUT_POST, self::UPLOAD_FILE_OBFUSCATED);
-
-                        // Ecriture des variables.
-                        $this->_actionUploadFile = true;
-                        $this->_actionUploadFileName = $upname;
-                        $this->_actionUploadFileExtension = $upext;
-                        $this->_actionUploadFileType = $uptype;
-                        $this->_actionUploadFileSize = $upsize;
-                        $this->_actionUploadFilePath = $uppath;
-                        $this->_actionUploadFileUpdate = $argUpd;
-                        if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
-                            $this->_actionUploadFileProtect = $argPrt;
-                        }
-                        if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
-                            $this->_actionUploadFileObfuscateLinks = $argObf;
-                        }
-                    } else {
-                        $this->_metrologyInstance->addLog('action _extractActionUploadFile ioReadMaxData exeeded', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                        $this->_actionUploadFileError = true;
-                        $this->_actionUploadFileErrorMessage = 'Le fichier dépasse la taille limite de transfert.';
-                    }
-                } else {
-                    $this->_metrologyInstance->addLog('action _extractActionUploadFile upload error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                    $this->_actionUploadFileError = true;
-                    $this->_actionUploadFileErrorMessage = "No uploaded file.";
-                }
-                unset($upfname, $upinfo, $upext, $upname, $upsize, $uppath, $uptype);
-                break;
-            case UPLOAD_ERR_INI_SIZE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
-                break;
-            case UPLOAD_ERR_FORM_SIZE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.";
-                break;
-            case UPLOAD_ERR_PARTIAL:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "The uploaded file was only partially uploaded.";
-                break;
-            case UPLOAD_ERR_NO_FILE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "No file was uploaded.";
-                break;
-            case UPLOAD_ERR_NO_TMP_DIR:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "Missing a temporary folder.";
-                break;
-            case UPLOAD_ERR_CANT_WRITE:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "Failed to write file to disk.";
-                break;
-            case UPLOAD_ERR_EXTENSION:
-                $this->_metrologyInstance->addLog('action _extractActionUploadFile upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-                $this->_actionUploadFileError = true;
-                $this->_actionUploadFileErrorMessage = "A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop.";
-                break;
-        }
-    }
-    protected function _getFilenameTypeMime(string $f): string
-    {
-        $m = '/etc/mime.types'; // Chemin du fichier pour trouver le type mime.
+    protected bool $_uploadFile = false;
+    protected string $_uploadFileID = '0';
+    protected string $_uploadFileName = '';
+    protected string $_uploadFileExtension = '';
+    protected string $_uploadFileType = '';
+    protected int $_uploadFileSize = 0;
+    protected string $_uploadFilePath = '';
+    protected bool $_uploadFileUpdate = false;
+    protected bool $_uploadFileProtect = false;
+    protected bool $_uploadFileObfuscate = false;
+    protected bool $_uploadFileObfuscateLink = false;
+    protected string $_uploadFileGroup = '';
+    protected string $_uploadFileGroupTyped = '';
+    protected string $_uploadFileContext = '';
+    protected bool $_uploadFileError = false;
+    protected string $_uploadFileErrorMessage = 'Initialisation du transfert.';
+    public function getUploadObject(): bool { return $this->_uploadFile; }
+    public function getUploadObjectID(): string { return $this->_uploadFileID; }
+    public function getUploadObjectError(): bool { return $this->_uploadFileError; }
+    public function getUploadObjectErrorMessage(): string { return $this->_uploadFileErrorMessage; }
+    protected function _getFilenameTypeMime(string $f): string {
+        $m = '/etc/mime.types';
         $e = substr(strrchr($f, '.'), 1);
         if (empty($e))
             return 'application/octet-stream';
@@ -435,51 +307,124 @@ class ActionsObjects extends Actions implements ActionsInterface {
         }
         return 'application/octet-stream';
     }
-    protected function _actionUploadFile(): void
-    {
+    protected function _uploadFile(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-
-        // Lit le contenu du fichier.
-        $data = file_get_contents($_FILES[self::UPLOAD_FILE]['tmp_name']);
-
-        // Ecrit le contenu dans l'objet.
-        $instance = new Node($this->_nebuleInstance, '0', $data, $this->_actionUploadFileProtect);
-        if ($instance === false) {
-            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_actionUploadFileError = true;
-            $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+        if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadFile')) {
+            $this->_metrologyInstance->addLog('unauthorised to upload file', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c063ad79');
             return;
         }
-
-        // Lit l'ID.
-        $id = $instance->getID();
-        unset($data);
-        if ($id == '0') {
-            $this->_metrologyInstance->addLog('action _actionUploadFile cant create object', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_actionUploadFileError = true;
-            $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+        if (!isset($_FILES[self::UPLOAD_FILE]))
             return;
-        }
-        $this->_actionUploadFileID = $id;
+        $this->_uploadFile = true;
 
-        // Définition de la date et le signataire.
-        $date = date(DATE_ATOM);
-        $signer = $this->_entitiesInstance->getGhostEntityEID();
+        try {
+            switch ($_FILES[self::UPLOAD_FILE]['error']) {
+                case UPLOAD_ERR_OK:
+                    $filename = strtok(trim((string)filter_var($_FILES[self::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n");
+                    if (extension_loaded('mbstring'))
+                        $filename = mb_convert_encoding($filename, 'UTF-8');
+                    else
+                        $this->_metrologyInstance->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ce685199');
+                    $fileInfo = pathinfo($filename);
+                    $this->_uploadFileExtension = $fileInfo['extension'];
+                    $this->_uploadFileName = basename($filename, '.' . $this->_uploadFileExtension);
+                    $this->_uploadFileSize = $_FILES[self::UPLOAD_FILE]['size'];
+                    $this->_uploadFilePath = $_FILES[self::UPLOAD_FILE]['tmp_name'];
+                    if (file_exists($this->_uploadFilePath)) {
+                        $ioReadMaxUpload = $this->_configurationInstance->getOptionAsInteger('ioReadMaxUpload');
+                        if ($this->_uploadFileSize <= $ioReadMaxUpload) {
+                            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                            $this->_uploadFileType = finfo_file($finfo, $this->_uploadFilePath);
+                            finfo_close($finfo);
+                            if ($this->_uploadFileType == 'application/octet-stream') {
+                                $this->_uploadFileType = $this->_getFilenameTypeMime("$this->_uploadFileName.$this->_uploadFileExtension");
+                            }
 
-        // Création du type mime.
-        $instance->setType($this->_actionUploadFileType);
+                            $this->_uploadFileObfuscate = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getFilterInput(self::UPLOAD_FILE_OBFUSCATED) == 'y');
+                            $this->_uploadFileProtect = ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject') && $this->getFilterInput(self::UPLOAD_FILE_PROTECT) == 'y');
+                            $this->_uploadFileUpdate = $this->getHaveInput(self::UPLOAD_FILE_UPDATE);
+                            $this->_uploadFileGroup = $this->getFilterInput(self::UPLOAD_FILE_GROUP, FILTER_FLAG_NO_ENCODE_QUOTES);
+                            $this->_uploadFileGroupTyped = $this->getFilterInput(self::UPLOAD_FILE_GROUP_TYPED, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        // Crée l'objet du nom.
-        $instance->setName($this->_actionUploadFileName);
-
-        // Crée l'objet de l'extension.
-        $instance->setSuffixName($this->_actionUploadFileExtension);
-
-        // Si mise à jour de l'objet en cours.
-        if ($this->_actionUploadFileUpdate) {
-            $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-            $instanceBL->addLink('u>' . $this->_applicationInstance->getCurrentObjectID() . '>' . $id);
-            $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
+                            $data = file_get_contents($_FILES[self::UPLOAD_FILE]['tmp_name']);
+                            $instance = new Node($this->_nebuleInstance, '0');
+                            $instance->setWriteContent($data, $this->_uploadFileProtect, $this->_uploadFileObfuscate);
+                            unset($data);
+                            $this->_metrologyInstance->addLog('upload file name=' . $filename . ' size=' . (string)$this->_uploadFileSize, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd6d9db77');
+                            if ($instance->getID() == '0') {
+                                $this->_metrologyInstance->addLog('cant create object', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9a0b2492');
+                                $this->_uploadFileError = true;
+                                $this->_uploadFileErrorMessage = '::9a0b2492';
+                                return;
+                            }
+                            $this->_uploadFileID = $instance->getID();
+                            $this->_metrologyInstance->addLog('upload file oid=' . $this->_uploadFileID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0ac7ff91');
+                            $instance->setType($this->_uploadFileType, $this->_uploadFileProtect, $this->_uploadFileObfuscate);
+                            $instance->setName($this->_uploadFileName, $this->_uploadFileProtect, $this->_uploadFileObfuscate);
+                            $instance->setSuffixName($this->_uploadFileExtension, $this->_uploadFileProtect, $this->_uploadFileObfuscate);
+                            if ($this->_uploadFileUpdate) {
+                                $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
+                                $instanceBL->addLink('u>' . $this->_applicationInstance->getCurrentObjectID() . '>' . $instance->getID());
+                                $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
+                            }
+                            if ($this->_uploadFileGroup != '' && \Nebule\Library\Node::checkNID($this->_uploadFileGroup)) {
+                                $group = $this->_cacheInstance->newNode($this->_uploadFileGroup, \Nebule\Library\Cache::TYPE_GROUP);
+                                if ($this->_uploadFileGroupTyped == '')
+                                    $group->setAsMemberNID($this->_uploadFileID, $this->_uploadFileObfuscate);
+                                else
+                                    $group->setAsTypedMemberNID($this->_uploadFileID, $this->_uploadFileGroupTyped, $this->_uploadFileObfuscate);
+                            }
+                        } else {
+                            $this->_metrologyInstance->addLog('ioReadMaxData exceeded '  .$this->_uploadFileSize . '/' . $ioReadMaxUpload, Metrology::LOG_LEVEL_ERROR, __METHOD__, '7e720681');
+                            $this->_uploadFileError = true;
+                            $this->_uploadFileErrorMessage = '::7e720681';
+                        }
+                    } else {
+                        $this->_metrologyInstance->addLog('upload error', Metrology::LOG_LEVEL_ERROR, __METHOD__, '0a2485f6');
+                        $this->_uploadFileError = true;
+                        $this->_uploadFileErrorMessage = '::0a2485f6';
+                    }
+                    break;
+                case UPLOAD_ERR_INI_SIZE:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_INI_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '49eedd04');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::49eedd04';
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_FORM_SIZE', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e3a3864c');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::e3a3864c';
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_PARTIAL', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4555fd63');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::4555fd63';
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_NO_FILE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '27d21ac9');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::27d21ac9';
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_NO_TMP_DIR', Metrology::LOG_LEVEL_ERROR, __METHOD__, '5e464992');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::5e464992';
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_CANT_WRITE', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3ab22f3a');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::3ab22f3a';
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $this->_metrologyInstance->addLog('upload PHP error UPLOAD_ERR_EXTENSION', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e3c9845c');
+                    $this->_uploadFileError = true;
+                    $this->_uploadFileErrorMessage = '::e3c9845c';
+                    break;
+            }
+        } catch (\Exception $e) {
+            $this->_metrologyInstance->addLog('upload file error ('  . $e->getCode() . ') : ' . $e->getFile()
+                . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '7e720681');
         }
     }
 
@@ -537,8 +482,8 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $instance = new Node($this->_nebuleInstance, '0', $this->_actionUploadTextContent, $this->_actionUploadTextProtect);
         if ($instance === false) {
             $this->_metrologyInstance->addLog('action _actionUploadText cant create object instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_actionUploadFileError = true;
-            $this->_actionUploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
+            $this->_uploadFileError = true;
+            $this->_uploadFileErrorMessage = "L'instance de l'objet n'a pas pu être créée.";
             return;
         }
 
@@ -546,8 +491,8 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $id = $instance->getID();
         if ($id == '0') {
             $this->_metrologyInstance->addLog('action _actionUploadText cant create object', Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
-            $this->_actionUploadFileError = true;
-            $this->_actionUploadFileErrorMessage = "L'objet n'a pas pu être créé.";
+            $this->_uploadFileError = true;
+            $this->_uploadFileErrorMessage = "L'objet n'a pas pu être créé.";
             return;
         }
         $this->_actionUploadTextID = $id;

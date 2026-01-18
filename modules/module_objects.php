@@ -392,6 +392,18 @@ class ModuleObjects extends Module {
                     . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
                     . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
+
+            case 'typeFile':
+                $hookArray[] = array(
+                    'name' => '::seeTheFolder',
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $instance->getID()
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
+                break;
         }
         return $hookArray;
     }

@@ -104,7 +104,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::BACK' => 'Revenir',
             '::SecurityChecks' => 'Tests de sécurité',
             '::icon:DEFAULT_ICON_LO' => 'Objet',
-            '::HtmlHeadDescription' => 'Page web cliente sylabe pour nebule.',
+            '::HtmlHeadDescription' => 'Application web pour nebule.',
             '::Experimental' => '[Experimental]',
             '::Developpement' => '[En cours de développement]',
             '::help' => 'Aide',
@@ -212,6 +212,18 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::synchroAll' => 'Synchroniser tout',
             '::refreshList' => 'Rafraîchir la liste',
 
+            // errors
+            '::9a0b2492' => 'Canot create node for uploaded file.',
+            '::7e720681' => 'The uploaded file exceeds the max filesize.',
+            '::0a2485f6' => 'No uploaded file.',
+            '::49eedd04' => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+            '::e3a3864c' => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+            '::4555fd63' => 'The uploaded file was only partially uploaded.',
+            '::27d21ac9' => 'No file was uploaded.',
+            '::5e464992' => 'Missing a temporary folder.',
+            '::3ab22f3a' => 'Failed to write file to disk.',
+            '::e3c9845c' => 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop.',
+
             // Groups
             '::group' => 'groupe',
             '::Group' => 'Groupe',
@@ -318,6 +330,8 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::createFolderOK' => 'Le dossier a été créé',
             '::createFolderNOK' => "Le dossier n'a pas été créé ! %s",
             '::createObfuscatedFolder' => 'Créer un dossier dissimulé',
+            '::createProtectedNode' => 'Create a protected node',
+            '::createObfuscatedNode' => 'Create an obfuscated node',
             '::deleteFolder' => 'Supprimer le dossier',
             '::modifyFolder' => 'Modifier le dossier',
             '::removeFolder' => 'Retirer le dossier',
@@ -325,6 +339,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::getFolder' => 'Récupérer un dossier',
             '::returnToFolder' => 'Retourner au dossier',
             '::addObject' => 'Ajouter un objet',
+            '::addFile' => 'Ajouter un fichier',
 
             // Galleries
             '::gallery' => 'galerie',

@@ -169,10 +169,10 @@ class Display extends Displays
                     )
                 ) {
                     if (!$this->_unlocked) {
-                        $instanceMessage = new DisplayInformation($this->_applicationInstance);
-                        $instanceMessage->setType(DisplayItemIconMessage::TYPE_WARN);
+                        $instanceMessage = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
+                        $instanceMessage->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
                         $instanceMessage->setDisplayAlone(true);
-                        $instanceMessage->setRatio(DisplayItem::RATIO_SHORT);
+                        $instanceMessage->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                         if ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink'))
                             $instanceMessage->setMessage('::info_OnlySignedLinks');
                         else
@@ -188,7 +188,7 @@ class Display extends Displays
                                   action="<?php echo '?' . References::COMMAND_TOKEN . '=' . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue(); ?>">
                                 <label>
                                     <input type="text" class="newlink"
-                                           name="<?php echo ActionsLinks::UPLOAD_SIGNED; ?>"
+                                           name="<?php echo \Nebule\Library\ActionsLinks::UPLOAD_SIGNED; ?>"
                                            value=""/>
                                 </label><br/>
                                 <input type="submit"
@@ -205,7 +205,7 @@ class Display extends Displays
                                        name="MAX_FILE_SIZE"
                                        value="<?php echo $this->_configurationInstance->getOptionUntyped('ioReadMaxData'); ?>"/>
                                 <input type="file"
-                                       name="<?php echo ActionsLinks::UPLOAD_FILE_LINKS; ?>"/><br/>
+                                       name="<?php echo \Nebule\Library\ActionsLinks::UPLOAD_FILE_LINKS; ?>"/><br/>
                                 <input type="submit"
                                        value="Upload"/>
                             </form>
@@ -228,37 +228,37 @@ class Display extends Displays
 
                     foreach (array('permitWrite', 'permitWriteLink', 'permitUploadLink', 'permitPublicUploadLink', 'permitPublicUploadCodeAuthoritiesLink') as $option) {
                         $variable = "instanceMessage$option";
-                        $$variable = new DisplayInformation($this->_applicationInstance);
+                        $$variable = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                         if ($this->_configurationInstance->getOptionAsBoolean($option)) {
                             $$variable->setMessage("$option<br />true");
-                            $$variable->setType(DisplayItemIconMessage::TYPE_OK);
+                            $$variable->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                         } else {
                             $$variable->setMessage("$option<br />false");
-                            $$variable->setType(DisplayItemIconMessage::TYPE_ERROR);
+                            $$variable->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                             if ($option == 'permitPublicUploadLink' || $option == 'permitPublicUploadCodeAuthoritiesLink')
-                                $$variable->setType(DisplayItemIconMessage::TYPE_WARN);
+                                $$variable->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
                         }
                         $$variable->setIconText('Option');
                         $instanceList->addItem($$variable);
                     }
 
-                    $instanceMessageUnlock = new DisplayInformation($this->_applicationInstance);
+                    $instanceMessageUnlock = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                         if ($this->_unlocked) {
                             $instanceMessageUnlock->setMessage('Entity unlocked');
-                            $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_OK);
+                            $instanceMessageUnlock->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                         } else {
                             $instanceMessageUnlock->setMessage('Entity locked');
-                            $instanceMessageUnlock->setType(DisplayItemIconMessage::TYPE_ERROR);
+                            $instanceMessageUnlock->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                         }
                     $instanceList->addItem($instanceMessageUnlock);
 
-                    $instanceMessageError = new DisplayInformation($this->_applicationInstance);
+                    $instanceMessageError = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
                     $instanceMessageError->setMessage('::err_NotPermit');
-                    $instanceMessageError->setType(DisplayItemIconMessage::TYPE_ERROR);
+                    $instanceMessageError->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
                     $instanceMessageError->setIconText('Final result of conditions');
                     $instanceList->addItem($instanceMessageError);
 
-                    $instanceList->setRatio(DisplayItem::RATIO_SHORT);
+                    $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                     $instanceList->display();
                 }
                 ?>

@@ -5,7 +5,7 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020260102
+# Version 020260118
 
 echo ' > start'
 
@@ -595,6 +595,7 @@ EOF
   cat "${WORKSPACE}/applications/portfolio.php" > "/tmp/portfolio.php"
   { tail +4 "${WORKSPACE}/modules/module_folders.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_groups.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
+    tail +4 "${WORKSPACE}/modules/module_objects.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/module_lang.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/langs/module_lang_de-de.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
     tail +4 "${WORKSPACE}/modules/langs/module_lang_en-en.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';

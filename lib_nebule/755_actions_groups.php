@@ -38,17 +38,17 @@ class ActionsGroups extends Actions implements ActionsInterface {
 
     public function initialisation(): void {}
     public function genericActions(): void {
-        if ($this->getHaveInput(self::CREATE))
+        if ($this->_nebuleInstance->getHaveInput(self::CREATE))
             $this->_createGroup();
-        if ($this->getHaveInput(self::DELETE))
+        if ($this->_nebuleInstance->getHaveInput(self::DELETE))
             $this->_deleteGroup();
-        if ($this->getHaveInput(self::SYNCHRO))
+        if ($this->_nebuleInstance->getHaveInput(self::SYNCHRO))
             $this->_synchroGroup();
-        if ($this->getHaveInput(self::ADD_MEMBER))
+        if ($this->_nebuleInstance->getHaveInput(self::ADD_MEMBER))
             $this->_addMember();
-        if ($this->getHaveInput(self::REMOVE_MEMBER))
+        if ($this->_nebuleInstance->getHaveInput(self::REMOVE_MEMBER))
             $this->_removeMember();
-        if ($this->getHaveInput(self::CREATE_MEMBER))
+        if ($this->_nebuleInstance->getHaveInput(self::CREATE_MEMBER))
             $this->_addCreateMember();
     }
     public function specialActions(): void {}

@@ -4196,7 +4196,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques à l'objet pour le module en cours.
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
-                $appHookList = $module->getHookList($selfHookName, $object);
+                try {
+                    $appHookList = $module->getHookList($selfHookName, $object);
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get selfHookName=' . $selfHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '26e60b29');
+                }
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
                         $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
@@ -4222,7 +4228,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques à l'objet pour tout sauf le module en cours.
         foreach ($modules as $module) {
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
-                $appHookList = $module->getHookList($selfHookName, $object);
+                try {
+                    $appHookList = $module->getHookList($selfHookName, $object);
+                } catch (\Exception $e) {
+                    $this->_metrologyInstance->addLog('error get selfHookName=' . $selfHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '210fff24');
+                }
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
                         $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
@@ -4248,7 +4260,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Ajoute les actions spécifiques au type d'objet.
         $i = 0;
         foreach ($modules as $module) {
-            $appHookList = $module->getHookList($typeHookName, $object);
+            try {
+                $appHookList = $module->getHookList($typeHookName, $object);
+            } catch (\Exception $e) {
+                $this->_metrologyInstance->addLog('error get typeHookName=' . $typeHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
+                    . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
+                    . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '230a27d3');
+            }
             foreach ($appHookList as $appHook) {
                 if ($appHook['name'] != '') {
                     $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
@@ -4363,12 +4381,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param bool        $permitWarnProtected
      * @return string
      */
-    public function getDisplayObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
-    {
-
-
-
-
+    public function getDisplayObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string {
         $result = '';
 
         if ($sizeCSS != 'full'
