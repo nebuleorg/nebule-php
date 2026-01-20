@@ -211,6 +211,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::synchronize' => 'Synchroniser',
             '::synchroAll' => 'Synchroniser tout',
             '::refreshList' => 'Rafraîchir la liste',
+            '::nid' => "Empreinte de l'objet",
 
             // errors
             '::9a0b2492' => 'Canot create node for uploaded file.',
@@ -340,6 +341,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::returnToFolder' => 'Retourner au dossier',
             '::addObject' => 'Ajouter un objet',
             '::addFile' => 'Ajouter un fichier',
+            '::seeTheFile' => 'Voir le fichier',
 
             // Galleries
             '::gallery' => 'galerie',

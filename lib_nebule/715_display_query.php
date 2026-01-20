@@ -205,11 +205,11 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
             }
 
             .queryDisplayPassword {
-                background: #ffe080;
+                background: rgba(255, 224, 0, 0.666);
             }
 
-            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText {
-                background: #ababab;
+            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile {
+                background: rgba(171, 171, 171, 0.5);
             }
 
             .queryTitleText {

@@ -210,6 +210,7 @@ class ModuleTranslateESCO extends ModuleTranslates
             '::synchronize' => 'Synchronize',
             '::synchroAll' => 'Synchronize all',
             '::refreshList' => 'Refresh the list',
+            '::nid' => 'Fingerprint of the object',
 
             // errors
             '::9a0b2492' => 'Canot create node for uploaded file.',
@@ -339,6 +340,7 @@ class ModuleTranslateESCO extends ModuleTranslates
             '::returnToFolder' => 'Return to the folder',
             '::addObject' => 'Add an object',
             '::addFile' => 'Add a file',
+            '::seeTheFile' => 'See the file',
 
             // Galleries
             '::gallery' => 'gallery',

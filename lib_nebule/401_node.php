@@ -403,8 +403,6 @@ class Node extends Functions implements nodeInterface {
 
         if (sizeof($links) == 0)
             return null;
-//foreach ($links as $link)
-//    $this->_metrologyInstance->addLog('DEBUGGING link=' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $link = end($links);
         if (!$link)
             return null;
@@ -511,14 +509,16 @@ class Node extends Functions implements nodeInterface {
         $this->_getLinksByNID3($links, $type, $socialClass, $context);
 
         foreach ($links as $i => $l) {
-            $properties[$i] = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('list property name=' . $type . ' value=' . $properties[$i], Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3bbb0aa7');
+            $p = $this->_readOneLineOtherObject($l->getParsed()['bl/rl/nid2']);
+            $properties[$i] = $p;
+            $this->_nebuleInstance->getMetrologyInstance()->addLog('list property name=' . $type . ' value=' . $p, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3bbb0aa7');
         }
         return $properties;
     }
 
     /**
-     * Lit si l'objet a une propriété particulière.
+     * Get if the node has a specific property.
+     * If the property is not an NID, calculate the NID of the property to find on links.
      *
      * @param string $type
      * @param string $property
@@ -528,9 +528,20 @@ class Node extends Functions implements nodeInterface {
      */
     public function getHaveProperty(string $type, string $property, string $socialClass = 'myself', string $context = ''): bool {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $list = $this->getProperties($type, $socialClass, $context);
+        if (!$this->checkNID($property))
+            $property = $this->_nebuleInstance->getFromDataNID($property);
+        $filter = array(
+                'bl/rl/req' => 'l',
+                'bl/rl/nid1' => $this->_id,
+                'bl/rl/nid2' => $property,
+                'bl/rl/nid3' => $type,
+        );
+        if ($context != '')
+            $filter['bl/rl/nid4'] = $context;
+        $links = array();
+        $this->getLinks($links, $filter, $socialClass, false);
 
-        if (in_array($property, $list))
+        if (sizeof($links) != 0)
             return true;
 
         return false;
@@ -2364,7 +2375,7 @@ class Node extends Functions implements nodeInterface {
             $limit = $maxLimit;
 
         // Extrait le contenu de l'objet, si possible.
-        $this->_metrologyInstance->addObjectRead(); // Metrologie.
+        $this->_metrologyInstance->addObjectRead();
         $this->_data = $this->_ioInstance->getObject($this->_id, $limit);
         if ($this->_data === false) {
             $this->_metrologyInstance->addLog('Cant read object ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa7f02d2');
@@ -2385,7 +2396,7 @@ class Node extends Functions implements nodeInterface {
         $hash = $this->_nebuleInstance->getFromDataNID($this->_data, $hashAlgo);
         if ($hash == $this->_id) // Si l'objet est valide.
         {
-            $this->_metrologyInstance->addObjectVerify(); // Metrologie.
+            $this->_metrologyInstance->addObjectVerify();
             $this->_haveData = true;
             return $this->_data;
         }
@@ -2501,9 +2512,7 @@ class Node extends Functions implements nodeInterface {
      */
     protected function _readOneLineOtherObject(string $id): string {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($id == ''
-                || !$this->_ioInstance->checkObjectPresent($id)
-        )
+        if ($id == '' || !$this->_ioInstance->checkObjectPresent($id))
             return '';
 
         $instance = $this->_cacheInstance->newNode($id);
@@ -2512,8 +2521,6 @@ class Node extends Functions implements nodeInterface {
             $text = mb_convert_encoding($text, 'UTF-8');
         else
             $this->_metrologyInstance->addLog('mbstring extension not installed or activated!', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c2becfad');
-
-        unset($instance);
         return $text;
     }
 

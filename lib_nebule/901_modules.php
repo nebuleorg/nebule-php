@@ -1000,9 +1000,11 @@ abstract class Module extends Functions implements ModuleInterface {
         }
         if (! \Nebule\Library\Node::checkNID($eid, false, false))
             return;
-        $this->_metrologyInstance->addLog('extract current blog owner eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
-        $this->_currentItemListOwners = array($eid => $eid);
+        $this->_metrologyInstance->addLog('extract current group founder eid=' . $eid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '0cdd6bb5');
         $this->_currentItemListFounders = array($eid => $eid);
+        $this->_currentItemListOwners = array($eid => $eid);
+        $this->_currentItemWritersList = array($eid => $eid);
+        $this->_currentItemFollowersList = array($eid => $eid);
     }
 
     protected function _getCurrentItemSocialList(?\Nebule\Library\Node $currentItem): void {
@@ -1018,14 +1020,18 @@ abstract class Module extends Functions implements ModuleInterface {
         $this->_currentItemListOwners = $instance->getListTypedMembersID(References::RID_OWNER, 'onlist', $this->_currentItemListFounders);
         foreach ($this->_currentItemListFounders as $eid)
             $this->_currentItemListOwners[$eid] = $eid;
-        foreach ($this->_currentItemListOwners as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        //foreach ($this->_currentItemListOwners as $eid)
+        //    $this->_metrologyInstance->addLog('DEBUGGING group owner eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_currentItemWritersList = $instance->getListTypedMembersID(References::RID_WRITER, 'onlist', $this->_currentItemListOwners);
-        foreach ($this->_currentItemWritersList as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        foreach ($this->_currentItemListOwners as $eid)
+            $this->_currentItemWritersList[$eid] = $eid;
+        //foreach ($this->_currentItemWritersList as $eid)
+        //    $this->_metrologyInstance->addLog('DEBUGGING group writer eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_currentItemFollowersList = $instance->getListTypedMembersID(References::RID_FOLLOWER, 'onlist', $this->_currentItemListOwners);
-        foreach ($this->_currentItemFollowersList as $eid)
-            $this->_metrologyInstance->addLog('DEBUGGING blog follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+        foreach ($this->_currentItemWritersList as $eid)
+            $this->_currentItemFollowersList[$eid] = $eid;
+        //foreach ($this->_currentItemFollowersList as $eid)
+        //    $this->_metrologyInstance->addLog('DEBUGGING group follower eid=' . $eid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
     protected function _displayRightsItem(string $name, int $icon = 3, int $returnView = 1): void {

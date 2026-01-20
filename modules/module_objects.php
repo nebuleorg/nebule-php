@@ -395,7 +395,7 @@ class ModuleObjects extends Module {
 
             case 'typeFile':
                 $hookArray[] = array(
-                    'name' => '::seeTheFolder',
+                    'name' => '::seeTheFile',
                     'icon' => $this::MODULE_LOGO,
                     'desc' => '',
                     'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME

@@ -222,6 +222,16 @@ class ModuleFolders extends Module {
                             . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
+                    $hookArray[] = array(
+                        'name' => '::refreshList',
+                        'icon' => References::REF_IMG['synobj'],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
 
@@ -424,7 +434,7 @@ class ModuleFolders extends Module {
         $instanceList->display();
     }
 
-    private function _display_InlineFolder(): void {
+    protected function _display_InlineFolder(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_displayNotSupported();
@@ -432,10 +442,10 @@ class ModuleFolders extends Module {
         }
 
         if ($this->_instanceCurrentItem->getMarkClosed())
-            $socialClass = 'myself';
+            $socialClass = 'onlist';
         else
             $socialClass = 'all';
-        $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($socialClass);
+        $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($socialClass, $this->_currentItemWritersList);
 
         $list = array();
         $this->_listSigners = array();
@@ -444,6 +454,7 @@ class ModuleFolders extends Module {
             $instance = $this->_cacheInstance->newNode($nid);
             $list[$nid] = $nid;
             $this->_listSigners[$nid] = $link->getSignersEID();
+            $this->_socialInstance->setList($this->_currentItemWritersList);
             if ($instance->getIsGroup($socialClass, $this::FOLDER_CONTEXT))
                 $this->_listTypes[$nid] = 'folder';
             else
@@ -479,7 +490,7 @@ class ModuleFolders extends Module {
                 . '&' . self::COMMAND_SELECT_FOLDER . '=' . $this->_instanceCurrentFolder->getID()
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_IS_GROUP
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_CONTEXT . '=' . $this::FOLDER_CONTEXT
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::FOLDER_CONTEXT
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentFolder->getID()
                 . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
@@ -541,7 +552,60 @@ class ModuleFolders extends Module {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::addObject', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackItemOrLogin('Folder');
-        $this->_displayNotImplemented();
+        if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
+            $link = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                . '&' . self::COMMAND_SELECT_FOLDER . '=' . $this->_instanceCurrentFolder->getID()
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentFolder->getID()
+                . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
+            $instance->setInputValue('');
+            $instance->setInputName(\Nebule\Library\ActionsGroups::ADD_MEMBER);
+            $instance->setIconText('::nid');
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $instance->setLink($link);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::ADD_MEMBER_OBFUSCATED);
+            $instance->setIconText('::createObfuscatedNode');
+            $instance->setSelectList(array(
+                'n' => $this->_translateInstance->getTranslate('::no'),
+                'y' => $this->_translateInstance->getTranslate('::yes'),
+            ));
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(false);
+            $instance->setWithSubmit(false);
+            $instanceList->addItem($instance);
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::addObject');
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::addObject'));
+            $instance->setIconText('::confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
+            $instanceList->addItem($instance);
+
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setOnePerLine();
+            $instanceList->display();
+        } else
+            $this->_displayNotPermit();
     }
 
     protected function _displayUploadFile(): void {
