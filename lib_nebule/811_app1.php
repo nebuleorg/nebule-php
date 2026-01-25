@@ -138,7 +138,7 @@ class App1 extends App0
         }
 
         // List all applications.
-        $instanceRID = $this->_cacheInstance->newNode(References::RID_INTERFACE_APPLICATIONS);
+        $instanceRID = $this->_cacheInstance->newNodeByType(References::RID_INTERFACE_APPLICATIONS);
         $phpNID = $this->getNidFromData(References::REFERENCE_OBJECT_APP_PHP);
         $links = array();
         $filter = array(

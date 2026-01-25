@@ -137,7 +137,7 @@ class Router extends Functions
             return '';
         }
 
-        $instance = $this->_cacheInstance->newNode($iid);
+        $instance = $this->_cacheInstance->newNodeByType($iid);
         if ($instance->getID() == '0') {
             $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ff07a565');
             return '';
@@ -201,7 +201,7 @@ class Router extends Functions
             $this->_metrologyInstance->addLog('invalid OID', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b5568936');
             return '';
         }
-        $instance = $this->_cacheInstance->newNode($oid);
+        $instance = $this->_cacheInstance->newNodeByType($oid);
         if ($instance->getID() == '0') {
             $this->_metrologyInstance->addLog('null instance', Metrology::LOG_LEVEL_ERROR, __METHOD__, '61d0b13c');
             return '';
@@ -281,7 +281,7 @@ class Router extends Functions
     private function _findApplicationCode(): string {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instance = $this->_cacheInstance->newNode($this->_applicationIID);
+        $instance = $this->_cacheInstance->newNodeByType($this->_applicationIID);
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -343,7 +343,7 @@ class Router extends Functions
     private function _getApplicationRelatedLink(string $type): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instance = $this->_cacheInstance->newNode($this->_applicationIID);
+        $instance = $this->_cacheInstance->newNodeByType($this->_applicationIID);
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',

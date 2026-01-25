@@ -5338,7 +5338,7 @@ function bootstrap_breakDisplay41LibraryEntities(): void {
 
     $entity = lib_getOptionAsString('subordinationEntity');
     if ($entity != '') {
-        $instance = $nebuleInstance->getCacheInstance()->newNode($entity, Cache::TYPE_ENTITY);
+        $instance = $nebuleInstance->getCacheInstance()->newNodeByType($entity, Cache::TYPE_ENTITY);
         bootstrap_breakDisplay411DisplayEntity('subordination',
             array($entity => $entity),
             array($entity => $instance),
@@ -6376,7 +6376,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
 
             // Définit l'entité comme entité instance du serveur.
             file_put_contents(LIB_LOCAL_ENTITY_FILE, $nebuleGhostPublicEntity);
-            $instancePubKey = $nebuleInstance->getCacheInstance()->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
+            $instancePubKey = $nebuleInstance->getCacheInstance()->newNodeByType('0', \Nebule\Library\Cache::TYPE_ENTITY);
             $instancePubKey->setContent($nebuleGhostPublicEntity);
             $nebuleInstance->getEntitiesInstance()->setGhostEntity($instancePubKey);
             $nebuleInstance->getEntitiesInstance()->setGhostEntityPassword($nebuleGhostPasswordEntity);

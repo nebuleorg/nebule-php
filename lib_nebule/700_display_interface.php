@@ -123,7 +123,7 @@ abstract class DisplayItemIconable extends DisplayItemCSS
 
     public function setIconRID(string $rid, bool $update = true): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $nid = $this->_cacheInstance->newNode($rid);
+        $nid = $this->_cacheInstance->newNodeByType($rid);
         if ($this->_nebuleInstance->getNodeIsRID($nid))
             $oid = $nid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         else
@@ -174,8 +174,8 @@ abstract class DisplayItemIconable extends DisplayItemCSS
         if (is_a($rid, 'Nebule\Library\Node'))
             $oid = $rid::DEFAULT_ICON_RID;
         else
-            $oid = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Node::DEFAULT_ICON_RID))->getID();
-        return $this->_cacheInstance->newNode($oid);
+            $oid = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Node::DEFAULT_ICON_RID))->getID();
+        return $this->_cacheInstance->newNodeByType($oid);
     }
 
     protected function _getIconUpdate(?Node $nid): string
@@ -306,7 +306,7 @@ abstract class DisplayItemIconMessage extends DisplayItemIconable
                 $icon = self::ICON_INFORMATION_RID;
                 break;
         }
-        $rid = $this->_cacheInstance->newNode($icon);
+        $rid = $this->_cacheInstance->newNodeByType($icon);
         $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, $this->_social);
     }
 }

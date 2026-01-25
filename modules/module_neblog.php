@@ -149,7 +149,7 @@ class ModuleNeblog extends Module
     protected function _initialisation(): void {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
-        $this->_instanceBlogNodeRID = $this->_cacheInstance->newNode(self::RID_BLOG_NODE);
+        $this->_instanceBlogNodeRID = $this->_cacheInstance->newNodeByType(self::RID_BLOG_NODE);
 
         $this->_getCurrentItem(self::COMMAND_SELECT_BLOG, 'Blog', $this->_instanceCurrentBlog, $this->_getDefaultItem($this::RID_BLOG_DEFAULT));
         if (! is_a($this->_instanceCurrentBlog, 'Nebule\Library\Node') || $this->_instanceCurrentBlog->getID() == '0')
@@ -170,7 +170,7 @@ class ModuleNeblog extends Module
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPost');
         if ($nid == '')
             return;
-        $this->_instanceCurrentBlogPost = $this->_cacheInstance->newNode($nid);
+        $this->_instanceCurrentBlogPost = $this->_cacheInstance->newNodeByType($nid);
         $this->_metrologyInstance->addLog('extract current blog post nid=' . $this->_instanceCurrentBlogPost->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'df3fcf87');
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPost', $nid);
     }
@@ -184,7 +184,7 @@ class ModuleNeblog extends Module
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrentBlogPage');
         if ($nid == '')
             return;
-        $this->_instanceCurrentBlogPage = $this->_cacheInstance->newNode($nid);
+        $this->_instanceCurrentBlogPage = $this->_cacheInstance->newNodeByType($nid);
         $this->_metrologyInstance->addLog('extract current blog page nid=' . $this->_instanceCurrentBlogPage->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c7298189');
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrentBlogPage', $nid);
     }
@@ -501,7 +501,7 @@ class ModuleNeblog extends Module
         foreach ($linksPost as $link) {
             $parsedLink = $link->getParsed();
             $postPostNID = $parsedLink['bl/rl/nid2'];
-            $postInstance = $this->_cacheInstance->newNode($postPostNID);
+            $postInstance = $this->_cacheInstance->newNodeByType($postPostNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($postInstance);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -598,10 +598,10 @@ class ModuleNeblog extends Module
                 $galleriesSigners[$nid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($galleriesNID as $nid) {
-            $instanceBlog = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceBlog = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceBlog);
@@ -746,7 +746,7 @@ class ModuleNeblog extends Module
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[2]);
+            $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[2]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::page:new');
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -778,7 +778,7 @@ class ModuleNeblog extends Module
         if ($this->_instanceCurrentBlog !== null)
             $list = $this->_getListPageNID($this->_instanceCurrentBlog, 'all');
         foreach ($list as $blogPageNID) {
-            $blogInstance = $this->_cacheInstance->newNode($blogPageNID);
+            $blogInstance = $this->_cacheInstance->newNodeByType($blogPageNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -973,7 +973,7 @@ class ModuleNeblog extends Module
             $oid = $this->_getOnLinkNID2($link);
         else
             $oid = '0';
-        return $this->_cacheInstance->newNode($oid);
+        return $this->_cacheInstance->newNodeByType($oid);
     }
 
     private function _displayBackOrLoginLocal(string $backMessage, string $backView, bool $addBlog = false): void {
@@ -1047,7 +1047,7 @@ class ModuleNeblog extends Module
 
         $list = $this->_getListContentOID($nid, 'all');
         foreach ($list as $i => $oid) {
-            $instance = $this->_cacheInstance->newNode($oid);
+            $instance = $this->_cacheInstance->newNodeByType($oid);
             $this->_displayContentBlock($instance);
         }
     }
@@ -1140,7 +1140,7 @@ class ModuleNeblog extends Module
             $parsedLink = $link->getParsed();
             $blogAnswerNID = $parsedLink['bl/rl/nid2'];
             $blogAnswerSID = $parsedLink['bs/rs1/eid'];
-            $blogInstance = $this->_cacheInstance->newNode($blogAnswerNID);
+            $blogInstance = $this->_cacheInstance->newNodeByType($blogAnswerNID);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setNID($blogInstance);
             $instance->setEnableLink(false);
@@ -1343,9 +1343,9 @@ class ModuleNeblog extends Module
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::owners', Displays::DEFAULT_ICON_ENT);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         foreach ($this->_currentItemListOwners as $eid) {
-            $instanceOwner = $this->_cacheInstance->newNode($eid, \Nebule\Library\Cache::TYPE_ENTITY);
+            $instanceOwner = $this->_cacheInstance->newNodeByType($eid, \Nebule\Library\Cache::TYPE_ENTITY);
             if (is_a($instanceOwner, '\Nebule\Library\Entity') && $instanceOwner->getID() != '0') {
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('all');

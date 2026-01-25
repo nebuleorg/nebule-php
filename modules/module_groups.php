@@ -80,9 +80,9 @@ class ModuleGroups extends Module {
         $this->_unlocked = $this->_entitiesInstance->getConnectedEntityIsUnlocked();
         $this->_socialClass = $this->getFilterInput(Displays::COMMAND_SOCIAL, FILTER_FLAG_ENCODE_LOW);
         $this->_hashGroup = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE);
-        $this->_hashGroupObject = $this->_cacheInstance->newNode($this->_hashGroup);
+        $this->_hashGroupObject = $this->_cacheInstance->newNodeByType($this->_hashGroup);
         $this->_hashGroupClosed = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME);
-        $this->_hashGroupClosedObject = $this->_cacheInstance->newNode($this->_hashGroupClosed);
+        $this->_hashGroupClosedObject = $this->_cacheInstance->newNodeByType($this->_hashGroupClosed);
         $this->_getCurrentItem(References::COMMAND_SELECT_GROUP, 'Group', $this->_instanceCurrentGroup);
         if (! is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node') || $this->_instanceCurrentGroup->getID() == '0')
             $this->_instanceCurrentGroup = null;
@@ -343,14 +343,14 @@ class ModuleGroups extends Module {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
             case 'addMember':
-                $node = $this->_cacheInstance->newNode($item);
+                $node = $this->_cacheInstance->newNodeByType($item);
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('self');
                 $instance->setNID($node);
                 $instance->setEnableColor(true);
                 $instance->setEnableIcon(true);
                 if ($this::RESTRICTED_TYPE == 'Entity') {
-                    $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+                    $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
                     $instance->setIcon($instanceIcon);
                 }
                 $instance->setEnableName(true);
@@ -548,7 +548,7 @@ class ModuleGroups extends Module {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($list as $nid => $signers) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instanceMember = $this->_cacheInstance->newNode($nid);
+            $instanceMember = $this->_cacheInstance->newNodeByType($nid);
             $instance->setSocial('self');
             $instance->setNID($instanceMember);
             $instance->setEnableColor(true);
@@ -598,7 +598,7 @@ class ModuleGroups extends Module {
         $instance->setStatus('');
         $instance->setEnableFlagUnlocked(true);
         //$instance->setSelfHookName('typeMenuEntity');
-        $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['oent']);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['oent']);
         $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
         $instance->setIcon($instanceIcon2);
         $instance->display();
@@ -609,7 +609,7 @@ class ModuleGroups extends Module {
 
     protected function _display_InlineAddToGroup(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
+        $instance = $this->_cacheInstance->newNodeByType(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -648,7 +648,7 @@ class ModuleGroups extends Module {
         $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         //$instance->setStatus('');
         $instance->setEnableFlagUnlocked(false);
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_LOGO);
+        $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_LOGO);
         $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
         $instance->setIcon($instanceIcon2);
         $instance->display();
@@ -694,10 +694,10 @@ class ModuleGroups extends Module {
                 $groupsSigners[$gid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($groupsGID as $gid) {
-            $instanceGroup = $this->_cacheInstance->newNode($gid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceGroup = $this->_cacheInstance->newNodeByType($gid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceGroup);

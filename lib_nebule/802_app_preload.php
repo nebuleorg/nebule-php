@@ -74,7 +74,7 @@ class AppPreload extends App0
             $nb = 0;
             foreach ($items as $item) {
                 if (!$this->_ioInstance->checkObjectPresent($item)) {
-                    $instance = $this->_cacheInstance->newNode($item);
+                    $instance = $this->_cacheInstance->newNodeByType($item);
                     $this->_routerInstance->getApplicationInstance()->getDisplayInstance()->displayInlineObjectColorNolink($instance);
                     echo "\n";
                     $instance->syncObject(false);

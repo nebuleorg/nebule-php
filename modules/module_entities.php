@@ -92,7 +92,7 @@ class ModuleEntities extends Module
         $this->_findDisplayEntity();
         $this->_hashType = $this->getNidFromData('nebule/objet/type');
         $this->_hashEntity = $this->getNidFromData('application/x-pem-file');
-        $this->_hashEntityObject = $this->_cacheInstance->newNode($this->_hashEntity);
+        $this->_hashEntityObject = $this->_cacheInstance->newNodeByType($this->_hashEntity);
     }
 
 
@@ -102,7 +102,7 @@ class ModuleEntities extends Module
         if ($instance !== null) {
             $nid = $instance->getID();
             if (!$instance instanceof \Nebule\Library\Entity && $instance->getIsEntity())
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\cache::TYPE_ENTITY);
+                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\cache::TYPE_ENTITY);
         } else
             $nid = $this->_nebuleInstance->getCurrentObjectOID();
         if ($instance instanceof \Nebule\Library\Entity)
@@ -808,7 +808,7 @@ class ModuleEntities extends Module
             && $arg_url != 'https://127.0.0.1/'
         ) {
             $this->_searchEntityID = $arg_id;
-            $this->_searchEntityInstance = $this->_cacheInstance->newNode($arg_url, \Nebule\Library\Cache::TYPE_ENTITY);
+            $this->_searchEntityInstance = $this->_cacheInstance->newNodeByType($arg_url, \Nebule\Library\Cache::TYPE_ENTITY);
         }
     }
 
@@ -876,7 +876,7 @@ class ModuleEntities extends Module
                 $messages[] = 'Master of directory';
             if ($this->_authoritiesInstance->getIsTimeMaster($entity))
                 $messages[] = 'Master of time';
-            $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial('self');
             $instance->setNID($entity);
@@ -915,7 +915,7 @@ class ModuleEntities extends Module
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
 
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('all');
         $instance->setNID($entity);
@@ -1200,7 +1200,7 @@ class ModuleEntities extends Module
                         ?>
 
                         <div class="moduleEntitiesActionDivIcon">
-                            <?php $instance = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LC); $this->_displayInstance->displayUpdateImage($instance); ?>
+                            <?php $instance = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LC); $this->_displayInstance->displayUpdateImage($instance); ?>
                         </div>
                         <div>
                             <p class="moduleEntitiesActionDate">
@@ -1226,7 +1226,7 @@ class ModuleEntities extends Module
                         ?>
 
                         <div class="moduleEntitiesActionDivIcon">
-                            <?php $instance = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LK); $this->_displayInstance->displayUpdateImage($instance); ?>
+                            <?php $instance = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LK); $this->_displayInstance->displayUpdateImage($instance); ?>
                         </div>
                         <div>
                             <p class="moduleEntitiesActionDate">
@@ -1312,7 +1312,7 @@ class ModuleEntities extends Module
                 $dispWarn = false;
                 // Vérifie si l'objet courant est une entité, affiche les messages de cette entité.
                 if ($typemime == 'application/x-pem-file' && $ispresent) {
-                    $entity = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+                    $entity = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_ENTITY);
                     echo $this->_applicationInstance->getTranslateInstance()->getTranslate(
                         '::DisplayEntityPublicMessages',
                         $this->_displayInstance->convertInlineObjectColorIconName($entity));
@@ -1357,7 +1357,7 @@ class ModuleEntities extends Module
                 $source = $link->getParsed()['bl/rl/nid1'];
                 $date = $link->getDate();
                 $object = $link->getParsed()['bl/rl/nid2'];
-                $objectInstance = $this->_cacheInstance->newNode($object);
+                $objectInstance = $this->_cacheInstance->newNodeByType($object);
 
                 ?>
 
@@ -1429,7 +1429,7 @@ class ModuleEntities extends Module
 
         $entities = array();
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entities[$link->getParsed()['bl/rl/nid2']] = $instance;
         }
 
@@ -1458,7 +1458,7 @@ class ModuleEntities extends Module
 
         $entities = array();
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entities[$link->getParsed()['bl/rl/nid2']] = $instance;
         }
 
@@ -1584,7 +1584,7 @@ class ModuleEntities extends Module
     private function _display_InlineSpecialEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $listOkEntities = array();
 
@@ -1687,7 +1687,7 @@ class ModuleEntities extends Module
                 $instance->setStatus('');
                 $instance->setEnableFlagUnlocked(true);
                 $instance->setSelfHookName('typeMenuEntity');
-                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['oent']); // FIXME
+                $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['oent']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
                 $instance->setIcon($instanceIcon2);
                 $instanceList->addItem($instance);
@@ -1714,7 +1714,7 @@ class ModuleEntities extends Module
                 $instance->setEnableFlagUnlocked(false);
                 $instance->setName($this->_translateInstance->getTranslate('::privateKey'));
                 $instance->setType(References::REFERENCE_OBJECT_TEXT);
-                $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['key']); // FIXME
+                $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['key']); // FIXME
                 $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
                 $instance->setIcon($instanceIcon2);
             } else {
@@ -2017,7 +2017,7 @@ class ModuleEntities extends Module
             $instanceList->addItem($instance);*/
 
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instanceNode = $this->_cacheInstance->newNode($contentOID);
+            $instanceNode = $this->_cacheInstance->newNodeByType($contentOID);
             $instance->setNID($instanceNode);
             $instance->setEnableColor(false);
             $instance->setEnableIcon(false);
@@ -2042,7 +2042,7 @@ class ModuleEntities extends Module
         $entity->getLinks($links, $filter, 'myself');
         foreach ($links as $link) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instanceNode = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $instanceNode = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
             $instance->setNID($instanceNode);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -2051,7 +2051,7 @@ class ModuleEntities extends Module
             $instance->setEnableContent(false);
             $instance->setEnableJS(false);
             $instance->setEnableLink(true);
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['lo']);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['lo']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
             $instanceList->addItem($instance);
@@ -2083,7 +2083,7 @@ class ModuleEntities extends Module
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($links as $link) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instanceNode = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $instanceNode = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
             $instance->setNID($instanceNode);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
@@ -2094,7 +2094,7 @@ class ModuleEntities extends Module
             $instance->setEnableLink(true);
             $instance->setEnableRefs(true);
             $instance->setRefs($link->getSignersEID());
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['key']);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['key']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
             $instanceList->addItem($instance);
@@ -2118,7 +2118,7 @@ class ModuleEntities extends Module
             string $hookName = 'typeMenuEntity'): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($listEntities as $i => $entity) {
             $eid = $entity->getID();
@@ -2140,7 +2140,7 @@ class ModuleEntities extends Module
             $instance->setEnableFlagUnlocked($showState);
             $instance->setFlagUnlocked($entity->getHavePrivateKeyPassword());
             $instance->setEnableContent(false);
-            $instance->setEnableJS(false);
+            $instance->setEnableJS(true);
             $instance->setEnableRefs(true);
             if (isset($listSigners[$i]))
                 $instance->setRefs($listSigners[$i]);

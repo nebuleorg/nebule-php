@@ -239,7 +239,7 @@ class Cache extends Functions
         return $instance;
     }
 
-    public function newNode(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet {
+    public function newNodeByType(string $nid, string $type = Cache::TYPE_NODE): Node|Entity|Group|Conversation|Currency|TokenPool|Token|Wallet {
         $this->_metrologyInstance->addLog('new nod NID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_filterNodeType($type);
 
@@ -255,6 +255,30 @@ class Cache extends Functions
                 }
             }
             $this->_writeCacheNodes($instance, $type);
+        }
+        return $instance;
+    }
+
+    public function newNode(string $nid): \Nebule\Library\Node {
+        $this->_metrologyInstance->addLog('new nod NID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->getIsOnCache($nid, self::TYPE_NODE)) {
+            $instance = $this->_cache[self::TYPE_NODE][$nid];
+            $this->_writeCacheTimestamp($nid, self::TYPE_NODE);
+        } else {
+            $instance = new \Nebule\Library\Node($this->_nebuleInstance, $nid);
+            $this->_writeCacheNodes($instance, self::TYPE_NODE);
+        }
+        return $instance;
+    }
+
+    public function newGroup(string $nid): \Nebule\Library\Group {
+        $this->_metrologyInstance->addLog('new group GID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->getIsOnCache($nid, self::TYPE_NODE)) {
+            $instance = $this->_cache[self::TYPE_NODE][$nid];
+            $this->_writeCacheTimestamp($nid, self::TYPE_NODE);
+        } else {
+            $instance = new \Nebule\Library\Group($this->_nebuleInstance, $nid);
+            $this->_writeCacheNodes($instance, self::TYPE_NODE);
         }
         return $instance;
     }

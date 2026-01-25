@@ -151,11 +151,11 @@ class Functions
         if ($nid == '0'
             || $nid == ''
         )
-            $instance = $this->_cacheInstance->newNode('0');
+            $instance = $this->_cacheInstance->newNodeByType('0');
         else {
-            $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_NODE);
+            $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_NODE);
             if ($instance->getIsEntity($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
             /*elseif ($instance->getIsWallet($social))
                 $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_WALLET);
             elseif ($instance->getIsToken($social))
@@ -165,15 +165,15 @@ class Functions
             elseif ($instance->getIsCurrency($social))
                 $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_CURRENCY);*/
             elseif ($instance->getIsConversation($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_CONVERSATION);
+                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_CONVERSATION);
             elseif ($instance->getIsGroup($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
             else {
                 $protected = $instance->getMarkProtected();
                 if ($protected)
-                    $instance = $this->_cacheInstance->newNode($instance->getID(), \Nebule\Library\Cache::TYPE_NODE);
+                    $instance = $this->_cacheInstance->newNodeByType($instance->getID(), \Nebule\Library\Cache::TYPE_NODE);
                 if ($instance->getType('all') == References::REFERENCE_OBJECT_ENTITY)
-                    $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+                    $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
             }
         }
 

@@ -433,7 +433,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
         $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
-            $this->_actionSynchronizeObjectLinksInstance = $this->_cacheInstance->newNode($arg);
+            $this->_actionSynchronizeObjectLinksInstance = $this->_cacheInstance->newNodeByType($arg);
     }
     protected function _actionSynchronizeObjectLinks(): void
     {

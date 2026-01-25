@@ -94,7 +94,7 @@ class Recovery extends Functions
         }
 
         foreach ($list as $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
             $this->_addAsLocalRecovery($instance, $link->getParsed()['bs/rs1/eid']);
         }
         unset($list);

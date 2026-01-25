@@ -762,7 +762,7 @@ class Currency extends Node implements nodeInterface
 
         // Filtrage type recherché. @todo faire filtrage sur MID.
         foreach ($links1 as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1']);
             $links2 = $instance->getLinksOnFields(
                 $link->getParsed()['bs/rs1/eid'],
                 '',
@@ -1053,7 +1053,7 @@ class Currency extends Node implements nodeInterface
         $this->_metrologyInstance->addLog(get_class($this) . ' get param on links ' . $this->_id . ' - meta:' . $id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($id != '') {
-            $instance = $this->_cacheInstance->newNode($id);
+            $instance = $this->_cacheInstance->newNodeByType($id);
         }
 
         if (is_a($instance, 'Node')
@@ -1374,7 +1374,7 @@ class Currency extends Node implements nodeInterface
         $newLink = new BlocLink($this->_nebuleInstance, $link);
 
         // Signe le lien.
-        $instance = $this->_cacheInstance->newNode($signer, Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($signer, Cache::TYPE_ENTITY);
         $newLink->sign($instance);
 
         // Si besoin, obfuscation du lien.

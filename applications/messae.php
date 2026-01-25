@@ -164,7 +164,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNodeByType($this::DEFAULT_CSS_BACKGROUND);
         if ($this->_nebuleInstance->getNodeIsRID($bgobj))
             $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);
@@ -775,13 +775,13 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) {
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if ($isGroup && !is_a($object, 'Group')) {
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
         }
         if ($isConversation && !is_a($object, 'Conversation')) {
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
         }
 
         $name = $object->getFullName('all');

@@ -272,16 +272,16 @@ class nebule {
             )
         ) {
             $this->_currentObject = $arg;
-            $this->_currentObjectInstance =$this->_cacheInstance->newNode($arg);
+            $this->_currentObjectInstance =$this->_cacheInstance->newNodeByType($arg);
             $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedObject');
             if ($cache != '') {
                 $this->_currentObject = $cache;
-                $this->_currentObjectInstance =$this->_cacheInstance->newNode($cache);
+                $this->_currentObjectInstance =$this->_cacheInstance->newNodeByType($cache);
             } else {
                 $this->_currentObject = $this->_entitiesInstance->getGhostEntityEID();
-                $this->_currentObjectInstance =$this->_cacheInstance->newNode($this->_entitiesInstance->getGhostEntityEID());
+                $this->_currentObjectInstance =$this->_cacheInstance->newNodeByType($this->_entitiesInstance->getGhostEntityEID());
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedObject', $this->_entitiesInstance->getGhostEntityEID());
             }
         }
@@ -309,7 +309,7 @@ class nebule {
     private function _findCurrentEntity(): void {
         $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_ENTITY);
 
-        $instance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_ENTITY);
 
         if ($instance->getIsEntity()) {
             $this->_currentEntityID = $arg;
@@ -319,11 +319,11 @@ class nebule {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedEntity');
             if ($cache != '') {
                 $this->_currentEntityID = $cache;
-                $this->_currentEntityInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_ENTITY);
+                $this->_currentEntityInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_ENTITY);
             } else
             {
                 $this->_currentEntityID = '0';
-                $this->_currentEntityInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_ENTITY);
+                $this->_currentEntityInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_ENTITY);
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedEntity', $this->_currentEntityID);
             }
         }
@@ -347,17 +347,17 @@ class nebule {
             )
         ) {
             $this->_currentGroupID = $arg;
-            $this->_currentGroupInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_GROUP);
+            $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_GROUP);
             $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedGroup');
             if ($cache != '') {
                 $this->_currentGroupID = $cache;
-                $this->_currentGroupInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_GROUP);
+                $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_GROUP);
             } else
             {
                 $this->_currentGroupID = '0';
-                $this->_currentGroupInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_GROUP);
+                $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_GROUP);
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $this->_currentGroupID);
             }
         }
@@ -381,16 +381,16 @@ class nebule {
             )
         ) {
             $this->_currentConversationID = $arg;
-            $this->_currentConversationInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_CONVERSATION);
             $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedConversation', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedConversation');
             if ($cache != '') {
                 $this->_currentConversationID = $cache;
-                $this->_currentConversationInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_CONVERSATION);
+                $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_CONVERSATION);
             } else {
                 $this->_currentConversationID = '0';
-                $this->_currentConversationInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CONVERSATION);
+                $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_CONVERSATION);
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedConversation', $this->_currentConversationID);
             }
         }
@@ -603,7 +603,7 @@ class nebule {
         if ($type == '0')
             return array();
 
-        $instance = $this->_cacheInstance->newNode($type);
+        $instance = $this->_cacheInstance->newNodeByType($type);
         $result = $instance->getLinksOnFields(
             '',
             '',

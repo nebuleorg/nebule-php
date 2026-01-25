@@ -58,7 +58,7 @@ class ModuleAutent extends Module {
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuBlog':
-                $instance = $this->_cacheInstance->newNode($nid);
+                $instance = $this->_cacheInstance->newNodeByType($nid);
                 $id = $instance->getID();
 
                 break;
@@ -232,7 +232,7 @@ class ModuleAutent extends Module {
             $instance->setEnableFlagUnlocked(false);
             $instance->setName($this->_translateInstance->getTranslate('::privateKey'));
             $instance->setType(References::REFERENCE_OBJECT_TEXT);
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['lo']); // FIXME
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['lo']); // FIXME
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
         } else {

@@ -58,7 +58,7 @@ class Entities extends Functions
      */
     private function _findServerEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->_findServerEntityFromFileOID(), \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($this->_findServerEntityFromFileOID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_authoritiesInstance->getPuppetmasterInstance();
         $this->_serverEntityInstance = $instance;
@@ -103,10 +103,10 @@ class Entities extends Functions
      */
     private function _findDefaultEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleDefaultEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleDefaultEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         $from = 'session';
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0') {
-            $instance = $this->_cacheInstance->newNode($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity'), \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity'), \Nebule\Library\Cache::TYPE_ENTITY);
             $from = 'environment config';
         }
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0') {
@@ -154,9 +154,9 @@ class Entities extends Functions
      */
     private function _findGhostEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
-            $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_defaultEntityInstance;
         $this->setGhostEntity($instance);
@@ -189,7 +189,7 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
-            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNodeByType($this->_ghostEntityPrivateKeyOID);
         }
         return $this->_ghostEntityPrivateKeyInstance;
     }
@@ -198,7 +198,7 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
-            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNodeByType($this->_ghostEntityPrivateKeyOID);
         }
         return $this->_ghostEntityPrivateKeyOID;
     }
@@ -269,9 +269,9 @@ class Entities extends Functions
      */
     private function _findConnectedEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNode($this->getFilterInput(References::COMMAND_SWITCH_CONNECTED, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newNodeByType($this->getFilterInput(References::COMMAND_SWITCH_CONNECTED, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
-            $instance = $this->_cacheInstance->newNode($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
         if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
             $instance = $this->_ghostEntityInstance;
         $this->setConnectedEntity($instance);
@@ -290,7 +290,7 @@ class Entities extends Functions
 
 
     public function getListEntitiesLinks(): array {
-        $hashEntityObject = $this->_cacheInstance->newNode($this->hashEntity);
+        $hashEntityObject = $this->_cacheInstance->newNodeByType($this->hashEntity);
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -307,7 +307,7 @@ class Entities extends Functions
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
             if ($instance->getIsPublicKey())
                 $result[$nid] = $instance;
         }

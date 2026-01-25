@@ -899,15 +899,13 @@ class Node extends Functions implements nodeInterface {
         );
         $this->getLinks($links, $filter, $socialClass);
 
-        // Tri sur les appartenances aux groupes ou équivalent.
         foreach ($links as $i => $link) {
             if ($link->getParsed()['bl/rl/nid1'] != $link->getParsed()['bl/rl/nid3'])
                 unset($links[$i]);
         }
 
-        // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -934,7 +932,7 @@ class Node extends Functions implements nodeInterface {
         // Tri les objets de type groupe.
         $list = array();
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getIsGroup('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -974,7 +972,7 @@ class Node extends Functions implements nodeInterface {
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if (!$instance->getIsConversation('all'))
                 unset($links[$i]);
         }
@@ -1001,7 +999,7 @@ class Node extends Functions implements nodeInterface {
         // Tri les objets de type groupe.
         $list = array();
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if ($instance->getIsConversation('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }
@@ -2208,7 +2206,7 @@ class Node extends Functions implements nodeInterface {
             // Si lien de chiffrement.
             if ($linkSym->getParsed()['bl/rl/nid3'] != '0') {
                 // Lit l'objet de clé de chiffrement symétrique et ses liens.
-                $instanceSym = $this->_cacheInstance->newNode($linkSym->getParsed()['bl/rl/nid3']);
+                $instanceSym = $this->_cacheInstance->newNodeByType($linkSym->getParsed()['bl/rl/nid3']);
                 $linksAsym = array();
                 $filter = array(
                         'bl/rl/req' => 'k',
@@ -2515,7 +2513,7 @@ class Node extends Functions implements nodeInterface {
         if ($id == '' || !$this->_ioInstance->checkObjectPresent($id))
             return '';
 
-        $instance = $this->_cacheInstance->newNode($id);
+        $instance = $this->_cacheInstance->newNodeByType($id);
         $text = substr(trim(strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
@@ -2808,7 +2806,7 @@ class Node extends Functions implements nodeInterface {
         if (!$present || $this->_ioInstance->checkObjectPresent($nid))
             return $nid;
         elseif ($synchro) {
-            $instance = $this->_cacheInstance->newNode($nid);
+            $instance = $this->_cacheInstance->newNodeByType($nid);
             $instance->syncObject();
             if ($this->_ioInstance->checkObjectPresent($nid))
                 return $nid;

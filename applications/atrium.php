@@ -157,7 +157,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
 
     public function displayCSS(): void {
-        $bgobj = $this->_cacheInstance->newNode($this::DEFAULT_CSS_BACKGROUND);
+        $bgobj = $this->_cacheInstance->newNodeByType($this::DEFAULT_CSS_BACKGROUND);
         if ($this->_nebuleInstance->getNodeIsRID($bgobj))
             $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
         $background = $bgobj->getUpdateNID(true, false);

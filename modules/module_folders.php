@@ -147,7 +147,7 @@ class ModuleFolders extends Module {
                             . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
-                    if ($this->_unlocked) {
+                    if ($this->_unlocked && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()])) {
                         $hookArray[] = array(
                             'name' => '::modifyRootFolder',
                             'icon' => Displays::DEFAULT_ICON_IMODIFY,
@@ -160,7 +160,8 @@ class ModuleFolders extends Module {
                     }
                 }
                 if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[8]
-                    && $this->_unlocked && $this->_instanceCurrentRoot !== null) {
+                    && $this->_unlocked && isset($this->_currentItemWritersList[$this->_entitiesInstance->getConnectedEntityEID()])
+                    && $this->_instanceCurrentRoot !== null) {
                     $hookArray[] = array(
                         'name' => '::removeRootFolder',
                         'icon' => Displays::DEFAULT_ICON_LX,
@@ -191,37 +192,39 @@ class ModuleFolders extends Module {
                 break;
 
             case 'selfFolder':
-                if ($this->_unlocked && $this->_instanceCurrentRoot !== null) {
-                    $hookArray[] = array(
-                        'name' => '::addFolder',
-                        'icon' => $this::MODULE_REGISTERED_ICONS[2],
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
-                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                    $hookArray[] = array(
-                        'name' => '::addFile',
-                        'icon' => $this::MODULE_REGISTERED_ICONS[2],
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
-                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
-                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                    $hookArray[] = array(
-                        'name' => '::addObject',
-                        'icon' => $this::MODULE_REGISTERED_ICONS[2],
-                        'desc' => '',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
-                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
-                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
+                if ($this->_instanceCurrentRoot !== null) {
+                    if ($this->_unlocked && isset($this->_currentItemWritersList[$this->_entitiesInstance->getConnectedEntityEID()])) {
+                        $hookArray[] = array(
+                            'name' => '::addFolder',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                                . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                                . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                        $hookArray[] = array(
+                            'name' => '::addFile',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                                . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                                . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                        $hookArray[] = array(
+                            'name' => '::addObject',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
+                                . '&' . $this::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                                . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                    }
                     $hookArray[] = array(
                         'name' => '::refreshList',
                         'icon' => References::REF_IMG['synobj'],
@@ -264,8 +267,8 @@ class ModuleFolders extends Module {
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
                 if ($this->_listTypes[$item] == 'folder') {
-                    $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-                    $node = $this->_cacheInstance->newNode($item);
+                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
+                    $node = $this->_cacheInstance->newNodeByType($item);
                     $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $instance->setSocial('myself');
                     $instance->setNID($node);
@@ -289,8 +292,8 @@ class ModuleFolders extends Module {
                     $instance->setIcon($instanceIcon);
                     return $instance;
                 } elseif ($this->_listTypes[$item] == 'object') {
-                    $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
-                    $node = $this->_cacheInstance->newNode($item);
+                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
+                    $node = $this->_cacheInstance->newNodeByType($item);
                     $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $instance->setSocial('myself');
                     $instance->setNID($node);
@@ -318,8 +321,8 @@ class ModuleFolders extends Module {
             case 'displayRootFolders':
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
-                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-                $node = $this->_cacheInstance->newNode($item);
+                $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
+                $node = $this->_cacheInstance->newNodeByType($item);
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $instance->setSocial('myself');
                 $instance->setNID($node);
@@ -412,7 +415,7 @@ class ModuleFolders extends Module {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($this->_path as $nid) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instancePath = $this->_cacheInstance->newNode($nid);
+            $instancePath = $this->_cacheInstance->newNodeByType($nid);
             $instance->setNID($instancePath);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
@@ -441,9 +444,9 @@ class ModuleFolders extends Module {
             return;
         }
 
-        if ($this->_instanceCurrentItem->getMarkClosed())
-            $socialClass = 'onlist';
-        else
+        $socialClass = 'onlist';
+        $this->_socialInstance->setList($this->_currentItemWritersList, $socialClass);
+        if (! $this->_instanceCurrentItem->getMarkClosed())
             $socialClass = 'all';
         $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($socialClass, $this->_currentItemWritersList);
 
@@ -454,7 +457,7 @@ class ModuleFolders extends Module {
             $instance = $this->_cacheInstance->newNode($nid);
             $list[$nid] = $nid;
             $this->_listSigners[$nid] = $link->getSignersEID();
-            $this->_socialInstance->setList($this->_currentItemWritersList);
+            $this->_socialInstance->setList($this->_currentItemWritersList, $socialClass);
             if ($instance->getIsGroup($socialClass, $this::FOLDER_CONTEXT))
                 $this->_listTypes[$nid] = 'folder';
             else

@@ -70,14 +70,14 @@ class ModuleObjects extends Module {
             case 'selfMenu':
             case 'selfMenuObject':
                 //$instance = $this->_applicationInstance->getCurrentObjectInstance();
-                $instance = $this->_cacheInstance->newNode($nid);
+                $instance = $this->_cacheInstance->newNodeByType($nid);
                 $id = $instance->getID();
 
                 // Recherche si l'objet est protégé.
                 $protected = $instance->getMarkProtected();
                 if ($protected) {
                     $id = $instance->getUnprotectedID();
-                    $instance = $this->_cacheInstance->newNode($id);
+                    $instance = $this->_cacheInstance->newNodeByType($id);
                 }
 
                 // Recherche une mise à jour.
@@ -300,7 +300,7 @@ class ModuleObjects extends Module {
                 // Recherche si l'objet est protégé.
                 if ($instance->getMarkProtected()) {
                     $id = $instance->getUnprotectedID();
-                    $instance = $this->_cacheInstance->newNode($id);
+                    $instance = $this->_cacheInstance->newNodeByType($id);
                 }
 
                 // Recherche si l'objet est marqué.
@@ -629,7 +629,7 @@ class ModuleObjects extends Module {
                             && $hashValue != '0'
                             && $hashValue != ''
                         ) {
-                            $attribInstance = $this->_cacheInstance->newNode($hashAttrib);
+                            $attribInstance = $this->_cacheInstance->newNodeByType($hashAttrib);
                             $attribName = $attribInstance->readOneLineAsText();
                             unset($attribInstance);
                             // Vérifie le nom.
@@ -666,7 +666,7 @@ class ModuleObjects extends Module {
                     if ($showAttrib
                         && $attribName != ''
                     ) {
-                        $valueInstance = $this->_cacheInstance->newNode($hashValue);
+                        $valueInstance = $this->_cacheInstance->newNodeByType($hashValue);
                         $value = $valueInstance->readOneLineAsText();
                         unset($valueInstance);
                         // Vérifie la valeur.
@@ -1076,7 +1076,7 @@ class ModuleObjects extends Module {
             $instance = null;
             $typeEntity = false;
             foreach ($shareTo as $entity) {
-                $instance = $this->_cacheInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
+                $instance = $this->_cacheInstance->newNodeByType($entity, \Nebule\Library\Cache::TYPE_ENTITY);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$entity])
                     && $typeEntity
@@ -1195,7 +1195,7 @@ class ModuleObjects extends Module {
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
                 && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             ) {
-                $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[3]);
+                $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[3]);
                 $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::ShareObjectProtection');
                 $instance->setIcon($icon);
@@ -1268,7 +1268,7 @@ class ModuleObjects extends Module {
             foreach ($listGroups as $group) {
                 // @todo vérifier que le groupe ne contient pas juste des entités pour lesquelles le partage est effectif.
 
-                $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
+                $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
                 $typeGroup = $instance->getIsEntity('all');
                 if (!isset($listOkGroups[$group])
                     && $typeGroup
@@ -1336,13 +1336,13 @@ class ModuleObjects extends Module {
             // Liste toutes les autres entités.
             $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->getNidFromData('application/x-pem-file');
-            $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
+            $hashEntityObject = $this->_cacheInstance->newNodeByType($hashEntity);
             $links = $hashEntityObject->getLinksOnFields('', '', 'l', '', $hashEntity, $hashType);
 
             $typeEntity = false;
             $link = null;
             foreach ($links as $link) {
-                $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
+                $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
                 $typeEntity = $instance->getIsEntity('all');
                 if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']])
                     && $typeEntity

@@ -980,7 +980,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
         foreach ($list as $object) {
             if (is_string($object) && Node::checkNID($object))
-                $object = $this->_cacheInstance->newNode($object);
+                $object = $this->_cacheInstance->newNodeByType($object);
             if (! is_a($object, 'Nebule\Library\Node') || $object->getID() === '0') {
                 $this->_metrologyInstance->addLog('not a node', Metrology::LOG_LEVEL_ERROR, __METHOD__, '34ef9500');
                 continue;
@@ -1097,10 +1097,10 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
                 $action = 'x';
-                $rid = $this->_cacheInstance->newNode($listEmotions1[$emotion]);
+                $rid = $this->_cacheInstance->newNodeByType($listEmotions1[$emotion]);
             } else {
                 $action = 'f';
-                $rid = $this->_cacheInstance->newNode($listEmotions0[$emotion]);
+                $rid = $this->_cacheInstance->newNodeByType($listEmotions0[$emotion]);
             }
             $link = $action . '_' . $source . '_' . $target . '_' . $meta;
             $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
@@ -1222,7 +1222,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_displayFlagProtection = $enable;
         
         if ($enable) {
-            $this->_flagProtectionIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_LINK_LK));
+            $this->_flagProtectionIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_LINK_LK));
         }
     }
 
@@ -1258,7 +1258,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_displayFlagObfuscate = $enable;
 
         if ($enable) {
-            $this->_flagObfuscateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_LINK_LC));
+            $this->_flagObfuscateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_LINK_LC));
         }
     }
 
@@ -1298,7 +1298,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setEnableFlagUnlocked(bool $enable = true): void {
         $this->_displayFlagUnlocked = $enable;
         if ($enable)
-            $this->_flagUnlockedIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_KEY));
+            $this->_flagUnlockedIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_KEY));
     }
 
     public function setFlagUnlocked(bool $enable): void {
@@ -1375,23 +1375,23 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setFlagState(string $state): void {
         if ($state == 'e') {
             $this->_flagState = 'e';
-            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_ERROR));
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_INFO_ERROR));
             $this->_flagStateText = '::display:content:errorBan';
         } elseif ($state == 'w') {
             $this->_flagState = 'w';
-            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_WARN));
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_INFO_WARN));
             $this->_flagStateText = '::display:content:warningTaggedWarning';
         } elseif ($state == 'r') {
             $this->_flagState = 'r';
-            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_WARN));
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_INFO_WARN));
             $this->_flagStateText = '::display:content:notAnObject';
         } elseif ($state == 'o') {
             $this->_flagState = 'o';
-            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_OK));
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_INFO_OK));
             $this->_flagStateText = '::display:content:OK';
         } else {
             $this->_flagState = 'n';
-            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNode(Displays::REFERENCE_ICON_INFO_ERROR));
+            $this->_flagStateIcon = $this->_displayInstance->getImageByReference($this->_cacheInstance->newNodeByType(Displays::REFERENCE_ICON_INFO_ERROR));
             $this->_flagStateText = '::display:content:errorNotAvailable';
         }
     }

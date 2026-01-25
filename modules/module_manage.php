@@ -430,7 +430,7 @@ class ModuleManage extends Module
      */
     private function _displayModules(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::Modules');
         $instance->setIcon($icon);
@@ -555,7 +555,7 @@ class ModuleManage extends Module
                             $param['flagActivated'] = false;
                             $param['flagActivatedDesc'] = '::ModuleDisabled';
                         }
-                        $instance = $this->_cacheInstance->newNode('0'); // FIXME
+                        $instance = $this->_cacheInstance->newNodeByType('0'); // FIXME
                         echo $this->_displayInstance->getDisplayObject_DEPRECATED($instance, $param);
 
                         // Marque comme vu.
@@ -578,7 +578,7 @@ class ModuleManage extends Module
      */
     private function _displayModule(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::Module');
         $instance->setIcon($icon);
@@ -713,7 +713,7 @@ class ModuleManage extends Module
 
                 // Affiche l'application (RID).
                 if ($rid != '0') {
-                    $object = $this->_cacheInstance->newNode($rid);
+                    $object = $this->_cacheInstance->newNodeByType($rid);
                     $param = array(
                         'enableDisplayColor' => true,
                         'enableDisplayIcon' => true,
@@ -762,7 +762,7 @@ class ModuleManage extends Module
 
                 // ID
                 if ($id != '0') {
-                    $object = $this->_cacheInstance->newNode($id);
+                    $object = $this->_cacheInstance->newNodeByType($id);
                     $param['objectName'] = '';
                     $param['status'] = '';
                     $param['link2Object'] = '';
@@ -937,7 +937,7 @@ class ModuleManage extends Module
      */
     private function _displayCreateModule(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::create:createModule');
         $instance->setIcon($icon);
@@ -990,7 +990,7 @@ class ModuleManage extends Module
      */
     private function _displayChangeCode(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::create:addModuleCode');
         $instance->setIcon($icon);
@@ -1018,7 +1018,7 @@ class ModuleManage extends Module
                 )
             ) {
                 // Affichage du module concerné.
-                $ridInstance = $this->_cacheInstance->newNode($rid);
+                $ridInstance = $this->_cacheInstance->newNodeByType($rid);
                 $param = array(
                     'enableDisplayColor' => false,
                     'enableDisplayIcon' => false,

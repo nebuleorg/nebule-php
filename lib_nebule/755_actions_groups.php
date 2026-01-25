@@ -129,7 +129,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
         }
         try {
             $gid = $this->getFilterInput(self::DELETE, FILTER_FLAG_ENCODE_LOW);
-            $instance = $this->_cacheInstance->newNode($gid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newNodeByType($gid, \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getID() == '0')
                 return;
             $this->_metrologyInstance->addLog('delete group gid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '03a28196');

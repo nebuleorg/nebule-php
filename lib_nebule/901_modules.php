@@ -103,7 +103,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_socialClass != 'notmyself') {
+                if ($this->_socialClass != 'notmyself' && $this->_displayInstance->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexList]) {
                     $hookArray[] = array(
                         'name' => '::other' . $names,
                         'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
@@ -115,7 +115,7 @@ abstract class Module extends Functions implements ModuleInterface {
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_socialClass != 'all') {
+                if ($this->_socialClass != 'all' && $this->_displayInstance->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[$indexList]) {
                     $hookArray[] = array(
                         'name' => '::all' . $names,
                         'icon' => $this::MODULE_REGISTERED_ICONS[$iconList],
@@ -432,7 +432,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $nid = $defaultNID;
         if ($nid == '')
             return;
-        $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
     }
@@ -462,7 +462,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconAdd]);
+            $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[$iconAdd]);
             $instance->setIcon($instanceIcon);
             $instance->setMessage('::create' . $name);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
@@ -472,7 +472,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['ll']);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['ll']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
             $instance->setMessage('::get' . $name);
@@ -483,7 +483,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['synobj']);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['synobj']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
             $instance->setMessage('::synchroAll');
@@ -495,7 +495,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instanceList->addItem($instance);
 
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['module']);
+            $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['module']);
             $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon2);
             $instance->setMessage('::options');
@@ -513,7 +513,7 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList->addItem($instance);
 
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNode(References::REF_IMG['synobj']);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['synobj']);
         $instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
         $instance->setIcon($instanceIcon2);
         $instance->setMessage('::refreshList');
@@ -589,7 +589,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             //$instance->setStatus('');
             $instance->setEnableFlagUnlocked(false);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$icon]);
+            $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[$icon]);
             //$instanceIcon2 = $this->_displayInstance->getImageByReference($instanceIcon);
             $instance->setIcon($instanceIcon);
             $instance->setSelfHookName('self' . $name);
@@ -735,7 +735,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
                 $instance->setEnableFlagUnlocked(false);
-                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+                $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[$iconItem]);
                 $instance->setIcon($instanceIcon);
             } else {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -786,7 +786,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
                 $instance->setStatus('');
                 $instance->setEnableFlagUnlocked(false);
-                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+                $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[$iconItem]);
                 $instance->setIcon($instanceIcon);
             } else {
                 $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -853,7 +853,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instance->setStatus('');
             $instance->setEnableFlagUnlocked(false);
-            $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[$iconItem]);
+            $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[$iconItem]);
             $instance->setIcon($instanceIcon);
             $instanceList->addItem($instance);
             if ($this->_unlocked) {
@@ -1044,7 +1044,7 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _display_InlineRightsItem(string $name): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_USER);
+        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
             $eid = $entityInstance->getID();
             if (($this->_entitiesInstance->getConnectedEntityIsUnlocked() && isset($this->_currentItemListOwners[$this->_entitiesInstance->getConnectedEntityEID()]))

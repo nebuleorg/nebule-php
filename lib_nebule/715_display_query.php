@@ -186,7 +186,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 $icon = self::ICON_QUERY_RID;
                 break;
         }
-        $rid = $this->_cacheInstance->newNode($icon);
+        $rid = $this->_cacheInstance->newNodeByType($icon);
         $this->_icon = $rid->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, $this->_social);
     }
 
@@ -205,7 +205,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
             }
 
             .queryDisplayPassword {
-                background: rgba(255, 224, 0, 0.666);
+                background: rgba(255, 224, 64, 0.666);
             }
 
             .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile {

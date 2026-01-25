@@ -168,13 +168,13 @@ class ApplicationModules
             return;
         $this->_metrologyInstance->addLog('load external modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $instanceRID = $this->_cacheInstance->newNodeByType(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES, 'authority');
         foreach ($links as $link) {
-            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $moduleInstanceRID = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
             if ($moduleInstanceRID->getID() == '0')
                 continue;
-            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
+            $moduleInstanceOID = $this->_cacheInstance->newNodeByType($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
             if ($moduleInstanceOID->getID() == '0'
                 || !$moduleInstanceOID->checkPresent()
             )
@@ -203,11 +203,11 @@ class ApplicationModules
             return;
         $this->_metrologyInstance->addLog('load translate modules on NameSpace=' . $this->_applicationNamespace, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
-        $instanceRID = $this->_cacheInstance->newNode(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
+        $instanceRID = $this->_cacheInstance->newNodeByType(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
         $links = $instanceRID->getReferencedLinks(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES_TRANSLATE, 'authority');
         foreach ($links as $link) {
-            $moduleInstanceRID = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
-            $moduleInstanceOID = $this->_cacheInstance->newNode($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
+            $moduleInstanceRID = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
+            $moduleInstanceOID = $this->_cacheInstance->newNodeByType($moduleInstanceRID->getReferencedOrSelfNID(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES));
             if ($moduleInstanceRID->getID() == '0'
                 || $moduleInstanceOID->getID() == '0'
                 || !$moduleInstanceOID->checkPresent()
@@ -241,7 +241,7 @@ class ApplicationModules
 
         $this->_metrologyInstance->addLog('Find option modules', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '226ce8be');
 
-        $object = $this->_cacheInstance->newNode($bootstrapApplicationIID);
+        $object = $this->_cacheInstance->newNodeByType($bootstrapApplicationIID);
         $links = $object->getLinksOnFields('', '', 'f', $bootstrapApplicationIID, '', References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
 
         foreach ($links as $link) {
@@ -294,7 +294,7 @@ class ApplicationModules
                 }
             }
 
-            $instanceModule = $this->_cacheInstance->newNode($moduleID);
+            $instanceModule = $this->_cacheInstance->newNodeByType($moduleID);
             $listed[$moduleID] = $moduleID;
 
             // Cherche une mise à jour.
@@ -306,7 +306,7 @@ class ApplicationModules
             if ($updateModule != $moduleID
                 && $updateModule != '0'
             ) {
-                $instanceModule = $this->_cacheInstance->newNode($updateModule);
+                $instanceModule = $this->_cacheInstance->newNodeByType($updateModule);
                 if ($instanceModule->getType('authority') == References::REFERENCE_OBJECT_APP_PHP
                     && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($updateModule)
                 ) {

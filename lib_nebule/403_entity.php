@@ -639,7 +639,7 @@ class Entity extends Node implements nodeInterface {
         //_l_fnd($this->_id, $links, 'f', $this->_id, '', '0');				// @todo Vérifier le bon fonctionnement.
         $links = $this->getLinksOnFields('', '', 'f', $this->_id, '', '0');
         foreach ($links as $link) {
-            $instance6 = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $instance6 = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
             $type = $instance6->getType('all');
             if (($type == 'image/png'
                             || $type == 'image/jpeg')
@@ -683,7 +683,7 @@ class Entity extends Node implements nodeInterface {
             //_l_fnd($this->_id, $uplinks, 'f', '', $this->_id, '0');							// @todo Vérifier le bon fonctionnement.
             $uplinks = $this->getLinksOnFields('', '', 'f', '', $this->_id, '0');
             foreach ($uplinks as $uplink) {
-                $instance5 = $this->_cacheInstance->newNode($uplink->getParsed()['bl/rl/nid1']);
+                $instance5 = $this->_cacheInstance->newNodeByType($uplink->getParsed()['bl/rl/nid1']);
                 $type = $instance5->getType('all');
                 if (($type == 'image/png' || $type == 'image/jpeg') && $instance5->checkPresent()) {
                     $list = array();
@@ -691,7 +691,7 @@ class Entity extends Node implements nodeInterface {
                     //_l_fnd($instance5->getID(), $links, 'f', $instance5->getID(), '', '0');          // @todo Vérifier le bon fonctionnement.
                     $links = $instance5->getLinksOnFields('', '', 'f', $instance5->getID(), '', '0');
                     foreach ($links as $link) {
-                        $instance6 = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+                        $instance6 = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
                         $type = $instance6->getType('all');
                         if ($type == 'image/png'
                                 || $type == 'image/jpeg'
@@ -779,7 +779,7 @@ class Entity extends Node implements nodeInterface {
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
             if (!$instance->getIsGroup('all')) {
                 unset($links[$i]);
             }
@@ -814,7 +814,7 @@ class Entity extends Node implements nodeInterface {
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_GROUP);
             if ($instance->getIsGroup('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }
@@ -848,7 +848,7 @@ class Entity extends Node implements nodeInterface {
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if (!$instance->getIsConversation('all')) {
                 unset($links[$i]);
             }
@@ -874,7 +874,7 @@ class Entity extends Node implements nodeInterface {
 
         // Tri les objets de type groupe.
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
+            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_CONVERSATION);
             if ($instance->getIsConversation('all')) {
                 $list[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
             }

@@ -96,11 +96,11 @@ class Group extends Node implements nodeInterface {
         if ($context != '')
             $context = '>' . $context;
         return $this->addLink(
-                'l>' . $this->_id
-                . '>' . References::RID_OBJECT_GROUP
-                . '>' . References::RID_OBJECT_TYPE
-                . $context,
-                $obfuscated);
+            'l>' . $this->_id
+            . '>' . References::RID_OBJECT_GROUP
+            . '>' . References::RID_OBJECT_TYPE
+            . $context,
+            $obfuscated);
     }
 
     public function unsetAsGroup(bool $obfuscated = false, string $context = ''): bool {
@@ -113,11 +113,11 @@ class Group extends Node implements nodeInterface {
         if ($context != '')
             $context = '>' . $context;
         return $this->addLink(
-                'x>' . $this->_id
-                . '>' . References::RID_OBJECT_GROUP
-                . '>' . References::RID_OBJECT_TYPE
-                . $context,
-                $obfuscated);
+            'x>' . $this->_id
+            . '>' . References::RID_OBJECT_GROUP
+            . '>' . References::RID_OBJECT_TYPE
+            . $context,
+            $obfuscated);
     }
 
     public function setAsGroupOfEntities(bool $obfuscated = false): bool {
@@ -140,49 +140,30 @@ class Group extends Node implements nodeInterface {
 
     protected bool $_isMarkClosed = false;
 
-    /**
-     * Retourne si le groupe est marqué comme fermé.
-     * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
-     *
-     * @param Entity|null $entity
-     * @return boolean
-     */
-    public function getMarkClosed(?Entity $entity = null): bool {
+    public function getMarkClosed(string $socialClass = 'myself', array $socialListID = array()): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($entity != null)
-            $id = $entity->getID();
-        else
-            $id = $this->_entitiesInstance->getGhostEntityEID();
+        if ($this->_isMarkClosed)
+            return true;
         $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $this->_id,
-                $id,
-                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME)
+            '',
+            '',
+            'l',
+            $this->_id,
+            '',
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME)
         );
-        $this->_socialInstance->arraySocialFilter($links, 'myself');
-        if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
-            if (sizeof($links) != 0)
-                $this->_isMarkClosed = true;
-            else
-                $this->_isMarkClosed = false;
-        } // FIXME _isMarkClosed
+        $this->_socialInstance->setList($socialListID, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
         if (sizeof($links) != 0) {
             $this->_metrologyInstance->addLog('group ' . $this->_id . ' is closed', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9ace1a1c');
-            return true;
+            $this->_isMarkClosed = true;
+        } else {
+            $this->_metrologyInstance->addLog('group ' . $this->_id . ' is not closed', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '23a4e2d9');
+            $this->_isMarkClosed = false;
         }
-        $this->_metrologyInstance->addLog('group ' . $this->_id . ' is not closed', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '23a4e2d9');
-        return false;
+        return $this->_isMarkClosed;
     }
 
-    /**
-     * Ecrit l'objet comme un groupe fermé.
-     *
-     * @param Entity|null $entity
-     * @param boolean     $obfuscated
-     * @return boolean
-     */
     public function setMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
@@ -196,9 +177,10 @@ class Group extends Node implements nodeInterface {
         if ($this->getMarkClosed())
             return true;
         $this->_metrologyInstance->addLog('set group=' . $this->_id . ' as close', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'd5a5dcc0');
+        $this->_isMarkClosed = true;
         return $this->addLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME),
-                $obfuscated);
+            'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_FERME),
+            $obfuscated);
     }
 
     /**
@@ -227,49 +209,43 @@ class Group extends Node implements nodeInterface {
 
     protected bool $_isMarkProtected = false;
 
-    /**
-     * Retourne si le groupe est marqué comme protégé.
-     * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
-     *
-     * @param Entity|null $entity
-     * @return boolean
-     */
-    public function getMarkProtected(?Entity $entity = null): bool {
+    public function getMarkProtected(string $socialClass = 'myself', array $socialListID = array()): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($entity != null)
-            $id = $entity->getID();
-        else
-            $id = $this->_entitiesInstance->getGhostEntityEID();
+        if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
+            return false;
+        if ($this->_isMarkProtected)
+            return true;
         $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $this->_id,
-                $id,
-                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE)
+            '',
+            '',
+            'l',
+            $this->_id,
+            '',
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE)
         );
-        $this->_socialInstance->arraySocialFilter($links, 'myself');
-        if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
-            if (sizeof($links) != 0)
-                $this->_isMarkProtected = true;
-            else
-                $this->_isMarkProtected = false;
+        $this->_socialInstance->setList($socialListID, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
+        if (sizeof($links) != 0) {
+            $this->_metrologyInstance->addLog('group ' . $this->_id . ' is protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '6c89868a');
+            $this->_isMarkProtected = true;
+        }
+        else {
+            $this->_metrologyInstance->addLog('group ' . $this->_id . ' is not protected', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '780fd82a');
+            $this->_isMarkProtected = false;
         }
         return $this->_isMarkProtected;
     }
 
     /**
-     * Ecrit l'objet comme un groupe protégé.
-     *
      * @param Entity|null $entity
-     * @param boolean            $obfuscated
+     * @param boolean     $obfuscated
      * @return boolean
      */
     public function setMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
-        if ($this->getMarkObfuscated($entity))
+        if ($this->getMarkObfuscated())
             $obfuscated = true;
         if ($entity != null)
             $id = $entity->getID();
@@ -279,8 +255,8 @@ class Group extends Node implements nodeInterface {
             return true;
         $this->_isMarkProtected = true;
         return $this->addLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE),
-                $obfuscated);
+            'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE),
+            $obfuscated);
     }
 
     /**
@@ -309,42 +285,34 @@ class Group extends Node implements nodeInterface {
 
     protected bool $_isMarkObfuscated = false;
 
-    /**
-     * Retourne si le groupe est marqué comme dissimulé.
-     * En sélectionnant une entité, fait la recherche de marquage pour cette entité comme contributrice.
-     *
-     * @param Entity|null $entity
-     * @return boolean
-     */
-    public function getMarkObfuscated(?Entity $entity = null): bool {
+    public function getMarkObfuscated(string $socialClass = 'myself', array $socialListID = array()): bool {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             return false;
-        if ($entity != null)
-            $id = $entity->getID();
-        else
-            $id = $this->_entitiesInstance->getGhostEntityEID();
+        if ($this->_isMarkObfuscated)
+            return true;
         $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $this->_id,
-                $id,
-                $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE)
+            '',
+            '',
+            'l',
+            $this->_id,
+            '',
+            $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE)
         );
-        $this->_socialInstance->arraySocialFilter($links, 'myself');
-        if ($id == $this->_entitiesInstance->getGhostEntityEID()) {
-            if (sizeof($links) != 0)
-                $this->_isMarkObfuscated = true;
-            else
-                $this->_isMarkObfuscated = false;
+        $this->_socialInstance->setList($socialListID, $socialClass);
+        $this->_socialInstance->arraySocialFilter($links, $socialClass);
+        if (sizeof($links) != 0) {
+            $this->_metrologyInstance->addLog('group ' . $this->_id . ' is obfuscated', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'fa06c443');
+            $this->_isMarkObfuscated = true;
+        }
+        else {
+            $this->_metrologyInstance->addLog('group ' . $this->_id . ' is not obfuscated', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b10ec132');
+            $this->_isMarkObfuscated = false;
         }
         return $this->_isMarkObfuscated;
     }
 
     /**
-     * Ecrit l'objet comme un groupe dissimulé.
-     *
      * @param Entity|null $entity
      * @param boolean     $obfuscated
      * @return boolean
@@ -363,8 +331,8 @@ class Group extends Node implements nodeInterface {
             return true;
         $this->_isMarkObfuscated = true;
         return $this->addLink(
-                'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE),
-                $obfuscated);
+            'l>' . $this->_id . '>' . $id . '>' . $this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE),
+            $obfuscated);
     }
 
     /**
@@ -408,12 +376,12 @@ class Group extends Node implements nodeInterface {
             return false;
         }
         $links = $this->getLinksOnFields(
-                '',
-                '',
-                'l',
-                $this->_id,
-                $nid,
-                $type
+            '',
+            '',
+            'l',
+            $this->_id,
+            $nid,
+            $type
         );
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         if (sizeof($links) != 0)
@@ -444,8 +412,8 @@ class Group extends Node implements nodeInterface {
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
         return $this->addLink(
-                'l>' . $this->_id . '>' . $nid . '>' . $type,
-                $obfuscated);
+            'l>' . $this->_id . '>' . $nid . '>' . $type,
+            $obfuscated);
     }
 
     /**
@@ -472,8 +440,8 @@ class Group extends Node implements nodeInterface {
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('remove member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c23f3303');
         return $this->addLink(
-                'x>' . $this->_id . '>' . $nid . '>' . $type,
-                $obfuscated);
+            'x>' . $this->_id . '>' . $nid . '>' . $type,
+            $obfuscated);
     }
 
     public function getIsMemberTyped(Node $object, string $type, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $type, $socialClass); }
@@ -705,8 +673,8 @@ abstract class HelpGroup {
             est dédié à la gestion des groupes
             fermés. Un groupe est considéré comme fermé quand on a l’objet réservé en champs nid3, l’entité en cours en
             champs nid2 et le NID du groupe en champs nid1. Si au lieu d’utiliser l’entité en cours pour le champ
-            cible, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
-            Dans ce cas, c’est une entité contributrice.</p>
+            nid2, on utilise une autre entité, cela revient à prendre aussi en compte ses liens dans le groupe fermé.
+            Dans ce cas, c’est une entité reconnue contributrice.</p>
         <p>Lorsqu’un groupe est marqué comme fermé, l’interface de visualisation du groupe peut permettre de le
             visualiser temporairement comme un groupe ouvert.</p>
         <p>Le traitement des liens de fermeture d’un groupe doit être fait exclusivement avec le traitement social

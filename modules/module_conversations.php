@@ -131,7 +131,7 @@ class ModuleConversations extends Module {
                 }
                 break;
 
-            case 'typeMenuEntity':
+            /*case 'typeMenuEntity':
                 $hookArray[] = array(
                     'name' => '::myConversations',
                     'icon' => $this::MODULE_LOGO,
@@ -142,7 +142,7 @@ class ModuleConversations extends Module {
                         . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
-                break;
+                break;*/
 
         }
         return $hookArray;
@@ -237,10 +237,10 @@ class ModuleConversations extends Module {
                 $conversationsSigners[$nid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($conversationsNID as $nid) {
-            $instanceConversation = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceConversation = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceConversation);

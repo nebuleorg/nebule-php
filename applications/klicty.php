@@ -736,7 +736,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
     public function displayCSS(): void
     {
         // Recherche l'image de fond.
-        $backgroundInstance = $this->_cacheInstance->newNode(self::DEFAULT_CSS_BACKGROUND);
+        $backgroundInstance = $this->_cacheInstance->newNodeByType(self::DEFAULT_CSS_BACKGROUND);
         $backgroundOid = $backgroundInstance->getUpdateNID(true, false);
         ?>
 
@@ -1188,17 +1188,17 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     <?php
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTENT),
+                            $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LSTENT),
                             '::EntitiesList'),
                         '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_LIST_COMMAND);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT),
+                            $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ADDENT),
                             '::EntityAdd'),
                         '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ENTITY_ADD_COMMAND);
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD),
+                            $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_WORLD),
                             '::SelectLanguage'),
                         '?' . self::COMMAND_DISPLAY_VIEW . '=' . self::DEFAULT_ABOUT_COMMAND . '#lang');
                     ?>
@@ -1221,7 +1221,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche le lien de verrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
+                                    $this->_cacheInstance->newNodeByType(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat déverrouillé, verrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1230,7 +1230,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                             // Affiche de lien de déverrouillage sans les effets.
                             $this->displayHypertextLink(
                                 $this->convertUpdateImage(
-                                    $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
+                                    $this->_cacheInstance->newNodeByType(\Nebule\Library\DisplayInformation::ICON_WARN_RID), 'Etat verrouillé, déverrouiller ?',
                                     '',
                                     '',
                                     'name="ico_lock"'),
@@ -1241,7 +1241,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     else {
                         $this->displayHypertextLink(
                             $this->convertUpdateImage(
-                                $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_WARN_RID),
+                                $this->_cacheInstance->newNodeByType(\Nebule\Library\DisplayInformation::ICON_WARN_RID),
                                 'WARNING'),
                             '?' . References::COMMAND_AUTH_ENTITY_LOGOUT);
                     }
@@ -1249,7 +1249,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 else {
                     $this->displayHypertextLink(
                         $this->convertUpdateImage(
-                            $this->_cacheInstance->newNode(\Nebule\Library\DisplayInformation::ICON_ERROR_RID),
+                            $this->_cacheInstance->newNodeByType(\Nebule\Library\DisplayInformation::ICON_ERROR_RID),
                             'ERROR'),
                         '?' . References::COMMAND_FLUSH);
                 }
@@ -1361,7 +1361,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
                 foreach ($modulesName as $i => $module) {
                     $name = $this->_applicationInstance->getTranslateInstance()->getTranslate($module);
-                    $icon = $this->_cacheInstance->newNode($modulesIcon[$i]);
+                    $icon = $this->_cacheInstance->newNodeByType($modulesIcon[$i]);
                     $link = '?' . self::COMMAND_DISPLAY_VIEW . '=' . $modulesLink[$i];
                     ?>
 
@@ -1542,7 +1542,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentObjectList()
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTOBJ);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LSTOBJ);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::ObjectList');
         $instance->setIcon($icon);
@@ -1562,7 +1562,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $DisplayedList = array();
         $id = $this->_entitiesInstance->getGhostEntityEID();
         $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
-        $instance = $this->_cacheInstance->newNode($meta);
+        $instance = $this->_cacheInstance->newNodeByType($meta);
 
         // Si c'est l'entité du serveur, affiche tous les objets.
         if ($id == $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
@@ -1575,7 +1575,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Fait un pré-tri.
         foreach ($list as $i => $item) {
             $id2 = $item->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNode($id2);
+            $instance = $this->_cacheInstance->newNodeByType($id2);
             $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
             if ($lifetimeExpired) {
                 unset($list[$i]);
@@ -1586,7 +1586,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         foreach ($list as $item) {
             $id = $item->getParsed()['bl/rl/nid1'];
             $entity = $item->getParsed()['bs/rs1/eid'];
-            $instance = $this->_cacheInstance->newNode($id);
+            $instance = $this->_cacheInstance->newNodeByType($id);
             $id = $instance->getID();
             $present = $this->_nebuleInstance->getIoInstance()->checkObjectPresent($id);
             $ban = $instance->getMarkDanger(); // @todo
@@ -1646,7 +1646,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     if ($signer != $id) {
                         // Recherche du lien de chiffrement des objets.
                         $source = $item->getParsed()['bl/rl/nid1'];
-                        $instance = $this->_cacheInstance->newNode($source);
+                        $instance = $this->_cacheInstance->newNodeByType($source);
                         $list2 = $instance->getLinksOnFields(
                             '',
                             '',
@@ -1659,7 +1659,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                         // Extrait l'objet protégé.
                         if (sizeof($list2) != 0) {
                             $source = $list2[0]->getParsed()['bl/rl/nid1'];
-                            $instance = $this->_cacheInstance->newNode($source);
+                            $instance = $this->_cacheInstance->newNodeByType($source);
                             $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
                             $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
                             // Si l'objet n'est pas expiré.
@@ -1679,7 +1679,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             foreach ($list as $item) {
                 // Extrait et affiche l'objet protégé.
                 $entity = $listS[$item];
-                $instance = $this->_cacheInstance->newNode($item);
+                $instance = $this->_cacheInstance->newNodeByType($item);
                 $id = $instance->getID();
                 $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
                 $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
@@ -1741,7 +1741,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntityList()
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LSTENT);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LSTENT);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitiesList');
         $instance->setIcon($icon);
@@ -1758,7 +1758,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         $hashEntity = $this->getNidFromData('application/x-pem-file');
-        $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
+        $hashEntityObject = $this->_cacheInstance->newNodeByType($hashEntity);
 
         // Liste des entités à ne pas afficher.
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
@@ -1779,7 +1779,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         // Affiche les entités.
         foreach ($links as $link) {
             $id = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkEntities[$id])
                 && $instance->getType('all') ==\Nebule\Library\Entity::ENTITY_TYPE
                 && $instance->getIsPublicKey()
@@ -1831,7 +1831,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntityGroupList()
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_GRPENT);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitiesGroupList');
         $instance->setIcon($icon);
@@ -1854,7 +1854,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Affiche les groupes.
         foreach ($listGroups as $id) {
-            $instance = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_ENTITY);
             if (!isset($listOkGroups[$id])) {
                 $param = array(
                     'enableDisplayColor' => true,
@@ -1921,7 +1921,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (!$createGroupError
                 && is_a($createGroupInstance, 'Group') // FIXME la classe
             ) {
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_GRPENT);
                 $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::CreatedGroup');
                 $instance->setIcon($icon);
@@ -1959,7 +1959,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo $this->getDisplayInformation_DEPRECATED('::NOKCreateGroup', $param);
             }
         } else {
-            $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENTADD);
+            $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_GRPENTADD);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::EntitiesGroupAdd');
             $instance->setIcon($icon);
@@ -2070,10 +2070,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) { // FIXME la classe
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         }
         if ($isGroup && !is_a($object, 'Group')) { // FIXME la classe
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
         }
 
         // Détermine si l'objet est protégé.
@@ -2221,7 +2221,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 ?>
 
                 <div class="sequence"></div>
-                <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_GRPENT); $this->displayDivTextTitleH2_DEPRECATED($icon, '::GroupList'); ?>
+                <?php $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_GRPENT); $this->displayDivTextTitleH2_DEPRECATED($icon, '::GroupList'); ?>
                 <div class="text">
                     <p>
                     <form method="post"
@@ -2236,7 +2236,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 class="klictyModuleEntityInput">
                             <?php
                             foreach ($listGroupsMember as $group) {
-                                $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
+                                $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
                                 echo '<option value="' . $group . '">' . $instance->getFullName('myself') . "</option>\n";
                             }
                             unset($instance);
@@ -2254,7 +2254,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list = array();
                 foreach ($listGroupsMember as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
+                        $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
 
                         // Si c'est un grupe, l'affiche.
                         if ($instance->getIsGroup('myself')) {
@@ -2448,7 +2448,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                     $this->displayMessageOk('::UploadedNewFileOK');
 
                     $id = $this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectID();
-                    $instance = $this->_cacheInstance->newNode($id);
+                    $instance = $this->_cacheInstance->newNodeByType($id);
                     $name = $instance->getName('all');
                     $desc = $instance->getType('all');
                     $htlink = '?' . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
@@ -2490,7 +2490,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             }
 
             // Affiche le titre.
-            $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDOBJ);
+            $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ADDOBJ);
             $this->displayDivTextTitleH2_DEPRECATED($icon, '::ObjectAdd', '::SelectUploadFile', '');
             ?>
 
@@ -2592,7 +2592,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             if (!$createEntityError
                 && is_a($createEntityInstance, 'Entity') // FIXME la classe
             ) {
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ADDENT);
                 $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::NewEntityCreated');
                 $instance->setIcon($icon);
@@ -2639,7 +2639,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo $this->getDisplayInformation_DEPRECATED('::EntityAddError', $param);
             }
         } else {
-            $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ADDENT);
+            $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ADDENT);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::CreateEntity');
             $instance->setIcon($icon);
@@ -2731,7 +2731,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
     private function _displayContentEntitySync()
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_SYNENT);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_SYNENT);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::EntitySync');
         $instance->setIcon($icon);
@@ -2833,7 +2833,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 echo "<div class=\"sequence\"></div>\n";
 
                 // Affiche le titre.
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                 $this->displayDivTextTitleH2_DEPRECATED($icon, '::ShareProtectObject', '', '');
 
                 // Avertissement.
@@ -2879,7 +2879,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list = array();
                 $i = 0;
                 foreach ($shareTo as $entity) {
-                    $instance = $this->_cacheInstance->newNode($entity, \Nebule\Library\Cache::TYPE_ENTITY);
+                    $instance = $this->_cacheInstance->newNodeByType($entity, \Nebule\Library\Cache::TYPE_ENTITY);
                     $type = $instance->getIsEntity('all');
                     if (!isset($listOkEntities[$entity]) && $type) {
                         $list[$i]['object'] = $instance;
@@ -2982,7 +2982,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $listOkGroups = array();
                 foreach ($listGroups as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newNode($group, \Nebule\Library\Cache::TYPE_GROUP);
+                        $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
 
                         // Si c'est un groupe fermé.
                         $typeClosed = $instance->getMarkClosed();
@@ -3023,7 +3023,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
             $hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
             $hashEntity = $this->getNidFromData('application/x-pem-file');
-            $hashEntityObject = $this->_cacheInstance->newNode($hashEntity);
+            $hashEntityObject = $this->_cacheInstance->newNodeByType($hashEntity);
 
             // Ajoute des entités à ne pas afficher.
             $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = true;
@@ -3048,7 +3048,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             //Prépare l'affichage des entités.
             if (sizeof($links) != 0) {
                 foreach ($links as $link) {
-                    $instance = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
+                    $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_ENTITY);
                     $type = $instance->getIsEntity('all');
                     if (!isset($listOkEntities[$link->getParsed()['bl/rl/nid1']]) && $type) {
                         $list[$i]['object'] = $instance;
@@ -3116,13 +3116,13 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 && $this->_unlocked
             )
         ) {
-            $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_KEY);
+            $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_KEY);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::entity:unlocked');
             $instance->setIcon($icon);
             $instance->display();
         } else {
-            $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENTITY_LOCK);
+            $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ENTITY_LOCK);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('::entity:locked');
             $instance->setIcon($icon);
@@ -3262,9 +3262,9 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
 private function _displayContentAbout():void
 {
-    $iconLL = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LL);
-    $iconLK = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
-    $iconTIME = $this->_cacheInstance->newNode(self::DEFAULT_ICON_TIME);
+    $iconLL = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LL);
+    $iconLK = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
+    $iconTIME = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_TIME);
     ?>
 
     <div class="textcenter" id="welcome">
@@ -3325,7 +3325,7 @@ private function _displayContentAbout():void
 
     <div class="sequence" id="lang"></div>
     <?php
-    $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_WORLD);
+    $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_WORLD);
     $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle('::SelectLanguage');
     $instance->setIcon($icon);
@@ -3346,7 +3346,7 @@ private function _displayContentAbout():void
     ?>
 
     <div class="sequence" id="help"></div>
-    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_HELP);
+    <?php $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_HELP);
     $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle('::Help');
     $instance->setIcon($icon);
@@ -3363,7 +3363,7 @@ private function _displayContentAbout():void
     ?>
 
     <div class="sequence" id="recovery"></div>
-    <?php $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LC);
+    <?php $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LC);
     $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
     $instance->setTitle('::ProtectionRecovery');
     $instance->setIcon($icon);
@@ -3543,9 +3543,9 @@ private function _displayContentAbout():void
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) // FIXME la classe
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
         if ($isGroup && !is_a($object, 'Group')) // FIXME la classe
-            $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
 
         // Vérifie si il est protégé
         $protected = $object->getMarkProtected();
@@ -3647,7 +3647,7 @@ private function _displayContentAbout():void
             foreach ($actionList as $appHook) {
                 if ($appHook['name'] != '') {
                     $name = $this->_applicationInstance->getTranslateInstance()->getTranslate($appHook['name']);
-                    $icon = $this->_cacheInstance->newNode($appHook['icon']);
+                    $icon = $this->_cacheInstance->newNodeByType($appHook['icon']);
                     if ($icon == '')
                         $icon = self::DEFAULT_ICON_LSTOBJ;
                     $desc = $this->_applicationInstance->getTranslateInstance()->getTranslate($appHook['desc']);
@@ -3711,7 +3711,7 @@ private function _displayContentAbout():void
             && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($item['entity'])
             && $this->_nebuleInstance->getIoInstance()->checkLinkPresent($item['entity'])
         ) {
-            $entity = $this->_cacheInstance->newNode($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $entity = $this->_cacheInstance->newNodeByType($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entityID = $entity->getID();
         }
 
@@ -3794,7 +3794,7 @@ private function _displayContentAbout():void
 
                         <div class="oneAction-warn">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IWARN);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IWARN);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:warningTaggedWarning',
@@ -3809,7 +3809,7 @@ private function _displayContentAbout():void
 
                         <div class="oneAction-error">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IERR);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IERR);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:errorBan',
@@ -3824,7 +3824,7 @@ private function _displayContentAbout():void
 
                         <div class="oneAction-ok">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:ObjectProctected',
@@ -3842,7 +3842,7 @@ private function _displayContentAbout():void
                         <div class="oneAction-actions">
                             <?php
                             foreach ($item['actions'] as $action) {
-                                $icon = $this->_cacheInstance->newNode($action['icon']);
+                                $icon = $this->_cacheInstance->newNodeByType($action['icon']);
                                 $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
                                 $actionName = $this->_translateInstance->getTranslate($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";

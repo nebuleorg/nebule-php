@@ -224,7 +224,7 @@ class ModuleAdmin extends Module
      */
     private function _displayAppOptions(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:AppOptions');
         $instance->setIcon($icon);
@@ -285,7 +285,7 @@ class ModuleAdmin extends Module
      */
     private function _displayNebOptions(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:NebOptions');
         $instance->setIcon($icon);
@@ -354,7 +354,7 @@ class ModuleAdmin extends Module
      */
     private function _displayAdmins(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:seeAdmins');
         $instance->setIcon($icon);
@@ -426,7 +426,7 @@ class ModuleAdmin extends Module
      */
     private function _displayRecoveryEntities(): void
     {
-        $icon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
+        $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle('::display:seeRecovery');
         $instance->setIcon($icon);

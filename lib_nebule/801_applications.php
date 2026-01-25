@@ -270,7 +270,7 @@ abstract class Applications extends Functions implements ApplicationInterface
             }
         } else // Sinon c'est un objet à télécharger.
         {
-            $instance = $this->_cacheInstance->newNode($this->_askDownloadObject);
+            $instance = $this->_cacheInstance->newNodeByType($this->_askDownloadObject);
             $data = $instance->getContent(0);
             if ($data != null) {
                 $this->_metrologyInstance->addLog('Sending object ' . $this->_askDownloadObject, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '18852ac4');

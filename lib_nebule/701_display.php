@@ -1583,11 +1583,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             document.onmouseover = move;
 
             ico_lock_off = new Image(64, 64);
-            ico_lock_off.src = "/<?php    $objet = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENTITY_LOCK);
+            ico_lock_off.src = "/<?php    $objet = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ENTITY_LOCK);
                 $newobj = $objet->getUpdateNID(true, false);
                 echo References::OBJECTS_FOLDER . '/' . $newobj; ?>";
             ico_lock_on = new Image(64, 64);
-            ico_lock_on.src = "/<?php    $objet = $this->_cacheInstance->newNode(self::DEFAULT_ICON_ENT);
+            ico_lock_on.src = "/<?php    $objet = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_ENT);
                 $newobj = $objet->getUpdateNID(true, false);
                 echo References::OBJECTS_FOLDER . '/' . $newobj; ?>";
 
@@ -2337,7 +2337,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->checkPresent()) {
                 if ($size = 'half' || $size = 'full') {
                     if (!is_a($object, 'Nebule\Library\Entity')) {
-                        $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+                        $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
                     }
 
                     $result = '<div class="text">' . "\n\t<p>"
@@ -2351,7 +2351,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (sizeof($localisations) > 0) {
                             $result .= '<table border="0"><tr><td><td>' . $this->_translateInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                             foreach ($localisations as $localisation) {
-                                $locObject = $this->_cacheInstance->newNode($localisation);
+                                $locObject = $this->_cacheInstance->newNodeByType($localisation);
                                 $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
                                     . $this->convertHypertextLink(
                                         $locObject->readOneLineAsText(),
@@ -2372,7 +2372,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
-                $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+                $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -2387,7 +2387,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             unset($isOpened, $isClosed);
         } elseif ($isConversation) {
             if (!is_a($object, 'Conversation'))
-                $object = $this->_cacheInstance->newNode($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
+                $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_CONVERSATION);
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -2455,7 +2455,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $notify->setMessage('::display:content:warningObjectProctected');
             $notify->setType(DisplayItemIconMessage::TYPE_WARN);
             $result .= $notify->getHTML();
-            $unprotectedObject = $this->_cacheInstance->newNode($object->getUnprotectedID());
+            $unprotectedObject = $this->_cacheInstance->newNodeByType($object->getUnprotectedID());
             $unprotectedName = $unprotectedObject->getFullName('all');
             $unprotectedTypemime = $unprotectedObject->getType('all');
             $htlink = $this->_prepareDefaultNodeLinkURL($unprotectedObject);
@@ -2704,7 +2704,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($uid == $nid)
             $newObjectInstance = $oid;
         else
-            $newObjectInstance = $this->_cacheInstance->newNode($uid);
+            $newObjectInstance = $this->_cacheInstance->newNodeByType($uid);
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -2747,7 +2747,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         if ($uid->getID() == $oid->getID())
             $newObjectInstance = $oid;
         else
-            $newObjectInstance = $this->_cacheInstance->newNode($uid->getID());
+            $newObjectInstance = $this->_cacheInstance->newNodeByType($uid->getID());
 
         return $this->convertImage($newObjectInstance, $alt, $class, $id, $args);
     }
@@ -2959,7 +2959,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         // Récupère une instance de l'objet.
         if (!is_a($object, 'Nebule\Library\Node'))
-            $object = $this->_cacheInstance->newNode($object);
+            $object = $this->_cacheInstance->newNodeByType($object);
 
         if ($object->getID() == '0')
             return '';
@@ -3071,7 +3071,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     private function _prepareObjectIcon_DEPRECATED(Node $nid, string $icon, string $class = ''): string
     {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object icon ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $iconInstance = $this->_nebuleInstance->getCacheInstance()->newNode($icon);
+        $iconInstance = $this->_nebuleInstance->getCacheInstance()->newNodeByType($icon);
         $instance = new DisplayIcon($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setIcon($iconInstance);
@@ -3699,10 +3699,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
                 $action = 'x';
-                $rid = $this->_cacheInstance->newNode($listEmotions1[$emotion]);
+                $rid = $this->_cacheInstance->newNodeByType($listEmotions1[$emotion]);
             } else {
                 $action = 'f';
-                $rid = $this->_cacheInstance->newNode($listEmotions0[$emotion]);
+                $rid = $this->_cacheInstance->newNodeByType($listEmotions0[$emotion]);
             }
             $link = $action . '_' . $source . '_' . $target . '_' . $meta;
             $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
@@ -4205,7 +4205,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
-                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::TRANSLATE_TABLE['en-en'][$module::MODULE_NAME]);
                         $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $dispHookList[$i]['icon'] = $appHook['icon'];
                         if ($dispHookList[$i]['icon'] == '')
@@ -4237,7 +4237,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 }
                 foreach ($appHookList as $appHook) {
                     if ($appHook['name'] != '') {
-                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                        $dispHookList[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::TRANSLATE_TABLE['en-en'][$module::MODULE_NAME]);
                         $dispHookList[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                         $dispHookList[$i]['icon'] = $appHook['icon'];
                         if ($dispHookList[$i]['icon'] == '')
@@ -4269,7 +4269,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             foreach ($appHookList as $appHook) {
                 if ($appHook['name'] != '') {
-                    $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::MODULE_NAME);
+                    $dispHookListT[$i]['moduleName'] = $this->_translateInstance->getTranslate($module::TRANSLATE_TABLE['en-en'][$module::MODULE_NAME]);
                     $dispHookListT[$i]['name'] = $this->_translateInstance->getTranslate($appHook['name']);
                     $dispHookListT[$i]['icon'] = $appHook['icon'];
                     if ($dispHookListT[$i]['icon'] == '')
@@ -4343,7 +4343,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $dispHook['desc'] = '';
 
         if (!is_a($dispHook['icon'], 'Nebule\Library\Node'))
-            $dispHook['icon'] = $this->_cacheInstance->newNode($dispHook['icon']);
+            $dispHook['icon'] = $this->_cacheInstance->newNodeByType($dispHook['icon']);
 
         if ($dispHook['link'] != '')
             $result .= ' <a href="' . $dispHook['link'] . '">' . "\n";
@@ -4408,16 +4408,16 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !is_a($object, 'Nebule\Library\Transaction')
             && !is_a($object, 'Nebule\Library\Wallet')
         ) {
-            $object = $this->_cacheInstance->newNode($object);
+            $object = $this->_cacheInstance->newNodeByType($object);
             $id = $object->getID();
             if ($object->getType('all') == References::REFERENCE_OBJECT_ENTITY
                 && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER) !== false
             )
-                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_ENTITY);
+                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_ENTITY);
             elseif ($object->getIsGroup('all'))
-                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_GROUP);
+                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_GROUP);
             elseif ($object->getIsConversation('all'))
-                $object = $this->_cacheInstance->newNode($id, \Nebule\Library\Cache::TYPE_CONVERSATION);
+                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_CONVERSATION);
         }
 
         $type = $object->getType('all');
@@ -4439,7 +4439,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         if (sizeof($localisations) > 0) {
                             $result .= '<table border="0"><tr><td><td>' . $this->_translateInstance->getTranslate('::EntityLocalisation') . " :</td><td>\n";
                             foreach ($localisations as $localisation) {
-                                $locObject = $this->_cacheInstance->newNode($localisation);
+                                $locObject = $this->_cacheInstance->newNodeByType($localisation);
                                 $result .= "\t " . $this->convertInlineObjectColorIcon($localisation) . ' '
                                     . $this->convertHypertextLink(
                                         $locObject->readOneLineAsText(),
@@ -4518,7 +4518,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && !is_a($object, 'Nebule\Library\Entity')
             && !is_a($object, 'Nebule\Library\Conversation')
         )
-            $object = $this->_cacheInstance->newNode($object);
+            $object = $this->_cacheInstance->newNodeByType($object);
         $id = $object->getID();
 
         // Vérifie si il est protégé
@@ -4708,7 +4708,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $param['displaySize'] = $size;
 
             if (isset($param['icon']) && (is_string($param['icon'])))
-                $param['icon'] = $this->_cacheInstance->newNode($param['icon']);
+                $param['icon'] = $this->_cacheInstance->newNodeByType($param['icon']);
 
             // Détermine si c'est un objet ou un message à afficher.
             if (isset($item['object'])
@@ -4797,7 +4797,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if (is_a($item['icon'], 'Nebule\Library\Node'))
                 $icon = $item['icon'];
             else {
-                $iconTmp = $this->_cacheInstance->newNode((string)$item['icon']);
+                $iconTmp = $this->_cacheInstance->newNodeByType((string)$item['icon']);
                 if ($this->getNodeIsRID($iconTmp))
                     $icon = $this->getImageByReference($iconTmp);
                 else
@@ -4968,7 +4968,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $instance->setRatio($param['displayRatio']);
         if (isset($param['icon']))
             if (is_string($param['icon']))
-                $param['icon'] = $this->_cacheInstance->newNode($param['icon']);
+                $param['icon'] = $this->_cacheInstance->newNodeByType($param['icon']);
             $instance->setIcon($param['icon']);
         if (isset($param['htlink']))
             $instance->setLink($param['htlink']);
@@ -5060,17 +5060,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         ) {
             if ($instance->getSigned()) {
                 $contantDisplayValid .= '<img title="OK" ';
-                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNode(DisplayItemIconMessage::ICON_OK_RID))->getID() . '" ';
+                $contantDisplayValid .= 'alt="[O]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType(DisplayItemIconMessage::ICON_OK_RID))->getID() . '" ';
                 $contantDisplayValid .= '/>';
             } else {
                 $contantDisplayValid .= '<img title="ERROR" ';
-                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNode(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
+                $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
                 $contantDisplayValid .= '/>';
             }
 
             foreach ($instance->getSignersEID() as $signer)
             {
-                $object = $this->_cacheInstance->newNode($signer);
+                $object = $this->_cacheInstance->newNodeByType($signer);
                 $contantDisplaySigner .= '<img title="' . $object->getFullName();
                 $contantDisplaySigner .= '" style="background:#' . $object->getPrimaryColor();
                 $contantDisplaySigner .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
@@ -5107,29 +5107,29 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
             $contantDisplayAction .= '<img title="Action ' . $instance->getParsed()['bl/rl/req'] . '" ';
             $contantDisplayAction .= 'alt="[' . $instance->getParsed()['bl/rl/req'] . ']" ';
-            $contantDisplayAction .= 'src="o/' . $this->getImageByReference($this->_cacheInstance->newNode($icon))->getID() . '" />';
+            $contantDisplayAction .= 'src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType($icon))->getID() . '" />';
 
-            $object = $this->_cacheInstance->newNode($instance->getParsed()['bl/rl/nid1']);
+            $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid1']);
             $contantDisplaySource .= '<img title="' . $object->getFullName();
             $contantDisplaySource .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplaySource .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_cacheInstance->newNode($instance->getParsed()['bl/rl/nid2']);
+            $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid2']);
             $contantDisplayTarget .= '<img title="' . $object->getFullName();
             $contantDisplayTarget .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayTarget .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
-            $object = $this->_cacheInstance->newNode($instance->getParsed()['bl/rl/nid3']);
+            $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid3']);
             $contantDisplayMeta .= '<img title="' . $object->getFullName();
             $contantDisplayMeta .= '" style="background:#' . $object->getPrimaryColor();
             $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
         } else {
             $contantDisplayIcon .= '<img title="ERROR" ';
-            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNode(self::REFERENCE_ICON_LINK_LL))->getID() . '" ';
+            $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType(self::REFERENCE_ICON_LINK_LL))->getID() . '" ';
             $contantDisplayIcon .= '/>';
 
             $contantDisplayValid .= '<img title="ERROR" ';
-            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNode(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
+            $contantDisplayValid .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType(DisplayItemIconMessage::ICON_ERROR_RID))->getID() . '" ';
             $contantDisplayValid .= '/>';
         }
 
@@ -5466,50 +5466,50 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
         switch ($link->getParsed()['bl/rl/req']) {
             case 'f':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LF);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LF);
                 $iconUpdate = $this->convertUpdateImage($icon, 'f', 'iconInlineDisplay');
                 break;
             case 'u':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LU);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LU);
                 $iconUpdate = $this->convertUpdateImage($icon, 'u', 'iconInlineDisplay');
                 break;
             case 'd':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LD);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LD);
                 $iconUpdate = $this->convertUpdateImage($icon, 'd', 'iconInlineDisplay');
                 break;
             case 'e':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LE);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LE);
                 $iconUpdate = $this->convertUpdateImage($icon, 'e', 'iconInlineDisplay');
                 break;
             case 'c':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LC);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LC);
                 $iconUpdate = $this->convertUpdateImage($icon, 'c', 'iconInlineDisplay');
                 break;
             case 'k':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                 $iconUpdate = $this->convertUpdateImage($icon, 'k', 'iconInlineDisplay');
                 break;
             case 's':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LS);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LS);
                 $iconUpdate = $this->convertUpdateImage($icon, 's', 'iconInlineDisplay');
                 break;
             case 'x':
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LX);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LX);
                 $iconUpdate = $this->convertUpdateImage($icon, 'x', 'iconInlineDisplay');
                 break;
             default :
-                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LL);
+                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LL);
                 $iconUpdate = $this->convertUpdateImage($icon, 'l', 'iconInlineDisplay');
                 break;
         }
 
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IMLOG);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IMLOG);
         $colorDate = $this->convertUpdateImage($icon, $link->getDate(), 'iconInlineDisplay'); // FIXME
 
         // Prépare le contenu à afficher.
         $return = '';
         foreach ($link->getSignersEID() as $signer)
-            $return .= $this->convertInlineObjectColor($this->_cacheInstance->newNode($signer), \Nebule\Library\Cache::TYPE_ENTITY);
+            $return .= $this->convertInlineObjectColor($this->_cacheInstance->newNodeByType($signer), \Nebule\Library\Cache::TYPE_ENTITY);
         $return .= $colorDate;
         $return .= $iconUpdate;
         $return .= $this->convertInlineObjectColor($link->getParsed()['bl/rl/nid1']);
@@ -5533,7 +5533,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         else
             $iconID = self::DEFAULT_ICON_LO;
 
-        $instance = $this->_cacheInstance->newNode($iconID);
+        $instance = $this->_cacheInstance->newNodeByType($iconID);
         if ($instance->getID() == '0')
             return '';
 
@@ -5547,7 +5547,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineInfoFace(): string
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IINFO);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IINFO);
         return $this->convertUpdateImage($icon, $this->_translateInstance->getTranslate('::INFO'), 'iconInlineDisplay');
     }
 
@@ -5558,7 +5558,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineOKFace(): string
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IOK);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IOK);
         return $this->convertUpdateImage($icon, $this->_translateInstance->getTranslate('::OK'), 'iconInlineDisplay');
     }
 
@@ -5569,7 +5569,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineWarningFace(): string
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IWARN);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IWARN);
         return $this->convertUpdateImage($icon, $this->_translateInstance->getTranslate('::WARN'), 'iconInlineDisplay');
     }
 
@@ -5580,7 +5580,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function convertInlineErrorFace(): string
     {
-        $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IERR);
+        $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IERR);
         return $this->convertUpdateImage($icon, $this->_translateInstance->getTranslate('::ERROR'), 'iconInlineDisplay');
     }
 
@@ -5881,7 +5881,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $entity = $item['entity'];
             $entityID = $entity->getID();
         } elseif (Node::checkNID($item['entity'], false, false)) {
-            $entity = $this->_cacheInstance->newNode($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $entity = $this->_cacheInstance->newNodeByType($item['entity'], \Nebule\Library\Cache::TYPE_ENTITY);
             $entityID = $entity->getID();
         }
 
@@ -5969,7 +5969,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
                         <div class="oneAction-warn">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IWARN);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IWARN);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:warningTaggedWarning',
@@ -5984,7 +5984,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
                         <div class="oneAction-error">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_IERR);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_IERR);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:errorBan',
@@ -5999,7 +5999,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
                         <div class="oneAction-ok">
                             <p><?php
-                                $icon = $this->_cacheInstance->newNode(self::DEFAULT_ICON_LK);
+                                $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
                                     '::display:content:ObjectProctected',
@@ -6020,7 +6020,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 if (is_a($action['icon'], 'Nebule\Library\Node'))
                                     $icon = $action['icon'];
                                 else
-                                    $icon = $this->_cacheInstance->newNode($action['icon']);
+                                    $icon = $this->_cacheInstance->newNodeByType($action['icon']);
                                 $actionIcon = $this->convertUpdateImage($icon, $action['name'], 'iconInlineDisplay');
                                 $actionName = $this->_translateInstance->getTranslate($action['name']);
                                 echo '<p>' . $actionIcon . ' ' . $this->convertHypertextLink($actionName, $action['link']) . "</p>\n";

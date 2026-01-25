@@ -663,23 +663,23 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
     private function _displayMenu(): void
     {
         $list = array();
-        $list[0]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LL);
+        $list[0]['icon'] = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LL);
         $list[0]['title'] = 'Options';
         $list[0]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_OPTIONS
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-        $list[1]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
+        $list[1]['icon'] = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LF);
         $list[1]['title'] = 'Global authorities';
         $list[1]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_GLOBAL_AUTHORITIES
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-        $list[2]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LF);
+        $list[2]['icon'] = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LF);
         $list[2]['title'] = 'Local authorities';
         $list[2]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_LOCAL_AUTHORITIES
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-        $list[4]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LS);
+        $list[4]['icon'] = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LS);
         $list[4]['title'] = 'Applications';
         $list[4]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_APPLICATIONS
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-        $list[5]['icon'] = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LK);
+        $list[5]['icon'] = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LK);
         $list[5]['title'] = 'Local recovery';
         $list[5]['htlink'] = '?' . Displays::COMMAND_DISPLAY_VIEW . '=' . self::VIEW_RECOVERY
             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
@@ -880,7 +880,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         if ($this->_permitAction($this->_entitiesInstance->getGhostEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities')
         ) {
-            $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
+            $icon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_ADD);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('Add entities as local authority');
             $instance->setIcon($icon);
@@ -1014,7 +1014,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             <?php
             foreach (\Nebule\Library\Configuration::OPTIONS_CATEGORIES as $optionCategory) {
                 $instanceTitle->setTitle($optionCategory);
-                $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_LL);
+                $icon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_LL);
                 $instanceTitle->setIcon($icon);
                 $instanceTitle->setEnableEntity(false);
                 $instanceTitle->display();
@@ -1025,7 +1025,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
                     $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-                    $instanceID = $this->_nebuleInstance->getCacheInstance()->newNode('0');
+                    $instanceID = $this->_nebuleInstance->getCacheInstance()->newNodeByType('0');
                     $instanceID->setContent($optionName);
                     $instanceOption = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                     $instanceOption->setNID($instanceID);
@@ -1246,7 +1246,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
 
         echo '<div id="apps">' . "\n";
 
-        $instanceAppsID = $this->_cacheInstance->newNode(\Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS);
+        $instanceAppsID = $this->_cacheInstance->newNodeByType(\Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS);
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK2 refAppsID=' . \Nebule\Bootstrap\LIB_RID_INTERFACE_APPLICATIONS, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK3 refPHP=' . $referencePHP, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
 $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK4 nid=' . $instanceAppsID->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -1514,7 +1514,7 @@ $this->_nebuleInstance->getMetrologyInstance()->addLog('MARK10 target=' . $hashT
         if ($this->_permitAction($this->_entitiesInstance->getGhostEntityInstance())
             && $this->_configurationInstance->getOptionAsBoolean('permitRecoveryEntities')
         ) {
-            $icon = $this->_cacheInstance->newNode(Displays::DEFAULT_ICON_ADD);
+            $icon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_ADD);
             $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
             $instance->setTitle('Add entities as recovery');
             $instance->setIcon($icon);

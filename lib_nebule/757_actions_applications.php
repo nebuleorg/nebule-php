@@ -44,7 +44,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
             $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
 
             if (Node::checkNID($arg))
-                $this->_actionSynchronizeApplicationInstance = $this->_cacheInstance->newNode($arg);
+                $this->_actionSynchronizeApplicationInstance = $this->_cacheInstance->newNodeByType($arg);
         }
     }
     protected function _actionSynchronizeApplication(): void
@@ -61,7 +61,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
         // Synchronise l'objet cible.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
+            $object = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.
@@ -72,7 +72,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
         // Synchronise l'objet source.
         $object = null;
         foreach ($links as $link) {
-            $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);
+            $object = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1']);
             // Synchronise les liens (avant).
             $object->syncLinks();
             // Synchronise l'objet.

@@ -109,7 +109,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         // Extraction de l'objet à supprimer.
         if (Node::checkNID($argObject)) {
             $this->_actionDeleteObjectID = $argObject;
-            $this->_actionDeleteObjectInstance = $this->_cacheInstance->newNode($argObject);
+            $this->_actionDeleteObjectInstance = $this->_cacheInstance->newNodeByType($argObject);
             $this->_actionDeleteObject = true;
         }
 
@@ -142,7 +142,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $arg = $this->getFilterInput(self::PROTECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
-            $this->_actionProtectObjectInstance = $this->_cacheInstance->newNode($arg);
+            $this->_actionProtectObjectInstance = $this->_cacheInstance->newNodeByType($arg);
     }
     protected function _actionProtectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -160,7 +160,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $arg = $this->getFilterInput(self::UNPROTECT, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
-            $this->_actionUnprotectObjectInstance = $this->_cacheInstance->newNode($arg);
+            $this->_actionUnprotectObjectInstance = $this->_cacheInstance->newNodeByType($arg);
     }
     protected function _actionUnprotectObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -202,7 +202,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupOpened, \Nebule\Library\Cache::TYPE_GROUP);
+        $group = $this->_cacheInstance->newNodeByType($this->_actionShareProtectObjectToGroupOpened, \Nebule\Library\Cache::TYPE_GROUP);
         foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -224,7 +224,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newNode($this->_actionShareProtectObjectToGroupClosed, \Nebule\Library\Cache::TYPE_GROUP);
+        $group = $this->_cacheInstance->newNodeByType($this->_actionShareProtectObjectToGroupClosed, \Nebule\Library\Cache::TYPE_GROUP);
         foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -259,7 +259,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $arg = $this->getFilterInput(self::SYNCHRONIZE, FILTER_FLAG_ENCODE_LOW);
 
         if (Node::checkNID($arg))
-            $this->_actionSynchronizeObjectInstance = $this->_cacheInstance->newNode($arg);
+            $this->_actionSynchronizeObjectInstance = $this->_cacheInstance->newNodeByType($arg);
     }
     protected function _actionSynchronizeObject(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -368,7 +368,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
                                 $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
                             }
                             if ($this->_uploadFileGroup != '' && \Nebule\Library\Node::checkNID($this->_uploadFileGroup)) {
-                                $group = $this->_cacheInstance->newNode($this->_uploadFileGroup, \Nebule\Library\Cache::TYPE_GROUP);
+                                $group = $this->_cacheInstance->newNodeByType($this->_uploadFileGroup, \Nebule\Library\Cache::TYPE_GROUP);
                                 if ($this->_uploadFileGroupTyped == '')
                                     $group->setAsMemberNID($this->_uploadFileID, $this->_uploadFileObfuscate);
                                 else

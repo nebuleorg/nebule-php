@@ -101,7 +101,7 @@ class ModuleLang extends Module
                     $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_OK);
                 else
                     $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
-                $instanceIcon = $this->_cacheInstance->newNode($moduleName::MODULE_LOGO);
+                $instanceIcon = $this->_cacheInstance->newNodeByType($moduleName::MODULE_LOGO);
                 if ($instanceIcon == '0')
                     continue;
                 $instance->setIcon($instanceIcon);
