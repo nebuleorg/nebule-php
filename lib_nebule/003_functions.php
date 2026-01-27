@@ -180,52 +180,30 @@ class Functions
         return $instance;
     }
 
-    public function dateCompare($chr1, $mod1, $chr2, $mod2): false|int
-    {
+    public function dateCompare($chr1, $mod1, $chr2, $mod2): int{
+//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING ' . $chr1 . '>' . $mod1 . ' ' . $chr2 . '>' . $mod2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         // FIXME comparateur universel sur multiples formats de dates...
-        if ($chr1 != '0') return false;
-        if ($chr2 != '0') return false;
-        if ($mod1 == '') return false;
-        if ($mod2 == '') return false;
-        // Extrait les éléments d'une date.
-        $d1 = date_parse($mod1);
-        if (!$d1) return 0;
-        $d2 = date_parse($mod2);
-        if (!$d2) return 0;
-        // Année
-        if ($d1['year'] > $d2['year']) return 1;
-        if ($d1['year'] < $d2['year']) return -1;
-        // Mois
-        if ($d1['month'] === false) return 0;
-        if ($d2['month'] === false) return 0;
-        if ($d1['month'] > $d2['month']) return 1;
-        if ($d1['month'] < $d2['month']) return -1;
-        // Jour
-        if ($d1['day'] === false) return 0;
-        if ($d2['day'] === false) return 0;
-        if ($d1['day'] > $d2['day']) return 1;
-        if ($d1['day'] < $d2['day']) return -1;
-        // Heure
-        if ($d1['hour'] === false) return 0;
-        if ($d2['hour'] === false) return 0;
-        if ($d1['hour'] > $d2['hour']) return 1;
-        if ($d1['hour'] < $d2['hour']) return -1;
-        // Minute
-        if ($d1['minute'] === false) return 0;
-        if ($d2['minute'] === false) return 0;
-        if ($d1['minute'] > $d2['minute']) return 1;
-        if ($d1['minute'] < $d2['minute']) return -1;
-        // Seconde
-        if ($d1['second'] === false) return 0;
-        if ($d2['second'] === false) return 0;
-        if ($d1['second'] > $d2['second']) return 1;
-        if ($d1['second'] < $d2['second']) return -1;
-        // Fraction de seconde
-        if ($d1['fraction'] === false) return 0;
-        if ($d2['fraction'] === false) return 0;
-        if ($d1['fraction'] > $d2['fraction']) return 1;
-        if ($d1['fraction'] < $d2['fraction']) return -1;
-        return 0;
+        if ($chr1 != '0') return 0;
+        if ($chr2 != '0') return 0;
+        if ($mod1 == '') return 0;
+        if ($mod2 == '') return 0;
+
+        if ($mod1 == $mod2) return 0;
+
+        if (strlen($mod1) > strlen($mod2)) $mod1 = substr($mod1, 0, strlen($mod2));
+        if (strlen($mod2) > strlen($mod1)) $mod2 = substr($mod2, 0, strlen($mod1));
+
+        if (extension_loaded('bcmath'))
+            return bccomp($mod1, $mod2);
+        //$this->_metrologyInstance->addLog('BCMath not available', Metrology::LOG_LEVEL_ERROR, __METHOD__, '22e9185a');
+
+        $mod1 = ltrim($mod1, '0') ?: '0';
+        $mod2 = ltrim($mod2, '0') ?: '0';
+        if (strlen($mod1) > strlen($mod2))
+            return 1;
+        elseif (strlen($mod1) < strlen($mod2))
+            return -1;
+        return strcmp($mod1, $mod2);
     }
 
     public function getYoungestLink(array $links): ?LinkRegister {

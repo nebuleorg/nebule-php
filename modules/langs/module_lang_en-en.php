@@ -342,6 +342,7 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::returnToFolder' => 'Return to the folder',
             '::addObject' => 'Add an object',
             '::addFile' => 'Add a file',
+            '::removeFile' => 'Remove the file',
             '::seeTheFile' => 'See the file',
 
             // Galleries

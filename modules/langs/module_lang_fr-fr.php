@@ -341,6 +341,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::returnToFolder' => 'Retourner au dossier',
             '::addObject' => 'Ajouter un objet',
             '::addFile' => 'Ajouter un fichier',
+            '::removeFile' => 'Retirer le fichier',
             '::seeTheFile' => 'Voir le fichier',
 
             // Galleries

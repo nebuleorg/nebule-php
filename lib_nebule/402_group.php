@@ -451,8 +451,8 @@ class Group extends Node implements nodeInterface {
     public function getIsMemberNID(string $nid, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($nid, $this->_id, $socialClass); }
     public function setAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
     public function setAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
-    public function unsetAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
-    public function unsetAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
+    public function unsetAsMember(Node $object, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
+    public function unsetAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($nid, $this->_id, $obfuscated); }
 
 
 

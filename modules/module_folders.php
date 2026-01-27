@@ -241,7 +241,7 @@ class ModuleFolders extends Module {
             case 'typeFolder':
                 $rootID = $nid;
                 if ($this->_instanceCurrentRoot !== null)
-                    $rootID = $this->_instanceCurrentFolder->getID();
+                    $rootID = $this->_instanceCurrentRoot->getID();
                 $hookArray[] = array(
                     'name' => '::seeTheFolder',
                     'icon' => $this::MODULE_LOGO,
@@ -252,8 +252,41 @@ class ModuleFolders extends Module {
                         . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
+                if ($this->_instanceCurrentFolder != null) {
+                    $hookArray[] = array(
+                        'name' => '::removeFolder',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $rootID
+                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $this->_instanceCurrentFolder->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
+                }
                 break;
 
+            case 'typeFile':
+                $rootID = $nid;
+                if ($this->_instanceCurrentRoot !== null)
+                    $rootID = $this->_instanceCurrentRoot->getID();
+                if ($this->_instanceCurrentFolder != null) {
+                    $hookArray[] = array(
+                        'name' => '::removeFile',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $rootID
+                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $this->_instanceCurrentFolder->getID()
+                            . '&' . \Nebule\Library\ActionsGroups::REMOVE_MEMBER . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
+                }
+                break;
         }
         return $hookArray;
     }

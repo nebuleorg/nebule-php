@@ -2591,7 +2591,6 @@ class Node extends Functions implements nodeInterface {
             return;
 
         $lines = $this->_ioInstance->getBlockLinks($this->_id, '', 0);
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING lines=' . sizeof($lines), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         if (sizeof($lines) == 0)
             return;
 
@@ -2609,11 +2608,8 @@ class Node extends Functions implements nodeInterface {
             } else
                 $this->_cacheInstance->unsetOnCache($line, Cache::TYPE_BLOCLINK);
         }
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $this->_filterLinksByX($links, $withLinkX);
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING links=' . sizeof($links), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
     }
 
     /**
@@ -2636,8 +2632,9 @@ class Node extends Functions implements nodeInterface {
                 $compare = $this->dateCompare(
                         $linkToCheck->getBlocLink()->getParsed()['bl/rc/mod'], $linkToCheck->getBlocLink()->getParsed()['bl/rc/chr'],
                         $linkToCompare->getBlocLink()->getParsed()['bl/rc/mod'], $linkToCompare->getBlocLink()->getParsed()['bl/rc/chr']);
-                if ($compare === false || $compare < 0)
+                if ($compare > 0) {
                     continue;
+                }
                 unset($links[$i]);
             }
         }
