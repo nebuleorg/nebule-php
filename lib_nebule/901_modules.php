@@ -566,11 +566,17 @@ abstract class Module extends Functions implements ModuleInterface {
 
     protected function _displayItem(string $name, int $icon = 0): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_socialClass == '')
+            $this->_socialClass = 'onlist';
+        $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+        if (! $this->_instanceCurrentItem->getMarkClosed())
+            $this->_socialClass = 'all';
 
         if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_preDisplayItem();
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instance->setSocial('self');
+            $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+            $instance->setSocial($this->_socialClass);
             $instance->setNID($this->_instanceCurrentItem);
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
+use Nebule\Library\Cache;
 use Nebule\Library\nebule;
 use Nebule\Library\References;
 use Nebule\Library\Metrology;
@@ -303,7 +304,8 @@ class ModuleFolders extends Module {
                     $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
                     $node = $this->_cacheInstance->newNodeByType($item);
                     $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                    $instance->setSocial('myself');
+                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                    $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
                     $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
@@ -328,7 +330,8 @@ class ModuleFolders extends Module {
                     $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
                     $node = $this->_cacheInstance->newNodeByType($item);
                     $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                    $instance->setSocial('myself');
+                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                    $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
                     $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
@@ -354,10 +357,13 @@ class ModuleFolders extends Module {
             case 'displayRootFolders':
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
-                $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
-                $node = $this->_cacheInstance->newNodeByType($item);
+                $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
+                $node = $this->_cacheInstance->newNode($item);
                 $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                $instance->setSocial('myself');
+                $this->_getCurrentItemFounders($node);
+                $this->_getCurrentItemSocialList($node);
+                $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                $instance->setSocial($this->_socialClass);
                 $instance->setNID($node);
                 $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                     . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
@@ -477,11 +483,12 @@ class ModuleFolders extends Module {
             return;
         }
 
-        $socialClass = 'onlist';
-        $this->_socialInstance->setList($this->_currentItemWritersList, $socialClass);
+        if ($this->_socialClass == '')
+            $this->_socialClass = 'onlist';
+        $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
         if (! $this->_instanceCurrentItem->getMarkClosed())
-            $socialClass = 'all';
-        $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($socialClass, $this->_currentItemWritersList);
+            $this->_socialClass = 'all';
+        $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($this->_socialClass, $this->_currentItemWritersList);
 
         $list = array();
         $this->_listSigners = array();
@@ -490,8 +497,8 @@ class ModuleFolders extends Module {
             $instance = $this->_cacheInstance->newNode($nid);
             $list[$nid] = $nid;
             $this->_listSigners[$nid] = $link->getSignersEID();
-            $this->_socialInstance->setList($this->_currentItemWritersList, $socialClass);
-            if ($instance->getIsGroup($socialClass, $this::FOLDER_CONTEXT))
+            $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+            if ($instance->getIsGroup($this->_socialClass, $this::FOLDER_CONTEXT))
                 $this->_listTypes[$nid] = 'folder';
             else
                 $this->_listTypes[$nid] = 'object';
@@ -726,6 +733,8 @@ class ModuleFolders extends Module {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $foldersNID = array();
         $this->_listSigners = array();
+        if ($this->_socialClass == '')
+            $this->_socialClass = 'onlist';
         foreach ($links as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
             if (!$this->_filterItemByType($nid))
