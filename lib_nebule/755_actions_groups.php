@@ -110,7 +110,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $this->_createInstance->setMarkClosed(null, $this->_createObfuscated);
             $this->_createGID = $this->_createInstance->getID();
             $this->_createError = ($this->_createInstance->getID() == '0');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('catch error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '9909a3df');
@@ -137,7 +137,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $instance->unsetMarkClosed();
             $this->_deleteGroup = true;
             $this->_deleteError = (!$instance->unsetAsGroup());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('catch error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bfc81e6c');
@@ -189,7 +189,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $this->_actionAddMemberError = (!$instance->setAsMemberNID($this->_actionAddMember, $obfuscated));
             else
                 $this->_actionAddMemberError = (!$instance->setAsTypedMemberNID($this->_actionAddMember, $typed, $obfuscated));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('catch error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '544a520c');
@@ -216,7 +216,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $this->_actionRemoveMemberError = (!$instance->unsetAsMemberNID($this->_actionRemoveMember));
             else
                 $this->_actionRemoveMemberError = (!$instance->unsetAsTypedMemberNID($this->_actionRemoveMember, $typed));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('catch error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ccbe9b9a');
@@ -254,7 +254,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $this->_actionAddCreateMemberError = (!$instanceGroup->setAsMemberNID($this->_createInstance->getID(), $obfuscated));
             else
                 $this->_actionAddCreateMemberError = (!$instanceGroup->setAsTypedMemberNID($this->_createInstance->getID(), $typed, $obfuscated));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('catch error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '32b941f3');

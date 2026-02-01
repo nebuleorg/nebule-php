@@ -69,21 +69,21 @@ abstract class Applications extends Functions implements ApplicationInterface
         $this->_metrologyInstance->addLog('initialisation application translate', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bd674f44');
         try {
             $this->_translateInstance->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('initialisation application translate error (' . $e->getCode() . ') : ' . $e->getFile() . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '585648a2');
         }
 
         $this->_metrologyInstance->addLog('initialisation application display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '451a8518');
         try {
             $this->_displayInstance->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('initialisation application display error (' . $e->getCode() . ') : ' . $e->getFile() . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '4c7da4e2');
         }
 
         $this->_metrologyInstance->addLog('initialisation application action', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd3478bd7');
         try {
             $this->_actionInstance->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('initialisation application action error (' . $e->getCode() . ') : ' . $e->getFile() . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3c042de3');
         }
         $this->_actionInstance->getActions(); // try to catch inside
@@ -383,7 +383,7 @@ abstract class Applications extends Functions implements ApplicationInterface
             $this->_metrologyInstance->addLog('running display', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '13cb1fd7');
             try {
                 $this->_displayInstance->display();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('error display (' . $e->getCode() . ') : ' . $e->getFile()
                         . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '93be3bc2');

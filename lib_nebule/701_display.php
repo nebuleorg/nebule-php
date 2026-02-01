@@ -2161,7 +2161,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     try {
                         $module->displayModule();
                         $ok = true;
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $this->_metrologyInstance->addLog('error display module content ' . $module::MODULE_COMMAND_NAME .' ('  . $e->getCode() . ') : ' . $e->getFile() . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'fa838cce');
                     }
                 }
@@ -4198,7 +4198,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 try {
                     $appHookList = $module->getHookList($selfHookName, $object);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get selfHookName=' . $selfHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '26e60b29');
@@ -4230,7 +4230,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($module::MODULE_COMMAND_NAME != $this->_currentDisplayMode) {
                 try {
                     $appHookList = $module->getHookList($selfHookName, $object);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get selfHookName=' . $selfHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '210fff24');
@@ -4262,7 +4262,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         foreach ($modules as $module) {
             try {
                 $appHookList = $module->getHookList($typeHookName, $object);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('error get typeHookName=' . $typeHookName . ' from module ' . get_class($module) . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '230a27d3');

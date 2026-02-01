@@ -413,7 +413,7 @@ class Router extends Functions
                 $this->_metrologyInstance->addLog('application load serialized instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b5f2f3f2');
                 $this->_applicationInstance = unserialize($bootstrapApplicationInstanceSleep);
             }
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
             $this->_metrologyInstance->addLog('application load error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),
@@ -442,7 +442,7 @@ class Router extends Functions
         if ($this->_applicationNoPreload) {
             try {
                 $this->_applicationInstance->router();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
                 $this->_metrologyInstance->addLog('application router error ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n" . $e->getTraceAsString(),

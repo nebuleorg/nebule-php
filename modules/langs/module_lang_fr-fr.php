@@ -366,6 +366,8 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::refuseGallery' => 'Refuser cet objet comme galerie',
             '::getGallery' => 'Récupérer une galerie',
             '::returnToGallery' => 'Retourner à la galerie',
+            '::addObjectMedia' => 'Ajouter un objet média',
+            '::addMedia' => 'Ajouter un média',
 
             // Blogs
             '::blog' => 'blog',

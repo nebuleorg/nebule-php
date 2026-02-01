@@ -241,7 +241,7 @@ class archiveActionsQantion {
                     $value = '';
                     try {
                         $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $valueArray = '';
                     }
                     $valueArray = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
@@ -252,7 +252,7 @@ class archiveActionsQantion {
                 } else {
                     try {
                         $this->_actionCreateCurrencyParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $this->_actionCreateCurrencyParam[$name] = '';
                     }
                     $this->_actionCreateCurrencyParam[$name] = trim($this->_actionCreateCurrencyParam[$name]);
@@ -346,7 +346,7 @@ class archiveActionsQantion {
                     $value = '';
                     try {
                         $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $valueArray = '';
                     }
                     foreach ($valueArray as $item)
@@ -356,7 +356,7 @@ class archiveActionsQantion {
                 } else {
                     try {
                         $this->_actionCreateTokenPoolParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $this->_actionCreateTokenPoolParam[$name] = '';
                     }
                     $this->_actionCreateTokenPoolParam[$name] = trim($this->_actionCreateTokenPoolParam[$name]);
@@ -451,7 +451,7 @@ class archiveActionsQantion {
                     $value = '';
                     try {
                         $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $valueArray = '';
                     }
                     foreach ($valueArray as $item)
@@ -461,7 +461,7 @@ class archiveActionsQantion {
                 } else {
                     try {
                         $this->_actionCreateTokensParam[$name] = trim((string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         $this->_actionCreateTokensParam[$name] = '';
                     }
                     $this->_actionCreateTokensParam[$name] = trim($this->_actionCreateTokensParam[$name]);

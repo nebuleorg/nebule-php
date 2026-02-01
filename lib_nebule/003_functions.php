@@ -278,7 +278,7 @@ class Functions
                 if (! $noTrim)
                     $arg = trim($arg);
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog("error reading '$name' on POST "
                 . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
@@ -295,7 +295,7 @@ class Functions
                     if (! $noTrim)
                         $arg = trim($arg);
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog("error reading '$name' on GET "
                     . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"

@@ -46,7 +46,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsLinks->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsLinks->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsLinks->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions links ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b4747eb7');
@@ -57,7 +57,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsObjects->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsObjects->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsObjects->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions objects ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '7dedc636');
@@ -68,7 +68,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsEntities->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsEntities->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsEntities->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions entities ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '37d646db');
@@ -79,7 +79,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsGroups->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsGroups->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsGroups->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions groups ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'db43cf5f');
@@ -90,7 +90,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsLocations->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsLocations->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsLocations->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions locations ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'afb6250a');
@@ -101,7 +101,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsApplications->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsApplications->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsApplications->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions applications ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '8d8d0b27');
@@ -112,7 +112,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             $this->_instanceActionsMarks->setEnvironmentLibrary($this->_nebuleInstance);
             $this->_instanceActionsMarks->setEnvironmentApplication($this->_applicationInstance);
             //$this->_instanceActionsMarks->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error init actions marks ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '44813857');
@@ -145,7 +145,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '435ee7f6');
             $this->_instanceActionsLinks->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions links ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '211aa041');
@@ -153,7 +153,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions objects', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5070a01f');
             $this->_instanceActionsObjects->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions objects ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e85d6df2');
@@ -161,7 +161,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions entities', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9684d61b');
             $this->_instanceActionsEntities->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions entities ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '8000113d');
@@ -169,7 +169,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions groups', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4299833c');
             $this->_instanceActionsGroups->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions groups ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '18dd4a7c');
@@ -177,7 +177,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions locations', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '26a04f10');
             $this->_instanceActionsLocations->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions locations ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '5d2b7c0b');
@@ -185,7 +185,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions applications', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '792ea58c');
             $this->_instanceActionsApplications->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions applications ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'cc89cc54');
@@ -193,7 +193,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call special actions marks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '3553b65b');
             $this->_instanceActionsMarks->specialActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call special actions marks ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '327969ed');
@@ -208,7 +208,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions links', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2c57d443');
             $this->_instanceActionsLinks->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions links ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e1fc5a04');
@@ -216,7 +216,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions objects', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7f459074');
             $this->_instanceActionsObjects->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions objects ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '9008f242');
@@ -224,7 +224,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions entities', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '41f64673');
             $this->_instanceActionsEntities->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions entities ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '06dc58f3');
@@ -232,7 +232,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions groups', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '4ea9f4d7');
             $this->_instanceActionsGroups->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions groups ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '7f12f7b9');
@@ -240,7 +240,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions locations', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c187a9f3');
             $this->_instanceActionsLocations->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions locations ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'e0c4cc52');
@@ -248,7 +248,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions applications', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5deb30a7');
             $this->_instanceActionsApplications->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions applications ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '12dcf93c');
@@ -256,7 +256,7 @@ abstract class Actions extends Functions implements ActionsInterface {
         try {
             $this->_metrologyInstance->addLog('call generic actions marks', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '5469549b');
             $this->_instanceActionsMarks->genericActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error call generic actions marks ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '1d9d6581');
@@ -275,7 +275,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             try {
                 $this->_metrologyInstance->addLog('actions for module ' . $module::MODULE_COMMAND_NAME, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '55fba077');
                 $module->actions();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('error actions for module ' . $module::MODULE_COMMAND_NAME
                     . ' ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"

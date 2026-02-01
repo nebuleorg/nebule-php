@@ -80,7 +80,7 @@ class ApplicationModules
             $moduleFullName = $this->_applicationNamespace . '\\' . $moduleName;
             try {
                 $classImplement = class_implements($moduleFullName);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('module ' . $moduleFullName . ' (' . $moduleName . ')' . ' lost ('  . $e->getCode() . ') : ' . $e->getFile()
                     . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                     . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '993617b1');
@@ -118,7 +118,7 @@ class ApplicationModules
             $lang = $moduleFullName::MODULE_LANGUAGE;
             $this->_listModulesName[$moduleName] = $moduleFullName;
             $this->_listModulesTranslateName[$lang] = $moduleFullName;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('translate module ' . $moduleFullName . ' (' . $moduleName . ')' . ' cannot been loaded ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '57947e3f');
@@ -130,7 +130,7 @@ class ApplicationModules
         try {
             //$instance = new $moduleFullName($this->_applicationInstance);
             $instance = new $moduleFullName($this->_nebuleInstance);
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error instancing class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6e8ba898');
@@ -145,7 +145,7 @@ class ApplicationModules
         $this->_metrologyInstance->addLog('init internal module ' . $moduleFullName . ' (' . $moduleName . ')', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a6c894e7');
         try {
             $instance->initialisation();
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('error initialisation class=' . $moduleFullName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '0d36b043');
@@ -183,7 +183,7 @@ class ApplicationModules
             $this->_metrologyInstance->addLog('Load external module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '06a13897');
             try {
                 include('o/' . $moduleID);// @todo A modifier, passer par IO.
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('error include external moduleID=' . $moduleID .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6cbb4fdd');
@@ -217,7 +217,7 @@ class ApplicationModules
             $this->_metrologyInstance->addLog('Load translate module ' . $moduleID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6d2f16cb');
             try {
                 include('o/' . $moduleID);// @todo A modifier, passer par IO.
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('error include translate moduleID=' . $moduleID .' ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '6ed36db6');

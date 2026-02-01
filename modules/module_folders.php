@@ -108,7 +108,6 @@ class ModuleFolders extends Module {
             $this->_path = $cache;
         else
             $this->_path = array(0 => $this->_instanceCurrentRoot->getID());
-        // TODO add when change root folder
         if ($this->_instanceCurrentFolder->getID() != $this->_instanceCurrentRoot->getID()) {
             $inPath = false;
             foreach ($this->_path as $i => $nid) {
@@ -121,7 +120,8 @@ class ModuleFolders extends Module {
             }
             if (!$inPath)
                 $this->_path[] = $this->_instanceCurrentFolder->getID();
-        }
+        } else
+            $this->_path = array(0 => $this->_instanceCurrentRoot->getID());
         $this->_sessionInstance->setSessionStore('module:folders:path', $this->_path);
     }
 
@@ -188,11 +188,24 @@ class ModuleFolders extends Module {
                 );
                 break;
 
-            case 'typeRootFolders':
             case 'typeRootFolder':
+                $rootID = $nid;
+                if ($this->_instanceCurrentRoot !== null)
+                    $rootID = $this->_instanceCurrentRoot->getID();
+                $hookArray[] = array(
+                    'name' => '::seeTheRootFolder',
+                    'icon' => $this::MODULE_LOGO,
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        . '&' . $this::COMMAND_SELECT_ROOT . '=' . $rootID
+                        . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
                 break;
 
             case 'selfFolder':
+            case 'selfRootFolder':
                 if ($this->_instanceCurrentRoot !== null) {
                     if ($this->_unlocked && isset($this->_currentItemWritersList[$this->_entitiesInstance->getConnectedEntityEID()])) {
                         $hookArray[] = array(
@@ -253,7 +266,8 @@ class ModuleFolders extends Module {
                         . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $nid
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                 );
-                if ($this->_instanceCurrentFolder != null) {
+                if ($this->_instanceCurrentFolder != null
+                    && $this->_unlocked && isset($this->_currentItemWritersList[$this->_entitiesInstance->getConnectedEntityEID()])) {
                     $hookArray[] = array(
                         'name' => '::removeFolder',
                         'icon' => $this::MODULE_REGISTERED_ICONS[4],
@@ -297,63 +311,6 @@ class ModuleFolders extends Module {
     public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
-            case 'displayFolderMembers':
-                if (!\Nebule\Library\Node::checkNID($item))
-                    return null;
-                if ($this->_listTypes[$item] == 'folder') {
-                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
-                    $node = $this->_cacheInstance->newNodeByType($item);
-                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
-                    $instance->setSocial($this->_socialClass);
-                    $instance->setNID($node);
-                    $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
-                        . '&' . self::COMMAND_SELECT_FOLDER . '=' . $item
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
-                    $instance->setEnableColor(true);
-                    $instance->setEnableIcon(true);
-                    $instance->setEnableName(true);
-                    $instance->setEnableFlags(false);
-                    $instance->setEnableContent(false);
-                    $instance->setEnableJS(true);
-                    if (sizeof($this->_listSigners[$item]) != 0) {
-                        $instance->setEnableRefs(true);
-                        $instance->setRefs($this->_listSigners[$item]);
-                    } else
-                        $instance->setEnableRefs(false);
-                    $instance->setSelfHookName('typeFolder');
-                    $instance->setIcon($instanceIcon);
-                    return $instance;
-                } elseif ($this->_listTypes[$item] == 'object') {
-                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
-                    $node = $this->_cacheInstance->newNodeByType($item);
-                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
-                    $instance->setSocial($this->_socialClass);
-                    $instance->setNID($node);
-                    $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $item
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
-                    $instance->setEnableColor(true);
-                    $instance->setEnableIcon(true);
-                    $instance->setEnableName(true);
-                    $instance->setEnableFlags(false);
-                    $instance->setEnableContent(false);
-                    $instance->setEnableJS(true);
-                    if (sizeof($this->_listSigners[$item]) != 0) {
-                        $instance->setEnableRefs(true);
-                        $instance->setRefs($this->_listSigners[$item]);
-                    } else
-                        $instance->setEnableRefs(false);
-                    $instance->setSelfHookName('typeFile');
-                    $instance->setIcon($instanceIcon);
-                    return $instance;
-                } else
-                    return null;
-                break;
             case 'displayRootFolders':
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
@@ -381,9 +338,66 @@ class ModuleFolders extends Module {
                     $instance->setRefs($this->_listSigners[$item]);
                 } else
                     $instance->setEnableRefs(false);
-                $instance->setSelfHookName('typeFolder');
+                $instance->setTypeHookName('typeRootFolder');
                 $instance->setIcon($instanceIcon);
                 return $instance;
+                break;
+            case 'displayFolderMembers':
+                if (!\Nebule\Library\Node::checkNID($item))
+                    return null;
+                if ($this->_listTypes[$item] == 'folder') {
+                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
+                    $node = $this->_cacheInstance->newNodeByType($item);
+                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                    $instance->setSocial($this->_socialClass);
+                    $instance->setNID($node);
+                    $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        . '&' . self::COMMAND_SELECT_ROOT . '=' . $this->_instanceCurrentRoot->getID()
+                        . '&' . self::COMMAND_SELECT_FOLDER . '=' . $item
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                    $instance->setEnableColor(true);
+                    $instance->setEnableIcon(true);
+                    $instance->setEnableName(true);
+                    $instance->setEnableFlags(false);
+                    $instance->setEnableContent(false);
+                    $instance->setEnableJS(true);
+                    if (sizeof($this->_listSigners[$item]) != 0) {
+                        $instance->setEnableRefs(true);
+                        $instance->setRefs($this->_listSigners[$item]);
+                    } else
+                        $instance->setEnableRefs(false);
+                    $instance->setTypeHookName('typeFolder');
+                    $instance->setIcon($instanceIcon);
+                    return $instance;
+                } elseif ($this->_listTypes[$item] == 'object') {
+                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
+                    $node = $this->_cacheInstance->newNodeByType($item);
+                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                    $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                    $instance->setSocial($this->_socialClass);
+                    $instance->setNID($node);
+                    $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $item
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                    $instance->setEnableColor(true);
+                    $instance->setEnableIcon(true);
+                    $instance->setEnableName(true);
+                    $instance->setEnableFlags(false);
+                    $instance->setEnableContent(false);
+                    $instance->setEnableJS(true);
+                    if (sizeof($this->_listSigners[$item]) != 0) {
+                        $instance->setEnableRefs(true);
+                        $instance->setRefs($this->_listSigners[$item]);
+                    } else
+                        $instance->setEnableRefs(false);
+                    $instance->setTypeHookName('typeFile');
+                    $instance->setIcon($instanceIcon);
+                    return $instance;
+                } else
+                    return null;
                 break;
             default:
                 return null;
@@ -395,7 +409,7 @@ class ModuleFolders extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('Folder');
+                $this->_displayItem('RootFolder');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('RootFolder');
@@ -422,7 +436,7 @@ class ModuleFolders extends Module {
                 $this->_displayAddFolder();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[10]:
-                $this->_displayAddFile();
+                $this->_displayAddNode();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[11]:
                 $this->_displayUploadFile();
@@ -452,6 +466,12 @@ class ModuleFolders extends Module {
     protected function _preDisplayItem(): void { $this->_displayPath(); }
     protected function _displayPath(): void {
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
+        if ($this->_instanceCurrentItem === null)
+            return;
+        if ($this->_socialClass == '')
+            $this->_socialClass = 'onlist';
+        if (! $this->_instanceCurrentItem->getMarkClosed())
+            $this->_socialClass = 'all';
         foreach ($this->_path as $nid) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instancePath = $this->_cacheInstance->newNodeByType($nid);
@@ -469,6 +489,8 @@ class ModuleFolders extends Module {
             $instance->setEnableContent(false);
             $instance->setEnableJS(false);
             $instance->setEnableRefs(false);
+            $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+            $instance->setSocial($this->_socialClass);
             $instanceList->addItem($instance);
         }
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_TINY);
@@ -591,7 +613,7 @@ class ModuleFolders extends Module {
             $this->_displayNotPermit();
     }
 
-    protected function _displayAddFile(): void {
+    protected function _displayAddNode(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::addObject', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackItemOrLogin('Folder');

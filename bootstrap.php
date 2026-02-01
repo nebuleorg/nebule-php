@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260116';
+const BOOTSTRAP_VERSION = '020260201';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -94,7 +94,7 @@ ob_start();
 try {
     /** @noinspection PhpUnusedLocalVariableInspection */
     $loggerSessionID = bin2hex(random_bytes(6));
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     /** @noinspection PhpUnusedLocalVariableInspection */
     $loggerSessionID = '0123456789ab';
 }
@@ -1736,7 +1736,7 @@ function io_objectInclude(string $nid): bool {
     log_add('include code NID=' . $nid, 'info', __FUNCTION__, 'ec10ca1d');
     try {
         include_once(LIB_LOCAL_OBJECTS_FOLDER . '/' . $nid);
-    } catch (\Error $e) {
+    } catch (\Throwable $e) {
         log_add('error include code NID=' . $nid .' ('  . $e->getCode() . ') : ' . $e->getFile()
             . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
             . $e->getTraceAsString(), 'error', __FUNCTION__, 'fa2f570a');
@@ -4330,7 +4330,7 @@ function bootstrap_loadLibraryPOO(string &$bootstrapLibraryInstanceSleep): void 
             } else
                 log_add('no class \Nebule\Library\nebule to instancing',
                     'error', __FUNCTION__, '60a345b8');
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             log_reopen(BOOTSTRAP_NAME);
             log_add('Library nebule load error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
@@ -6352,7 +6352,7 @@ function bootstrap_firstDisplay9LocaleEntity(): bool {
             $nebuleGhostPasswordEntity = '';
             try {
                 $newPasswd = random_bytes(LIB_FIRST_GENERATED_PASSWORD_SIZE * 20);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $newPasswd = 'ERROR GEN RANDOM ';
             }
             $nebuleGhostPasswordEntity .= preg_replace('/[^a-zA-Z0-9,;:*&#+=_-]/', '', $newPasswd);

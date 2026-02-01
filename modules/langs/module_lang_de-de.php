@@ -359,6 +359,8 @@ class ModuleTranslateDEDE extends ModuleTranslates
             '::refuseGallery' => 'Refuse this object as gallery',
             '::getGallery' => 'Get a gallery',
             '::returnToGallery' => 'Return to the gallery',
+            '::addObjectMedia' => 'Add an object as media',
+            '::addMedia' => 'Add a media',
 
             // Blogs
             '::blog' => 'blog',

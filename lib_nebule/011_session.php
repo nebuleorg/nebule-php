@@ -220,7 +220,7 @@ class Session extends Functions
                 $instance->setEnvironmentLibrary($this->_nebuleInstance);
                 $instance->initialisation();
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
             $instance = null;
         }
@@ -244,7 +244,7 @@ class Session extends Functions
                 return null;
             $instance->setEnvironmentLibrary($this->_nebuleInstance);
             $instance->initialisation();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('unable to restore entity ' . $name . ' from session', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'b6dc60cc');
             return null;
         }

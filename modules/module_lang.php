@@ -116,7 +116,7 @@ class ModuleLang extends Module
                     );
                 }
                 $instanceList->addItem($instance);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->_metrologyInstance->addLog('display language error (' . $e->getCode() . ') : ' . $e->getFile() . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n" . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c0ae4709');
             }
         }

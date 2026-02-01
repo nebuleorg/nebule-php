@@ -53,7 +53,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                     $item->setSize($this->_sizeCSS);
                     $item->setDisplayAlone(false);
                     $result .= $item->getHTML();
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display information ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3a188875');
@@ -62,7 +62,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 try {
                     $item->setSize($this->_sizeCSS);
                     $result .= $item->getHTML();
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display object ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa1f3719');
@@ -72,7 +72,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                     $item->setSize($this->_sizeCSS);
                     $item->setDisplayAlone(false);
                     $result .= $item->getHTML();
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display security ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a3a050a4');
@@ -186,7 +186,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             if (intval($count / $this->_listSize) == ($this->_currentPage - 1)) {
                 try {
                     $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $this->_metrologyInstance->addLog('error get hook function ' . $this->_listHookName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                             . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                             . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');

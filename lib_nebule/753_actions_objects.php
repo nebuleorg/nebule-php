@@ -421,7 +421,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
                     $this->_uploadFileErrorMessage = '::e3c9845c';
                     break;
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_metrologyInstance->addLog('upload file error ('  . $e->getCode() . ') : ' . $e->getFile()
                 . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                 . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '7e720681');
