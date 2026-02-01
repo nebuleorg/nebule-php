@@ -675,18 +675,20 @@ abstract class Module extends Functions implements ModuleInterface {
             $instance->setWithSubmit(false);
             $instanceList->addItem($instance);
 
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
-            $instance->setIconText('::createObfuscated' . $name);
-            $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::no'),
-                'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
+                $instance->setIconText('::createObfuscated' . $name);
+                $instance->setSelectList(array(
+                    'n' => $this->_translateInstance->getTranslate('::no'),
+                    'y' => $this->_translateInstance->getTranslate('::yes'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);

@@ -581,18 +581,20 @@ class ModuleFolders extends Module {
                 $instanceList->addItem($instance);
             }
 
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_OBFUSCATED);
-            $instance->setIconText('::createObfuscatedFolder');
-            $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::no'),
-                'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_OBFUSCATED);
+                $instance->setIconText('::createObfuscatedFolder');
+                $instance->setSelectList(array(
+                    'n' => $this->_translateInstance->getTranslate('::no'),
+                    'y' => $this->_translateInstance->getTranslate('::yes'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
@@ -641,18 +643,20 @@ class ModuleFolders extends Module {
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
 
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsGroups::ADD_MEMBER_OBFUSCATED);
-            $instance->setIconText('::createObfuscatedNode');
-            $instance->setSelectList(array(
-                'n' => $this->_translateInstance->getTranslate('::no'),
-                'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::ADD_MEMBER_OBFUSCATED);
+                $instance->setIconText('::createObfuscatedNode');
+                $instance->setSelectList(array(
+                    'n' => $this->_translateInstance->getTranslate('::no'),
+                    'y' => $this->_translateInstance->getTranslate('::yes'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
@@ -703,31 +707,35 @@ class ModuleFolders extends Module {
             $instance->setHiddenInput1('', $this->_configurationInstance->getOptionAsString('ioReadMaxData'));
             $instanceList->addItem($instance);
 
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsObjects::UPLOAD_FILE_PROTECT);
-            $instance->setIconText('::createProtectedNode');
-            $instance->setSelectList(array(
+            if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsObjects::UPLOAD_FILE_PROTECT);
+                $instance->setIconText('::createProtectedNode');
+                $instance->setSelectList(array(
                     'n' => $this->_translateInstance->getTranslate('::no'),
                     'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
 
-            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-            $instance->setInputName(\Nebule\Library\ActionsObjects::UPLOAD_FILE_OBFUSCATED);
-            $instance->setIconText('::createObfuscatedNode');
-            $instance->setSelectList(array(
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsObjects::UPLOAD_FILE_OBFUSCATED);
+                $instance->setIconText('::createObfuscatedNode');
+                $instance->setSelectList(array(
                     'n' => $this->_translateInstance->getTranslate('::no'),
                     'y' => $this->_translateInstance->getTranslate('::yes'),
-            ));
-            $instance->setWithFormOpen(false);
-            $instance->setWithFormClose(false);
-            $instance->setWithSubmit(false);
-            $instanceList->addItem($instance);
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
 
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
