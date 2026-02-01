@@ -697,7 +697,7 @@ class ModuleGroups extends Module {
         $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($groupsGID as $gid) {
-            $instanceGroup = $this->_cacheInstance->newNodeByType($gid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceGroup = $this->_cacheInstance->newGroup($gid);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceGroup);

@@ -432,7 +432,7 @@ abstract class Module extends Functions implements ModuleInterface {
             $nid = $defaultNID;
         if ($nid == '')
             return;
-        $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
+        $instance = $this->_cacheInstance->newGroup($nid);
         $this->_sessionInstance->setSessionStoreAsString('instanceCurrent' . $name, $nid);
         $this->_metrologyInstance->addLog('extract current ' . $name . ' nid=' . $instance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '565f123c');
     }
@@ -1087,6 +1087,7 @@ abstract class Module extends Functions implements ModuleInterface {
                 }
                 else
                     $instance->setSelfHookName('rightsAny');
+                $instance->setSocial('self');
                 $instanceList->addItem($instance);
             }
         }

@@ -2070,10 +2070,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) { // FIXME la classe
-            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+            $object = $this->_cacheInstance->newEntity($object->getID());
         }
         if ($isGroup && !is_a($object, 'Group')) { // FIXME la classe
-            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+            $object = $this->_cacheInstance->newGroup($object->getID());
         }
 
         // Détermine si l'objet est protégé.
@@ -2236,7 +2236,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                                 class="klictyModuleEntityInput">
                             <?php
                             foreach ($listGroupsMember as $group) {
-                                $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
+                                $instance = $this->_cacheInstance->newGroup($group);
                                 echo '<option value="' . $group . '">' . $instance->getFullName('myself') . "</option>\n";
                             }
                             unset($instance);
@@ -2254,7 +2254,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $list = array();
                 foreach ($listGroupsMember as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
+                        $instance = $this->_cacheInstance->newGroup($group);
 
                         // Si c'est un grupe, l'affiche.
                         if ($instance->getIsGroup('myself')) {
@@ -2982,7 +2982,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
                 $listOkGroups = array();
                 foreach ($listGroups as $group) {
                     if (!isset($listOkGroups[$group])) {
-                        $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
+                        $instance = $this->_cacheInstance->newGroup($group);
 
                         // Si c'est un groupe fermé.
                         $typeClosed = $instance->getMarkClosed();
@@ -3526,7 +3526,7 @@ private function _displayContentAbout():void
     /* --------------------------------------------------------------------------------
 	 *  Affichage des objets.
 	 * -------------------------------------------------------------------------------- */
-    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = ''): void
+    public function displayObjectDivHeaderH1(string $object, string $help = '', string $desc = ''): void // FIXME tyo replace
     {
         $object = $this->_applicationInstance->getTypedInstanceFromNID($object);
         // Prépare le type mime.
@@ -3536,16 +3536,16 @@ private function _displayContentAbout():void
 
         // Détermine si c'est une entité.
         $objHead = $object->readOneLineAsText(\Nebule\Library\Entity::ENTITY_MAX_SIZE);
-        $isEntity = ($typemime == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false);
+        $isEntity = ($typemime == References::REFERENCE_OBJECT_ENTITY && strpos($objHead, References::REFERENCE_ENTITY_HEADER) !== false); // FIXME to remove
 
         // Détermine si c'est un groupe.
         $isGroup = $object->getIsGroup('all');
 
         // Modifie le type au besoin.
         if ($isEntity && !is_a($object, 'Entity')) // FIXME la classe
-            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+            $object = $this->_cacheInstance->newEntity($object->getID());
         if ($isGroup && !is_a($object, 'Group')) // FIXME la classe
-            $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+            $object = $this->_cacheInstance->newGroup($object->getID());
 
         // Vérifie si il est protégé
         $protected = $object->getMarkProtected();

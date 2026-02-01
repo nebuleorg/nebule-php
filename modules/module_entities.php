@@ -1092,9 +1092,6 @@ class ModuleEntities extends Module
 
     private function _displayEntityLogs(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
-            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntityEID);
-        }
         $this->_displaySimpleTitle('::ObjectTitle1', $this::MODULE_REGISTERED_ICONS[7]);
 
         // Extrait des propriétés de l'objet.
@@ -1294,9 +1291,6 @@ class ModuleEntities extends Module
 
     private function _displayEntityActs(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_entitiesInstance->getGhostEntityEID() != $this->_entitiesInstance->getConnectedEntityEID()) {
-            $this->_displayInstance->displayObjectDivHeaderH1($this->_displayEntityInstance, '', $this->_displayEntityEID);
-        }
         $this->_displaySimpleTitle('::ObjectTitle2', $this::MODULE_REGISTERED_ICONS[8]);
 
         // Extrait des propriétés de l'objet.

@@ -309,7 +309,7 @@ class nebule {
     private function _findCurrentEntity(): void {
         $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_ENTITY);
 
-        $instance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newEntity($arg);
 
         if ($instance->getIsEntity()) {
             $this->_currentEntityID = $arg;
@@ -319,11 +319,11 @@ class nebule {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedEntity');
             if ($cache != '') {
                 $this->_currentEntityID = $cache;
-                $this->_currentEntityInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_ENTITY);
+                $this->_currentEntityInstance = $this->_cacheInstance->newEntity($cache);
             } else
             {
                 $this->_currentEntityID = '0';
-                $this->_currentEntityInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_ENTITY);
+                $this->_currentEntityInstance = $this->_cacheInstance->newEntity('0');
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedEntity', $this->_currentEntityID);
             }
         }
@@ -347,17 +347,17 @@ class nebule {
             )
         ) {
             $this->_currentGroupID = $arg;
-            $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_GROUP);
+            $this->_currentGroupInstance = $this->_cacheInstance->newGroup($arg);
             $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $arg);
         } else {
             $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedGroup');
             if ($cache != '') {
                 $this->_currentGroupID = $cache;
-                $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_GROUP);
+                $this->_currentGroupInstance = $this->_cacheInstance->newGroup($cache);
             } else
             {
                 $this->_currentGroupID = '0';
-                $this->_currentGroupInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_GROUP);
+                $this->_currentGroupInstance = $this->_cacheInstance->newGroup('0');
                 $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedGroup', $this->_currentGroupID);
             }
         }

@@ -905,7 +905,7 @@ class Node extends Functions implements nodeInterface {
         }
 
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if (!$instance->getIsGroup('all'))
                 unset($links[$i]);
         }
@@ -932,7 +932,7 @@ class Node extends Functions implements nodeInterface {
         // Tri les objets de type groupe.
         $list = array();
         foreach ($links as $i => $link) {
-            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1'], \Nebule\Library\Cache::TYPE_GROUP);
+            $instance = $this->_cacheInstance->newGroup($link->getParsed()['bl/rl/nid1']);
             if ($instance->getIsGroup('all'))
                 $list[$link->getParsed()['bl/rl/nid1']] = $link->getParsed()['bl/rl/nid1'];
         }

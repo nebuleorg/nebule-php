@@ -84,7 +84,7 @@ class App4 extends App0
                     echo 'BS / EID=';
                     \Nebule\Bootstrap\bootstrap_echoLinkNID($parsedBloc['bs/rs1/eid'], $this->_seqNid($parsedBloc['bs/rs1/eid']));
                     echo ' SIG=' . $this->_seqNid($parsedBloc['bs/rs1/sig']) . ' ';
-                    if (\Nebule\Bootstrap\blk_verify($bloc))
+                    if (\Nebule\Bootstrap\blk_verify($bloc)) // FIXME
                         echo 'OK';
                     else
                         echo 'NOK';

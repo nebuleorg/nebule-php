@@ -202,7 +202,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newNodeByType($this->_actionShareProtectObjectToGroupOpened, \Nebule\Library\Cache::TYPE_GROUP);
+        $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupOpened);
         foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -224,7 +224,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Demande de protection de l'objet.
-        $group = $this->_cacheInstance->newNodeByType($this->_actionShareProtectObjectToGroupClosed, \Nebule\Library\Cache::TYPE_GROUP);
+        $group = $this->_cacheInstance->newGroup($this->_actionShareProtectObjectToGroupClosed);
         foreach ($group->getListMembersID('myself') as $id) {
             $this->_nebuleInstance->getCurrentObjectInstance()->shareProtectionTo($id);
         }
@@ -368,7 +368,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
                                 $instanceBL->signWrite($this->_entitiesInstance->getGhostEntityInstance(), '');
                             }
                             if ($this->_uploadFileGroup != '' && \Nebule\Library\Node::checkNID($this->_uploadFileGroup)) {
-                                $group = $this->_cacheInstance->newNodeByType($this->_uploadFileGroup, \Nebule\Library\Cache::TYPE_GROUP);
+                                $group = $this->_cacheInstance->newGroup($this->_uploadFileGroup);
                                 if ($this->_uploadFileGroupTyped == '')
                                     $group->setAsMemberNID($this->_uploadFileID, $this->_uploadFileObfuscate);
                                 else

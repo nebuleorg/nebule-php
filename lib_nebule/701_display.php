@@ -2337,7 +2337,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->checkPresent()) {
                 if ($size = 'half' || $size = 'full') {
                     if (!is_a($object, 'Nebule\Library\Entity')) {
-                        $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_ENTITY);
+                        $object = $this->_cacheInstance->newEntity($object->getID());
                     }
 
                     $result = '<div class="text">' . "\n\t<p>"
@@ -2372,7 +2372,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             }
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
-                $object = $this->_cacheInstance->newNodeByType($object->getID(), \Nebule\Library\Cache::TYPE_GROUP);
+                $object = $this->_cacheInstance->newGroup($object->getID());
             $isClosed = $object->getMarkClosed();
 
             $result = '<div class="text">' . "\n\t<p>"
@@ -4413,9 +4413,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             if ($object->getType('all') == References::REFERENCE_OBJECT_ENTITY
                 && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER) !== false
             )
-                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_ENTITY);
+                $object = $this->_cacheInstance->newEntity($id);
             elseif ($object->getIsGroup('all'))
-                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_GROUP);
+                $object = $this->_cacheInstance->newGroup($id);
             elseif ($object->getIsConversation('all'))
                 $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_CONVERSATION);
         }

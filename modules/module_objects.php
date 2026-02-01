@@ -1268,7 +1268,7 @@ class ModuleObjects extends Module {
             foreach ($listGroups as $group) {
                 // @todo vérifier que le groupe ne contient pas juste des entités pour lesquelles le partage est effectif.
 
-                $instance = $this->_cacheInstance->newNodeByType($group, \Nebule\Library\Cache::TYPE_GROUP);
+                $instance = $this->_cacheInstance->newGroup($group);
                 $typeGroup = $instance->getIsEntity('all');
                 if (!isset($listOkGroups[$group])
                     && $typeGroup

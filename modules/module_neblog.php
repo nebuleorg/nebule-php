@@ -601,7 +601,7 @@ class ModuleNeblog extends Module
         $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($galleriesNID as $nid) {
-            $instanceBlog = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceBlog = $this->_cacheInstance->newGroup($nid);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceBlog);

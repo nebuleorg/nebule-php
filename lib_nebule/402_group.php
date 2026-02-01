@@ -378,7 +378,7 @@ class Group extends Node implements nodeInterface {
         $links = $this->getLinksOnFields(
             '',
             '',
-            'l',
+            'f',
             $this->_id,
             $nid,
             $type
@@ -412,7 +412,7 @@ class Group extends Node implements nodeInterface {
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
         return $this->addLink(
-            'l>' . $this->_id . '>' . $nid . '>' . $type,
+            'f>' . $this->_id . '>' . $nid . '>' . $type,
             $obfuscated);
     }
 
@@ -470,7 +470,7 @@ class Group extends Node implements nodeInterface {
         $links = $this->getLinksOnFields(
                 '',
                 '',
-                'l',
+                'f',
                 $this->_id,
                 '',
                 $type
@@ -521,7 +521,7 @@ class Group extends Node implements nodeInterface {
         $links = $this->getLinksOnFields(
                 '',
                 '',
-                'l',
+                'f',
                 '',
                 $this->_id,
                 $reference

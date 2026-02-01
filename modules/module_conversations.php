@@ -240,7 +240,7 @@ class ModuleConversations extends Module {
         $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($conversationsNID as $nid) {
-            $instanceConversation = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
+            $instanceConversation = $this->_cacheInstance->newGroup($nid);
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
             $instance->setSocial($socialClass);
             $instance->setNID($instanceConversation);

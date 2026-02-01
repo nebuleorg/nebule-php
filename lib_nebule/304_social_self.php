@@ -10,13 +10,9 @@ namespace Nebule\Library;
  * @license GNU GPLv3
  * @copyright Projet nebule
  * @link www.nebule.org
- *
- * Si le signataire du lien est l'entité en cours d'affichage, retourne un score de 1.
- * Sinon retourne un score de 0.
  */
 class SocialSelf extends SocialMySelf implements SocialInterface {
     const TYPE='self';
-    const LIMIT = 5;
 
     /**
      * @param array &$links
@@ -25,9 +21,8 @@ class SocialSelf extends SocialMySelf implements SocialInterface {
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void {
         foreach ($links as $i => $link) {
-            if ($this->linkSocialScore($link) != 1) {
+            if ($this->linkSocialScore($link) != 1)
                 unset($links[$i]);
-            }
         }
     }
 
@@ -38,21 +33,8 @@ class SocialSelf extends SocialMySelf implements SocialInterface {
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float {
         $this->_nebuleInstance->getMetrologyInstance()->addLog('Ask link social=self score for ' . $link->getRaw(), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '46e5975d');
-
-        foreach ($link->getSignersEID() as $signer) {
-            $i = 0;
-            while (isset($link->getParsed()['bl/rl/nid' . ++$i])) {
-                if ($link->getParsed()['bl/rl/nid' . $i] == $signer){
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 1 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'a4487d36');
-                    return 1;
-                }
-                if ($i > $this::LIMIT)
-                    break;
-            }
-        }
-
-        //foreach ($link->getSignersEID() as $signer)
-        //    $this->_nebuleInstance->getMetrologyInstance()->addLog('Link social=self score 0 for ' . $signer, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'acfd6bab');
+        if (in_array($link->getParsed()['bl/rl/nid1'], $link->getSignersEID()))
+            return 1;
         return 0;
     }
 }

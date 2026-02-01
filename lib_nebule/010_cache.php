@@ -273,12 +273,24 @@ class Cache extends Functions
 
     public function newGroup(string $nid): \Nebule\Library\Group {
         $this->_metrologyInstance->addLog('new group GID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->getIsOnCache($nid, self::TYPE_NODE)) {
-            $instance = $this->_cache[self::TYPE_NODE][$nid];
-            $this->_writeCacheTimestamp($nid, self::TYPE_NODE);
+        if ($this->getIsOnCache($nid, self::TYPE_GROUP)) {
+            $instance = $this->_cache[self::TYPE_GROUP][$nid];
+            $this->_writeCacheTimestamp($nid, self::TYPE_GROUP);
         } else {
             $instance = new \Nebule\Library\Group($this->_nebuleInstance, $nid);
-            $this->_writeCacheNodes($instance, self::TYPE_NODE);
+            $this->_writeCacheNodes($instance, self::TYPE_GROUP);
+        }
+        return $instance;
+    }
+
+    public function newEntity(string $nid): \Nebule\Library\Entity {
+        $this->_metrologyInstance->addLog('new group GID=' . $nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->getIsOnCache($nid, self::TYPE_ENTITY)) {
+            $instance = $this->_cache[self::TYPE_ENTITY][$nid];
+            $this->_writeCacheTimestamp($nid, self::TYPE_ENTITY);
+        } else {
+            $instance = new \Nebule\Library\Entity($this->_nebuleInstance, $nid);
+            $this->_writeCacheNodes($instance, self::TYPE_ENTITY);
         }
         return $instance;
     }

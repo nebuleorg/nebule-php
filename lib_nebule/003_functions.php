@@ -46,11 +46,9 @@ class Functions
 
     public function __construct(nebule $nebuleInstance){}
 
-    public function __sleep(){
-        return $this::SESSION_SAVED_VARS;
-    }
+    public function __sleep() { return $this::SESSION_SAVED_VARS; }
 
-    public function __wakeup(){}
+    public function __wakeup() {}
 
     public function setEnvironmentLibrary(nebule $nebuleInstance): void {
         $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
@@ -101,8 +99,7 @@ class Functions
 
     protected function _initialisation(): void{}
 
-    protected function _initSubInstance(string $class): functions
-    {
+    protected function _initSubInstance(string $class): functions {
         $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new $class($this->_nebuleInstance);
         $instance->setEnvironmentLibrary($this->_nebuleInstance);
@@ -117,8 +114,7 @@ class Functions
         return $instance;
     }
 
-    protected function _getDefaultSubInstance(string $name): Functions
-    {
+    protected function _getDefaultSubInstance(string $name): Functions {
         $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $option = strtolower($this->_configurationInstance->getOptionAsString($name));
         if (isset($this->_listClasses[$option])) {
@@ -137,15 +133,11 @@ class Functions
         return $defaultInstance;
     }
 
-    public function getReady(): bool
-    {
-        return $this->_ready;
-    }
+    public function getReady(): bool { return $this->_ready; }
 
 
 
-    public function getTypedInstanceFromNID(string $nid): Node
-    {
+    public function getTypedInstanceFromNID(string $nid): Node {
         $social = 'all';
 
         if ($nid == '0'
@@ -153,35 +145,26 @@ class Functions
         )
             $instance = $this->_cacheInstance->newNodeByType('0');
         else {
-            $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_NODE);
+            $instance = $this->_cacheInstance->newNode($nid);
             if ($instance->getIsEntity($social))
-                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
-            /*elseif ($instance->getIsWallet($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_WALLET);
-            elseif ($instance->getIsToken($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_TOKEN);
-            elseif ($instance->getIsTokenPool($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_TOKENPOOL);
-            elseif ($instance->getIsCurrency($social))
-                $instance = $this->_cacheInstance->newNode($nid, \Nebule\Library\Cache::TYPE_CURRENCY);*/
+                $instance = $this->_cacheInstance->newEntity($nid);
             elseif ($instance->getIsConversation($social))
                 $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_CONVERSATION);
             elseif ($instance->getIsGroup($social))
-                $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_GROUP);
+                $instance = $this->_cacheInstance->newGroup($nid);
             else {
                 $protected = $instance->getMarkProtected();
                 if ($protected)
-                    $instance = $this->_cacheInstance->newNodeByType($instance->getID(), \Nebule\Library\Cache::TYPE_NODE);
+                    $instance = $this->_cacheInstance->newNode($instance->getID());
                 if ($instance->getType('all') == References::REFERENCE_OBJECT_ENTITY)
-                    $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+                    $instance = $this->_cacheInstance->newEntity($nid);
             }
         }
 
         return $instance;
     }
 
-    public function dateCompare($chr1, $mod1, $chr2, $mod2): int{
-//$this->_nebuleInstance->getMetrologyInstance()->addLog('DEBUGGING ' . $chr1 . '>' . $mod1 . ' ' . $chr2 . '>' . $mod2, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+    public function dateCompare($chr1, $mod1, $chr2, $mod2): int {
         // FIXME comparateur universel sur multiples formats de dates...
         if ($chr1 != '0') return 0;
         if ($chr2 != '0') return 0;
@@ -195,7 +178,6 @@ class Functions
 
         if (extension_loaded('bcmath'))
             return bccomp($mod1, $mod2);
-        //$this->_metrologyInstance->addLog('BCMath not available', Metrology::LOG_LEVEL_ERROR, __METHOD__, '22e9185a');
 
         $mod1 = ltrim($mod1, '0') ?: '0';
         $mod2 = ltrim($mod2, '0') ?: '0';
