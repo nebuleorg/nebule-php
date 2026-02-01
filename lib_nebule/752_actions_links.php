@@ -13,7 +13,7 @@ namespace Nebule\Library;
  * @link www.nebule.org
  */
 class ActionsLinks extends Actions implements ActionsInterface {
-    // WARNING: contents of constants for actions must be uniq for all actions classes!
+    // WARNING: the contents of constants for actions must be uniq for all actions classes!
     const OBFUSCATE = 'actobflnk';
     const SIGN1 = 'actsiglnk1';
     const SIGN1_OBFUSCATE = 'actsiglnk1o';
@@ -54,6 +54,8 @@ class ActionsLinks extends Actions implements ActionsInterface {
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupUploadLink')
             || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
+            if ($this->_nebuleInstance->getHaveInput(self::SIGN1))
+                $this->_actionSignLinkNew(self::SIGN1, self::SIGN1_OBFUSCATE);
             // Extrait les actions.
             $this->_extractActionSignLink1();
             $this->_extractActionSignLink2();
@@ -70,7 +72,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
         ) {
             // Lien à signer 1.
             if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink')
-                && is_a($this->_actionSignLinkInstance1, 'Nebule\Library\LinkRegister')
+                && $this->_actionSignLinkInstance1 != ''
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
 
@@ -167,39 +169,48 @@ class ActionsLinks extends Actions implements ActionsInterface {
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
             return;
 
-        $arg = $this->getFilterInput(self::SIGN1);
-        $argObfuscate = filter_has_var(INPUT_GET, self::SIGN1_OBFUSCATE);
-
-        if ($arg == '')
-            return ;
-        $this->_actionSignLinkInstance1 = $arg;
-        $this->_actionSignLinkInstance1Obfuscate = $argObfuscate;
-
+        $this->_actionSignLinkInstance1 = $this->getFilterInput(self::SIGN1);
+        $this->_actionSignLinkInstance1Obfuscate = filter_has_var(INPUT_GET, self::SIGN1_OBFUSCATE);
     }
-    protected function _actionSignLink(string $link, bool $obfuscate = false): void
-    {
+    protected function _actionSignLink(string $link, bool $obfuscate = false): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-
+            if (! $this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks'))
+                $obfuscate = false;
             $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
-            $blockLinkInstance->addLink($link);
-
-
-            // On cache le lien ? // FIXME
-            if ($obfuscate !== false
-                && $obfuscate !== true
-            )
-                $obfuscate = $this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks');
-            //...
-
-            $link->signWrite();
+            $blockLinkInstance->addLink($link, $obfuscate);
+            if (! $blockLinkInstance->getValid())
+                return ;
+            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
+            $blockLinkInstance->signWrite();
         } elseif ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')
             || $this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')
         ) {
-            $this->_metrologyInstance->addLog('action sign link', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
 
-            if ($link->getSigned())
-                $link->write();
+            $blockLinkInstance = new BlocLink($this->_nebuleInstance, $link);
+            if ($blockLinkInstance->getSigned())
+                $blockLinkInstance->write();
+        }
+    }
+    protected function _actionSignLinkNew(string $sign, string $sign_obfuscate): void {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $link = $this->getFilterInput(self::SIGN1);
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+            $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
+            $obfuscate = false;
+            if ($this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks'))
+                $obfuscate = $this->_nebuleInstance->getHaveInput(self::SIGN1_OBFUSCATE);
+            $blockLinkInstance->addLink($link, $obfuscate);
+            $this->_metrologyInstance->addLog('sign RL=' . $link, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
+            $blockLinkInstance->signWrite();
+        } elseif ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
+            $blockLinkInstance = new BlocLink($this->_nebuleInstance, $link);
+            if ($blockLinkInstance->getSigned())
+                $blockLinkInstance->write();
+        } elseif ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadCodeAuthoritiesLink')) {
+            $blockLinkInstance = new BlocLink($this->_nebuleInstance, $link);
+            //if ($blockLinkInstance->getSigned()) // FIXME check the signer
+            //    $blockLinkInstance->write();
         }
     }
 

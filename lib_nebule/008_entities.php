@@ -24,6 +24,7 @@ class Entities extends Functions
 {
     const SESSION_SAVED_VARS = array();
     private string $hashType;
+    private string $hashKnownEntity;
     private string $hashEntity;
 
     protected function _initialisation(): void {
@@ -39,6 +40,7 @@ class Entities extends Functions
         $this->_findConnectedEntity();
         $this->_findGhostEntityPassword();
         $this->hashType = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->hashKnownEntity = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI);
         $this->hashEntity = $this->getNidFromData('application/x-pem-file');
     }
 
@@ -58,8 +60,8 @@ class Entities extends Functions
      */
     private function _findServerEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNodeByType($this->_findServerEntityFromFileOID(), \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
+        $instance = $this->_cacheInstance->newEntity($this->_findServerEntityFromFileOID());
+        if (!$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_authoritiesInstance->getPuppetmasterInstance();
         $this->_serverEntityInstance = $instance;
         $this->_serverEntityEID = $instance->getID();
@@ -103,13 +105,13 @@ class Entities extends Functions
      */
     private function _findDefaultEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleDefaultEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
+        $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleDefaultEntityInstance'));
         $from = 'session';
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0') {
-            $instance = $this->_cacheInstance->newNodeByType($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity'), \Nebule\Library\Cache::TYPE_ENTITY);
+        if (!$instance->getIsEntity() || $instance->getID() == '0') {
+            $instance = $this->_cacheInstance->newEntity($this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity'));
             $from = 'environment config';
         }
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0') {
+        if (!$instance->getIsEntity() || $instance->getID() == '0') {
             $instance = $this->_serverEntityInstance;
             $from = 'server entity';
         }
@@ -154,10 +156,10 @@ class Entities extends Functions
      */
     private function _findGhostEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNodeByType($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
-            $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0')
+        $instance = $this->_cacheInstance->newEntity($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW));
+        if (!$instance->getIsEntity() || $instance->getID() == '0')
+            $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'));
+        if (!$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_defaultEntityInstance;
         $this->setGhostEntity($instance);
     }
@@ -189,7 +191,7 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
-            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNodeByType($this->_ghostEntityPrivateKeyOID);
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
         }
         return $this->_ghostEntityPrivateKeyInstance;
     }
@@ -198,7 +200,7 @@ class Entities extends Functions
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
-            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNodeByType($this->_ghostEntityPrivateKeyOID);
+            $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
         }
         return $this->_ghostEntityPrivateKeyOID;
     }
@@ -269,10 +271,10 @@ class Entities extends Functions
      */
     private function _findConnectedEntity(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = $this->_cacheInstance->newNodeByType($this->getFilterInput(References::COMMAND_SWITCH_CONNECTED, FILTER_FLAG_ENCODE_LOW), \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
-            $instance = $this->_cacheInstance->newNodeByType($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'), \Nebule\Library\Cache::TYPE_ENTITY);
-        if (!$instance instanceof \Nebule\Library\Entity || !$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
+        $instance = $this->_cacheInstance->newEntity($this->getFilterInput(References::COMMAND_SWITCH_CONNECTED, FILTER_FLAG_ENCODE_LOW));
+        if (!$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
+            $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'));
+        if (!$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
             $instance = $this->_ghostEntityInstance;
         $this->setConnectedEntity($instance);
     }
@@ -290,7 +292,7 @@ class Entities extends Functions
 
 
     public function getListEntitiesLinks(): array {
-        $hashEntityObject = $this->_cacheInstance->newNodeByType($this->hashEntity);
+        $hashEntityObject = $this->_cacheInstance->newEntity($this->hashEntity);
         $links = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -299,7 +301,6 @@ class Entities extends Functions
             'bl/rl/nid4' => '',
         );
         $hashEntityObject->getLinks($links, $filter, 'all', false);
-        //return $hashEntityObject->getLinksOnFields($eid, '', 'l', '', $this->hashEntity, $this->hashType);
         return $links;
     }
 
@@ -307,7 +308,7 @@ class Entities extends Functions
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
-            $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newEntity($nid);
             if ($instance->getIsPublicKey())
                 $result[$nid] = $instance;
         }
@@ -322,5 +323,42 @@ class Entities extends Functions
                 $result[$nid] = $nid;
         }
         return $result;
+    }
+
+    public function getKnownEntitiesLinks(): array {
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid1' => $this->_ghostEntityEID,
+            'bl/rl/nid3' => $this->hashKnownEntity,
+            'bl/rl/nid4' => '',
+        );
+        $this->_serverEntityInstance->getLinks($links, $filter, 'myself', false);
+        return $links;
+    }
+    public function getIsKnownEntity(string $nid): bool {
+        $links = $this->getKnownEntitiesLinks();
+        foreach ($links as $link)
+            if ($link->getParsed()['bl/rl/nid2'] == $nid)
+                return true;
+        return false;
+    }
+    public function getKnownByEntitiesLinks(): array {
+        $links = array();
+        $filter = array(
+            'bl/rl/req' => 'f',
+            'bl/rl/nid2' => $this->_ghostEntityEID,
+            'bl/rl/nid3' => $this->hashKnownEntity,
+            'bl/rl/nid4' => '',
+        );
+        $this->_serverEntityInstance->getLinks($links, $filter, 'myself', false);
+        return $links;
+    }
+    public function getIsKnownByEntity(string $nid): bool {
+        $links = $this->getKnownByEntitiesLinks();
+        foreach ($links as $link)
+            if ($link->getParsed()['bl/rl/nid1'] == $nid)
+                return true;
+        return false;
     }
 }

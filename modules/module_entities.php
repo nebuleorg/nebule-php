@@ -105,257 +105,279 @@ class ModuleEntities extends Module
                 $instance = $this->_cacheInstance->newNodeByType($nid, \Nebule\Library\cache::TYPE_ENTITY);
         } else
             $nid = $this->_nebuleInstance->getCurrentObjectOID();
-        if ($instance instanceof \Nebule\Library\Entity)
-            $unlocked = $instance->getHavePrivateKeyPassword();
-        else
-            $unlocked = false;
 
         $hookArray = array();
         switch ($hookName) {
-            /*case 'menu':
-                $hookArray[2]['name'] = '::MyEntities';
-                $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                $hookArray[2]['desc'] = '::MyEntitiesDesc';
-                $hookArray[2]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                break;*/
             case 'selfMenu':
             case 'selfMenuEntity':
-                // List entities I know.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[0]['name'] = '::KnownEntities';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[0]['desc'] = '::KnownEntitiesDesc';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::KnownEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::KnownEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // List entities know me.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[11]) {
-                    $hookArray[1]['name'] = '::KnownByEntities';
-                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[1]['desc'] = '::KnownByEntitiesDesc';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::KnownByEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::KnownByEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // List my entities.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[8]) {
-                    $hookArray[2]['name'] = '::MyEntities';
-                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[2]['desc'] = '::MyEntitiesDesc';
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::MyEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::MyEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // List unknown entities.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[9]) {
-                    $hookArray[3]['name'] = '::UnknownEntities';
-                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[3]['desc'] = '::UnknownEntitiesDesc';
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::UnknownEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::UnknownEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // List special entities.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[10]) {
-                    $hookArray[4]['name'] = '::SpecialEntities';
-                    $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[4]['desc'] = '::SpecialEntitiesDesc';
-                    $hookArray[4]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::SpecialEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::SpecialEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // List all entities.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[12]) {
-                    $hookArray[5]['name'] = '::allEntities';
-                    $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[5]['desc'] = '::allEntitiesDesc';
-                    $hookArray[5]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::allEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '::allEntitiesDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
-                // See entity properties.
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[7]) {
-                    $hookArray[6]['name'] = '::DescriptionEntity';
-                    $hookArray[6]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                    $hookArray[6]['desc'] = '::DescriptionEntityDesc';
-                    $hookArray[6]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                        'name' => '::DescriptionEntity',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[10],
+                        'desc' => '::DescriptionEntityDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
-
                 if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitWriteEntity'])
                     && ($this->_unlocked || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
                 ) {
-                    // Create entity.
-                    $hookArray[10]['name'] = '::CreateEntity';
-                    $hookArray[10]['icon'] = $this::MODULE_REGISTERED_ICONS[5];
-                    $hookArray[10]['desc'] = '::CreateEntityDesc';
-                    $hookArray[10]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                        'name' => '::CreateEntity',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[5],
+                        'desc' => '::CreateEntityDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
 
                 if ($this->_configurationInstance->checkBooleanOptions(['permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'])) {
-                    // Search entity.
-                    $hookArray[20]['name'] = '::SearchEntity';
-                    $hookArray[20]['icon'] = Displays::DEFAULT_ICON_LF;
-                    $hookArray[20]['desc'] = '::SearchEntityDesc';
-                    $hookArray[20]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-
-                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[7]) {
-                    // Show keys
                     $hookArray[] = array(
-                            'name' => '::EntityKeys',
-                            'icon' => $this::MODULE_REGISTERED_ICONS[10],
-                            'desc' => '::EntityKeys',
-                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
-                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
-                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        'name' => '::SearchEntity',
+                        'icon' => Displays::DEFAULT_ICON_LF,
+                        'desc' => '::SearchEntityDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[7]) {
+                    $hookArray[] = array(
+                        'name' => '::EntityKeys',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[10],
+                        'desc' => '::EntityKeys',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $this->_displayEntityEID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
                 break;
 
             case 'selfMenuObject':
                 if ($instance instanceof \Nebule\Library\Entity) {
-                    $hookArray[0]['name'] = '::ShowEntity';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                        'name' => '::ShowEntity',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[10],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
 
             case 'typeMenuEntity':
-                if ($unlocked) {
-                    // Lock entity.
-                    $hookArray[0]['name'] = '::lock';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGOUT
-                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid;
+                if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+                    $hookArray[] = array(
+                        'name' => '::lock',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[11],
+                        'desc' => '',
+                        'link' => '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                            . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_AUTH_ENTITY_LOGOUT
+                            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid,
+                    );
                     if ($nid != $this->_entitiesInstance->getConnectedEntityEID()) {
-                        // Switch to this entity.
-                        $hookArray[1]['name'] = '::seeAs';
-                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                        $hookArray[1]['desc'] = '';
-                        $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::seeAs',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[11],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                             . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $nid;
+                            . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $nid,
+                        );
                     }
-                    // Modify entity.
-                    $hookArray[2]['name'] = '::modify';
-                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                    $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid;
+                    $hookArray[] = array(
+                        'name' => '::modify',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                        'desc' => '',
+                        'link' => '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid,
+                        );
                 } elseif ($this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
-                    // Unlock entity.
-                    $hookArray[0]['name'] = '::unlock';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
-                        . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=login'
-                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
-                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid;
+                    $hookArray[] = array(
+                        'name' => '::unlock',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[11],
+                        'desc' => '',
+                        'link' => '?' . References::COMMAND_SWITCH_APPLICATION . '=2'
+                            . '&' . References::COMMAND_APPLICATION_BACK . '=' . $this->_routerInstance->getApplicationIID()
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=login'
+                            . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
+                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid,
+                        );
                     if ($nid != $this->_entitiesInstance->getConnectedEntityEID()) {
-                        // Switch and connect to this entity.
-                        $hookArray[1]['name'] = '::connectWith';
-                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[11];
-                        $hookArray[1]['desc'] = '';
-                        $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::connectWith',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[11],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . References::COMMAND_SWITCH_GHOST . '=' . $nid
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
                             . '&' . References::COMMAND_SWITCH_CONNECTED . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
                     }
                 }
-
-                // Synchronise entity.
-                $hookArray[3]['name'] = '::SynchronizeEntity';
-                $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                $hookArray[3]['desc'] = '';
-                $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
-                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-
+                $hookArray[] = array(
+                    'name' => '::SynchronizeEntity',
+                    'icon' => $this::MODULE_REGISTERED_ICONS[6],
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                        . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
+                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
                 if ($this->_displayInstance->getCurrentDisplayView() == self::MODULE_REGISTERED_VIEWS[1]) {
-                    // See entity.
-                    $hookArray[4]['name'] = '::ShowEntity';
-                    $hookArray[4]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[4]['desc'] = '';
-                    $hookArray[4]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                    $hookArray[] = array(
+                        'name' => '::ShowEntity',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-
-                    // See entity properties.
-                    $hookArray[5]['name'] = '::DescriptionEntity';
-                    $hookArray[5]['icon'] = $this::MODULE_REGISTERED_ICONS[10];
-                    $hookArray[5]['desc'] = '::DescriptionEntityDesc';
-                    $hookArray[5]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                    $hookArray[] = array(
+                        'name' => '::DescriptionEntity',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[10],
+                        'desc' => '::DescriptionEntityDesc',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[7]
                             . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
+                }
+                if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+                    if ($this->_entitiesInstance->getIsKnownEntity($nid)) {
+                        $hookArray[] = array(
+                            'name' => '::dontKnowThisEntity',
+                            'icon' => References::REF_IMG['lx'],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=x>' . $this->_entitiesInstance->getConnectedEntityEID() . '>' . $nid . '>' . $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI)
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
+                    } else {
+                        $hookArray[] = array(
+                            'name' => '::knowThisEntity',
+                            'icon' => References::REF_IMG['addent'],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=f>' . $this->_entitiesInstance->getConnectedEntityEID() . '>' . $nid . '>' . $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_ENTITE_SUIVI)
+                                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
+                    }
                 }
 
                 /*if (!$this->_applicationInstance->getMarkObject($object)) {
                     // Mark entity.
-                    $hookArray[5]['name'] = '::MarkAdd';
-                    $hookArray[5]['icon'] = Display::DEFAULT_ICON_MARK;
-                    $hookArray[5]['desc'] = '';
-                    $hookArray[5]['link'] = '?' . Displays::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
-                        . '&' . ActionsMarks::MARK . '=' . $object
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    $hookArray[] = array(
+                        'name' => '::MarkAdd',
+                        'icon' => Display::DEFAULT_ICON_MARK,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                            . '&' . References::COMMAND_SELECT_OBJECT . '=' . $object
+                            . '&' . ActionsMarks::MARK . '=' . $object
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                 }*/
                 break;
 
             case '::DisplayMyEntities':
             case '::DisplayKnownEntity':
-                // Synchroniser les entités connues.
-                $hookArray[0]['name'] = '::SynchronizeKnownEntities';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
-                    . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
-                    . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                $hookArray[] = array(
+                    'name' => '::SynchronizeKnownEntities',
+                    'icon' => $this::MODULE_REGISTERED_ICONS[6],
+                    'desc' => '',
+                    'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
+                        . '&' . self::COMMAND_SYNC_KNOWN_ENTITIES
+                        . '&' . References::COMMAND_SWITCH_GHOST . '=' . $this->_entitiesInstance->getGhostEntityEID()
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
                 break;
 
             case '::DisplayAuthorityEntities':
@@ -1397,7 +1419,7 @@ class ModuleEntities extends Module
 
     private function _display_InlineMyEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $entities = array();
+        $entities = array(); // FIXME
         $this->_displayEntitiesList($entities);
     }
 
@@ -1412,21 +1434,12 @@ class ModuleEntities extends Module
     private function _display_InlineKnownEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
-
-        // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_entitiesInstance->getGhostEntityEID(),
-        );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'self');
-
+        $links = $this->_entitiesInstance->getKnownEntitiesLinks();
         $entities = array();
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             $entities[$link->getParsed()['bl/rl/nid2']] = $instance;
         }
-
         $this->_displayEntitiesList($entities, \Nebule\Library\DisplayItem::RATIO_LONG, $listOkEntities);
     }
 
@@ -1441,21 +1454,12 @@ class ModuleEntities extends Module
     private function _display_InlineKnownByEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
-
-        // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
-        );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
-
+        $links = $this->_entitiesInstance->getKnownByEntitiesLinks();
         $entities = array();
         foreach ($links as $link) {
-            $instance = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2'], \Nebule\Library\Cache::TYPE_ENTITY);
+            $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
             $entities[$link->getParsed()['bl/rl/nid2']] = $instance;
         }
-
         $this->_displayEntitiesList($entities, \Nebule\Library\DisplayItem::RATIO_LONG, $listOkEntities);
     }
 
@@ -1470,29 +1474,10 @@ class ModuleEntities extends Module
     private function _display_InlineUnknownEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
-
-        // Liste les entités que j'ai marqué comme connues. @todo revoir la méthode !
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid1' => $this->_entitiesInstance->getGhostEntityEID(),
-        );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
-        foreach ($links as $link) {
-            $listOkEntities[$link->getParsed()['bl/rl/nid2']] = true;
-        }
-
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'f',
-            'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
-        );
-        $this->_entitiesInstance->getGhostEntityInstance()->getLinks($links, $filter, 'all');
-
-        foreach ($links as $link) {
-            $listOkEntities[$link->getParsed()['bl/rl/nid1']] = true;
-        }
-
+        $links = $this->_entitiesInstance->getKnownEntitiesLinks();
+        foreach ($links as $link)
+            $listOkEntities[$link->getParsed()['bl/rl/nid2']] = $link->getParsed()['bl/rl/nid2'];
+        $listOkEntities[$this->_entitiesInstance->getGhostEntityEID()] = $this->_entitiesInstance->getGhostEntityEID();
         $this->_displayEntitiesList($this->_entitiesInstance->getListEntitiesInstances(), \Nebule\Library\DisplayItem::SIZE_LARGE, $listOkEntities, array(), array(), false, true, true);
     }
 
@@ -2149,7 +2134,7 @@ class ModuleEntities extends Module
         }
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setRatio($ratio);
-        $instanceList->setEnableWarnIfEmpty(false);
+        $instanceList->setEnableWarnIfEmpty(true);
         $instanceList->setListSize(12);
         $instanceList->display();
     }

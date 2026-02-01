@@ -275,6 +275,10 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::removeAsWriter' => 'Remove as writer',
             '::removeAsFollower' => 'Remove as follower',
 
+            // Entities
+            '::knowThisEntity' => 'I know this entity',
+            '::dontKnowThisEntity' => "I don't know this entity",
+
             // Conversations
             '::conversation' => 'conversation',
             '::Conversation' => 'Conversation',
