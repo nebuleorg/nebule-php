@@ -292,6 +292,7 @@ class Entities extends Functions
 
 
     public function getListEntitiesLinks(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hashEntityObject = $this->_cacheInstance->newEntity($this->hashEntity);
         $links = array();
         $filter = array(
@@ -305,6 +306,7 @@ class Entities extends Functions
     }
 
     public function getListEntitiesInstances(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
@@ -316,6 +318,7 @@ class Entities extends Functions
     }
 
     public function getListEntitiesID(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
@@ -326,6 +329,7 @@ class Entities extends Functions
     }
 
     public function getKnownEntitiesLinks(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -333,17 +337,20 @@ class Entities extends Functions
             'bl/rl/nid3' => $this->hashKnownEntity,
             'bl/rl/nid4' => '',
         );
-        $this->_serverEntityInstance->getLinks($links, $filter, 'myself', false);
+        $this->_ghostEntityInstance->getLinks($links, $filter, 'myself', false);
         return $links;
     }
-    public function getIsKnownEntity(string $nid): bool {
+    public function getIsKnownEntity(string $nid): bool { // FIXME ne marche pas
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->getKnownEntitiesLinks();
-        foreach ($links as $link)
+        foreach ($links as $link) {
             if ($link->getParsed()['bl/rl/nid2'] == $nid)
                 return true;
+        }
         return false;
     }
     public function getKnownByEntitiesLinks(): array {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -351,10 +358,11 @@ class Entities extends Functions
             'bl/rl/nid3' => $this->hashKnownEntity,
             'bl/rl/nid4' => '',
         );
-        $this->_serverEntityInstance->getLinks($links, $filter, 'myself', false);
+        $this->_ghostEntityInstance->getLinks($links, $filter, 'self', false);
         return $links;
     }
     public function getIsKnownByEntity(string $nid): bool {
+        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->getKnownByEntitiesLinks();
         foreach ($links as $link)
             if ($link->getParsed()['bl/rl/nid1'] == $nid)

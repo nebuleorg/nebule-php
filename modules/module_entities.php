@@ -110,33 +110,23 @@ class ModuleEntities extends Module
         switch ($hookName) {
             case 'selfMenu':
             case 'selfMenuEntity':
-                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[] = array(
-                        'name' => '::KnownEntities',
-                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::KnownEntitiesDesc',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
-                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[11]) {
-                    $hookArray[] = array(
-                        'name' => '::KnownByEntities',
-                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::KnownByEntitiesDesc',
-                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
-                    );
-                }
                 if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[8]) {
                     $hookArray[] = array(
                         'name' => '::MyEntities',
                         'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::MyEntitiesDesc',
+                        'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[8]
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[0]) {
+                    $hookArray[] = array(
+                        'name' => '::KnownEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -144,19 +134,19 @@ class ModuleEntities extends Module
                     $hookArray[] = array(
                         'name' => '::UnknownEntities',
                         'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::UnknownEntitiesDesc',
+                        'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[10]) {
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[11]) {
                     $hookArray[] = array(
-                        'name' => '::SpecialEntities',
+                        'name' => '::KnownByEntities',
                         'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::SpecialEntitiesDesc',
+                        'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -164,9 +154,19 @@ class ModuleEntities extends Module
                     $hookArray[] = array(
                         'name' => '::allEntities',
                         'icon' => $this::MODULE_REGISTERED_ICONS[4],
-                        'desc' => '::allEntitiesDesc',
+                        'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[12]
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_displayInstance->getCurrentDisplayView() != self::MODULE_REGISTERED_VIEWS[10]) {
+                    $hookArray[] = array(
+                        'name' => '::SpecialEntities',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[4],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
@@ -322,7 +322,7 @@ class ModuleEntities extends Module
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                         );
                 }
-                if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
+                if ($this->_entitiesInstance->getConnectedEntityIsUnlocked() && $nid != $this->_entitiesInstance->getConnectedEntityEID()) {
                     if ($this->_entitiesInstance->getIsKnownEntity($nid)) {
                         $hookArray[] = array(
                             'name' => '::dontKnowThisEntity',
@@ -1448,7 +1448,7 @@ class ModuleEntities extends Module
     private function _displayKnownByEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::KnownByEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('knownentities');
+        $this->_displayInstance->registerInlineContentID('known_entities');
     }
 
     private function _display_InlineKnownByEntitiesList(): void {
@@ -1458,7 +1458,7 @@ class ModuleEntities extends Module
         $entities = array();
         foreach ($links as $link) {
             $instance = $this->_cacheInstance->newEntity($link->getParsed()['bl/rl/nid2']);
-            $entities[$link->getParsed()['bl/rl/nid2']] = $instance;
+            $entities[$link->getParsed()['bl/rl/nid1']] = $instance;
         }
         $this->_displayEntitiesList($entities, \Nebule\Library\DisplayItem::RATIO_LONG, $listOkEntities);
     }
@@ -1468,7 +1468,7 @@ class ModuleEntities extends Module
     private function _displayUnknownEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::UnknownEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('unknownentities');
+        $this->_displayInstance->registerInlineContentID('unknown_entities');
     }
 
     private function _display_InlineUnknownEntitiesList(): void {
@@ -1486,7 +1486,7 @@ class ModuleEntities extends Module
     private function _displayAllEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::allEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('allentities');
+        $this->_displayInstance->registerInlineContentID('all_entities');
     }
 
     private function _display_InlineAllEntitiesList(): void {
@@ -1504,7 +1504,7 @@ class ModuleEntities extends Module
     private function _displaySpecialEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::SpecialEntities', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayInstance->registerInlineContentID('specialentities');
+        $this->_displayInstance->registerInlineContentID('special_entities');
     }
 
     private function _getDisplaySpecialEntities(\Nebule\Library\Entity $entity, \Nebule\Library\Node $instanceIcon, array $refs): \Nebule\Library\DisplayObject {

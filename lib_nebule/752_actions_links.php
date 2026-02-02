@@ -55,11 +55,17 @@ class ActionsLinks extends Actions implements ActionsInterface {
             || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
         ) {
             if ($this->_nebuleInstance->getHaveInput(self::SIGN1))
-                $this->_actionSignLinkNew(self::SIGN1, self::SIGN1_OBFUSCATE);
+                $this->_actionSignLinkNew($this::SIGN1, $this::SIGN1_OBFUSCATE);
+            if ($this->_nebuleInstance->getHaveInput(self::SIGN2))
+                $this->_actionSignLinkNew($this::SIGN2, $this::SIGN2_OBFUSCATE);
+            if ($this->_nebuleInstance->getHaveInput(self::SIGN3))
+                $this->_actionSignLinkNew($this::SIGN3, $this::SIGN3_OBFUSCATE);
+
+
             // Extrait les actions.
-            $this->_extractActionSignLink1();
-            $this->_extractActionSignLink2();
-            $this->_extractActionSignLink3();
+            //$this->_extractActionSignLink1();
+            //$this->_extractActionSignLink2();
+            //$this->_extractActionSignLink3();
             $this->_extractActionUploadLink();
             $this->_extractActionUploadFileLinks();
         }
@@ -71,7 +77,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
             )
         ) {
             // Lien à signer 1.
-            if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink')
+            /*if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink')
                 && $this->_actionSignLinkInstance1 != ''
             )
                 $this->_actionSignLink($this->_actionSignLinkInstance1, $this->_actionSignLinkInstance1Obfuscate);
@@ -86,7 +92,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
             if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink')
                 && is_a($this->_actionSignLinkInstance3, 'Nebule\Library\LinkRegister')
             )
-                $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);
+                $this->_actionSignLink($this->_actionSignLinkInstance3, $this->_actionSignLinkInstance3Obfuscate);*/
 
             // Liens pré-signés.
             if ($this->_actionUploadLinkInstance !== null
@@ -161,9 +167,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
         //$this->_actionObfuscateLinkInstance->obfuscateWrite(); FIXME
     }
 
-    protected string $_actionSignLinkInstance1 = '';
-    protected bool $_actionSignLinkInstance1Obfuscate = false;
-    protected function _extractActionSignLink1(): void
+    //protected string $_actionSignLinkInstance1 = '';
+    //protected bool $_actionSignLinkInstance1Obfuscate = false;
+    /*protected function _extractActionSignLink1(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
@@ -171,8 +177,8 @@ class ActionsLinks extends Actions implements ActionsInterface {
 
         $this->_actionSignLinkInstance1 = $this->getFilterInput(self::SIGN1);
         $this->_actionSignLinkInstance1Obfuscate = filter_has_var(INPUT_GET, self::SIGN1_OBFUSCATE);
-    }
-    protected function _actionSignLink(string $link, bool $obfuscate = false): void {
+    }*/
+    /*protected function _actionSignLink(string $link, bool $obfuscate = false): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             if (! $this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks'))
@@ -191,17 +197,17 @@ class ActionsLinks extends Actions implements ActionsInterface {
             if ($blockLinkInstance->getSigned())
                 $blockLinkInstance->write();
         }
-    }
+    }*/
     protected function _actionSignLinkNew(string $sign, string $sign_obfuscate): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $link = $this->getFilterInput(self::SIGN1);
+        $link = $this->getFilterInput($sign);
         if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
             $blockLinkInstance = new BlocLink($this->_nebuleInstance, 'new');
             $obfuscate = false;
             if ($this->_configurationInstance->getOptionUntyped('defaultObfuscateLinks'))
-                $obfuscate = $this->_nebuleInstance->getHaveInput(self::SIGN1_OBFUSCATE);
+                $obfuscate = $this->_nebuleInstance->getHaveInput($sign_obfuscate);
             $blockLinkInstance->addLink($link, $obfuscate);
-            $this->_metrologyInstance->addLog('sign RL=' . $link, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
+            $this->_metrologyInstance->addLog('sign arg=' . $sign . ' RL=' . $link, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'be97740a');
             $blockLinkInstance->signWrite();
         } elseif ($this->_configurationInstance->getOptionAsBoolean('permitPublicUploadLink')) {
             $blockLinkInstance = new BlocLink($this->_nebuleInstance, $link);
@@ -214,9 +220,9 @@ class ActionsLinks extends Actions implements ActionsInterface {
         }
     }
 
-    protected string $_actionSignLinkInstance2 = '';
-    protected bool $_actionSignLinkInstance2Obfuscate = false;
-    protected function _extractActionSignLink2(): void
+    //protected string $_actionSignLinkInstance2 = '';
+    //protected bool $_actionSignLinkInstance2Obfuscate = false;
+    /*protected function _extractActionSignLink2(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
@@ -229,11 +235,11 @@ class ActionsLinks extends Actions implements ActionsInterface {
             return ;
         $this->_actionSignLinkInstance2 = $arg;
         $this->_actionSignLinkInstance2Obfuscate = $argObfuscate;
-    }
+    }*/
 
-    protected string $_actionSignLinkInstance3 = '';
-    protected bool $_actionSignLinkInstance3Obfuscate = false;
-    protected function _extractActionSignLink3(): void
+    //protected string $_actionSignLinkInstance3 = '';
+    //protected bool $_actionSignLinkInstance3Obfuscate = false;
+    /*protected function _extractActionSignLink3(): void
     {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSignLink'))
@@ -246,7 +252,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
             return ;
         $this->_actionSignLinkInstance3 = $arg;
         $this->_actionSignLinkInstance3Obfuscate = $argObfuscate;
-    }
+    }*/
 
     protected ?BlocLink $_actionUploadLinkInstance = null;
     protected function _extractActionUploadLink(): void
