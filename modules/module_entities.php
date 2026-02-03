@@ -1419,7 +1419,7 @@ class ModuleEntities extends Module
 
     private function _display_InlineMyEntitiesList(): void {
         $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $entities = array(); // FIXME
+        $entities = array($this->_entitiesInstance->getGhostEntityEID() => $this->_entitiesInstance->getGhostEntityInstance()); // FIXME
         $this->_displayEntitiesList($entities);
     }
 
@@ -2100,7 +2100,11 @@ class ModuleEntities extends Module
         $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($listEntities as $i => $entity) {
-            $eid = $entity->getID();
+            if (is_string($entity)) {
+                $eid = $entity;
+                $entity = $this->_cacheInstance->newEntity($eid);
+            } else
+                $eid = $entity->getID();
             if ((isset($listOkEntities[$eid]) && !$allowDouble)
                 || !$entity->getTypeVerify()
                 || !$entity->getIsPublicKey()
