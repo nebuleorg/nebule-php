@@ -57,13 +57,7 @@ class ModuleObjects extends Module {
     const DEFAULT_ATTRIBS_DISPLAY_NUMBER = 10;
 
 
-    /**
-     * Ajout de fonctionnalités à des points d'ancrage.
-     *
-     * @param string                    $hookName
-     * @param \Nebule\Library\Node|null $instance
-     * @return array
-     */
+
     public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array
     {
         $nid = $this->_applicationInstance->getCurrentObjectID();
@@ -242,153 +236,6 @@ class ModuleObjects extends Module {
                 unset($instance, $id, $protected, $update, $markList, $marked);
                 break;
 
-            case 'menu':
-                // Recherche si il y a des objets marqués.
-                $markList = $this->_applicationInstance->getMarkObjectList();
-
-                // Si la liste des marques n'est pas vide.
-                if (sizeof($markList) != 0) {
-                    // Retirer la marque de tous les objets.
-                    $hookArray[0]['name'] = '::MarkRemoveAll';
-                    $hookArray[0]['icon'] = References::REF_IMG['unmarkall'];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . \Nebule\Library\ActionsMarks::UNMARK_ALL
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                }
-                unset($markList);
-                break;
-
-            case '::sylabe:module:upload:FileUploaded':
-                // Si il y a eu le téléchargement d'un fichier.
-                if ($this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObject()) {
-                    // Si pas d'erreur.
-                    if (!$this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectError()) {
-                        $hookArray[0]['name'] = '::DisplayNewObject';
-                        $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
-                        $hookArray[0]['desc'] = '';
-                        $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getActionInstance()->getInstanceActionsObjects()->getUploadObjectID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                    }
-                }
-                break;
-
-            case 'typeMenuEntity':
-            case 'typeMenuCurrency':
-            case 'typeMenuTokenPool':
-            case 'typeMenuToken':
-                // Voir l'objet de l'entité.
-                $hookArray[0]['name'] = '::DisplayAsObject';
-                $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-
-                $instance = $this->_entitiesInstance->getGhostEntityInstance();
-                $id = $instance->getID();
-
-                // Recherche si l'objet est protégé.
-                if ($instance->getMarkProtected()) {
-                    $id = $instance->getUnprotectedID();
-                    $instance = $this->_cacheInstance->newNodeByType($id);
-                }
-
-                // Recherche si l'objet est marqué.
-                $marked = $this->_applicationInstance->getMarkObject($id);
-
-                // Si l'objet n'est pas marqué.
-                if (!$marked) {
-                    // Ajouter la marque de l'objet.
-                    $hookArray[1]['name'] = '::MarkAdd';
-                    $hookArray[1]['icon'] = References::REF_IMG['mark'];
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . \Nebule\Library\ActionsMarks::MARK . '=' . $id
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                } else {
-                    // Retirer la marque de l'objet.
-                    $hookArray[1]['name'] = '::MarkRemove';
-                    $hookArray[1]['icon'] = References::REF_IMG['unmark'];
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_ENTITY . '=' . $id
-                        . '&' . \Nebule\Library\ActionsMarks::UNMARK . '=' . $id
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
-                }
-                unset($instance, $id, $marked);
-                break;
-
-            case '::sylabe:module:entities:DisplayEntity':
-            case '::sylabe:module:filesystem:adminInpoint' :
-            case '::sylabe:module:filesystem:adminFolder' :
-            case '::sylabe:module:filesystem:adminObject' :
-            case 'selfMenuConversation':
-                // Voir comme objet simplement.
-                $hookArray[0]['name'] = '::DisplayAsObject';
-                $hookArray[0]['icon'] = Displays::DEFAULT_ICON_LO;
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_DEFAULT_VIEW
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                break;
-
-            case '::sylabe:module:objet:ProtectionAdd' :
-                // Actions sur l'objet lors de l'ajout de la protection.
-                break;
-
-            case '::sylabe:module:object:protectShared' :
-                // Actions pour retirer le partage de protection de l'objet à l'entité.
-                break;
-
-            case '::sylabe:module:object:protectShareTo' :
-                // Actions pour partager la protection de l'objet à l'entité.
-                break;
-
-            case '::sylabe:module:object:protectShareToGroup' :
-                // Actions pour partager la protection de l'objet aux entités du groupe.
-                break;
-
-            case '::sylabe:module:objet:ProtectionButtons' :
-                // Si l'entité est déverrouillée.
-                if ($this->_unlocked
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                    && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    && $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected()
-                ) {
-                    $hookArray[0]['name'] = '::ShareProtection';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[4];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                        . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                }
-                break;
-
-            case '::sylabe:module:objet:ProtectionShareButtons' :
-                // Protéger l'objet.
-                $hookArray[0]['name'] = '::Protection';
-                $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[3];
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                break;
-
             case 'typeFile':
                 $hookArray[] = array(
                     'name' => '::seeTheFile',
@@ -413,9 +260,6 @@ class ModuleObjects extends Module {
     public function displayModule(): void
     {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
-            /*case $this::MODULE_REGISTERED_VIEWS[0]:
-                $this->_displayObjectContent();
-                break;*/
             case $this::MODULE_REGISTERED_VIEWS[1]:
                 $this->_displayObjectDescription();
                 break;

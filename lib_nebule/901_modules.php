@@ -894,15 +894,6 @@ abstract class Module extends Functions implements ModuleInterface {
         $instanceList->setEnableWarnIfEmpty(false);
         $instanceList->setOnePerLine();
         $instanceList->display();
-
-
-        /*$this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$iconDel]);
-
-        if ($this->_applicationInstance->getCurrentObjectInstance()->getIsGroup('all')) {
-            echo $this->_applicationInstance->getDisplayInstance()->getDisplayHookMenuList('::sylabe:module:group:remove');
-        } else {
-            $this->_applicationInstance->getDisplayInstance()->displayMessageError('::thisIsNotGroup');
-        }*/
     }
 
 
