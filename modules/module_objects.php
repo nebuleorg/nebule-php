@@ -35,7 +35,13 @@ class ModuleObjects extends Module {
     const MODULE_HELP = '::ModuleHelp';
     const MODULE_INTERFACE = '3.0';
 
-    const MODULE_REGISTERED_VIEWS = array('disp', 'desc', 'nav', 'prot', 'sprot');
+    const MODULE_REGISTERED_VIEWS = array(
+        'disp',
+        'desc',
+        'nav',
+        'prot',
+        'sprot',
+    );
     const MODULE_REGISTERED_ICONS = array(
         '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256',    // 0 : Objet.
         '2e836dd0ca088d84cbc472093a14445e5c81ee0998293b46a479fedc41adf10d.sha2.256',    // 1 : Loupe.
@@ -199,7 +205,7 @@ class ModuleObjects extends Module {
                 if (!$marked) {
                     // Ajouter la marque de l'objet.
                     $hookArray[8]['name'] = '::MarkAdd';
-                    $hookArray[8]['icon'] = Display::DEFAULT_ICON_MARK;
+                    $hookArray[8]['icon'] = References::REF_IMG['mark'];
                     $hookArray[8]['desc'] = '';
                     $hookArray[8]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -210,7 +216,7 @@ class ModuleObjects extends Module {
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[8]['name'] = '::MarkRemove';
-                    $hookArray[8]['icon'] = Display::DEFAULT_ICON_UNMARK;
+                    $hookArray[8]['icon'] = References::REF_IMG['unmark'];
                     $hookArray[8]['desc'] = '';
                     $hookArray[8]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -224,7 +230,7 @@ class ModuleObjects extends Module {
                 if (sizeof($markList) != 0) {
                     // Retirer la marque de tous les objets.
                     $hookArray[9]['name'] = '::MarkRemoveAll';
-                    $hookArray[9]['icon'] = Display::DEFAULT_ICON_UNMARKALL;
+                    $hookArray[9]['icon'] = References::REF_IMG['unmarkall'];
                     $hookArray[9]['desc'] = '';
                     $hookArray[9]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -244,7 +250,7 @@ class ModuleObjects extends Module {
                 if (sizeof($markList) != 0) {
                     // Retirer la marque de tous les objets.
                     $hookArray[0]['name'] = '::MarkRemoveAll';
-                    $hookArray[0]['icon'] = Display::DEFAULT_ICON_UNMARKALL;
+                    $hookArray[0]['icon'] = References::REF_IMG['unmarkall'];
                     $hookArray[0]['desc'] = '';
                     $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -253,16 +259,6 @@ class ModuleObjects extends Module {
                         . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 }
                 unset($markList);
-                break;
-
-            case '::sylabe:module:links:MenuNameSelfMenu':
-                $hookArray[0]['name'] = '::DisplayObject';
-                $hookArray[0]['icon'] = Display::DEFAULT_ICON_LO;
-                $hookArray[0]['desc'] = '';
-                $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                    . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $nid
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
                 break;
 
             case '::sylabe:module:upload:FileUploaded':
@@ -310,7 +306,7 @@ class ModuleObjects extends Module {
                 if (!$marked) {
                     // Ajouter la marque de l'objet.
                     $hookArray[1]['name'] = '::MarkAdd';
-                    $hookArray[1]['icon'] = Display::DEFAULT_ICON_MARK;
+                    $hookArray[1]['icon'] = References::REF_IMG['mark'];
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -321,7 +317,7 @@ class ModuleObjects extends Module {
                 } else {
                     // Retirer la marque de l'objet.
                     $hookArray[1]['name'] = '::MarkRemove';
-                    $hookArray[1]['icon'] = Display::DEFAULT_ICON_UNMARK;
+                    $hookArray[1]['icon'] = References::REF_IMG['unmark'];
                     $hookArray[1]['desc'] = '';
                     $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleEntities')::MODULE_COMMAND_NAME
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
@@ -688,8 +684,8 @@ class ModuleObjects extends Module {
                                 <div class="sylabeModuleObjectsDescIcon">
                                     <?php $display->displayHypertextLink($display->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_LINK
+                                        . '&' . References::COMMAND_SELECT_LINK . '=' . $link->getFullLink()); ?>
 
                                 </div>
                                 <?php
@@ -718,8 +714,8 @@ class ModuleObjects extends Module {
                                 <div class="sylabeModuleObjectsDescIcon">
                                     <?php $display->displayHypertextLink($display->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_LINK
+                                        . '&' . References::COMMAND_SELECT_LINK . '=' . $link->getFullLink()); ?>
 
                                 </div>
                                 <?php
@@ -749,8 +745,8 @@ class ModuleObjects extends Module {
                                 <div class="sylabeModuleObjectsDescIcon">
                                     <?php $display->displayHypertextLink($display->convertInlineIconFace('DEFAULT_ICON_LL'),
                                         '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getModule('ModuleLinks')::MODULE_COMMAND_NAME
-                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . Display::DEFAULT_LINK_COMMAND
-                                        . '&' . ModuleLinks::DEFAULT_LINK_COMMAND . '=' . $link->getFullLink()); ?>
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_LINK
+                                        . '&' . References::COMMAND_SELECT_LINK . '=' . $link->getFullLink()); ?>
                                     &nbsp;
                                     <?php $display->displayInlineIconFace('DEFAULT_ICON_IWARN'); ?>
 

@@ -386,7 +386,7 @@ class ModuleGalleries extends Module {
                     $instance->setEnableIcon(true);
                     $instance->setEnableName(true);
                     $instance->setEnableFlags(false);
-                    $instance->setEnableContent(false);
+                    $instance->setEnableContent(true);
                     $instance->setEnableJS(true);
                     if (sizeof($this->_listSigners[$item]) != 0) {
                         $instance->setEnableRefs(true);

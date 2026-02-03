@@ -505,7 +505,6 @@ class Display extends Displays
 {
     const DEFAULT_DISPLAY_MODE = 'hlp';
     const DEFAULT_DISPLAY_VIEW = '1st';
-    //const DEFAULT_LINK_COMMAND				= 'lnk';
     const DEFAULT_ABOUT_COMMAND = 'about';
     const DEFAULT_OBJECT_LIST_COMMAND = 'objlst';
     const DEFAULT_ENTITY_LIST_COMMAND = 'entlst';
