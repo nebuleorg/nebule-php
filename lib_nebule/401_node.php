@@ -2348,7 +2348,6 @@ class Node extends Functions implements nodeInterface {
         if (!$this->_ioInstance->checkObjectPresent($this->_id))
             return null;
 
-        // Si c'est l'objet 0, le supprime.
         if ($this->_id == '0' || !$this->checkNID($this->_id)) {
             $this->_data = null;
             $this->_metrologyInstance->addLog('Delete object 0', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'f8873320');
@@ -2365,14 +2364,10 @@ class Node extends Functions implements nodeInterface {
         else
             return null;
 
-        // Prépare la limite de lecture.
         $maxLimit = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
-        if ($limit == 0
-                || $limit > $maxLimit
-        )
+        if ($limit == 0 || $limit > $maxLimit)
             $limit = $maxLimit;
 
-        // Extrait le contenu de l'objet, si possible.
         $this->_metrologyInstance->addObjectRead();
         $this->_data = $this->_ioInstance->getObject($this->_id, $limit);
         if ($this->_data === false) {
@@ -2382,31 +2377,27 @@ class Node extends Functions implements nodeInterface {
         }
         $this->_metrologyInstance->addLog('Object read size ' . $this->_id . ' ' . strlen($this->_data) . '/' . $maxLimit, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b1ca0788');
 
-        // Vérifie la taille. Si trop grand mais qu'une limite est imposé, quitte sans vérifier l'empreinte.
-        if (strlen($this->_data) >= $limit
-                && $limit < $maxLimit
-        ) {
+        // Check the size, if truncated don't check the hash of the object.
+        if (strlen($this->_data) >= $maxLimit) {
             $this->_data = null;
             return null;
         }
 
-        // Calcul l'empreinte.
+        // Calculate the hash.
         $hash = $this->_nebuleInstance->getFromDataNID($this->_data, $hashAlgo);
-        if ($hash == $this->_id) // Si l'objet est valide.
-        {
+        if ($hash == $this->_id) {
             $this->_metrologyInstance->addObjectVerify();
             $this->_haveData = true;
             return $this->_data;
         }
 
-        // Si la vérification est désactivée, quitte.
         if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
             $this->_metrologyInstance->addLog('Warning - Invalid object hash ' . $this->_id, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'd2e4f3be');
             $this->_haveData = true;
             return $this->_data;
         }
 
-        // Sinon l'objet est présent mais invalide, le supprime.
+        // Invalid hash = delete the object.
         $this->_data = null;
         $this->_metrologyInstance->addLog('Delete unconsistency object ' . $this->_id . ' ' . $hashAlgo . ':' . $hash, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '8f30c4c0');
         $this->_ioInstance->unsetObject($this->_id);
@@ -2514,7 +2505,7 @@ class Node extends Functions implements nodeInterface {
             return '';
 
         $instance = $this->_cacheInstance->newNodeByType($id);
-        $text = substr(trim(strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
+        $text = substr(trim((string)strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
@@ -2538,7 +2529,7 @@ class Node extends Functions implements nodeInterface {
         if ($limit < 4)
             $limit = 4;
 
-        $text = trim(strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n"));
+        $text = trim((string)strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n"));
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
@@ -3296,8 +3287,11 @@ class Node extends Functions implements nodeInterface {
             $this->_haveData = false;
         }
 
-        $this->_metrologyInstance->addAction('addobj', $this->_id, $ok);
-        $this->_metrologyInstance->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cddb5083');
+        if ($ok) {
+            $this->_metrologyInstance->addAction('addobj', $this->_id, $ok);
+            $this->_metrologyInstance->addLog('OK write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cddb5083');
+        } else
+            $this->_metrologyInstance->addLog('cannot write objet ' . $this->_id, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '32b4a8f1');
 
         return $ok;
     }

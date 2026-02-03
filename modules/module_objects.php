@@ -236,6 +236,21 @@ class ModuleObjects extends Module {
                 unset($instance, $id, $protected, $update, $markList, $marked);
                 break;
 
+            case 'selfNode':
+                if ($this->_displayInstance->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
+                    $hookArray[] = array(
+                        'name' => '::ObjectDescription',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $instance->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                break;
+
+            case 'typeNode': // FIXME
             case 'typeFile':
                 $hookArray[] = array(
                     'name' => '::seeTheFile',
@@ -307,8 +322,7 @@ class ModuleObjects extends Module {
      *
      * @return void
      */
-    public function headerStyle(): void
-    {
+    public function headerStyle(): void {
         ?>
 
         /* Module objets */
@@ -327,61 +341,66 @@ class ModuleObjects extends Module {
     }
 
 
-    /**
-     * Affichage de la vue disp.
-     */
-    private function _displayObjectContent(): void
-    {
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => true,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    private function _displayObjectContent(): void {
+        $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['lo']);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+        $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+        $instance->setSocial($this->_socialClass);
+        $instance->setNID($this->_nebuleInstance->getCurrentObjectInstance());
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
+            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObjectOID()
+            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableNID(true);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(true);
+        $instance->setEnableStatus(true);
+        $instance->setEnableContent(true);
+        $instance->setEnableJS(true);
+        $instance->setEnableRefs(false);
+        $instance->setSelfHookName('selfNode');
+        $instance->setIcon($instanceIcon);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
+        $instance->display();
     }
 
 
     /**
      * Affichage de la vue desc.
      */
-    private function _displayObjectDescription(): void
-    {
-        $param = array(
-            'enableDisplayColor' => true,
-            'enableDisplayIcon' => true,
-            'enableDisplayRefs' => false,
-            'enableDisplayName' => true,
-            'enableDisplayID' => false,
-            'enableDisplayFlags' => true,
-            'enableDisplayFlagProtection' => true,
-            'flagProtection' => $this->_applicationInstance->getCurrentObjectInstance()->getMarkProtected(),
-            'enableDisplayFlagObfuscate' => false,
-            'enableDisplayFlagUnlocked' => false,
-            'enableDisplayFlagState' => true,
-            'enableDisplayFlagEmotions' => true,
-            'enableDisplayStatus' => true,
-            'enableDisplayContent' => false,
-            'displaySize' => 'medium',
-            'displayRatio' => 'long',
-            'enableDisplaySelfHook' => true,
-            'enableDisplayTypeHook' => false,
-        );
-        echo $this->_displayInstance->getDisplayObject_DEPRECATED($this->_applicationInstance->getCurrentObjectInstance(), $param);
+    private function _displayObjectDescription(): void {
+        $instanceIcon = $this->_cacheInstance->newNodeByType(References::REF_IMG['lo']);
+        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+        $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+        $instance->setSocial($this->_socialClass);
+        $instance->setNID($this->_nebuleInstance->getCurrentObjectInstance());
+        $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $this->_nebuleInstance->getCurrentObjectOID()
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+        $instance->setEnableColor(true);
+        $instance->setEnableIcon(true);
+        $instance->setEnableName(true);
+        $instance->setEnableNID(true);
+        $instance->setEnableFlags(true);
+        $instance->setEnableFlagProtection(true);
+        $instance->setEnableFlagState(true);
+        $instance->setEnableFlagEmotions(true);
+        $instance->setEnableStatus(true);
+        $instance->setEnableContent(false);
+        $instance->setEnableJS(true);
+        $instance->setEnableRefs(false);
+        $instance->setSelfHookName('selfNode');
+        $instance->setIcon($instanceIcon);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
+        $instance->display();
 
         // Affiche les propriétés.
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('objprop');

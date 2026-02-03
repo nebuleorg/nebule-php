@@ -468,7 +468,7 @@ class Configuration extends Functions
         'socialLibrary' => 'authority',
         'ioLibrary' => 'Disk',
         'ioReadMaxLinks' => '2000',
-        'ioReadMaxData' => '10000',
+        'ioReadMaxData' => '1000000',
         'ioReadMaxUpload' => '2000000',
         'ioTimeout' => '1',
         'displayUnsecureURL' => 'true',

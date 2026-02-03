@@ -302,6 +302,24 @@ class ModuleFolders extends Module {
                     );
                 }
                 break;
+
+            case 'typeNode':
+                $rootID = $nid;
+                if ($this->_instanceCurrentRoot !== null)
+                    $rootID = $this->_instanceCurrentRoot->getID();
+                if ($this->_instanceCurrentFolder != null) {
+                    $hookArray[] = array(
+                        'name' => '::seeTheFolder',
+                        'icon' => $this::MODULE_LOGO,
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                            . '&' . $this::COMMAND_SELECT_ROOT . '=' . $rootID
+                            . '&' . $this::COMMAND_SELECT_FOLDER . '=' . $this->_instanceCurrentFolder->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                break;
         }
         return $hookArray;
     }
@@ -379,7 +397,7 @@ class ModuleFolders extends Module {
                     $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
                     $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . ModuleObjects::MODULE_REGISTERED_VIEWS[0]
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $item
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
                     $instance->setEnableColor(true);
