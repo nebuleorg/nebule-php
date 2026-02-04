@@ -514,6 +514,7 @@ class ModuleGalleries extends Module {
 
         $list = array();
         $this->_listSigners = array();
+        $this->_listTypes = array();
         foreach ($memberLinks as $link) {
             $nid = $link->getParsed()['bl/rl/nid2'];
             $instance = $this->_cacheInstance->newNode($nid);
