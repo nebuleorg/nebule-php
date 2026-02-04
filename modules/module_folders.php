@@ -303,7 +303,7 @@ class ModuleFolders extends Module {
                 }
                 break;
 
-            case 'typeNode':
+            case 'selfNode':
                 $rootID = $nid;
                 if ($this->_instanceCurrentRoot !== null)
                     $rootID = $this->_instanceCurrentRoot->getID();

@@ -237,6 +237,17 @@ class ModuleObjects extends Module {
                 break;
 
             case 'selfNode':
+                if ($this->_displayInstance->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
+                    $hookArray[] = array(
+                        'name' => '::DisplayObject',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                            . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $instance->getID()
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
                 if ($this->_displayInstance->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
                         'name' => '::ObjectDescription',
