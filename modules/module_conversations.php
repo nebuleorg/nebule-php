@@ -237,7 +237,7 @@ class ModuleConversations extends Module {
                 $conversationsSigners[$nid][$signer] = $signer;
             }
         }
-        $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
+        $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($conversationsNID as $nid) {
             $instanceConversation = $this->_cacheInstance->newGroup($nid);

@@ -31,6 +31,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     public const QUERY_BOOLEAN = 'boolean';
     public const QUERY_SELECT = 'select';
     public const QUERY_TEXT = 'text';
+    public const QUERY_TEXTAREA = 'textarea';
     public const QUERY_FILE = 'file';
     public const ICON_QUERY_RID = '16e9a40a7f705f9c3871d13ce78b9f016f6166c2214b293e5a38964502a5ff9a05bb.none.272';
     public const ICON_PASSWORD_RID = 'ebde500081ce0916fb54efc3a900472be9fadee2dfcf988e3b5b721ebf00d687f655.none.272';
@@ -130,7 +131,9 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 $result .= '      <option value="' . $key . '">' . $value . '</option>' . "\n";
             $result .= '     </select>' . "\n";
         } elseif ($this->_type == 'File') {
-            $result .= '<input type="file" name="' . $this->_inputName . '" id="' . $this->_inputName . '"/>';
+            $result .= '     <input type="file" name="' . $this->_inputName . '" id="' . $this->_inputName . '"/>';
+        } elseif ($this->_type == 'Textarea') {
+            $result .= '     <textarea class="text" rows="8" cols="34" name="' . $this->_inputName . '" id="' . $this->_inputName . '"></textarea>';
         } else
             $result .= $this->_message . "\n";
         if ($this->_withSubmit)
@@ -175,6 +178,12 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 $icon = self::ICON_QUERY_RID;
                 $this->_inputType = 'text';
                 break;
+            case self::QUERY_TEXTAREA:
+                $this->_type = 'Textarea';
+                $this->_iconText = $this->_translateInstance->getTranslate('::Query');
+                $icon = self::ICON_QUERY_RID;
+                $this->_inputType = 'textarea';
+                break;
             case self::QUERY_FILE:
                 $this->_type = 'File';
                 $this->_iconText = $this->_translateInstance->getTranslate('::Query');
@@ -208,7 +217,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
                 background: rgba(255, 224, 64, 0.666);
             }
 
-            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile {
+            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile, .queryDisplayTextarea {
                 background: rgba(171, 171, 171, 0.5);
             }
 

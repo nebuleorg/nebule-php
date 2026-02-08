@@ -789,21 +789,21 @@ abstract class HelpGroup {
                     <li>nid3 : hash(‘nebule/objet/groupe/suivi’)</li>
                 </ul>
             </li>
-            <li>Le lien de dissimulation d’un groupe est le lien de définition caché dans une lien de type
+            <li>Le lien de dissimulation d’un groupe est le lien de définition caché dans un lien de type
                 <code>c</code>.
             </li>
-            <li>Le lien de rattachement d’un membre du groupe :
+            <li>Le lien de rattachement non typé d’un membre du groupe :
                 <ul>
                     <li>Signature du lien</li>
                     <li>Identifiant du signataire</li>
                     <li>Horodatage</li>
-                    <li>action : <code>l</code></li>
+                    <li>action : <code>f</code></li>
                     <li>nid1 : ID du groupe</li>
                     <li>nid2 : ID de l’objet</li>
                     <li>nid3 : ID du groupe</li>
                 </ul>
             </li>
-            <li>Le lien de suppression de rattachement d’un membre du groupe :
+            <li>Le lien de suppression de rattachement non typé d’un membre du groupe :
                 <ul>
                     <li>Signature du lien</li>
                     <li>Identifiant du signataire</li>
@@ -812,6 +812,28 @@ abstract class HelpGroup {
                     <li>nid1 : ID du groupe</li>
                     <li>nid2 : ID de l’objet</li>
                     <li>nid3 : ID du groupe</li>
+                </ul>
+            </li>
+            <li>Le lien de rattachement typé d’un membre du groupe :
+                <ul>
+                    <li>Signature du lien</li>
+                    <li>Identifiant du signataire</li>
+                    <li>Horodatage</li>
+                    <li>action : <code>f</code></li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID de typage</li>
+                </ul>
+            </li>
+            <li>Le lien de suppression de rattachement typé d’un membre du groupe :
+                <ul>
+                    <li>Signature du lien</li>
+                    <li>Identifiant du signataire</li>
+                    <li>Horodatage</li>
+                    <li>action : <code>x</code></li>
+                    <li>nid1 : ID du groupe</li>
+                    <li>nid2 : ID de l’objet</li>
+                    <li>nid3 : ID de typage</li>
                 </ul>
             </li>
             <li>Le lien de fermeture d’un groupe :
