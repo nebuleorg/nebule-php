@@ -85,7 +85,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     private ?Entity $_actionSynchronizeEntityInstance = null;
     public function getSynchronizeEntityInstance(): ?Entity { return $this->_actionSynchronizeEntityInstance; }
     private function _synchronize(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // TODO DISABLED for refactor
         return;
@@ -130,7 +130,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     private ?Entity $_actionSynchronizeNewEntityInstance = null;
     public function getSynchronizeNewEntityInstance(): ?Entity { return $this->_actionSynchronizeNewEntityInstance; }
     private function _extractActionSynchronizeNewEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeNewEntity'))
             return;
 
@@ -184,7 +184,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         }*/
     }
     private function _SynchronizeNew(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // TODO DISABLED for refactor
         return;
@@ -251,7 +251,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     private bool $_changeProperty = false;
     public function getChangeProperty(): bool { return $this->_changeProperty; }
     private function _changePropertyOld(): void { // TODO do the same on 753_actions_objects.php
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeProperty = false;
         $instance = $this->_nebuleInstance->getCurrentEntityInstance();
         $changeName = $this->getFilterInput(self::CHANGE_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -313,27 +313,27 @@ class ActionsEntities extends Actions implements ActionsInterface {
     public function getChangeNicknameTry(): bool { return $this->_changeNicknameTry; }
     public function getChangeNicknameOk(): bool { return $this->_changeNicknameOk; }
     private function _changeName(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeNameTry = true;
         $this->_changePrefixOk = $this->_changeProperty(self::CHANGE_NAME, References::REFERENCE_NEBULE_OBJET_NOM);
     }
     private function _changePrefix(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changePrefixTry = true;
         $this->_changePrefixOk = $this->_changeProperty(self::CHANGE_PREFIX, References::REFERENCE_NEBULE_OBJET_PREFIX);
     }
     private function _changeSuffix(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeSuffixTry = true;
         $this->_changeSuffixOk = $this->_changeProperty(self::CHANGE_SUFFIX, References::REFERENCE_NEBULE_OBJET_SUFFIX);
     }
     private function _changeFirstname(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeFirstnameTry = true;
         $this->_changeFirstnameOk = $this->_changeProperty(self::CHANGE_FIRSTNAME, References::REFERENCE_NEBULE_OBJET_PRENOM);
     }
     private function _changeNickname(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changeNicknameTry = true;
         $this->_changeNicknameOk = $this->_changeProperty(self::CHANGE_NICKNAME, References::REFERENCE_NEBULE_OBJET_SURNOM);
     }
@@ -345,7 +345,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     public function getDeletePropertyTry(): bool { return $this->_deletePropertyTry; }
     public function getDeleteProperty(): bool { return $this->_deletePropertyOk; }
     private function _deleteProperties(): void { // TODO do the same on 753_actions_objects.php
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_deletePropertyTry = true;
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink'))
             return;
@@ -373,7 +373,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     public function getChangePasswordOk(): bool { return $this->_changePasswordOk; }
     public function getChangePasswordTry(): bool { return $this->_changePasswordTry; }
     private function _changePassword(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_changePasswordTry = true;
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntityAction'))
             return;
@@ -411,7 +411,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
     public function getCreateError(): bool { return $this->_createError; }
     public function getCreateErrorMessage(): string { return $this->_createErrorMessage; }
     private function _create(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ((!$this->_entitiesInstance->getConnectedEntityIsUnlocked() && !$this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity'))
             || !$this->_tokenizeInstance->checkActionToken()
             || !$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntityAction')
@@ -517,7 +517,7 @@ class ActionsEntities extends Actions implements ActionsInterface {
         }
     }
     private function _writeEntitySelfProperty(Entity $instance, string $reference, string $content): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($content != '') {
             $this->_metrologyInstance->addLog('set entity ' . $reference . '=' . $content, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '81385b9d');
             $instance->setSelfProperty($reference, $content);

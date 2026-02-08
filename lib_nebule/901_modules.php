@@ -85,7 +85,7 @@ abstract class Module extends Functions implements ModuleInterface {
         int    $indexGet = 5,
         int    $iconGet = 6,
     ): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hookArray = array();
 
         switch ($hookName) {
@@ -299,7 +299,7 @@ abstract class Module extends Functions implements ModuleInterface {
     private ?string $_commandActionDisplayModuleCache = null;
 
     public function getExtractCommandDisplayModule(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $return = '';
 
         if ($this->_commandActionDisplayModuleCache != null)
@@ -347,7 +347,7 @@ abstract class Module extends Functions implements ModuleInterface {
     public function actions(): void {}
 
     public function getTranslate(string $text, string $lang = ''): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = $text;
         if ($this->_translateInstance === null)
             $this->_translateInstance = $this->_applicationInstance->getTranslateInstance();
@@ -383,7 +383,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displaySimpleTitle(string $title, string $icon = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
         $instance->setTitle($title);
         if ($icon != '')
@@ -392,7 +392,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayNotImplemented(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::notImplemented');
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
@@ -402,7 +402,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayNotSupported(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::notSupported');
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_WARN);
@@ -412,7 +412,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayNotPermit(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage('::err_NotPermit');
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
@@ -424,7 +424,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _getCurrentItem(string $command, string $name, ?\Nebule\Library\Group &$instance, string $defaultNID = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->getFilterInput($command, FILTER_FLAG_ENCODE_LOW);
         if ($nid == '')
             $nid = $this->_sessionInstance->getSessionStoreAsString('instanceCurrent' . $name);
@@ -438,7 +438,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayListItems(string $name, string $names, int $indexAdd = 2, int $iconAdd = 2, int $indexGet = 5, int $indexSync = 6, int $indexOption = 8, int $iconItem = 0, int $iconGet = 6): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
             $this->_displayItemCreateNew($name, $iconItem);
@@ -532,7 +532,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _display_InlineMyItems(string $name): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($this->_socialClass) {
             case 'all':
                 $links = $this->_nebuleInstance->getListLinksByType(References::REFERENCE_NEBULE_OBJET_GROUPE, $this::RESTRICTED_CONTEXT, 'all');
@@ -553,7 +553,7 @@ abstract class Module extends Functions implements ModuleInterface {
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {}
 
     protected function _getListByRight(array &$links, string $right): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $filter = array(
             'bl/rl/req' => 'l',
             'bl/rl/nid2' => $this->_entitiesInstance->getGhostEntityEID(),
@@ -565,7 +565,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _displayItem(string $name, int $icon = 0): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_preDisplayItem();
             if ($this->_socialClass == '')
@@ -615,7 +615,7 @@ abstract class Module extends Functions implements ModuleInterface {
         int    $iconAdd = 1,
         bool   $withContent = true
     ): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::create' . $name, $this::MODULE_REGISTERED_ICONS[$iconAdd]);
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $commonLink = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
@@ -710,7 +710,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayItemCreateNew(string $name, int $iconItem = 0): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getCreate()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -760,7 +760,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayItemGetNew(string $name, int $iconItem = 0): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsGroups()->getSynchro()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -813,7 +813,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _displayModifyItem(string $name, int $icon = 3, int $returnView = 1): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackItemOrLogin($name, $returnView);
         if ($this->_unlocked)
             $this->_displayNotImplemented(); // TODO
@@ -824,7 +824,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _displayRemoveItem(string $name, int $iconDelete = 7, int $iconItem = 0, int $returnView = 1): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::remove' . $name, $this::MODULE_REGISTERED_ICONS[$iconDelete]);
         $this->_displayNotImplemented(); // TODO
 
@@ -899,7 +899,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _displayGetItem(string $name, string $names, string $commandNID, string $commandURL, int $icon = 6, int $returnView = 0): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackItems($names, $returnView);
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeItem')) {
             $this->_displaySimpleTitle('::get' . $name, $this::MODULE_REGISTERED_ICONS[$icon]);
@@ -959,7 +959,7 @@ abstract class Module extends Functions implements ModuleInterface {
 
 
     protected function _displaySynchroItem(string $name, string $commandNID, int $icon = 8, int $returnView = 1): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayBackItemOrLogin($name, $returnView);
         if ($this->_unlocked)
             $this->_displayNotImplemented(); // TODO
@@ -975,7 +975,7 @@ abstract class Module extends Functions implements ModuleInterface {
     protected array $_currentItemFollowersList = array();
 
     protected function _getCurrentItemFounders(?\Nebule\Library\Node $currentItem): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($currentItem == null)
             return;
         $oid = $currentItem->getID();
@@ -1006,7 +1006,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _getCurrentItemSocialList(?\Nebule\Library\Node $currentItem): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($currentItem == null)
             return;
         if (sizeof($this->_currentItemListFounders) == 0)
@@ -1033,14 +1033,14 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayRightsItem(string $name, int $icon = 3, int $returnView = 1): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[$icon]);
         $this->_displayBackItemOrLogin($name, $returnView);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('rights');
     }
 
     protected function _display_InlineRightsItem(string $name): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         foreach ($this->_entitiesInstance->getListEntitiesInstances() as $entityInstance) {
@@ -1090,7 +1090,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayBackItemOrLogin(string $name, int $returnView = 1, string $addURL = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
@@ -1117,7 +1117,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _displayBackItems(string $name, int $returnView = 0, string $addURL = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
@@ -1133,7 +1133,7 @@ abstract class Module extends Functions implements ModuleInterface {
     }
 
     protected function _getDefaultItem(string $rid): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (! is_a($this->_entitiesInstance->getGhostEntityInstance(), '\Nebule\Library\Node'))
             return '';
         return $this->_entitiesInstance->getGhostEntityInstance()->getPropertyID($rid, 'self');

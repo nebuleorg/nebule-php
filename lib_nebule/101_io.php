@@ -43,7 +43,7 @@ class io extends Functions implements ioInterface {
     public function __toString(): string { return self::TYPE; }
 
     protected function _initialisation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();

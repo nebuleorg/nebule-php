@@ -68,7 +68,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getCreateInstance(): ?Group { return $this->_createInstance; }
     public function getCreateError(): bool { return $this->_createError; }
     protected function _createGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroupAction')) {
             $this->_metrologyInstance->addLog('unauthorised to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '44f2509d');
             return;
@@ -122,7 +122,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getDelete(): bool { return $this->_deleteGroup; }
     public function getDeleteError(): bool { return $this->_deleteError; }
     protected function _deleteGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupDeleteGroup')) {
             $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'db9a2f07');
             return;
@@ -153,7 +153,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getSynchroNID(): string { return $this->_synchroNID; }
     public function getSynchroError(): bool { return $this->_synchroError; }
     protected function _synchroGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeItem')) {
             $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ece92f46');
             return;
@@ -173,7 +173,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getAddMember(): string { return $this->_actionAddMember; }
     public function getAddMemberError(): bool { return $this->_actionAddMemberError; }
     protected function _addMember(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
             $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3e508b5f');
             return;
@@ -201,7 +201,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getRemoveMember(): string { return $this->_actionRemoveMember; }
     public function getRemoveMemberError(): bool { return $this->_actionRemoveMemberError; }
     protected function _removeMember(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
             $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, '60c4aa2a');
             return;
@@ -228,7 +228,7 @@ class ActionsGroups extends Actions implements ActionsInterface {
     public function getAddCreateMember(): string { return $this->_actionAddCreateMember; }
     public function getAddCreateMemberError(): bool { return $this->_actionAddCreateMemberError; }
     protected function _addCreateMember(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupAddToGroup')) {
             $this->_metrologyInstance->addLog('unauthorized to use groups', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c10459a6');
             return;

@@ -62,7 +62,7 @@ class Token extends TokenPool implements nodeInterface
 
     protected function _initialisation(): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
             $this->_id = '0';
             $this->_isNew = false;

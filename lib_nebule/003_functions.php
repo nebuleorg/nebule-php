@@ -51,7 +51,7 @@ class Functions
     public function __wakeup() {}
 
     public function setEnvironmentLibrary(nebule $nebuleInstance): void {
-        $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
+//        $nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_environmentLibrarySet)
             return;
         $this->_environmentLibrarySet = true;
@@ -73,7 +73,7 @@ class Functions
     }
 
     public function setEnvironmentApplication(Applications $applicationInstance): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_environmentApplicationSet)
             return;
         $this->_environmentApplicationSet = true;
@@ -89,7 +89,7 @@ class Functions
      * @return void
      */
     public function initialisation(): void {
-        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, $this::class . '::' . __METHOD__, '1111c0de');
         if ($this->_initialisationSet)
             return;
         $this->_initialisationSet = true;
@@ -100,7 +100,7 @@ class Functions
     protected function _initialisation(): void{}
 
     protected function _initSubInstance(string $class): functions {
-        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new $class($this->_nebuleInstance);
         $instance->setEnvironmentLibrary($this->_nebuleInstance);
         $instance->initialisation();
@@ -115,7 +115,7 @@ class Functions
     }
 
     protected function _getDefaultSubInstance(string $name): Functions {
-        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions ' . get_class($this), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $option = strtolower($this->_configurationInstance->getOptionAsString($name));
         if (isset($this->_listClasses[$option])) {
             $this->_metrologyInstance->addLog('get default instance with option', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '04260a5e');

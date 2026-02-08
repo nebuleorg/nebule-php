@@ -138,7 +138,7 @@ abstract class Translates extends Functions
 
 
     protected function _findDefaultLanguage(): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_defaultLanguage = self::DEFAULT_LANGUAGE;
 
         if ($this->_applicationInstance::USE_MODULES && $this->_applicationInstance::USE_MODULES_TRANSLATE) {
@@ -155,7 +155,7 @@ abstract class Translates extends Functions
 
 
     protected function _findLanguages(): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance::USE_MODULES && $this->_applicationInstance::USE_MODULES_TRANSLATE) { // FIXME find nothing
             foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {
                 $this->_languageList[$module::MODULE_LANGUAGE] = $module::MODULE_LANGUAGE;
@@ -169,7 +169,7 @@ abstract class Translates extends Functions
 
 
     protected function _findCurrentLanguage(): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $arg_lang = $this->getFilterInput(Displays::COMMAND_DISPLAY_LANG, FILTER_FLAG_ENCODE_LOW);
         $ok_lang = '';
         if ($arg_lang == ''
@@ -210,7 +210,7 @@ abstract class Translates extends Functions
 
 
     public function getTranslate(string $text, string $lang = ''): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         //$this->_nebuleInstance->getMetrologyInstance()->addLog('ask translate (' . $lang .  ') : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
 
         if ($lang == '')
@@ -260,7 +260,7 @@ abstract class Translates extends Functions
     }
 
     private function _getTranslateFromModules(string $text, string $lang): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         //$this->_nebuleInstance->getMetrologyInstance()->addLog('ask translate (' . $lang .  ') : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         $result = '';
         foreach ($this->_applicationModulesInstance->getModulesTranslateListName() as $module) {

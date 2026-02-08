@@ -294,7 +294,7 @@ abstract class Actions extends Functions implements ActionsInterface {
 
     // Common functions for subclasses
     protected function _changeProperty(string $nameInput, string $nameProperty, string $social = 'self'): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateLink'))
             return false;
         $instance = $this->_nebuleInstance->getCurrentEntityInstance();
@@ -319,7 +319,7 @@ abstract class Actions extends Functions implements ActionsInterface {
             return $this->_deleteProperty($nameProperty);
     }
     protected function _deleteProperty(string $name): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_nebuleInstance->getCurrentEntityInstance();
         $inputLinks = $instance->getPropertiesLinks($name, 'all');
         if (sizeof($inputLinks) == 0)

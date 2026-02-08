@@ -51,7 +51,7 @@ class Group extends Node implements nodeInterface {
     protected string $_short_class_name = '';
 
     protected function _initialisation(): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isNew)
             $this->_createNew();
         $this->_isGroup = true;
@@ -60,7 +60,7 @@ class Group extends Node implements nodeInterface {
     }
 
     protected function _createNew(): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked'))) {
             $this->_metrologyInstance->addLog('create group (' . $this->_short_class_name . ') error no authorized', Metrology::LOG_LEVEL_ERROR, __METHOD__, '8613d472');
             return;
@@ -88,7 +88,7 @@ class Group extends Node implements nodeInterface {
 
 
     public function setAsGroup(bool $obfuscated = false, string $context = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_isGroup = true;
@@ -104,7 +104,7 @@ class Group extends Node implements nodeInterface {
     }
 
     public function unsetAsGroup(bool $obfuscated = false, string $context = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_isGroup = false;
@@ -121,7 +121,7 @@ class Group extends Node implements nodeInterface {
     }
 
     public function setAsGroupOfEntities(bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name, 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('set nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '6636179a');
@@ -129,7 +129,7 @@ class Group extends Node implements nodeInterface {
     }
 
     public function unsetAsGroupOfEntities(bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         $this->_metrologyInstance->addLog('unset nid=' . $this->_id . ' as group of entities', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'de5c0565');
@@ -141,7 +141,7 @@ class Group extends Node implements nodeInterface {
     protected bool $_isMarkClosed = false;
 
     public function getMarkClosed(string $socialClass = 'myself', array $socialListID = array()): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_isMarkClosed)
             return true;
         $links = $this->getLinksOnFields(
@@ -165,7 +165,7 @@ class Group extends Node implements nodeInterface {
     }
 
     public function setMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($this->getMarkObfuscated())
@@ -192,7 +192,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function unsetMarkClosed(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
@@ -210,7 +210,7 @@ class Group extends Node implements nodeInterface {
     protected bool $_isMarkProtected = false;
 
     public function getMarkProtected(string $socialClass = 'myself', array $socialListID = array()): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
             return false;
         if ($this->_isMarkProtected)
@@ -242,7 +242,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function setMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($this->getMarkObfuscated())
@@ -268,7 +268,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function unsetMarkProtected(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
@@ -286,7 +286,7 @@ class Group extends Node implements nodeInterface {
     protected bool $_isMarkObfuscated = false;
 
     public function getMarkObfuscated(string $socialClass = 'myself', array $socialListID = array()): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink'))
             return false;
         if ($this->_isMarkObfuscated)
@@ -318,7 +318,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function setMarkObfuscated(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($this->getMarkObfuscated())
@@ -344,7 +344,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function unsetMarkObfuscated(?Entity $entity = null, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitObfuscatedLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if ($entity != null)
@@ -366,7 +366,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function getIsMemberTypedNID(string $nid, string $type, string $socialClass = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($nid)) {
             $this->_metrologyInstance->addLog('nid=' . $nid . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ac6a7b0b');
             return false;
@@ -397,7 +397,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function setAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if (!Node::checkNID($nid)) {
@@ -424,7 +424,7 @@ class Group extends Node implements nodeInterface {
      * @return boolean
      */
     public function unsetAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
         if (!Node::checkNID($nid)) {
@@ -464,7 +464,7 @@ class Group extends Node implements nodeInterface {
      * @return array:Link
      */
     public function getListTypedMembersLinks(string $type, string $socialClass = '', array $socialListID = array()): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($type))
             return array();
         $links = $this->getLinksOnFields(
@@ -490,7 +490,7 @@ class Group extends Node implements nodeInterface {
      * @return array:string
      */
     public function getListTypedMembersID(string $type,string $socialClass = '', array $socialListID = array()): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($type))
             return array();
         $links = $this->getListTypedMembersLinks($type, $socialClass, $socialListID);
@@ -515,7 +515,7 @@ class Group extends Node implements nodeInterface {
      * @return array:Link
      */
     protected function _getListFollowersLinks(string $reference, string $socialClass = '', array $socialListID = array()): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($reference))
             $reference = $this->_nebuleInstance->getFromDataNID($reference);
         $links = $this->getLinksOnFields(
@@ -540,7 +540,7 @@ class Group extends Node implements nodeInterface {
      * @return array:string
      */
     public function getListFollowersID(string $socialClass = '', array $socialListID = array()): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getListFollowersLinks($this->_nebuleInstance->getFromDataNID(References::REFERENCE_NEBULE_OBJET_GROUPE_SUIVI), $socialClass, $socialListID);
         $list = array();
         foreach ($links as $link)

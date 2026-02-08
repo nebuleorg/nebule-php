@@ -20,7 +20,7 @@ class Social extends Functions implements SocialInterface
     public function __toString(): string { return self::TYPE; }
 
     protected function _initialisation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $myClass = get_class($this);
         $size = strlen($myClass);
         $list = get_declared_classes();
@@ -41,7 +41,7 @@ class Social extends Functions implements SocialInterface
      * @return void
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void {
-        $this->_metrologyInstance->addLog('track functions links=' . sizeof($links) . ' social=' . $socialClass, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions links=' . sizeof($links) . ' social=' . $socialClass, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass != '' && isset($this->_listClasses[$socialClass]) && isset($this->_listInstances[$socialClass]))
             $this->_listInstances[$socialClass]->arraySocialFilter($links, $socialClass);
         elseif (is_a($this->_defaultInstance, 'SocialInterface'))
@@ -58,7 +58,7 @@ class Social extends Functions implements SocialInterface
      * @return float
      */
     public function linkSocialScore(LinkRegister &$link, string $socialClass = ''): float {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = 0.0;
         if ($socialClass != '')
             $result = $this->_listInstances[$socialClass]->linkSocialScore($link, '');
@@ -79,7 +79,7 @@ class Social extends Functions implements SocialInterface
      * @return boolean
      */
     public function setList(array $listID, string $socialClass = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
             $this->_metrologyInstance->addLog('error empty social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, '18dbcb17');
             return false;
@@ -98,7 +98,7 @@ class Social extends Functions implements SocialInterface
      * @return boolean
      */
     public function unsetList(string $socialClass = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($socialClass == '') {
             $this->_metrologyInstance->addLog('error empty social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c52dcb51');
             return false;

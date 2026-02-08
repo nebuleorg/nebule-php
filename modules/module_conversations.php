@@ -86,7 +86,7 @@ class ModuleConversations extends Module {
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null):array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
@@ -199,7 +199,7 @@ class ModuleConversations extends Module {
 
 
     protected function _display_InlineConversation(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_displayNotSupported();
             return;
@@ -216,7 +216,7 @@ class ModuleConversations extends Module {
     }
 
     protected function _displayOptions(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented();
     }
 
@@ -224,7 +224,7 @@ class ModuleConversations extends Module {
 
     // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $conversationsNID = array();
         $conversationsSigners = array();
         foreach ($links as $link) {

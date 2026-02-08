@@ -98,7 +98,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     }
 
     protected function _getNotTinyHTML(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_type == '')
             return '';
         $padding = 0;
@@ -143,7 +143,7 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
 
     public function setType(string $type): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set type ' . $type, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch (strtolower($type)) {
             case self::QUERY_PASSWORD:
                 $this->_type = 'Password';

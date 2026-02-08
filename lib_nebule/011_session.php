@@ -33,7 +33,7 @@ class Session extends Functions
      */
     public function getSessionStore(string $name): array|bool|int|string|null
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
 
         if ($name == ''
@@ -53,7 +53,7 @@ class Session extends Functions
 
     public function getSessionStoreAsString(string $name): string
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
 
         if ($name == ''
@@ -72,7 +72,7 @@ class Session extends Functions
 
     public function getSessionStoreAsArray(string $name): array
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
 
         if ($name == ''
@@ -98,7 +98,7 @@ class Session extends Functions
      */
     public function setSessionStore(string $name, int|bool|array|string|null $content): bool
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name == ''
             || $this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
@@ -113,7 +113,7 @@ class Session extends Functions
 
     public function setSessionStoreAsString(string $name, string $content): bool
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name == ''
             || $this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
@@ -128,7 +128,7 @@ class Session extends Functions
 
     public function setSessionStoreAsArray(string $name, array $content): bool
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name == ''
             || $this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionOptions')
@@ -207,13 +207,13 @@ class Session extends Functions
 
     public function setSessionStoreAsEntity(string $name, ?Entity $instance): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($instance instanceof \Nebule\Library\Entity) // $instance !== null
             $this->setSessionStoreAsString($name, serialize($instance));
     }
 
     public function getSessionStoreAsEntity(string $name): ?Entity {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         try {
             $instance = unserialize($this->getSessionStoreAsString($name));
             if ($instance instanceof \Nebule\Library\Entity) {
@@ -232,7 +232,7 @@ class Session extends Functions
     }
 
     private function _getEntityFromSession(string $name): ?Entity {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_flushCache
             || !$this->_configurationInstance->getOptionAsBoolean('permitSessionBuffer')
         )
@@ -262,7 +262,7 @@ class Session extends Functions
      */
     public function unsetSessionBuffer(string $name): bool
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 /*        if ($name == ''
             || $this->_flushCache
             || !$this->_configuration->getOptionAsString('permitSessionBuffer')

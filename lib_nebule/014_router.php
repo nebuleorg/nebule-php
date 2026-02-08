@@ -49,7 +49,7 @@ class Router extends Functions
     }
 
     public function router(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_nebuleInstance->getLoadingStatus() || !$this->_initStatus)
             return;
 
@@ -77,14 +77,14 @@ class Router extends Functions
      */
     private function _getCurrentBranch(): void {
         global $codeBranchNID;
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_codeBranchNID = $codeBranchNID;
         $this->_metrologyInstance->addLog('Current branch : ' . $this->_codeBranchNID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '9f1bf579');
     }
 
     private function _getCurrentLibrary(): void {
         global $bootstrapLibraryIID, $bootstrapLibraryOID, $bootstrapLibrarySID;;
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_libraryIID = $bootstrapLibraryIID;
         $this->_libraryOID = $bootstrapLibraryOID;
         $this->_librarySID = array($bootstrapLibrarySID); // FIXME on bootstrap.
@@ -96,12 +96,12 @@ class Router extends Functions
      */
     public function getNeedUpdate(): bool { return $this->_needUpdate; }
     private function _getArgUpdate(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_needUpdate = $this->getHaveInput(References::COMMAND_UPDATE);
     }
 
     private function _findApplicationIID(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_applicationIID = $this->_findApplicationSleeping();
         if ($this->_applicationIID == '')
             $this->_applicationIID = $this->_checkApplicationIID($this->_findApplicationAsk());
@@ -117,7 +117,7 @@ class Router extends Functions
     }
 
     private function _checkApplicationIID(string $iid): string {
-        $this->_metrologyInstance->addLog('track functions IID=' . $iid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions IID=' . $iid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($iid) == 0) {
             $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_ERROR, __METHOD__, '3f8451cb');
@@ -167,7 +167,7 @@ class Router extends Functions
     }
 
     private function _findApplicationOID(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (strlen($this->_applicationIID) == 1)
             $this->_applicationOID = $this->_applicationIID;
         else {
@@ -182,7 +182,7 @@ class Router extends Functions
     }
 
     private function _checkApplicationOID(string $oid): string {
-        $this->_metrologyInstance->addLog('track functions OID=' . $oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions OID=' . $oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($oid) == 0) {
             $this->_metrologyInstance->addLog('empty', Metrology::LOG_LEVEL_ERROR, __METHOD__, '9e55ac4a');
@@ -256,12 +256,12 @@ class Router extends Functions
     }
 
     private function _findApplicationAsk(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->getFilterInput(References::COMMAND_SWITCH_APPLICATION);
     }
 
     private function _findApplicationSession(string $name): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
         $iid = (isset($_SESSION[$name][0])) ? $_SESSION[$name][0] : '';
         session_abort();
@@ -269,17 +269,17 @@ class Router extends Functions
     }
 
     private function _findApplicationConfig(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return $this->_configurationInstance->getOptionAsString('defaultApplication');
     }
 
     private function _findApplicationDefault(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return ($this->_configurationInstance->getOptionAsBoolean('permitApplication1')) ? '1' : '0';
     }
 
     private function _findApplicationCode(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instance = $this->_cacheInstance->newNodeByType($this->_applicationIID);
         $links = array();
@@ -297,7 +297,7 @@ class Router extends Functions
     }
 
     private function _getApplicationNamespace(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (strlen($this->_applicationIID) == 1 || strlen($this->_applicationOID) == 1 || !$this->_ioInstance->checkObjectPresent($this->_applicationOID)) {
             $this->_metrologyInstance->addLog('namespace=Nebule\Library', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '49374854');
             $this->_applicationNameSpace = 'Nebule\Library';
@@ -320,7 +320,7 @@ class Router extends Functions
     }
 
     private function _getApplicationPreload(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_getApplicationPreloadSession())
             $this->_applicationNoPreload = true;
         elseif (strlen($this->_applicationIID) == 1)
@@ -333,7 +333,7 @@ class Router extends Functions
     }
 
     private function _getApplicationPreloadSession(): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         session_start();
         $noPreloadSession = isset($_SESSION['bootstrapApplicationsInstances'][$this->_applicationOID]);
         session_abort();
@@ -341,7 +341,7 @@ class Router extends Functions
     }
 
     private function _getApplicationRelatedLink(string $type): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instance = $this->_cacheInstance->newNodeByType($this->_applicationIID);
         $links = array();
@@ -359,7 +359,7 @@ class Router extends Functions
     }
 
     private function _includeApplicationFile(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (strlen($this->_applicationIID) == 1)
             return;
         $this->_metrologyInstance->addLog('include application code OID=' . $this->_applicationOID, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8683e195');
@@ -376,7 +376,7 @@ class Router extends Functions
      */
     private function _instancingApplication(): void {
         global $nebuleInstance, $libraryPPCheckOK, $applicationInstance, $applicationNameSpace, $bootstrapApplicationOID;
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (strlen($this->_applicationIID) == 1)
             return;
 
@@ -423,7 +423,7 @@ class Router extends Functions
     }
 
     private function _initialisationApplication(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (strlen($this->_applicationIID) == 1)
             return;
 
@@ -452,7 +452,7 @@ class Router extends Functions
     }
 
     private function _displayLocalEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = '';
         if (file_exists(References::LOCAL_ENTITY_FILE)) {
             $ioReadMaxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
@@ -464,7 +464,7 @@ class Router extends Functions
     }
 
     private function _displayLoadingAppX(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $name = $this->_applicationNameSpace . '\App' . $this->_applicationIID;
         if ($this->_applicationIID == '0' || $this->_configurationInstance->getOptionAsBoolean('permitApplication' . $this->_applicationIID)) {
             $instance = New $name($this->_nebuleInstance);
@@ -475,7 +475,7 @@ class Router extends Functions
     }
 
     public function instancingApplication(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_applicationInstance, 'Nebule\Library\Applications'))
             return;
         $this->_includeApplicationFile();
@@ -484,14 +484,14 @@ class Router extends Functions
     }
 
     private function _displayLoadingApplication(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_metrologyInstance->addLog('load application without preload OID=' . $this->_applicationOID, Metrology::LOG_LEVEL_AUDIT, __FUNCTION__, 'e01ea813');
         $this->instancingApplication();
         // FIXME
     }
 
     private function _displayPreloadingApplication(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $name = $this->_applicationNameSpace . '\AppPreload';
         $instance = New AppPreload($this->_nebuleInstance);
         $instance->setEnvironmentLibrary($this->_nebuleInstance);
@@ -502,7 +502,7 @@ class Router extends Functions
     private function _displayRouter(): void {
         global $bootstrapBreak, $needFirstSynchronization, $bootstrapInlineDisplay, $bootstrapApplicationIID,
                $bootstrapApplicationOID, $bootstrapApplicationNoPreload;
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Display only server entity if asked.
         // For compatibility and interoperability.
@@ -579,7 +579,7 @@ class Router extends Functions
 
     private function _saveLibrarySession(): void {
         global $bootstrapLibraryIID, $bootstrapLibraryOID, $bootstrapLibrarySID;
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!is_a($this->_nebuleInstance, 'Nebule\Library\nebule'))
             return;
@@ -594,7 +594,7 @@ class Router extends Functions
     }
 
     private function _saveApplicationOnSession(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         session_start();
         $_SESSION['bootstrapApplicationOID'][0] = $this->_applicationOID;

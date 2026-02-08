@@ -28,7 +28,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     protected float $_fullSize = 0;
 
     public function getHTML(): string {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $this->_prepareList();
         if (sizeof($this->_fullList) == 0) {
@@ -97,7 +97,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     }
 
     protected function _getNavHTML(string &$result, bool $needBR = false): void {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_lastPage > 1) {
             if ($needBR)
                 $result .= "<br />\n";
@@ -167,7 +167,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public function setListItems(array $list): void { $this->_listItem = $list; }
 
     protected function _prepareList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_currentPage = $this->_displayInstance->getCurrentPage();
         if ($this->_currentPage < 1)
             $this->_currentPage = 1;
@@ -202,7 +202,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     }
 
     protected function _prepareURL(): string  {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $url = '?';
         foreach ($_GET as $key => $value) {
             if (str_starts_with($key, 'action_') || $key == References::COMMAND_TOKEN || $key == Displays::COMMAND_INLINE)

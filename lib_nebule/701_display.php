@@ -1990,7 +1990,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     }
 
     protected function _displayInternalMenuApplications(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $modules = $this->_applicationInstance->getApplicationModulesInstance()->getModulesListInstances();
         $list = array();
         $currentModuleName = 'noModuleFound-';
@@ -3070,7 +3070,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectIcon_DEPRECATED(Node $nid, string $icon, string $class = ''): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object icon ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object icon ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $iconInstance = $this->_nebuleInstance->getCacheInstance()->newNodeByType($icon);
         $instance = new DisplayIcon($this->_applicationInstance);
         $instance->setNID($nid);
@@ -3095,7 +3095,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      */
     private function _prepareObjectColor_DEPRECATED(Node $nid, string $class = '', string $title = ''): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object color ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('prepare object color ' . $nid->getID(), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new DisplayColor($this->_applicationInstance);
         $instance->setNID($nid);
         $instance->setName($title);

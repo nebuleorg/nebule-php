@@ -94,7 +94,7 @@ class ModuleGroups extends Module {
 
     
     public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null):array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
@@ -340,7 +340,7 @@ class ModuleGroups extends Module {
 
 
     public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
             case 'addMember':
                 $node = $this->_cacheInstance->newNodeByType($item);
@@ -433,7 +433,7 @@ class ModuleGroups extends Module {
 
 
     protected function _display_InlineGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_displayNotSupported();
             return;
@@ -471,14 +471,14 @@ class ModuleGroups extends Module {
     }
 
     protected function _displayOptions(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented();
     }
 
 
 
     protected function _displayAddToGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setSocial('self');
@@ -511,7 +511,7 @@ class ModuleGroups extends Module {
     }
 
     protected function _display_InlineAddToGroup(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newNodeByType(References::RID_OBJECT_GROUP, \Nebule\Library\Cache::TYPE_NODE);
         $links = array();
         $filter = array(
@@ -526,7 +526,7 @@ class ModuleGroups extends Module {
 
 
     protected function _displayAddMembers(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!is_a($this->_instanceCurrentGroup, 'Nebule\Library\Node'))
             $this->_displayNotSupported();
 
@@ -560,7 +560,7 @@ class ModuleGroups extends Module {
     }
 
     protected function _display_InlineAddMembers(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             $instanceList->setListHookName('addMember');
@@ -584,7 +584,7 @@ class ModuleGroups extends Module {
 
     // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = 'notMyGroups'): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $groupsGID = array();
         $groupsSigners = array();
         foreach ($links as $link) {
@@ -690,7 +690,7 @@ class ModuleGroupEntities extends ModuleGroups {
     const RESTRICTED_CONTEXT = References::RID_OBJECT_GROUP_ENTITY;
 
     protected function _filterItemByType(string $gid): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return true; // FIXME for group of entities
     }
 

@@ -200,7 +200,7 @@ class Authorities extends Functions
     }
 
     public function setServerEntityAsAuthorities(Entity $instance): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_configurationInstance->getOptionAsBoolean('permitServerEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -209,7 +209,7 @@ class Authorities extends Functions
     }
 
     public function setDefaultEntityAsAuthorities(Entity $instance): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $eid = $instance->getID();
         if ($this->_configurationInstance->getOptionAsBoolean('permitDefaultEntityAsAuthority') && !$this->_rescueInstance->getModeRescue()) {
             $this->_addAsLocalAuthority($instance, $eid);
@@ -235,7 +235,7 @@ class Authorities extends Functions
      * @return void
      */
     public function setLinkedLocalAuthorities(Entities $entitiesInstance): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitLocalSecondaryAuthorities'))
             return;
 

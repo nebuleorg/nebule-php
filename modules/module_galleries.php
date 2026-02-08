@@ -127,7 +127,7 @@ class ModuleGalleries extends Module {
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null):array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $nid = $this->_applicationInstance->getCurrentObjectID();
         if ($instance !== null)
             $nid = $instance->getID();
@@ -309,7 +309,7 @@ class ModuleGalleries extends Module {
 
 
     public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
             case 'displayGalleries':
                 if (!\Nebule\Library\Node::checkNID($item))
@@ -499,7 +499,7 @@ class ModuleGalleries extends Module {
     }
 
     private function _display_InlineGallery(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!is_a($this->_instanceCurrentItem, 'Nebule\Library\Group')) {
             $this->_displayNotSupported();
             return;
@@ -538,12 +538,12 @@ class ModuleGalleries extends Module {
     }
 
     protected function _displayOptions(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNotImplemented();
     }
 
     protected function _displayAddFolder(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::createFolder', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackItemOrLogin('Folder');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
@@ -615,7 +615,7 @@ class ModuleGalleries extends Module {
     }
 
     protected function _displayAddNode(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::addObjectMedia', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackItemOrLogin('Folder');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
@@ -677,7 +677,7 @@ class ModuleGalleries extends Module {
     }
 
     protected function _displayUploadFile(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::addMedia', $this::MODULE_REGISTERED_ICONS[2]);
         $this->_displayBackItemOrLogin('Folder');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateGroup')) {
@@ -759,7 +759,7 @@ class ModuleGalleries extends Module {
 
     // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $foldersNID = array();
         $this->_listSigners = array();
         if ($this->_socialClass == '')

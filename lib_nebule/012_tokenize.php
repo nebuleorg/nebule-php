@@ -31,7 +31,7 @@ class Tokenize extends Functions
      * @return void
      */
     private function _findActionToken(): void {
-        $this->_metrologyInstance->addLog('find token', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('find token', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->getOptionAsBoolean('permitActionWithoutToken')) {
             $this->_metrologyInstance->addLog('check token: permitActionWithoutToken=true', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'd767b2ca');
             $this->_validToken = true;
@@ -86,7 +86,7 @@ class Tokenize extends Functions
      * @return string
      */
     public function getActionTokenValue(): string {
-        $this->_metrologyInstance->addLog('get token', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('get token', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $data = $this->_cryptoInstance->getRandom(self::TOKEN_SIZE / 8, Crypto::RANDOM_PSEUDO);
         $token = bin2hex($data);
         $this->_metrologyInstance->addLog('new token ' . $token, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8957de86');

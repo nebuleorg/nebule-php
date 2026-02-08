@@ -98,7 +98,7 @@ class ModuleEntities extends Module
 
 
     public function getHookList(string $hookName, ?\Nebule\Library\Node $instance = null): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($instance !== null) {
             $nid = $instance->getID();
             if (!$instance instanceof \Nebule\Library\Entity && $instance->getIsEntity())
@@ -776,7 +776,7 @@ class ModuleEntities extends Module
     private bool $_synchronizeEntity = false;
 
     private function _findSynchronizeEntity(): void { // TODO refactor
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $arg = $this->getFilterInput(\Nebule\Library\ActionsEntities::SYNCHRONIZE, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         if ($arg != ''
@@ -787,7 +787,7 @@ class ModuleEntities extends Module
     }
 
     private function _actionSynchronizeEntity(): void { // TODO refactor
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteObject', 'permitWriteLink', 'permitSynchronizeObject', 'permitSynchronizeLink', 'unlocked'))
             && $this->_synchronizeEntity
         ) {
@@ -811,7 +811,7 @@ class ModuleEntities extends Module
     private ?\Nebule\Library\Node $_searchEntityInstance = null;
 
     private function _findSearchEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $arg_url = trim((string)filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         if ($arg_url != ''
             && strlen($arg_url) >= 8
@@ -835,7 +835,7 @@ class ModuleEntities extends Module
     }
 
     private function _actionSearchEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ( $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked'))
             && ($this->_searchEntityID != ''
                 || $this->_searchEntityURL != ''
@@ -871,7 +871,7 @@ class ModuleEntities extends Module
 
 
     private function _displayEntityDisplay(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
             $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
             $this->_displayEntityCreateNew();
@@ -929,7 +929,7 @@ class ModuleEntities extends Module
 
 
     private function _displayEntityChange(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         echo '<div class="layout-list">' . "\n";
         echo '<div class="textListObjects">' . "\n";
 
@@ -1113,7 +1113,7 @@ class ModuleEntities extends Module
 
 
     private function _displayEntityLogs(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::ObjectTitle1', $this::MODULE_REGISTERED_ICONS[7]);
 
         // Extrait des propriétés de l'objet.
@@ -1312,7 +1312,7 @@ class ModuleEntities extends Module
 
 
     private function _displayEntityActs(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::ObjectTitle2', $this::MODULE_REGISTERED_ICONS[8]);
 
         // Extrait des propriétés de l'objet.
@@ -1412,13 +1412,13 @@ class ModuleEntities extends Module
 
 
     private function _displayMyEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::MyEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('my_entities');
     }
 
     private function _display_InlineMyEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $entities = array($this->_entitiesInstance->getGhostEntityEID() => $this->_entitiesInstance->getGhostEntityInstance()); // FIXME
         $this->_displayEntitiesList($entities);
     }
@@ -1426,13 +1426,13 @@ class ModuleEntities extends Module
 
 
     private function _displayKnownEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::KnownEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('known_entities');
     }
 
     private function _display_InlineKnownEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         $links = $this->_entitiesInstance->getKnownEntitiesLinks();
         $entities = array();
@@ -1446,13 +1446,13 @@ class ModuleEntities extends Module
 
 
     private function _displayKnownByEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::KnownByEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('known_entities');
     }
 
     private function _display_InlineKnownByEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         $links = $this->_entitiesInstance->getKnownByEntitiesLinks();
         $entities = array();
@@ -1466,13 +1466,13 @@ class ModuleEntities extends Module
 
 
     private function _displayUnknownEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::UnknownEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('unknown_entities');
     }
 
     private function _display_InlineUnknownEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $listOkEntities = $this->_authoritiesInstance->getSpecialEntitiesID();
         $links = $this->_entitiesInstance->getKnownEntitiesLinks();
         foreach ($links as $link)
@@ -1484,13 +1484,13 @@ class ModuleEntities extends Module
 
 
     private function _displayAllEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::allEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('all_entities');
     }
 
     private function _display_InlineAllEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayEntitiesList($this->_entitiesInstance->getListEntitiesInstances());
     }
 
@@ -1502,7 +1502,7 @@ class ModuleEntities extends Module
      * @return void
      */
     private function _displaySpecialEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::SpecialEntities', $this::MODULE_REGISTERED_ICONS[4]);
         $this->_displayInstance->registerInlineContentID('special_entities');
     }
@@ -1561,7 +1561,7 @@ class ModuleEntities extends Module
     }
 
     private function _display_InlineSpecialEntitiesList(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
@@ -1624,14 +1624,14 @@ class ModuleEntities extends Module
      * Affiche la création d'une entité.
      */
     private function _displayEntityCreate(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::CreateEntity', $this::MODULE_REGISTERED_ICONS[5]);
         $this->_displayEntityCreateForm();
         // MyEntities() view displays the result of the creation
     }
 
     private function _displayEntityCreateNew(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_applicationInstance->getActionInstance()->getInstanceActionsEntities()->getCreate()) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
             $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
@@ -1719,7 +1719,7 @@ class ModuleEntities extends Module
     }
 
     private function _displayEntityCreateForm(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ( $this->_configurationInstance->checkGroupedBooleanOptions('GroupCreateEntity')
             && ($this->_unlocked
                 || $this->_configurationInstance->getOptionAsBoolean('permitPublicCreateEntity')
@@ -1875,7 +1875,7 @@ class ModuleEntities extends Module
 
 
     private function _displayEntitySearch(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::SearchEntity', Displays::DEFAULT_ICON_LF);
 
         // Vérifie que la création soit autorisée.
@@ -1937,20 +1937,20 @@ class ModuleEntities extends Module
 
 
     private function _display_InlineEntitySearch(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // TODO
     }
 
 
 
     private function _displayEntityProp(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::Desc:AttribsTitle', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayInstance->registerInlineContentID('properties');
     }
 
     private function _display_InlineEntityProp(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $entity = $this->_displayEntityInstance;
         $this->_metrologyInstance->addLog('DEBUGGING entity EID=' . $entity->getID(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
@@ -2042,13 +2042,13 @@ class ModuleEntities extends Module
     }
 
     private function _displayEntityKeys(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::EntityKeys', $this::MODULE_REGISTERED_ICONS[3]);
         $this->_displayInstance->registerInlineContentID('keys');
     }
 
     private function _display_InlineEntityKeys(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $entity = $this->_displayEntityInstance;
         $links = array();
@@ -2096,7 +2096,7 @@ class ModuleEntities extends Module
             bool   $showEmotions = false,
             string $hookName = 'typeMenuEntity'): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         foreach ($listEntities as $i => $entity) {

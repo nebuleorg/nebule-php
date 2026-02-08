@@ -36,7 +36,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function getHTML(): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('nid null', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4d5732c9');
             return '';
@@ -57,7 +57,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function setNID(?Node $nid): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . gettype($nid), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set nid ' . gettype($nid), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($nid === null)
             $this->_nid = null;
         elseif ($nid->getID() != '0' && is_a($nid, 'Nebule\Library\Node')) {
@@ -70,7 +70,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function setName(string $name = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null)
             return;
         if ($name != '')
@@ -81,7 +81,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function setStyleCSS(string $style = ''): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_nid === null)
             return;
         $this->_styleCSS = ' style="background:#'
@@ -92,13 +92,13 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function setEnableActions(bool $enable = true): void // TODO rétrocompatibilité, en double de enableJS, à supprimer.
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable actions ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable actions ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayActions = $enable;
     }
 
     public function setActionsID(string $id = '')
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set actions id ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($id == '')
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
@@ -110,7 +110,7 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
 
     public function setEnableJS(bool $enable = true): void
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable JS ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('set enable JS ' . (string)$enable, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             $this->_displayJS = $enable;
         else

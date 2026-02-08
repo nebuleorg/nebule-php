@@ -62,7 +62,7 @@ class DisplayNotify extends DisplayItemIconMessage implements DisplayInterface
 
     public function getHTML(): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_message == '')
             return '';
 

@@ -209,7 +209,7 @@ class ModuleAutent extends Module {
     }
 
     private function _displayAddEID(\Nebule\Library\DisplayList $instanceList, \Nebule\Library\Node $eid, bool $isKey): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
         $instance->setNID($eid);
         $instance->setEnableColor(true);
@@ -251,7 +251,7 @@ class ModuleAutent extends Module {
     }
 
     private function _displayAddButton(\Nebule\Library\DisplayList $instanceList, string $message, string $type, string $link, string $title = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
         $instance->setMessage($message);
         $instance->setSocial('all');
@@ -264,7 +264,7 @@ class ModuleAutent extends Module {
     }
 
     private function _displayAddButtonQuery(\Nebule\Library\DisplayList $instanceList, string $message, string $type, string $link, string $inputName): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
         $instance->setIconText($message);
         $instance->setSocial('all'); // FIXME ne marche pas

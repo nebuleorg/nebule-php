@@ -24,7 +24,7 @@ class SocialMySelf extends Social implements SocialInterface {
      * @return void
      */
     public function arraySocialFilter(array &$links, string $socialClass = ''): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($links as $i => $link) {
             if ($this->linkSocialScore($link) != 1) {
                 unset($links[$i]);
@@ -70,7 +70,7 @@ class SocialMySelf extends Social implements SocialInterface {
      * @return boolean
      */
     public function setList(array $listID, string $socialClass = ''): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($listID as $nid) {
             if (is_string($nid)
                 && Node::checkNID($nid)

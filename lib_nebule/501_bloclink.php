@@ -79,7 +79,7 @@ class BlocLink extends Functions implements blocLinkInterface
         $this->_maxUIDbyRL = $this->_configurationInstance->getOptionAsInteger('linkMaxUIDbyRL');
         $this->_maxRS = $this->_configurationInstance->getOptionAsInteger('linkMaxRS');
 
-        //$this->_metrologyInstance->addLog(substr($blocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($blocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($blocLink == 'new')
             $this->_new();
@@ -117,7 +117,7 @@ class BlocLink extends Functions implements blocLinkInterface
 
     protected function _new(): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_rawBlocLink = 'nebule:link/' . $this->_configurationInstance->getOptionAsString('defaultLinksVersion') . '_';
         $this->_newBL = '';
         $this->_isNew = true;
@@ -135,7 +135,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _parse(string $link): bool
     {
-        $this->_metrologyInstance->addLog('parse ' . substr($link, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('parse ' . substr($link, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_lid = $this->_cryptoInstance->hash($link);
 
         $this->_validStructure = false;
@@ -193,21 +193,21 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getRaw(): string
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_rawBlocLink;
     }
 
     public function getLID(): string
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_lid;
     }
 
     public function getIsNew(): bool
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_isNew;
     }
@@ -219,7 +219,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getLinks(): array
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_links;
     }
@@ -231,7 +231,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getSignersEID(): array
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $result = array();
         for ($i = 1; $i <= $this->_parsed['bs/count']; $i++)
@@ -247,7 +247,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getParsed(): array
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_parsed;
     }
@@ -259,7 +259,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getCheckCompleted(): bool
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_checkCompleted;
     }
@@ -271,7 +271,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getValid(): bool
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_valid;
     }
@@ -283,7 +283,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getValidStructure(): bool
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_validStructure;
     }
@@ -295,7 +295,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getSigned(): bool
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         return $this->_signed;
     }
@@ -307,7 +307,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getVersion(): string
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!isset($this->_parsed['bl/rv']))
             return '';
@@ -321,7 +321,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     public function getDate(): string
     {
-        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('LID=' . $this->_lid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!isset($this->_parsed['bl/rc/chr']))
             return '';
@@ -337,7 +337,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkBH(string &$bh): bool
     {
-        //$this->_metrologyInstance->addLog(substr($bh, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($bh, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($bh) > 15) {
             $this->_metrologyInstance->addLog('BH size overflow ' . substr($bh, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '84cf4447');
@@ -374,7 +374,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRF(string &$rf): bool
     {
-        //$this->_metrologyInstance->addLog(substr($rf, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($rf, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rf) > 11) return false;
 
@@ -401,7 +401,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRV(string &$rv): bool
     {
-        //$this->_metrologyInstance->addLog(substr($rv, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($rv, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rv) > 3) return false;
 
@@ -427,7 +427,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkBL(string &$bl): bool
     {
-        //$this->_metrologyInstance->addLog(substr($bl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($bl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($bl) > self::LINK_MAX_BL_SIZE) {
             $this->_metrologyInstance->addLog('BL size overflow ' . substr($bl, 0, 1000) . '+',
@@ -483,7 +483,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRC(string &$rc): bool
     {
-        //$this->_metrologyInstance->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($rc, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rc) > 27) {
             $this->_metrologyInstance->addLog('BL/RC size overflow ' . substr($rc, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '7282e54a');
@@ -521,7 +521,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRL(string &$rl, string $i): bool
     {
-        //$this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($rl, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rl) > BlocLink::LINK_MAX_RL_SIZE) {
             $this->_metrologyInstance->addLog('BL/RL size overflow ' . substr($rl, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4835c147');
@@ -566,7 +566,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkREQ(string &$req, string $i): bool
     {
-        //$this->_metrologyInstance->addLog(substr($req, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($req, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($req != 'l'
                 && $req != 'f'
@@ -594,7 +594,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkBS(string &$bh_bl, string &$bs): bool
     {
-        //$this->_metrologyInstance->addLog(substr($bs, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($bs, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($bs) > self::LINK_MAX_BS_SIZE) {
             $this->_metrologyInstance->addLog('BS size overflow ' . substr($bs, 0, 1000) . '+', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efc551d7');
@@ -633,7 +633,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkRS(string &$rs, string &$bh_bl, string $i): bool
     {
-        //$this->_metrologyInstance->addLog(substr($rs, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog(substr($rs, 0, 512) . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($rs) > 4096) return false; // TODO à revoir.
 
@@ -677,7 +677,7 @@ class BlocLink extends Functions implements blocLinkInterface
      */
     protected function _checkSIG(string &$bh_bl, string &$sig, string &$nid, string $i): bool
     {
-        //$this->_metrologyInstance->addLog($sig . ' / ' . $nid . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        //$this->_metrologyInstance->addLog($sig . ' / ' . $nid . ' / ' . $i, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (strlen($sig) > 4096) return false; // TODO à revoir.
 //$this->_metrologyInstance->addLog('DEBUGGING MARK1 ' . $nid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
@@ -735,7 +735,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
 
     protected function _checkObjectContent($oid): bool
     {
-        $this->_metrologyInstance->addLog($oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog($oid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!Node::checkNID($oid, false)
                 || !$this->_ioInstance->checkObjectPresent($oid)
@@ -753,7 +753,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
      */
     public function addLink(string $rl, bool $obfuscate = false): bool
     {
-        $this->_metrologyInstance->addLog('add RL=' . substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('add RL=' . substr($rl, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Checks
         if ($rl == '') {
@@ -790,7 +790,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
      */
     public function sign(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('sign ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         // Checks
         if ($this->_signed) {
@@ -869,7 +869,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
      */
     public function write(): bool
     {
-        $this->_metrologyInstance->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('write ' . substr($this->_rawBlocLink, 0, 128), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitWrite')
                 || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
@@ -925,7 +925,7 @@ $this->_metrologyInstance->addLog('DEBUGGING false ' . $sig, Metrology::LOG_LEVE
      */
     public function signWrite(?Entity $publicKey = null, string $date = '', string $privateKey = '', string $password = ''): bool
     {
-        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('sign write ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($this->sign($publicKey, $date, $privateKey, $password)) {
             $this->_metrologyInstance->addLog('signed ' . substr($this->_rawBlocLink, 0, 512), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e8e59a93');

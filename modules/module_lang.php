@@ -79,13 +79,13 @@ class ModuleLang extends Module
 
 
     private function _displayLanguages(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::display:List', $this::MODULE_LOGO);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('langs');
     }
 
     private function _display_InlineLanguages(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $list = $this->_applicationInstance->getApplicationModulesInstance()->getModulesTranslateListName();
         foreach ($list as $moduleName) {

@@ -230,7 +230,7 @@ class nebule {
      * @return string
      */
     public function getFromDataNID(string $data, string $algo = ''): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($algo == '')
             $algo = $this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm');
         return $this->_cryptoInstance->hash($data, $algo) . '.' . $algo;
@@ -239,7 +239,7 @@ class nebule {
 
 
     private function _getArgCurrentNode(string $reference): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (filter_has_var(INPUT_GET, $reference))
             $arg = trim(' ' . filter_input(INPUT_GET, $reference, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         else
@@ -256,7 +256,7 @@ class nebule {
     public function getCurrentObjectOID(): string { return $this->_currentObject; }
     public function getCurrentObjectInstance(): ?Node { return $this->_currentObjectInstance; }
     public function setCurrentObjectInstance(Node $nid): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $this->_currentObjectInstance = $nid;
         $this->_currentObject = $nid->getID();
@@ -297,7 +297,7 @@ class nebule {
     public function getCurrentEntityEID(): string { return $this->_currentEntityID; }
     public function getCurrentEntityInstance(): ?Entity { return $this->_currentEntityInstance; }
     public function setCurrentEntityInstance(Entity $entity): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if ($entity->getIsEntity()) {
             $this->_currentEntityInstance = $entity;
@@ -706,7 +706,7 @@ class nebule {
     }
 
     public function runApplication(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_routerInstance->router();
     }
 }

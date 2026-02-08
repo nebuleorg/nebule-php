@@ -59,7 +59,7 @@ class Entities extends Functions
      * @return void
      */
     private function _findServerEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newEntity($this->_findServerEntityFromFileOID());
         if (!$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_authoritiesInstance->getPuppetmasterInstance();
@@ -69,7 +69,7 @@ class Entities extends Functions
     }
 
     private function _findServerEntityFromFileOID(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = file_get_contents(References::COMMAND_LOCAL_ENTITY_FILE);
         if (is_bool($content))
             return '0';
@@ -104,7 +104,7 @@ class Entities extends Functions
      * @return void
      */
     private function _findDefaultEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleDefaultEntityInstance'));
         $from = 'session';
         if (!$instance->getIsEntity() || $instance->getID() == '0') {
@@ -122,7 +122,7 @@ class Entities extends Functions
     }
 
     private function _findDefaultEntityFromOptionOID(): String {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = $this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity');
         if ($content == '')
             return '0';
@@ -155,7 +155,7 @@ class Entities extends Functions
      * @return void
      */
     private function _findGhostEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newEntity($this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW));
         if (!$instance->getIsEntity() || $instance->getID() == '0')
             $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleGhostEntityInstance'));
@@ -165,7 +165,7 @@ class Entities extends Functions
     }
 
     public function setGhostEntity(Entity $entity): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_cacheInstance->flushBufferStore();
         $this->_ghostEntityInstance = $entity;
         $this->_ghostEntityEID = $this->_ghostEntityInstance->getID();
@@ -179,7 +179,7 @@ class Entities extends Functions
 
     public function setGhostEntityPrivateKeyInstance(Node $oid): bool
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($oid->getID() == '0')
             return false;
         $this->_ghostEntityPrivateKeyInstance = $oid;
@@ -188,7 +188,7 @@ class Entities extends Functions
     }
 
     public function getGhostEntityPrivateKeyInstance(): ?Node {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
             $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
@@ -197,7 +197,7 @@ class Entities extends Functions
     }
 
     public function getGhostEntityPrivateKeyOID(): string {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_ghostEntityPrivateKeyOID == '') {
             $this->_ghostEntityPrivateKeyOID = $this->_ghostEntityInstance->getPrivateKeyOID();
             $this->_ghostEntityPrivateKeyInstance = $this->_cacheInstance->newNode($this->_ghostEntityPrivateKeyOID);
@@ -206,7 +206,7 @@ class Entities extends Functions
     }
 
     private function _findGhostEntityPassword(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (filter_has_var(INPUT_GET, References::COMMAND_AUTH_ENTITY_LOGOUT)
             || filter_has_var(INPUT_POST, References::COMMAND_AUTH_ENTITY_LOGOUT)) {
@@ -234,7 +234,7 @@ class Entities extends Functions
     }
 
     public function setGhostEntityPassword(string $password): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         if (!$this->_configurationInstance->getOptionAsBoolean('permitAuthenticateEntity')) {
             $this->_metrologyInstance->addLog('permitAuthenticateEntity=false cannot set password to eid=' . $this->_ghostEntityEID, Metrology::LOG_LEVEL_ERROR, __METHOD__, '0fba3fab');
@@ -270,7 +270,7 @@ class Entities extends Functions
      * @return void
      */
     private function _findConnectedEntity(): void {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $instance = $this->_cacheInstance->newEntity($this->getFilterInput(References::COMMAND_SWITCH_CONNECTED, FILTER_FLAG_ENCODE_LOW));
         if (!$instance->getIsEntity() || $instance->getID() == '0' || !$instance->getIsUnlocked())
             $instance = $this->_cacheInstance->newEntity($this->_sessionInstance->getSessionStoreAsString('nebuleConnectedEntityInstance'));
@@ -280,7 +280,7 @@ class Entities extends Functions
     }
 
     public function setConnectedEntity(Entity $entity): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_cacheInstance->flushBufferStore();
         $this->_connectedEntityInstance = $entity;
         $this->_connectedEntityEID = $this->_connectedEntityInstance->getID();
@@ -292,7 +292,7 @@ class Entities extends Functions
 
 
     public function getListEntitiesLinks(): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $hashEntityObject = $this->_cacheInstance->newEntity($this->hashEntity);
         $links = array();
         $filter = array(
@@ -306,7 +306,7 @@ class Entities extends Functions
     }
 
     public function getListEntitiesInstances(): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
@@ -318,7 +318,7 @@ class Entities extends Functions
     }
 
     public function getListEntitiesID(): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = array();
         foreach ($this->getListEntitiesLinks() as $link) {
             $nid = $link->getParsed()['bl/rl/nid1'];
@@ -329,7 +329,7 @@ class Entities extends Functions
     }
 
     public function getKnownEntitiesLinks(): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -341,7 +341,7 @@ class Entities extends Functions
         return $links;
     }
     public function getIsKnownEntity(string $nid): bool { // FIXME ne marche pas
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->getKnownEntitiesLinks();
         foreach ($links as $link) {
             if ($link->getParsed()['bl/rl/nid2'] == $nid)
@@ -350,7 +350,7 @@ class Entities extends Functions
         return false;
     }
     public function getKnownByEntitiesLinks(): array {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = array();
         $filter = array(
             'bl/rl/req' => 'f',
@@ -362,7 +362,7 @@ class Entities extends Functions
         return $links;
     }
     public function getIsKnownByEntity(string $nid): bool {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->getKnownByEntitiesLinks();
         foreach ($links as $link)
             if ($link->getParsed()['bl/rl/nid1'] == $nid)

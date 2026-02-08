@@ -35,7 +35,7 @@ class Crypto extends Functions implements CryptoInterface
 
     protected function _initialisation(): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach (get_declared_classes() as $class) {
             if (str_starts_with($class, get_class($this)) && $class != get_class($this)) {
                 $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '53556863');

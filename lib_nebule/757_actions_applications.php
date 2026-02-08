@@ -35,7 +35,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
     }
     protected function _extractActionSynchronizeApplication(): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_configurationInstance->checkGroupedBooleanOptions('GroupSynchronizeApplication')
             && ($this->_configurationInstance->getOptionAsBoolean('permitPublicSynchronizeApplication')
                 || $this->_entitiesInstance->getConnectedEntityIsUnlocked()
@@ -49,7 +49,7 @@ class ActionsApplications extends Actions implements ActionsInterface {
     }
     protected function _actionSynchronizeApplication(): void
     {
-        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         echo $this->_displayInstance->convertInlineIconFace('DEFAULT_ICON_SYNOBJ') . $this->_displayInstance->convertInlineObjectColor($this->_actionSynchronizeApplicationInstance);
 
