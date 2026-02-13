@@ -32,7 +32,10 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const CREATE_MEMBER_TYPED = 'action_group_create_member_type';
     const CREATE_MEMBER_CONTEXT = 'action_group_create_member_context';
     const CREATE_MEMBER_OBFUSCATED = 'action_group_create_member_obf';
+    const CREATE_MEMBER_PROTECTED = 'action_group_create_member_prt';
     const CREATE_MEMBER_IS_GROUP = 'action_group_create_member_is_group';
+    const CREATE_MEMBER_CONTENT = 'action_group_create_member_content';
+    const CREATE_MEMBER_CONTENT_INDEX = 'action_group_create_member_content_index';
 
 
 
@@ -58,9 +61,6 @@ class ActionsGroups extends Actions implements ActionsInterface {
     protected bool $_create = false;
     protected string $_createName = '';
     protected string $_createGID = '0';
-    protected bool $_createClosed = false;
-    protected bool $_createObfuscated = false;
-    protected bool $_createWithContent = false;
     protected ?Group $_createInstance = null;
     protected bool $_createError = false;
     public function getCreate(): bool { return $this->_create; }
@@ -81,33 +81,33 @@ class ActionsGroups extends Actions implements ActionsInterface {
                 $this->_createError = true;
                 return;
             }
-            $createContext = $this->getFilterInput(self::CREATE_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
-            if (!Node::checkNID($createContext))
-                $createContext = '';
-            if ($createContext == '')
-                $this->_metrologyInstance->addLog('create group context=' . $createContext, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a4031625');
-            $this->_createClosed = $this->getHaveInput(self::CREATE_CLOSED);
-            $this->_createObfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
-            $this->_createWithContent = $this->getHaveInput(self::CREATE_WITH_CONTENT);
+            $context = $this->getFilterInput(self::CREATE_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
+            if (!Node::checkNID($context))
+                $context = '';
+            if ($context == '')
+                $this->_metrologyInstance->addLog('create group context=' . $context, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'a4031625');
+            $closed = $this->getHaveInput(self::CREATE_CLOSED);
+            $obfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_OBFUSCATED));
+            $content = $this->getHaveInput(self::CREATE_WITH_CONTENT);
             $nid = '';
-            if ($this->_createWithContent) {
+            if ($content) {
                 $instance = new Node($this->_nebuleInstance, '');
                 $eid = $this->_entitiesInstance->getConnectedEntityEID();
                 $salt = bin2hex($this->_cryptoInstance->getRandom(64, \Nebule\Library\Crypto::RANDOM_PSEUDO));
                 $date = '0' . date('YmdHis');
                 $branch = $this->_configurationInstance->getOptionAsString('codeBranch');
-                $content = 'library=' . nebule::NEBULE_SURNAME . "\nbranch=" . $branch . "\nversion=" . nebule::NEBULE_VERSION . "\ntimestamp=" . $date . "\ntype=group\ncontext=" . $createContext . "\neid=" . $eid . "\nsalt=" . $salt;
-                $instance->setContent($content);
+                $nodeContent = 'library=' . nebule::NEBULE_SURNAME . "\nbranch=" . $branch . "\nversion=" . nebule::NEBULE_VERSION . "\ntimestamp=" . $date . "\ntype=group\ncontext=" . $context . "\neid=" . $eid . "\nsalt=" . $salt;
+                $instance->setContent($nodeContent);
                 $instance->write();
                 $nid = $instance->getID();
                 $this->_metrologyInstance->addLog('create group with content nid=' . $nid . ' eid=' . $eid . ' salt=' . $salt, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4c921139');
             }
             $this->_createInstance = new Group($this->_nebuleInstance, $nid);
             $this->_metrologyInstance->addLog('create group name=' . $this->_createName . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'cf18d77f');
-            $this->_createInstance->setAsGroup($this->_createObfuscated, $createContext);
+            $this->_createInstance->setAsGroup($obfuscated, $context);
             $this->_createInstance->setName($this->_createName);
-            if ($this->_createClosed)
-                $this->_createInstance->setMarkClosed(null, $this->_createObfuscated);
+            if ($closed)
+                $this->_createInstance->setMarkClosed(null, $obfuscated);
             $this->_createGID = $this->_createInstance->getID();
             $this->_createError = ($this->_createInstance->getID() == '0');
         } catch (\Throwable $e) {
@@ -242,13 +242,45 @@ class ActionsGroups extends Actions implements ActionsInterface {
             $context = $this->getFilterInput(self::CREATE_MEMBER_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
             $typed = $this->getFilterInput(self::CREATE_MEMBER_TYPED, FILTER_FLAG_NO_ENCODE_QUOTES);
             $obfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_MEMBER_OBFUSCATED));
+            $protected = ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject') && $this->getHaveInput(self::CREATE_MEMBER_PROTECTED));
             $isGroup = $this->getHaveInput(self::CREATE_MEMBER_IS_GROUP);
-            $this->_createInstance = new Group($this->_nebuleInstance, '');
+
+
+
+            // TODO add content and indexed content
+            $content = $this->getFilterInput(self::CREATE_MEMBER_CONTENT, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $index = $this->getFilterInput(self::CREATE_MEMBER_CONTENT_INDEX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $nid = '';
+            if ($content != '') {
+                if ($index == '') {
+                    $instance = new Node($this->_nebuleInstance, '');
+                    $instance->setContent($content);
+                    if ($protected)
+                        $instance->setProtected($obfuscated);
+                    $instance->write();
+                    $nid = $instance->getID();
+                    $this->_metrologyInstance->addLog('create group with content nid=' . $nid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4c921139');
+                } else {
+                    $instance = new Group($this->_nebuleInstance, '');
+                    $nodeContent = new Node($this->_nebuleInstance, '');
+                    $nodeContent->setContent($content);
+                    if ($protected)
+                        $nodeContent->setProtected($obfuscated);
+                    $nodeContent->write();
+                    $nid = $instance->getID();
+                    $this->_metrologyInstance->addLog('create group with content nid=' . $nid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '219474b1');
+                    $instance->setAsMemberNID($nodeContent->getID(), $obfuscated);
+                }
+            }
+
+
+
+            $this->_createInstance = new Group($this->_nebuleInstance, $nid);
             $this->_metrologyInstance->addLog('create group name=' . $name . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'eff13303');
             if ($name != '')
                 $this->_createInstance->setName($name);
             if ($isGroup) {
-                $this->_createInstance->setAsGroup($this->_createObfuscated, $context);
+                $this->_createInstance->setAsGroup($obfuscated, $context);
             }
             if ($typed == '')
                 $this->_actionAddCreateMemberError = (!$instanceGroup->setAsMemberNID($this->_createInstance->getID(), $obfuscated));

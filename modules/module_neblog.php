@@ -113,6 +113,8 @@ class ModuleNeblog extends Module
 
     const RESTRICTED_TYPE = 'blog';
     const RESTRICTED_CONTEXT = 'ad34c6d9368499b303927c616197f653e3a08d37e7803f3cd46fe163114d91d437d9.none.272';
+    const POST_CONTEXT = 'f741383d6aeb6c2b669c546ac12c789d456fefa40ba20615261878e27bd9d90a977a.none.272';
+    const PAGE_CONTEXT = '8c3626349ace2fc204d707d551a731d8f01a3068dbaaa1e42c7c4e850da36fa77c0d.none.272';
     const COMMAND_SELECT_BLOG = 'blog';
     const COMMAND_SELECT_ITEM = 'blog';
     const COMMAND_SELECT_POST = 'post';
@@ -595,9 +597,9 @@ class ModuleNeblog extends Module
         if ($this->_socialClass == '')
             $this->_socialClass = 'onlist';
         $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
-        if (! $this->_instanceCurrentItem->getMarkClosed())
+        if (! $this->_instanceCurrentBlog->getMarkClosed())
             $this->_socialClass = 'all';
-        $memberLinks = $this->_instanceCurrentItem->getListMembersLinks($this->_socialClass, $this->_currentItemWritersList);
+        $memberLinks = $this->_instanceCurrentBlog->getListMembersLinks($this->_socialClass, $this->_currentItemWritersList);
 
         $list = array();
         $this->_listSigners = array();
@@ -747,25 +749,24 @@ class ModuleNeblog extends Module
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_STRING);
             $instance->setInputValue('');
-            if ($type == 'Post')
-                $instance->setInputName(self::COMMAND_ACTION_NEW_POST_NAME);
-            else
-                $instance->setInputName(self::COMMAND_ACTION_NEW_PAGE_NAME);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_NAME);
             $instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
             $instance->setWithFormOpen(true);
             $instance->setWithFormClose(false);
+            $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_IS_GROUP
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             if ($type == 'Post')
-                $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand());
+                $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::POST_CONTEXT;
             else
-                $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
-                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand());
+                $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::PAGE_CONTEXT;
+            $instance->setLink($link);
             $instance->setWithSubmit(false);
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
@@ -773,21 +774,19 @@ class ModuleNeblog extends Module
             $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
             $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXTAREA);
             $instance->setInputValue('');
-            if ($type == 'Post')
-                $instance->setInputName(self::COMMAND_ACTION_NEW_POST_CONTENT);
-            else
-                $instance->setInputName(self::COMMAND_ACTION_NEW_PAGE_CONTENT);
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTENT);
             //$instance->setIconText('');
             $instance->setWithFormOpen(false);
             $instance->setWithFormClose(false);
             $instance->setWithSubmit(false);
+            $instance->setHiddenInput1(\Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTENT_INDEX, '0010000000000000.none.64');
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
 
             if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
                 $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
                 $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-                $instance->setInputName(\Nebule\Library\ActionsObjects::UPLOAD_FILE_PROTECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_PROTECTED);
                 $instance->setIconText('::createProtectedNode');
                 $instance->setSelectList(array(
                         'n' => $this->_translateInstance->getTranslate('::no'),
@@ -802,7 +801,7 @@ class ModuleNeblog extends Module
             if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
                 $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
                 $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
-                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_OBFUSCATED);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_OBFUSCATED);
                 $instance->setIconText('::createObfuscated' . $type);
                 $instance->setSelectList(array(
                     'n' => $this->_translateInstance->getTranslate('::no'),
@@ -996,15 +995,15 @@ class ModuleNeblog extends Module
 
 
     public function actions(): void {
-        if ($this->_extractActionAddPost())
-            $this->_setNewBlogPost($this->_actionAddPostName, $this->_actionAddPostContent);
-        if ($this->_extractActionAddAnswer())
-            $this->_setNewAnswerOID($this->_actionAddAnswerContent);
-        if ($this->_extractActionAddPage())
-            $this->_setNewPageNID($this->_actionAddPageName, $this->_actionAddPageContent);
+        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_POST_NAME) && $this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_POST_CONTENT))
+                $this->_setNewBlogPost();
+        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_ANSWER))
+                $this->_setNewAnswerOID();
+        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_PAGE_NAME) && $this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_PAGE_CONTENT))
+                $this->_setNewPageNID();
     }
 
-    private function _extractActionAddPost(): bool {
+    /*private function _extractActionAddPost(): bool {
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
             $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b54fc74c');
 
@@ -1043,7 +1042,7 @@ class ModuleNeblog extends Module
             }
         }
         return false;
-    }
+    }*/
 
 
     // Common functions
@@ -1329,10 +1328,16 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPostNID($blog, $socialClass));
     }
-    private function _setNewBlogPost(string $name, string $content): void {
+    private function _setNewBlogPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
+            return;
         if ($this->_instanceCurrentBlog === null)
             return;
+
+        $name = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_NAME);
+        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_CONTENT);
+
         // Create PostNID
         $instanceNode = $this->_cacheInstance->newVirtualNode();
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
@@ -1397,10 +1402,13 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksAnswerOID($post, $socialClass));
     }
-    private function _setNewAnswerOID(string $content): void {
+    private function _setNewAnswerOID(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
+            return;
         if ($this->_instanceCurrentBlogPost === null)
             return;
+        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_ANSWER);
         $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
         $instanceNode->setWriteContent($content);
         $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
@@ -1444,10 +1452,15 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPageNID($blog, $socialClass));
     }
-    private function _setNewPageNID(string $name, string $content): void {
+    private function _setNewPageNID(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
+            return;
         if ($this->_instanceCurrentBlog === null)
             return;
+
+        $name = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_NAME);
+        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_CONTENT);
 
         // Create PageNID
         $instanceNode = $this->_cacheInstance->newVirtualNode();
