@@ -224,9 +224,9 @@ class Entities extends Functions
             return;
 
         if (filter_has_var(INPUT_POST, References::COMMAND_PASSWORD))
-            $arg_pwd = filter_input(INPUT_POST, References::COMMAND_PASSWORD, FILTER_SANITIZE_STRING);
+            $arg_pwd = $this->getFilterInput(References::COMMAND_PASSWORD);
         elseif (filter_has_var(INPUT_GET, References::COMMAND_PASSWORD))
-            $arg_pwd = filter_var(hex2bin(filter_input(INPUT_GET, References::COMMAND_PASSWORD, FILTER_SANITIZE_STRING)), FILTER_SANITIZE_STRING);
+            $arg_pwd = filter_var(hex2bin($this->getFilterInput(References::COMMAND_PASSWORD)), FILTER_SANITIZE_STRING);
         else
             return;
 

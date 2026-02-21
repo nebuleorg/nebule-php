@@ -15,7 +15,7 @@ class App2 extends App0
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_VERSION = '020260221';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -29,17 +29,17 @@ class App2 extends App0
         $this->_metrologyInstance->addLog('Loading', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'cb4450a2');
 
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
-            $argBack = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argBack = $this->getFilterInput(References::COMMAND_APPLICATION_BACK, FILTER_FLAG_ENCODE_LOW);
             $this->_metrologyInstance->addLog('input ' . References::COMMAND_APPLICATION_BACK . ' ask come back to application nid=' . $argBack, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a8a5401d');
         }
         else
             $argBack = '1';
         if (filter_has_var(INPUT_GET, References::COMMAND_SWITCH_GHOST)) {
-            $argEnt = trim(filter_input(INPUT_GET, References::COMMAND_SWITCH_GHOST, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argEnt = $this->getFilterInput(References::COMMAND_SWITCH_GHOST, FILTER_FLAG_ENCODE_LOW);
             $this->_metrologyInstance->addLog('input ' . References::COMMAND_SWITCH_GHOST . ' ask use entity eid=' . $argEnt, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '425694ce');
         } else
             $argEnt = $nebuleServerEntity;
-        $argLogout = (filter_has_var(INPUT_GET, Displays::COMMAND_DISPLAY_VIEW) && filter_input(INPUT_GET, Displays::COMMAND_DISPLAY_VIEW, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
+        $argLogout = (filter_has_var(INPUT_GET, Displays::COMMAND_DISPLAY_VIEW) && $this->getFilterInput(Displays::COMMAND_DISPLAY_VIEW, FILTER_FLAG_ENCODE_LOW) == References::COMMAND_AUTH_ENTITY_LOGOUT);
         $args = '?' . References::COMMAND_SWITCH_APPLICATION . '=' . References::DEFAULT_REDIRECT_AUTH_APP;
         $args .= '&' . References::COMMAND_APPLICATION_BACK . '=' . $argBack;
         $args .= '&' . References::COMMAND_SWITCH_GHOST . '=' . $argEnt;

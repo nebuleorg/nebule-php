@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260201';
+const BOOTSTRAP_VERSION = '020260221';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -1053,8 +1053,8 @@ function lib_getOptionFromFile(string $name): string {
                 if ($line == '' || $line[0] == "#" || !str_contains($line, '='))
                     continue;
 
-                if (trim(strtok($line, '=')) == $name) {
-                    return trim(strtok('='));
+                if (trim((string)strtok($line, '=')) == $name) {
+                    return trim((string)strtok('='));
                 }
             }
         }
@@ -1239,7 +1239,7 @@ function lib_setServerEntity(bool $rescueMode): void {
 
     if (file_exists(LIB_LOCAL_ENTITY_FILE) && is_file(LIB_LOCAL_ENTITY_FILE))
     {
-        $nebuleServerEntity = filter_var(strtok(trim(file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $nebuleServerEntity = filter_var(strtok(trim((string)file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
         if (!ent_checkIsPublicKey($nebuleServerEntity))
         {
             bootstrap_setBreak('62', __FUNCTION__);
@@ -1505,7 +1505,7 @@ function io_blockLinkWrite(string $nid, string &$block): bool {
         $l = file(LIB_LOCAL_LINKS_FOLDER . '/' . $nid, FILE_SKIP_EMPTY_LINES);
         if ($l !== false) {
             foreach ($l as $k) {
-                if (trim($k) == trim($block))
+                if (trim((string)$k) == trim($block))
                     return true;
             }
         }
@@ -1544,7 +1544,7 @@ function io_blockLinkSynchronize(string $nid, string $location): bool {
     $ressource = fopen($location . '/l/' . $nid, 'r');
     if ($ressource !== false) {
         while (feof($ressource) !== false) {
-            $line = trim(fgets($ressource));
+            $line = trim((string)fgets($ressource));
             log_add('write bloclink=' . $line, 'info', __FUNCTION__, '00000000');
             blk_write($line);
         }
@@ -5892,7 +5892,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool {
         echo $firstPuppetmasterEid . "\n";
         log_add('get puppetmaster by config eid=' . $firstPuppetmasterEid, 'audit', __FUNCTION__, 'bf4b0577');
     } elseif (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID)) {
-        $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $argEID = trim((string)filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
         bootstrap_echoLineTitle('try puppetmaster');
         echo $argEID;
         log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_EID . ' ask define alternative puppetmaster eid=' . $argEID, 'audit', __FUNCTION__, '10a0bd6d');
@@ -5901,7 +5901,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool {
             $firstPuppetmasterEid = $argEID;
         } elseif (filter_has_var(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION)) {
             echo "<br/>\n";
-            $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argLocation = trim((string)filter_input(INPUT_GET, LIB_ARG_FIRST_PUPPETMASTER_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             bootstrap_echoLineTitle('try location');
             echo $argLocation . "<br/>\n";
             log_add('input ' . LIB_ARG_FIRST_PUPPETMASTER_LOCATION . ' ask define alternative puppetmaster location=' . $argLocation, 'audit', __FUNCTION__, '6d54e19e');
@@ -6223,12 +6223,12 @@ function bootstrap_firstDisplay7Subordination(): bool {
             <?php
             $ok = false;
         } else {
-            $argEID = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $argEID = trim((string)filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_EID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
             log_add('input ' . LIB_ARG_FIRST_SUBORDINATION_EID . ' ask define subordination eid=' . $argEID, 'warn', __FUNCTION__, 'a875618e');
             if (nod_checkNID($argEID, false)) {
                 echo 'try alternative subordination eid : ' . $argEID . ' ';
                 $firstSubordinationEID = $argEID;
-                $argLocation = trim(' ' . filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                $argLocation = trim((string)filter_input(INPUT_GET, LIB_ARG_FIRST_SUBORDINATION_LOCATION, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
                 log_add('input ' . LIB_ARG_FIRST_SUBORDINATION_LOCATION . ' ask define subordination location=' . $argLocation, 'info', __FUNCTION__, 'c1c943a5');
                 if (strlen($argLocation) != 0 && filter_var($argLocation, FILTER_VALIDATE_URL) !== false) {
                     echo 'sync...';

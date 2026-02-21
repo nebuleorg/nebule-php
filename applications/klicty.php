@@ -4382,7 +4382,7 @@ class Action extends Actions
                         $argObf = filter_has_var(INPUT_POST, \Nebule\Library\ActionsObjects::UPLOAD_FILE_OBFUSCATED);
 
                         // Spécifique klicty.
-                        $argLifeTime = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+                        $argLifeTime = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_LIFETIME, FILTER_FLAG_ENCODE_LOW);
                         if ($argLifeTime != '1h' && $argLifeTime != '2h'
                             && $argLifeTime != '1d' && $argLifeTime != '2d'
                             && $argLifeTime != '1w' && $argLifeTime != '2w'
@@ -4390,7 +4390,7 @@ class Action extends Actions
                             && $argLifeTime != '1y' && $argLifeTime != '2y'
                         )
                             $argLifeTime = '1m';
-                        $argShowTime = intval(trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME, FILTER_SANITIZE_STRING)));
+                        $argShowTime = intval($this->getFilterInput(self::DEFAULT_COMMAND_ACTION_UPLOAD_FILE_SHOWTIME));
                         if ($argShowTime < 0 || $argShowTime > 10)
                             $argShowTime = 0;
 

@@ -288,9 +288,8 @@ class ModuleManage extends Module
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '468a2957');
 
-            // Lit et nettoye le contenu de la variable GET.
-            $arg_name = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_NOM, FILTER_SANITIZE_STRING));
-            $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg_name = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_NOM);
+            $arg_rid = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_RID, FILTER_FLAG_ENCODE_LOW);
 
             // Écriture des variables.
             if ($arg_name != '') {
@@ -323,9 +322,8 @@ class ModuleManage extends Module
         ) {
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Extract action add code module', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '9e20fc27');
 
-            // Lit et nettoye le contenu de la variable GET.
-            $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-            $arg_id = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_ID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg_rid = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_RIDC, FILTER_FLAG_ENCODE_LOW);
+            $arg_id = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_ID, FILTER_FLAG_ENCODE_LOW);
 
             if (\Nebule\Library\Node::checkNID($arg_rid)) {
                 $this->_actionAddModuleRID = $arg_rid;
@@ -997,7 +995,7 @@ class ModuleManage extends Module
         $instance->display();
 
         // Extrait le RID si nouveau module créé.
-        $arg_rid = trim(filter_input(INPUT_POST, self::DEFAULT_COMMAND_ACTION_RID, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_rid = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_RID, FILTER_FLAG_ENCODE_LOW);
         if (\Nebule\Library\Node::checkNID($arg_rid)) {
             $rid = $arg_rid;
             $newCode = true;

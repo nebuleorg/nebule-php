@@ -69,7 +69,7 @@ class ModuleAutent extends Module {
 
     public function displayModule(): void {
         if (filter_has_var(INPUT_GET, References::COMMAND_APPLICATION_BACK)) {
-            $this->_comebackAppId = trim(filter_input(INPUT_GET, References::COMMAND_APPLICATION_BACK, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $this->_comebackAppId = $this->getFilterInput(References::COMMAND_APPLICATION_BACK, FILTER_FLAG_ENCODE_LOW);
             $this->_metrologyInstance->addLog('input ' . References::COMMAND_APPLICATION_BACK . ' ask application to come back rid=' . $this->_comebackAppId, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'dade09c2');
         }
         else

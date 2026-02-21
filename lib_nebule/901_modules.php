@@ -306,7 +306,7 @@ abstract class Module extends Functions implements ModuleInterface {
             return $this->_commandActionDisplayModuleCache;
 
         if ($this->_displayInstance->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]) {
-            $arg = trim(filter_input(INPUT_GET, self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE, FILTER_SANITIZE_STRING));
+            $arg = $this->getFilterInput(self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE);
 
             if ($arg != '')
                 $return = $arg;

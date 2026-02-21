@@ -812,13 +812,13 @@ class ModuleEntities extends Module
 
     private function _findSearchEntity(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $arg_url = trim((string)filter_input(INPUT_GET, 'srchurl', FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_url = $this->getFilterInput('srchurl', FILTER_FLAG_ENCODE_LOW);
         if ($arg_url != ''
             && strlen($arg_url) >= 8
         )
             $this->_searchEntityURL = $arg_url;
 
-        $arg_id = trim((string)filter_input(INPUT_GET, 'srchid', FILTER_SANITIZE_URL, FILTER_FLAG_ENCODE_LOW));
+        $arg_id = filter_var($this->getFilterInput('srchid', FILTER_FLAG_ENCODE_LOW), FILTER_SANITIZE_URL);
         if (\Nebule\Library\Node::checkNID($arg_id)
             && $arg_url != 'http://localhost'
             && $arg_url != 'http://127.0.0.1'

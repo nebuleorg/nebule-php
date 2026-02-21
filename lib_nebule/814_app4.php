@@ -15,7 +15,7 @@ class App4 extends App0
     const APPLICATION_NAME = 'app4';
     const APPLICATION_SURNAME = 'nebule/app4';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260101';
+    const APPLICATION_VERSION = '020260221';
     const APPLICATION_LICENCE = 'GNU GPL v3 2024-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256';
@@ -41,7 +41,7 @@ class App4 extends App0
         $nid = '';
         $arg = '';
         if (filter_has_var(INPUT_GET, \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER))
-            $arg = trim(filter_input(INPUT_GET, \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+            $arg = $this->getFilterInput(\Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER, FILTER_FLAG_ENCODE_LOW);
         if (\Nebule\Bootstrap\nod_checkNID($arg))
             $nid = $arg;
 

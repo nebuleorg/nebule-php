@@ -224,13 +224,13 @@ abstract class Applications extends Functions implements ApplicationInterface
 
     protected function _findAskDownload(): bool
     {
-        $arg_dwlobj = trim((string)filter_input(INPUT_GET, References::OBJECTS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_dwlobj = $this->getFilterInput(References::OBJECTS_FOLDER, FILTER_FLAG_ENCODE_LOW);
         if (Node::checkNID($arg_dwlobj)) {
             $this->_askDownload = true;
             $this->_askDownloadObject = trim($arg_dwlobj);
             $this->_metrologyInstance->addLog('ask for download object ' . $arg_dwlobj, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'df913e73');
         }
-        $arg_dwllnk = trim((string)filter_input(INPUT_GET, References::LINKS_FOLDER, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg_dwllnk = $this->getFilterInput(References::LINKS_FOLDER, FILTER_FLAG_ENCODE_LOW);
         if (Node::checkNID($arg_dwllnk)) {
             $this->_askDownload = true;
             $this->_askDownloadLinks = trim($arg_dwllnk);

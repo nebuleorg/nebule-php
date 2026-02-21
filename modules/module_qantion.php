@@ -240,7 +240,7 @@ class archiveActionsQantion {
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                        $valueArray = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Throwable $e) {
                         $valueArray = '';
                     }
@@ -251,7 +251,7 @@ class archiveActionsQantion {
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateCurrencyParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                        $this->_actionCreateCurrencyParam[$name] = ($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES);
                     } catch (\Throwable $e) {
                         $this->_actionCreateCurrencyParam[$name] = '';
                     }
@@ -345,7 +345,7 @@ class archiveActionsQantion {
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                        $valueArray = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Throwable $e) {
                         $valueArray = '';
                     }
@@ -355,7 +355,7 @@ class archiveActionsQantion {
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateTokenPoolParam[$name] = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                        $this->_actionCreateTokenPoolParam[$name] = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES);
                     } catch (\Throwable $e) {
                         $this->_actionCreateTokenPoolParam[$name] = '';
                     }
@@ -450,7 +450,7 @@ class archiveActionsQantion {
                 if (isset($property['checkbox'])) {
                     $value = '';
                     try {
-                        $valueArray = (string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
+                        $valueArray = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FORCE_ARRAY);
                     } catch (\Throwable $e) {
                         $valueArray = '';
                     }
@@ -460,7 +460,7 @@ class archiveActionsQantion {
                     unset($value, $valueArray);
                 } else {
                     try {
-                        $this->_actionCreateTokensParam[$name] = trim((string)filter_input(INPUT_POST, $property['shortname'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                        $this->_actionCreateTokensParam[$name] = $this->getFilterInput($property['shortname'], FILTER_FLAG_NO_ENCODE_QUOTES));
                     } catch (\Throwable $e) {
                         $this->_actionCreateTokensParam[$name] = '';
                     }

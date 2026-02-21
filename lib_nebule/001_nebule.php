@@ -45,6 +45,7 @@ class nebule {
     private ?ioInterface $_ioInstance = null;
     private ?CryptoInterface $_cryptoInstance = null;
     private ?SocialInterface $_socialInstance = null;
+    private ?Functions $_functions = null;
 
 
 
@@ -73,6 +74,9 @@ class nebule {
     private function _initialisation(): void {
         $this->_initMetrology();
         $this->_metrologyInstance->addLog('first step init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '64154189');
+        $this->_functions = new Functions($this->_nebuleInstance);
+        $this->_functions->setEnvironmentLibrary($this->_nebuleInstance);
+
         $this->_initConfiguration();
         $this->_initRescue();
         $this->_initSession();
@@ -96,10 +100,6 @@ class nebule {
         $this->_findCurrentObjet();
         $this->_findCurrentEntity();
         $this->_findCurrentGroup();
-        $this->_findCurrentConversation();
-        $this->_findCurrentCurrency();
-        $this->_findCurrentTokenPool();
-        $this->_findCurrentToken();
 
         $this->_loadingStatus = true;
         $this->_metrologyInstance->addLog('end init nebule instance', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '474676ed');
@@ -240,10 +240,7 @@ class nebule {
 
     private function _getArgCurrentNode(string $reference): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (filter_has_var(INPUT_GET, $reference))
-            $arg = trim(' ' . filter_input(INPUT_GET, $reference, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $arg = trim(' ' . filter_input(INPUT_POST, $reference, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
+        $arg = $this->_functions->getFilterInput($reference, FILTER_FLAG_ENCODE_LOW);
         if ($arg != '')
             $this->_metrologyInstance->addLog('user input ' . $reference . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '8eb05394');
         return $arg;
@@ -368,173 +365,17 @@ class nebule {
 
 
     private string $_currentConversationID = '';
-    private ?Conversation $_currentConversationInstance = null;
-    public function getCurrentConversationOID(): string { return $this->_currentConversationID; }
-    public function getCurrentConversationInstance(): ?Conversation { return $this->_currentConversationInstance; }
-    private function _findCurrentConversation(): void {
-        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_CONVERSATION);
-
-        if (Node::checkNID($arg, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg)
-                || $this->getIoInstance()->checkLinkPresent($arg)
-                || $arg == '0'
-            )
-        ) {
-            $this->_currentConversationID = $arg;
-            $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType($arg, \Nebule\Library\Cache::TYPE_CONVERSATION);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedConversation', $arg);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedConversation');
-            if ($cache != '') {
-                $this->_currentConversationID = $cache;
-                $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType($cache, \Nebule\Library\Cache::TYPE_CONVERSATION);
-            } else {
-                $this->_currentConversationID = '0';
-                $this->_currentConversationInstance = $this->_cacheInstance->newNodeByType('0', \Nebule\Library\Cache::TYPE_CONVERSATION);
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedConversation', $this->_currentConversationID);
-            }
-        }
-
-        $this->_metrologyInstance->addLog('find current conversation ' . $this->_currentConversationID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'adf0b5df');
-    }
+    public function getCurrentConversationOID(): string { return $this->_currentConversationID; } // FIXME remove
 
 
 
-    private string $_currentCurrencyID = '';
     private ?Currency $_currentCurrencyInstance = null;
-    public function getCurrentCurrencyOID(): string { return $this->_currentCurrencyID; }
-    public function getCurrentCurrencyInstance(): ?Currency { return $this->_currentCurrencyInstance; }
-    private function _findCurrentCurrency(): void {
-/*        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_CURRENCY);
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
-            $this->_currentCurrencyID = '0';
-            $this->_currentCurrencyInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CURRENCY);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedCurrency', $this->_currentCurrencyID);
-            return;
-        }
-
-        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_CURRENCY))
-            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_CURRENCY, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if ($arg != '')
-            $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_CURRENCY . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '69f274eb');
-
-        if (Node::checkNID($arg, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg)
-                || $this->getIoInstance()->checkLinkPresent($arg)
-                || $arg == '0'
-            )
-        ) {
-            $this->_currentCurrencyID = $arg;
-            $this->_currentCurrencyInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_CURRENCY);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedCurrency', $arg);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedCurrency');
-            if ($cache != '') {
-                $this->_currentCurrencyID = $cache;
-                $this->_currentCurrencyInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_CURRENCY);
-            } else {
-                $this->_currentCurrencyID = '0';
-                $this->_currentCurrencyInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_CURRENCY);
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedCurrency', $this->_currentCurrencyID);
-            }
-        }
-
-        $this->_metrologyInstance->addLog('find current currency ' . $this->_currentCurrencyID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '952d5651');*/
-    }
+    public function getCurrentCurrencyInstance(): ?Currency { return $this->_currentCurrencyInstance; } // FIXME remove
 
 
 
-    private string $_currentTokenPool = '';
     private ?TokenPool $_currentTokenPoolInstance = null;
-    public function getCurrentTokenPoolNID(): string { return $this->_currentTokenPool; }
-    public function getCurrentTokenPoolInstance(): ?TokenPool { return $this->_currentTokenPoolInstance; }
-    private function _findCurrentTokenPool(): void {
-/*        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_TOKENPOOL);
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
-            $this->_currentTokenPool = '0';
-            $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKENPOOL);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedTokenPool', $this->_currentTokenPool);
-            return;
-        }
-
-        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKENPOOL))
-            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKENPOOL, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if ($arg != '')
-            $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_TOKENPOOL . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'e1874657');
-
-        if (Node::checkNID($arg, false, true)
-            && ($this->getIoInstance()->checkObjectPresent($arg)
-                || $this->getIoInstance()->checkLinkPresent($arg)
-                || $arg == '0'
-            )
-        ) {
-            $this->_currentTokenPool = $arg;
-            $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_TOKENPOOL);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedTokenPool', $arg);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedTokenPool');
-            if ($cache != '') {
-                $this->_currentTokenPool = $cache;
-                $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_TOKENPOOL);
-            } else {
-                $this->_currentTokenPool = '0';
-                $this->_currentTokenPoolInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKENPOOL);
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedTokenPool', $this->_currentTokenPool);
-            }
-        }
-
-        $this->_metrologyInstance->addLog('find current token pool ' . $this->_currentTokenPool, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c8485d55');*/
-    }
-
-
-
-    private string $_currentTokenID = '';
-    private ?Token $_currentTokenInstance = null;
-    public function getCurrentTokenOID(): string { return $this->_currentTokenID; }
-    public function getCurrentTokenInstance(): ?Token { return $this->_currentTokenInstance; }
-    private function _findCurrentToken(): void {
-/*        $arg = $this->_getArgCurrentNode(References::COMMAND_SELECT_TOKENCOIN);
-        if (!$this->_configurationInstance->getOptionAsBoolean('permitCurrency')) {
-            $this->_currentTokenID = '0';
-            $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedToken', $this->_currentTokenID);
-            return;
-        }
-
-        if (filter_has_var(INPUT_GET, References::COMMAND_SELECT_TOKENCOIN))
-            $arg = trim(' ' . filter_input(INPUT_GET, References::COMMAND_SELECT_TOKENCOIN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        else
-            $arg = trim(' ' . filter_input(INPUT_POST, References::COMMAND_SELECT_TOKENCOIN, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-        if ($arg != '')
-            $this->_metrologyInstance->addLog('user input ' . References::COMMAND_SELECT_TOKENCOIN . '=' . $arg, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '9504b976');
-
-        if (Node::checkNID($arg, false, true)
-            && ($this->_ioInstance->checkObjectPresent($arg)
-                || $this->_ioInstance->checkLinkPresent($arg)
-                || $arg == '0'
-            )
-        ) {
-            $this->_currentTokenID = $arg;
-            $this->_currentTokenInstance = $this->_cacheInstance->newNode($arg, \Nebule\Library\Cache::TYPE_TOKEN);
-            $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedToken', $arg);
-        } else {
-            $cache = $this->_sessionInstance->getSessionStoreAsString('nebuleSelectedToken');
-            if ($cache != '') {
-                $this->_currentTokenID = $cache;
-                $this->_currentTokenInstance = $this->_cacheInstance->newNode($cache, \Nebule\Library\Cache::TYPE_TOKEN);
-            } else {
-                $this->_currentTokenID = '0';
-                $this->_currentTokenInstance = $this->_cacheInstance->newNode('0', \Nebule\Library\Cache::TYPE_TOKEN);
-                $this->_sessionInstance->setSessionStoreAsString('nebuleSelectedToken', $this->_currentTokenID);
-            }
-        }
-
-        $this->_metrologyInstance->addLog('find current token ' . $this->_currentTokenID, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '0ccb0886');*/
-    }
+    public function getCurrentTokenPoolInstance(): ?TokenPool { return $this->_currentTokenPoolInstance; } // FIXME remove
 
 
 
@@ -689,10 +530,8 @@ class nebule {
      * @return string
      */
     public function getDisplayNextObject_obsolete(): string {
-        $this->_metrologyInstance->addLog('extract display next object', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bccbff7a');
-
-        $arg = trim(' ' . filter_input(INPUT_GET, Displays::COMMAND_NEXT, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW));
-
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $arg = $this->_functions->getFilterInput(Displays::COMMAND_NEXT, FILTER_FLAG_ENCODE_LOW);
         if (Node::checkNID($arg))
             return $arg;
         return '';
