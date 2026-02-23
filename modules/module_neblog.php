@@ -399,7 +399,7 @@ class ModuleNeblog extends Module
     public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
-            case 'displayFolderMembers':
+            case 'displayBlogMembers':
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
                 $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
@@ -425,6 +425,35 @@ class ModuleNeblog extends Module
                 } else
                     $instance->setEnableRefs(false);
                 $instance->setTypeHookName('typeBlogs');
+                $instance->setIcon($instanceIcon);
+                return $instance;
+                break;
+            case 'displayPageMembers':
+                if (!\Nebule\Library\Node::checkNID($item))
+                    return null;
+                $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
+                $node = $this->_cacheInstance->newNodeByType($item);
+                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
+                $instance->setSocial($this->_socialClass);
+                $instance->setNID($node);
+                $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                        . '&' . self::COMMAND_SELECT_PAGE . '=' . $item
+                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                $instance->setEnableColor(true);
+                $instance->setEnableIcon(true);
+                $instance->setEnableName(true);
+                $instance->setEnableFlags(false);
+                $instance->setEnableContent(false);
+                $instance->setEnableJS(true);
+                if (sizeof($this->_listSigners[$item]) != 0) {
+                    $instance->setEnableRefs(true);
+                    $instance->setRefs($this->_listSigners[$item]);
+                } else
+                    $instance->setEnableRefs(false);
+                $instance->setTypeHookName('typePages');
                 $instance->setIcon($instanceIcon);
                 return $instance;
                 break;
@@ -566,7 +595,7 @@ class ModuleNeblog extends Module
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setListHookName('displayFolderMembers');
+        $instanceList->setListHookName('displayBlogMembers');
         $instanceList->setListSize(12);
         $instanceList->setListItems($list);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
@@ -658,39 +687,6 @@ class ModuleNeblog extends Module
     private function _displayNewPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNewPostOrPage('Post');
-
-
-
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
-                && $this->_instanceCurrentBlog !== null) {
-            ?>
-
-            <div>
-                <h1>New post</h1>
-                <div>
-                    <form enctype="multipart/form-data" method="post"
-                          action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                                  . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                                  . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                                  . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                                  . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <label>
-                            <input type="text" class="newpost"
-                                   name="<?php echo self::COMMAND_ACTION_NEW_POST_NAME; ?>"
-                                   value="Name"/>
-                        </label><br/>
-                        <label>
-                            <textarea class="newpost" rows="20" cols="50"
-                                      name="<?php echo self::COMMAND_ACTION_NEW_POST_CONTENT; ?>"></textarea>
-                        </label><br/>
-                        <input type="submit"
-                               value="Create"/>
-                    </form>
-                </div>
-            </div>
-            <?php
-        } else
-            $this->_displayNotPermit();
     }
 
     private function _displayNewPostOrPage(string $type): void {
@@ -879,7 +875,7 @@ class ModuleNeblog extends Module
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setListHookName('displayFolderMembers');
+        $instanceList->setListHookName('displayPageMembers');
         $instanceList->setListSize(12);
         $instanceList->setListItems($list);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
@@ -891,38 +887,6 @@ class ModuleNeblog extends Module
     private function _displayNewPage(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displayNewPostOrPage('Page');
-        /*$this->_displaySimpleTitle('::page:new', $this::MODULE_REGISTERED_ICONS[2]);
-        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
-
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
-            && $this->_instanceCurrentBlog !== null) {
-            ?>
-
-            <div>
-                <h1>New page</h1>
-                <div>
-                    <form enctype="multipart/form-data" method="post"
-                        action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
-                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <label>
-                            <input type="text" class="newpage"
-                                   name="<?php echo self::COMMAND_ACTION_NEW_PAGE_NAME; ?>"
-                                   value="Name"/>
-                        </label><br/>
-                        <label>
-                            <textarea class="newpage" rows="20" cols="50"
-                                   name="<?php echo self::COMMAND_ACTION_NEW_PAGE_CONTENT; ?>"></textarea>
-                        </label><br/>
-                        <input type="submit" value="Create"/>
-                    </form>
-                </div>
-            </div>
-            <?php
-        } else
-            $this->_displayNotSupported();*/
     }
 
     private function _displayModPage(): void {
