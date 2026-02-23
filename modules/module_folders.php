@@ -427,7 +427,10 @@ class ModuleFolders extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('RootFolder');
+                if ($this->_instanceCurrentFolder !== null && $this->_instanceCurrentFolder->getID() != '0')
+                    $this->_displayItem('RootFolder');
+                else
+                    $this->_displayListItems('RootFolder', 'RootFolders');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('RootFolder');
@@ -471,7 +474,10 @@ class ModuleFolders extends Module {
                 $this->_display_InlineMyItems('RootFolders');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineFolder();
+                if ($this->_instanceCurrentFolder !== null && $this->_instanceCurrentFolder->getID() != '0')
+                    $this->_display_InlineFolder();
+                else
+                    $this->_display_InlineMyItems('RootFolders');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_display_InlineRightsItem('RootFolder');

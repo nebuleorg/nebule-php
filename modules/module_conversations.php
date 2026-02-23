@@ -153,7 +153,10 @@ class ModuleConversations extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('Conversation');
+                if ($this->_instanceCurrentConversation !== null && $this->_instanceCurrentConversation->getID() != '0')
+                    $this->_displayItem('Conversation');
+                else
+                    $this->_displayListItems('Conversation', 'Conversations');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('Conversation');
@@ -188,7 +191,10 @@ class ModuleConversations extends Module {
                 $this->_display_InlineMyItems('Conversations');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineConversation();
+                 if ($this->_instanceCurrentConversation !== null && $this->_instanceCurrentConversation->getID() != '0')
+                    $this->_display_InlineConversation();
+                 else
+                    $this->_display_InlineMyItems('Conversations');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_display_InlineRightsItem('Conversation');

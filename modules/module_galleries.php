@@ -409,7 +409,10 @@ class ModuleGalleries extends Module {
     public function displayModule(): void {
         switch ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()) {
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_displayItem('Gallery');
+                if ($this->_instanceCurrentFolder !== null && $this->_instanceCurrentFolder->getID() != '0')
+                    $this->_displayItem('Gallery');
+                else
+                    $this->_displayListItems('Gallery', 'Galleries');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[2]:
                 $this->_displayItemCreateForm('Gallery');
@@ -453,7 +456,10 @@ class ModuleGalleries extends Module {
                 $this->_display_InlineMyItems('Galleries');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[1]:
-                $this->_display_InlineGallery();
+                if ($this->_instanceCurrentFolder !== null && $this->_instanceCurrentFolder->getID() != '0')
+                    $this->_display_InlineGallery();
+                else
+                    $this->_display_InlineMyItems('Galleries');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_display_InlineRightsItem('Gallery');
