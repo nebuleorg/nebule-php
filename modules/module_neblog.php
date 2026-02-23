@@ -1230,19 +1230,20 @@ class ModuleNeblog extends Module
      * ContentOID can have update.
      * OrderNID reflects the order of a content on the list of contents to display.
      */
-    private function _getLinksPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
+    private function _getLinksPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = array();
+        return $blog->getListTypedMembersLinks($this::POST_CONTEXT, $socialClass, $this->_currentItemWritersList);
+        /*$links = array();
         $this->_getLinksF($links, $blog, self::RID_BLOG_POST, true, $socialClass);
         $this->_metrologyInstance->addLog('size of post list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b81aeb71');
-        return $links;
+        return $links;*/
     }
-    private function _getListPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
+    private function _getListPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksPostNID($blog, $socialClass);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountPostNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): int {
+    private function _getCountPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): int {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPostNID($blog, $socialClass));
     }
@@ -1355,18 +1356,19 @@ class ModuleNeblog extends Module
      * ContentOID can have update.
      * OrderNID reflects the order of a content on the list of contents to display.
      */
-    private function _getLinksPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
+    private function _getLinksPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = array();
+        return $blog->getListTypedMembersLinks($this::PAGE_CONTEXT, $socialClass, $this->_currentItemWritersList);
+        /*$links = array();
         $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE, true, $socialClass);
-        return $links;
+        return $links;*/
     }
-    private function _getListPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): array {
+    private function _getListPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $links = $this->_getLinksPageNID($blog, $socialClass);
         return $this->_getOnLinksNID2($links);
     }
-    private function _getCountPageNID(\Nebule\Library\Node $blog, string $socialClass = 'self'): int {
+    private function _getCountPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): int {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPageNID($blog, $socialClass));
     }
