@@ -812,7 +812,7 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_instanceCurrentBlogPage !== null) {
             $this->_displayContent($this->_instanceCurrentBlogPage, 'selfMenuPage', 'page');
-            $this->_displayContentAnswers($this->_instanceCurrentBlogPage);
+            //$this->_displayContentAnswers($this->_instanceCurrentBlogPage);
         } else
             $this->_displayNotSupported();
     }
