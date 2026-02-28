@@ -1059,6 +1059,7 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::answ:list', $this::MODULE_REGISTERED_ICONS[1]);
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
+            && isset($this->_currentItemFollowersList[$this->_entitiesInstance->getConnectedEntityEID()])
             && $this->_instanceCurrentBlog !== null) {
             $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
@@ -1080,6 +1081,7 @@ class ModuleNeblog extends Module
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             $instance->setLink($link);
+            $instance->setTextareaRows(3);
             $instance->setWithSubmit(false);
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
             $instanceList->addItem($instance);
@@ -1144,7 +1146,7 @@ class ModuleNeblog extends Module
             $instance->setNID($blogInstance);
             $instance->setEnableLink(false);
             $instance->setEnableColor(true);
-            $instance->setEnableIcon(true);
+            $instance->setEnableIcon(false);
             $instance->setEnableName(true);
             $instance->setEnableFlags(true);
             $instance->setEnableFlagState(false);

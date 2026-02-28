@@ -48,6 +48,8 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
     protected bool $_withSubmit = true;
     protected bool $_linkEnable = false;
     protected array $_selectList = array();
+    protected int $_textareaRows = 8;
+    protected int $_textareaCols = 34;
 
     public function setHiddenInput1(string $name, string $value = ''): void {
         $this->_hiddenName1 = trim($name);
@@ -78,6 +80,9 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
      */
     public function setWithSubmit(bool $withSubmit = true): void { $this->_withSubmit = $withSubmit; }
     public function setSelectList(array $selectList): void { $this->_selectList = $selectList; }
+
+    public function setTextareaRows(int $rows): void { $this->_textareaRows = $rows; }
+    public function setTextareaCols(int $cols): void { $this->_textareaCols = $cols; }
 
     protected function _initialisation(): void {
         $this->setType(self::QUERY_STRING);
@@ -130,11 +135,11 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface
             foreach ($this->_selectList as $key => $value)
                 $result .= '      <option value="' . $key . '">' . $value . '</option>' . "\n";
             $result .= '     </select>' . "\n";
-        } elseif ($this->_type == 'File') {
-            $result .= '     <input type="file" name="' . $this->_inputName . '" id="' . $this->_inputName . '"/>';
-        } elseif ($this->_type == 'Textarea') {
-            $result .= '     <textarea class="text" rows="8" cols="34" name="' . $this->_inputName . '" id="' . $this->_inputName . '"></textarea>';
-        } else
+        } elseif ($this->_type == 'File')
+            $result .= '     <input type="file" name="' . $this->_inputName . '" id="' . $this->_inputName . '"/>' . "\n";
+        elseif ($this->_type == 'Textarea')
+            $result .= '     <textarea class="text" rows="' . $this->_textareaRows . '" cols="' . $this->_textareaCols . '" name="' . $this->_inputName . '" id="' . $this->_inputName . '"></textarea>' . "\n";
+        else
             $result .= $this->_message . "\n";
         if ($this->_withSubmit)
             $result .= '     <input type="submit" value="&gt;">' . "\n";
