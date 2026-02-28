@@ -490,7 +490,7 @@ class ModuleNeblog extends Module
                 $this->_displayPost();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[10]:
-                $this->_displayNewPost();
+                $this->_displayNewPostOrPage('Post');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[11]:
                 $this->_displayModPost();
@@ -505,7 +505,7 @@ class ModuleNeblog extends Module
                 $this->_displayPages();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[15]:
-                $this->_displayNewPage();
+                $this->_displayNewPostOrPage('Page');
                 break;
             case $this::MODULE_REGISTERED_VIEWS[16]:
                 $this->_displayModPage();
@@ -675,11 +675,6 @@ class ModuleNeblog extends Module
             $this->_displayContentAnswers($this->_instanceCurrentBlogPost);
         } else
             $this->_displayNotSupported();
-    }
-
-    private function _displayNewPost(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNewPostOrPage('Post');
     }
 
     private function _displayNewPostOrPage(string $type): void {
@@ -876,11 +871,6 @@ class ModuleNeblog extends Module
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->display();
-    }
-
-    private function _displayNewPage(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displayNewPostOrPage('Page');
     }
 
     private function _displayModPage(): void {
