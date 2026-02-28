@@ -36,17 +36,18 @@ use Nebule\Library\ModuleTranslates;
  * OrderNID reflect the order of a content on the list of contents to display.
  *  - On a post 'PostNID', definition of a new answer with 'AnswerOID' OID:
  *    - f>PostNID>AnswerOID>RID_BLOG_ANSWER
+ *    - l>AnswerOID>References::REFERENCE_OBJECT_TEXT>References::REFERENCE_NEBULE_OBJET_TYPE
  * AnswerOID must have content.
  * AnswerOID should not have name.
  * AnswerOID can have update.
- * Only one level of answer for now. TODO
+ * Only one level of answer for now.
  *  - On a blog 'BlogNID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
  *    - f>BlogNID>PageNID>RID_BLOG_PAGE
  *    - l>PageNID>References::REFERENCE_NEBULE_OBJET_GROUPE>References::REFERENCE_NEBULE_OBJET_TYPE>PAGE_CONTEXT
  * PageNID should not have content.
  * PageNID should have name.
  * PageNID can have update.
- *    - l>PageNID>PageOID>RID_BLOG_CONTENT FIXME add OrderNID
+ *    - f>PageNID>ContentOID>RID_BLOG_CONTENT>OrderNID
  * PageOID must have content.
  * PageOID should not have name.
  * PageOID can have update.
