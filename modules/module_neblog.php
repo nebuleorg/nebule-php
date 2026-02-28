@@ -14,46 +14,49 @@ use Nebule\Library\ModelModuleHelp;
 use Nebule\Library\ModuleTranslates;
 
 /**
- * This module can manage blogs with articles, pages, and messages in articles.
- *  - Definition of new blog with 'BlogOID' NID:
- *    - f>RID_BLOG_NODE>BlogOID>References::REFERENCE_NEBULE_OBJET_GROUPE :
- * BlogOID must have content with one eid value or more.
- * BlogOID should have name.
- * BlogOID must not have update.
- *  - Definition of the default blog for an entity :
- *    - l>Entity_EID>BlogOID>RID_BLOG_DEFAULT
- *  - On a blog 'BlogOID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
- *    - f>BlogOID>PostNID>RID_BLOG_POST :
+ * This module can manage blogs with posts (articles), pages, and messages in posts (but not in pages).
+ *  - Definition of new blog with 'BlogNID' NID as a group with specific context:
+ *    - l>BlogNID>References::REFERENCE_NEBULE_OBJET_GROUPE>References::REFERENCE_NEBULE_OBJET_TYPE>RESTRICTED_CONTEXT
+ * BlogNID should have content with one eid value or more. If not, should have a virtual NID.
+ * BlogNID should have name.
+ * BlogNID must not have update.
+ * RESTRICTED_CONTEXT is specific to blogs.
+ *  - Definition of the default blog for an entity : FIXME
+ *    - l>Entity_EID>BlogNID>RID_BLOG_DEFAULT
+ *  - On a blog 'BlogNID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
+ *    - f>BlogNID>PostNID>RID_BLOG_POST
+ *    - l>PostNID>References::REFERENCE_NEBULE_OBJET_GROUPE>References::REFERENCE_NEBULE_OBJET_TYPE>POST_CONTEXT
  * PostNID should not have content.
- * PostNID can have name.
+ * PostNID should have name.
  * PostNID can have update.
- *    - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID :
+ *    - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID
  * ContentOID must have content.
  * ContentOID should not have name.
  * ContentOID can have update.
  * OrderNID reflect the order of a content on the list of contents to display.
  *  - On a post 'PostNID', definition of a new answer with 'AnswerOID' OID:
- *    - f>PostNID>AnswerOID>RID_BLOG_ANSWER :
+ *    - f>PostNID>AnswerOID>RID_BLOG_ANSWER
  * AnswerOID must have content.
  * AnswerOID should not have name.
  * AnswerOID can have update.
  * Only one level of answer for now. TODO
- *  - On a blog 'BlogOID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
- *    - f>BlogOID>PageNID>RID_BLOG_PAGE :
+ *  - On a blog 'BlogNID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
+ *    - f>BlogNID>PageNID>RID_BLOG_PAGE
+ *    - l>PageNID>References::REFERENCE_NEBULE_OBJET_GROUPE>References::REFERENCE_NEBULE_OBJET_TYPE>PAGE_CONTEXT
  * PageNID should not have content.
- * PageNID can have name.
+ * PageNID should have name.
  * PageNID can have update.
- *    - l>PageNID>PageOID>RID_BLOG_CONTENT : FIXME add OrderNID
+ *    - l>PageNID>PageOID>RID_BLOG_CONTENT FIXME add OrderNID
  * PageOID must have content.
  * PageOID should not have name.
  * PageOID can have update.
  *  - A blog can be linked to entities (EID) or groups (GroupNID) to add rights:
- *    - f>BlogOID>EID>RID_owner
- *    - f>BlogOID>EID>RID_writer
- *    - f>BlogOID>EID>RID_follower
- *    - f>BlogOID>GroupNID>RID_owner TODO
- *    - f>BlogOID>GroupNID>RID_writer TODO
- *    - f>BlogOID>GroupNID>RID_follower TODO
+ *    - f>BlogNID>EID>RID_owner
+ *    - f>BlogNID>EID>RID_writer
+ *    - f>BlogNID>EID>RID_follower
+ *    - f>BlogNID>GroupNID>RID_owner TODO
+ *    - f>BlogNID>GroupNID>RID_writer TODO
+ *    - f>BlogNID>GroupNID>RID_follower TODO
  *
  * @author Projet nebule
  * @license GNU GPLv3
@@ -584,7 +587,7 @@ class ModuleNeblog extends Module
         $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
         if (! $this->_instanceCurrentBlog->getMarkClosed())
             $this->_socialClass = 'all';
-        $memberLinks = $this->_instanceCurrentBlog->getListTypedMembersLinks($this::POST_CONTEXT, $this->_socialClass, $this->_currentItemWritersList);
+        $memberLinks = $this->_instanceCurrentBlog->getListTypedMembersLinks($this::RID_BLOG_POST, $this->_socialClass, $this->_currentItemWritersList);
 
         $list = array();
         $this->_listSigners = array();
@@ -671,7 +674,7 @@ class ModuleNeblog extends Module
     private function _displayPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::post:disp', $this::MODULE_REGISTERED_ICONS[0]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
+        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post');
     }
 
@@ -717,10 +720,12 @@ class ModuleNeblog extends Module
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             if ($type == 'Post')
                 $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::POST_CONTEXT;
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_POST
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::POST_CONTEXT;
             else
                 $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::PAGE_CONTEXT;
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_PAGE
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::PAGE_CONTEXT;
             $instance->setLink($link);
             $instance->setWithSubmit(false);
             $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
@@ -742,7 +747,7 @@ class ModuleNeblog extends Module
                 $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
                 $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
                 $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_PROTECTED);
-                $instance->setIconText('::createProtectedNode');
+                $instance->setIconText('::createProtected' . $type);
                 $instance->setSelectList(array(
                         'n' => $this->_translateInstance->getTranslate('::no'),
                         'y' => $this->_translateInstance->getTranslate('::yes'),
@@ -790,21 +795,21 @@ class ModuleNeblog extends Module
     private function _displayModPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::post:mod', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[9], true);
+        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[9], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayDelPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::post:del', $this::MODULE_REGISTERED_ICONS[4]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
+        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_displayNotImplemented(); // TODO
     }
 
     private function _displayPage(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::page:disp', $this::MODULE_REGISTERED_ICONS[0]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
+        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[14], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('page');
     }
 
@@ -812,7 +817,6 @@ class ModuleNeblog extends Module
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($this->_instanceCurrentBlogPage !== null) {
             $this->_displayContent($this->_instanceCurrentBlogPage, 'selfMenuPage', 'page');
-            //$this->_displayContentAnswers($this->_instanceCurrentBlogPage);
         } else
             $this->_displayNotSupported();
     }
@@ -826,7 +830,7 @@ class ModuleNeblog extends Module
             $blogNID = $this->_instanceCurrentBlog->getID();
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $this->_displayAddButton($instanceList, '::returnBlog', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
+        $this->_displayAddButton($instanceList, '::returnToBlog', \Nebule\Library\DisplayItemIconMessage::TYPE_BACK,
             '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
             . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
@@ -864,7 +868,7 @@ class ModuleNeblog extends Module
         $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
         if (! $this->_instanceCurrentBlog->getMarkClosed())
             $this->_socialClass = 'all';
-        $memberLinks = $this->_instanceCurrentBlog->getListTypedMembersLinks($this::PAGE_CONTEXT, $this->_socialClass, $this->_currentItemWritersList);
+        $memberLinks = $this->_instanceCurrentBlog->getListTypedMembersLinks($this::RID_BLOG_PAGE, $this->_socialClass, $this->_currentItemWritersList);
 
         $list = array();
         $this->_listSigners = array();
@@ -906,61 +910,10 @@ class ModuleNeblog extends Module
     private function _displayRightsBlog(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::returnBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
+        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog_rights');
     }
 
-
-
-    public function actions(): void {
-        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_POST_NAME) && $this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_POST_CONTENT))
-                $this->_setNewBlogPost();
-        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_ANSWER))
-                $this->_setNewAnswerOID();
-        if ($this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_PAGE_NAME) && $this->_nebuleInstance->getHaveInput(self::COMMAND_ACTION_NEW_PAGE_CONTENT))
-                $this->_setNewPageNID();
-    }
-
-    /*private function _extractActionAddPost(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
-            $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b54fc74c');
-
-            $this->_actionAddPostName = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_NAME);
-            $this->_actionAddPostContent = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_CONTENT);
-            if ($this->_actionAddPostContent != '') {
-                $this->_metrologyInstance->addLog('extract action add blog post', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '48cdf007');
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function _extractActionAddAnswer(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
-            $this->_metrologyInstance->addLog('extract action add answer', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '8e1f227c');
-
-            $this->_actionAddAnswerContent = $this->getFilterInput(self::COMMAND_ACTION_NEW_ANSWER);
-            if ($this->_actionAddAnswerContent != '') {
-                $this->_metrologyInstance->addLog('extract action add answer:' . $this->_actionAddAnswerContent, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '1645ca53');
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function _extractActionAddPage(): bool {
-        if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token'))) {
-            $this->_metrologyInstance->addLog('extract action add blog page', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b7e2f6c2');
-
-            $this->_actionAddPageName = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_NAME);
-            $this->_actionAddPageContent = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_CONTENT);
-            if ($this->_actionAddPageContent != '') {
-                $this->_metrologyInstance->addLog('extract action add blog page', Metrology::LOG_LEVEL_NORMAL, __METHOD__, '074a9b57');
-                return true;
-            }
-        }
-        return false;
-    }*/
 
 
     // Common functions
@@ -1151,42 +1104,86 @@ class ModuleNeblog extends Module
         $this->_displayNotImplemented(); // TODO
     }
 
-    private function _displayContentAnswers(\Nebule\Library\Node $nid): void {
+    private function _displayContentAnswers(\Nebule\Library\Group $nid): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_displaySimpleTitle('::answ:list', $this::MODULE_REGISTERED_ICONS[1]);
         if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
-            && $this->_instanceCurrentBlog !== null) { // FIXME add inside the list
-            // Add answer query
-            ?>
+            && $this->_instanceCurrentBlog !== null) {
+            $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
 
-            <div>
-                <h1>New answer</h1>
-                <div>
-                    <form enctype="multipart/form-data" method="post"
-                          action="<?php echo '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                              . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                              . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
-                              . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
-                              . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                              . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(); ?>">
-                        <label>
-                            <input type="text" class="newanswer"
-                                   name="<?php echo self::COMMAND_ACTION_NEW_ANSWER; ?>"
-                                   value="Answer"/>
-                        </label><br/>
-                        <input type="submit"
-                               value="Create"/>
-                    </form>
-                </div>
-            </div>
-            <?php
-        } else
-            $this->_displayNotSupported();
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXTAREA);
+            $instance->setInputValue('');
+            $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTENT);
+            //$instance->setIconText(References::REFERENCE_NEBULE_OBJET_NOM);
+            $instance->setWithFormOpen(true);
+            $instance->setWithFormClose(false);
+            $link = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_ANSWER
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPE_MIME . '=' . References::REFERENCE_OBJECT_TEXT
+                . '&' . References::COMMAND_SELECT_GROUP . '=' . $nid->getID()
+                . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+            $instance->setLink($link);
+            $instance->setWithSubmit(false);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_WARN_RID);
+            $instanceList->addItem($instance);
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_PROTECTED);
+                $instance->setIconText('::createProtectedComment');
+                $instance->setSelectList(array(
+                        'n' => $this->_translateInstance->getTranslate('::no'),
+                        'y' => $this->_translateInstance->getTranslate('::yes'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
+
+            if ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')) {
+                $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+                $instance->setType(\Nebule\Library\DisplayQuery::QUERY_SELECT);
+                $instance->setInputName(\Nebule\Library\ActionsGroups::CREATE_MEMBER_OBFUSCATED);
+                $instance->setIconText('::createObfuscatedComment');
+                $instance->setSelectList(array(
+                        'n' => $this->_translateInstance->getTranslate('::no'),
+                        'y' => $this->_translateInstance->getTranslate('::yes'),
+                ));
+                $instance->setWithFormOpen(false);
+                $instance->setWithFormClose(false);
+                $instance->setWithSubmit(false);
+                $instanceList->addItem($instance);
+            }
+
+            $instance = new \Nebule\Library\DisplayQuery($this->_applicationInstance);
+            $instance->setType(\Nebule\Library\DisplayQuery::QUERY_TEXT);
+            $instance->setMessage('::createTheComment');
+            $instance->setInputValue('');
+            $instance->setInputName($this->_translateInstance->getTranslate('::createTheComment'));
+            $instance->setIconText('::confirm');
+            $instance->setWithFormOpen(false);
+            $instance->setWithFormClose(true);
+            $instance->setWithSubmit(true);
+            $instance->setIconRID(\Nebule\Library\DisplayItemIconMessage::ICON_PLAY_RID);
+            $instanceList->addItem($instance);
+
+            $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+            $instanceList->setOnePerLine();
+            $instanceList->display();
+        }
 
         // List of answers
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_LONG);
-        $list = $this->_getLinksAnswerOID($nid, 'all');
+        $list = $this->_getLinksAnswerOID($nid, 'all'); //FIXME not all
         foreach ($list as $link) {
             $parsedLink = $link->getParsed();
             $blogAnswerNID = $parsedLink['bl/rl/nid2'];
@@ -1198,9 +1195,11 @@ class ModuleNeblog extends Module
             $instance->setEnableColor(true);
             $instance->setEnableIcon(true);
             $instance->setEnableName(true);
-            $instance->setEnableFlags(false);
+            $instance->setEnableFlags(true);
             $instance->setEnableFlagState(false);
-            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableFlagProtection(true);
+            $instance->setEnableFlagObfuscate(true);
+            $instance->setEnableFlagEmotions(true);
             $instance->setEnableStatus(false);
             $instance->setEnableContent(true);
             $instance->setEnableJS(false);
@@ -1208,7 +1207,7 @@ class ModuleNeblog extends Module
             $instance->setRefs(array($blogAnswerSID));
             $instanceList->addItem($instance);
         }
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setEnableWarnIfEmpty();
         $instanceList->setOnePerLine(true);
         $instanceList->display();
@@ -1216,70 +1215,13 @@ class ModuleNeblog extends Module
 
 
 
-    /*
-     * Posts on blogs
-     *
-     * On a blog 'BlogOID', definition of a new post with 'PostNID' NID and link to content 'ContentOID' OID:
-     *  - f>BlogOID>PostNID>RID_BLOG_POST:
-     * PostNID should not have content.
-     * PostNID can have a name.
-     * PostNID can have an update.
-     *  - f>PostNID>ContentOID>RID_BLOG_CONTENT>OrderNID:
-     * ContentOID must have content.
-     * ContentOID should not have a name.
-     * ContentOID can have update.
-     * OrderNID reflects the order of a content on the list of contents to display.
-     */
     private function _getLinksPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $blog->getListTypedMembersLinks($this::POST_CONTEXT, $socialClass, $this->_currentItemWritersList);
-        /*$links = array();
-        $this->_getLinksF($links, $blog, self::RID_BLOG_POST, true, $socialClass);
-        $this->_metrologyInstance->addLog('size of post list=' . sizeof($links), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'b81aeb71');
-        return $links;*/
-    }
-    private function _getListPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_getLinksPostNID($blog, $socialClass);
-        return $this->_getOnLinksNID2($links);
+        return $blog->getListTypedMembersLinks($this::RID_BLOG_POST, $socialClass, $this->_currentItemWritersList);
     }
     private function _getCountPostNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): int {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPostNID($blog, $socialClass));
-    }
-    private function _setNewBlogPost(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
-            return;
-        if ($this->_instanceCurrentBlog === null)
-            return;
-
-        $name = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_NAME);
-        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_POST_CONTENT);
-
-        // Create PostNID
-        $instanceNode = $this->_cacheInstance->newVirtualNode();
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $this->_metrologyInstance->addLog('new blog post nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '5e3b8f18');
-        $instanceBL->addLink('f>' . $this->_instanceCurrentBlog->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_POST);
-        $instanceBL->signWrite();
-
-        // Create name
-        $instanceNode->setName($name);
-
-        // Create PostOID
-        $instanceObject = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
-        $instanceObject->setWriteContent($content);
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $this->_metrologyInstance->addLog('new blog post nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fd1f9a24');
-        $instanceBL->addLink('f>' . $instanceNode->getID() . '>' . $instanceObject->getID() . '>' . self::RID_BLOG_CONTENT . '>0010000000000000.none.64');
-        $instanceBL->signWrite();
-
-        // Create type
-        $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
-    }
-    private function _getPostNID(\Nebule\Library\Node $blog, \Nebule\Library\Node $post): void {
-        // TODO
     }
     private function _getLinksContentOID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -1296,151 +1238,23 @@ class ModuleNeblog extends Module
 
 
 
-    /*
-     * Answers of posts on blogs
-     *
-     * On an post 'PostNID', definition of a new answer with 'AnswerOID' OID:
-     *  - f>PostNID>AnswerOID>RID_BLOG_ANSWER
-     * AnswerOID must have content.
-     * AnswerOID should not have name.
-     * AnswerOID can have update.
-     * Only one level of answer for now. TODO
-     */
-    private function _getLinksAnswerOID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
+    private function _getLinksAnswerOID(\Nebule\Library\Group $post, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = array();
-        $this->_getLinksF($links, $post, self::RID_BLOG_ANSWER, false, $socialClass);
-        return $links;
-    }
-    private function _getListAnswerNID(\Nebule\Library\Node $post, string $socialClass = 'self'): array {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_getLinksAnswerOID($post, $socialClass);
-        return $this->_getOnLinksNID2($links);
-    }
-    private function _getCountAnswerOID(\Nebule\Library\Node $post, string $socialClass = 'self'): int {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return sizeof($this->_getLinksAnswerOID($post, $socialClass));
-    }
-    private function _setNewAnswerOID(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
-            return;
-        if ($this->_instanceCurrentBlogPost === null)
-            return;
-        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_ANSWER);
-        $instanceNode = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
-        $instanceNode->setWriteContent($content);
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $this->_metrologyInstance->addLog('new blog post answer oid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '89b709e6');
-        $instanceBL->addLink('f>' . $this->_instanceCurrentBlogPost->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_ANSWER);
-        $instanceBL->signWrite();
-        $instanceNode->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
-    }
-    private function _getAnswerOID(\Nebule\Library\Node $blog, \Nebule\Library\Node $post): void {
-        // TODO
-    }
-
-
-
-    /*
-     * Pages on blogs
-     *
-     * On a blog 'BlogOID', definition of a new page with 'PageNID' NID and link to content 'PageOID' OID:
-     *  - f>BlogOID>PageNID>RID_BLOG_PAGE:
-     * PageNID should not have content.
-     * PageNID can have name.
-     * PageNID can have update.
-     *  - f>PageNID>ContentOID>RID_BLOG_CONTENT>OrderNID:
-     * ContentOID must have content.
-     * ContentOID should not have name.
-     * ContentOID can have update.
-     * OrderNID reflects the order of a content on the list of contents to display.
-     */
-    private function _getLinksPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        return $blog->getListTypedMembersLinks($this::PAGE_CONTEXT, $socialClass, $this->_currentItemWritersList);
+        return $post->getListTypedMembersLinks($this::RID_BLOG_ANSWER, $socialClass, $this->_currentItemFollowersList);
         /*$links = array();
-        $this->_getLinksF($links, $blog, self::RID_BLOG_PAGE, true, $socialClass);
+        $this->_getLinksF($links, $post, self::RID_BLOG_ANSWER, false, $socialClass);
         return $links;*/
     }
-    private function _getListPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
+
+
+
+    private function _getLinksPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): array {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = $this->_getLinksPageNID($blog, $socialClass);
-        return $this->_getOnLinksNID2($links);
+        return $blog->getListTypedMembersLinks($this::RID_BLOG_PAGE, $socialClass, $this->_currentItemWritersList);
     }
     private function _getCountPageNID(\Nebule\Library\Group $blog, string $socialClass = 'self'): int {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         return sizeof($this->_getLinksPageNID($blog, $socialClass));
-    }
-    private function _setNewPageNID(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if (! $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked', 'token')))
-            return;
-        if ($this->_instanceCurrentBlog === null)
-            return;
-
-        $name = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_NAME);
-        $content = $this->getFilterInput(self::COMMAND_ACTION_NEW_PAGE_CONTENT);
-
-        // Create PageNID
-        $instanceNode = $this->_cacheInstance->newVirtualNode();
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $this->_metrologyInstance->addLog('new blog page nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, '94d38ae6');
-        $instanceBL->addLink('f>' . $this->_instanceCurrentBlog->getID() . '>' . $instanceNode->getID() . '>' . self::RID_BLOG_PAGE);
-        $instanceBL->signWrite();
-        $instanceNode->setName($name);
-
-        // Create PageOID
-        $instanceObject = new \Nebule\Library\Node($this->_nebuleInstance, 'new');
-        $instanceObject->setWriteContent($content);
-        $instanceBL = new \Nebule\Library\BlocLink($this->_nebuleInstance, 'new');
-        $this->_metrologyInstance->addLog('new blog page nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fc4f137c');
-        $instanceBL->addLink('f>' . $instanceNode->getID() . '>' . $instanceObject->getID() . '>' . self::RID_BLOG_CONTENT . '>0010000000000000.none.64');
-        $instanceBL->signWrite();
-        $instanceObject->setType(\Nebule\Library\References::REFERENCE_OBJECT_TEXT);
-    }
-    private function _getPageNID(\Nebule\Library\Node $blog, \Nebule\Library\Node $page): void {
-        // TODO
-    }
-
-    /**
-     * @return void
-     */
-    public function _displayOwner(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::owners', Displays::DEFAULT_ICON_ENT);
-        $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceIcon = $this->_cacheInstance->newNodeByType(Displays::DEFAULT_ICON_USER);
-        foreach ($this->_currentItemListOwners as $eid) {
-            $instanceOwner = $this->_cacheInstance->newNodeByType($eid, \Nebule\Library\Cache::TYPE_ENTITY);
-            if (is_a($instanceOwner, '\Nebule\Library\Entity') && $instanceOwner->getID() != '0') {
-                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-                $instance->setSocial('all');
-                $instance->setNID($instanceOwner);
-                $instance->setEnableColor(true);
-                $instance->setEnableIcon(true);
-                $instance->setEnableName(true);
-                $instance->setEnableRefs(false);
-                $instance->setEnableFlags(false);
-                $instance->setEnableFlagUnlocked(false);
-                $instance->setEnableFlagProtection(false);
-                $instance->setEnableFlagObfuscate(false);
-                $instance->setEnableFlagState(true);
-                $instance->setEnableFlagEmotions(false);
-                $instance->setEnableStatus(false);
-                $instance->setEnableContent(false);
-                $instance->setEnableJS(false);
-                $instance->setEnableLink(true);
-                $instance->setFlagUnlocked($instanceOwner->getHavePrivateKeyPassword());
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setIcon($instanceIcon);
-                $instanceList->addItem($instance);
-            }
-        }
-        $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
-        $instanceList->setEnableWarnIfEmpty();
-        $instanceList->setOnePerLine(true);
-        $instanceList->display();
     }
 
 
@@ -1468,7 +1282,6 @@ class ModuleNeblog extends Module
             '::blog:mod' => 'Modify the blog',
             '::blog:del' => 'Delete the blog',
             '::blog:sync' => 'Synchronize the blog',
-            '::returnBlog' => 'Return to the blog',
             '::blog:default' => 'Default blog',
             '::blog:rights' => 'Authorizations on blog',
             '::post:list' => 'List of posts',

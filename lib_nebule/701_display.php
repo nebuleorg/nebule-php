@@ -4375,13 +4375,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Prépare à afficher le contenu d'un objet suivant sont type.
      *
-     * @param string|Node $object
-     * @param string      $sizeCSS  [tiny|small|medium|large|full]
-     * @param string      $ratioCSS [short|long]
-     * @param bool        $permitWarnProtected
+     * @param Node   $object
+     * @param string $sizeCSS  [tiny|small|medium|large|full]
+     * @param string $ratioCSS [short|long]
+     * @param bool   $permitWarnProtected
      * @return string
      */
-    public function getDisplayObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string {
+    public function getDisplayObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string {
         $result = '';
 
         if ($sizeCSS != 'full'
@@ -4397,29 +4397,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $ratioCSS = 'short';
 
-        // Vérifie que c'est un objet.
-        if (!is_a($object, 'Nebule\Library\Node')
-            && !is_a($object, 'Nebule\Library\Group')
-            && !is_a($object, 'Nebule\Library\Entity')
-            && !is_a($object, 'Nebule\Library\Conversation')
-            && !is_a($object, 'Nebule\Library\Currency')
-            && !is_a($object, 'Nebule\Library\TokenPool')
-            && !is_a($object, 'Nebule\Library\Token')
-            && !is_a($object, 'Nebule\Library\Transaction')
-            && !is_a($object, 'Nebule\Library\Wallet')
-        ) {
-            $object = $this->_cacheInstance->newNodeByType($object);
-            $id = $object->getID();
-            if ($object->getType('all') == References::REFERENCE_OBJECT_ENTITY
-                && strpos($object->readOneLineAsText(Entity::ENTITY_MAX_SIZE), References::REFERENCE_ENTITY_HEADER) !== false
-            )
-                $object = $this->_cacheInstance->newEntity($id);
-            elseif ($object->getIsGroup('all'))
-                $object = $this->_cacheInstance->newGroup($id);
-            elseif ($object->getIsConversation('all'))
-                $object = $this->_cacheInstance->newNodeByType($id, \Nebule\Library\Cache::TYPE_CONVERSATION);
-        }
-
+        $id = $object->getID();
         $type = $object->getType('all');
 
         $result .= '<div class="objectContent">' . "\n";
@@ -4455,7 +4433,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             } else {
                 $notify = new DisplayNotify($this->_applicationInstance);
                 $notify->setMessage('::display:content:errorNotAvailable');
-                $notify->setType(DisplayNotify::TYPE_ERROR);
+                $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
                 $result .= $notify->getHTML();
             }
         } elseif (is_a($object, 'Nebule\Library\Group')) {
@@ -4489,13 +4467,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * Affiche un objet sans tenir compte de son type nebule (Entity|Group|Conversation).
      * Mais affiche l'objet en fonction de son type mime déclaré.
      *
-     * @param string|Node $object
-     * @param string      $sizeCSS  [tiny|small|medium|large|full]
-     * @param string      $ratioCSS [short|long]
-     * @param bool        $permitWarnProtected
+     * @param Node   $object
+     * @param string $sizeCSS  [tiny|small|medium|large|full]
+     * @param string $ratioCSS [short|long]
+     * @param bool   $permitWarnProtected
      * @return string
      */
-    public function getDisplayAsObjectContent($object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
+    public function getDisplayAsObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
     {
         $result = '';
 
@@ -4512,13 +4490,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         )
             $ratioCSS = 'short';
 
-        // Vérifie que c'est un objet.
-        if (!is_a($object, 'Nebule\Library\Node')
-            && !is_a($object, 'Nebule\Library\Group')
-            && !is_a($object, 'Nebule\Library\Entity')
-            && !is_a($object, 'Nebule\Library\Conversation')
-        )
-            $object = $this->_cacheInstance->newNodeByType($object);
         $id = $object->getID();
 
         // Vérifie si il est protégé
