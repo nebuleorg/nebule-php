@@ -122,18 +122,12 @@ class ModuleNeblog extends Module
     const COMMAND_SELECT_BLOG = 'blog';
     const COMMAND_SELECT_ITEM = 'blog';
     const COMMAND_SELECT_POST = 'post';
-    const COMMAND_SELECT_ANSWER = 'answ';
     const COMMAND_SELECT_PAGE= 'page';
     const COMMAND_ACTION_GET_BLOG_NID = 'actiongetblognid';
     const COMMAND_ACTION_GET_BLOG_URL = 'actiongetblogurl';
     const COMMAND_ACTION_SYNC_BLOG_NID = 'actionsyncblognid';
     const COMMAND_ACTION_SYNC_BLOG = 'actionsyncblog';
-    const COMMAND_ACTION_NEW_POST_NAME = 'actionnewpostname';
-    const COMMAND_ACTION_NEW_POST_CONTENT = 'actionnewpostcontent';
     const COMMAND_ACTION_SYNC_POST = 'actionsyncpost';
-    const COMMAND_ACTION_NEW_ANSWER = 'actionnewanswcontent';
-    const COMMAND_ACTION_NEW_PAGE_NAME = 'actionnewpagename';
-    const COMMAND_ACTION_NEW_PAGE_CONTENT = 'actionnewpagecontent';
     const COMMAND_ACTION_SYNC_PAGE = 'actionsyncpage';
     const RID_BLOG_NODE = 'cd9fd328c6b2aadd42ace4254bd70f90d636600db6ed9079c0138bd80c4347755d98.none.272';
     const RID_BLOG_DEFAULT = 'dd7a63bd324437ac05e82f5e278844f9a260082270f7cb18f37066f9ed83a5a06be4.none.272';
@@ -142,11 +136,6 @@ class ModuleNeblog extends Module
     const RID_BLOG_PAGE = '0188e8440a7cb80ade4affb0449ae92b089bed48d380024a625ab54826d4a2c2ca67.none.272';
     const RID_BLOG_CONTENT = '6178f3de25e2acad0a4dfe5b8bffabec8e5eac50898a8efcb52d2c635697f25d680a.none.272';
 
-    protected string $_actionAddPostName = '';
-    protected string $_actionAddPostContent = '';
-    protected string $_actionAddAnswerContent = '';
-    protected string $_actionAddPageName = '';
-    protected string $_actionAddPageContent = '';
     protected ?\Nebule\Library\node $_instanceBlogNodeRID = null;
     protected ?\Nebule\Library\Group $_instanceCurrentBlog = null;
     protected ?\Nebule\Library\Group $_instanceCurrentBlogPost = null;
@@ -908,13 +897,6 @@ class ModuleNeblog extends Module
         $this->_displayNotImplemented(); // TODO
     }
 
-    private function _displayRightsBlog(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::rights', $this::MODULE_REGISTERED_ICONS[3]);
-        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
-        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('blog_rights');
-    }
-
 
 
     // Common functions
@@ -937,23 +919,6 @@ class ModuleNeblog extends Module
             $this->_socialInstance->unsetList('onlist');
     }
 
-    private function _getLinkL(\Nebule\Library\Node $nid1, string $nid3): ?\Nebule\Library\linkInterface {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $links = array();
-        $filter = array(
-            'bl/rl/req' => 'l',
-            'bl/rl/nid1' => $nid1->getID(),
-            'bl/rl/nid3' => $nid3,
-            'bl/rl/nid4' => '',
-        );
-        $nid1->getLinks($links, $filter);
-
-        if (sizeof($links) == 0)
-            return null;
-
-        return $links[0];
-    }
-
     private function _getOnLinksNID2(array &$links): array {
         $list = array();
         foreach ($links as $link) {
@@ -964,21 +929,6 @@ class ModuleNeblog extends Module
             $list[$nid] = $oid;
         }
         return $list;
-    }
-
-    private function _getOnLinkNID2(?\Nebule\Library\linkInterface $link): string {
-        if ($link === null)
-            return '';
-        return $link->getParsed()['bl/rl/nid2'];
-    }
-
-    private function _getContentNID(\Nebule\Library\Node $nid): \Nebule\Library\Node {
-        $link = $this->_getLinkL($nid, self::RID_BLOG_CONTENT);
-        if ($link !== null)
-            $oid = $this->_getOnLinkNID2($link);
-        else
-            $oid = '0';
-        return $this->_cacheInstance->newNodeByType($oid);
     }
 
     private function _displayBackOrLoginLocal(string $backMessage, string $backView, bool $addBlog = false): void {
