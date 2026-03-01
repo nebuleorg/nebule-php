@@ -151,11 +151,7 @@ class ModuleObjects extends Module {
                     $hookArray[4]['link'] = '?o=' . $id;
 
                     // Si l'entité est déverrouillée.
-                    if ($this->_unlocked
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    ) {
+                    if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
                         // Supprimer l'objet.
                         $hookArray[5]['name'] = '::ObjectDelete';
                         $hookArray[5]['icon'] = Displays::DEFAULT_ICON_LD;
@@ -778,11 +774,7 @@ class ModuleObjects extends Module {
             );
 
             // N'affiche un message que si la modification est possible.
-            if ($this->_unlocked
-                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            ) {
+            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
                 // Vérifie la présence de l'objet.
                 if ($object->checkPresent()
                     && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityEID()
@@ -842,10 +834,7 @@ class ModuleObjects extends Module {
 
             // Ajoute l'action de protection.
             if ($object->checkPresent()
-                && $this->_unlocked
-                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+                && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
                 && $this->_applicationInstance->getCurrentObjectID() != $this->_entitiesInstance->getGhostEntityEID()
             ) {
                 $list[2]['param']['selfHookList'][0]['name'] = '::ProtectObject';
@@ -978,11 +967,7 @@ class ModuleObjects extends Module {
 
 
                     // Ajout l'action de déprotection ou de suppression de partage de protection.
-                    if ($this->_unlocked
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                        && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-                    ) {
+                    if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
                         if ($entity == $this->_entitiesInstance->getGhostEntityEID()) {
                             // Déprotéger l'objet.
                             $list[$i]['param']['selfHookList'][0]['name'] = '::UnprotectObject';
@@ -1060,11 +1045,7 @@ class ModuleObjects extends Module {
             // affichage des boutons.
             echo $this->_displayInstance->getDisplayHookMenuList('::sylabe:module:objet:ProtectionShareButtons', 'medium');
 
-            if ($this->_unlocked
-                && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-                && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
-            ) {
+            if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
                 $icon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[3]);
                 $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
                 $instance->setTitle('::ShareObjectProtection');
@@ -1089,10 +1070,7 @@ class ModuleObjects extends Module {
 
         // Si l'objet est présent et protégé et si l'entité est déverrouillée
         if ($object->getMarkProtected()
-            && $this->_unlocked
-            && $this->_configurationInstance->getOptionAsBoolean('permitWrite')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
-            && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
+            && $this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
         ) {
             $listOkEntities = array();
             $listOkGroups = array();
