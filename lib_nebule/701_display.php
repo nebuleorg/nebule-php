@@ -1838,7 +1838,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     $this->_metrologyInstance->addLog('Display content', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '58d043ab');
                     $this->_displayModuleContent();
 
-                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
+                    $this->_metrologyInstance->addLog('Display metrology', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                     $this->_displayMetrology();
                     ?>
 
@@ -1879,6 +1879,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 <?php
                 $this->_actionInstance->getDisplayActions();
                 ?>
+                <p style="color: #ffff00; font-size: 16px; font-weight: bold;">/// /// /// EXPERIMENTAL /// /// ///</p>
 
             </p>
         </div>
@@ -2187,7 +2188,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         /*if ($this->_configurationInstance->getOptionUntyped('sylabeDisplayMetrology')) {
             ?>
 
-            <?php $this->displayDivTextTitle_DEPRECATED(self::DEFAULT_ICON_IMLOG, 'Métrologie', 'Mesures quantitatives et temporelles.') ?>
+            <?php
+            $instance = new \Nebule\Library\DisplayTitle($this->_applicationInstance);
+            $instance->setTitle('Metrology');
+            $instance->display();
+            ?>
             <div class="text">
                 <p>
                     <?php
