@@ -701,15 +701,16 @@ class ModuleNeblog extends Module
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_IS_GROUP
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $this->_instanceCurrentBlog->getID()
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPE_MIME . '=' . References::REFERENCE_OBJECT_TEXT
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
                 . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             if ($type == 'Post')
                 $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_POST
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_GROUP_TYPED . '=' . $this::RID_BLOG_POST
                     . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::POST_CONTEXT;
             else
                 $link .= '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
-                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_PAGE
+                    . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_GROUP_TYPED . '=' . $this::RID_BLOG_PAGE
                     . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_CONTEXT . '=' . $this::PAGE_CONTEXT;
             $instance->setLink($link);
             $instance->setWithSubmit(false);
@@ -1065,7 +1066,7 @@ class ModuleNeblog extends Module
                 . '&' . self::COMMAND_SELECT_BLOG . '=' . $this->_instanceCurrentBlog->getID()
                 . '&' . self::COMMAND_SELECT_POST . '=' . $nid->getID()
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER
-                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPED . '=' . $this::RID_BLOG_ANSWER
+                . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_GROUP_TYPED . '=' . $this::RID_BLOG_ANSWER
                 . '&' . \Nebule\Library\ActionsGroups::CREATE_MEMBER_TYPE_MIME . '=' . References::REFERENCE_OBJECT_TEXT
                 . '&' . References::COMMAND_SELECT_GROUP . '=' . $nid->getID()
                 . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()

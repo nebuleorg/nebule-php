@@ -30,11 +30,11 @@ class ActionsGroups extends Actions implements ActionsInterface {
     const CREATE_MEMBER = 'action_group_create_member';
     const CREATE_MEMBER_NAME = 'action_group_create_member_name';
     const CREATE_MEMBER_TYPE_MIME = 'action_group_create_member_type_mime';
-    const CREATE_MEMBER_TYPED = 'action_group_create_member_type';
     const CREATE_MEMBER_CONTEXT = 'action_group_create_member_context';
     const CREATE_MEMBER_OBFUSCATED = 'action_group_create_member_obf';
     const CREATE_MEMBER_PROTECTED = 'action_group_create_member_prt';
     const CREATE_MEMBER_IS_GROUP = 'action_group_create_member_is_group';
+    const CREATE_MEMBER_GROUP_TYPED = 'action_group_create_member_type';
     const CREATE_MEMBER_CONTENT = 'action_group_create_member_content';
     const CREATE_MEMBER_CONTENT_INDEX = 'action_group_create_member_content_index';
 
@@ -241,17 +241,16 @@ class ActionsGroups extends Actions implements ActionsInterface {
             $this->_actionAddCreateMember = $this->getFilterInput(self::CREATE_MEMBER, FILTER_FLAG_ENCODE_LOW);
             $name = $this->getFilterInput(self::CREATE_MEMBER_NAME, FILTER_FLAG_NO_ENCODE_QUOTES);
             $context = $this->getFilterInput(self::CREATE_MEMBER_CONTEXT, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $typeMime = $this->getFilterInput(self::CREATE_MEMBER_TYPE_MIME, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $typed = $this->getFilterInput(self::CREATE_MEMBER_TYPED, FILTER_FLAG_NO_ENCODE_QUOTES);
             $obfuscated = ($this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink') && $this->getHaveInput(self::CREATE_MEMBER_OBFUSCATED));
             $protected = ($this->_configurationInstance->getOptionAsBoolean('permitProtectedObject') && $this->getHaveInput(self::CREATE_MEMBER_PROTECTED));
+
             $isGroup = $this->getHaveInput(self::CREATE_MEMBER_IS_GROUP);
+            $typed = $this->getFilterInput(self::CREATE_MEMBER_GROUP_TYPED, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-
-
-            // TODO add content and indexed content
             $content = $this->getFilterInput(self::CREATE_MEMBER_CONTENT, FILTER_FLAG_NO_ENCODE_QUOTES);
             $index = $this->getFilterInput(self::CREATE_MEMBER_CONTENT_INDEX, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $typeMime = $this->getFilterInput(self::CREATE_MEMBER_TYPE_MIME, FILTER_FLAG_NO_ENCODE_QUOTES);
+
             $nid = '';
             if ($content != '') {
                 if ($index == '') {
@@ -260,6 +259,8 @@ class ActionsGroups extends Actions implements ActionsInterface {
                     if ($protected)
                         $instance->setProtected($obfuscated);
                     $instance->write();
+                    if ($typeMime != '')
+                        $instance->setType($typeMime);
                     $nid = $instance->getID();
                     $this->_metrologyInstance->addLog('create group with content nid=' . $nid, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '4c921139');
                 } else {
@@ -269,22 +270,20 @@ class ActionsGroups extends Actions implements ActionsInterface {
                     if ($protected)
                         $nodeContent->setProtected($obfuscated);
                     $nodeContent->write();
+                    if ($typeMime != '')
+                        $nodeContent->setType($typeMime);
                     $nid = $instance->getID();
-                    $this->_metrologyInstance->addLog('create group with content nid=' . $nid . ' and index=' . $index, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '219474b1');
-                    $instance->setAsMemberNID($nodeContent->getID(), $obfuscated);
+                    $this->_metrologyInstance->addLog('create group gid=' . $nid . ' with content nid=' . $nodeContent->getID() . ' and index=' . $index, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '219474b1');
+                    $instance->setAsMemberNID($nodeContent->getID(), $obfuscated, $index);
                 }
             }
 
-
-
             $this->_createInstance = new Group($this->_nebuleInstance, $nid);
-            $this->_metrologyInstance->addLog('create group name=' . $name . ' gid=' . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'eff13303');
+            $this->_metrologyInstance->addLog("create group name='" . $name . "' gid=" . $this->_createInstance->getID(), Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'eff13303');
             if ($name != '')
                 $this->_createInstance->setName($name);
             if ($isGroup)
                 $this->_createInstance->setAsGroup($obfuscated, $context);
-            if ($typeMime != '')
-                $this->_createInstance->setType($typeMime);
             if ($typed == '')
                 $this->_actionAddCreateMemberError = (!$instanceGroup->setAsMemberNID($this->_createInstance->getID(), $obfuscated));
             else

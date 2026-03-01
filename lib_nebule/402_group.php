@@ -365,7 +365,7 @@ class Group extends Node implements nodeInterface {
      * @param string $socialClass
      * @return boolean
      */
-    public function getIsMemberTypedNID(string $nid, string $type, string $socialClass = ''): bool {
+    public function getIsMemberTypedNID(string $nid, string $type, string $socialClass = '', string $index = ''): bool {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!Node::checkNID($nid)) {
             $this->_metrologyInstance->addLog('nid=' . $nid . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'ac6a7b0b');
@@ -375,13 +375,18 @@ class Group extends Node implements nodeInterface {
             $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'bb3085fc');
             return false;
         }
+        if (!Node::checkNID($index, true)) {
+            $this->_metrologyInstance->addLog('index nid=' . $index . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4b9d4a4f');
+            return false;
+        }
         $links = $this->getLinksOnFields(
             '',
             '',
             'f',
             $this->_id,
             $nid,
-            $type
+            $type,
+            $index,
         );
         $this->_socialInstance->arraySocialFilter($links, $socialClass);
         if (sizeof($links) != 0)
@@ -390,13 +395,15 @@ class Group extends Node implements nodeInterface {
     }
 
     /**
-     * Add the object as a typed member of the group.
+     * Add the object as a typed member of the group with eventually an index.
+     *
      * @param string  $nid
      * @param string  $type
      * @param boolean $obfuscated
+     * @param string  $index
      * @return boolean
      */
-    public function setAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
+    public function setAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false, string $index = ''): bool {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
@@ -408,22 +415,30 @@ class Group extends Node implements nodeInterface {
             $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a346f4b3');
             return false;
         }
+        if (!Node::checkNID($index, true)) {
+            $this->_metrologyInstance->addLog('index nid=' . $index . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, '4b9d4a4f');
+            return false;
+        }
+        if ($index != '')
+            $index = '>' . $index;
         if ($this->getMarkObfuscated())
             $obfuscated = true;
         $this->_metrologyInstance->addLog('add member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, '695d463e');
         return $this->addLink(
-            'f>' . $this->_id . '>' . $nid . '>' . $type,
+            'f>' . $this->_id . '>' . $nid . '>' . $type . $index,
             $obfuscated);
     }
 
     /**
      * Remove the object as a member of the group.
+     *
      * @param string  $nid
      * @param string  $type
      * @param boolean $obfuscated
+     * @param string  $index
      * @return boolean
      */
-    public function unsetAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false): bool {
+    public function unsetAsTypedMemberNID(string $nid, string $type, bool $obfuscated = false, string $index = ''): bool {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitCreateLink', 'permitWriteGroup', 'permitWrite' . $this->_short_class_name , 'unlocked')))
             return false;
@@ -435,24 +450,30 @@ class Group extends Node implements nodeInterface {
             $this->_metrologyInstance->addLog('type rid=' . $type . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, '18ee9ded');
             return false;
         }
+        if (!Node::checkNID($index, true)) {
+            $this->_metrologyInstance->addLog('index nid=' . $index . ' not valid', Metrology::LOG_LEVEL_ERROR, __METHOD__, '90d82779');
+            return false;
+        }
+        if ($index != '')
+            $index = '>' . $index;
         if ($this->getMarkObfuscated())
             $obfuscated = true;
         // TODO detect previously obfuscated link.
         $this->_metrologyInstance->addLog('remove member=' . $nid . ' to group=' . $this->_id . ' with type=' . $type, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c23f3303');
         return $this->addLink(
-            'x>' . $this->_id . '>' . $nid . '>' . $type,
+            'x>' . $this->_id . '>' . $nid . '>' . $type . $index,
             $obfuscated);
     }
 
-    public function getIsMemberTyped(Node $object, string $type, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $type, $socialClass); }
-    public function setAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $type, $obfuscated); }
-    public function unsetAsTypedMember(Node $object, string $type, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($object->getID(), $type, $obfuscated); }
-    public function getIsMember(Node $object, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $this->_id, $socialClass); }
-    public function getIsMemberNID(string $nid, string $socialClass = ''): bool { return $this->getIsMemberTypedNID($nid, $this->_id, $socialClass); }
-    public function setAsMember(Node $object, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
-    public function setAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated); }
-    public function unsetAsMember(Node $object, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($object->getID(), $this->_id, $obfuscated); }
-    public function unsetAsMemberNID(string $nid, bool $obfuscated = false): bool { return $this->unsetAsTypedMemberNID($nid, $this->_id, $obfuscated); }
+    public function getIsMemberTyped(Node $object, string $type, string $socialClass = '', string $index = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $type, $socialClass, $index); }
+    public function setAsTypedMember(Node $object, string $type, bool $obfuscated = false, string $index = ''): bool { return $this->setAsTypedMemberNID($object->getID(), $type, $obfuscated, $index); }
+    public function unsetAsTypedMember(Node $object, string $type, bool $obfuscated = false, string $index = ''): bool { return $this->unsetAsTypedMemberNID($object->getID(), $type, $obfuscated, $index); }
+    public function getIsMember(Node $object, string $socialClass = '', string $index = ''): bool { return $this->getIsMemberTypedNID($object->getID(), $this->_id, $socialClass, $index); }
+    public function getIsMemberNID(string $nid, string $socialClass = '', string $index = ''): bool { return $this->getIsMemberTypedNID($nid, $this->_id, $socialClass, $index); }
+    public function setAsMember(Node $object, bool $obfuscated = false, string $index = ''): bool { return $this->setAsTypedMemberNID($object->getID(), $this->_id, $obfuscated, $index); }
+    public function setAsMemberNID(string $nid, bool $obfuscated = false, string $index = ''): bool { return $this->setAsTypedMemberNID($nid, $this->_id, $obfuscated, $index); }
+    public function unsetAsMember(Node $object, bool $obfuscated = false, string $index = ''): bool { return $this->unsetAsTypedMemberNID($object->getID(), $this->_id, $obfuscated, $index); }
+    public function unsetAsMemberNID(string $nid, bool $obfuscated = false, string $index = ''): bool { return $this->unsetAsTypedMemberNID($nid, $this->_id, $obfuscated, $index); }
 
 
 
