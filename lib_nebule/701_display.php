@@ -312,8 +312,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    protected function _findCurrentDisplayMode(): void
-    {
+    protected function _findCurrentDisplayMode(): void {
         // Prepare the right application's class to use, '\Nebule\Application\*\Display' and not '\Nebule\Library\Displays'.
         $displayClass = $this->_applicationInstance->getNamespace() . '\\Display';
 
@@ -385,8 +384,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * @return void
      */
-    protected function _findCurrentModule(): void
-    {
+    protected function _findCurrentModule(): void {
         // Récupère l'instance du module en cours.
         if ($this->_applicationInstance::USE_MODULES) {
             foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
@@ -398,11 +396,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
     }
 
-    /**
-     * Retourne le mode d'affichage en cours.
-     *
-     * @return Module
-     */
     public function getCurrentModuleInstance(): Module { return $this->_currentModuleInstance; }
 
     protected string $_currentDisplayView = '';
@@ -423,8 +416,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      *
      * @return void
      */
-    protected function _findCurrentDisplayView(): void
-    {
+    protected function _findCurrentDisplayView(): void {
         if (!$this->_applicationInstance::USE_MODULES && sizeof($this->_listDisplayModes) == 0) {
             $this->_metrologyInstance->addLog('search view, no module and no mode', Metrology::LOG_LEVEL_ERROR, __METHOD__, '82b83c17');
             return;
@@ -492,19 +484,14 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         unset($arg_view, $list_views_names, $ok_view);
     }
 
-    /**
-     * Retourne la vue en cours.
-     *
-     * @return string
-     */
     public function getCurrentDisplayView(): string { return $this->_currentDisplayView; }
+
 
 
     /**
      * Recherche l'ID de contenu online à afficher.
      */
-    protected function _findInlineContentID(): void
-    {
+    protected function _findInlineContentID(): void {
         $arg_id = $this->getFilterInput(self::COMMAND_INLINE_CONTENT, FILTER_FLAG_ENCODE_LOW);
         if ($arg_id != '')
             $this->_inlineContentID = $arg_id;
@@ -533,8 +520,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param string $options
      * @return boolean
      */
-    public function registerInlineContentID(string $id, string $options = ''): bool
-    {
+    public function registerInlineContentID(string $id, string $options = ''): bool {
         if ($id == ''
             || $id == '0'
         )
@@ -553,13 +539,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         return true;
     }
 
-    /**
-     * Affiche le nécessaire pour le contenu html à remplacer.
-     *
-     * @return boolean
-     */
-    protected function _displayInlineContentID(): bool
-    {
+    protected function _displayInlineContentID(): bool {
         if (sizeof($this->_inlineContentIndex) == 0)
             return true;
 
@@ -606,11 +586,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function getCurrentPage(): float { return $this->_currentPage; }
 
 
-    /**
-     * Affichage du style CSS commun.
-     */
-    public function commonCSS(): void
-    {
+
+    public function commonCSS(): void {
         ?>
 
         <style>
@@ -733,14 +710,24 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             .header-left {
                 height: 64px;
-                width: 64px;
-                margin: 2px;
                 float: left;
             }
 
-            .header-left img {
+            .header-left-menu {
                 height: 64px;
                 width: 64px;
+                float: left;
+            }
+
+            .header-left-menu img {
+                height: 64px;
+                width: 64px;
+            }
+
+            .header-left-ent {
+                height: 64px;
+                margin-top: -5px;
+                float: right;
             }
 
             .header-right {
@@ -1444,20 +1431,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         DisplayQuery::displayCSS();
     }
 
-    /**
-     * Affichage du style CSS de l'application.
-     */
     public function displayCSS(): void {} // This function must be overloaded by applications.
 
 
-    /**
-     * Affichage des scripts JS communs.
-     * Si l'option permitJavaScript est à false, cette partie est désactivée.
-     *
-     * @return void
-     */
-    public function commonScripts(): void
-    {
+
+    public function commonScripts(): void {
         if (!$this->_configurationInstance->getOptionAsBoolean('permitJavaScript'))
             return;
         ?>
@@ -1635,147 +1613,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
     }
 
-    /**
-     * Prepare links depending on modules loaded.
-     */
-    protected function _configureLinks(): void
-    {
-        /*if (!$this->_applicationInstance::USE_MODULES)
-            return;
-
-        $namespace = '\\' . __NAMESPACE__ . '\\';
-
-        // Prefix objects.
-        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleObjects')
-            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleObjects')
-        ) {
-            $this->setUrlLinkObjectPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        } else {
-            $this->setUrlLinkObjectPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-        }
-
-        // Prefix for entities.
-        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleEntities')
-            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleEntities')
-        ) {
-            $this->setUrlLinkEntityPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleEntities')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_ENTITY . '=');
-        } else {
-            $this->setUrlLinkEntityPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-        }
-        
-        // Prefix for groups.
-        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleGroups')
-            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleGroups')
-        ) {
-            $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleGroups')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_GROUP . '=');
-        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
-            $this->setUrlLinkGroupPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        } else {
-            $this->setUrlLinkGroupPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-        }
-
-        // Prefix pour les conversations.
-        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'ModuleMessenger')
-            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleMessenger')
-        ) {
-            $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('Nebule\\Modules\\ModuleMessenger')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_CONVERSATION . '=');
-        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
-            $this->setUrlLinkConversationPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        } else {
-            $this->setUrlLinkConversationPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-        }
-
-        // Prefix currencies. FIXME
-        if ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('ModuleQantion')
-            || $this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded('\\Nebule\\Modules\\ModuleQantion')
-        ) {
-            $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[3]
-                . '&' . References::COMMAND_SELECT_CURRENCY . '=');
-            $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[8]
-                . '&' . References::COMMAND_SELECT_TOKENPOOL . '=');
-            $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[13]
-                . '&' . References::COMMAND_SELECT_TOKENCOIN . '=');
-            $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[19]
-                . '&' . References::COMMAND_SELECT_TRANSACTION . '=');
-            $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule('ModuleQantion')::MODULE_REGISTERED_VIEWS[23]
-                . '&' . References::COMMAND_SELECT_WALLET . '=');
-        } elseif ($this->_applicationInstance->getApplicationModulesInstance()->getIsModuleLoaded($namespace . 'Nebule\\Modules\\ModuleObjects')) {
-            $this->setUrlLinkCurrencyPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTokenPoolPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTokenPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkTransactionPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-            $this->setUrlLinkWalletPrefix('?'
-                . self::DEFAULT_DISPLAY_COMMAND_MODE . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_COMMAND_NAME
-                . '&' . Displays::DEFAULT_DISPLAY_COMMAND_VIEW . '=' . $this->_applicationInstance->getModule($namespace . 'ModuleObjects')::MODULE_DEFAULT_VIEW
-                . '&' . References::COMMAND_SELECT_OBJECT . '=');
-        } else {
-            $this->setUrlLinkCurrencyPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-            $this->setUrlLinkTokenPoolPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-            $this->setUrlLinkTokenPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-            $this->setUrlLinkTransactionPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-            $this->setUrlLinkWalletPrefix('?' . \Nebule\Library\References::COMMAND_SWITCH_APPLICATION . '=4'
-                . '&' . \Nebule\Bootstrap\LIB_LOCAL_LINKS_FOLDER . '=');
-        }*/
-    }
-
-    /**
-     * Code on apps before display.
-     */
     protected function _preDisplay(): void {} // Nothing to do. This function must be rewritten on apps if needed.
 
-    /**
-     * Display page inline or not.
-     */
-    public function display(): void
-    {
+    public function display(): void {
         //$this->_configureLinks();
         $this->_preDisplay();
 
@@ -1787,11 +1627,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $this->_displayFull();
     }
 
-    /**
-     * Display full page.
-     */
     protected function _displayFull(): void
-    {
+ {
         $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c3cdf3de');
         ?>
         <!DOCTYPE html>
@@ -1850,13 +1687,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $this->_displayFooter();
     }
 
-    /**
-     * Display inline page.
-     *
-     * Can be overwritten by apps.
-     */
-    protected function _displayInline(): void
-    {
+    protected function _displayInline(): void {
         $this->_metrologyInstance->addLog('display inline', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'bfcdcd6d');
 
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
@@ -1868,94 +1699,83 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
     }
 
-    protected function _displayActions(): void
-    {
-        ?>
-
-        <div class="layout-footer footer<?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            echo 'Unlock';
-        } ?>">
-            <p>
-                <?php
-                $this->_actionInstance->getDisplayActions();
-                ?>
-                <p style="color: #ffff00; font-size: 16px; font-weight: bold;">/// /// /// EXPERIMENTAL /// /// ///</p>
-
-            </p>
-        </div>
-        <?php
+    protected function _displayActions(): void {
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked())
+            echo '<div class="layout-footer footerUnlock">' . "\n";
+        else
+            echo '<div class="layout-footer footer">' . "\n";
+        echo '<p>' . "\n";
+        $this->_actionInstance->getDisplayActions();
+        echo '</p>' . "\n";
+        echo '<p style="color: #ffff00; font-size: 16px; font-weight: bold;">/// /// /// EXPERIMENTAL /// /// ///</p>' . "\n";
+        echo '</div>' . "\n";
     }
 
     protected string $_logoApplication = '';
-    protected function _findLogoApplication(): void
-    {
+    protected function _findLogoApplication(): void {
         $this->_logoApplication = $this->_displayInstance::DEFAULT_APPLICATION_LOGO;
         // TODO
     }
 
     protected string $_logoApplicationLink = '';
-    protected function _findLogoApplicationLink(): void
-    {
+    protected function _findLogoApplicationLink(): void {
         $this->_logoApplicationLink = $this->_displayInstance::DEFAULT_APPLICATION_LOGO_LINK;
         // TODO
     }
 
     protected string $_logoApplicationName = '';
-    protected function _findLogoApplicationName(): void
-    {
+    protected function _findLogoApplicationName(): void {
         $this->_logoApplicationName = $this->_applicationInstance::APPLICATION_NAME;
         // TODO
     }
 
 
-    /**
-     * Display information on top.
-     * On left the current entity.
-     * On right security checks, empty if all OK.
-     */
-    protected function _displayHeader(): void
-    {
-        ?>
 
-        <div class="layout-header header<?php if ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            echo 'Unlock';
-        } ?>">
-            <div class="header-left">
-                <?php
-                if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
-                    ?>
-                    <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
-                         title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
-                         onclick="display_menu('layout-menu-applications');"/>
-                    <?php
-                } else {
-                    ?>
-                    <a href="?<?php echo Displays::COMMAND_DISPLAY_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::COMMAND_DISPLAY_VIEW; ?>=menu">
-                        <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
-                             title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"/>
-                    </a>
-                    <?php
-                }
-                ?>
-            </div>
-            <?php
-            $this->_displayGhostEntityOnHeader(false);
-            $this->_displayConnectedEntityOnHeader(false);
-            ?>
-
-            <div class="header-right">
-                <?php $this->_displayHeaderRight(); ?>
-
-            </div>
-
-            <div class="header-center">
-                <?php $this->_displayHeaderCenter(); ?>
-
-            </div>
-        </div>
-        <?php
+    protected function _displayHeader(): void {
+        if ($this->_entitiesInstance->getConnectedEntityIsUnlocked())
+            echo '<div class="layout-header headerUnlock">' . "\n";
+        else
+            echo '<div class="layout-header header">' . "\n";
+        echo '<div class="header-left">' . "\n";
+        $this->_displayHeaderLeft();
+        echo '</div>' . "\n";
+        echo '<div class="header-right">' . "\n";
+        $this->_displayHeaderRight();
+        echo '</div>' . "\n";
+        echo '<div class="header-center">' . "\n";
+        $this->_displayHeaderCenter();
+        echo '</div>' . "\n";
+        echo '</div>' . "\n";
     }
 
+    protected function _displayHeaderLeft(): void {
+        $this->_displayHeaderLeftMenu();
+        $this->_displayHeaderLeftEntities();
+    }
+    protected function _displayHeaderLeftMenu(): void {
+        echo '<div class="header-left-menu">' . "\n";
+        if ($this->_configurationInstance->getOptionAsBoolean('permitJavaScript')) {
+            ?>
+            <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
+                 title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"
+                 onclick="display_menu('layout-menu-applications');"/>
+            <?php
+        } else {
+            ?>
+            <a href="?<?php echo Displays::COMMAND_DISPLAY_MODE . '=' . $this->getCurrentDisplayMode() . '&' . Displays::COMMAND_DISPLAY_VIEW; ?>=menu">
+                <img src="<?php echo $this->_logoApplication; ?>" alt="[W]"
+                     title="<?php echo $this->_translateInstance->getTranslate('::menu'); ?>"/>
+            </a>
+            <?php
+        }
+        echo '</div>' . "\n";
+    }
+    protected function _displayHeaderLeftEntities(): void {
+        echo '<div class="header-left-ent">' . "\n";
+        $this->_displayGhostEntityOnHeader(false);
+        $this->_displayConnectedEntityOnHeader(false);
+        echo '</div>' . "\n";
+    }
     protected function _displayHeaderRight(): void {}
     protected function _displayHeaderCenter(): void {}
 
