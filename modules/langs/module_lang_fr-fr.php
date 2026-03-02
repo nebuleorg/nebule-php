@@ -212,6 +212,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::synchroAll' => 'Synchroniser tout',
             '::refreshList' => 'Rafraîchir la liste',
             '::nid' => "Empreinte de l'objet",
+            '::modify' => 'Modifier',
 
             // errors
             '::9a0b2492' => 'Canot create node for uploaded file.',
@@ -401,6 +402,8 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::getBlog' => 'Récupérer un blog',
             '::returnToBlog' => 'Retourner au blog',
             '::returnToPages' => 'Returner à la liste des pages',
+            '::returnToPost' => 'Retourner à la publication',
+            '::returnToPage' => 'Retourner à la page',
         ],
     ];
 }

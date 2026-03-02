@@ -212,6 +212,7 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::synchroAll' => 'Synchronize all',
             '::refreshList' => 'Refresh the list',
             '::nid' => 'Fingerprint of the object',
+            '::modify' => 'Modify',
 
             // errors
             '::9a0b2492' => 'Canot create node for uploaded file.',
@@ -406,6 +407,8 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::getBlog' => 'Get a blog',
             '::returnToBlog' => 'Return to the blog',
             '::returnToPages' => 'Return to the list of pages',
+            '::returnToPost' => 'Return to the post',
+            '::returnToPage' => 'Return to the page',
         ],
         'es-co' => [
             '::translateModule:en-en:ModuleName' => 'Inglés (Inglaterra)',

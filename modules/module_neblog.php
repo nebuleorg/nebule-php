@@ -234,13 +234,57 @@ class ModuleNeblog extends Module
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
                 }
-                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[1]) {
                     $hookArray[] = array(
                         'name' => '::page:list',
                         'icon' => $this::MODULE_REGISTERED_ICONS[1],
                         'desc' => '',
                         'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                             . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[9]) {
+                    $hookArray[] = array(
+                        'name' => '::modify',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[3],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[11]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[11]) {
+                    $hookArray[] = array(
+                        'name' => '::returnToPost',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[13]) {
+                    $hookArray[] = array(
+                        'name' => '::modify',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[3],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[16]
+                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                }
+                if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() == $this::MODULE_REGISTERED_VIEWS[16]) {
+                    $hookArray[] = array(
+                        'name' => '::returnToPage',
+                        'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                        'desc' => '',
+                        'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
                             . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
                             . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
                     );
@@ -534,11 +578,17 @@ class ModuleNeblog extends Module
             case $this::MODULE_REGISTERED_VIEWS[9]:
                 $this->_display_InlinePost();
                 break;
+            case $this::MODULE_REGISTERED_VIEWS[11]:
+                $this->_display_InlineModPost();
+                break;
             case $this::MODULE_REGISTERED_VIEWS[13]:
                 $this->_display_InlinePage();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[14]:
                 $this->_display_InlinePages();
+                break;
+            case $this::MODULE_REGISTERED_VIEWS[16]:
+                $this->_display_InlineModPage();
                 break;
             case $this::MODULE_REGISTERED_VIEWS[7]:
                 $this->_display_InlineRightsItem('Blog');
@@ -663,7 +713,8 @@ class ModuleNeblog extends Module
 
     private function _displayPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::post:disp', $this::MODULE_REGISTERED_ICONS[0]);
+        if ($this->_instanceCurrentBlogPost !== null)
+            $this->_displaySimpleTitle($this->_instanceCurrentBlogPost->getName('all'), $this::MODULE_REGISTERED_ICONS[0]); // FIXME not all
         $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[1], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post');
     }
@@ -780,9 +831,18 @@ class ModuleNeblog extends Module
 
     private function _displayModPost(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::post:mod', $this::MODULE_REGISTERED_ICONS[3]);
+        if ($this->_instanceCurrentBlogPost !== null)
+            $this->_displaySimpleTitle($this->_instanceCurrentBlogPost->getName('all'), $this::MODULE_REGISTERED_ICONS[3]); // FIXME not all
         $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[9], true);
-        $this->_displayNotImplemented(); // TODO
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('post');
+    }
+
+    private function _display_InlineModPost(): void {
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_instanceCurrentBlogPost !== null)
+            $this->_displayContent($this->_instanceCurrentBlogPost, 'selfMenuPost', 'post', true);
+        else
+            $this->_displayNotSupported();
     }
 
     private function _displayDelPost(): void {
@@ -794,16 +854,17 @@ class ModuleNeblog extends Module
 
     private function _displayPage(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::page:disp', $this::MODULE_REGISTERED_ICONS[0]);
-        $this->_displayBackOrLoginLocal('::returnToBlog', $this::MODULE_REGISTERED_VIEWS[14], true);
+        if ($this->_instanceCurrentBlogPage !== null)
+            $this->_displaySimpleTitle($this->_instanceCurrentBlogPage->getName('all'), $this::MODULE_REGISTERED_ICONS[0]); // FIXME not all
+        $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
         $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('page');
     }
 
     private function _display_InlinePage(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        if ($this->_instanceCurrentBlogPage !== null) {
+        if ($this->_instanceCurrentBlogPage !== null)
             $this->_displayContent($this->_instanceCurrentBlogPage, 'selfMenuPage', 'page');
-        } else
+        else
             $this->_displayNotSupported();
     }
 
@@ -876,9 +937,18 @@ class ModuleNeblog extends Module
 
     private function _displayModPage(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_displaySimpleTitle('::page:mod', $this::MODULE_REGISTERED_ICONS[3]);
+        if ($this->_instanceCurrentBlogPage !== null)
+            $this->_displaySimpleTitle($this->_instanceCurrentBlogPage->getName('all'), $this::MODULE_REGISTERED_ICONS[3]); // FIXME not all
         $this->_displayBackOrLoginLocal('::page:list', $this::MODULE_REGISTERED_VIEWS[14], true);
-        $this->_displayNotImplemented(); // TODO
+        $this->_applicationInstance->getDisplayInstance()->registerInlineContentID('page');
+    }
+
+    private function _display_InlineModPage(): void {
+//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        if ($this->_instanceCurrentBlogPage !== null)
+            $this->_displayContent($this->_instanceCurrentBlogPage, 'selfMenuPage', 'page', true);
+        else
+            $this->_displayNotSupported();
     }
 
     private function _displayDelPage(): void {
@@ -967,59 +1037,63 @@ class ModuleNeblog extends Module
         $instanceList->addItem($instance);
     }
 
-    private function _displayContent(\Nebule\Library\Group $nid, string $hook, string $type = 'post'): void {
+    private function _displayContent(\Nebule\Library\Group $nid, string $hook, string $type = 'post', bool $displayNode = false): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instance->setNID($nid);
-        $instance->setEnableColor(true);
-        $instance->setEnableIcon(true);
-        $instance->setEnableName(true);
-        $instance->setEnableRefs(false);
-        $instance->setEnableNID(false);
-        $instance->setEnableFlags(true);
-        $instance->setEnableFlagProtection(false);
-        $instance->setEnableFlagObfuscate(true);
-        $instance->setEnableFlagState(false);
-        $instance->setEnableFlagEmotions(false);
-        $instance->setEnableStatus(true);
-        $typeName = ($type == 'post') ? '::post' : '::page';
-        $instance->setStatus($typeName);
-        $instance->setEnableContent(false);
-        $instance->setEnableJS(false);
-        $instance->setEnableLink(true);
-        $instance->setSelfHookName($hook);
-        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-        $instance->display();
+        if ($displayNode) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($nid);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(false);
+            $instance->setEnableFlagObfuscate(true);
+            $instance->setEnableFlagState(false);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(true);
+            $typeName = ($type == 'post') ? '::post' : '::page';
+            $instance->setStatus($typeName);
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setSelfHookName($hook);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->display();
+        }
 
         $links = $this->_getLinksContentOID($nid, 'onlist', $this->_currentItemWritersList);
         foreach ($links as $i => $link) {
             $oid = $link->getParsed()['bl/rl/nid2'];
             $instance = $this->_cacheInstance->newNodeByType($oid);
-            $this->_displayContentBlock($instance);
+            $this->_displayContentBlock($instance, $displayNode);
         }
     }
 
-    private function _displayContentBlock(\Nebule\Library\Node $oid): void {
+    private function _displayContentBlock(\Nebule\Library\Node $oid, bool $displayNode = false): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-        $instance->setNID($oid);
-        $instance->setEnableColor(true);
-        $instance->setEnableIcon(true);
-        $instance->setEnableName(true);
-        $instance->setEnableRefs(false);
-        $instance->setEnableNID(false);
-        $instance->setEnableFlags(true);
-        $instance->setEnableFlagProtection(true);
-        $instance->setEnableFlagObfuscate(true);
-        $instance->setEnableFlagState(true);
-        $instance->setEnableFlagEmotions(false);
-        $instance->setEnableStatus(true);
-        $instance->setStatus('::content');
-        $instance->setEnableContent(false);
-        $instance->setEnableJS(false);
-        $instance->setEnableLink(true);
-        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-        $instance->display();
+        if ($displayNode) {
+            $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+            $instance->setNID($oid);
+            $instance->setEnableColor(true);
+            $instance->setEnableIcon(true);
+            $instance->setEnableName(true);
+            $instance->setEnableRefs(false);
+            $instance->setEnableNID(false);
+            $instance->setEnableFlags(true);
+            $instance->setEnableFlagProtection(true);
+            $instance->setEnableFlagObfuscate(true);
+            $instance->setEnableFlagState(true);
+            $instance->setEnableFlagEmotions(false);
+            $instance->setEnableStatus(true);
+            $instance->setStatus('::content');
+            $instance->setEnableContent(false);
+            $instance->setEnableJS(false);
+            $instance->setEnableLink(true);
+            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+            $instance->display();
+        }
 
         switch ($oid->getType()) {
             case References::REFERENCE_OBJECT_TEXT:
