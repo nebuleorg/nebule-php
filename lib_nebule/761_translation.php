@@ -255,7 +255,7 @@ abstract class Translates extends Functions
                 return $instance::TRANSLATE_TABLE[self::DEFAULT_LANGUAGE][$text];
         }
 
-        $this->_metrologyInstance->addLog('no translate, keep same value : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_ERROR, __METHOD__, '74bd1f3a');
+        $this->_metrologyInstance->addLog('no translate, keep same value : ' . strtok(substr($text, 0, 100), "\n"), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74bd1f3a');
         return $text;
     }
 

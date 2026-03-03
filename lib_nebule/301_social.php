@@ -47,7 +47,7 @@ class Social extends Functions implements SocialInterface
         elseif (is_a($this->_defaultInstance, 'SocialInterface'))
             $this->_defaultInstance->arraySocialFilter($links, '');
         else
-            $this->_metrologyInstance->addLog('error no default social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'c04e8d5b');
+            $this->_metrologyInstance->addLog('warning no default social class', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'c04e8d5b');
     }
 
     /**
@@ -65,7 +65,7 @@ class Social extends Functions implements SocialInterface
         elseif (is_a($this->_defaultInstance, 'SocialInterface'))
             $result = $this->_defaultInstance->linkSocialScore($link, '');
         else
-            $this->_metrologyInstance->addLog('error no default social class', Metrology::LOG_LEVEL_ERROR, __METHOD__, '74686ed7');
+            $this->_metrologyInstance->addLog('warning no default social class', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '74686ed7');
         return $result;
     }
 
