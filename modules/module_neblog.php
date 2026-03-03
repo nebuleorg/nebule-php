@@ -1097,7 +1097,7 @@ class ModuleNeblog extends Module
 
         switch ($oid->getType()) {
             case References::REFERENCE_OBJECT_TEXT:
-                $this->_displayContentText($oid);
+                \Nebule\Library\DisplayWikiSimple::display($oid->getContent());
                 break;
             case References::REFERENCE_OBJECT_PNG:
             case References::REFERENCE_OBJECT_JPEG:
@@ -1111,9 +1111,7 @@ class ModuleNeblog extends Module
     private function _displayContentText(\Nebule\Library\Node $nid): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $content = \Nebule\Library\DisplayWikiSimple::parse($nid->getContent());
-        echo '<div class="text"><p>' . "\n";
-        echo $content;
-        echo '</p></div>' . "\n";
+        echo '<div class="simpleWiki">' . "\n" . $content . "\n</div>\n";
     }
 
     private function _displayContentImage(\Nebule\Library\Node $nid): void {

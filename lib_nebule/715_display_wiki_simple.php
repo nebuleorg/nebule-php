@@ -18,8 +18,7 @@ namespace Nebule\Library;
 * @copyright Projet nebule
 * @link www.nebule.org
 */
-class DisplayWikiSimple
-{
+class DisplayWikiSimple {
     static public function parse($wikiText): string {
         $result = htmlspecialchars(strip_tags($wikiText), ENT_QUOTES, 'UTF-8');
 
@@ -45,10 +44,66 @@ class DisplayWikiSimple
             $result
         );
 
-        $result = str_replace("\n\n", '<br />', $result);
+        //$result = str_replace("\n\n", '<br />', $result);
+        $result = nl2br($result);
         //$result = '<p>' . str_replace("\n", '</p><p>', $result) . '</p>';
         //$result = str_replace('<p></p>', '', $result);
 
         return $result;
+    }
+
+    static public function display(string $text): void { echo '<div class="simpleWiki">' . "\n" . self::parse($text) . "\n</div>\n"; }
+
+    static public function displayCSS(): void {
+        ?>
+
+        <style type="text/css">
+            /* CSS for DisplaySimpleWiki(). */
+            .simpleWiki {
+                background: rgba(255, 255, 255, 0.666);
+                padding: 5px 10px 20px;
+                font-family: sans-serif;
+                color: #000000;
+                overflow: scroll;
+                text-align: justify;
+            }
+
+            .simpleWiki h1 {
+                font-size: 2rem;
+            }
+
+            .simpleWiki h2 {
+                font-size: 1.8rem;
+            }
+
+            .simpleWiki h3 {
+                font-size: 1.6rem;
+            }
+
+            .simpleWiki h4 {
+                font-size: 1.4rem;
+            }
+
+            .simpleWiki h5 {
+                font-size: 1.2rem;
+            }
+
+            .simpleWiki strong {
+                font-weight: bold;
+            }
+
+            .simpleWiki em {
+            }
+
+            .simpleWiki code {
+            }
+
+            .simpleWiki li {
+            }
+
+            .simpleWiki ul{
+            }
+        </style>
+        <?php
     }
 }

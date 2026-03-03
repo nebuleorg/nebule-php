@@ -1429,6 +1429,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         DisplayContent::displayCSS();
         DisplayNotify::displayCSS();
         DisplayQuery::displayCSS();
+        DisplayWikiSimple::displayCSS();
     }
 
     public function displayCSS(): void {} // This function must be overloaded by applications.
