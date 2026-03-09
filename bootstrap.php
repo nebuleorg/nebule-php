@@ -1518,7 +1518,7 @@ function io_blockLinkWrite(string $nid, string &$block): bool {
 }
 
 /**
- * I/O - Synchronize links from other location.
+ * I/O - Synchronize links from another location.
  *
  * @param string $nid
  * @param string $location
@@ -1540,23 +1540,18 @@ function io_blockLinkSynchronize(string $nid, string $location): bool {
     if (!io_checkExistOverHTTP($location . '/l/' . $nid))
         return false;
 
-    log_add('get ressource', 'info', __FUNCTION__, '00000000');
-    $ressource = fopen($location . '/l/' . $nid, 'r');
-    if ($ressource !== false) {
-        while (feof($ressource) !== false) {
-            $line = trim((string)fgets($ressource));
-            log_add('write bloclink=' . $line, 'info', __FUNCTION__, '00000000');
-            blk_write($line);
-        }
+    $ressource = @fopen($location . '/l/' . $nid, 'r');
+    if ($ressource) {
+        while (($line = fgets($ressource)) !== false)
+            blk_write(trim($line));
         fclose($ressource);
     }
-
     return true;
 }
 
 /**
  * I/O - Read object content.
- * Return the read data from object.
+ * Return the read data from an object.
  *
  * @param string  $nid
  * @param integer $maxData
@@ -3580,6 +3575,9 @@ function ent_getAskedAuthorities(string $refNid, array &$result, bool $synchroni
     // Extract uniques entities
     foreach ($lnkList as $lnk)
         $entList[$lnk['bl/rl/nid2']] = $lnk['bl/rl/nid2'];
+    log_add('find authority size=' . sizeof($entList) . ' for nid=' . $refNid, 'error', __FUNCTION__, '00000000');
+    foreach ($entList as $ent)
+        log_add('find authority eid=' . $ent . ' for nid=' . $refNid, 'error', __FUNCTION__, '00000000');
     foreach ($entList as $ent)
         $result[] = $ent;
 
@@ -3748,7 +3746,7 @@ function ent_syncPuppetmaster(string $oid): void {
     global $optionCache;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
-    if (!ent_checkIsPublicKey($oid)) {
+    if (strlen($oid) < LIB_NID_MIN_HASH_SIZE || !nod_checkNID($oid, false)) {
         $oid = LIB_DEFAULT_PUPPETMASTER_EID;
         $optionCache['puppetmaster'] = LIB_DEFAULT_PUPPETMASTER_EID;
     }
@@ -6165,6 +6163,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool {
 
         echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
         lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
+        // FIXME get OID from RID
         flush();
 
         echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refAppsID;
