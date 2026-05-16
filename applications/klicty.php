@@ -21,21 +21,35 @@ use DateTime;
 use const Nebule\Bootstrap\BOOTSTRAP_NAME;
 
 /*
-|------------------------------------------------------------------------------------------
-| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-|------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------------------------------------------------------------------
 |
-|  [FR] Toute modification de ce code entraînera une modification de son empreinte
-|       et entraînera donc automatiquement son invalidation !
-|  [EN] Any modification of this code will result in a modification of its hash digest
-|       and will therefore automatically result in its invalidation!
-|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-|       tanto lugar automáticamente a su anulación!
-|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і,
-|       відповідно, автоматично призведе до його анулювання!
+|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
+|  [EN] Any modification of this code will result in a modification of its hash digest and will therefore automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo tanto lugar automáticamente a su anulación!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
+|  [IT] Ogni modifica di questo codice comporterà una modifica della sua impronta e quindi ne causerà automaticamente l'invalidazione!
+|  [PL] Każda modyfikacja tego kodu spowoduje zmianę jego odcisku i automatycznie doprowadzi do jego unieważnienia!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
 |
-|------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------------------------------------------------------------------
 */
+
+
+
+/*
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ *   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+ *   later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ *   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ *   details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
+ *   See at the end of the file. If not, see https://www.gnu.org/licenses/.
+ */
 
 
 
@@ -52,7 +66,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'klicty';
     const APPLICATION_SURNAME = 'nebule/klicty';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260111';
+    const APPLICATION_VERSION = '020260516';
     const APPLICATION_LICENCE = 'GNU GPL v3 2015-2026';
     const APPLICATION_WEBSITE = 'www.klicty.org';
     const APPLICATION_NODE = 'd0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288';
