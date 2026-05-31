@@ -10,7 +10,7 @@ use Nebule\Library\nebule;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260221';
+const BOOTSTRAP_VERSION = '020260516';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -885,7 +885,19 @@ $nebuleGhostPasswordEntity = '';
 $nebuleLocalAuthorities = array();
 
 /**
- * Current code branch NID used to find different apps codes.
+ * Current code branch name (from config) used to find different apps codes.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$codeBranchName = '';
+
+/**
+ * Current code branch RID (reference) used to find different apps codes.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$codeBranchRID = '';
+
+/**
+ * Current code branch NID (node) used to find different apps codes.
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $codeBranchNID = '';
@@ -3899,7 +3911,7 @@ function app_getActivate(string $nid): bool {
  * @return void
  */
 function app_getCurrentBranch(): void {
-    global $nebuleLocalAuthorities, $codeBranchNID;
+    global $nebuleLocalAuthorities, $codeBranchName, $codeBranchRID, $codeBranchNID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if ($codeBranchNID != '')
@@ -3909,14 +3921,20 @@ function app_getCurrentBranch(): void {
     $codeBranchName = lib_getOptionAsString('codeBranch');
     if ($codeBranchName == '')
         $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
-    $codeBranchNID = '';
+    if ($codeBranchName == '')
+        log_add('error no code branch found', 'error', __FUNCTION__, '83af2589');
+    else
+        log_add('code branch name : ' . $codeBranchName, 'info', __FUNCTION__, 'd7aa7cac');
 
     // Check if it's a name or an OID.
     if (nod_checkNID($codeBranchName, false)
         && io_checkNodeHaveLink($codeBranchName)
     ) {
+        $codeBranchRID = $codeBranchName;
         $codeBranchNID = $codeBranchName;
+        log_add('direct code branch NID : ' . $codeBranchNID, 'info', __FUNCTION__, 'd8570c45');
     } else {
+        log_add('indirect code branch NID ' . $codeBranchNID, 'debug', __FUNCTION__, '00000000');
         // Get all RID of code branches
         $codeBranchRID = LIB_RID_CODE_BRANCH;
         $bLinks = array();
@@ -3927,10 +3945,13 @@ function app_getCurrentBranch(): void {
             'bl/rl/nid4' => '',
         );
         lnk_getList($codeBranchRID, $bLinks, $filter, false);
+        log_add('blinks before size=' . sizeof($bLinks), 'debug', __FUNCTION__, '00000000');
         blk_filterBySigners($bLinks, $nebuleLocalAuthorities);
+        log_add('blinks after size=' . sizeof($bLinks), 'debug', __FUNCTION__, '00000000');
 
         // Get all NID with the name of wanted code branch.
         $codeBranchRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
+        log_add('code branch RID : ' . $codeBranchRID, 'info', __FUNCTION__, 'bfcb9967');
         $nLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -3939,7 +3960,9 @@ function app_getCurrentBranch(): void {
             'bl/rl/nid4' => '',
         );
         lnk_getList($codeBranchRID, $nLinks, $filter, false);
+        log_add('nlinks before size=' . sizeof($nLinks), 'debug', __FUNCTION__, '00000000');
         blk_filterBySigners($nLinks, $nebuleLocalAuthorities);
+        log_add('nlinks after size=' . sizeof($nLinks), 'debug', __FUNCTION__, '00000000');
 
         // Latest collision of code branches with the name
         $bl_rc_mod = '0';
@@ -3956,7 +3979,7 @@ function app_getCurrentBranch(): void {
             }
         }
     }
-    log_add('Current branch : ' . $codeBranchNID, 'normal', __FUNCTION__, '9f1bf579');
+    log_add('current branch : ' . $codeBranchNID, 'normal', __FUNCTION__, '9f1bf579');
 }
 
 /**
@@ -6136,44 +6159,81 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool {
  * @return bool
  */
 function bootstrap_firstDisplay6SyncObjects(): bool {
-    global $codeBranchNID;
+    global $codeBranchName, $codeBranchRID, $codeBranchNID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     $ok = true;
     $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
     $refLibID = LIB_RID_INTERFACE_LIBRARY;
+    $libIID = app_getByRef($refLibID);
+    $libOID = app_getCode($libIID);
     $refBootID = LIB_RID_INTERFACE_BOOTSTRAP;
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#6 synchronizing objets</span><br/>' . "\n";
 
-    // Si la bibliothèque ne se charge pas correctement, fait une première synchronisation des entités.
-    if (!io_checkNodeHaveLink($refAppsID)
+    lnk_getDistantOnLocations(LIB_RID_CODE_BRANCH, LIB_FIRST_LOCALISATIONS);
+    lnk_getDistantOnLocations($libOID, LIB_FIRST_LOCALISATIONS);
+
+    log_add('MARK01', 'debug', __FUNCTION__, '00000000');
+    app_getCurrentBranch();
+    if ($codeBranchName == '')
+        $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+    echo 'code branch name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchName . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($codeBranchRID, LIB_FIRST_LOCALISATIONS);
+    log_add('MARK02', 'debug', __FUNCTION__, '00000000');
+    app_getCurrentBranch();
+    echo 'code branch RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchRID . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
+    log_add('MARK03', 'debug', __FUNCTION__, '00000000');
+    app_getCurrentBranch();
+    echo 'code branch NID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchNID . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
+    echo 'bootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $refBootID . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
+    echo 'library RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $refLibID . "<br />\n";
+    flush();
+
+    $libIID = app_getByRef($refLibID);
+    lnk_getDistantOnLocations($libIID, LIB_FIRST_LOCALISATIONS);
+    $libOID = app_getCode($libIID);
+    echo 'library IID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $libIID . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($libOID, LIB_FIRST_LOCALISATIONS);
+    obj_getDistantContent($libOID, LIB_FIRST_LOCALISATIONS);
+    echo 'library OID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $libOID . "<br />\n";
+    flush();
+
+    lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
+    echo 'applications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $refAppsID . "<br />\n";
+    flush();
+
+    /*if (!io_checkNodeHaveLink($refAppsID)
         || !io_checkNodeHaveLink($refLibID)
+        || !io_checkNodeHaveLink($libIID)
+        || !io_checkNodeHaveLink($libOID)
         || !io_checkNodeHaveLink($refBootID)
+        || $libOID == ''
     ) {
         log_add('need sync reference objects', 'warn', __FUNCTION__, '0f21ad26');
+    }*/
 
-        app_getCurrentBranch();
-        echo "<br />\ncode branch RID &nbsp;&nbsp;: " . $codeBranchNID . ' ';
-        lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
-
-        echo "<br />\nbootstrap RID &nbsp;&nbsp;&nbsp;&nbsp;: " . $refBootID . ' ';
-        lnk_getDistantOnLocations($refBootID, LIB_FIRST_LOCALISATIONS);
-
-        echo "<br />\nlibrary RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refLibID . ' ';
-        lnk_getDistantOnLocations($refLibID, LIB_FIRST_LOCALISATIONS);
-        // FIXME get OID from RID
-        flush();
-
-        echo "<br />\napplications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: " . $refAppsID;
-        lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-        flush();
-    }
 
     if (io_checkNodeHaveLink($refAppsID)
         && io_checkNodeHaveLink($refLibID)
+        && io_checkNodeHaveLink($libIID)
+        && io_checkNodeHaveLink($libOID)
         && io_checkNodeHaveLink($refBootID)
+        && $libOID != ''
     ) {
         log_add('ok sync objects', 'info', __FUNCTION__, '4473358f');
         echo "ok\n";

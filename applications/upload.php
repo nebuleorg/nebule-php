@@ -63,7 +63,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'upload';
     const APPLICATION_SURNAME = 'nebule/upload';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260516';
+    const APPLICATION_VERSION = '020260531';
     const APPLICATION_LICENCE = 'GNU GPL 2016-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288';
@@ -103,36 +103,14 @@ class Display extends Displays
             <meta name="description" content="<?php echo Application::APPLICATION_NAME; ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
-            <?php $this->commonCSS(); ?>
-            <style>
-                .layout-content {
-                    max-width: 86%;
-                }
+            <?php
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
+            $this->commonCSS();
+            $this->displayCSS();
 
-                .layout-content > div {
-                    min-width: 400px;
-                    margin-bottom: 20px;
-                    text-align: left;
-                    color: #ababab;
-                    white-space: normal;
-                }
-
-                h1 {
-                    font-family: monospace;
-                    font-size: 1.4em;
-                    font-weight: normal;
-                    color: #ababab;
-                }
-
-                .newlink {
-                    width: 100%;
-                }
-
-                .result img {
-                    height: 16px;
-                    width: 16px;
-                }
-            </style>
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
+            $this->_displayScripts();
+            ?>
         </head>
         <body>
         <div class="layout-header">
@@ -282,6 +260,48 @@ class Display extends Displays
         </html>
         <?php
     }
+
+    public function displayCSS(): void
+    {
+        ?>
+
+        <style>
+            .layout-content {
+                max-width: 86%;
+            }
+
+            .layout-content > div {
+                min-width: 400px;
+                margin-bottom: 20px;
+                text-align: left;
+                color: #ababab;
+                white-space: normal;
+            }
+
+            .header-left img {
+                margin: 2px;
+            }
+
+            h1 {
+                font-family: monospace;
+                font-size: 1.4em;
+                font-weight: normal;
+                color: #ababab;
+            }
+
+            .newlink {
+                width: 100%;
+            }
+
+            .result img {
+                height: 16px;
+                width: 16px;
+            }
+        </style>
+        <?php
+    }
+
+    protected function _displayScripts(): void {}
 }
 
 

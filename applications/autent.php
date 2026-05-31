@@ -63,7 +63,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'autent';
     const APPLICATION_SURNAME = 'nebule/autent';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260516';
+    const APPLICATION_VERSION = '020260531';
     const APPLICATION_LICENCE = 'GNU GPL v3 2023-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288';
@@ -157,6 +157,10 @@ class Display extends Displays
                 white-space: normal;
             }
 
+            .header-left img {
+                margin: 2px;
+            }
+
             h1 {
                 font-family: monospace;
                 font-size: 1.4em;
@@ -178,19 +182,6 @@ class Display extends Displays
         foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
             if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
                 $module->getCSS();
-            }
-        }
-    }
-
-    protected function _displayScripts(): void
-    {
-        $this->commonScripts();
-
-        // Ajout de la partie script JS du module en cours d'utilisation, si présent.
-        foreach ($this->_applicationInstance->getModulesListInstances() as $module) {
-            if ($module::MODULE_COMMAND_NAME == $this->_currentDisplayMode) {
-                $module->headerScript();
-                echo "\n";
             }
         }
     }

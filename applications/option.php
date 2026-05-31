@@ -63,7 +63,7 @@ class Application extends Applications
     const APPLICATION_NAME = 'option';
     const APPLICATION_SURNAME = 'nebule/option';
     const APPLICATION_AUTHOR = 'Projet nebule';
-    const APPLICATION_VERSION = '020260516';
+    const APPLICATION_VERSION = '020260531';
     const APPLICATION_LICENCE = 'GNU GPL v3 2016-2026';
     const APPLICATION_WEBSITE = 'www.nebule.org';
     const APPLICATION_NODE = '555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288';
@@ -156,7 +156,14 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
             <meta name="description" content="<?php echo Application::APPLICATION_NAME; ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
-            <?php $this->commonCSS(); ?>
+            <?php
+            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
+            $this->commonCSS();
+            $this->displayCSS();
+
+            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
+            $this->_displayScripts();
+            ?>
         </head>
         <body>
         <div class="layout-header header<?php if ($this->_unlocked) {
@@ -246,6 +253,16 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 white-space: normal;
             }
 
+            .layout-header {
+                border-bottom-style: solid;
+                border-bottom-color: #222222;
+                border-bottom-width: 3px;
+            }
+
+            .header-left img {
+                margin: 2px;
+            }
+
             .header-center > div {
                 margin: auto 3px 3px 3px;
                 overflow: hidden;
@@ -271,12 +288,6 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
                 margin-top: 24px;
                 margin-bottom: 8px;
                 margin-left: 32px;
-            }
-
-            .layout-header {
-                border-bottom-style: solid;
-                border-bottom-color: #222222;
-                border-bottom-width: 3px;
             }
 
             .header-right {
@@ -656,6 +667,8 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         </style>
         <?php
     }
+
+    protected function _displayScripts(): void {}
 
 
     protected function _displayActions(): void

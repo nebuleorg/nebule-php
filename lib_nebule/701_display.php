@@ -713,6 +713,11 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 float: left;
             }
 
+            .header-left img {
+                height: 64px;
+                width: 64px;
+            }
+
             .header-left-menu {
                 height: 64px;
                 width: 64px;
