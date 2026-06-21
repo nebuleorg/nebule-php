@@ -27,7 +27,7 @@ class ModuleTranslateENEN extends ModuleTranslates
     const MODULE_NAME = '::translateModule:en-en:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
-    const MODULE_VERSION = '020260110';
+    const MODULE_VERSION = '020260619';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
@@ -349,6 +349,7 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::addFile' => 'Add a file',
             '::removeFile' => 'Remove the file',
             '::seeTheFile' => 'See the file',
+            '::getTheFile' => 'Get the file',
 
             // Galleries
             '::gallery' => 'gallery',

@@ -28,7 +28,7 @@ class ModuleObjects extends Module {
     const MODULE_COMMAND_NAME = 'obj';
     const MODULE_DEFAULT_VIEW = 'disp';
     const MODULE_DESCRIPTION = '::ModuleDescription';
-    const MODULE_VERSION = '020260111';
+    const MODULE_VERSION = '020260619';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '26d3b259b94862aecac064628ec02a38e30e9da9b262a7307453046e242cc9ee.sha2.256';
@@ -48,6 +48,7 @@ class ModuleObjects extends Module {
         '06cac4acb887cff2c7ba6653f865d800276a4e9d493a3be4e1b05d107f5ecbaf.sha2.256',    // 2 : Fork.
         '6d1d397afbc0d2f6866acd1a30ac88abce6a6c4c2d495179504c2dcb09d707c1.sha2.256',    // 3 : Protection d'un objet.
         '1c6db1c9b3b52a9b68d19c936d08697b42595bec2f0adf16e8d9223df3a4e7c5.sha2.256',    // 4 : Clé.
+        '3cd50162b66b62d582110858a6167794d7afc7f83a918aa4f2339f00b66ac620.sha2.256',    // 5 : téléchargement.
     );
     const MODULE_APP_TITLE_LIST = array();
     const MODULE_APP_ICON_LIST = array();
@@ -267,6 +268,12 @@ class ModuleObjects extends Module {
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $instance->getID()
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                );
+                $hookArray[] = array(
+                    'name' => '::getTheFile',
+                    'icon' => $this::MODULE_REGISTERED_ICONS[5],
+                    'desc' => '',
+                    'link' => '?' . References::OBJECTS_FOLDER . '=' . $instance->getID(),
                 );
                 break;
         }
