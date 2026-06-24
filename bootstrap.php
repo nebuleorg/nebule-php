@@ -5,12 +5,14 @@ use Nebule\Library\Cache;
 use Nebule\Library\Crypto;
 use Nebule\Library\io;
 use Nebule\Library\nebule;
+use Nebule\Library\References;
+
 #use Random\RandomException;
 
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260516';
+const BOOTSTRAP_VERSION = '020260624';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -4713,82 +4715,6 @@ log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
             font-weight: bold;
         }
 
-        .preload {
-            clear: both;
-            margin-bottom: 12px;
-            min-height: 64px;
-            width: 600px;
-        }
-
-        .preload img {
-            height: 64px;
-            width: 64px;
-            float: left;
-            margin-right: 8px;
-        }
-
-        .preloadsync img {
-            height: 16px;
-            width: 16px;
-            float: none;
-            margin-left: 0;
-            margin-right: 1px;
-        }
-
-        .preloadstitle {
-            font-weight: bold;
-            color: #ffffff;
-            font-size: 1.4em;
-        }
-
-        #appslist {
-        }
-
-        #appslist a:link, #appslist a:visited {
-            font-weight: normal;
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        #appslist a:hover, #appslist a:active {
-            font-weight: normal;
-            text-decoration: none;
-            color: #ffff80;
-        }
-
-        .apps {
-            float: left;
-            margin: 4px;
-            height: 64px;
-            width: 64px;
-            padding: 8px;
-            color: #ffffff;
-            overflow: hidden;
-        }
-
-        .appstitle {
-            font-size: 2em;
-            font-weight: normal;
-            text-decoration: none;
-            color: #ffffff;
-            margin: 0;
-        }
-
-        .appsname {
-            font-weight: bold;
-        }
-
-        .appssigner {
-            float: right;
-            height: 24px;
-            width: 24px;
-        }
-
-        .appssigner img {
-            height: 24px;
-            width: 24px;
-        }
-
         #sync {
             clear: both;
             width: 100%;
@@ -4843,153 +4769,6 @@ log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
             font-weight: bold;
             margin: 10px;
             padding: 10px;
-        }
-
-        /* Spécifique app 1. */
-        #layout_documentation {
-            background: #ffffff;
-            padding: 20px;
-            text-align: left;
-            color: #000000;
-            font-size: 0.8rem;
-            font-family: sans-serif;
-            min-width: 400px;
-            max-width: 1200px;
-        }
-
-        #title_documentation {
-            margin-bottom: 30px;
-        }
-
-        #title_documentation p {
-            text-align: center;
-            color: #000000;
-            font-size: 0.7em;
-        }
-
-        #title_documentation p a:link, #title_documentation p a:visited {
-            font-weight: normal;
-            text-decoration: none;
-            color: #000000;
-        }
-
-        #title_documentation p a:hover, #title_documentation p a:active {
-            font-weight: normal;
-            text-decoration: underline;
-            color: #000000;
-        }
-
-        #content_documentation {
-            text-align: justify;
-            color: #000000;
-            font-size: 1em;
-        }
-
-        #content_documentation h1 {
-            text-align: left;
-            color: #454545;
-            font-size: 2em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 80px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation h2 {
-            text-align: left;
-            color: #454545;
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 60px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation h3 {
-            text-align: left;
-            color: #454545;
-            font-size: 1.6em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 40px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation h4 {
-            text-align: left;
-            color: #454545;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 30px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation h5 {
-            text-align: left;
-            color: #454545;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 20px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation h6 {
-            text-align: left;
-            color: #454545;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-left: 10px;
-            margin-top: 20px;
-            margin-bottom: 5px;
-        }
-
-        #content_documentation p {
-            text-align: justify;
-            margin-top: 5px;
-        }
-
-        .pcenter {
-            text-align: center;
-        }
-
-        #content_documentation a:link, #content_documentation a:visited {
-            font-weight: normal;
-            text-decoration: underline;
-            color: #000000;
-        }
-
-        #content_documentation a:hover, #content_documentation a:active {
-            font-weight: normal;
-            text-decoration: underline;
-            color: #0000ab;
-        }
-
-        code {
-            font-family: monospace;
-        }
-
-        #content_documentation pre {
-            font-family: monospace;
-            text-align: left;
-            border-left-style: solid;
-            border-left-color: #c8c8c8;
-            border-left-width: 1px;
-        }
-
-        #content_documentation ol li, #content_documentation ul li {
-            text-align: left;
-            list-style-position: inside;
-            margin-left: 10px;
-        }
-
-        #content_documentation ol {
-            list-style-type: decimal-leading-zero;
-        }
-
-        #content_documentation ul {
-            list-style-type: disc;
         }
     </style>
     <script language="javascript" type="text/javascript">
@@ -5245,6 +5024,9 @@ function bootstrap_breakDisplay3LibraryPP(): void {
     bootstrap_echoLineTitle('ghost entity');
     bootstrap_echoLinkNID($nebuleGhostPublicEntity);
     echo "<br/>\n";
+
+    bootstrap_echoLineTitle('code type');
+    echo nebule::NEBULE_CODING . "<br/>\n";
 
     $codeBranchName = lib_getOptionAsString('codeBranch');
     if ($codeBranchName == '')
@@ -6593,31 +6375,24 @@ function bootstrap_displayRouter(): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     // End of Web page buffering with a buffer erased before display important things.
-    echo 'Display test of of erased buffer - must not be prompted!';
+    echo 'Display test of erased buffer - must not be prompted!';
     ob_end_clean();
 
-    // Break on the first run, many things to do before continue.
-    if ($needFirstSynchronization && !$bootstrapInlineDisplay) {
+
+    if ($needFirstSynchronization && !$bootstrapInlineDisplay) { // Break on the first run, many things to do before continue.
         log_add('load first', 'info', __FUNCTION__, '63d9bc00');
         bootstrap_displayApplicationFirst();
-        return;
-    }
-
-    // Break on problems on bootstrap load or on the user query.
-    if (sizeof($bootstrapBreak) > 0) {
+    } elseif (sizeof($bootstrapBreak) > 0) { // Break on problems on bootstrap load or on the user query.
         log_add('load break', 'info', __FUNCTION__, '4abf554b');
         if ($bootstrapInlineDisplay)
             bootstrap_inlineDisplayOnBreak();
         else
             bootstrap_displayOnBreak();
-        return;
+    } else {
+        io_close();
+        $nebuleInstance->getRouterInstance()->router();
+        log_reopen(BOOTSTRAP_NAME);
     }
-
-    io_close();
-
-    $nebuleInstance->getRouterInstance()->router();
-
-    log_reopen(BOOTSTRAP_NAME);
 }
 
 function bootstrap_logMetrology(): void {

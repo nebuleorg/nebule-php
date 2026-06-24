@@ -76,6 +76,7 @@ class Application extends Applications
 }
 
 
+
 /**
  * Classe Display
  *

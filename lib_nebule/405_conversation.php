@@ -49,10 +49,6 @@ class Conversation extends Group implements nodeInterface
             '_isMarkClosed',
             '_isMarkProtected',
             '_isMarkObfuscated',
-            '_referenceObject',
-            '_referenceObjectClosed',
-            '_referenceObjectProtected',
-            '_referenceObjectObfuscated',
     );
 
     protected function _initialisation(): void {

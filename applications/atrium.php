@@ -3,19 +3,11 @@ declare(strict_types=1);
 namespace Nebule\Application\Atrium;
 use Nebule\Library\nebule;
 use Nebule\Library\References;
-use Nebule\Library\Metrology;
-use Nebule\Library\ApplicationInterface;
 use Nebule\Library\Applications;
-use Nebule\Library\DisplayInterface;
 use Nebule\Library\Displays;
-use Nebule\Library\ActionsInterface;
 use Nebule\Library\Actions;
-use Nebule\Library\ModuleTranslateInterface;
 use Nebule\Library\Translates;
-use Nebule\Library\ModuleInterface;
-use Nebule\Library\Module;
 use Nebule\Library\ModelModuleHelp;
-use Nebule\Library\ModuleTranslates;
 
 /*
 |------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -171,13 +163,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
 
     public function displayCSS(): void {
-        $bgobj = $this->_cacheInstance->newNodeByType($this::DEFAULT_CSS_BACKGROUND);
-        if ($this->_nebuleInstance->getNodeIsRID($bgobj))
-            $bgobj = $bgobj->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
-        $background = $bgobj->getUpdateNID(true, false);
+        $backgroundObject = $this->_cacheInstance->newNodeByType($this::DEFAULT_CSS_BACKGROUND);
+        if ($this->_nebuleInstance->getNodeIsRID($backgroundObject))
+            $backgroundObject = $backgroundObject->getReferencedObjectInstance(References::REFERENCE_NEBULE_OBJET_IMAGE_REFERENCE, 'authority');
+        $background = $backgroundObject->getUpdateNID();
         ?>
 
-        <style type="text/css">
+        <style>
             html, body {
                 font-family: Sans-Serif, monospace, Arial, Helvetica;
                 font-stretch: condensed;
@@ -189,13 +181,9 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
             @media screen {
                 body {
-                    background: #f0f0f0 url("<?php echo 'o/'.$background; ?>") no-repeat;
-                    background-position: center center;
                     background-size: cover;
-                    background-attachment: fixed;
+                    background: #f0f0f0 url("<?php echo 'o/'.$background; ?>") no-repeat fixed center center;
                     -webkit-background-size: cover;
-                    -moz-background-size: cover;
-                    -o-background-size: cover;
                 }
             }
 
@@ -331,10 +319,7 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 min-width: 217px;
                 max-width: 217px;
                 min-height: 100px;
-                margin: 0;
-                margin-right: 10px;
-                margin-bottom: 20px;
-                margin-top: 120px;
+                margin: 120px 10px 20px 0;
             }
 
             @media screen and (max-width: 1020px) {
@@ -445,15 +430,13 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
 
             .menu-left-links {
                 width: 207px;
-                padding: 5px;
-                padding-bottom: 0;
+                padding: 5px 5px 0;
             }
 
             @media screen and (max-width: 1020px) {
                 .menu-left-links {
                     width: 64px;
-                    padding: 5px;
-                    padding-bottom: 0;
+                    padding: 5px 5px 0;
                 }
             }
 
@@ -461,7 +444,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 .menu-left-links {
                     width: 32px;
                     padding: 0;
-                    padding-bottom: 0;
                 }
             }
 
@@ -469,7 +451,6 @@ jmzbvh4fH38zMjLyLqhlcxyHnJycnG9vb39cXFz84A+4nh4mz/00iyzgv3sd/wY9bBdgOXr2vwAAAABJ
                 .menu-left-links {
                     width: 32px;
                     padding: 0;
-                    padding-bottom: 0;
                 }
             }
 
@@ -703,7 +684,7 @@ class Translate extends Translates {}
 
 
 
-class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
+class ModuleHelp extends ModelModuleHelp {
     const MODULE_TYPE = 'Application';
     const MODULE_VERSION = '020260101';
 
@@ -725,7 +706,7 @@ class ModuleHelp extends \Nebule\Library\ModelModuleHelp {
 Cette implémentation en php est voulue comme une référence des possibilités offertes par les objets et les liens tels que définis dans nebule.",
                     '::AideGenerale:Text' => "Le logiciel est composé de trois parties :<br />
 1. le bandeau du haut qui contient le menu de l'application et l'entité en cours.<br />
-2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc...<br />
+2. la partie centrale qui contient le contenu à afficher, les objets, les actions, etc.<br />
 3. le bandeau du bas qui apparaît lorsqu'une action est réalisée.<br />
 <br />
 D'un point de vue général, tout ce qui est sur fond clair concerne une action en cours ou l'objet en cours d'utilisation. Et tout ce qui est sur fond noir concerne l'interface globale ou d'autres actions non liées à ce que l'on fait.<br />

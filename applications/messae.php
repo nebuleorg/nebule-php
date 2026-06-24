@@ -183,7 +183,7 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
-        <style type="text/css">
+        <style>
             html, body {
                 font-family: Sans-Serif, monospace, Arial, Helvetica;
                 font-stretch: condensed;

@@ -753,7 +753,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $backgroundOid = $backgroundInstance->getUpdateNID(true, false);
         ?>
 
-        <style type="text/css">
+        <style>
             html, body {
                 font-family: Sans-Serif, monospace, Arial, Helvetica;
                 font-stretch: condensed;
@@ -3624,7 +3624,7 @@ private function _displayContentAbout():void
                         $this->displayIcon(self::DEFAULT_ICON_IERR, $msg, 'iconNormalDisplay');
                         break;
                     case 'protected':
-                        $msg = $this->_translateInstance->getTranslate('::display:content:ObjectProctected');
+                        $msg = $this->_translateInstance->getTranslate('::display:content:ObjectProtected');
                         $this->displayIcon(self::DEFAULT_ICON_IOK, $msg, 'iconNormalDisplay');
                         break;
                     default:
@@ -3840,10 +3840,10 @@ private function _displayContentAbout():void
                                 $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    '::display:content:ObjectProctected',
+                                    '::display:content:ObjectProtected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                echo $this->_translateInstance->getTranslate('::display:content:ObjectProctected'); ?></p>
+                                echo $this->_translateInstance->getTranslate('::display:content:ObjectProtected'); ?></p>
                         </div>
                         <?php
                     }
@@ -4745,8 +4745,8 @@ Toutes les entités de recouvrement sont affichées ici, aucune n'est cachée.",
             '::MarkRemoveAll' => 'Démarquer tout',
             '::display:content:errorBan' => 'Cet objet est banni, il ne peut pas être affiché !',
             '::display:content:warningTaggedWarning' => 'Cet objet est marqué comme dangereux, attention à son contenu !',
-            '::display:content:ObjectProctected' => 'Cet objet est protégé !',
-            '::display:content:warningObjectProctected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
+            '::display:content:ObjectProtected' => 'Cet objet est protégé !',
+            '::display:content:warningObjectProtected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
             '::display:content:OK' => 'Cet objet est valide, son contenu a été vérifié.',
             '::display:content:warningTooBig' => "Cet objet est trop volumineux, son contenu n'a pas été vérifié !",
             '::display:content:errorNotDisplayable' => 'Cet objet ne peut pas être affiché !',
@@ -4943,8 +4943,8 @@ All recovery entities are displayed here, none are hidden.",
             '::MarkRemoveAll' => 'Unmark all',
             '::display:content:errorBan' => "This object is banned, it can't be displayed!",
             '::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
-            '::display:content:ObjectProctected' => "This object is marked as protected!",
-            '::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::display:content:ObjectProtected' => "This object is marked as protected!",
+            '::display:content:warningObjectProtected' => "This object is marked as protected, be careful when it's content is displayed in public!",
             '::display:content:OK' => "This object is valid, it's content have been checked!",
             '::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
             '::display:content:errorNotDisplayable' => "This object can't be displayed!",
@@ -5141,8 +5141,8 @@ All recovery entities are displayed here, none are hidden.",
             '::MarkRemoveAll' => 'Unmark all',
             '::display:content:errorBan' => "This object is banned, it can't be displayed!",
             '::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
-            '::display:content:ObjectProctected' => "This object is marked as protected!",
-            '::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::display:content:ObjectProtected' => "This object is marked as protected!",
+            '::display:content:warningObjectProtected' => "This object is marked as protected, be careful when it's content is displayed in public!",
             '::display:content:OK' => "This object is valid, it's content have been checked!",
             '::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
             '::display:content:errorNotDisplayable' => "This object can't be displayed!",

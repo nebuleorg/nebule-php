@@ -2075,54 +2075,50 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /* --------------------------------------------------------------------------------
 	 *  Affichage des messages.
 	 * -------------------------------------------------------------------------------- */
-    /**
-     * @param string $text
-     * @param string $arg1
-     * @return void
-     */
-    public function displayMessageInformation(string $text, string $arg1 = ''): void
+    public function displayMessageInformation(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
         $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
         $instance->display();
     }
 
-    /**
-     * @param string $text
-     * @param string $arg1
-     * @return void
-     */
-    public function displayMessageOk(string $text, string $arg1 = ''): void
+    public function displayMessageOk(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
     {
         $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
         $instance->setType(DisplayItemIconMessage::TYPE_OK);
         $instance->display();
     }
 
-    /**
-     * @param string $text
-     * @param string $arg1
-     * @return void
-     */
-    public function displayMessageWarning(string $text, string $arg1 = ''): void
+    public function getDisplayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
         $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setType(DisplayItemIconMessage::TYPE_WARN);
+        return $instance->getHTML();
+    }
+
+    public function displayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
+    {
+        $instance = new DisplayNotify($this->_applicationInstance);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
         $instance->setType(DisplayItemIconMessage::TYPE_WARN);
         $instance->display();
     }
 
-    /**
-     * @param string $text
-     * @param string $arg1
-     * @return void
-     */
-    public function displayMessageError(string $text, string $arg1 = ''): void
+    public function getDisplayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
     {
         $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
+        return $instance->getHTML();
+    }
+
+    public function displayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
+    {
+        $instance = new DisplayNotify($this->_applicationInstance);
+        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
         $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
         $instance->display();
     }
@@ -2283,7 +2279,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             && $nid == $object->getProtectedID()
         ) {
             $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage('::display:content:warningObjectProctected');
+            $notify->setMessage('::display:content:warningObjectProtected');
             $notify->setType(DisplayItemIconMessage::TYPE_WARN);
             $result .= $notify->getHTML();
             $unprotectedObject = $this->_cacheInstance->newNodeByType($object->getUnprotectedID());
@@ -2313,7 +2309,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 && $permitWarnProtected
             ) {
                 $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage('::display:content:warningObjectProctected');
+                $notify->setMessage('::display:content:warningObjectProtected');
                 $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                 $result .= $notify->getHTML();
             }
@@ -2421,7 +2417,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     break;
                 case References::REFERENCE_OBJECT_CRYPT_RSA :
                     $notify = new DisplayNotify($this->_applicationInstance);
-                    $notify->setMessage('::display:content:warningObjectProctected');
+                    $notify->setMessage('::display:content:warningObjectProtected');
                     $notify->setType(DisplayItemIconMessage::TYPE_WARN);
                     $result .= $notify->getHTML();
                     break;
@@ -3889,7 +3885,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 'displayRatio' => $param['displayRatio'],
                 'informationType' => 'warn',
             );
-            $objectContent = $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProctected', $paramInfo);
+            $objectContent = $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProtected', $paramInfo);
         } else
             $objectContent = $this->getDisplayObjectContent($messageInstance, $param['displaySize'], $param['displayRatio'], false);
 
@@ -4204,7 +4200,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
 
     /**
-     * Prépare à afficher le contenu d'un objet suivant sont type.
+     * Prépare à afficher le contenu d'un objet suivant son type.
      *
      * @param Node   $object
      * @param string $sizeCSS  [tiny|small|medium|large|full]
@@ -4212,7 +4208,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param bool   $permitWarnProtected
      * @return string
      */
-    public function getDisplayObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string {
+    public function getDisplayObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = 'short', bool $permitWarnProtected = true): string {
         $result = '';
 
         if ($sizeCSS != 'full'
@@ -4304,7 +4300,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
      * @param bool   $permitWarnProtected
      * @return string
      */
-    public function getDisplayAsObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = '', bool $permitWarnProtected = true): string
+    public function getDisplayAsObjectContent(Node $object, string $sizeCSS = 'medium', string $ratioCSS = 'short', bool $permitWarnProtected = true): string
     {
         $result = '';
 
@@ -4344,39 +4340,46 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         // Affichage du contenu.
         if ($danger) {
             $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorBan', $param);
-            $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorBan', $param);
+            $result .= $this->getDisplayMessageError('::display:content:errorBan');
+            $this->displayMessageInformation('::display:content:errorBan');
+            //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
         } elseif ($protected
             && !$this->_unlocked
         ) {
-            $param['informationType'] = 'warn';
-            $result .= $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProctected', $param);
+            //$param['informationType'] = 'warn';
+            //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProtected', $param);
+            $result .= $this->getDisplayMessageWarning('::display:content:ObjectProtected');
             $result .= "<br />\n";
-            $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            //$param['informationType'] = 'error';
+            //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
         } elseif ($ispresent) {
             if ($warning) {
-                $param['informationType'] = 'warn';
-                $result .= $this->getDisplayInformation_DEPRECATED('::display:content:warningTaggedWarning', $param);
+                //$param['informationType'] = 'warn';
+                //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:warningTaggedWarning', $param);
+                $result .= $this->getDisplayMessageWarning('::display:content:warningTaggedWarning');
             }
             if ($protected
                 && $this->_unlocked
                 && $permitWarnProtected
             ) {
-                $param['informationType'] = 'warn';
-                $result .= $this->getDisplayInformation_DEPRECATED('::display:content:warningObjectProctected', $param);
+                //$param['informationType'] = 'warn';
+                //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:warningObjectProtected', $param);
+                $result .= $this->getDisplayMessageWarning('::display:content:ObjectProtected');
             }
 
             switch ($typemime) {
                 case References::REFERENCE_OBJECT_PNG :
                 case References::REFERENCE_OBJECT_JPEG :
-                    $content = $object->getContent(0);
-                    if ($content != null) {
+                    if ($object->checkPresent()) {
                         $result .= '<div class="objectContentObject objectContentImage"><img src="?o=' . $id
                             . '" alt="Image ' . $id . '"></div>' . "\n";
                     } else {
-                        $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        //$param['informationType'] = 'error';
+                        //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_TEXT :
@@ -4384,8 +4387,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null) {
                         $result .= '<div class="objectContentObject objectContentText"><p>' . $content . '</p></div>' . "\n";
                     } else {
-                        $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        //$param['informationType'] = 'error';
+                        //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     unset($content);
                     break;
@@ -4401,8 +4405,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentCode"><pre>' . $content . '</pre></div>' . "\n";
                     else {
-                        $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        //$param['informationType'] = 'error';
+                        //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     unset($content);
                     break;
@@ -4411,8 +4416,9 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/mp3" />' . $this->_translateInstance->getTranslate('::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
-                        $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        //$param['informationType'] = 'error';
+                        //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_OGG :
@@ -4420,22 +4426,25 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result .= '<div class="objectContentObject objectContentAudio"><audio controls><source src="?o=' . $id . '" type="audio/ogg" />' . $this->_translateInstance->getTranslate('::warn_NoAudioTagSupport') . '</audio></div>' . "\n";
                     else {
-                        $param['informationType'] = 'error';
-                        $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        //$param['informationType'] = 'error';
+                        //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                        $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_CRYPT_RSA :
                     $param['informationType'] = 'warn';
-                    $result .= $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProctected', $param);
+                    $result .= $this->getDisplayInformation_DEPRECATED('::display:content:ObjectProtected', $param);
                     break;
                 default :
-                    $param['informationType'] = 'error';
-                    $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                    //$param['informationType'] = 'error';
+                    //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotDisplayable', $param);
+                    $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     break;
             }
         } else {
-            $param['informationType'] = 'error';
-            $result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            //$param['informationType'] = 'error';
+            //$result .= $this->getDisplayInformation_DEPRECATED('::display:content:errorNotAvailable', $param);
+            $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
         }
 
         // Recherche si l'objet a une mise à jour.
@@ -5804,10 +5813,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                                 $icon = $this->_cacheInstance->newNodeByType(self::DEFAULT_ICON_LK);
                                 $this->displayUpdateImage(
                                     $icon,
-                                    '::display:content:ObjectProctected',
+                                    '::display:content:ObjectProtected',
                                     'iconInlineDisplay');
                                 echo ' ';
-                                echo $this->_translateInstance->getTranslate('::display:content:ObjectProctected'); ?></p>
+                                echo $this->_translateInstance->getTranslate('::display:content:ObjectProtected'); ?></p>
                         </div>
                         <?php
                     }

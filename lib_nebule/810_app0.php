@@ -292,12 +292,6 @@ class App0 extends Functions
                 margin-right: 1px;
             }
 
-            .preloadstitle {
-                font-weight: bold;
-                color: #ffffff;
-                font-size: 1.4em;
-            }
-
             #appslist {
             }
 
@@ -368,20 +362,6 @@ class App0 extends Functions
             .error, .important {
                 color: #ffffff;
                 font-weight: bold;
-            }
-
-            .diverror {
-                color: #ffffff;
-                padding-top: 6px;
-                padding-bottom: 6px;
-            }
-
-            .diverror pre {
-                padding-left: 6px;
-                margin: 3px;
-                border-left-style: solid;
-                border-left-color: #ababab;
-                border-left-width: 1px;
             }
 
             #reload {

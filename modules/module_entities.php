@@ -562,7 +562,7 @@ class ModuleEntities extends Module
     public function getCSS(): void {
         ?>
 
-        <style type="text/css">
+        <style>
             /* Création d'entité */
             input {
                 background: rgba(255, 255, 255, 0.5);

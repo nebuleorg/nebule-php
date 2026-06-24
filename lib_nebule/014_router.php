@@ -519,62 +519,6 @@ class Router extends Functions
             $this->_displayLoadingApplication();
         else
             $this->_displayPreloadingApplication();
-
-        /*if ($bootstrapApplicationIID == '0' || $bootstrapApplicationOID == '0') {
-            $instance = New \Nebule\Library\App0();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '1' && $this->_configurationInstance->getOptionAsBoolean('permitApplication1')) {
-            $instance = New \Nebule\Library\App1();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '2' && $this->_configurationInstance->getOptionAsBoolean('permitApplication2')) {
-            $instance = New \Nebule\Library\App2();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '3' && $this->_configurationInstance->getOptionAsBoolean('permitApplication3')) {
-            $instance = New \Nebule\Library\App3();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '4' && $this->_configurationInstance->getOptionAsBoolean('permitApplication4')) {
-            $instance = New \Nebule\Library\App4();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '5' && $this->_configurationInstance->getOptionAsBoolean('permitApplication5')) {
-            $instance = New \Nebule\Library\App5();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '6' && $this->_configurationInstance->getOptionAsBoolean('permitApplication6')) {
-            $instance = New \Nebule\Library\App6();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '7' && $this->_configurationInstance->getOptionAsBoolean('permitApplication7')) {
-            $instance = New \Nebule\Library\App7();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '8' && $this->_configurationInstance->getOptionAsBoolean('permitApplication8')) {
-            $instance = New \Nebule\Library\App8();
-            $instance->display();
-        }
-        elseif ($bootstrapApplicationIID == '9' && $this->_configurationInstance->getOptionAsBoolean('permitApplication9')) {
-            $instance = New \Nebule\Library\App9();
-            $instance->display();
-        }
-        elseif (strlen($bootstrapApplicationIID) < 2) {
-            $instance = New \Nebule\Library\App0();
-            $instance->display();
-        }*/
-//    elseif (isset($bootstrapApplicationInstanceSleep) && $bootstrapApplicationInstanceSleep != '')
-//        bootstrap_displaySleepingApplication();
-        /*elseif ($bootstrapApplicationNoPreload)
-            $this->_displayNoPreloadApplication();
-        else
-            $this->_displayPreloadApplication();*/
-
-        //\Nebule\Bootstrap\log_reopen(\Nebule\Bootstrap\BOOTSTRAP_NAME);
-
-        // Sérialise les instances et les sauve dans la session PHP.
-        //$this->_saveLibrarySession(); // FIXME à supprimer ?
     }
 
     private function _saveLibrarySession(): void {

@@ -387,56 +387,56 @@ namespace Nebule\Library;
  */
 class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInterface
 {
-    private ?Node $_nid = null;
-    private bool $_displayColor = true;
-    private bool $_displayIcon = false;
-    private bool $_displayIconApp = false;
-    private bool $_displayRefs = false;
-    private bool $_displayName = true;
-    private bool $_displayNID = false;
-    private bool $_displayFlags = false;
-    private bool $_displayFlagEmotions = false;
-    private bool $_displayFlagProtection = false;
-    private bool $_displayFlagObfuscate = false;
-    private bool $_displayFlagUnlocked = false;
-    private bool $_displayFlagActivated = false;
-    private bool $_displayFlagState = false;
-    private bool $_displayStatus = false;
-    private bool $_displayContent = false;
-    private bool $_displayActions = false;
-    private string $_actionsID = '';
-    private bool $_displayLink = true;
-    private bool $_displayLink2Refs = true;
-    private bool $_displayJS = true;
-    private bool $_displaySelfHook = true;
-    private bool $_displayTypeHook = true;
-    private string $_name = '';
-    private string $_appShortname = '';
-    private bool $_flagProtection = false;
-    private ?Node $_flagProtectionIcon = null;
-    private string $_flagProtectionText = '::display:object:flag:unprotected';
-    private string $_flagProtectionLink = '';
-    private bool $_flagObfuscate = false;
-    private ?Node $_flagObfuscateIcon = null;
-    private string $_flagObfuscateText = '::display:object:flag:unobfuscated';
-    private string $_flagObfuscateLink = '';
-    private bool $_flagUnlocked = false;
-    private ?Node $_flagUnlockedIcon = null;
-    private string $_flagUnlockedText = '::display:object:flag:locked';
-    private string $_flagUnlockedLink = '';
-    private bool $_flagActivated = false;
-    private string $_flagActivatedText = '::display:object:flag:unactivated';
-    private string $_flagState = '';
-    private ?Node $_flagStateIcon = null;
-    private string $_flagStateText = '';
-    private string $_flagMessage = '';
-    private array $_flagMessageList = array();
-    private ?Node $_flagTargetObject = null;
-    private string $_status = '';
-    private array $_refs = array();
-    private string $_selfHookName = '';
-    private string $_typeHookName = '';
-    private array $_selfHookList = array();
+    protected ?Node $_nid = null;
+    protected bool $_displayColor = true;
+    protected bool $_displayIcon = false;
+    protected bool $_displayIconApp = false;
+    protected bool $_displayRefs = false;
+    protected bool $_displayName = true;
+    protected bool $_displayNID = false;
+    protected bool $_displayFlags = false;
+    protected bool $_displayFlagEmotions = false;
+    protected bool $_displayFlagProtection = false;
+    protected bool $_displayFlagObfuscate = false;
+    protected bool $_displayFlagUnlocked = false;
+    protected bool $_displayFlagActivated = false;
+    protected bool $_displayFlagState = false;
+    protected bool $_displayStatus = false;
+    protected bool $_displayContent = false;
+    protected bool $_displayActions = false;
+    protected string $_actionsID = '';
+    protected bool $_displayLink = true;
+    protected bool $_displayLink2Refs = true;
+    protected bool $_displayJS = true;
+    protected bool $_displaySelfHook = true;
+    protected bool $_displayTypeHook = true;
+    protected string $_name = '';
+    protected string $_appShortname = '';
+    protected bool $_flagProtection = false;
+    protected ?Node $_flagProtectionIcon = null;
+    protected string $_flagProtectionText = '::display:object:flag:unprotected';
+    protected string $_flagProtectionLink = '';
+    protected bool $_flagObfuscate = false;
+    protected ?Node $_flagObfuscateIcon = null;
+    protected string $_flagObfuscateText = '::display:object:flag:unobfuscated';
+    protected string $_flagObfuscateLink = '';
+    protected bool $_flagUnlocked = false;
+    protected ?Node $_flagUnlockedIcon = null;
+    protected string $_flagUnlockedText = '::display:object:flag:locked';
+    protected string $_flagUnlockedLink = '';
+    protected bool $_flagActivated = false;
+    protected string $_flagActivatedText = '::display:object:flag:unactivated';
+    protected string $_flagState = '';
+    protected ?Node $_flagStateIcon = null;
+    protected string $_flagStateText = '';
+    protected string $_flagMessage = '';
+    protected array $_flagMessageList = array();
+    protected ?Node $_flagTargetObject = null;
+    protected string $_status = '';
+    protected array $_refs = array();
+    protected string $_selfHookName = '';
+    protected string $_typeHookName = '';
+    protected array $_selfHookList = array();
 
     protected function _initialisation(): void {
         $this->setSocial('');
@@ -844,7 +844,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             if ($this->_displayContent)
                 $objectContent = $this->_displayInstance->getDisplayObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS);
 
-            // Prépare le résultat à afficher.
+            // Prepare result to display.
             $result = $divDisplayOpen;
             $result .= $divTitleOpen . $titleContent . $divTitleClose;
             if (!$this->_displayJS
@@ -860,7 +860,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         return $result;
     }
 
-    private function _solveConflicts():void {
+    protected function _solveConflicts():void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_configurationInstance->getOptionAsBoolean('permitProtectedObject'))
             $this->_displayFlagProtection = false;
@@ -919,7 +919,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_displayNID = false;
     }
 
-    private function _getObjectColorHTML(): string {
+    protected function _getObjectColorHTML(): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_displayColor)
             return '';
@@ -935,7 +935,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         return $colorInstance->getHTML();
     }
 
-    private function _getObjectIconHTML(): string {
+    protected function _getObjectIconHTML(): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (!$this->_displayIcon)
             return '';
@@ -967,7 +967,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
      * @param array $list
      * @return string
      */
-    private function _getObjectRefsHTML(array $list): string {
+    protected function _getObjectRefsHTML(array $list): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // FIXME add $this->_displayLink2Refs support.
         $result = '';
@@ -1017,7 +1017,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
      * @param string  $descOn
      * @return string
      */
-    private function _getObjectFlagHTML(bool $on, string $image, string $descOff, string $descOn): string {
+    protected function _getObjectFlagHTML(bool $on, string $image, string $descOff, string $descOn): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $result = '';
 
@@ -1042,7 +1042,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
      * @param boolean $counts
      * @return string
      */
-    private function _getObjectFlagEmotionsHTML(Node $object, bool $counts = false): string {
+    protected function _getObjectFlagEmotionsHTML(Node $object, bool $counts = false): string {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         // Vérifie si les émotions doivent être affichées.
         if (!$this->_configurationInstance->getOptionUntyped('displayEmotions'))
@@ -1231,7 +1231,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_setFlagProtection();
     }
 
-    private function _setFlagProtection(): void {
+    protected function _setFlagProtection(): void {
         if ($this->_flagProtection)
             $this->_flagProtectionText = '::display:object:flag:protected';
         else
@@ -1267,7 +1267,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_setFlagObfuscate();
     }
 
-    private function _setFlagObfuscate(): void {
+    protected function _setFlagObfuscate(): void {
         if ($this->_flagObfuscate)
             $this->_flagObfuscateText = '::display:object:flag:obfuscated';
         else
@@ -1306,7 +1306,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_setFlagUnlocked();
     }
 
-    private function _setFlagUnlocked(): void {
+    protected function _setFlagUnlocked(): void {
         if ($this->_flagUnlocked)
             $this->_flagUnlockedText = '::display:object:flag:unlocked';
         else
@@ -1343,7 +1343,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_setActivated();
     }
 
-    private function _setActivated(): void {
+    protected function _setActivated(): void {
         if ($this->_flagActivated)
             $this->_flagActivatedText = '::display:object:flag:activated';
         else
@@ -1357,7 +1357,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         $this->_setFlagState();
     }
 
-    private function _setFlagState(): void {
+    protected function _setFlagState(): void {
         if ($this->_nid === null)
             $this->setFlagState('n');
         elseif ($this->_nid->getMarkDanger())
@@ -1438,7 +1438,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_setSelfHookName();
     }
 
-    private function _setSelfHookName(): void {
+    protected function _setSelfHookName(): void {
         if (is_a($this->_nid, 'Nebule\Library\Entity'))
             $this->_selfHookName = 'selfMenuEntity';
         elseif (is_a($this->_nid, 'Nebule\Library\Conversation'))
@@ -1467,7 +1467,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_setTypeHookName();
     }
 
-    private function _setTypeHookName(): void {
+    protected function _setTypeHookName(): void {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('track functions ' . $this->_nid, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if (is_a($this->_nid, 'Nebule\Library\Entity'))
             $this->_typeHookName = 'typeMenuEntity';

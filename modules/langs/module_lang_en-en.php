@@ -27,7 +27,7 @@ class ModuleTranslateENEN extends ModuleTranslates
     const MODULE_NAME = '::translateModule:en-en:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:en-en:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:en-en:ModuleDescription';
-    const MODULE_VERSION = '020260619';
+    const MODULE_VERSION = '020260624';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = '7796077f1b865951946dd40ab852f6f4d21e702e7c4f47bd5fa6cb9ce94a4c5f.sha2.256';
@@ -129,8 +129,8 @@ class ModuleTranslateENEN extends ModuleTranslates
             '::Wallet' => 'Wallet',
             '::display:content:errorBan' => "This object is banned, it can't be displayed!",
             '::display:content:warningTaggedWarning' => "This object is marked as dangerous, be carfull with it's content!",
-            '::display:content:ObjectProctected' => "This object is marked as protected!",
-            '::display:content:warningObjectProctected' => "This object is marked as protected, be careful when it's content is displayed in public!",
+            '::display:content:ObjectProtected' => "This object is marked as protected!",
+            '::display:content:warningObjectProtected' => "This object is marked as protected, be careful when it's content is displayed in public!",
             '::display:content:OK' => 'The object content is valid.',
             '::display:content:warningTooBig' => "This object is too big, it's content have not been checked!",
             '::display:content:errorNotDisplayable' => "This object can't be displayed!",

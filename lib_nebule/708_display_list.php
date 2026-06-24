@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace Nebule\Library;
 
+use Throwable;
+
 /**
  * Classe DisplayList
  *       ---
- * Display a list of mix with DisplayInformation, DisplayObject, DisplaySecurity, DisplayQuery and DisplayBlankLine.
+ * Display a list of mix with DisplayInformation, DisplayObject, DisplaySecurity, DisplayQuery, DisplayBlankLine and children classes.
  *       ---
  *  Example:
  *   FIXME
@@ -33,10 +35,10 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         $this->_prepareList();
         if (sizeof($this->_fullList) == 0) {
             if ($this->_enableWarnIfEmpty) {
-                $instanceWarn = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instanceWarn->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+                $instanceWarn = new DisplayInformation($this->_applicationInstance);
+                $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
                 $instanceWarn->setMessage('::list:empty');
-                $instanceWarn->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
+                $instanceWarn->setRatio(DisplayItem::RATIO_SHORT);
                 $instanceWarn->display();
             }
             return '';
@@ -48,36 +50,36 @@ class DisplayList extends DisplayItem implements DisplayInterface {
         $column = 0;
         foreach ($this->_fullList as $item){
             $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
-            if ($item instanceof \Nebule\Library\DisplayInformation) {
+            if ($item instanceof DisplayInformation) {
                 try {
                     $item->setSize($this->_sizeCSS);
                     $item->setDisplayAlone(false);
                     $result .= $item->getHTML();
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display information ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3a188875');
                 }
-            } elseif ($item instanceof \Nebule\Library\DisplayObject) {
+            } elseif ($item instanceof DisplayObject) {
                 try {
                     $item->setSize($this->_sizeCSS);
                     $result .= $item->getHTML();
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display object ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa1f3719');
                 }
-            } elseif ($item instanceof \Nebule\Library\DisplaySecurity) {
+            } elseif ($item instanceof DisplaySecurity) {
                 try {
                     $item->setSize($this->_sizeCSS);
                     $item->setDisplayAlone(false);
                     $result .= $item->getHTML();
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->_metrologyInstance->addLog('error get display security ('  . $e->getCode() . ') : ' . $e->getFile()
                         . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
                         . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a3a050a4');
                 }
-            } elseif ($item instanceof \Nebule\Library\DisplayBlankLine)
+            } elseif ($item instanceof DisplayBlankLine)
                 $result .= $item->getHTML();
             else
                 continue;
@@ -103,33 +105,33 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 $result .= "<br />\n";
             $url = $this->_prepareURL();
             if ($this->_currentPage > 1) {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_BACK);
+                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance->setType(DisplayItemIconMessage::TYPE_BACK);
                 $instance->setMessage('::previousPage', (string)$this->_currentPage, (string)$this->_lastPage);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setSize(DisplayItem::SIZE_SMALL);
                 $instance->setIconText('');
                 $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage - 1));
                 $result .= $instance->getHTML();
                 $result .= "\n";
             }
-            $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_MESSAGE);
+            $instance = new DisplayInformation($this->_applicationInstance);
+            $instance->setType(DisplayItemIconMessage::TYPE_MESSAGE);
             $first = ($this->_currentPage * $this->_listSize) - $this->_listSize + 1;
             $last = $this->_currentPage * $this->_listSize;
             if ($last > $this->_fullSize) $last = $this->_fullSize;
             $instance->setMessage('::page%s%s%s%s%s', (string)$this->_currentPage, (string)$this->_lastPage, (string)$first, (string)$last, (string)$this->_fullSize);
-            $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-            $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+            $instance->setRatio(DisplayItem::RATIO_SHORT);
+            $instance->setSize(DisplayItem::SIZE_SMALL);
             $instance->setIconText('');
             $result .= $instance->getHTML();
             $result .= "\n";
             if ($this->_currentPage < $this->_lastPage) {
-                $instance = new \Nebule\Library\DisplayInformation($this->_applicationInstance);
-                $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_PLAY);
+                $instance = new DisplayInformation($this->_applicationInstance);
+                $instance->setType(DisplayItemIconMessage::TYPE_PLAY);
                 $instance->setMessage('::nextPage', (string)$this->_currentPage, (string)$this->_lastPage);
-                $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
-                $instance->setSize(\Nebule\Library\DisplayItem::SIZE_SMALL);
+                $instance->setRatio(DisplayItem::RATIO_SHORT);
+                $instance->setSize(DisplayItem::SIZE_SMALL);
                 $instance->setIconText('');
                 $instance->setLink($url . '&' . Displays::COMMAND_DISPLAY_PAGE_LIST . '=' . ($this->_currentPage + 1));
                 $result .= $instance->getHTML();
@@ -139,10 +141,10 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     }
 
     public function addItem(DisplayItem $item): void {
-        if ($item instanceof \Nebule\Library\DisplayInformation
-            || $item instanceof \Nebule\Library\DisplayObject
-            || $item instanceof \Nebule\Library\DisplaySecurity // and \Nebule\Library\DisplayQuery
-            || $item instanceof \Nebule\Library\DisplayBlankLine
+        if ($item instanceof DisplayInformation
+            || $item instanceof DisplayObject
+            || $item instanceof DisplaySecurity // and DisplayQuery
+            || $item instanceof DisplayBlankLine
         )
             $this->_listAdd[] = $item;
         else
@@ -186,10 +188,10 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             if (intval($count / $this->_listSize) == ($this->_currentPage - 1)) {
                 try {
                     $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $this->_metrologyInstance->addLog('error get hook function ' . $this->_listHookName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                             . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                            . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '00000000');
+                            . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'efa38425');
                     $instance = null;
                 }
                 if ($instance != null)

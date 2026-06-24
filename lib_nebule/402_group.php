@@ -42,10 +42,6 @@ class Group extends Node implements nodeInterface {
             '_isMarkClosed',
             '_isMarkProtected',
             '_isMarkObfuscated',
-            '_referenceObject',
-            '_referenceObjectClosed',
-            '_referenceObjectProtected',
-            '_referenceObjectObfuscated',
     );
     
     protected string $_short_class_name = '';

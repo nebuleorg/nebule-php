@@ -27,7 +27,7 @@ class ModuleTranslateFRFR extends ModuleTranslates
     const MODULE_NAME = '::translateModule:fr-fr:ModuleName';
     const MODULE_MENU_NAME = '::translateModule:fr-fr:MenuName';
     const MODULE_DESCRIPTION = '::translateModule:fr-fr:ModuleDescription';
-    const MODULE_VERSION = '020260619';
+    const MODULE_VERSION = '020260624';
     const MODULE_AUTHOR = 'Projet nebule';
     const MODULE_LICENCE = 'GNU GLP v3 2013-2026';
     const MODULE_LOGO = 'b55cb8774839a5a894cecf77ce5e47db7fc114c2bc92e3dfc77cb9b4a8f488ac.sha2.256';
@@ -129,8 +129,8 @@ class ModuleTranslateFRFR extends ModuleTranslates
             '::Wallet' => 'Porte monnaie',
             '::display:content:errorBan' => 'Cet objet est banni, il ne peut pas être affiché !',
             '::display:content:warningTaggedWarning' => 'Cet objet est marqué comme dangereux, attention à son contenu !',
-            '::display:content:ObjectProctected' => 'Cet objet est protégé !',
-            '::display:content:warningObjectProctected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
+            '::display:content:ObjectProtected' => 'Cet objet est protégé !',
+            '::display:content:warningObjectProtected' => 'Cet objet est marqué comme protégé, attention à la divulgation de son contenu en public !!!',
             '::display:content:OK' => "Le contenu de l'objet est valide.",
             '::display:content:warningTooBig' => "Cet objet est trop volumineux, son contenu n'a pas été vérifié !",
             '::display:content:errorNotDisplayable' => 'Cet objet ne peut pas être affiché !',

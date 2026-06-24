@@ -1,17 +1,9 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Application\Modules;
-use Nebule\Library\nebule;
 use Nebule\Library\References;
-use Nebule\Library\Metrology;
-use Nebule\Library\Applications;
 use Nebule\Library\Displays;
-use Nebule\Library\Actions;
-use Nebule\Library\Translates;
-use Nebule\Library\ModuleInterface;
 use Nebule\Library\Module;
-use Nebule\Library\ModelModuleHelp;
-use Nebule\Library\ModuleTranslates;
 
 /**
  * This module can manage media supports. There can be attached to groups (or objects) in a related gallery.
@@ -316,7 +308,7 @@ class ModuleGalleries extends Module {
                     return null;
                 $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
                 $node = $this->_cacheInstance->newNode($item);
-                $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
                 $this->_getCurrentItemFounders($node);
                 $this->_getCurrentItemSocialList($node);
                 $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
@@ -341,14 +333,14 @@ class ModuleGalleries extends Module {
                 $instance->setTypeHookName('typeGallery');
                 $instance->setIcon($instanceIcon);
                 return $instance;
-                break;
+                //break;
             case 'displayFolderMembers':
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
                 if ($this->_listTypes[$item] == 'folder') {
                     $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
                     $node = $this->_cacheInstance->newNodeByType($item);
-                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                    $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
                     $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
                     $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
@@ -374,7 +366,7 @@ class ModuleGalleries extends Module {
                 } elseif ($this->_listTypes[$item] == 'object') {
                     $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
                     $node = $this->_cacheInstance->newNodeByType($item);
-                    $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
+                    $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
                     $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
                     $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
@@ -398,7 +390,7 @@ class ModuleGalleries extends Module {
                     return $instance;
                 } else
                     return null;
-                break;
+                //break;
             default:
                 return null;
         }
