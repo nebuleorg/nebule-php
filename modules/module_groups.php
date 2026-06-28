@@ -570,12 +570,8 @@ class ModuleGroups extends Module {
             $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
             $instanceList->setEnableWarnIfEmpty(false);
             $instanceList->display();
-        } else {
-            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::err_NotPermit');
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $instance->display();
-        }
+        } else
+            $this->_displayInstance->displayMessageError('::err_NotPermit');
     }
 
     protected function _listMembersToAdd(): array { return $this->_ioInstance->getList(); }

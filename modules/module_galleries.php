@@ -307,8 +307,9 @@ class ModuleGalleries extends Module {
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
                 $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
-                $node = $this->_cacheInstance->newNode($item);
+                $node = $this->_cacheInstance->newGroup($item);
                 $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
+                //$instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
                 $this->_getCurrentItemFounders($node);
                 $this->_getCurrentItemSocialList($node);
                 $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);

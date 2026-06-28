@@ -44,11 +44,17 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
             }
         }
 
-        $divObjectOpen = '';
-        $divObjectClose = '';
-        $objectContent = $this->_displayInstance->getDisplayObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS);
+        $divObjectOpen = '<div class="objectContent">' . "\n";
+        $divObjectClose = '</div>' . "\n";
+        $objectContent = '';
+        if ($this->_displayContent)
+            $objectContent = $this->_displayInstance->getDisplayObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS);
+        else {
+            $objectContent = '<img title="' . $this->_name . '"' . $this->_styleCSS
+                . ' alt="[C]" src="o/' . DisplayColor::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"/>';
+        }
 
-
+        // FIXME
 
         // Prepare result to display.
         $result = $divDisplayOpen;

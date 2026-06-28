@@ -1432,7 +1432,6 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         DisplayIcon::displayCSS();
         DisplayIconApplication::displayCSS();
         DisplayContent::displayCSS();
-        DisplayNotify::displayCSS();
         DisplayQuery::displayCSS();
         DisplayWikiSimple::displayCSS();
     }
@@ -2075,52 +2074,48 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /* --------------------------------------------------------------------------------
 	 *  Affichage des messages.
 	 * -------------------------------------------------------------------------------- */
-    public function displayMessageInformation(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
+    public function displayMessageInformation(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void {
+        $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setType(DisplayItemIconMessage::TYPE_INFORMATION);
         $instance->display();
     }
 
-    public function displayMessageOk(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
+    public function displayMessageOk(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void {
+        $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setType(DisplayItemIconMessage::TYPE_OK);
         $instance->display();
     }
 
-    public function getDisplayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
+    public function getDisplayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string {
+        $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setType(DisplayItemIconMessage::TYPE_WARN);
         return $instance->getHTML();
     }
 
-    public function displayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
-        $instance->setType(DisplayItemIconMessage::TYPE_WARN);
-        $instance->display();
+    public function displayMessageWarning(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void {
+        echo $this->getDisplayMessageWarning($text, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
-    public function getDisplayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
+    public function getDisplayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): string {
+        $instance = new DisplayInformation($this->_applicationInstance);
         $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
+        $instance->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
+        $instance->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
         return $instance->getHTML();
     }
 
-    public function displayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void
-    {
-        $instance = new DisplayNotify($this->_applicationInstance);
-        $instance->setMessage($text, $arg1, $arg2, $arg3, $arg4, $arg5);
-        $instance->setType(DisplayItemIconMessage::TYPE_ERROR);
-        $instance->display();
+    public function displayMessageError(string $text, string $arg1 = '', string $arg2 = '', string $arg3 = '', string $arg4 = '', string $arg5 = ''): void {
+        echo $this->getDisplayMessageError($text, $arg1, $arg2, $arg3, $arg4, $arg5);
     }
 
 
@@ -2191,12 +2186,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     $result .= "</div>\n";
                 }
-            } else {
-                $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage('::display:content:errorNotAvailable');
-                $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                $result .= $notify->getHTML();
-            }
+            } else
+                $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
         } elseif ($isGroup) {
             if (!is_a($object, 'Group'))
                 $object = $this->_cacheInstance->newGroup($object->getID());
@@ -2269,19 +2260,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         $type = $this->_translateInstance->getTranslate($typemime);
 
         // Affichage du contenu.
-        if ($danger) {
-
-            $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage('::display:content:errorBan');
-            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-            $result .= $notify->getHTML();
-        } elseif ($protected
+        if ($danger)
+            $result .= $this->getDisplayMessageError('::display:content:errorBan');
+        elseif ($protected
             && $nid == $object->getProtectedID()
         ) {
-            $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage('::display:content:warningObjectProtected');
-            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-            $result .= $notify->getHTML();
+            $result .= $this->getDisplayMessageWarning('::display:content:warningObjectProtected');
             $unprotectedObject = $this->_cacheInstance->newNodeByType($object->getUnprotectedID());
             $unprotectedName = $unprotectedObject->getFullName('all');
             $unprotectedTypemime = $unprotectedObject->getType('all');
@@ -2298,21 +2282,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $result .= "</div>\n";
             unset($unprotectedObject, $unprotectedName, $unprotectedTypemime, $htlink);
         } elseif ($ispresent) {
-            if ($warning) {
-                $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage('::display:content:warningTaggedWarning');
-                $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                $result .= $notify->getHTML();
-            }
+            if ($warning)
+                $result .= $this->getDisplayMessageWarning('::display:content:warningTaggedWarning');
             if ($protected
                 && $unlocked
                 && $permitWarnProtected
-            ) {
-                $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage('::display:content:warningObjectProtected');
-                $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                $result .= $notify->getHTML();
-            }
+            )
+                $result .= $this->getDisplayMessageWarning('::display:content:warningObjectProtected');
             $divOpen = "<div class=\"textcontent" . $size . "\">\n\t";
             $divClose = "\n</div>\n";
             switch ($typemime) {
@@ -2323,17 +2299,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                         $result = $result . $divOpen . '<img src="?o=' . $nid
                             . '" alt="Image ' . $nid . '">' . $divClose;
                     else {
-                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:warningTooBig');
-                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                            $result .= $notify->getHTML();
-                        } else {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                            $result .= $notify->getHTML();
-                        }
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
+                            $result .= $this->getDisplayMessageWarning('::display:content:warningTooBig');
+                        else
+                            $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_TEXT :
@@ -2341,17 +2310,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<p>' . $content . '</p>' . $divClose;
                     else {
-                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:warningTooBig');
-                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                            $result .= $notify->getHTML();
-                        } else {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                            $result .= $notify->getHTML();
-                        }
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
+                            $result .= $this->getDisplayMessageWarning('::display:content:warningTooBig');
+                        else
+                            $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     unset($content);
                     break;
@@ -2364,17 +2326,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<pre>' . $content . '</pre>' . $divClose;
                     else {
-                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:warningTooBig');
-                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                            $result .= $notify->getHTML();
-                        } else {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                            $result .= $notify->getHTML();
-                        }
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
+                            $result .= $this->getDisplayMessageWarning('::display:content:warningTooBig');
+                        else
+                            $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     unset($content);
                     break;
@@ -2383,18 +2338,10 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/mp3" />' . $this->_translateInstance->getTranslate('::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
-                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:warningTooBig');
-                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                            $result .= $notify->getHTML();
-                        }
-                        else {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:errorNotAvailable');
-                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                            $result .= $notify->getHTML();
-                        }
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
+                            $result .= $this->getDisplayMessageWarning('::display:content:warningTooBig');
+                        else
+                            $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_OGG :
@@ -2402,38 +2349,22 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     if ($content != null)
                         $result = $result . $divOpen . '<br /><audio controls><source src="?o=' . $nid . '" type="audio/ogg" />' . $this->_translateInstance->getTranslate('::warn_NoAudioTagSupport') . '</audio><br />' . $divClose;
                     else {
-                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash')) {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:warningTooBig');
-                            $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                            $result .= $notify->getHTML();
-                        } else {
-                            $notify = new DisplayNotify($this->_applicationInstance);
-                            $notify->setMessage('::display:content:errorNotDisplayable');
-                            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                            $result .= $notify->getHTML();
-                        }
+                        if (!$this->_configurationInstance->getOptionAsBoolean('permitCheckObjectHash'))
+                            $result .= $this->getDisplayMessageWarning('::display:content:warningTooBig');
+                        else
+                            $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     }
                     break;
                 case References::REFERENCE_OBJECT_CRYPT_RSA :
-                    $notify = new DisplayNotify($this->_applicationInstance);
-                    $notify->setMessage('::display:content:warningObjectProtected');
-                    $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                    $result .= $notify->getHTML();
+                    $result .= $this->getDisplayMessageWarning('::display:content:warningObjectProtected');
                     break;
                 default :
-                    $notify = new DisplayNotify($this->_applicationInstance);
-                    $notify->setMessage('::display:content:errorNotDisplayable');
-                    $notify->setType(DisplayItemIconMessage::TYPE_WARN);
-                    $result .= $notify->getHTML();
+                    $result .= $this->getDisplayMessageError('::display:content:errorNotDisplayable');
                     break;
             }
-        } else {
-            $notify = new DisplayNotify($this->_applicationInstance);
-            $notify->setMessage('::display:content:errorNotAvailable');
-            $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-            $result .= $notify->getHTML();
-        }
+        } else
+            $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
+
 
         return $result;
     }
@@ -4257,12 +4188,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                     }
                     $result .= "</div>\n";
                 }
-            } else {
-                $notify = new DisplayNotify($this->_applicationInstance);
-                $notify->setMessage('::display:content:errorNotAvailable');
-                $notify->setType(DisplayItemIconMessage::TYPE_ERROR);
-                $result .= $notify->getHTML();
-            }
+            } else
+                $result .= $this->getDisplayMessageError('::display:content:errorNotAvailable');
         } elseif (is_a($object, 'Nebule\Library\Group')) {
             $result .= '<div class="objectContentGroup">' . "\n\t<p>"
                 . sprintf($this->_translateInstance->getTranslate('::UniqueID'),

@@ -42,8 +42,8 @@ class DisplayColor extends DisplayItemCSS implements DisplayInterface
             return '';
         }
 
-        $result = '<img title="' . $this->_name . '"' . $this->_styleCSS;
-        $result .= ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"';
+        $result = '<img title="' . $this->_name . '"' . $this->_styleCSS
+                . ' alt="[C]" src="o/' . self::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"';
         if ($this->_classCSS != '')
             $result .= ' class="' . $this->_classCSS . '"';
         if ($this->_idCSS != '')

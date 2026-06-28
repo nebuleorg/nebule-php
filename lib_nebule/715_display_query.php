@@ -24,8 +24,7 @@ namespace Nebule\Library;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class DisplayQuery extends DisplayInformation implements DisplayInterface
-{
+class DisplayQuery extends DisplayInformation implements DisplayInterface {
     public const QUERY_STRING = 'query';
     public const QUERY_PASSWORD = 'password';
     public const QUERY_BOOLEAN = 'boolean';

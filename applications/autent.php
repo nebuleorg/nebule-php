@@ -229,10 +229,7 @@ class Display extends Displays
             $this->_displayInlineContentID();
         } else {
             $this->_metrologyInstance->addLog('Error loading ModuleAutent', Metrology::LOG_LEVEL_ERROR, __METHOD__, '57b017ad');
-            $notify = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $notify->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $notify->setMessage('::ERROR');
-            $notify->display();
+            $this->_displayInstance->displayMessageError('::ERROR');
         }
     }
 

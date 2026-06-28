@@ -21,8 +21,7 @@ use Nebule\Library\ModuleTranslates;
  * @copyright Projet nebule
  * @link www.nebule.org
  */
-class ModuleEntities extends Module
-{
+class ModuleEntities extends Module {
     const MODULE_TYPE = 'Application';
     const MODULE_NAME = '::ModuleName';
     const MODULE_MENU_NAME = '::MenuName';
@@ -1864,12 +1863,8 @@ class ModuleEntities extends Module
             $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
             $instanceList->setOnePerLine();
             $instanceList->display();
-        } else {
-            $instance = new \Nebule\Library\DisplayNotify($this->_applicationInstance);
-            $instance->setMessage('::err_NotPermit');
-            $instance->setType(\Nebule\Library\DisplayItemIconMessage::TYPE_ERROR);
-            $instance->display();
-        }
+        } else
+            $this->_displayInstance->displayMessageError('::err_NotPermit');
     }
 
 
