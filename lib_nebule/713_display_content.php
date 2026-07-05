@@ -130,10 +130,6 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
         <style type="text/css">
             /* CSS for DisplayContent(). */
             .objectContent {
-            }
-
-            /* .layoutInformation { max-width:2000px; } */
-            .objectContent .layoutInformation {
                 margin-left: -3px;
             }
 

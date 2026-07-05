@@ -1496,35 +1496,14 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public static function displayCSS(): void {
         ?>
 
-        <style type="text/css">
+        <style>
             /* CSS for DisplayObject(). */
-            .layoutObject {
-                margin: 5px 0 0 5px;
-                border: 0;
-                background: none;
-                display: inline-block;
-                vertical-align: top;
-            }
-
-            .objectDisplayTiny {
-                font-size: 16px;
-            }
-
-            .objectDisplaySmall {
-                font-size: 32px;
-            }
-
-            .objectDisplayMedium {
-                font-size: 64px;
-            }
-
-            .objectDisplayLarge {
-                font-size: 128px;
-            }
-
-            .objectDisplayFull {
-                font-size: 256px;
-            }
+            .layoutObject { margin: 0; border: 0; background: none; display: inline-block; vertical-align: top; }
+            .objectDisplayTiny { font-size: 16px; }
+            .objectDisplaySmall { font-size: 32px; }
+            .objectDisplayMedium { font-size: 64px; }
+            .objectDisplayLarge { font-size: 128px; }
+            .objectDisplayFull { font-size: 256px; }
 
             .objectTitle a:link, .objectTitle a:visited {
                 font-weight: bold;
@@ -1794,100 +1773,25 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 padding-right: 2px;
             }
 
-            .objectDisplayTinyShort {
-            }
+            .objectDisplayTinyShort {}
+            .objectDisplaySmallShort { width: 8em; }
+            .objectDisplayMediumShort { width: 6em; }
+            .objectDisplayLargeShort { width: 5em; }
+            .objectDisplayFullShort { width: 4em; }
 
-            .objectDisplaySmallShort {
-                width: 8em;
-            }
-
-            .objectDisplayMediumShort {
-                width: 6em;
-            }
-
-            .objectDisplayLargeShort {
-                width: 5em;
-            }
-
-            .objectDisplayFullShort {
-                width: 4em;
-            }
-
-            .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                width: 256px;
-            }
-
-            @media screen and (min-width: 320px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 310px;
-                }
-            }
-
-            @media screen and (min-width: 480px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 470px;
-                }
-            }
-
-            @media screen and (min-width: 600px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 590px;
-                }
-            }
-
-            @media screen and (min-width: 768px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 758px;
-                }
-            }
-
-            @media screen and (min-width: 1024px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1014px;
-                }
-            }
-
-            @media screen and (min-width: 1200px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1190px;
-                }
-            }
-
-            @media screen and (min-width: 1600px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1590px;
-                }
-            }
-
-            @media screen and (min-width: 1920px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1910px;
-                }
-            }
-
-            @media screen and (min-width: 2048px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 2038px;
-                }
-            }
-
-            @media screen and (min-width: 2400px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 2390px;
-                }
-            }
-
-            @media screen and (min-width: 3840px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 3830px;
-                }
-            }
-
-            @media screen and (min-width: 4096px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 4086px;
-                }
-            }
+            .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 256px; }
+            @media screen and (min-width: 320px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 310px; } }
+            @media screen and (min-width: 480px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 470px; } }
+            @media screen and (min-width: 600px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 590px; } }
+            @media screen and (min-width: 768px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 758px; } }
+            @media screen and (min-width: 1024px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 1014px; } }
+            @media screen and (min-width: 1200px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 1190px; } }
+            @media screen and (min-width: 1600px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 1590px; } }
+            @media screen and (min-width: 1920px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 1910px; } }
+            @media screen and (min-width: 2048px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 2038px; } }
+            @media screen and (min-width: 2400px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 2390px; } }
+            @media screen and (min-width: 3840px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 3830px; } }
+            @media screen and (min-width: 4096px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 4086px; } }
 
             .objectContent {
                 font-size: 0.8rem;

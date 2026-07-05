@@ -731,7 +731,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
             .header-left-ent {
                 height: 64px;
-                margin-top: -5px;
+                margin-left: 5px;
                 float: right;
             }
 
@@ -1423,6 +1423,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         DisplayTitle::displayCSS();
         DisplayInformation::displayCSS();
         DisplayObject::displayCSS();
+        DisplayObjectSquare::displayCSS();
         DisplayLink::displayCSS();
         DisplayBlockLink::displayCSS();
         DisplaySecurity::displayCSS();

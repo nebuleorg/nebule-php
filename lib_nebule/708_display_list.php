@@ -33,7 +33,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('get HTML content', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
 
         $this->_prepareList();
-        if (sizeof($this->_fullList) == 0) {
+        if ($this->_listSize == 0) {
             if ($this->_enableWarnIfEmpty) {
                 $instanceWarn = new DisplayInformation($this->_applicationInstance);
                 $instanceWarn->setType(DisplayItemIconMessage::TYPE_MESSAGE);
@@ -42,60 +42,70 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 $instanceWarn->display();
             }
             return '';
-        }
-
-        $result = '<div class="layoutList">' . "\n";
-        $result .= '<div class="listContent">' . "\n";
-        $this->_getNavHTML($result);
-        $column = 0;
-        foreach ($this->_fullList as $item){
-            $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
-            if ($item instanceof DisplayInformation) {
-                try {
-                    $item->setSize($this->_sizeCSS);
-                    $item->setDisplayAlone(false);
+        } else {
+            $result = '<div class="layoutList">' . "\n";
+            //$result .= '<div class="listContent" style="min-width: ' . $this->_getLayoutSize() . 'px">' . "\n";
+            $result .= '<div class="listContent" style="min-width: 900px">' . "\n";
+            $this->_getNavHTML($result);
+            $column = 0;
+            foreach ($this->_fullList as $item) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog('get code from ' . get_class($item), Metrology::LOG_LEVEL_DEBUG, __METHOD__, '52d6f3ea');
+                $result .= '<div class="listItemContent">' . "\n";
+                if ($item instanceof DisplayInformation) {
+                    try {
+                        $item->setSize($this->_sizeCSS);
+                        $item->setDisplayAlone(false);
+                        $result .= $item->getHTML();
+                    } catch (Throwable $e) {
+                        $this->_metrologyInstance->addLog('error get display information (' . $e->getCode() . ') : ' . $e->getFile()
+                                . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n"
+                                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3a188875');
+                    }
+                } elseif ($item instanceof DisplayObject) {
+                    try {
+                        $item->setSize($this->_sizeCSS);
+                        $result .= $item->getHTML();
+                    } catch (Throwable $e) {
+                        $this->_metrologyInstance->addLog('error get display object (' . $e->getCode() . ') : ' . $e->getFile()
+                                . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n"
+                                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa1f3719');
+                    }
+                } elseif ($item instanceof DisplaySecurity) {
+                    try {
+                        $item->setSize($this->_sizeCSS);
+                        $item->setDisplayAlone(false);
+                        $result .= $item->getHTML();
+                    } catch (Throwable $e) {
+                        $this->_metrologyInstance->addLog('error get display security (' . $e->getCode() . ') : ' . $e->getFile()
+                                . '(' . $e->getLine() . ') : ' . $e->getMessage() . "\n"
+                                . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a3a050a4');
+                    }
+                } elseif ($item instanceof DisplayBlankLine)
                     $result .= $item->getHTML();
-                } catch (Throwable $e) {
-                    $this->_metrologyInstance->addLog('error get display information ('  . $e->getCode() . ') : ' . $e->getFile()
-                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3a188875');
+                else
+                    continue;
+                $result .= '</div>';
+                $column++;
+                if ($this->_onPerLine || $column >= $this->_pageColumns) {
+                    $result .= '<br />';
+                    $column = 0;
                 }
-            } elseif ($item instanceof DisplayObject) {
-                try {
-                    $item->setSize($this->_sizeCSS);
-                    $result .= $item->getHTML();
-                } catch (Throwable $e) {
-                    $this->_metrologyInstance->addLog('error get display object ('  . $e->getCode() . ') : ' . $e->getFile()
-                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'aa1f3719');
-                }
-            } elseif ($item instanceof DisplaySecurity) {
-                try {
-                    $item->setSize($this->_sizeCSS);
-                    $item->setDisplayAlone(false);
-                    $result .= $item->getHTML();
-                } catch (Throwable $e) {
-                    $this->_metrologyInstance->addLog('error get display security ('  . $e->getCode() . ') : ' . $e->getFile()
-                        . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
-                        . $e->getTraceAsString(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'a3a050a4');
-                }
-            } elseif ($item instanceof DisplayBlankLine)
-                $result .= $item->getHTML();
-            else
-                continue;
-            $column++;
-            if ($this->_onPerLine || $column >= $this->_pageColumns) {
-                $result .= '<br />';
-                $column = 0;
+                $result .= "\n";
             }
+            $this->_getNavHTML($result, ($column != 0));
+            $result .= '</div>';
+            $result .= '</div>';
             $result .= "\n";
         }
-        $this->_getNavHTML($result, ($column != 0));
-        $result .= '</div>';
-        $result .= '</div>';
-        $result .= "\n";
 
         return $result;
+    }
+
+    protected function _getLayoutSize(): int { // FIXME pour toutes les sizeCSS. FIXME bugg
+        if ( $this->_fullSize > $this->_pageColumns)
+            return 2 + ($this->_pageColumns * 384 + 4) + 2;
+        else
+            return 2 + ($this->_fullSize * 384 + 4) + 2;
     }
 
     protected function _getNavHTML(string &$result, bool $needBR = false): void {
@@ -221,11 +231,11 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public static function displayCSS(): void {
         ?>
 
-        <style type="text/css">
+        <style>
             /* CSS de la fonction DisplayList(). */
-            .layoutList {
-                padding: 3px;
-            }
+            .layoutList { padding: 3px; }
+            .listContent { padding: 2px; background: rgb(69 69 69 / 5%); text-align: center; }
+            .listItemContent { padding: 2px; }
         </style>
         <?php
     }
