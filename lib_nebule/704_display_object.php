@@ -394,6 +394,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     protected bool $_displayRefs = false;
     protected bool $_displayName = true;
     protected bool $_displayNID = false;
+    protected bool $_displayType = false;
     protected bool $_displayFlags = false;
     protected bool $_displayFlagEmotions = false;
     protected bool $_displayFlagProtection = false;
@@ -1148,6 +1149,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     public function setEnableName(bool $enable = true): void { $this->_displayName = $enable; }
 
     public function setEnableNID(bool $enable = true): void { $this->_displayNID = $enable; }
+
+    public function setEnableType(bool $enable = true): void { $this->_displayType = $enable; $this->setType(); }
 
     public function setEnableFlags(bool $enable = true): void { $this->_displayFlags = $enable; }
 

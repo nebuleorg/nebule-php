@@ -17,9 +17,6 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         $result = '';
         $this->_ratioCSS = 'Square'; // Forced here. TODO to remove.
 
-        $divDisplayOpen = '<div class="layoutObject">' . "\n";
-        $divDisplayClose = '</div>' . "\n";
-
         $htLinkOpen = '';
         $htLinkClose = '';
         if ($this->_displayLink) {
@@ -32,7 +29,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
 
         $divObjectOpen = '<div class="objectSquareContainer objectDisplay' . $this->_sizeCSS . ' objectSquareContainer' . $this->_sizeCSS . '">' . "\n";
         $divObjectClose = '</div>' . "\n";
-        $objectContent = '';
+        $objectContentFlag = '';
         /*if ($this->_displayContent)
             $objectContent = $this->_displayInstance->getDisplayObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS);
         else {
@@ -40,24 +37,33 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 . ' alt="[C]" src="o/' . DisplayColor::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"/>';
         }*/
 
-        $type = $this->_nid->getType();
-        if ($type == References::REFERENCE_OBJECT_JPEG || $type == References::REFERENCE_OBJECT_PNG) {
+        //$type = $this->_nid->getType();
+        if ($this->_type == References::REFERENCE_OBJECT_JPEG || $this->_type == References::REFERENCE_OBJECT_PNG) {
             $objectContent = '<img src="o/' . $this->_nid . '" alt="I" class="objectSquareContent" />';
-            $objectContent .= '<div class="objectSquareTitle">' . $this->_nid->getFullName() . '</div>';
-            $objectContent .= '<div class="objectSquareComment">' . $this->_translateInstance->getTranslate($type) . '<br />' . $this->_displayInstance->prepareObjectColor($this->_nid) . $this->_nid->getID() . '</div>';
-        }
-        else {
-            $type = 'application/x-folder';
+        } elseif ($this->_type == References::REFERENCE_OBJECT_TEXT) {
+            $objectContent = '<div class="objectSquareContent"><p>' . $this->_nid->readAsText() . '</p></div>';
+        } else {
+            $this->_type = 'application/x-folder';
+            $this->_displayName = false;
             $objectContent = '<div class="objectSquareContent"><p>' . $this->_nid->getFullName() . '</p></div>';
-            $objectContent .= '<div class="objectSquareComment">' . $this->_translateInstance->getTranslate($type) . '<br />' . $this->_displayInstance->prepareObjectColor($this->_nid) . $this->_nid->getID() . '</div>';
         }
-
-        // FIXME
+        if ($this->_displayName)
+            $objectContent .= '<div class="objectSquareTitle">' . $this->_nid->getFullName() . '</div>';
+        if ($this->_displayType)
+            $objectContentFlag .= $this->_type;
+        if ($this->_displayNID) {
+            if ($objectContentFlag != '') $objectContentFlag .= '<br />' ;
+            if ($this->_displayColor) $objectContentFlag .= $this->_displayInstance->prepareObjectColor($this->_nid);
+            if ($this->_displayIcon) $objectContentFlag .= $this->_displayInstance->prepareObjectFace($this->_nid);
+            $objectContentFlag .= $this->_nid->getID();
+        }
+        if ($objectContentFlag != '')
+            $objectContent .= '<div class="objectSquareFlags">' . $objectContentFlag .'</div>';
 
         // Prepare result to display.
-        $result = $divDisplayOpen;
+        $result = '<div class="layoutObject">' . "\n";
         $result .= $htLinkOpen . $divObjectOpen . $objectContent . $divObjectClose . $htLinkClose;
-        $result .= $divDisplayClose;
+        $result .= '</div>' . "\n";
 
         return $result;
     }
@@ -92,11 +98,11 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         )
             $this->_displayActions = false;
 
-        if (!$this->_displayName) {
+        /*if (!$this->_displayName) {
             $this->_displayRefs = false;
             $this->_displayFlags = false;
             $this->_displayStatus = false;
-        }
+        }*/
 
         if (!$this->_configurationInstance->getOptionAsBoolean('displayEmotions'))
             $this->_displayFlagEmotions = false;
@@ -156,7 +162,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 opacity: 0;
                 transition: opacity 0.3s ease;
             }
-            .objectSquareComment {
+            .objectSquareFlags {
                 position: absolute;
                 bottom: 5%;
                 left: 5%;
@@ -172,13 +178,13 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 opacity: 0;
                 transition: opacity 0.3s ease;
             }
-            .objectSquareComment img {
+            .objectSquareFlags img {
                 height: 16px;
                 width: 16px;
                 vertical-align: baseline;
             }
             .objectSquareContainer:hover .objectSquareTitle,
-            .objectSquareContainer:hover .objectSquareComment { opacity: 1; }
+            .objectSquareContainer:hover .objectSquareFlags { opacity: 1; }
         </style>
         <?php
     }

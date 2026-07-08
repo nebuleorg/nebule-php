@@ -350,9 +350,13 @@ class ModuleGalleries extends Module {
                         . '&' . self::COMMAND_SELECT_GALLERY . '=' . $this->_instanceCurrentGallery->getID()
                         . '&' . self::COMMAND_SELECT_FOLDER . '=' . $item
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                    $instance->setEnableNID(true);
+                    $instance->setEnableName(true);
+                    $instance->setEnableType(true);
+                    $instance->setType('application/x-folder');
+                    $instance->setEnableStatus(true);
                     $instance->setEnableColor(true);
                     $instance->setEnableIcon(true);
-                    $instance->setEnableName(true);
                     $instance->setEnableFlags(false);
                     $instance->setEnableContent(false);
                     $instance->setEnableJS(true);
@@ -375,9 +379,12 @@ class ModuleGalleries extends Module {
                         . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $item
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
+                    $instance->setEnableNID(true);
+                    $instance->setEnableName(true);
+                    $instance->setEnableType(true);
+                    $instance->setEnableStatus(true);
                     $instance->setEnableColor(true);
                     $instance->setEnableIcon(true);
-                    $instance->setEnableName(true);
                     $instance->setEnableFlags(false);
                     $instance->setEnableContent(true);
                     $instance->setEnableJS(true);
