@@ -991,8 +991,8 @@ abstract class Module extends Functions implements ModuleInterface {
             if ($l == '' || str_starts_with($l, '#'))
                 continue;
 
-            $nameOnFile = trim((string)filter_var(strtok($l, '='), FILTER_SANITIZE_STRING));
-            $value = trim((string)filter_var(strtok('='), FILTER_SANITIZE_STRING));
+            $nameOnFile = trim((string)htmlspecialchars(strtok($l, '=')));
+            $value = trim((string)htmlspecialchars(strtok('=')));
             if ($nameOnFile == 'eid')
                 $eid = $value;
         }

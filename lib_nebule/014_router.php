@@ -309,8 +309,8 @@ class Router extends Functions
             $l = trim($line);
             if (str_starts_with($l, "#"))
                 continue;
-            $name = trim((string)filter_var(strtok($l, ' '), FILTER_SANITIZE_STRING));
-            $value = trim(substr_replace(filter_var(strtok(' '), FILTER_SANITIZE_STRING), '', -1));
+            $name = trim((string)htmlspecialchars((string)strtok($l, ' ')));
+            $value = trim(substr_replace(htmlspecialchars((string)strtok(' ')), '', -1));
             if ($name == 'namespace') {
                 $this->_applicationNameSpace = $value;
                 $this->_metrologyInstance->addLog('namespace=' . $value, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fe5308a8');

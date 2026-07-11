@@ -320,7 +320,7 @@ class ActionsObjects extends Actions implements ActionsInterface {
         try {
             switch ($_FILES[self::UPLOAD_FILE]['error']) {
                 case UPLOAD_ERR_OK:
-                    $filename = strtok(trim((string)filter_var($_FILES[self::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n");
+                    $filename = strtok(trim((string)htmlspecialchars($_FILES[self::UPLOAD_FILE]['name'])), "\n");
                     if (extension_loaded('mbstring'))
                         $filename = mb_convert_encoding($filename, 'UTF-8');
                     else

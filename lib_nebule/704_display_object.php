@@ -1168,7 +1168,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($id == '')
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
-            $this->_actionsID = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
+            $this->_actionsID = trim((string)htmlspecialchars($id));
 
         if ($this->_actionsID != '')
             $this->_displayActions = true;
@@ -1187,12 +1187,12 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($this->_nid !== null && $type == '')
             $this->_type = $this->_nid->getType($this->_social);
         else
-            $this->_type = trim((string)filter_var($type, FILTER_SANITIZE_STRING));
+            $this->_type = trim((string)htmlspecialchars($type));
     }
     
     public function setName(string $name = ''): void {
         if ($name != '')
-            $this->_name = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
+            $this->_name = trim((string)htmlspecialchars($name));
         elseif ($this->_nid !== null) {
             if ($this->_displayIconApp)
                 $this->_name = $this->_nid->getName($this->_social);
@@ -1203,7 +1203,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setAppShortName(string $name): void {
         if ($name != '')
-            $this->_appShortname = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
+            $this->_appShortname = trim((string)htmlspecialchars($name));
         elseif ($this->_nid !== null) {
             if ($this->_displayIconApp)
                 $this->_appShortname = $this->_nid->getSurname($this->_social);
@@ -1252,7 +1252,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         }
     }
 
-    public function setFlagProtectionText(string $text): void { $this->_flagProtectionText = trim((string)filter_var($text, FILTER_SANITIZE_STRING)); }
+    public function setFlagProtectionText(string $text): void { $this->_flagProtectionText = trim((string)htmlspecialchars($text)); }
 
     public function setFlagProtectionLink(string $link): void { $this->_flagProtectionLink = trim((string)filter_var($link, FILTER_SANITIZE_URL)); }
 
@@ -1290,7 +1290,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagObfuscateText(string $text): void {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set obfuscate text ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_flagObfuscateText = trim((string)filter_var($text, FILTER_SANITIZE_STRING));
+        $this->_flagObfuscateText = trim((string)htmlspecialchars($text));
     }
 
     public function setFlagObfuscateLink(string $link): void {
@@ -1329,7 +1329,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagUnlockedText(string $text): void {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set unlocked text ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_flagUnlockedText = trim((string)filter_var($text, FILTER_SANITIZE_STRING));
+        $this->_flagUnlockedText = trim((string)htmlspecialchars($text));
     }
 
     public function setFlagUnlockedLink(string $link): void {
@@ -1353,7 +1353,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_flagActivatedText = '::display:object:flag:unactivated';
     }
     
-    public function setActivatedText(string $text): void { $this->_flagActivatedText = trim((string)filter_var($text, FILTER_SANITIZE_STRING)); }
+    public function setActivatedText(string $text): void { $this->_flagActivatedText = trim((string)htmlspecialchars($text)); }
 
     public function setEnableFlagState(bool $enable = true): void {
         $this->_displayFlagState = $enable;
@@ -1399,7 +1399,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         }
     }
 
-    public function setFlagStateText(string $text): void { $this->_flagStateText = trim((string)filter_var($text, FILTER_SANITIZE_STRING)); }
+    public function setFlagStateText(string $text): void { $this->_flagStateText = trim((string)htmlspecialchars($text)); }
 
     public function setEnableStatus(bool $enable = true): void { $this->_displayStatus = $enable; }
 
@@ -1407,7 +1407,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         if ($status == '')
             $this->_status = $this->_translateInstance->getTranslate($this->_type);
         else
-            $this->_status = $this->_translateInstance->getTranslate(trim((string)filter_var($status, FILTER_SANITIZE_STRING)));
+            $this->_status = $this->_translateInstance->getTranslate(trim((string)htmlspecialchars($status)));
         
         if ($this->_status == '')
                 $this->_displayStatus = false;
@@ -1415,13 +1415,13 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
 
     public function setFlagMessage(string $text): void {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set flag message ' . $text, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_flagMessage = trim((string)filter_var($text, FILTER_SANITIZE_STRING));
+        $this->_flagMessage = trim((string)htmlspecialchars($text));
     }
 
     public function setFlagMessageList(array $list): void {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set flag message list', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         foreach ($list as $value)
-            $this->_flagMessageList[] = trim((string)filter_var($value, FILTER_SANITIZE_STRING));
+            $this->_flagMessageList[] = trim((string)htmlspecialchars($value));
     }
 
     public function setFlagTargetObject(?Node $nid): void {
@@ -1462,7 +1462,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_selfHookName = 'selfMenuObject';
     }
 
-    public function setSelfHookName(string $name): void { $this->_selfHookName = trim((string)filter_var($name, FILTER_SANITIZE_STRING)); }
+    public function setSelfHookName(string $name): void { $this->_selfHookName = trim((string)htmlspecialchars($name)); }
 
     public function setEnableTypeHook(bool $enable = true): void {
         $this->_displayTypeHook = $enable;
@@ -1492,7 +1492,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $this->_typeHookName = 'typeMenuObject';
     }
 
-    public function setTypeHookName(string $name): void { $this->_typeHookName = trim((string)filter_var($name, FILTER_SANITIZE_STRING)); }
+    public function setTypeHookName(string $name): void { $this->_typeHookName = trim((string)htmlspecialchars($name)); }
     
     public function setSelfHookList(array $list): void { $this->_selfHookList = $list; }
 

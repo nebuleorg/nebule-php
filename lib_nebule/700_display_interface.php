@@ -97,20 +97,20 @@ abstract class DisplayItemCSS extends DisplayItem
     public function setClassCSS(string $class = ''): void
     {
 //        $this->_metrologyInstance->addLog('set class CSS ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_classCSS = trim((string)filter_var($class, FILTER_SANITIZE_STRING));
+        $this->_classCSS = trim((string)htmlspecialchars($class));
     }
 
     public function setIdCSS(string $id = ''): void
     {
 //        $this->_metrologyInstance->addLog('set id CSS ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_idCSS = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
+        $this->_idCSS = trim((string)htmlspecialchars($id));
     }
 
     public function setStyleCSS(string $style = ''): void
     {
 //        $this->_metrologyInstance->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_styleCSS = ' style="'
-            . trim((string)filter_var($style, FILTER_SANITIZE_STRING))
+            . trim((string)htmlspecialchars($style))
             . ';"';
     }
 }

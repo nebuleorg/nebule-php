@@ -12,7 +12,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260624';
+const BOOTSTRAP_VERSION = '020260711';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -1062,7 +1062,7 @@ function lib_getOptionFromFile(string $name): string {
         $file = file(LIB_LOCAL_ENVIRONMENT_FILE, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
         if ($file !== false) {
             foreach ($file as $line) {
-                $line = trim((string)filter_var($line, FILTER_SANITIZE_STRING));
+                $line = trim((string)htmlspecialchars($line));
 
                 if ($line == '' || $line[0] == "#" || !str_contains($line, '='))
                     continue;
@@ -1253,7 +1253,7 @@ function lib_setServerEntity(bool $rescueMode): void {
 
     if (file_exists(LIB_LOCAL_ENTITY_FILE) && is_file(LIB_LOCAL_ENTITY_FILE))
     {
-        $nebuleServerEntity = filter_var(strtok(trim((string)file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $nebuleServerEntity = htmlspecialchars(strtok(trim((string)file_get_contents(LIB_LOCAL_ENTITY_FILE, false, null, 0, LIB_NID_MAX_HASH_SIZE)), "\n"), FILTER_FLAG_ENCODE_LOW);
         if (!ent_checkIsPublicKey($nebuleServerEntity))
         {
             bootstrap_setBreak('62', __FUNCTION__);
@@ -3168,12 +3168,12 @@ function obj_getAsText1line(string &$oid, int $maxData = 0): string {
 
     $data = '';
     obj_getLocalContent($oid, $data, $maxData + 1);
-    $data = strtok(filter_var($data, FILTER_SANITIZE_STRING), "\n");
+    $data = strtok(htmlspecialchars($data), "\n");
     if (!is_string($data))
         return '';
 
     $data = trim($data);
-    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', htmlspecialchars($data));
 
     if (extension_loaded('mbstring'))
         $data = mb_convert_encoding($data, 'UTF-8');
@@ -3203,7 +3203,7 @@ function obj_getAsText(string &$oid, int $maxData = 0): string {
 
     $data = '';
     obj_getLocalContent($oid, $data, $maxData + 1);
-    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', filter_var($data, FILTER_SANITIZE_STRING));
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', htmlspecialchars($data));
 
     if (strlen($data) > $maxData)
         $data = substr($data, 0, ($maxData - 3)) . '...';

@@ -131,8 +131,8 @@ CkCJUsZFcoEUVv7Ig7g4CymiI25EX2SEA3iZqZ6uybpAISPyBtI+JP+bHjfa6nSWHm0hZI+jmOHak1vD
                     continue;
 
                 // Recherche l'option demandée.
-                if (filter_var(trim(strtok($l, '=')), FILTER_SANITIZE_STRING) == $name) {
-                    $t = filter_var(trim(substr($l, strpos($l, '=') + 1)), FILTER_SANITIZE_STRING);
+                if (htmlspecialchars(trim(strtok($l, '='))) == $name) {
+                    $t = htmlspecialchars(trim(substr($l, strpos($l, '=') + 1)));
                     break;
                 }
             }
@@ -4372,7 +4372,7 @@ class Action extends Actions
                 && trim($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['name']) != ''
             ) {
                 // Extraction des méta données du fichier.
-                $upfname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upfname = mb_convert_encoding(strtok(trim((string)htmlspecialchars($_FILES[\Nebule\Library\ActionsObjects::UPLOAD_FILE]['name'])), "\n"), 'UTF-8');
                 $upinfo = pathinfo($upfname);
                 $upext = $upinfo['extension'];
                 $upname = basename($upfname, '.' . $upext);

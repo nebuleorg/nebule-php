@@ -699,7 +699,7 @@ class Currency extends Node implements nodeInterface
         }
 
         // Contenu retourné.
-        $result = mb_convert_encoding(trim(strtok(filter_var(trim($value), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_NO_ENCODE_QUOTES), "\n")), 'UTF-8'); // @todo faire la restriction de caractères plus fine...
+        $result = mb_convert_encoding(trim(strtok(htmlspecialchars(trim($value), FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_NO_ENCODE_QUOTES), "\n")), 'UTF-8'); // @todo faire la restriction de caractères plus fine...
 
         if ($result === false) {
             $result = '';
@@ -987,8 +987,8 @@ class Currency extends Node implements nodeInterface
                 }
 
                 // Recherche l'option demandée.
-                if (filter_var(trim(strtok($l, ':')), FILTER_SANITIZE_STRING) == $key) {
-                    $result = trim((string)filter_var(trim(substr($l, strpos($l, ':') + 1)), FILTER_SANITIZE_STRING));
+                if (htmlspecialchars(trim(strtok($l, ':'))) == $key) {
+                    $result = trim((string)htmlspecialchars(trim(substr($l, strpos($l, ':') + 1))));
                     break;
                 }
             }

@@ -3566,7 +3566,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $param['flagProtectionIcon'] = self::DEFAULT_ICON_LK;
             if (isset($param['flagProtectionText']))
-                $param['flagProtectionText'] = trim((string)filter_var($param['flagProtectionText'], FILTER_SANITIZE_STRING));
+                $param['flagProtectionText'] = trim((string)htmlspecialchars($param['flagProtectionText']));
             if (!isset($param['flagProtectionText'])
                 || trim($param['flagProtectionText']) == ''
             ) {
@@ -3597,7 +3597,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             )
                 $param['flagObfuscateIcon'] = self::DEFAULT_ICON_LC;
             if (isset($param['flagObfuscateText'])) {
-                $param['flagObfuscateText'] = trim((string)filter_var($param['flagObfuscateText'], FILTER_SANITIZE_STRING));
+                $param['flagObfuscateText'] = trim((string)htmlspecialchars($param['flagObfuscateText']));
             }
             if (!isset($param['flagObfuscateText'])
                 || trim($param['flagObfuscateText']) == ''

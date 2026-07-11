@@ -336,7 +336,7 @@ class ActionsLinks extends Actions implements ActionsInterface {
                 && trim($_FILES[self::UPLOAD_FILE_LINKS]['name']) != ''
             ) {
                 // Extraction des méta données du fichier.
-                $upname = mb_convert_encoding(strtok(trim((string)filter_var($_FILES[self::UPLOAD_FILE_LINKS]['name'], FILTER_SANITIZE_STRING)), "\n"), 'UTF-8');
+                $upname = mb_convert_encoding(strtok(trim((string)htmlspecialchars($_FILES[self::UPLOAD_FILE_LINKS]['name'])), "\n"), 'UTF-8');
                 $upsize = $_FILES[self::UPLOAD_FILE_LINKS]['size'];
                 $uppath = $_FILES[self::UPLOAD_FILE_LINKS]['tmp_name'];
 

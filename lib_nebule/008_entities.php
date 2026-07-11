@@ -76,7 +76,7 @@ class Entities extends Functions
         $content = strtok($content, "\n");
         if (is_bool($content))
             return '0';
-        $oid = filter_var(trim($content), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $oid = htmlspecialchars(trim($content), FILTER_FLAG_ENCODE_LOW);
         if (is_bool($oid) || $oid == '')
             return '0';
         if (!Node::checkNID($oid, false, false)
@@ -126,7 +126,7 @@ class Entities extends Functions
         $content = $this->_configurationInstance->getOptionFromEnvironmentAsString('defaultEntity');
         if ($content == '')
             return '0';
-        $oid = filter_var(trim($content), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_LOW);
+        $oid = htmlspecialchars(trim($content), FILTER_FLAG_ENCODE_LOW);
         if (is_bool($oid) || $oid == '')
             return '0';
         if (!Node::checkNID($oid, false, false)
@@ -226,7 +226,7 @@ class Entities extends Functions
         if (filter_has_var(INPUT_POST, References::COMMAND_PASSWORD))
             $arg_pwd = $this->getFilterInput(References::COMMAND_PASSWORD);
         elseif (filter_has_var(INPUT_GET, References::COMMAND_PASSWORD))
-            $arg_pwd = filter_var(hex2bin($this->getFilterInput(References::COMMAND_PASSWORD)), FILTER_SANITIZE_STRING);
+            $arg_pwd = htmlspecialchars(hex2bin($this->getFilterInput(References::COMMAND_PASSWORD)));
         else
             return;
 

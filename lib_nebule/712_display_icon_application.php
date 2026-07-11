@@ -74,7 +74,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
     {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set name ' . $name, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         if ($name != '')
-            $this->_name = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
+            $this->_name = trim((string)htmlspecialchars($name));
         else
             $this->_name = $this->_nid->getName($this->_social);
     }
@@ -82,7 +82,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
     public function setShortName(string $name): void
     {
         if ($name != '')
-            $this->_shortName = trim((string)filter_var($name, FILTER_SANITIZE_STRING));
+            $this->_shortName = trim((string)htmlspecialchars($name));
         else
             $this->_shortName = $this->_nid->getSurname($this->_social);
     }
@@ -90,13 +90,13 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
     public function setClassCSS(string $class = ''): void
     {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set class CSS ' . $class, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_classCSS = trim((string)filter_var($class, FILTER_SANITIZE_STRING));
+        $this->_classCSS = trim((string)htmlspecialchars($class));
     }
 
     public function setIdCSS(string $id = ''): void
     {
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set id CSS ' . $id, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $this->_idCSS = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
+        $this->_idCSS = trim((string)htmlspecialchars($id));
     }
 
     public function setStyleCSS(string $style = ''): void
@@ -104,7 +104,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
 //        $this->_nebuleInstance->getMetrologyInstance()->addLog('set style CSS ' . $style, Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         $this->_styleCSS = ' style="background:#'
             . $this->_nid->getPrimaryColor()
-            . trim((string)filter_var($style, FILTER_SANITIZE_STRING))
+            . trim((string)htmlspecialchars($style))
             . ';"';
     }
 
@@ -120,7 +120,7 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
         if ($id == '')
             $this->_actionsID = bin2hex($this->_nebuleInstance->getCryptoInstance()->getRandom(8, Crypto::RANDOM_PSEUDO));
         else
-            $this->_actionsID = trim((string)filter_var($id, FILTER_SANITIZE_STRING));
+            $this->_actionsID = trim((string)htmlspecialchars($id));
 
         if ($this->_actionsID != '')
             $this->_displayActions = true;

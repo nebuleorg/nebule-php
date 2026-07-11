@@ -2505,7 +2505,7 @@ class Node extends Functions implements nodeInterface {
             return '';
 
         $instance = $this->_cacheInstance->newNodeByType($id);
-        $text = substr(trim((string)strtok(filter_var($instance->getContent(0), FILTER_SANITIZE_STRING), "\n")), 0, 1024);
+        $text = substr(trim((string)strtok(htmlspecialchars($instance->getContent(0)), "\n")), 0, 1024);
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
@@ -2529,7 +2529,7 @@ class Node extends Functions implements nodeInterface {
         if ($limit < 4)
             $limit = 4;
 
-        $text = trim((string)strtok(filter_var($this->getContent($limit), FILTER_SANITIZE_STRING), "\n"));
+        $text = trim((string)strtok(htmlspecialchars($this->getContent($limit)), "\n"));
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
@@ -2554,7 +2554,7 @@ class Node extends Functions implements nodeInterface {
         if ($limit < 4)
             $limit = 4;
 
-        $text = trim((string)filter_var($this->getContent($limit + 4), FILTER_SANITIZE_STRING));
+        $text = trim((string)htmlspecialchars($this->getContent($limit + 4)));
         if (extension_loaded('mbstring'))
             $text = mb_convert_encoding($text, 'UTF-8');
         else
