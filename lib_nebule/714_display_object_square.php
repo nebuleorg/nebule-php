@@ -30,14 +30,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         $divObjectOpen = '<div class="objectSquareContainer objectDisplay' . $this->_sizeCSS . ' objectSquareContainer' . $this->_sizeCSS . '">' . "\n";
         $divObjectClose = '</div>' . "\n";
         $objectContentFlag = '';
-        /*if ($this->_displayContent)
-            $objectContent = $this->_displayInstance->getDisplayObjectContent($this->_nid, $this->_sizeCSS, $this->_ratioCSS);
-        else {
-            $objectContent = '<img title="' . $this->_name . '"' . $this->_styleCSS
-                . ' alt="[C]" src="o/' . DisplayColor::ICON_ALPHA_COLOR_OID . '" class="iconColor' . $this->_sizeCSS . '"/>';
-        }*/
 
-        //$type = $this->_nid->getType();
         if ($this->_type == References::REFERENCE_OBJECT_JPEG || $this->_type == References::REFERENCE_OBJECT_PNG) {
             $objectContent = '<img src="o/' . $this->_nid . '" alt="I" class="objectSquareContent" />';
         } elseif ($this->_type == References::REFERENCE_OBJECT_TEXT) {
@@ -50,7 +43,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         if ($this->_displayName)
             $objectContent .= '<div class="objectSquareTitle">' . $this->_nid->getFullName() . '</div>';
         if ($this->_displayType)
-            $objectContentFlag .= $this->_type;
+            $objectContentFlag .= $this->_translateInstance->getTranslate($this->_type);
         if ($this->_displayNID) {
             if ($objectContentFlag != '') $objectContentFlag .= '<br />' ;
             if ($this->_displayColor) $objectContentFlag .= $this->_displayInstance->prepareObjectColor($this->_nid);

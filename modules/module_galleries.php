@@ -339,8 +339,8 @@ class ModuleGalleries extends Module {
                 if (!\Nebule\Library\Node::checkNID($item))
                     return null;
                 if ($this->_listTypes[$item] == 'folder') {
-                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[1]);
-                    $node = $this->_cacheInstance->newNodeByType($item);
+                    $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[1]);
+                    $node = $this->_cacheInstance->newNode($item);
                     $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
                     $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
                     $instance->setSocial($this->_socialClass);
@@ -369,14 +369,14 @@ class ModuleGalleries extends Module {
                     $instance->setIcon($instanceIcon);
                     return $instance;
                 } elseif ($this->_listTypes[$item] == 'object') {
-                    $instanceIcon = $this->_cacheInstance->newNodeByType($this::MODULE_REGISTERED_ICONS[0]);
-                    $node = $this->_cacheInstance->newNodeByType($item);
+                    $instanceIcon = $this->_cacheInstance->newNode($this::MODULE_REGISTERED_ICONS[0]);
+                    $node = $this->_cacheInstance->newNode($item);
                     $instance = new \Nebule\Library\DisplayObjectSquare($this->_applicationInstance);
                     $this->_socialInstance->setList($this->_currentItemWritersList, $this->_socialClass);
                     $instance->setSocial($this->_socialClass);
                     $instance->setNID($node);
                     $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . ModuleObjects::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . ModuleObjects::MODULE_REGISTERED_VIEWS[0]
                         . '&' . \Nebule\Library\References::COMMAND_SELECT_OBJECT . '=' . $item
                         . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID());
                     $instance->setEnableNID(true);
