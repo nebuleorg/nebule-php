@@ -433,7 +433,7 @@ class ModuleNeblog extends Module
         }
         return $hookArray;
     }
-    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
+    public function getHookFunction(string $hookName, string $item, array $infos = []): ?\Nebule\Library\DisplayItemIconMessageSizeable {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
             case 'displayBlogMembers':

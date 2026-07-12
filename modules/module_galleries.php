@@ -70,6 +70,7 @@ class ModuleGalleries extends Module {
     protected ?\Nebule\Library\Group $_instanceCurrentFolder = null;
     protected array $_path = array();
     protected array $_listSigners = array();
+    protected array $_listObfuscated = array();
     protected array $_listTypes = array();
 
 
@@ -300,7 +301,7 @@ class ModuleGalleries extends Module {
 
 
 
-    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable {
+    public function getHookFunction(string $hookName, string $item, array $infos = []): ?\Nebule\Library\DisplayItemIconMessageSizeable {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
         switch ($hookName) {
             case 'displayGalleries':
@@ -357,7 +358,12 @@ class ModuleGalleries extends Module {
                     $instance->setEnableStatus(true);
                     $instance->setEnableColor(true);
                     $instance->setEnableIcon(true);
-                    $instance->setEnableFlags(false);
+                    $instance->setEnableFlags(true);
+                    $instance->setEnableFlagState(false);
+                    $instance->setEnableFlagProtection(false);
+                    $instance->setEnableFlagObfuscate(true);
+                    if (isset($this->_listObfuscated[$item]))
+                        $instance->setFlagObfuscate($this->_listObfuscated[$item]);
                     $instance->setEnableContent(false);
                     $instance->setEnableJS(true);
                     if (sizeof($this->_listSigners[$item]) != 0) {
@@ -385,7 +391,12 @@ class ModuleGalleries extends Module {
                     $instance->setEnableStatus(true);
                     $instance->setEnableColor(true);
                     $instance->setEnableIcon(true);
-                    $instance->setEnableFlags(false);
+                    $instance->setEnableFlags(true);
+                    $instance->setEnableFlagState(true);
+                    $instance->setEnableFlagProtection(true);
+                    $instance->setEnableFlagObfuscate(true);
+                    if (isset($this->_listObfuscated[$item]))
+                        $instance->setFlagObfuscate($this->_listObfuscated[$item]);
                     $instance->setEnableContent(true);
                     $instance->setEnableJS(true);
                     if (sizeof($this->_listSigners[$item]) != 0) {
@@ -534,7 +545,7 @@ class ModuleGalleries extends Module {
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setListHookName('displayFolderMembers');
+        $instanceList->setListHookName('displayFolderMembers'); // See self::getHookFunction
         $instanceList->setListSize(12);
         $instanceList->setListItems($list);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
@@ -766,7 +777,7 @@ class ModuleGalleries extends Module {
     // Called by Modules::_display_InlineMyItems()
     protected function _displayListOfItems(array $links, string $socialClass = 'all', string $hookName = ''): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $foldersNID = array();
+        $itemsNID = array();
         $this->_listSigners = array();
         if ($this->_socialClass == '')
             $this->_socialClass = 'onlist';
@@ -774,17 +785,16 @@ class ModuleGalleries extends Module {
             $nid = $link->getParsed()['bl/rl/nid1'];
             if (!$this->_filterItemByType($nid))
                 continue;
-            $signers = $link->getSignersEID(); // FIXME get all signers
-            $foldersNID[$nid] = $nid;
-            foreach ($signers as $signer) {
-                $this->_listSigners[$nid][$signer] = $signer;
-            }
+            if ($link->getObfuscated())
+                $this->_listObfuscated[$nid] = true;
+            $itemsNID[$nid] = $nid;
+            $this->_listSigners[$nid] = $link->getSignersEID();
         }
 
         $instanceList = new \Nebule\Library\DisplayList($this->_applicationInstance);
-        $instanceList->setListHookName('displayGalleries');
+        $instanceList->setListHookName('displayGalleries'); // See self::getHookFunction
         $instanceList->setListSize(12);
-        $instanceList->setListItems($foldersNID);
+        $instanceList->setListItems($itemsNID);
         $instanceList->setSize(\Nebule\Library\DisplayItem::SIZE_MEDIUM);
         $instanceList->setRatio(\Nebule\Library\DisplayItem::RATIO_SHORT);
         $instanceList->setEnableWarnIfEmpty();

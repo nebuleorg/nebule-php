@@ -280,7 +280,7 @@ abstract class Module extends Functions implements ModuleInterface {
         return $hookArray;
     }
 
-    public function getHookFunction(string $hookName, string $item): ?\Nebule\Library\DisplayItemIconMessageSizeable { return null; }
+    public function getHookFunction(string $hookName, string $item, array $infos = []): ?\Nebule\Library\DisplayItemIconMessageSizeable { return null; }
 
     /**
      * Part from this module to display on browser.

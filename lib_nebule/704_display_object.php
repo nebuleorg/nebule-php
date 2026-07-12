@@ -1139,25 +1139,15 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
         }
     }
 
-    public function setEnableColor(bool $enable = true): void {
-        $this->_displayColor = $enable; }
-
+    public function setEnableColor(bool $enable = true): void { $this->_displayColor = $enable; }
     public function setEnableIcon(bool $enable = true): void { $this->_displayIcon = $enable; }
-
     public function setEnableIconApp(bool $enable = true): void { $this->_displayIconApp = $enable; }
-
     public function setEnableName(bool $enable = true): void { $this->_displayName = $enable; }
-
     public function setEnableNID(bool $enable = true): void { $this->_displayNID = $enable; }
-
     public function setEnableType(bool $enable = true): void { $this->_displayType = $enable; $this->setType(); }
-
     public function setEnableFlags(bool $enable = true): void { $this->_displayFlags = $enable; }
-
     public function setEnableFlagEmotions(bool $enable = true): void { $this->_displayFlagEmotions = $enable; }
-
     public function setEnableContent(bool $enable = true): void { $this->_displayContent = $enable; }
-
     public function setEnableActions(bool $enable = true): void // TODO rétrocompatibilité, en double de enableJS, à supprimer.
     {
         $this->_displayActions = $enable;
@@ -1213,11 +1203,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     public function setEnableRefs(bool $enable = true): void { $this->_displayRefs = $enable; }
-
     public function setRefs(array $refs): void { $this->_refs = $refs; }
-
     public function setEnableLink2Refs(bool $enable = true): void { $this->_displayLink2Refs = $enable; }
-
     public function setLink(string $link): void { $this->_link = trim((string)filter_var($link, FILTER_SANITIZE_URL)); }
 
     public function setEnableFlagProtection(bool $enable): void {
@@ -1253,7 +1240,6 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
     }
 
     public function setFlagProtectionText(string $text): void { $this->_flagProtectionText = trim((string)htmlspecialchars($text)); }
-
     public function setFlagProtectionLink(string $link): void { $this->_flagProtectionLink = trim((string)filter_var($link, FILTER_SANITIZE_URL)); }
 
     public function setEnableFlagObfuscate(bool $enable = true): void {

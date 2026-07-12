@@ -24,7 +24,8 @@ use Throwable;
 class DisplayList extends DisplayItem implements DisplayInterface {
     protected array $_fullList = array();
     protected array $_listAdd = array();
-    protected array $_listItem = array();
+    protected array $_listItems = array();
+    protected array $_listItemInfos = array();
     protected bool $_onePerLine = false;
     protected float $_currentPage = 0;
     protected float $_lastPage = 0;
@@ -169,14 +170,16 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public function setListSize(int $size = Displays::DEFAULT_DISPLAY_SIZE_LIST): void { $this->_listSize = $size; }
     public function setPageColumns(int $columns = Displays::DEFAULT_DISPLAY_PAGE_COLUMN): void { $this->_pageColumns = $columns; }
     public function setGap(int $gap = Displays::DEFAULT_DISPLAY_GAP_COLUMN): void { $this->_pageGap = $gap; }
-    public function setListItems(array $list): void { $this->_listItem = $list; }
+    public function setListItems(array $list): void { $this->_listItems = $list; }
+    public function setListItemInfos(array $infos): void { $this->_listItemInfos = $infos; }
 
     protected function _prepareList(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $infos = array();
         $this->_currentPage = $this->_displayInstance->getCurrentPage();
         if ($this->_currentPage < 1)
             $this->_currentPage = 1;
-        $this->_fullSize = sizeof($this->_listItem) + sizeof($this->_listAdd);
+        $this->_fullSize = sizeof($this->_listItems) + sizeof($this->_listAdd);
         $this->_lastPage = ceil($this->_fullSize / $this->_listSize);
         if ($this->_currentPage > $this->_lastPage)
             $this->_currentPage = $this->_lastPage;
@@ -187,10 +190,10 @@ class DisplayList extends DisplayItem implements DisplayInterface {
                 $this->_fullList[$count] = $instance;
             $count++;
         }
-        foreach ($this->_listItem as $item) {
+        foreach ($this->_listItems as $item) {
             if (intval($count / $this->_listSize) == ($this->_currentPage - 1)) {
                 try {
-                    $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item);
+                    $instance = $this->_routerInstance->getApplicationInstance()->getCurrentModuleInstance()->getHookFunction($this->_listHookName, $item, $this->_listItemInfos);
                 } catch (Throwable $e) {
                     $this->_metrologyInstance->addLog('error get hook function ' . $this->_listHookName .' ('  . $e->getCode() . ') : ' . $e->getFile()
                             . '('  . $e->getLine() . ') : '  . $e->getMessage() . "\n"
@@ -203,7 +206,7 @@ class DisplayList extends DisplayItem implements DisplayInterface {
             $count++;
         }
         $this->_listAdd = array();
-        $this->_listItem = array();
+        $this->_listItems = array();
     }
 
     protected function _prepareURL(): string  {

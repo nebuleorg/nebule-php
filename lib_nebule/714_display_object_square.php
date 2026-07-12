@@ -42,13 +42,72 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         }
         if ($this->_displayName)
             $objectContent .= '<div class="objectSquareTitle">' . $this->_nid->getFullName() . '</div>';
-        if ($this->_displayType)
-            $objectContentFlag .= $this->_translateInstance->getTranslate($this->_type);
-        if ($this->_displayNID) {
-            if ($objectContentFlag != '') $objectContentFlag .= '<br />' ;
-            if ($this->_displayColor) $objectContentFlag .= $this->_displayInstance->prepareObjectColor($this->_nid);
-            if ($this->_displayIcon) $objectContentFlag .= $this->_displayInstance->prepareObjectFace($this->_nid);
-            $objectContentFlag .= $this->_nid->getID();
+        if ($this->_displayFlags) {
+            if ($this->_displayType)
+                $objectContentFlag .= $this->_translateInstance->getTranslate($this->_type);
+            if ($this->_displayFlagState) {
+                $objectContentFlag .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
+                if ($this->_flagState == 'e')
+                    $objectContentFlag .= 'Error';
+                elseif ($this->_flagState == 'w')
+                    $objectContentFlag .= 'Warn';
+                elseif ($this->_flagState == 'n')
+                    $objectContentFlag .= 'Error';
+                else
+                    $objectContentFlag .= 'OK';
+                $objectContentFlag .= '">';
+                $objectContentFlag .= $this->_getObjectFlagHTML(
+                    false,
+                    $this->_flagStateIcon->getID(),
+                    $this->_flagStateText,
+                    '');
+                $objectContentFlag .= $this->_translateInstance->getTranslate($this->_flagStateText);
+                $objectContentFlag .= '</div>' . "\n";
+            }
+            if ($this->_displayFlagProtection) {
+                if ($this->_flagProtectionLink != '')
+                    $objectContentFlag .= '<a href="' . $this->_flagProtectionLink . '">';
+                $objectContentFlag .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
+                if ($this->_flagProtection)
+                    $objectContentFlag .= 'OK';
+                else
+                    $objectContentFlag .= 'Info';
+                $objectContentFlag .= '">';
+                $objectContentFlag .= $this->_getObjectFlagHTML(
+                        $this->_flagProtection,
+                        $this->_flagProtectionIcon->getID(),
+                        $this->_flagProtectionText,
+                        $this->_flagProtectionText);
+                $objectContentFlag .= $this->_translateInstance->getTranslate($this->_flagProtectionText);
+                $objectContentFlag .= '</div>' . "\n";
+                if ($this->_flagProtectionLink != '')
+                    $objectContentFlag .= '</a>';
+            }
+            if ($this->_displayFlagObfuscate) {
+                if ($this->_flagObfuscateLink != '')
+                    $objectContentFlag .= '<a href="' . $this->_flagObfuscateLink . '">';
+                $objectContentFlag .= '   <div class="objectMenuContentMsg objectMenuContentMsg';
+                if ($this->_flagObfuscate)
+                    $objectContentFlag .= 'OK';
+                else
+                    $objectContentFlag .= 'Info';
+                $objectContentFlag .= '">';
+                $objectContentFlag .= $this->_getObjectFlagHTML(
+                        $this->_flagObfuscate,
+                        $this->_flagObfuscateIcon->getID(),
+                        $this->_flagObfuscateText,
+                        $this->_flagObfuscateText);
+                $objectContentFlag .= $this->_translateInstance->getTranslate($this->_flagObfuscateText);
+                $objectContentFlag .= '</div>' . "\n";
+                if ($this->_flagObfuscateLink != '')
+                    $objectContentFlag .= '</a>';
+            }
+            if ($this->_displayNID) {
+                //if ($objectContentFlag != '') $objectContentFlag .= '<br />';
+                if ($this->_displayColor) $objectContentFlag .= $this->_displayInstance->prepareObjectColor($this->_nid);
+                if ($this->_displayIcon) $objectContentFlag .= $this->_displayInstance->prepareObjectFace($this->_nid);
+                $objectContentFlag .= $this->_nid->getID();
+            }
         }
         if ($objectContentFlag != '')
             $objectContent .= '<div class="objectSquareFlags">' . $objectContentFlag .'</div>';

@@ -443,7 +443,7 @@ class nebule {
         if ($type == '0')
             return array();
 
-        $instance = $this->_cacheInstance->newNodeByType($type);
+        $instance = $this->_cacheInstance->newNode($type);
         $result = $instance->getLinksOnFields(
             '',
             '',
