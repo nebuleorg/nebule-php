@@ -305,7 +305,6 @@ abstract class HelpApplications {
             faut enregistrer l'application pour la rendre disponible.</p>
 
         <?php Displays::docDispTitle(5, 'oaicr', 'Référence'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Cette partie est à faire au début lorsque l’on veut rendre visible et utiliser la nouvelle application. Elle
             ne sera plus refaite par la suite. Le but est de permettre au <i>bootstrap</i> de retrouver l’application et
             de permettre à l’utilisateur de la sélectionner.</p>
@@ -317,23 +316,22 @@ abstract class HelpApplications {
                 </div>
             </div>
         </div>
-        <p>On définit un objet de référence, un objet qui sera virtuel puisqu'il n’aura pas de contenu.
-            Sa seule contrainte forte est que l’empreinte est exprimée en hexadécimal. Par convention, il est recommandé
-            que la taille de l’empreinte des objets virtuels soit comprise en 129 et 191 bits. Cet objet de référence
+        <p>On définit un objet de référence, dit IID, un objet qui sera virtuel puisqu'il n’aura pas de contenu.
+            Sa seule contrainte est que l’empreinte est exprimée en hexadécimal. Par convention, il est recommandé
+            que la taille de l’empreinte des objets virtuels soit comprise en 129 et 191 bits. Cet IID
             peut être généré aléatoirement ou au contraire avoir un contenu pré-déterminé, ou mixer les deux.</p>
-        <p>Chaque application doit avoir un objet de référence qui lui est réservé. Utiliser l’objet de référence d’une
+        <p>Chaque application doit avoir un IID qui lui est réservé. Utiliser l’IID d’une
             autre application revient à tenter de mettre à jour l’application, non à en faire une nouvelle.</p>
         <p>Par exemple avec la commande : <code>openssl rand -hex 36</code></p>
-        <p>Cela donne une valeur, notre objet de référence, qui ressemble à ça :</p>
-        <code>f3c2e389d0ec1bd3f279410748ba352c205ca354cec396a5f9fa0f8c0dcc1f9900bfd9</code>
-        <p>Pour finir avec l’objet de référence, la couleur de l’application dépend de lui. Cette couleur étant
-            constituée des 6 premiers caractères de l’empreinte de l’objet de référence, il est possible de choisir
-            volontairement cette couleur.</p>
+        <p>Cela donne une valeur, notre IID, qui ressemble à ça :</p>
+        <code>c50878ef5c48e861061c6a421cb2ae2aba4f04e7e2d03d9182e2aa39537c2e8ca1f71a6e.none.288</code>
+        <p>Pour finir avec l’IID, la couleur de l’application dépend de lui. Cette couleur étant
+            constituée des 6 premiers caractères de l’IID, il est possible de choisir volontairement cette couleur.</p>
         <p>L’application doit avoir un nom et un préfixe. Ces deux propriétés sont utilisées par le bootstrap pour
             l’affichage des applications dans l’application de sélection des applications.</p>
-        <p>Le nom est libre, mais si il est trop grand, il sera tronqué pour tenir dans le carré de l’application.</p>
-        <p>Le préfixe doit faire 2 caractères. Si ce sont des lettres, systématiquement la première sera transformée en
-            majuscule et la deuxième en minuscule.</p>
+        <p>Le nom est libre, mais s'il est trop grand, il sera tronqué pour tenir dans le carré de l’application.</p>
+        <p>Le préfixe doit faire deux caractères. Si ce sont des lettres, systématiquement la première sera transformée
+            en majuscule et la deuxième en minuscule.</p>
         <p>Par exemple :</p>
         <ul>
             <li>sylabe</li>
@@ -341,59 +339,22 @@ abstract class HelpApplications {
         </ul>
 
         <p>Lorsque l’on a défini notre objet de référence et le nom de l’application, on crée les liens.</p>
-        <p>Liste des liens à générer lors de la création d'une application interface.</p>
-        <ul>
-            <li>Le lien de hash :
-                <ul>
-                    <li>REQ : <code>l</code></li>
-                    <li>NID1 : ID de l'application</li>
-                    <li>NID2 : hash du nom de l’algorithme de prise d’empreinte</li>
-                    <li>NID3 : hash(‘nebule/objet/hash’)</li>
-                </ul>
-            </li>
-            <li>Le lien de définition de type application :
-                <ul>
-                    <li>REQ : <code>l</code></li>
-                    <li>NID1 : ID de l'application</li>
-                    <li>NID2 : hash(‘nebule/objet/interface/web/php/applications’)</li>
-                    <li>NID3 : hash(‘nebule/objet/type’)</li>
-                </ul>
-            </li>
-            <li>Le lien de nommage long de l'application :
-                <ul>
-                    <li>REQ : <code>l</code></li>
-                    <li>NID1 : ID de l'application</li>
-                    <li>NID2 : hash(nom long de l'application)</li>
-                    <li>NID3 : hash(‘nebule/objet/nom’)</li>
-                </ul>
-            </li>
-            <li>Le lien de nommage court de l'application :
-                <ul>
-                    <li>REQ : <code>l</code></li>
-                    <li>NID1 : ID de l'application</li>
-                    <li>NID2 : hash(nom court de l'application)</li>
-                    <li>NID3 : hash(‘nebule/objet/surnom’)</li>
-                </ul>
-            </li>
-        </ul>
+        <p>Pour la liste des liens à générer lors de l'enregistrement initial d'une application interface,
+            voir <a href="#oaice">OAICE</a>.</p>
         <p>Pour que ces liens soient reconnus par le bootstrap, ils doivent tous être signés d’une autorité locale.</p>
+        <p>Une fois l'application déclarée, on lui attache un objet de code, voir <a href="#oaicc">OAICC</a>.
+            La déclaration ne change plus mais le code peut ainsi être mis à jour autant que nécessaire.</p>
 
         <?php Displays::docDispTitle(5, 'oaicc', 'Code'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>La création de la base d’une application est simple, il suffit de copier le modèle d’application dans un
             nouveau fichier et dans un premier temps d’adapter les variables et la fonction d’affichage.</p>
         <p>Ensuite, ce fichier doit être nébulisé, c'est-à-dire transféré vers le serveur comme nouvel objet.</p>
-        <p>Une fois nébulisé, l’objet peut être déclaré par un lien comme code pour l’objet de référence de
-            l’application. Ainsi, l'objet référence point un code à exécuter.</p>
-        <p>Le lien de pointage du code :</p>
-        <ul>
-            <li>REQ : <code>f</code></li>
-            <li>NID1 :</li>
-            <li>NID2 :</li>
-            <li>NID3 :</li>
-        </ul>
+        <p>Une fois nébulisé, l’objet doit être déclaré par un lien comme code pour l’objet de référence IID de
+            l’application. Ainsi, l'IID point un code à exécuter avec le dernier lien valide trouvé.</p>
+        <p>Pour les liens de définition initiale ou de mise à jour du code, voir <a href="#oaice">OAICE</a>.</p>
 
         <p>Exemple de modèle d'application :</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
         <pre>
 &lt;?php
 declare(strict_types=1);
@@ -406,18 +367,19 @@ use Nebule\Library\References;
 use Nebule\Library\Translates;
 
 /*
-------------------------------------------------------------------------------------------
- /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-------------------------------------------------------------------------------------------
-
- [FR] Toute modification de ce code entrainera une modification de son empreinte
-      et entrainera donc automatiquement son invalidation !
- [EN] Any changes to this code will cause a change in its footprint and therefore
-      automatically result in its invalidation!
- [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo
-      tanto lugar automáticamente a su anulación!
-
-------------------------------------------------------------------------------------------
+|------------------------------------------------------------------------------------------------------------------------------------------------------
+| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
+|------------------------------------------------------------------------------------------------------------------------------------------------------
+|
+|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
+|  [EN] Any modification of this code will result in a modification of its hash digest and will therefore automatically result in its invalidation!
+|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo tanto lugar automáticamente a su anulación!
+|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
+|  [IT] Ogni modifica di questo codice comporterà una modifica della sua impronta e quindi ne causerà automaticamente l'invalidazione!
+|  [PL] Każda modyfikacja tego kodu spowoduje zmianę jego odcisku i automatycznie doprowadzi do jego unieważnienia!
+|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
+|
+|------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
 class Application extends Applications
@@ -566,31 +528,15 @@ class Traduction extends Traductions
 </pre>
 
         <?php Displays::docDispTitle(5, 'oaice', 'Enregistrement'); ?>
-        <p>Enregistrement d'une application :</p>
+        <p>Enregistrement initial d'une application :</p>
         <ul>
-            <li>Enregistrement de la référence de l'application :
+            <li>Enregistrement de la référence (IID) de l'application :
                 <ul>
                     <li>action : <code>f</code></li>
                     <li>nid1 : RID applications</li>
                     <li>nid2 : IID application</li>
                     <li>nid3 : OID type PHP</li>
                     <li>nid4 : NID code branch</li>
-                </ul>
-            </li>
-            <li>Lien entre la référence de l'application et l'objet contenant le code :
-                <ul>
-                    <li>action : <code>f</code></li>
-                    <li>nid1 : IID application</li>
-                    <li>nid2 : OID application</li>
-                    <li>nid3 : NID code branch</li>
-                </ul>
-            </li>
-            <li>Type de l'objet contenant le code :
-                <ul>
-                    <li>action : <code>l</code></li>
-                    <li>nid1 : OID application</li>
-                    <li>nid2 : OID type PHP</li>
-                    <li>nid3 : RID type mime</li>
                 </ul>
             </li>
             <li>Activation de l'application :
@@ -632,24 +578,41 @@ class Traduction extends Traductions
                     <li>nid3 : RID type mime</li>
                 </ul>
             </li>
-            <li>Légende :
+        </ul>
+        <p>Déclaration initiale ou mise à jour du code d'une application :</p>
+        <ul>
+            <li>Lien entre la référence de l'application et l'objet contenant le code (OID) :
                 <ul>
-                    <li>RID applications : référence commune pour retrouver les applications.</li>
-                    <li>IID applications : référence interne, unique, de l'application.</li>
-                    <li>OID applications : objet contenant le code de l'application.</li>
-                    <li>OID type PHP : objet contenant le type mime du code (<code>application/x-httpd-php</code>).</li>
-                    <li>OID type texte : objet contenant le type mime du code (<code>text/plain</code>).</li>
-                    <li>RID type mime : objet de référence du type mime (<code>nebule/objet/type</code>).</li>
-                    <li>NID code branch : référence unique du niveau de développement, la branche, du code.</li>
-                    <li>RID activation application : référence pour l'activation de l'application.</li>
-                    <li>OID nom long : objet contenant le nom long de l'application.</li>
-                    <li>OID nom court : objet contenant le nom raccourci (deux caractères) de l'application.</li>
-                    <li>RID nommage long : objet de référence du nommage long des objets (<code>nebule/objet/nom</code>).</li>
-                    <li>RID nommage court : objet de référence du nommage raccourci des objets (<code>nebule/objet/surnom</code>).</li>
+                    <li>action : <code>f</code></li>
+                    <li>nid1 : IID application</li>
+                    <li>nid2 : OID application</li>
+                    <li>nid3 : NID code branch</li>
+                </ul>
+            </li>
+            <li>Type de l'objet contenant le code :
+                <ul>
+                    <li>action : <code>l</code></li>
+                    <li>nid1 : OID application</li>
+                    <li>nid2 : OID type PHP</li>
+                    <li>nid3 : RID type mime</li>
                 </ul>
             </li>
         </ul>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>Légende :</p>
+        <ul>
+            <li>RID applications : référence commune pour retrouver les applications.</li>
+            <li>IID applications : référence interne, unique, de l'application.</li>
+            <li>OID applications : objet contenant le code de l'application.</li>
+            <li>OID type PHP : objet contenant le type mime du code (<code>application/x-httpd-php</code>).</li>
+            <li>OID type texte : objet contenant le type mime du code (<code>text/plain</code>).</li>
+            <li>RID type mime : objet de référence du type mime (<code>nebule/objet/type</code>).</li>
+            <li>NID code branch : référence unique du niveau de développement, la branche, du code.</li>
+            <li>RID activation application : référence pour l'activation de l'application.</li>
+            <li>OID nom long : objet contenant le nom long de l'application.</li>
+            <li>OID nom court : objet contenant le nom raccourci (deux caractères) de l'application.</li>
+            <li>RID nommage long : objet de référence du nommage long des objets (<code>nebule/objet/nom</code>).</li>
+            <li>RID nommage court : objet de référence du nommage raccourci des objets (<code>nebule/objet/surnom</code>).</li>
+        </ul>
 
         <?php Displays::docDispTitle(4, 'oaiu', 'Mise à Jour'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>

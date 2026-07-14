@@ -5,53 +5,54 @@
 # License GNU GPLv3
 # Copyright Projet nebule
 # www.nebule.org
-# Version 020260201
+# Version 020260714
 
 echo ' > start'
 
-export PUPPETMASTER_SPACE=~/puppetmaster.nebule.org
-export SECURITY_MASTER_SPACE=~/security.master.nebule.org
-export CODE_MASTER_SPACE=~/code.master.nebule.org
-export TIME_MASTER_SPACE=~/time.master.nebule.org
-export DIRECTORY_MASTER_SPACE=~/directory.master.nebule.org
-export TEST_SPACE=~/test.nebule.org
-export ALL_SPACES="${PUPPETMASTER_SPACE} ${SECURITY_MASTER_SPACE} ${CODE_MASTER_SPACE} ${TIME_MASTER_SPACE} ${DIRECTORY_MASTER_SPACE} ${TEST_SPACE}"
-export WORKSPACE=~/workspace/nebule-php
-export TESTINSTANCE="${WORKSPACE}/test_instance"
-export password_entity=3968761168fe7f4b9df6f6964fb23f5db1a9531569cf78c230c4b6877b7cb0ea
+readonly PUPPETMASTER_SPACE=~/puppetmaster.nebule.org
+readonly SECURITY_MASTER_SPACE=~/security.master.nebule.org
+readonly CODE_MASTER_SPACE=~/code.master.nebule.org
+readonly CODE_MASTER_EXPORT=~/code.master.nebule.org/export
+readonly TIME_MASTER_SPACE=~/time.master.nebule.org
+readonly DIRECTORY_MASTER_SPACE=~/directory.master.nebule.org
+readonly TEST_SPACE=~/test.nebule.org
+readonly ALL_SPACES="${PUPPETMASTER_SPACE} ${SECURITY_MASTER_SPACE} ${CODE_MASTER_SPACE} ${CODE_MASTER_EXPORT} ${TIME_MASTER_SPACE} ${DIRECTORY_MASTER_SPACE} ${TEST_SPACE}"
+readonly WORKSPACE=~/workspace/nebule-php
+readonly TEST_INSTANCE="${WORKSPACE}/test_instance"
+readonly password_entity=3968761168fe7f4b9df6f6964fb23f5db1a9531569cf78c230c4b6877b7cb0ea
 
 cd "${CODE_MASTER_SPACE}" || return 1
 cd "${CODE_MASTER_SPACE}" || exit 1
 
-export LIB_RID_SECURITY_AUTHORITY='a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
-export LIB_RID_CODE_AUTHORITY='2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
-export LIB_RID_TIME_AUTHORITY='bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288'
-export LIB_RID_DIRECTORY_AUTHORITY='0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288'
+readonly LIB_RID_SECURITY_AUTHORITY='a4b210d4fb820a5b715509e501e36873eb9e27dca1dd591a98a5fc264fd2238adf4b489d.none.288'
+readonly LIB_RID_CODE_AUTHORITY='2b9dd679451eaca14a50e7a65352f959fc3ad55efc572dcd009c526bc01ab3fe304d8e69.none.288'
+readonly LIB_RID_TIME_AUTHORITY='bab7966fd5b483f9556ac34e4fac9f778d0014149f196236064931378785d81cae5e7a6e.none.288'
+readonly LIB_RID_DIRECTORY_AUTHORITY='0a4c1e7930a65672379616a2637b84542049b416053ac0d9345300189791f7f8e05f3ed4.none.288'
 LIB_RID_CODE_BRANCH=$(grep 'const LIB_RID_CODE_BRANCH' ${WORKSPACE}/bootstrap.php | head -1 | cut -d\' -f2)
-export LIB_RID_CODE_BRANCH
-export LIB_RID_INTERFACE_BOOTSTRAP='fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288'
-export IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e4b3bffb90d47e73832374176.none.288'
-export LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
-export IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
-export LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
-export IID_INTERFACE_ATRIUM='d09020c0df1b5746a11e2eb1446055526c84e85964ef86a53a5385122d2a90debda48270.none.288'
-export IID_INTERFACE_AUTENT='9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288'
-export IID_INTERFACE_ENTITY='206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288'
-export IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
-export IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
-export IID_INTERFACE_NEBLOG='05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288'
-export IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288'
-export IID_INTERFACE_PORTFOLIO='60004013fb89ff390da02a1ca427eded51f09d8f6ef4affc192ad8de265155aa8046da6e.none.288'
-export IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
-export IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
-export IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
-export LIB_RID_INTERFACE_APPLICATIONS_DIRECT='f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288'
-export LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
-export LIB_RID_INTERFACE_MODULES='fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'
-export LIB_RID_INTERFACE_MODULES_TRANSLATE='4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'
-export LIB_RID_INTERFACE_MODULES_ACTIVE='1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'
-export NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
-export INIT_DATE='020260101'
+readonly LIB_RID_CODE_BRANCH
+readonly LIB_RID_INTERFACE_BOOTSTRAP='fc9bb365082ea3a3c8e8e9692815553ad9a70632fe12e9b6d54c8ae5e20959ce94fbb64f.none.288'
+readonly IID_INTERFACE_BOOTSTRAP='304f4431cd011211e8fbb57081cd8f1609a25a46ab30476e4b3bffb90d47e73832374176.none.288'
+readonly LIB_RID_INTERFACE_LIBRARY='780c5e2767e15ad2a92d663cf4fb0841f31fd302ea0fa97a53bfd1038a0f1c130010e15c.none.288'
+readonly IID_INTERFACE_LIBRARY='21f6396e921e4373a91d70d13895b04a359316fc269a1c0dc9268a71419ecfb41e88d58d.none.288'
+readonly LIB_RID_INTERFACE_APPLICATIONS='4046edc20127dfa1d99f645a7a4ca3db42e94feffa151319c406269bd6ede981c32b96e2.none.288'
+readonly IID_INTERFACE_ATRIUM='d09020c0df1b5746a11e2eb1446055526c84e85964ef86a53a5385122d2a90debda48270.none.288'
+readonly IID_INTERFACE_AUTENT='9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288'
+readonly IID_INTERFACE_ENTITY='206090aec4ba9e2eaa66737d34ced59cfe73b8342fc020efbd321eded7c8b46440e0875a.none.288'
+readonly IID_INTERFACE_KLICTY='d0b02052a575f63a4e87ff320df443a8b417be1b99e8e40592f8f98cbd1adc58c221d501.none.288'
+readonly IID_INTERFACE_MESSAE='2060a0d21853a42093f01d2e4809c2a5e9300b4ec31afbaf18af66ec65586d6c78b2823a.none.288'
+readonly IID_INTERFACE_NEBLOG='05c3dd94a9ae4795c888cb9a6995d1e5a23b43816e2e7fb908b6841694784bc3ecda8adf.none.288'
+readonly IID_INTERFACE_OPTION='555555712c23ff20740c50e6f15e275f695fe95728142c3f8ba2afa3b5a89b3cd0879211.none.288'
+readonly IID_INTERFACE_PORTFOLIO='60004013fb89ff390da02a1ca427eded51f09d8f6ef4affc192ad8de265155aa8046da6e.none.288'
+readonly IID_INTERFACE_QANTION='20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288'
+readonly IID_INTERFACE_SYLABE='c02030d3b77c52b3e18f36ee9035ed2f3ff68f66425f2960f973ea5cd1cc0240a4d28de1.none.288'
+readonly IID_INTERFACE_UPLOAD='6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288'
+readonly LIB_RID_INTERFACE_APPLICATIONS_DIRECT='f202ca455549a1ddd553251f9c1df49ec6541c3412e52ed5f2ce2adfd772d07d0bfc2d28.none.288'
+readonly LIB_RID_INTERFACE_APPLICATIONS_ACTIVE='ae2b0dd506026c59b27ae93ef2d1ead7a2c893d2662d360c3937b699428010538b5c0af9.none.288'
+readonly LIB_RID_INTERFACE_MODULES='fd66cdc1edfa0285d6ce9d8419847e54ec7df2d293921615d13d35a5879e7e311efff4ad.none.288'
+readonly LIB_RID_INTERFACE_MODULES_TRANSLATE='4a45d825cf72fbf331c07cb4bdd6c65ab13e3b6b10405400d82817ed48ff4691e8699a69.none.288'
+readonly LIB_RID_INTERFACE_MODULES_ACTIVE='1e1531707bb7b0be9f4664fe8010729090f592ed4c3f4e6e37c6365f865a192beee3e970.none.288'
+readonly NID_CODE_BRANCH='81de9f10eb1479bbb219c166547b6d4eb690672feadf0f3841cacf58dbb21f537252b011.none.288'
+readonly INIT_DATE='020260714000000'
 
 # Prepare all links specifically for develop and tests.
 echo " > prep authorities"
@@ -74,8 +75,7 @@ export directory_authority1_develop_key
 directory_authority2_develop_key=$(openssl genrsa -aes256 -passout pass:${password_entity} 1024 2>&1 | grep -A100 'BEGIN ENCRYPTED PRIVATE KEY')
 export directory_authority2_develop_key
 
-function work_full_reinit()
-{
+function work_full_reinit() {
   echo ' > work reinit full'
 
   echo ' > prep masters folders'
@@ -398,14 +398,12 @@ function work_full_reinit()
   sudo /usr/bin/rm -f /var/lib/php/sessions/*
 }
 
-function work_export()
-{
+function work_export() {
   echo ' > work export codes'
   echo ' ! do nothing by now!'
 }
 
-function work_dev_deploy()
-{
+function work_dev_deploy() {
   echo ' > work dev deploy codes'
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo " > date : ${current_date}"
@@ -427,13 +425,14 @@ function work_dev_deploy()
   echo '   - code branch'
   link="nebule:link/2:0_0>${current_date}/l>${LIB_RID_CODE_BRANCH}>${NID_CODE_BRANCH}>${LIB_RID_CODE_BRANCH}"
   sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+  write_archive_link "${link}" "${CODE_MASTER_EXPORT}" 'first'
   echo '   - name'
   link="nebule:link/2:0_0>${current_date}/l>${NID_CODE_BRANCH}>${entityNameOID}>${nameRID}"
   sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+  write_archive_link "${link}" "${CODE_MASTER_EXPORT}" 'first'
 }
 
-function work_refresh()
-{
+function work_refresh() {
   echo ' > work refresh codes'
   current_date=$(date "+0%Y%m%d%H%M%S")
   echo " > date : ${current_date}"
@@ -471,6 +470,7 @@ function work_refresh()
   bootstrap_hash=$(sha256sum "${WORKSPACE}/bootstrap.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new bootstrap : ${bootstrap_hash}"
   cp "${WORKSPACE}/bootstrap.php" "${CODE_MASTER_SPACE}/o/${bootstrap_hash}"
+  cp "${WORKSPACE}/bootstrap.php" "${CODE_MASTER_EXPORT}/o/${bootstrap_hash}"
 
   cat > "${WORKSPACE}/lib_nebule.php" << EOF
 <?php
@@ -492,7 +492,8 @@ EOF
   library_hash=$(sha256sum "${WORKSPACE}/lib_nebule.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new library : ${library_hash}"
   cp "${WORKSPACE}/lib_nebule.php" "/tmp/lib_nebule.php"
-  mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
+  cp "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_SPACE}/o/${library_hash}"
+  mv "${WORKSPACE}/lib_nebule.php" "${CODE_MASTER_EXPORT}/o/${library_hash}"
 
   cat "${WORKSPACE}/applications/atrium.php" > "/tmp/atrium.php"
   { tail +4 "${WORKSPACE}/modules/module_galleries.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -512,6 +513,7 @@ EOF
   atrium_hash=$(sha256sum "/tmp/atrium.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new atrium : ${atrium_hash}"
   cp "/tmp/atrium.php" "${CODE_MASTER_SPACE}/o/${atrium_hash}"
+  cp "/tmp/atrium.php" "${CODE_MASTER_EXPORT}/o/${atrium_hash}"
 
   cat "${WORKSPACE}/applications/autent.php" > "/tmp/autent.php"
   { tail +4 "${WORKSPACE}/modules/module_autent.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -520,10 +522,12 @@ EOF
   autent_hash=$(sha256sum "/tmp/autent.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new autent : ${autent_hash}"
   cp "/tmp/autent.php" "${CODE_MASTER_SPACE}/o/${autent_hash}"
+  cp "/tmp/autent.php" "${CODE_MASTER_EXPORT}/o/${autent_hash}"
 
   belzbu_hash=$(sha256sum "${WORKSPACE}/applications/belzbu.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new belzbu : ${belzbu_hash}"
   cp "${WORKSPACE}/applications/belzbu.php" "${CODE_MASTER_SPACE}/o/${belzbu_hash}"
+  cp "${WORKSPACE}/applications/belzbu.php" "${CODE_MASTER_EXPORT}/o/${belzbu_hash}"
 
   cat "${WORKSPACE}/applications/entity.php" > "/tmp/entity.php"
   { tail +4 "${WORKSPACE}/modules/module_entities.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -542,7 +546,9 @@ EOF
   entity_hash=$(sha256sum "/tmp/entity.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new entity : ${entity_hash}"
   cp "/tmp/entity.php" "${CODE_MASTER_SPACE}/o/${entity_hash}"
+  cp "/tmp/entity.php" "${CODE_MASTER_EXPORT}/o/${entity_hash}"
   cp ~/Images/klicty_neige20100101.jpg "${CODE_MASTER_SPACE}/o/f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256"
+  cp ~/Images/klicty_neige20100101.jpg "${CODE_MASTER_EXPORT}/o/f6bc46330958c60be02d3d43613790427523c49bd4477db8ff9ca3a5f392b499.sha2.256"
 
   cat "${WORKSPACE}/applications/klicty.php" > "/tmp/klicty.php"
   { tail +4 "${WORKSPACE}/lib_nebule/999_license.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -550,6 +556,7 @@ EOF
   klicty_hash=$(sha256sum "/tmp/klicty.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new klicty : ${klicty_hash}"
   cp "/tmp/klicty.php" "${CODE_MASTER_SPACE}/o/${klicty_hash}"
+  cp "/tmp/klicty.php" "${CODE_MASTER_EXPORT}/o/${klicty_hash}"
 
   cat "${WORKSPACE}/applications/messae.php" > "/tmp/messae.php"
   { tail +4 "${WORKSPACE}/modules/module_conversations.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -570,6 +577,7 @@ EOF
   messae_hash=$(sha256sum "/tmp/messae.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new messae : ${messae_hash}"
   cp "/tmp/messae.php" "${CODE_MASTER_SPACE}/o/${messae_hash}"
+  cp "/tmp/messae.php" "${CODE_MASTER_EXPORT}/o/${messae_hash}"
 
   cat "${WORKSPACE}/applications/neblog.php" > "/tmp/neblog.php"
   { tail +4 "${WORKSPACE}/modules/module_neblog.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -587,11 +595,14 @@ EOF
   neblog_hash=$(sha256sum "/tmp/neblog.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new neblog : ${neblog_hash}"
   cp "/tmp/neblog.php" "${CODE_MASTER_SPACE}/o/${neblog_hash}"
+  cp "/tmp/neblog.php" "${CODE_MASTER_EXPORT}/o/${neblog_hash}"
   cp ~/Images/bg2.jpg "${CODE_MASTER_SPACE}/o/8c40708bd7d89ba9e0bdb74a5300632100d4b660a99a11608930cb0ff56e132a.sha2.256"
+  cp ~/Images/bg2.jpg "${CODE_MASTER_EXPORT}/o/8c40708bd7d89ba9e0bdb74a5300632100d4b660a99a11608930cb0ff56e132a.sha2.256"
 
   option_hash=$(sha256sum "${WORKSPACE}/applications/option.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new option : ${option_hash}"
   cp "${WORKSPACE}/applications/option.php" "${CODE_MASTER_SPACE}/o/${option_hash}"
+  cp "${WORKSPACE}/applications/option.php" "${CODE_MASTER_EXPORT}/o/${option_hash}"
 
   cat "${WORKSPACE}/applications/portfolio.php" > "/tmp/portfolio.php"
   { tail +4 "${WORKSPACE}/modules/module_folders.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -611,6 +622,7 @@ EOF
   portfolio_hash=$(sha256sum "/tmp/portfolio.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new portfolio : ${portfolio_hash}"
   cp "/tmp/portfolio.php" "${CODE_MASTER_SPACE}/o/${portfolio_hash}"
+  cp "/tmp/portfolio.php" "${CODE_MASTER_EXPORT}/o/${portfolio_hash}"
 
   cat "${WORKSPACE}/applications/qantion.php" > "/tmp/qantion.php"
   { tail +4 "${WORKSPACE}/modules/module_qantion.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -628,6 +640,7 @@ EOF
   qantion_hash=$(sha256sum "/tmp/qantion.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new qantion : ${qantion_hash}"
   cp "/tmp/qantion.php" "${CODE_MASTER_SPACE}/o/${qantion_hash}"
+  cp "/tmp/qantion.php" "${CODE_MASTER_EXPORT}/o/${qantion_hash}"
 
   cat "${WORKSPACE}/applications/sylabe.php" > "/tmp/sylabe.php"
   { tail +4 "${WORKSPACE}/modules/module_manage.php" | grep -v '^use Nebule\\Library' | grep -v '^use Nebule\\Application' | grep -v '/** @noinspection ';
@@ -654,11 +667,14 @@ EOF
   sylabe_hash=$(sha256sum "/tmp/sylabe.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new sylabe : ${sylabe_hash}"
   cp "/tmp/sylabe.php" "${CODE_MASTER_SPACE}/o/${sylabe_hash}"
+  cp "/tmp/sylabe.php" "${CODE_MASTER_EXPORT}/o/${sylabe_hash}"
   cp ~/Images/bg1.jpg "${CODE_MASTER_SPACE}/o/906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256"
+  cp ~/Images/bg1.jpg "${CODE_MASTER_EXPORT}/o/906da8f91f664b5bff2b23fb3f8bad69d2641932031594a656de6ce618e3404d.sha2.256"
 
   upload_hash=$(sha256sum "${WORKSPACE}/applications/upload.php" | cut -d' ' -f1)'.sha2.256'
   echo " > new upload : ${upload_hash}"
   cp "${WORKSPACE}/applications/upload.php" "${CODE_MASTER_SPACE}/o/${upload_hash}"
+  cp "${WORKSPACE}/applications/upload.php" "${CODE_MASTER_EXPORT}/o/${upload_hash}"
 
   for module in module_admin module_autent module_entities module_groups module_manage module_conversations \
     module_neblog module_objects module_qantion module_folders module_galleries
@@ -668,6 +684,7 @@ EOF
     declare "${varName}"_hash="${module_hash}"
     echo " > new ${module} : ${module_hash}"
     cp "${WORKSPACE}/modules/${module}.php" "${CODE_MASTER_SPACE}/o/${module_hash}"
+    cp "${WORKSPACE}/modules/${module}.php" "${CODE_MASTER_EXPORT}/o/${module_hash}"
   done
 
   for module in module_lang_de-de module_lang_en-en module_lang_es-co module_lang_es-es \
@@ -687,11 +704,12 @@ EOF
     declare "flags_${varName}"_hash="${icon_hash}"
     echo " > new flag ${lang} : ${icon_hash}"
     cp "${WORKSPACE}/modules/langs/flags/${lang}.png" "${CODE_MASTER_SPACE}/o/${icon_hash}"
+    cp "${WORKSPACE}/modules/langs/flags/${lang}.png" "${CODE_MASTER_EXPORT}/o/${icon_hash}"
   done
 
   echo ' > links'
   links=(
-    # nodes
+    # Apps def
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_BOOTSTRAP}>${IID_INTERFACE_BOOTSTRAP}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_LIBRARY}>${IID_INTERFACE_LIBRARY}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_ATRIUM}>${phpOID}>${NID_CODE_BRANCH}"
@@ -705,25 +723,84 @@ EOF
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_QANTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_OPTION}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_APPLICATIONS}>${IID_INTERFACE_UPLOAD}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_admin_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_autent_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_entities_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_groups_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_manage_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_conversations_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_neblog_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_objects_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_qantion_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_folders_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES}>${module_galleries_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_de_de_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_en_en_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_co_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_es_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_fr_fr_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_it_it_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_pl_pl_hash}>${phpOID}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${INIT_DATE}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_ua_ua_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    # Apps activated
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ATRIUM}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ENTITY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_NEBLOG}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_PORTFOLIO}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
+    # names
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ATRIUM}>${atriumNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ATRIUM}>${atriumSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ENTITY}>${entityNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_ENTITY}>${entitySurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_SYLABE}>${sylabeNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_SYLABE}>${sylabeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_KLICTY}>${klictyNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_KLICTY}>${klictySurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_MESSAE}>${messaeNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_MESSAE}>${messaeSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_NEBLOG}>${neblogNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_NEBLOG}>${neblogSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_QANTION}>${qantionNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_QANTION}>${qantionSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_OPTION}>${optionNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_OPTION}>${optionSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_UPLOAD}>${uploadNameOID}>${nameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${IID_INTERFACE_UPLOAD}>${uploadSurnameOID}>${surnameRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${atriumNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${atriumSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${autentNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${autentSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${entityNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${entitySurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${sylabeNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${sylabeSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${klictyNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${klictySurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${messaeNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${messaeSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${neblogNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${neblogSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${portfolioNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${portfolioSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${qantionNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${qantionSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${optionNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${optionSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${uploadNameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${uploadSurnameOID}>${textOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/f>6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272>94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256>${imageRID}"
+    # Flags
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_de_de_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_en_en_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_es_co_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_es_es_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_fr_fr_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_it_it_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_pl_pl_hash}>${pngOID}>${typeRID}"
+    "nebule:link/2:0_0>${INIT_DATE}/l>${flag_ua_ua_hash}>${pngOID}>${typeRID}"
+  )
+  for link in "${links[@]}"
+  do
+    echo -n .
+    sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    write_archive_link "${link}" "${CODE_MASTER_EXPORT}" 'first'
+  done
+  links=(
     # type mime = application/x-httpd-php
     "nebule:link/2:0_0>${current_date}/l>${bootstrap_hash}>${phpOID}>${typeRID}"
     "nebule:link/2:0_0>${current_date}/l>${library_hash}>${phpOID}>${typeRID}"
@@ -771,17 +848,25 @@ EOF
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_QANTION}>${qantion_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_OPTION}>${option_hash}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/f>${IID_INTERFACE_UPLOAD}>${upload_hash}>${NID_CODE_BRANCH}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ENTITY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_ACTIVE}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_admin_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_autent_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_entities_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_groups_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_manage_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_conversations_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_neblog_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_objects_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_qantion_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_folders_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES}>${module_galleries_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_de_de_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_en_en_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_co_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_es_es_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_fr_fr_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_it_it_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_pl_pl_hash}>${phpOID}>${NID_CODE_BRANCH}"
+    "nebule:link/2:0_0>${current_date}/f>${LIB_RID_INTERFACE_MODULES_TRANSLATE}>${module_lang_ua_ua_hash}>${phpOID}>${NID_CODE_BRANCH}"
     "nebule:link/2:0_0>${current_date}/l>${module_admin_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_autent_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_entities_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
@@ -801,69 +886,12 @@ EOF
     "nebule:link/2:0_0>${current_date}/l>${module_lang_it_it_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_pl_pl_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
     "nebule:link/2:0_0>${current_date}/l>${module_lang_ua_ua_hash}>${LIB_RID_INTERFACE_MODULES_ACTIVE}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${LIB_RID_INTERFACE_APPLICATIONS_DIRECT}"
-    # names
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${atriumNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ATRIUM}>${atriumSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_AUTENT}>${autentSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ENTITY}>${entityNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_ENTITY}>${entitySurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_SYLABE}>${sylabeSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictyNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_KLICTY}>${klictySurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_MESSAE}>${messaeSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_NEBLOG}>${neblogSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_PORTFOLIO}>${portfolioSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_QANTION}>${qantionSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_OPTION}>${optionSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadNameOID}>${nameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${IID_INTERFACE_UPLOAD}>${uploadSurnameOID}>${surnameRID}"
-    "nebule:link/2:0_0>${current_date}/l>${atriumNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${atriumSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${autentNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${autentSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${entityNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${entitySurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${sylabeNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${sylabeSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${klictyNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${klictySurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${messaeNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${messaeSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${neblogNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${neblogSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${portfolioNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${portfolioSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${qantionNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${qantionSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${optionNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${optionSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${uploadNameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${uploadSurnameOID}>${textOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/f>6e6562756c652f6f626a65742f656e74697465000000000000000000000000000000.none.272>94d672f309fcf437f0fa305337bdc89fbb01e13cff8d6668557e4afdacaea1e0.sha2.256>${imageRID}"
-    # Flags
-    "nebule:link/2:0_0>${current_date}/l>${flag_de_de_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_en_en_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_es_co_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_es_es_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_fr_fr_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_it_it_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_pl_pl_hash}>${pngOID}>${typeRID}"
-    "nebule:link/2:0_0>${current_date}/l>${flag_ua_ua_hash}>${pngOID}>${typeRID}"
   )
   for link in "${links[@]}"
   do
     echo -n .
     sign_write_link "${link}" "${code_authority1_develop_key_hash}" "${code_authority1_develop_pem_hash}" 256 "${CODE_MASTER_SPACE}"
+    write_archive_link "${link}" "${CODE_MASTER_EXPORT}" 'update'
   done
   echo
 
@@ -890,6 +918,29 @@ EOF
   echo -n "upload" > "${CODE_MASTER_SPACE}/o/${uploadNameOID}"
   echo -n "Up" > "${CODE_MASTER_SPACE}/o/${uploadSurnameOID}"
 
+  echo -n "atrium" > "${CODE_MASTER_EXPORT}/o/${atriumNameOID}"
+  echo -n "At" > "${CODE_MASTER_EXPORT}/o/${atriumSurnameOID}"
+  echo -n "autent" > "${CODE_MASTER_EXPORT}/o/${autentNameOID}"
+  echo -n "Au" > "${CODE_MASTER_EXPORT}/o/${autentSurnameOID}"
+  echo -n "entity" > "${CODE_MASTER_EXPORT}/o/${entityNameOID}"
+  echo -n "En" > "${CODE_MASTER_EXPORT}/o/${entitySurnameOID}"
+  echo -n "sylabe" > "${CODE_MASTER_EXPORT}/o/${sylabeNameOID}"
+  echo -n "Sy" > "${CODE_MASTER_EXPORT}/o/${sylabeSurnameOID}"
+  echo -n "klicty" > "${CODE_MASTER_EXPORT}/o/${klictyNameOID}"
+  echo -n "Kl" > "${CODE_MASTER_EXPORT}/o/${klictySurnameOID}"
+  echo -n "messae" > "${CODE_MASTER_EXPORT}/o/${messaeNameOID}"
+  echo -n "Me" > "${CODE_MASTER_EXPORT}/o/${messaeSurnameOID}"
+  echo -n "neblog" > "${CODE_MASTER_EXPORT}/o/${neblogNameOID}"
+  echo -n "Ne" > "${CODE_MASTER_EXPORT}/o/${neblogSurnameOID}"
+  echo -n "portfolio" > "${CODE_MASTER_EXPORT}/o/${portfolioNameOID}"
+  echo -n "Pf" > "${CODE_MASTER_EXPORT}/o/${portfolioSurnameOID}"
+  echo -n "qantion" > "${CODE_MASTER_EXPORT}/o/${qantionNameOID}"
+  echo -n "Qa" > "${CODE_MASTER_EXPORT}/o/${qantionSurnameOID}"
+  echo -n "option" > "${CODE_MASTER_EXPORT}/o/${optionNameOID}"
+  echo -n "Op" > "${CODE_MASTER_EXPORT}/o/${optionSurnameOID}"
+  echo -n "upload" > "${CODE_MASTER_EXPORT}/o/${uploadNameOID}"
+  echo -n "Up" > "${CODE_MASTER_EXPORT}/o/${uploadSurnameOID}"
+
   echo ' > chmod masters folders'
   for SPACE in $ALL_SPACES
   do
@@ -901,27 +952,22 @@ EOF
   done
 }
 
-function copy_to_test_instance()
-{
+function copy_to_test_instance() {
   echo ' > copy to test instance'
-  [ -d "${TESTINSTANCE}" ] && rm -rf "${TESTINSTANCE}"
-  mkdir -p "${TESTINSTANCE}"
-  cp -r "${CODE_MASTER_SPACE}/index.php" "${CODE_MASTER_SPACE}/o" "${CODE_MASTER_SPACE}/l" "${CODE_MASTER_SPACE}/c" "${TESTINSTANCE}/"
-  #cd "${TESTINSTANCE}" || return
-  #git add o/* l/*
-  #cd "${CODE_MASTER_SPACE}" || return
+  [ -d "${TEST_INSTANCE}" ] && rm -rf "${TEST_INSTANCE}"
+  mkdir -p "${TEST_INSTANCE}"
+  cp -r "${CODE_MASTER_SPACE}/index.php" "${CODE_MASTER_SPACE}/o" "${CODE_MASTER_SPACE}/l" "${CODE_MASTER_SPACE}/c" "${TEST_INSTANCE}/"
 }
 
-function sign_write_link()
-{
+function sign_write_link() {
   link="${1}"
   key="${2}"
   eid="${3}"
   size="${4}"
   location="${5}"
-  [ "${location}" == '' ] && location=$CODE_MASTER_SPACE
+  [ "${location}" == '' ] && location="${CODE_MASTER_SPACE}"
 
-  logger "sign_write_link ${link} with ${eid}"
+  logger "sign_write_link ${link} with ${eid} on ${location}"
   slink=$(echo -n "${link}" | openssl dgst -hex -"sha${size}" -sign "${PUPPETMASTER_SPACE}/o/${key}" -passin "pass:${password_entity}" | cut -d ' ' -f2)
   flink="${link}_${eid}>${slink}.sha2.${size}"
   nid1=$(echo "${link}" | cut -d_ -f2 | cut -d/ -f2 | cut -d '>' -f2)
@@ -932,17 +978,20 @@ function sign_write_link()
   [ "${nid2}" != '' ] && touch "${location}/l/${nid2}" && [[ $(grep "${flink}" "${location}/l/${nid2}") == '' ]] && echo "${flink}" >> "${location}/l/${nid2}"
   [ "${nid3}" != '' ] && touch "${location}/l/${nid3}" && [[ $(grep "${flink}" "${location}/l/${nid3}") == '' ]] && echo "${flink}" >> "${location}/l/${nid3}"
   [ "${nid4}" != '' ] && touch "${location}/l/${nid4}" && [[ $(grep "${flink}" "${location}/l/${nid4}") == '' ]] && echo "${flink}" >> "${location}/l/${nid4}"
-  echo "${flink}" >> "l/h"
+  echo "${flink}" >> "${location}/l/h"
 }
 
-# Recherche ou demande le mot de passe de l'entité.
-#if [ -f ~/priv/default.password ]
-#then
-#  password_entity=$(cat ~/priv/default.password)
-#else
-#  read -r -s -p ' ? password : ' password_entity
-#fi
-#echo ''
+
+function write_archive_link() {
+  link="${1}"
+  location="${2}"
+  file="${3}"
+  [ "${location}" == '' ] && return
+  [ "${file}" == '' ] && file=unclassified
+
+  logger "write_archive_link ${link} on ${location}"
+  echo "${link}" >> "${location}/l/${file}"
+}
 
 # Extrait les clés publiques.
 echo " > extract pub keys"
@@ -1004,8 +1053,7 @@ export directory_authority2_develop_key_hash
 directory_authority2_develop_pem_hash=$(echo -n "${directory_authority2_develop_pem}" | sha256sum | cut -d' ' -f1)'.sha2.256'
 export directory_authority2_develop_pem_hash
 
-function mode_loop
-{
+function mode_loop {
   echo ' > mode loop'
   loop_type='r'
   while true
@@ -1030,8 +1078,7 @@ function mode_loop
   echo ' > end'
 }
 
-function mode_once
-{
+function mode_once {
   echo ' > mode once'
   case "${1}" in
     f) work_full_reinit; work_dev_deploy; work_refresh; copy_to_test_instance;;
@@ -1042,8 +1089,7 @@ function mode_once
   echo ' > end'
 }
 
-function main
-{
+function main {
   echo ' > main'
 
   echo "   - puppetmaster        : ${puppetmaster_develop_pem_hash}"
