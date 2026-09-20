@@ -85,7 +85,7 @@ class ModuleObjects extends Module {
                 $update = $instance->getUpdateNID(false, false);
 
                 // Recherche si l'objet est marqué.
-                $marked = $this->_applicationInstance->getMarkObject($id); // FIXME ne devrait pas être dans l'app sylabe mais dans Applications !
+                $marked = $this->_applicationInstance->getMarkObject($id);
                 $markList = $this->_applicationInstance->getMarkObjectList();
                 $mode = $this->_displayInstance->getCurrentDisplayMode();
                 $view = $this->_displayInstance->getCurrentDisplayView();

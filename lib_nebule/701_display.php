@@ -1714,7 +1714,17 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         echo '<p>' . "\n";
         $this->_actionInstance->getDisplayActions();
         echo '</p>' . "\n";
-        echo '<p style="color: #ffff00; font-size: 16px; font-weight: bold;">/// /// /// EXPERIMENTAL /// /// ///</p>' . "\n";
+        $classification = $this->_configurationInstance->getOptionAsString('displayClassification');
+        if ( $classification != '' ) {
+            $fg = preg_replace('/[^0-9a-f]/', '', $this->_configurationInstance->getOptionAsString('displayClassificationFG'));
+            if (strlen($fg) != 6)
+                $fg = 'ff0000';
+            $bg = preg_replace('/[^0-9a-f]/', '', $this->_configurationInstance->getOptionAsString('displayClassificationBG'));
+            if (strlen($bg) != 6)
+                $bg = 'ffffff';
+            $style = 'color: #' . $fg . '; background-color: #' . $bg . '; font-size: 16px; font-weight: bold; border: 2px solid; border-radius: 5px; padding:1px; margin: 1px; display: inline-block;';
+            echo '<p style="' . $style . '">' . $classification . "</p>\n";
+        }
         echo '</div>' . "\n";
     }
 

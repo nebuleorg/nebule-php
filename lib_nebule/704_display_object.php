@@ -1789,6 +1789,8 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 margin: 0;
                 color: #000000;
                 overflow: auto;
+                clear: both;
+                max-width: 95%;
             }
 
             .objectContentShort {
