@@ -452,7 +452,7 @@ class Router extends Functions
     }
 
     private function _displayLocalEntity(): void {
-//        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
+        $this->_metrologyInstance->addLog('input ' . \Nebule\Bootstrap\LIB_LOCAL_ENTITY_FILE . ' ask display local entity only', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'dcfc2e74');
         $content = '';
         if (file_exists(References::LOCAL_ENTITY_FILE)) {
             $ioReadMaxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
@@ -460,6 +460,28 @@ class Router extends Functions
         }
         if ($content == '')
             $content = 'undefined';
+        echo $content;
+    }
+
+    private function _displayRawNode(): void {
+        $this->_metrologyInstance->addLog('input ' . \Nebule\Bootstrap\LIB_LOCAL_ENTITY_FILE . ' ask display raw node content', Metrology::LOG_LEVEL_AUDIT, __METHOD__, '936812be');
+        $content = '';
+        $nid = $this->getFilterInput(References::OBJECTS_FOLDER, FILTER_FLAG_ENCODE_LOW);
+        if (file_exists(References::OBJECTS_FOLDER . '/' . $nid)) {
+            $ioReadMaxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
+            $content = (string)file_get_contents(References::OBJECTS_FOLDER . '/' . $nid, false, null, 0, $ioReadMaxData);
+        }
+        echo $content;
+    }
+
+    private function _displayRawLinks(): void {
+        $this->_metrologyInstance->addLog('input ' . \Nebule\Bootstrap\LIB_LOCAL_ENTITY_FILE . ' ask display raw node content', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'fb75b804');
+        $content = '';
+        $nid = $this->getFilterInput(References::LINKS_FOLDER, FILTER_FLAG_ENCODE_LOW);
+        if (file_exists(References::LINKS_FOLDER . '/' . $nid)) {
+            $ioReadMaxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
+            $content = (string)file_get_contents(References::LINKS_FOLDER . '/' . $nid, false, null, 0, $ioReadMaxData);
+        }
         echo $content;
     }
 
@@ -507,8 +529,17 @@ class Router extends Functions
         // Display only server entity if asked.
         // For compatibility and interoperability.
         if ($this->_nebuleInstance->getHaveInput(References::COMMAND_LOCAL_ENTITY_FILE)) {
-            $this->_metrologyInstance->addLog('input ' . \Nebule\Bootstrap\LIB_LOCAL_ENTITY_FILE . ' ask display local entity only', Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'dcfc2e74');
             $this->_displayLocalEntity();
+            return;
+        }
+
+        // Allow to download nodes and links as raw content to exchange datas. Can get protected data if entity unlocked.
+        if ($this->_nebuleInstance->getHaveInput(References::OBJECTS_FOLDER)) {
+            $this->_displayRawNode();
+            return;
+        }
+        if ($this->_nebuleInstance->getHaveInput(References::LINKS_FOLDER)) {
+            $this->_displayRawLinks();
             return;
         }
 
