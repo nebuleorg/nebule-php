@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use Nebule\Application\Atrium\Display;
 use Nebule\Library\nebule;
 use const Nebule\Bootstrap\LIB_ARG_BOOTSTRAP_BREAK;
 use const Nebule\Bootstrap\LIB_ARG_FLUSH_SESSION;
@@ -92,6 +93,7 @@ abstract class HelpApplications {
                                 <li><a href="#oaigu">OAIGU / Nu - upload</a></li>
                             </ul>
                         </li>
+                        <li><a href="#oaim">OAIM / Commandes</a></li>
                         <li><a href="#oaio">OAIO / Implémentation des Options</a></li>
                         <li><a href="#oaia">OAIA / Implémentation des Actions</a></li>
                     </ul>
@@ -127,6 +129,7 @@ abstract class HelpApplications {
                             </ul>
                         </li>
                         <li><a href="#oalt">OALT / Actions</a></li>
+                        <li><a href="#oalm">OALM / Commandes</a></li>
                         <li><a href="#oalz">OALZ / Mode sommeil</a></li>
                     </ul>
                 </li>
@@ -687,6 +690,27 @@ class Traduction extends Traductions
         <p>IID=6666661d0923f08d50de4d70be7dc3014e73de3325b6c7b16efd1a6f5a12f5957b68336d.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
+        <?php Displays::docDispTitle(4, 'oaim', 'Commandes'); ?>
+        <p>Il est possible d'interagir avec l'application au moyen de commandes dans l'URL.
+            Les commandes listées sont sur deux digits. Voir <a href="#oabm">OABM</a> et <a href="#oalm">OALM</a></p>
+        <p>Liste des commandes :</p>
+        <ul>
+            <li><b><?php echo Displays::COMMAND_DISPLAY_MODE; ?></b> :
+                Habituellement utilisé pour sélectionner le mode d'affichage d'une application.</li>
+            <li><b><?php echo Displays::COMMAND_DISPLAY_VIEW; ?></b> :
+                Habituellement utilisé pour sélectionner la vue d'affichage d'une application dans un mode spécifique.</li>
+            <li><b><?php echo Displays::COMMAND_DISPLAY_LANG; ?></b> :
+                Habituellement utilisé pour sélectionner la langue d'affichage d'une application.</li>
+            <li><b><?php echo Displays::COMMAND_INLINE; ?></b> :
+                Affichage en mode page intégrée d'une application. Ce n'est pas supporté partout.</li>
+            <li><b><?php echo Displays::COMMAND_CSS; ?></b> :
+                Habituellement utilisé pour l'affichage du code CSS.</li>
+            <li><b><?php echo Displays::COMMAND_SOCIAL; ?></b> :
+                Habituellement utilisé pour sélectionner le filtre social dans une application.</li>
+            <li><b><?php echo Displays::COMMAND_DISPLAY_PAGE_LIST; ?></b> :
+                Habituellement utilisé pour l'affichage d'une liste.</li>
+        </ul>
+
         <?php Displays::docDispTitle(4, 'oaio', 'Implémentation des Options'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
@@ -761,7 +785,7 @@ class Traduction extends Traductions
             <i>bootstrap</i> sur le serveur Web. Mais cela n'est pas le fonctionnement normal.</p>
 
         <?php Displays::docDispTitle(4, 'oabm', 'Commandes'); ?>
-        <p>Il est possible d'interagir avec le <i>bootstrap></i> au moyen de commandes dans l'URL.
+        <p>Il est possible d'interagir avec le <i>bootstrap</i> au moyen de commandes dans l'URL.
             Certaines commandes listées sont sur un digit et ont été historiquement dans le <i>bootstrap</i> mais sont
             maintenant déportées dans la bibliothèque.</p>
         <p>Liste des commandes :</p>
@@ -1076,6 +1100,20 @@ tE=0.5937s
                 nécessaires dans ce cas avant de réaliser l'action.</li>
         </ul>
         <p>Cette distinction se retrouve dans la bibliothèque et dans les applications, mais pas dans les modules.</p>
+
+        <?php Displays::docDispTitle(4, 'oalm', 'Commandes'); ?>
+        <p>Il est possible d'interagir avec la <i>bibliothèque</i> au moyen de commandes dans l'URL.
+            Certaines commandes listées sont sur un digit et ont été historiquement dans le <i>bootstrap</i> mais sont
+            maintenant déportées dans la bibliothèque. Ces commandes sont complémentaires avec les commandes du
+            <i>bootstrap</i>. Voir <a href="#oabm">OABM</a></p>
+        <p>Liste des commandes :</p>
+        <ul>
+            <li><b><?php echo References::OBJECTS_FOLDER; ?></b> :
+                Permet de télécharger le contenu brut d'un objet. Si l'objet est protégé, le contenu déchiffré est
+                affiché à condition qu'une entité légitime soit préalablement déverrouillée.</li>
+            <li><b><?php echo References::LINKS_FOLDER; ?></b> :
+                Permet de télécharger le contenu brut des liens d'un objet.</li>
+        </ul>
 
         <?php Displays::docDispTitle(4, 'oalz', 'Mode sommeil'); ?>
         <p>À définir...</p>

@@ -32,17 +32,31 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
         $objectContentFlag = '';
 
         if ($this->_type == References::REFERENCE_OBJECT_JPEG || $this->_type == References::REFERENCE_OBJECT_PNG) {
-            $objectContent = '<img src="o/' . $this->_nid . '" alt="I" class="objectSquareContent" />';
+            if ($this->_ioInstance->checkObjectPresent($this->_nid->getID()))
+                $objectContent = '<img src="/o/' . $this->_nid . '" alt="I" class="objectSquareContent" title="' . $this->_nid->getFullName() . '" />';
+            else
+                $objectContent = '<img src="?o=' . $this->_nid . '" alt="I" class="objectSquareContent" title="' . $this->_nid->getFullName() . '" />';
         } elseif ($this->_type == References::REFERENCE_OBJECT_TEXT) {
             $objectContent = '<div class="objectSquareContent"><p>' . $this->_nid->readAsText() . '</p></div>';
         } else {
             $this->_type = 'application/x-folder';
             $this->_displayName = false;
-            $objectContent = '<div class="objectSquareContent"><p>' . $this->_nid->getFullName() . '</p></div>';
+            $iconInstance = $this->_cacheInstance->newNode(References::REF_IMG['lstobj']);
+            $objectContent = '<div class="objectSquareContent"><p>' . $this->_displayInstance->convertUpdateImage($this->_displayInstance->getImageByReference($iconInstance)) . '</p><p>' . $this->_nid->getFullName() . '</p></div>';
         }
         if ($this->_displayName)
             $objectContent .= '<div class="objectSquareTitle">' . $this->_nid->getFullName() . '</div>';
         if ($this->_displayFlags) {
+            if ($this->_nid->getMarkDanger()) {
+                $objectContentFlag .= '<div class="objectMenuContentMsg objectMenuContentMsgError">';
+                $objectContentFlag .= $this->_translateInstance->getTranslate('::display:content:errorBan');
+                $objectContentFlag .= '</div>' . "\n";
+            }
+            if ($this->_nid->getMarkWarning()) {
+                $objectContentFlag .= '<div class="objectMenuContentMsg objectMenuContentMsgWarn">';
+                $objectContentFlag .= $this->_translateInstance->getTranslate('::display:content:warningTaggedWarning');
+                $objectContentFlag .= '</div>' . "\n";
+            }
             if ($this->_displayType)
                 $objectContentFlag .= $this->_translateInstance->getTranslate($this->_type);
             if ($this->_displayFlagState) {
@@ -195,6 +209,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 width: 90%;
                 text-align: center;
                 font-size: 14px;
+                font-weight: normal;
                 color: #fff;
                 overflow: hidden;
             }
@@ -208,6 +223,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 padding: 1%;
                 text-align: left;
                 font-size: 14px;
+                font-weight: normal;
                 text-wrap: nowrap;
                 white-space: nowrap;
                 overflow: hidden;
@@ -224,6 +240,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 padding: 1%;
                 text-align: left;
                 font-size: 14px;
+                font-weight: normal;
                 text-wrap: nowrap;
                 white-space: nowrap;
                 overflow: hidden;

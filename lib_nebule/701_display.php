@@ -67,7 +67,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     const DEFAULT_DISPLAY_VIEW = 'none';
     const COMMAND_DISPLAY_PAGE_LIST = 'dp';
     const DEFAULT_DISPLAY_SIZE_LIST = 24;
-    const COMMAND_DISPLAY_PAGE_COLUMN = 'dq';
+    const COMMAND_DISPLAY_PAGE_COLUMN = 'dq'; // FIXME à supprimer ?
     const DEFAULT_DISPLAY_PAGE_COLUMN = 3;
     const DEFAULT_DISPLAY_GAP_COLUMN = 4;
     const REFERENCE_DEFAULT_LOGO = '5dd45288e66bcdd560a287697655c58a410fa76d564badc1f28fc328209f49881b92.none.272';
@@ -2793,7 +2793,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function prepareIcon(string $icon): string
     {
         $updateIcon = $this->_getImageUpdate($icon);
-        if ($updateIcon == $icon)
+        if ($this->_ioInstance->checkObjectPresent($updateIcon))
             return References::OBJECTS_FOLDER . '/' . $icon;
         return '?' . References::OBJECTS_FOLDER . '=' . $updateIcon;
     }

@@ -491,7 +491,7 @@ class ModuleGalleries extends Module {
             $this->_socialClass = 'all';
         foreach ($this->_path as $nid) {
             $instance = new \Nebule\Library\DisplayObject($this->_applicationInstance);
-            $instancePath = $this->_cacheInstance->newNodeByType($nid);
+            $instancePath = $this->_cacheInstance->newGroup($nid);
             $instance->setNID($instancePath);
             $instance->setLink('?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
                 . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
