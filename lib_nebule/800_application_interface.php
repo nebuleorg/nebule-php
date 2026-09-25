@@ -709,6 +709,10 @@ class Traduction extends Traductions
                 Habituellement utilisé pour sélectionner le filtre social dans une application.</li>
             <li><b><?php echo Displays::COMMAND_DISPLAY_PAGE_LIST; ?></b> :
                 Habituellement utilisé pour l'affichage d'une liste.</li>
+            <li><b><?php echo References::COMMAND_SELECT_LINK; ?></b> :
+                Dans l'application 4, désigne le NID dont on veut afficher les blocs de liens.
+                Non reconnu ailleurs.
+                Voir <a href="#oala4">OALA4</a>.</li>
         </ul>
 
         <?php Displays::docDispTitle(4, 'oaio', 'Implémentation des Options'); ?>
@@ -801,11 +805,6 @@ class Traduction extends Traductions
                 Réinitialisation de la session, suppression du cache, fermeture des applications et entités.</li>
             <li><b><?php echo LIB_ARG_INLINE_DISPLAY; ?></b> :
                 Affichage en mode page intégrée d'une application. Ce n'est pas supporté partout.</li>
-            <li><b><?php echo LIB_LOCAL_LINKS_FOLDER; ?></b> :
-                Dans l'application 4, désigne le NID dont on veut afficher les blocs de liens.
-                Non reconnu ailleurs.
-                Voir <a href="#oala4">OALA4</a>.
-                (hors bootstrap)</li>
             <li><b><?php echo LIB_ARG_RESCUE_MODE; ?></b> :
                 Charge en mode restreint pour dépannage.</li>
             <li><b><?php echo References::COMMAND_TOKEN; ?></b> :
