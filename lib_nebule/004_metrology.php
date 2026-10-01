@@ -320,7 +320,14 @@ abstract class HelpMetrology {
                     <ul>
                         <li><a href="#mjs">MJS / Journalisation Système</a></li>
                         <li><a href="#mjd">MJD / Debug</a></li>
-                        <li><a href="#mjc">MJC / Liste de Codes</a></li>
+                        <li><a href="#mjc">MJC / Liste de Codes</a>
+                            <ul>
+                                <li><a href="#mjcg">MJCG / Codes génériques</a></li>
+                                <li><a href="#mjcb">MJCB / Codes bootstrap</a></li>
+                                <li><a href="#mjcc">MJCC / Codes communs</a></li>
+                                <li><a href="#mjct">MJCT / Codes tokenize</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -401,11 +408,53 @@ abstract class HelpMetrology {
             <li><code>100000XX</code> : Error. Code générique de traçage des interruptions du bootstrap avec XX le code associé.</li>
             <li><code>1111c0de</code> : Function. Code générique de traçage des appels des fonctions.</li>
         </ul>
-        <?php Displays::docDispTitle(4, 'mjcc', 'Codes communs'); ?>
-        <p>Liste non exhaustive de codes de journalisation :</p>
+        <?php Displays::docDispTitle(4, 'mjcb', 'Codes bootstrap'); ?>
+        <p>Codes spécifiques au bootstrap.php (librairie procédurale) :</p>
         <ul>
+            <li><code>df175c8c</code> : Info. 1: on error.</li>
+            <li><code>a844ce2c</code> : Info. 2: bootstrap.</li>
+            <li><code>76c10058</code> : Info. 3: library PP.</li>
+            <li><code>811b1513</code> : Info. 4: library POO.</li>
+            <li><code>7f1941a1</code> : Info. 5: application.</li>
+            <li><code>03a39126</code> : Info. 6: end.</li>
+            <li><code>82311cae</code> : Info. Affichage inline demandé.</li>
+            <li><code>529d21e0</code> : Info. Loading.</li>
+            <li><code>63d9bc00</code> : Info. Chargement initial (load first).</li>
+            <li><code>4abf554b</code> : Info. Interruption de chargement (load break).</li>
+            <li><code>555ec326</code> : Info. Écriture du puppetmaster par défaut.</li>
+            <li><code>01fc1f8f</code> : Info. Sérialisation de la classe Nebule\Library\nebule.</li>
             <li><code>76941959</code> : Info. Démarrage du bootstrap.</li>
-            <li><code>50615f80</code> : Info. Création du fichier de débug.</li>
+            <li><code>50615f80</code> : Info. Création du fichier de debug.</li>
+            <li><code>f060a74c</code> : Info. Initialisation du fichier de debug.</li>
+            <li><code>e0a8d6a5</code> : Info. Track functions (POO).</li>
+            <li><code>75d12813</code> : Info. Track functions.</li>
+            <li><code>82655082</code> : Info. Track functions.</li>
+            <li><code>2afa52df</code> : Info. Track functions.</li>
+            <li><code>3da38181</code> : Info. Track functions.</li>
+            <li><code>c43675e6</code> : Info. Track functions.</li>
+            <li><code>bc32d2f4</code> : Info. Track functions.</li>
+            <li><code>bfe82100</code> : Info. Track functions.</li>
+            <li><code>68c50ba0</code> : Info. Dossiers OK.</li>
+            <li><code>91e9b5bd</code> : Info. Fichier de configuration présent (ok have options file).</li>
+            <li><code>5c7be016</code> : Info. Objets OK.</li>
+            <li><code>ba3772d3</code> : Info. Objets OK.</li>
+            <li><code>c5b55957</code> : Info. Autorité de synchronisation OK.</li>
+            <li><code>4473358f</code> : Info. Synchronisation des objets OK.</li>
+            <li><code>549a608d</code> : Normal. Synchronisation OK.</li>
+            <li><code>70a99b83</code> : Info. Requête de l'EID du puppetmaster.</li>
+            <li><code>213a735c</code> : Info. Requête de l'EID de subordination.</li>
+            <li><code>7f3a8e2d</code> : Debug. Retour de la branche mise en cache (returning cached branch).</li>
+            <li><code>d7aa7cac</code> : Info. Recherche de la branche de code.</li>
+            <li><code>d8570c45</code> : Info. NID de branche de code direct trouvé.</li>
+            <li><code>bfcb9967</code> : Debug. Recherche du RID de branche de code.</li>
+            <li><code>9f1bf579</code> : Info. NID de branche de code trouvé.</li>
+            <li><code>83af2589</code> : Error. Aucune branche de code trouvée dans la configuration.</li>
+            <li><code>83af258a</code> : Warning. Aucun lien de branche de code trouvé.</li>
+            <li><code>83af258b</code> : Warning. Aucune branche de code correspondante trouvée pour le nom.</li>
+        </ul>
+        <?php Displays::docDispTitle(4, 'mjcc', 'Codes communs'); ?>
+        <p>Liste non exhaustive de codes de journalisation (applications) :</p>
+        <ul>
             <li><code>41ba02a9</code> : Error. Erreur lors de l'initialisation de l'instance de l'application par le bootstrap.</li>
             <li><code>d121af4c</code> : Error. Erreur lors de l'initialisation de l'instance de traduction de l'application par le bootstrap.</li>
             <li><code>4bb6af65</code> : Error. Erreur lors de l'initialisation de l'instance d'affichage de l'application par le bootstrap.</li>

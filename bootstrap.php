@@ -12,7 +12,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020260920';
+const BOOTSTRAP_VERSION = '020261001';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -891,6 +891,12 @@ $nebuleLocalAuthorities = array();
  * @noinspection PhpUnusedLocalVariableInspection
  */
 $codeBranchName = '';
+
+/**
+ * Current code branch name used as RID to find different apps codes.
+ * @noinspection PhpUnusedLocalVariableInspection
+ */
+$codeBranchNameRID = '';
 
 /**
  * Current code branch RID (reference) used to find different apps codes.
@@ -3908,12 +3914,152 @@ function app_getActivate(string $nid): bool {
 }
 
 /**
+ * Retrieves links for code branches.
+ *
+ * @param string $rid The RID to search from
+ * @param array $signers Array of authorized signers to filter by
+ * @return array Filtered links
+ */
+function app_getCodeBranchLinks(string $rid, array $signers): array {
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid1' => $rid,
+        'bl/rl/nid3' => $rid,
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($rid, $links, $filter, false);
+    blk_filterBySigners($links, $signers);
+    return $links;
+}
+
+/**
+ * Retrieves links for nodes with a specific name.
+ *
+ * @param string $nameRID The name RID to search for
+ * @param array $signers Array of authorized signers to filter by
+ * @return array Filtered links
+ */
+function app_getNamedNodeLinks(string $nameRID, array $signers): array {
+    $links = array();
+    $filter = array(
+        'bl/rl/req' => 'l',
+        'bl/rl/nid2' => $nameRID,
+        'bl/rl/nid3' => obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO),
+        'bl/rl/nid4' => '',
+    );
+    lnk_getList($nameRID, $links, $filter, false);
+    blk_filterBySigners($links, $signers);
+    return $links;
+}
+
+/**
+ * Finds the most recent link from an array of links.
+ *
+ * @param array $links Array of links to search through
+ * @param array $validNIDs Array of valid NIDs to match against bl/rl/nid2
+ * @return string The NID of the most recent matching link, or empty string
+ */
+function app_findMostRecentLink(array $links, array $validNIDs): string {
+    $bl_rc_mod = '0';
+    $bl_rc_chr = '0';
+    $foundNID = '';
+
+    foreach ($links as $link) {
+        if (isset($validNIDs[$link['bl/rl/nid2']]) 
+            && lnk_dateCompare($bl_rc_mod, $bl_rc_chr, $link['bl/rc/mod'], $link['bl/rc/chr']) < 0) {
+            $bl_rc_mod = $link['bl/rc/mod'];
+            $bl_rc_chr = $link['bl/rc/chr'];
+            $foundNID = $link['bl/rl/nid2'];
+        }
+    }
+
+    return $foundNID;
+}
+
+/**
+ * Retrieves the current code branch NID based on configuration.
+ *
+ * @return string The current code branch NID, or empty string if not found
+ */
+function app_getCurrentBranch(): string {
+    global $nebuleLocalAuthorities, $codeBranchName, $codeBranchNameRID, $codeBranchRID, $codeBranchNID;
+    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+
+    // Return cached value if available
+    if ($codeBranchNID !== '') {
+        log_add('returning cached branch: ' . $codeBranchNID, 'debug', __FUNCTION__, '7f3a8e2d');
+        return $codeBranchNID;
+    }
+
+    // Get code branch name from configuration
+    $codeBranchName = lib_getOptionAsString('codeBranch');
+    if ($codeBranchName === '') {
+        $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
+    }
+
+    if ($codeBranchName === '') {
+        log_add('error: no code branch found in configuration', 'error', __FUNCTION__, '83af2589');
+        return '';
+    }
+
+    log_add('looking for code branch: ' . $codeBranchName, 'info', __FUNCTION__, 'd7aa7cac');
+
+    // Check if it's a direct NID
+    if (nod_checkNID($codeBranchName, false) && io_checkNodeHaveLink($codeBranchName)) {
+        $codeBranchRID = $codeBranchName;
+        $codeBranchNID = $codeBranchName;
+        log_add('found direct code branch NID: ' . $codeBranchNID, 'info', __FUNCTION__, 'd8570c45');
+        return $codeBranchNID;
+    }
+
+    // Search for branch by name
+    $codeBranchRID = LIB_RID_CODE_BRANCH;
+
+    // Get all code branch links
+    $bLinks = app_getCodeBranchLinks($codeBranchRID, $nebuleLocalAuthorities);
+
+    if (empty($bLinks)) {
+        log_add('warning: no code branch links found', 'warning', __FUNCTION__, '83af258a');
+        return '';
+    }
+
+    // Get name RID for filtering
+    $codeBranchNameRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
+    log_add('searching for branch with name RID: ' . $codeBranchNameRID, 'debug', __FUNCTION__, 'bfcb9967');
+
+    // Get all nodes with the matching name
+    $nLinks = app_getNamedNodeLinks($codeBranchNameRID, $nebuleLocalAuthorities);
+
+    // Build map of valid NIDs for O(1) lookup
+    $validNIDs = array();
+    foreach ($nLinks as $nLink) {
+        $validNIDs[$nLink['bl/rl/nid1']] = true;
+    }
+
+    // Find the most recent branch with matching name
+    $foundNID = app_findMostRecentLink($bLinks, $validNIDs);
+
+    if ($foundNID !== '') {
+        $codeBranchRID = $foundNID;
+        $codeBranchNID = $foundNID;
+        log_add('found code branch NID: ' . $codeBranchNID, 'info', __FUNCTION__, '9f1bf579');
+    } else {
+        log_add('warning: no matching code branch found for name: ' . $codeBranchName, 'warning', __FUNCTION__, '83af258b');
+    }
+
+    return $codeBranchNID;
+}
+
+/**
  * Find current code branch to find apps codes.
+ * DEPRECATED: Kept for backward compatibility. Use app_getCurrentBranch() instead.
  *
  * @return void
+ * @deprecated
  */
-function app_getCurrentBranch(): void {
-    global $nebuleLocalAuthorities, $codeBranchName, $codeBranchRID, $codeBranchNID;
+function app_getCurrentBranch_legacy(): void {
+    global $nebuleLocalAuthorities, $codeBranchName, $codeBranchNameRID, $codeBranchRID, $codeBranchNID;
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if ($codeBranchNID != '')
@@ -3936,7 +4082,7 @@ function app_getCurrentBranch(): void {
         $codeBranchNID = $codeBranchName;
         log_add('direct code branch NID : ' . $codeBranchNID, 'info', __FUNCTION__, 'd8570c45');
     } else {
-        log_add('indirect code branch NID ' . $codeBranchNID, 'debug', __FUNCTION__, '00000000');
+        log_add('indirect code branch NID ' . $codeBranchNID, 'info', __FUNCTION__, '00000000');
         // Get all RID of code branches
         $codeBranchRID = LIB_RID_CODE_BRANCH;
         $bLinks = array();
@@ -3947,13 +4093,13 @@ function app_getCurrentBranch(): void {
             'bl/rl/nid4' => '',
         );
         lnk_getList($codeBranchRID, $bLinks, $filter, false);
-        log_add('blinks before size=' . sizeof($bLinks), 'debug', __FUNCTION__, '00000000');
+        log_add('blinks before size=' . sizeof($bLinks), 'info', __FUNCTION__, '00000000');
         blk_filterBySigners($bLinks, $nebuleLocalAuthorities);
-        log_add('blinks after size=' . sizeof($bLinks), 'debug', __FUNCTION__, '00000000');
+        log_add('blinks after size=' . sizeof($bLinks), 'info', __FUNCTION__, '00000000');
 
         // Get all NID with the name of wanted code branch.
-        $codeBranchRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
-        log_add('code branch RID : ' . $codeBranchRID, 'info', __FUNCTION__, 'bfcb9967');
+        $codeBranchNameRID = obj_getNID($codeBranchName, LIB_REF_CODE_ALGO);
+        log_add('code branch RID : ' . $codeBranchNameRID, 'info', __FUNCTION__, 'bfcb9967');
         $nLinks = array();
         $filter = array(
             'bl/rl/req' => 'l',
@@ -3961,10 +4107,10 @@ function app_getCurrentBranch(): void {
             'bl/rl/nid3' => obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO),
             'bl/rl/nid4' => '',
         );
-        lnk_getList($codeBranchRID, $nLinks, $filter, false);
-        log_add('nlinks before size=' . sizeof($nLinks), 'debug', __FUNCTION__, '00000000');
+        lnk_getList($codeBranchNameRID, $nLinks, $filter, false);
+        log_add('nlinks before size=' . sizeof($nLinks), 'info', __FUNCTION__, '00000000');
         blk_filterBySigners($nLinks, $nebuleLocalAuthorities);
-        log_add('nlinks after size=' . sizeof($nLinks), 'debug', __FUNCTION__, '00000000');
+        log_add('nlinks after size=' . sizeof($nLinks), 'info', __FUNCTION__, '00000000');
 
         // Latest collision of code branches with the name
         $bl_rc_mod = '0';
@@ -3983,6 +4129,7 @@ function app_getCurrentBranch(): void {
     }
     log_add('current branch : ' . $codeBranchNID, 'normal', __FUNCTION__, '9f1bf579');
 }
+// END OF DEPRECATED FUNCTION - Use app_getCurrentBranch() instead
 
 /**
  * Find a valid application OID from an RID for current code branch.
@@ -3997,7 +4144,7 @@ function app_getByRef(string $rid): string {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if ($codeBranchNID == '')
-        app_getCurrentBranch();
+        $codeBranchNID = app_getCurrentBranch();
 
     $phpNID = obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO);
 
@@ -4043,7 +4190,7 @@ function app_getList(string $rid, bool $activated = true, bool $allBranches=fals
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if ($codeBranchNID == '')
-        app_getCurrentBranch();
+        $codeBranchNID = app_getCurrentBranch();
 
     $phpNID = obj_getNID(BOOTSTRAP_CODING, LIB_REF_CODE_ALGO);
 
@@ -4082,7 +4229,7 @@ function app_getCodeList(string $iid, array &$links): void {
     log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
 
     if ($codeBranchNID == '')
-        app_getCurrentBranch();
+        $codeBranchNID = app_getCurrentBranch();
 
 // Get current version of code
     $filter = array(
@@ -4443,7 +4590,7 @@ function bootstrap_checkFingerprint(): bool {
     unset($data);
 
     if ($codeBranchNID == '')
-        app_getCurrentBranch();
+        $codeBranchNID = app_getCurrentBranch();
 
     $bootstrapListIID = app_getList(LIB_RID_INTERFACE_BOOTSTRAP, false, true);
 
@@ -5483,7 +5630,7 @@ function bootstrap_firstInitEnv() {
  */
 function bootstrap_firstDisplay1Breaks(): void {
     global $bootstrapBreak, $libraryRescueMode;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'b93c1dd2');
 
     echo '<div class="parts">' . "\n";
     echo '<span class="partstitle">#1 ' . BOOTSTRAP_NAME . ' break on (need first init)</span><br/>' . "\n";
@@ -5504,7 +5651,7 @@ function bootstrap_firstDisplay1Breaks(): void {
  * @return bool
  */
 function bootstrap_firstDisplay2Folders(): bool {
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'e0a8d6a5');
     $ok = true;
 
     echo '<div class="parts">' . "\n";
@@ -5569,7 +5716,7 @@ chmod 755 <?php echo LIB_LOCAL_OBJECTS_FOLDER; ?></pre>
  */
 function bootstrap_firstDisplay3ReservedObjects(): bool {
     global $nebuleInstance;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'bfe82100');
 
     $ok = true;
 
@@ -5682,7 +5829,7 @@ function bootstrap_firstDisplay3ReservedObjects(): bool {
  */
 function bootstrap_firstDisplay4Puppetmaster(): bool {
     global $firstPuppetmasterEid;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'c43675e6');
 
     $ok = true;
 
@@ -5778,7 +5925,7 @@ function bootstrap_firstDisplay4Puppetmaster(): bool {
  */
 function bootstrap_firstDisplay5SyncAuthorities(): bool {
     global $nebuleLocalAuthorities;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'f060a74c');
 
     $ok = true;
 
@@ -5941,8 +6088,8 @@ function bootstrap_firstDisplay5SyncAuthorities(): bool {
  * @return bool
  */
 function bootstrap_firstDisplay6SyncObjects(): bool {
-    global $codeBranchName, $codeBranchRID, $codeBranchNID;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    global $codeBranchName, $codeBranchNameRID, $codeBranchRID, $codeBranchNID;
+    log_add('track functions', 'info', __FUNCTION__, '75d12813');
 
     $ok = true;
     $refAppsID = LIB_RID_INTERFACE_APPLICATIONS;
@@ -5957,21 +6104,24 @@ function bootstrap_firstDisplay6SyncObjects(): bool {
     lnk_getDistantOnLocations(LIB_RID_CODE_BRANCH, LIB_FIRST_LOCALISATIONS);
     lnk_getDistantOnLocations($libOID, LIB_FIRST_LOCALISATIONS);
 
-    log_add('MARK01', 'debug', __FUNCTION__, '00000000');
     app_getCurrentBranch();
     if ($codeBranchName == '')
         $codeBranchName = LIB_CONFIGURATIONS_DEFAULT['codeBranch'];
     echo 'code branch name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchName . "<br />\n";
     flush();
 
+    lnk_getDistantOnLocations($codeBranchNameRID, LIB_FIRST_LOCALISATIONS);
+    lnk_getDistantOnLocations(obj_getNID('nebule/objet/nom', LIB_REF_CODE_ALGO), LIB_FIRST_LOCALISATIONS);
+    app_getCurrentBranch();
+    echo 'code branch name RID &nbsp;: ' . $codeBranchNameRID . "<br />\n";
+    flush();
+
     lnk_getDistantOnLocations($codeBranchRID, LIB_FIRST_LOCALISATIONS);
-    log_add('MARK02', 'debug', __FUNCTION__, '00000000');
     app_getCurrentBranch();
     echo 'code branch RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchRID . "<br />\n";
     flush();
 
     lnk_getDistantOnLocations($codeBranchNID, LIB_FIRST_LOCALISATIONS);
-    log_add('MARK03', 'debug', __FUNCTION__, '00000000');
     app_getCurrentBranch();
     echo 'code branch NID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $codeBranchNID . "<br />\n";
     flush();
@@ -5996,7 +6146,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool {
     flush();
 
     lnk_getDistantOnLocations($refAppsID, LIB_FIRST_LOCALISATIONS);
-    echo 'applications &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $refAppsID . "<br />\n";
+    echo 'applications RID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' . $refAppsID . "<br />\n";
     flush();
 
     /*if (!io_checkNodeHaveLink($refAppsID)
@@ -6034,7 +6184,7 @@ function bootstrap_firstDisplay6SyncObjects(): bool {
  */
 function bootstrap_firstDisplay7Subordination(): bool {
     global $firstPuppetmasterEid, $firstSubordinationEID;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, 'bc32d2f4');
 
     $ok = true;
 
@@ -6104,7 +6254,7 @@ function bootstrap_firstDisplay7Subordination(): bool {
  */
 function bootstrap_firstDisplay8OptionsFile(): bool {
     global $firstPuppetmasterEid, $firstSubordinationEID;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, '82655082');
 
     $ok = true;
 
@@ -6179,7 +6329,7 @@ chmod 644 <?php echo LIB_LOCAL_ENVIRONMENT_FILE; ?>
  */
 function bootstrap_firstDisplay9LocaleEntity(): bool {
     global $nebuleInstance, $nebuleGhostPublicEntity, $nebuleGhostPrivateEntity, $nebuleGhostPasswordEntity;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, '2afa52df');
 
     $ok = true;
 
@@ -6329,7 +6479,7 @@ chmod 644 <?php echo LIB_LOCAL_ENTITY_FILE; ?>
  */
 function bootstrap_firstDisplay10NeededObjects(): bool {
     global $nebuleInstance, $nebuleGhostPasswordEntity;
-    log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
+    log_add('track functions', 'info', __FUNCTION__, '3da38181');
 
     $ok = true;
 
