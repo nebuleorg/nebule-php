@@ -17,8 +17,57 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     const TYPE = 'Software';
 
+    // Algorithmes de hachage supportes
+    const HASH_ALGORITHM = array(
+        'sha1.128',
+        'sha2.224',
+        'sha2.256',
+        'sha2.384',
+        'sha2.512',
+    );
+
+    // Traduction des noms d'algorithmes
+    const TRANSLATE_HASH_ALGORITHM = array(
+        'sha1.128' => 'sha1',
+        'sha2.224' => 'sha224',
+        'sha2.256' => 'sha256',
+        'sha2.384' => 'sha384',
+        'sha2.512' => 'sha512',
+    );
+
+    // Valeurs de test pour verification
+    const TEST_HASH_ALGORITHM = array(
+        'value' => 'Bienvenue dans le projet nebule.',
+        'sha1.128' => 'd689bc73bbf35e6547e6de4b0ea79a5fd3b83ffa',
+        'sha2.224' => '8ee809ef3ec56e4e31273e2ee232697683d260db72d543ce6db4ab64',
+        'sha2.256' => '0b8dc4408e7ab1c81716ae978abe1f75d4bd3ea9a7b882b8da6afacdafc0e32b',
+        'sha2.384' => 'fef7e57afdbf243a756eae37fa7c556bc71050f555209d78b29d2e8feef56e62ed92da5e291669b6262170cd4f0dd0ba',
+        'sha2.512' => 'b9d7b17462c0e2657171975ee0bd37e8dc0cab5d6ebc6496864af2e261f16d35c16642898ba0af5174ad80bada202032c641595be0fc56e4d35599add72f8079',
+    );
+
+    // Algorithmes symetriques supportes (simples pour fallback)
+    const SYMMETRIC_ALGORITHM = array(
+        'xor.simple',
+    );
+
     protected function _initialisation(): void {
         // Nothing to do.
+    }
+
+    /**
+     * Add a log message if metrology instance is available.
+     *
+     * @param string $message
+     * @param int $level
+     * @param string $method
+     * @param string $id
+     * @return void
+     */
+    private function _log(string $message, int $level, string $method, string $id): void
+    {
+        if ($this->_nebuleInstance !== null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog($message, $level, $method, $id);
+        }
     }
 
     /**
@@ -63,14 +112,14 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * {@inheritDoc}
      * @see CryptoInterface::getAlgorithmList()
      */
-    public function getAlgorithmList(int $type): array {
-        /*return match ($type) {
+    public function getAlgorithmList(int $type): array
+    {
+        return match ($type) {
             Crypto::TYPE_HASH => self::HASH_ALGORITHM,
             Crypto::TYPE_SYMMETRIC => self::SYMMETRIC_ALGORITHM,
-            Crypto::TYPE_ASYMMETRIC => self::ASYMMETRIC_ALGORITHM,
-            default => false,
-        };*/
-        return array(); //FIXME
+            Crypto::TYPE_ASYMMETRIC => array(), // Pas de support pour asymetrique
+            default => array(),
+        };
     }
 
     // --------------------------------------------------------------------------------
@@ -162,63 +211,315 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     // --------------------------------------------------------------------------------
 
-    private function _checkHashFunction(string $algo): bool { return false; }
+    private function _checkHashAlgorithm(string $algo): bool
+    {
+        return isset(self::TRANSLATE_HASH_ALGORITHM[$algo]);
+    }
 
-    private function _checkHashAlgorithm(string $algo): bool { return false; }
+    private function _translateHashAlgorithm(string $name): string
+    {
+        return self::TRANSLATE_HASH_ALGORITHM[$name] ?? '';
+    }
+
+    private function _checkHashFunction(string $algo): bool
+    {
+        if (!$this->_checkHashAlgorithm($algo)) {
+            return false;
+        }
+
+        $testValue = self::TEST_HASH_ALGORITHM['value'];
+        $expected = self::TEST_HASH_ALGORITHM[$algo] ?? '';
+        if ($expected === '') {
+            return false;
+        }
+
+        $result = $this->hash($testValue, $algo);
+        return $result === $expected;
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::hash()
      */
-    public function hash(string $data, string $algo = ''): string { return ''; }
+    public function hash(string $data, string $algo = ''): string
+    {
+        if ($data === '') {
+            return '';
+        }
+
+        if ($algo === '') {
+            $algo = 'sha2.256';
+        }
+
+        if (!$this->_checkHashAlgorithm($algo)) {
+            if ($this->_nebuleInstance !== null) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                    'Unsupported hash algorithm: ' . $algo,
+                    Metrology::LOG_LEVEL_ERROR,
+                    __METHOD__,
+                    'hash001'
+                );
+            }
+            return '';
+        }
+
+        $translatedAlgo = $this->_translateHashAlgorithm($algo);
+
+        // Essayer d'utiliser hash() natif de PHP si disponible
+        // C'est la méthode privilégiée car elle est fiable et performante
+        if (function_exists('hash') && in_array($translatedAlgo, hash_algos())) {
+            return hash($translatedAlgo, $data);
+        }
+
+        // Utiliser l'implémentation SHA256 pure PHP comme fallback
+        // Note: cette implémentation a des problèmes connus, donc on l'utilise seulement
+        // si hash() natif n'est pas disponible
+        if ($translatedAlgo === 'sha256') {
+            $result = SHA256::hashing($data, 'hex');
+            // SHA256::hashing peut retourner false ou une string
+            if ($result === false || !is_string($result)) {
+                if ($this->_nebuleInstance !== null) {
+                    $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                        'SHA256 hashing failed for data',
+                        Metrology::LOG_LEVEL_ERROR,
+                        __METHOD__,
+                        'hash003'
+                    );
+                }
+                return '';
+            }
+            return $result;
+        }
+
+        // Pour les autres algorithmes SHA2, on ne peut pas les supporter sans hash() natif
+        if ($this->_nebuleInstance !== null) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Cannot compute hash with algorithm: ' . $algo . ' (native hash() not available)',
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'hash002'
+            );
+        }
+        return '';
+    }
 
     // --------------------------------------------------------------------------------
 
-    private function _checkSymmetricFunction(string $algo): bool { return false; }
+    private function _checkSymmetricAlgorithm(string $algo): bool
+    {
+        return in_array($algo, self::SYMMETRIC_ALGORITHM);
+    }
 
-    private function _checkSymmetricAlgorithm(string $algo): bool { return false; }
+    private function _checkSymmetricFunction(string $algo): bool
+    {
+        if (!$this->_checkSymmetricAlgorithm($algo)) {
+            return false;
+        }
+
+        // Tester avec des données simples
+        $data = 'Test data for symmetric encryption';
+        $hexKey = '0123456789abcdef0123456789abcdef'; // 32 bytes
+
+        $encrypted = $this->encrypt($data, $algo, $hexKey);
+        if ($encrypted === '') {
+            return false;
+        }
+
+        $decrypted = $this->decrypt($encrypted, $algo, $hexKey);
+        return $decrypted === $data;
+    }
+
+    /**
+     * Simple XOR encryption for fallback purposes.
+     * NOT SECURE for production, but works as a fallback.
+     *
+     * @param string $data Data to encrypt
+     * @param string $key Encryption key (binary)
+     * @return string Encrypted data
+     */
+    private function _xorCrypt(string $data, string $key): string
+    {
+        $result = '';
+        $keyLength = strlen($key);
+
+        if ($keyLength === 0) {
+            return '';
+        }
+
+        for ($i = 0; $i < strlen($data); $i++) {
+            $result .= $data[$i] ^ $key[$i % $keyLength];
+        }
+
+        return $result;
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encrypt()
      */
-    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string { return ''; }
+    public function encrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
+    {
+        if (!$this->_checkSymmetricAlgorithm($algo)) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Unsupported symmetric algorithm: ' . $algo,
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'enc001'
+            );
+            return '';
+        }
+
+        if ($hexKey === '') {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Empty key for symmetric encryption',
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'enc002'
+            );
+            return '';
+        }
+
+        // Pour XOR simple, on n'utilise pas l'IV
+        $binKey = pack("H*", $hexKey);
+        if ($binKey === false) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Invalid hex key for symmetric encryption',
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'enc003'
+            );
+            return '';
+        }
+
+        if ($algo === 'xor.simple') {
+            return $this->_xorCrypt($data, $binKey);
+        }
+
+        return '';
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decrypt()
      */
-    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string { return ''; }
+    public function decrypt(string $data, string $algo, string $hexKey, string $hexIV = ''): string
+    {
+        if (!$this->_checkSymmetricAlgorithm($algo)) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Unsupported symmetric algorithm: ' . $algo,
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'dec001'
+            );
+            return '';
+        }
+
+        if ($hexKey === '') {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Empty key for symmetric decryption',
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'dec002'
+            );
+            return '';
+        }
+
+        // Pour XOR simple, on n'utilise pas l'IV
+        $binKey = pack("H*", $hexKey);
+        if ($binKey === false) {
+            $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                'Invalid hex key for symmetric decryption',
+                Metrology::LOG_LEVEL_ERROR,
+                __METHOD__,
+                'dec003'
+            );
+            return '';
+        }
+
+        if ($algo === 'xor.simple') {
+            return $this->_xorCrypt($data, $binKey);
+        }
+
+        return '';
+    }
 
     // --------------------------------------------------------------------------------
 
-    private function _checkAsymmetricFunction(string $algo): bool { return false; }
+    private function _checkAsymmetricAlgorithm(string $algo): bool
+    {
+        // Pas de support pour les algorithmes asymetriques en pure PHP
+        return false;
+    }
 
-    private function _checkAsymmetricAlgorithm(string $algo): bool { return false; }
+    private function _checkAsymmetricFunction(string $algo): bool
+    {
+        // Pas de support pour les fonctions asymetriques en pure PHP
+        return false;
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::sign()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function sign(string $data, string $privateKey, string $privatePassword): string { return ''; }
+    public function sign(string $data, string $privateKey, string $privatePassword): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: sign() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw001'
+        );
+        return '';
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::verify()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function verify(string $data, string $sign, string $publicKey, string $algo): bool { return false; }
+    public function verify(string $data, string $sign, string $publicKey, string $algo): bool
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: verify() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw002'
+        );
+        return false;
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function encryptTo(string $data, ?string $publicKey): string { return ''; }
+    public function encryptTo(string $data, ?string $publicKey): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: encryptTo() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw003'
+        );
+        return '';
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function decryptTo(string $code, ?string $privateKey, ?string $password): string { return ''; }
+    public function decryptTo(string $code, ?string $privateKey, ?string $password): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: decryptTo() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw004'
+        );
+        return '';
+    }
 
     /**
      * {@inheritDoc}
@@ -226,20 +527,50 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * @param string $algo
      * @param int    $size
      * @see CryptoInterface::newAsymmetricKeys()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 0): array { return array(); }
+    public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 0): array
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: newAsymmetricKeys() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw005'
+        );
+        return array();
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool { return false; }
+    public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: checkPrivateKeyPassword() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw006'
+        );
+        return false;
+    }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
+     * NOT SUPPORTED in software implementation - use OpenSSL
      */
-    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string { return ''; }
+    public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
+    {
+        $this->_nebuleInstance->getMetrologyInstance()->addLog(
+            'Software crypto: changePrivateKeyPassword() not supported - use OpenSSL or Sodium',
+            Metrology::LOG_LEVEL_WARNING,
+            __METHOD__,
+            'sw007'
+        );
+        return '';
+    }
 }
 
 

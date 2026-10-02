@@ -19,6 +19,7 @@ class Metrology extends Functions
     const LOG_LEVEL_NORMAL = 0;
     const LOG_LEVEL_ERROR = 1;
     const LOG_LEVEL_AUDIT = 2;
+    const LOG_LEVEL_WARNING = 4;
     const LOG_LEVEL_DEVELOP = 4;
     const LOG_LEVEL_FUNCTION = 8;
     const LOG_LEVEL_DEBUG = 16;
