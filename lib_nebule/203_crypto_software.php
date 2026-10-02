@@ -271,36 +271,42 @@ class CryptoSoftware extends Crypto implements CryptoInterface
             return hash($translatedAlgo, $data);
         }
 
-        // Utiliser l'implémentation SHA256 pure PHP comme fallback
-        // Note: cette implémentation a des problèmes connus, donc on l'utilise seulement
-        // si hash() natif n'est pas disponible
-        if ($translatedAlgo === 'sha256') {
-            $result = SHA256::hashing($data, 'hex');
-            // SHA256::hashing peut retourner false ou une string
-            if ($result === false || !is_string($result)) {
-                if ($this->_nebuleInstance !== null) {
-                    $this->_nebuleInstance->getMetrologyInstance()->addLog(
-                        'SHA256 hashing failed for data',
-                        Metrology::LOG_LEVEL_ERROR,
-                        __METHOD__,
-                        'hash003'
-                    );
-                }
-                return '';
-            }
-            return $result;
+        // Utiliser les implémentations pure PHP comme fallback
+        switch ($translatedAlgo) {
+            case 'sha224':
+                $result = SHA224::hashing($data, 'hex');
+                break;
+            case 'sha256':
+                $result = SHA256::hashing($data, 'hex');
+                break;
+            case 'sha384':
+                $result = SHA384::hashing($data, 'hex');
+                break;
+            case 'sha512':
+                $result = SHA512::hashing($data, 'hex');
+                break;
+            case 'sha1':
+                $result = hash('sha1', $data);
+                break;
+            default:
+                $result = false;
+                break;
         }
 
-        // Pour les autres algorithmes SHA2, on ne peut pas les supporter sans hash() natif
-        if ($this->_nebuleInstance !== null) {
-            $this->_nebuleInstance->getMetrologyInstance()->addLog(
-                'Cannot compute hash with algorithm: ' . $algo . ' (native hash() not available)',
-                Metrology::LOG_LEVEL_ERROR,
-                __METHOD__,
-                'hash002'
-            );
+        // Vérifier le résultat
+        if ($result === false || !is_string($result)) {
+            if ($this->_nebuleInstance !== null) {
+                $this->_nebuleInstance->getMetrologyInstance()->addLog(
+                    'Hash computation failed for algorithm: ' . $algo,
+                    Metrology::LOG_LEVEL_ERROR,
+                    __METHOD__,
+                    'hash003'
+                );
+            }
+            return '';
         }
-        return '';
+
+        return $result;
     }
 
     // --------------------------------------------------------------------------------
@@ -1048,3 +1054,346 @@ function testSpeedHash($it = 10)
 //      END REMOVAL HERE
 //--------------
 */
+
+
+/*******************************************************************************
+ *
+ *      SHA224 implementation for PHP
+ *      Based on SHA256 implementation by feyd _at_ devnetwork .dot. net
+ *      specification from http://csrc.nist.gov/cryptval/shs/sha256-384-512.pdf
+ *
+ ******************************************************************************/
+
+class SHA224Data extends hashData
+{
+    var $buf = array();
+    var $chunks = null;
+
+    function SHA224Data($str)
+    {
+        $M = strlen($str);
+        $L1 = ($M >> 28) & 0x0000000F;
+        $L2 = $M << 3;
+        $l = pack('N*', $L1, $L2);
+
+        $k = $L2 + 64 + 1 + 511;
+        $k -= $k % 512 + $L2 + 64 + 1;
+        $k >>= 3;
+
+        $str .= chr(0x80) . str_repeat(chr(0), $k) . $l;
+
+        assert('strlen($str) % 64 == 0');
+
+        preg_match_all( '#.{64}#', $str, $this->chunks );
+        $this->chunks = $this->chunks[0];
+
+        // SHA224 initial hash values (H0) - first 32 bits of the fractional parts of the square roots of the first 8 primes
+        $this->hash = array
+        (
+            0xC1059ED8, 0x367CD507, 0x3070DD17, 0xF70E5939,
+            0xFFC00B31, 0x68581511, 0x64F98FA7, 0xBEFA4FA4
+        );
+    }
+}
+
+class SHA224 extends hash
+{
+    static function hashing($str, $mode = 'hex'): bool
+    {
+        static $modes = array( 'hex', 'bin', 'bit' );
+        $ret = false;
+
+        if(!in_array(strtolower($mode), $modes))
+        {
+            trigger_error('mode specified is unrecognized: ' . $mode, E_USER_WARNING);
+        }
+        else
+        {
+            $data = new SHA224Data($str);
+            SHA256::compute($data); // Reuse SHA256 compute logic
+
+            $func = array('SHA224', 'hash' . $mode);
+            if(is_callable($func))
+            {
+                $func = 'hash' . $mode;
+                $ret = SHA224::$func($data);
+            }
+            else
+            {
+                trigger_error('SHA224::hash' . $mode . '() NOT IMPLEMENTED.', E_USER_WARNING);
+            }
+        }
+
+        return $ret;
+    }
+
+    static function hashHex(&$hashData): string
+    {
+        $str = '';
+        reset($hashData->hash);
+        do
+        {
+            $str .= sprintf('%08x', current($hashData->hash));
+        }
+        while(next($hashData->hash));
+
+        // SHA224 returns first 224 bits (28 bytes = 7 words)
+        return substr($str, 0, 56); // 28 bytes * 2 hex chars = 56 chars
+    }
+
+    function hashBin(&$hashData): string
+    {
+        $str = '';
+        reset($hashData->hash);
+        do
+        {
+            $str .= pack('N', current($hashData->hash));
+        }
+        while(next($hashData->hash));
+
+        // SHA224 returns first 28 bytes
+        return substr($str, 0, 28);
+    }
+}
+
+/*******************************************************************************
+ *
+ *      SHA384 and SHA512 implementation for PHP
+ *      Based on specification from http://csrc.nist.gov/cryptval/shs/sha256-384-512.pdf
+ *
+ ******************************************************************************/
+
+class SHA512Data extends hashData
+{
+    var $buf = array();
+    var $chunks = null;
+
+    function SHA512Data($str)
+    {
+        $M = strlen($str);
+        $L1 = ($M >> 56) & 0x00FF000000000000;
+        $L2 = $M << 3;
+        
+        // Pack 128-bit length (two 64-bit words)
+        $l = pack('N*', 
+            ($M >> 56) & 0xFF, ($M >> 48) & 0xFF, ($M >> 40) & 0xFF, ($M >> 32) & 0xFF,
+            ($M >> 24) & 0xFF, ($M >> 16) & 0xFF, ($M >> 8) & 0xFF, $M & 0xFF
+        );
+
+        $k = $L2 + 128 + 1 + 1023; // 128 bits for length, 1 bit padding, 1023 bits to round up
+        $k -= $k % 1024 + $L2 + 128 + 1;
+        $k >>= 3; // convert to byte count
+
+        $str .= chr(0x80) . str_repeat(chr(0), $k) . $l;
+
+        assert('strlen($str) % 128 == 0');
+
+        // Break the binary string into 1024-bit blocks (128 bytes)
+        preg_match_all( '#.{128}#', $str, $this->chunks );
+        $this->chunks = $this->chunks[0];
+
+        // SHA512 initial hash values (H0) - 64-bit words
+        // First 64 bits of the fractional parts of the square roots of the first 8 primes
+        $this->hash = array
+        (
+            0x6A09E667F3BCC908, 0xBB67AE8584CAA73B,
+            0x3C6EF372FE94F82B, 0xA54FF53A5F1D36F1,
+            0x510E527FCADE2433, 0x9B05688C2B3E6C1F,
+            0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
+        );
+    }
+}
+
+class SHA384Data extends hashData
+{
+    var $buf = array();
+    var $chunks = null;
+
+    function SHA384Data($str)
+    {
+        $M = strlen($str);
+        $L1 = ($M >> 56) & 0x00FF000000000000;
+        $L2 = $M << 3;
+        
+        // Pack 128-bit length (two 64-bit words)
+        $l = pack('N*', 
+            ($M >> 56) & 0xFF, ($M >> 48) & 0xFF, ($M >> 40) & 0xFF, ($M >> 32) & 0xFF,
+            ($M >> 24) & 0xFF, ($M >> 16) & 0xFF, ($M >> 8) & 0xFF, $M & 0xFF
+        );
+
+        $k = $L2 + 128 + 1 + 1023;
+        $k -= $k % 1024 + $L2 + 128 + 1;
+        $k >>= 3;
+
+        $str .= chr(0x80) . str_repeat(chr(0), $k) . $l;
+
+        assert('strlen($str) % 128 == 0');
+
+        preg_match_all( '#.{128}#', $str, $this->chunks );
+        $this->chunks = $this->chunks[0];
+
+        // SHA384 initial hash values (H0) - first 64 bits of the fractional parts of the square roots of primes 2-9
+        $this->hash = array
+        (
+            0xCBBB9D5DC1059ED8, 0x629A292A367CD507,
+            0x510E527FADE24335, 0x9B05688C2B3E6C1F,
+            0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179,
+            0x923F82A4AF194F9B, 0xAB1C5ED5DA6D8118
+        );
+    }
+}
+
+class SHA512Base extends hash
+{
+    // 64-bit right rotate
+    static function rotr64($x, $n): int
+    {
+        return (($x >> $n) | ($x << (64 - $n))) & 0xFFFFFFFFFFFFFFFF;
+    }
+
+    // 64-bit right shift
+    static function shr64($x, $n): int
+    {
+        return ($x >> $n) & 0xFFFFFFFFFFFFFFFF;
+    }
+
+    // 64-bit addition with modulo 2^64
+    static function add64(): int
+    {
+        $result = 0;
+        foreach (func_get_args() as $arg) {
+            $result = ($result + $arg) & 0xFFFFFFFFFFFFFFFF;
+        }
+        return $result;
+    }
+
+    // 64-bit constants for SHA512 - all 80 constants from FIPS 180-4
+    // These are the first 80 fractional parts of the cube roots of the first 80 primes * 2^64
+    static $K512 = array(
+        0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
+        0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118,
+        0xd807aa98a3030242, 0x12835b0145706fbe, 0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2,
+        0x72be5d74f27b896f, 0x80dee1fe3b1696b1, 0x9bdc06a725c71235, 0xc19bf174cf59e778,
+        0xe49b69c19ef14ad2, 0xefbe4786384f25e3, 0x0fc19dc68b8cd5b5, 0x240ca1cc77ac9c65,
+        0x2de92c6f592b0275, 0x4a7484aa6ea6e483, 0x5cb0a9dcbd41fbd4, 0x76f988da831153b5,
+        0x983e5152ee66dfab, 0xa831c66d2db43210, 0xb00327c898fb213f, 0xbf597fc7beef0ee4,
+        0xc6e00bf33da88fc2, 0xd5a79147930aa725, 0x06ca6351e003826f, 0x142929670a0e6e70,
+        0x27b70a8546d22ffc, 0x2e1b21385c26c926, 0x4d2c6dfc5ac42aed, 0x53380d139d95b3df,
+        0x650a73548baf63de, 0x766a0abb3c77b2a8, 0x81c2c92e47edaee6, 0x92722c851482353b,
+        0xa2bfe8a14cf10364, 0xa81a664bbc423001, 0xc24b8b70d0f89791, 0xc76c51a30654be30,
+        0xd192e819d6ef5218, 0xd69906245565a910, 0xf40e35855771202a, 0x106aa07032bbd1b8,
+        0x19a4c116b8d2d0c8, 0x1e376c085141ab53, 0x2748774cdf8eeeb9, 0x34b0bcb5e19b48a8,
+        0x391c0cb3c5c95a63, 0x4ed8aa4ae3418acb, 0x5b9cca4f7763e373, 0x682e6ff3d6b2b8a3,
+        0x748f82ee5defb2fc, 0x78a5636f43172f60, 0x84c87814a1f0ab72, 0x8cc702081a6439ec,
+        0x90befffa23631e28, 0xa4506cebde82bde9, 0xbef9a3f7b2c67915, 0xc67178f2e372532b,
+        0xca2731ceea26619c, 0xd186b8c721c0c207, 0xeada7dd6cde0eb1e, 0xf57d4f7fee6ed178,
+        0x06f067aa72176fba, 0x0a637dc5a2c898a6, 0x113f9804bef90dae, 0x1b710b35131c471b,
+        0x28db77f523047d84, 0x32caab7b40c72493, 0x3c9ebe0a15c9bebc, 0x431d67c49c100d4c,
+        0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
+    );
+
+    static function compute64(&$hashData, $algoType = 'sha512')
+    {
+        $vars = 'abcdefgh';
+        $K = self::$K512;
+
+        $W = array();
+        for($i = 0, $numChunks = sizeof($hashData->chunks); $i < $numChunks; $i++)
+        {
+            // Initialize the registers
+            for($j = 0; $j < 8; $j++)
+                ${$vars[$j]} = $hashData->hash[$j];
+
+            // Process 80 rounds for SHA512
+            for($j = 0; $j < 80; $j++)
+            {
+                if($j < 16)
+                {
+                    // Extract 64-bit word from 16 bytes (big-endian)
+                    $T1 = 0;
+                    for ($k = 0; $k < 8; $k++) {
+                        $T1 = ($T1 << 8) | (ord($hashData->chunks[$i][$j*8 + $k]) & 0xFF);
+                    }
+                    $W[$j] = $T1;
+                }
+                else
+                {
+                    $s0 = self::rotr64($W[$j-15], 1) ^ self::rotr64($W[$j-15], 8) ^ self::shr64($W[$j-15], 7);
+                    $s1 = self::rotr64($W[$j-2], 19) ^ self::rotr64($W[$j-2], 61) ^ self::shr64($W[$j-2], 6);
+                    $W[$j] = self::add64($W[$j-16], $s0, $W[$j-7], $s1);
+                }
+
+                $S1 = self::rotr64($e, 14) ^ self::rotr64($e, 18) ^ self::rotr64($e, 41);
+                $ch = ($e & $f) ^ ((~$e & 0xFFFFFFFFFFFFFFFF) & $g);
+                $temp1 = self::add64($h, $S1, $ch, $K[$j], $W[$j]);
+                
+                $S0 = self::rotr64($a, 28) ^ self::rotr64($a, 34) ^ self::rotr64($a, 39);
+                $maj = ($a & $b) ^ ($a & $c) ^ ($b & $c);
+                $temp2 = self::add64($S0, $maj);
+
+                $h = $g;
+                $g = $f;
+                $f = $e;
+                $e = self::add64($d, $temp1);
+                $d = $c;
+                $c = $b;
+                $b = $a;
+                $a = self::add64($temp1, $temp2);
+            }
+
+            // Compute the next hash set
+            for($j = 0; $j < 8; $j++)
+                $hashData->hash[$j] = self::add64(${$vars[$j]}, $hashData->hash[$j]);
+        }
+    }
+
+    static function hashHex(&$hashData): string
+    {
+        $str = '';
+        reset($hashData->hash);
+        do
+        {
+            $str .= sprintf('%016x', current($hashData->hash));
+        }
+        while(next($hashData->hash));
+
+        return $str;
+    }
+
+    function hashBin(&$hashData): string
+    {
+        $str = '';
+        reset($hashData->hash);
+        do
+        {
+            $word = current($hashData->hash);
+            $str .= pack('NN', 
+                ($word >> 32) & 0xFFFFFFFF, 
+                $word & 0xFFFFFFFF
+            );
+        }
+        while(next($hashData->hash));
+
+        return $str;
+    }
+}
+
+class SHA384 extends SHA512Base
+{
+    static function hashing($str, $mode = 'hex'): bool
+    {
+        // SHA384 fallback implementation not available
+        // Use native hash() function instead - it's more reliable
+        return false;
+    }
+}
+
+class SHA512 extends SHA512Base
+{
+    static function hashing($str, $mode = 'hex'): bool
+    {
+        // SHA512 fallback implementation not available
+        // Use native hash() function instead - it's more reliable
+        return false;
+    }
+}

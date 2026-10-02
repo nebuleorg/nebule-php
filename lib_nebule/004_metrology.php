@@ -488,9 +488,10 @@ abstract class HelpMetrology {
             <li><code>04a98c79</code> : .</li>
             <li><code>050783df</code> : .</li>
             <li><code>06a13897</code> : .</li>
-            <li><code>07a97058</code> : .</li>
+            <li><code>07a97058</code> : Debug. Create reference icon node</li>
             <li><code>07edae7d</code> : .</li>
             <li><code>081f9805</code> : .</li>
+            <li><code>08d23b22</code> : Debug. Sign reference icon l>...</li>
             <li><code>09c0ab8c</code> : .</li>
             <li><code>09c33dba</code> : .</li>
             <li><code>0a2485f6</code> : .</li>
@@ -543,7 +544,7 @@ abstract class HelpMetrology {
             <li><code>23a4e2d9</code> : .</li>
             <li><code>2446015f</code> : .</li>
             <li><code>253cd7cf</code> : .</li>
-            <li><code>2618d5b0</code> : .</li>
+            <li><code>2618d5b0</code> : Debug. OK reference icon link</li>
             <li><code>2644d3a7</code> : .</li>
             <li><code>26a04f10</code> : .</li>
             <li><code>27b77f2d</code> : .</li>
@@ -583,11 +584,13 @@ abstract class HelpMetrology {
             <li><code>3b3255d5</code> : .</li>
             <li><code>3b3440f7</code> : .</li>
             <li><code>3bbb0aa7</code> : .</li>
+            <li><code>3bbc8d4f</code> : Error. Error reference icon node nid=...</li>
             <li><code>3c5e617d</code> : .</li>
             <li><code>3e39271b</code> : .</li>
             <li><code>3e508b5f</code> : .</li>
             <li><code>3e9b68d3</code> : .</li>
             <li><code>3f8451cb</code> : .</li>
+            <li><code>405b8b16</code> : Error. Error reference icon link</li>
             <li><code>40b3486e</code> : .</li>
             <li><code>41e23a37</code> : .</li>
             <li><code>41f64673</code> : .</li>
@@ -862,6 +865,7 @@ abstract class HelpMetrology {
             <li><code>e6f75b5e</code> : .</li>
             <li><code>e7e5cfd0</code> : .</li>
             <li><code>e8b0aea5</code> : .</li>
+            <li><code>ea79ccf9</code> : Debug. OK reference icon node nid=...</li>
             <li><code>ea998a6d</code> : .</li>
             <li><code>eb306b18</code> : .</li>
             <li><code>ecbbd1de</code> : .</li>

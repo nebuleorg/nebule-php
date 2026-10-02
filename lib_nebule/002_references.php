@@ -3797,10 +3797,12 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
                     $instanceNode->setName($name);
                 }
                 else {
+                    $nebuleInstance->getMetrologyInstance()->addLog('error ref icon node nid=' . $instanceNode->getID(), Metrology::LOG_LEVEL_ERROR, __METHOD__, '3bbc8d4f');
                     echo 'E';
                     $ok = false;
                 }
             } else {
+                $nebuleInstance->getMetrologyInstance()->addLog('error create ref icon node ' . $name, Metrology::LOG_LEVEL_ERROR, __METHOD__, '67010cee1');
                 echo 'E';
                 $ok = false;
             }
@@ -3833,6 +3835,7 @@ A/CapmlvcgYJIcRG/D8Y9FDJ9lYevAAAAABJRU5ErkJggg==',
                     $nebuleInstance->getMetrologyInstance()->addLog('ok ref icon link', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '2618d5b0');
                     echo '+';
                 } else {
+                    $nebuleInstance->getMetrologyInstance()->addLog('error ref icon link', Metrology::LOG_LEVEL_ERROR, __METHOD__, '405b8b16');
                     echo 'E';
                     $ok = false;
                 }
