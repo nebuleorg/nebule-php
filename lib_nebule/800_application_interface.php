@@ -89,6 +89,8 @@ abstract class HelpApplications {
                                 <li><a href="#oaigm">OAIGM / Me - messae</a></li>
                                 <li><a href="#oaign">OAIGN / Ne - neblog</a></li>
                                 <li><a href="#oaigq">OAIGQ / Qa - qantion</a></li>
+                                <li><a href="#oaigt">OAIGT / At - atrium</a></li>
+                                <li><a href="#oaigp">OAIGP / Pf - portfolio</a></li>
                                 <li><a href="#oaigo">OAIGO / No - option</a></li>
                                 <li><a href="#oaigu">OAIGU / Nu - upload</a></li>
                             </ul>
@@ -237,10 +239,9 @@ abstract class HelpApplications {
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
             <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>,
-                <a href="http://blog.nebule.org">blog.nebule.org</a>.<br />
-                RID=9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
-            <li><b>autent</b> : l’application de gestion des entités, <a href="#oaige">OAIGE</a>,
+            <li><b>entity</b> : l’application de gestion des entités, <a href="#oaige">OAIGE</a>,
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
             <li><b>sylabe</b> : l’application de référence des possibilités de nebule, <a href="#oaigs">OAIGS</a>,
@@ -258,6 +259,12 @@ abstract class HelpApplications {
             <li><b>qantion</b> : l’application de gestion des monnaies, <a href="#oaigq">OAIGQ</a>,
                 <a href="http://blog.qantion.org">blog.qantion.org</a>.
             </li>
+            <li><b>atrium</b> : l’application de gestion des galleries, <a href="#oaigt">OAIGT</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+            </li>
+            <li><b>portfolio</b> : l’application de gestion des dossiers partagés, <a href="#oaigp">OAIGP</a>,
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+            </li>
             <li><b>option</b> : l’application de gestion des options, <a href="#oaigo">OAIGO</a>,
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
@@ -270,12 +277,20 @@ abstract class HelpApplications {
                 <div id="appslist">
                     <div class="apps" style="background:#000000;"><span class="appstitle">Nb</span><br/><span
                             class="appsname">break</span></div>
-                    <div class="apps" style="background:#000000;"><span class="appstitle">N0</span><br/><span
+                    <div class="apps" style="background:#111111;"><span class="appstitle">Nf</span><br/><span
+                            class="appsname">flush</span></div>
+                    <div class="apps" style="background:#222222;"><span class="appstitle">N0</span><br/><span
                             class="appsname">defolt</span></div>
                     <div class="apps" style="background:#333333;"><span class="appstitle">N3</span><br/><span
                             class="appsname">doctech</span></div>
+                    <div class="apps" style="background:#444444;"><span class="appstitle">N9</span><br/><span
+                            class="appsname">sleep</span></div>
+                    <div class="apps" style="background:#d09020;"><span class="appstitle">At</span><br/><span
+                            class="appsname">atrium</span></div>
                     <div class="apps" style="background:#902060;"><span class="appstitle">Au</span><br/><span
                             class="appsname">autent</span></div>
+                    <div class="apps" style="background:#206090;"><span class="appstitle">Au</span><br/><span
+                            class="appsname">entity</span></div>
                     <div class="apps" style="background:#c02030;"><span class="appstitle">Sy</span><br/><span
                             class="appsname">sylabe</span></div>
                     <div class="apps" style="background:#d0b020;"><span class="appstitle">Kl</span><br/><span
@@ -284,7 +299,9 @@ abstract class HelpApplications {
                             class="appsname">messae</span></div>
                     <div class="apps" style="background:#05c3dd;"><span class="appstitle">Ne</span><br/><span
                             class="appsname">neblog</span></div>
-                    <div class="apps" style="background:#20a040;"><span class="appstitle">Qa</span><br/><span
+                    <div class="apps" style="background:#20a040;"><span class="appstitle">Pf</span><br/><span
+                            class="appsname">portfolio</span></div>
+                    <div class="apps" style="background:#600040;"><span class="appstitle">Qa</span><br/><span
                             class="appsname">qantion</span></div>
                     <div class="apps" style="background:#555555;"><span class="appstitle">Op</span><br/><span
                             class="appsname">option</span></div>
@@ -668,6 +685,14 @@ class Traduction extends Traductions
 
         <?php Displays::docDispTitle(5, 'oaigq', 'Qa - qantion'); ?>
         <p>IID=20a04016698cd3c996fa69e90bbf3e804c582b8946a5d60e9880cdb24b36b5d376208939.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <?php Displays::docDispTitle(5, 'oaigt', 'At - atrium'); ?>
+        <p>IID=d09020c0df1b5746a11e2eb1446055526c84e85964ef86a53a5385122d2a90debda48270.none.288</p>
+        <p style="color: red; font-weight: bold">A revoir...</p>
+
+        <?php Displays::docDispTitle(5, 'oaigp', 'Pf - portfolio'); ?>
+        <p>IID=60004013fb89ff390da02a1ca427eded51f09d8f6ef4affc192ad8de265155aa8046da6e.none.288</p>
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php Displays::docDispTitle(5, 'oaigo', 'No - option'); ?>
