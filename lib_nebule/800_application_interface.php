@@ -155,7 +155,6 @@ abstract class HelpApplications {
         ?>
 
         <?php Displays::docDispTitle(2, 'oa', 'Application'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Une application permet d'interagir avec les objets et liens.</p>
         <p>Une application qui ne fait que lire des objets et liens, ou retransmettre des liens déjà signés, est dite
             passive. Si l'application à la capacité de générer des liens signés, donc avec une entité déverrouillée,
@@ -238,7 +237,8 @@ abstract class HelpApplications {
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
             </li>
             <li><b>autent</b> : l’application d'authentification interactive, <a href="#oaiga">OAIGA</a>,
-                <a href="http://blog.nebule.org">blog.nebule.org</a>.
+                <a href="http://blog.nebule.org">blog.nebule.org</a>.<br />
+                RID=9020606a70985a00f1cf73e6aed5cfd46399868871bd26d6c0bd7a202e01759c3d91b97e.none.288
             </li>
             <li><b>autent</b> : l’application de gestion des entités, <a href="#oaige">OAIGE</a>,
                 <a href="http://blog.nebule.org">blog.nebule.org</a>.
@@ -372,22 +372,6 @@ use Nebule\Library\Applications;
 use Nebule\Library\Displays;
 use Nebule\Library\References;
 use Nebule\Library\Translates;
-
-/*
-|------------------------------------------------------------------------------------------------------------------------------------------------------
-| /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING /// WARNING ///
-|------------------------------------------------------------------------------------------------------------------------------------------------------
-|
-|  [DE] Jede Änderung dieses Codes führt zu einer Änderung seines Fingerabdrucks und führt daher automatisch zu seiner Ungültigkeit!
-|  [EN] Any modification of this code will result in a modification of its hash digest and will therefore automatically result in its invalidation!
-|  [ES] Cualquier cambio en el código causarán un cambio en su presencia y por lo tanto lugar automáticamente a su anulación!
-|  [FR] Toute modification de ce code entraînera une modification de son empreinte et entraînera donc automatiquement son invalidation !
-|  [IT] Ogni modifica di questo codice comporterà una modifica della sua impronta e quindi ne causerà automaticamente l'invalidazione!
-|  [PL] Każda modyfikacja tego kodu spowoduje zmianę jego odcisku i automatycznie doprowadzi do jego unieważnienia!
-|  [UA] Будь-яка модифікація цього коду призведе до зміни його відбитку пальця і, відповідно, автоматично призведе до його анулювання!
-|
-|------------------------------------------------------------------------------------------------------------------------------------------------------
-*/
 
 class Application extends Applications
 {
@@ -1017,7 +1001,65 @@ tE=0.5937s
 
         <?php Displays::docDispTitle(3, 'oal', 'Librairie'); ?>
         <?php Displays::docDispTitle(4, 'oald', 'Description'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
+        <p>La <strong>librairie orientée objet</strong> (LOO) est le cœur fonctionnel du projet nebule.
+            Elle fournit l'ensemble des classes de base nécessaires au fonctionnement des applications,
+            au chargement des données et à la gestion des interactions entre les entités, les objets et les liens.</p>
+
+        <p>Cette librairie est chargée par le <i><a href="#oab">bootstrap</a></i> après la phase d'initialisation
+            procédurale (PP).
+            Elle étend les capacités du bootstrap en offrant une architecture modulaire, sécurisée et extensible.</p>
+
+        <p><strong>Fonctionnalités principales :</strong></p>
+        <ul>
+            <li><strong>Gestion des entités et des liens</strong> :
+                <ul>
+                    <li>Chargement, vérification et synchronisation des entités et des liens</li>
+                    <li>Gestion des droits d'accès et des autorisations (via les autorités)</li>
+                    <li>Stockage modulaire des données (disk, http, https)</li>
+                    <li>Cache des objets et des liens pour optimiser les performances</li>
+                </ul>
+            </li>
+
+            <li><strong>Architecture modulaire</strong> :
+                <ul>
+                    <li>Séparation claire entre la librairie (OAL), le bootstrap (OAB) et les applications (OA)</li>
+                    <li>Système de modules chargeables dynamiquement</li>
+                    <li>Gestion des dépendances entre les composants</li>
+                </ul>
+            </li>
+
+            <li><strong>Sécurité et intégrité</strong> :
+                <ul>
+                    <li>Vérification des signatures et des empreintes (NID, OID, EID, RID, etc.)</li>
+                    <li>Gestion des autorités de confiance (puppetmaster, sécurité, code, annuaire, temps)</li>
+                    <li>Chiffrement des données sensibles (cryptographie asymétrique et symétrique)</li>
+                    <li>Validation des entités et des liens avant toute opération</li>
+                </ul>
+            </li>
+
+            <li><strong>Services transversaux</strong> :
+                <ul>
+                    <li><strong>Métrologie</strong> : Journalisation des événements et mesures de performances</li>
+                    <li><strong>Traduction</strong> : Support multilingue via des fichiers de langues</li>
+                    <li><strong>Affichage</strong> : Génération d'interfaces utilisateur standardisées</li>
+                    <li><strong>Actions</strong> : Gestion des actions utilisateur et des workflows</li>
+                    <li><strong>I/O</strong> : Abstraction des opérations d'entrée/sortie</li>
+                </ul>
+            </li>
+
+            <li><strong>Gestion des applications</strong> :
+                <ul>
+                    <li>Chargement dynamique des applications (internes et externes)</li>
+                    <li>Gestion des sessions et des entités connectées</li>
+                    <li>Support des modules applicatifs</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p>La librairie LOO est conçue pour être <strong>indépendante du contexte d'exécution</strong> :
+            elle peut fonctionner dans différents environnements (web, CLI, etc.) et avec différentes configurations
+            (stockage local, distant, ou hybride). Elle respecte les principes de modularité, de réutilisabilité
+            et de séparation des responsabilités (SoC).</p>
 
         <?php Displays::docDispTitle(4, 'oalc', 'Configuration'); ?>
         <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et en ajoute d'autres. Voir
