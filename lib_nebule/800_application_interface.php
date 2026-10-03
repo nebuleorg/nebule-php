@@ -1020,7 +1020,7 @@ tE=0.5937s
         <p style="color: red; font-weight: bold">A revoir...</p>
 
         <?php Displays::docDispTitle(4, 'oalc', 'Configuration'); ?>
-        <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et les applications. Voir
+        <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et en ajoute d'autres. Voir
             <a href="#cco">CCO</a>.</p>
 
         <?php Displays::docDispTitle(5, 'oalcs', 'Stockage'); ?>

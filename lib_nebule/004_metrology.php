@@ -480,11 +480,11 @@ abstract class HelpMetrology {
         <ul>
             <li><code>0074f2c6</code> : .</li>
             <li><code>00c8aa17</code> : .</li>
-            <li><code>00fde855</code> : .</li>
+            <li><code>00fde855</code> : Debug. disp on menu anywhere {desc} - module={module} name={name}</li>
             <li><code>0237217e</code> : .</li>
             <li><code>024f57bf</code> : .</li>
             <li><code>04260a5e</code> : .</li>
-            <li><code>046d378a</code> : .</li>
+            <li><code>046d378a</code> : Audit. find sub display : {id}</li>
             <li><code>04a98c79</code> : .</li>
             <li><code>050783df</code> : .</li>
             <li><code>06a13897</code> : .</li>
@@ -497,7 +497,7 @@ abstract class HelpMetrology {
             <li><code>0a2485f6</code> : .</li>
             <li><code>0ac7d800</code> : .</li>
             <li><code>0ac7ff91</code> : .</li>
-            <li><code>0acf655b</code> : .</li>
+            <li><code>0acf655b</code> : Normal. search view on {module}</li>
             <li><code>0af33bed</code> : .</li>
             <li><code>0bcdaa0d</code> : .</li>
             <li><code>0bd80061</code> : .</li>
@@ -537,20 +537,24 @@ abstract class HelpMetrology {
             <li><code>1ddcee4c</code> : .</li>
             <li><code>2067738b</code> : .</li>
             <li><code>21d5ead8</code> : .</li>
-            <li><code>21dc60cc</code> : .</li>
+            <li><code>1b232fad</code> : Debug. disp on menu (module) {desc} - module={module}</li>
+            <li><code>210fff24</code> : Error. error display module content {module} ({code}) : {file}({line}) : {message}</li>
+            <li><code>21dc60cc</code> : Error. search view, module but no mode</li>
             <li><code>226ce8be</code> : .</li>
             <li><code>229b08c9</code> : .</li>
             <li><code>2300b439</code> : .</li>
             <li><code>23a4e2d9</code> : .</li>
+            <li><code>230a27d3</code> : Audit. call module {module} display content</li>
             <li><code>2446015f</code> : .</li>
-            <li><code>253cd7cf</code> : .</li>
+            <li><code>253cd7cf</code> : Audit. call module {module} display content</li>
+            <li><code>26e60b29</code> : Debug. disp on menu selfMenu {name} - module={module}</li>
             <li><code>2618d5b0</code> : Debug. OK reference icon link</li>
             <li><code>2644d3a7</code> : .</li>
             <li><code>26a04f10</code> : .</li>
             <li><code>27b77f2d</code> : .</li>
             <li><code>27c698ab</code> : .</li>
             <li><code>27d21ac9</code> : .</li>
-            <li><code>28feadb6</code> : .</li>
+            <li><code>28feadb6</code> : Debug. Display checks</li>
             <li><code>293d8170</code> : .</li>
             <li><code>2a04d29d</code> : .</li>
             <li><code>2a6da5e1</code> : .</li>
@@ -598,14 +602,14 @@ abstract class HelpMetrology {
             <li><code>425694ce</code> : .</li>
             <li><code>4299833c</code> : .</li>
             <li><code>435ee7f6</code> : .</li>
-            <li><code>43714573</code> : .</li>
+            <li><code>43714573</code> : Audit. ask mode : {mode}</li>
             <li><code>43c10796</code> : .</li>
             <li><code>43e6baa9</code> : .</li>
             <li><code>44f2509d</code> : .</li>
             <li><code>451a8518</code> : .</li>
             <li><code>4555fd63</code> : .</li>
             <li><code>46f04cd0</code> : .</li>
-            <li><code>46fcbf07</code> : .</li>
+            <li><code>46fcbf07</code> : Normal. initialisation display</li>
             <li><code>474676ed</code> : .</li>
             <li><code>486f6813</code> : .</li>
             <li><code>48b7be4e</code> : .</li>
@@ -640,7 +644,7 @@ abstract class HelpMetrology {
             <li><code>5b2dc1ed</code> : .</li>
             <li><code>5bb68dab</code> : .</li>
             <li><code>5c979fa2</code> : .</li>
-            <li><code>5d4eb6f0</code> : .</li>
+            <li><code>5d4eb6f0</code> : Debug. Display header</li>
             <li><code>5deb30a7</code> : .</li>
             <li><code>5e464992</code> : .</li>
             <li><code>5edb0ddf</code> : .</li>
@@ -666,7 +670,8 @@ abstract class HelpMetrology {
             <li><code>6efad36a</code> : .</li>
             <li><code>6f9dfb64</code> : .</li>
             <li><code>6fcb7d18</code> : .</li>
-            <li><code>70704574</code> : .</li>
+            <li><code>58d043ab</code> : Debug. Display content</li>
+            <li><code>70704574</code> : Debug. disp on menu selfMenu {name} - module={module}</li>
             <li><code>70b97981</code> : .</li>
             <li><code>71301675</code> : .</li>
             <li><code>72a3452d</code> : .</li>
@@ -681,7 +686,7 @@ abstract class HelpMetrology {
             <li><code>7af6f9fe</code> : .</li>
             <li><code>7b4f89ef</code> : .</li>
             <li><code>7c70c571</code> : .</li>
-            <li><code>7cd85d87</code> : .</li>
+            <li><code>7cd85d87</code> : Audit. find current module name : {module}</li>
             <li><code>7e21187d</code> : .</li>
             <li><code>7e720681</code> : .</li>
             <li><code>7e7aeaed</code> : .</li>
@@ -693,7 +698,7 @@ abstract class HelpMetrology {
             <li><code>811a12be</code> : .</li>
             <li><code>81385b9d</code> : .</li>
             <li><code>82a6ada5</code> : .</li>
-            <li><code>82b83c17</code> : .</li>
+            <li><code>82b83c17</code> : Error. search view, no module and no mode</li>
             <li><code>82cd76b7</code> : .</li>
             <li><code>8318122c</code> : .</li>
             <li><code>83445a74</code> : .</li>
@@ -706,7 +711,7 @@ abstract class HelpMetrology {
             <li><code>8683e195</code> : .</li>
             <li><code>884a3959</code> : .</li>
             <li><code>88ff0291</code> : .</li>
-            <li><code>89f37a59</code> : .</li>
+            <li><code>89f37a59</code> : Debug. Display menu apps</li>
             <li><code>8a077f11</code> : .</li>
             <li><code>8a83ad5f</code> : .</li>
             <li><code>8e3d67f6</code> : .</li>
@@ -772,7 +777,8 @@ abstract class HelpMetrology {
             <li><code>b10ae177</code> : .</li>
             <li><code>b10ec132</code> : .</li>
             <li><code>b17970cf</code> : .</li>
-            <li><code>b1d7feb6</code> : .</li>
+            <li><code>a1b2c3d4</code> : Normal. Display CSS type: {type}</li>
+            <li><code>b1d7feb6</code> : Debug. Display footer</li>
             <li><code>b20294b1</code> : .</li>
             <li><code>b2046b14</code> : .</li>
             <li><code>b2bc7fc3</code> : .</li>
@@ -790,25 +796,25 @@ abstract class HelpMetrology {
             <li><code>bca6ad1b</code> : .</li>
             <li><code>bcc98872</code> : .</li>
             <li><code>bd674f44</code> : .</li>
-            <li><code>bda64a7b</code> : .</li>
+            <li><code>bda64a7b</code> : Audit. current mode : {mode}</li>
             <li><code>be65246d</code> : .</li>
             <li><code>be8d3098</code> : .</li>
             <li><code>be97740a</code> : .</li>
             <li><code>bf78846c</code> : .</li>
             <li><code>bf91c623</code> : .</li>
-            <li><code>bfcdcd6d</code> : .</li>
+            <li><code>bfcdcd6d</code> : Normal. display inline</li>
             <li><code>c04e8d5b</code> : .</li>
             <li><code>c063ad79</code> : .</li>
             <li><code>c10459a6</code> : .</li>
             <li><code>c187a9f3</code> : .</li>
             <li><code>c23f3303</code> : .</li>
             <li><code>c2b1d5ff</code> : .</li>
-            <li><code>c3cdf3de</code> : .</li>
+            <li><code>c3cdf3de</code> : Normal. Display full</li>
             <li><code>c465016b</code> : .</li>
             <li><code>c52dcb51</code> : .</li>
             <li><code>c7aac0dd</code> : .</li>
             <li><code>c845beb4</code> : .</li>
-            <li><code>c8b9734c</code> : .</li>
+            <li><code>c8b9734c</code> : Debug. disp on menu {currentModule}SelfMenu {name} - module={module}</li>
             <li><code>c92cb974</code> : .</li>
             <li><code>ca6f5f59</code> : .</li>
             <li><code>cabf8ebd</code> : .</li>
@@ -843,7 +849,7 @@ abstract class HelpMetrology {
             <li><code>db9a2f07</code> : .</li>
             <li><code>dc1eb20f</code> : .</li>
             <li><code>dcfc2e74</code> : .</li>
-            <li><code>ddcc0850</code> : .</li>
+            <li><code>ddcc0850</code> : Debug. search mode, no module and no mode</li>
             <li><code>de5c0565</code> : .</li>
             <li><code>dee3e8bd</code> : .</li>
             <li><code>df11e69f</code> : .</li>
@@ -856,7 +862,7 @@ abstract class HelpMetrology {
             <li><code>e19f2105</code> : .</li>
             <li><code>e2f2baa1</code> : .</li>
             <li><code>e3a3864c</code> : .</li>
-            <li><code>e3c2b608</code> : .</li>
+            <li><code>e3c2b608</code> : Debug. register sub display : {id}</li>
             <li><code>e3c9845c</code> : .</li>
             <li><code>e490371d</code> : .</li>
             <li><code>e4958dd2</code> : .</li>
@@ -885,11 +891,12 @@ abstract class HelpMetrology {
             <li><code>f4e5015c</code> : .</li>
             <li><code>f4f0eb13</code> : .</li>
             <li><code>f4fa20bd</code> : .</li>
-            <li><code>f5231ed0</code> : .</li>
+            <li><code>ecbd188e</code> : Debug. Display vbs</li>
+            <li><code>f5231ed0</code> : Audit. current view : {view}</li>
             <li><code>f5869664</code> : .</li>
             <li><code>f5b1872d</code> : .</li>
             <li><code>f7433d1d</code> : .</li>
-            <li><code>f74be2e8</code> : .</li>
+            <li><code>f74be2e8</code> : Audit. display inline to module {module}</li>
             <li><code>f8234249</code> : .</li>
             <li><code>f852ca44</code> : .</li>
             <li><code>f8873320</code> : .</li>
@@ -897,7 +904,8 @@ abstract class HelpMetrology {
             <li><code>fa06c443</code> : .</li>
             <li><code>fa22c32d</code> : .</li>
             <li><code>fa4a752c</code> : .</li>
-            <li><code>fac72c30</code> : .</li>
+            <li><code>fac72c30</code> : Debug. Display actions</li>
+            <li><code>fa838cce</code> : Error. error display module content {module} ({code}) : {file}({line}) : {message}</li>
             <li><code>fb75b804</code> : .</li>
             <li><code>fbaec5ee</code> : .</li>
             <li><code>fd932a98</code> : .</li>
@@ -905,7 +913,6 @@ abstract class HelpMetrology {
             <li><code>fe5308a8</code> : .</li>
             <li><code>ff07a565</code> : .</li>
             <li><code>ff1d7167</code> : .</li>
-            <li style="color: red; font-weight: bold">A compléter...</li>
         </ul>
 
 

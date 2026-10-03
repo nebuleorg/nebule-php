@@ -1626,16 +1626,15 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         //$this->_configureLinks();
         $this->_preDisplay();
 
-        if ($this->getHaveInput(self::COMMAND_INLINE))
+        if ($this->getHaveInput(self::COMMAND_CSS))
+            $this->_displayCSS();
+        elseif ($this->getHaveInput(self::COMMAND_INLINE))
             $this->_displayInline();
-        //elseif ($this->getHaveInput(self::DEFAULT_CSS_COMMAND))
-        //    $this->commonCSS(); TODO
         else
             $this->_displayFull();
     }
 
-    protected function _displayFull(): void
- {
+    protected function _displayFull(): void {
         $this->_metrologyInstance->addLog('Display full', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'c3cdf3de');
         ?>
         <!DOCTYPE html>
@@ -1645,15 +1644,12 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             <title><?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ' . $this->_entitiesInstance->getGhostEntityInstance()->getFullName('all'); ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
             <meta name="keywords" content="<?php echo $this->_applicationInstance::APPLICATION_SURNAME; ?>"/>
-            <meta name="description" content="<?php echo $this->_applicationInstance::APPLICATION_NAME . ' - ';
-            echo $this->_translateInstance->getTranslate('::HtmlHeadDescription'); ?>"/>
+            <meta name="description" content="<?php echo $this->_applicationInstance::APPLICATION_NAME . ' - '; echo $this->_translateInstance->getTranslate('::HtmlHeadDescription'); ?>"/>
             <meta name="author" content="<?php echo $this->_applicationInstance::APPLICATION_AUTHOR . ' - ' . $this->_applicationInstance::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo $this->_applicationInstance::APPLICATION_LICENCE; ?>"/>
+            <link rel="stylesheet" type="text/css" href="?<?php echo self::COMMAND_CSS; ?>=lib" />
+            <link rel="stylesheet" type="text/css" href="?<?php echo self::COMMAND_CSS; ?>=app&<?php echo \Nebule\Library\References::COMMAND_SWITCH_APPLICATION; ?>=<?php echo $this->_routerInstance->getApplicationIID(); ?>" />
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
-            $this->commonCSS();
-            $this->displayCSS();
-
             $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
             $this->_displayScripts();
             ?>
@@ -1704,6 +1700,30 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 echo "\n";
             }
         }
+    }
+
+    /**
+     * Display CSS only.
+     * Handles different CSS types: lib (library), app (application-specific).
+     */
+    protected function _displayCSS(): void {
+        $cssType = $this->getFilterInput(self::COMMAND_CSS, FILTER_FLAG_ENCODE_LOW);
+        
+        $this->_metrologyInstance->addLog('Display CSS type: ' . $cssType, Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'a1b2c3d4');
+        header('Content-Type: text/css; charset=utf-8');
+        
+        if ($cssType === 'lib') {
+            // Library CSS: common CSS + all child displayCSS() calls
+            $this->commonCSS();
+        } elseif ($cssType === 'app') {
+            // Application-specific CSS: only the displayCSS() from the current application
+            $this->displayCSS();
+        } else {
+            // Default: serve both library and application CSS
+            $this->commonCSS();
+            $this->displayCSS();
+        }
+        exit;
     }
 
     protected function _displayActions(): void {
