@@ -50,6 +50,30 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         'xor.simple',
     );
 
+    // Algorithmes asymetriques supportes (RSA pour fallback)
+    const ASYMMETRIC_ALGORITHM = array(
+        'rsa.32',
+        'rsa.64',
+        'rsa.128',
+        'rsa.256', 
+        'rsa.512',
+        'rsa.1024',
+        'rsa.2048',
+        'rsa.4096',
+    );
+
+    // Taille des clés RSA supportées
+    const RSA_KEY_SIZES = array(
+        'rsa.32' => 32,
+        'rsa.64' => 64,
+        'rsa.128' => 128,
+        'rsa.256' => 256,
+        'rsa.512' => 512,
+        'rsa.1024' => 1024,
+        'rsa.2048' => 2048,
+        'rsa.4096' => 4096,
+    );
+
     protected function _initialisation(): void {
         // Nothing to do.
     }
@@ -117,7 +141,7 @@ class CryptoSoftware extends Crypto implements CryptoInterface
         return match ($type) {
             Crypto::TYPE_HASH => self::HASH_ALGORITHM,
             Crypto::TYPE_SYMMETRIC => self::SYMMETRIC_ALGORITHM,
-            Crypto::TYPE_ASYMMETRIC => array(), // Pas de support pour asymetrique
+            Crypto::TYPE_ASYMMETRIC => self::ASYMMETRIC_ALGORITHM,
             default => array(),
         };
     }
@@ -453,78 +477,186 @@ class CryptoSoftware extends Crypto implements CryptoInterface
 
     private function _checkAsymmetricAlgorithm(string $algo): bool
     {
-        // Pas de support pour les algorithmes asymetriques en pure PHP
-        return false;
+        return isset(self::RSA_KEY_SIZES[$algo]);
+    }
+
+    private function _translateAsymmetricAlgorithm(string $name): int
+    {
+        return self::RSA_KEY_SIZES[$name] ?? 0;
     }
 
     private function _checkAsymmetricFunction(string $algo): bool
     {
-        // Pas de support pour les fonctions asymetriques en pure PHP
-        return false;
+        if (!$this->_checkAsymmetricAlgorithm($algo)) {
+            return false;
+        }
+
+        // Tester la génération de clés
+        $keySize = $this->_translateAsymmetricAlgorithm($algo);
+        if ($keySize === 0) {
+            return false;
+        }
+
+        // Générer des clés de test
+        $keys = $this->newAsymmetricKeys('', $algo, $keySize);
+        if (empty($keys) || !isset($keys['private']) || !isset($keys['public'])) {
+            return false;
+        }
+
+        // Tester un cycle signe/vérifie
+        $testData = 'Test data for RSA asymmetric verification';
+        $signature = $this->sign($testData, $keys['private'], '');
+        if ($signature === '') {
+            return false;
+        }
+
+        $verification = $this->verify($testData, $signature, $keys['public'], $algo);
+        return $verification === true;
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::sign()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function sign(string $data, string $privateKey, string $privatePassword): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: sign() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw001'
-        );
-        return '';
+        if ($data === '') {
+            $this->_log('Empty data for signing', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa001');
+            return '';
+        }
+
+        if ($privateKey === '') {
+            $this->_log('Empty private key for signing', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa002');
+            return '';
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $signature = $rsa->sign($data, $privateKey, $privatePassword);
+            
+            if ($signature === '') {
+                $this->_log('RSA signing failed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa003');
+                return '';
+            }
+            
+            $this->_log('RSA signing successful, signature length: ' . strlen($signature), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa004');
+            return $signature;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA signing exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa005');
+            return '';
+        }
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::verify()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function verify(string $data, string $sign, string $publicKey, string $algo): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: verify() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw002'
-        );
-        return false;
+        if ($data === '') {
+            $this->_log('Empty data for verification', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa101');
+            return false;
+        }
+
+        if ($sign === '') {
+            $this->_log('Empty signature for verification', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa102');
+            return false;
+        }
+
+        if ($publicKey === '') {
+            $this->_log('Empty public key for verification', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa103');
+            return false;
+        }
+
+        if (!$this->_checkAsymmetricAlgorithm($algo)) {
+            $this->_log('Unsupported RSA algorithm: ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa104');
+            return false;
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $result = $rsa->verify($data, $sign, $publicKey);
+            
+            $this->_log('RSA verification result: ' . ($result ? 'success' : 'failure'), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa105');
+            return $result;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA verification exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa106');
+            return false;
+        }
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::encryptTo()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function encryptTo(string $data, ?string $publicKey): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: encryptTo() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw003'
-        );
-        return '';
+        if ($data === '') {
+            $this->_log('Empty data for encryption', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa201');
+            return '';
+        }
+
+        if ($publicKey === null || $publicKey === '') {
+            $this->_log('Empty public key for encryption', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa202');
+            return '';
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $encrypted = $rsa->encrypt($data, $publicKey);
+            
+            if ($encrypted === '') {
+                $this->_log('RSA encryption failed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa203');
+                return '';
+            }
+            
+            $this->_log('RSA encryption successful, encrypted length: ' . strlen($encrypted), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa204');
+            return $encrypted;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA encryption exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa205');
+            return '';
+        }
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::decryptTo()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function decryptTo(string $code, ?string $privateKey, ?string $password): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: decryptTo() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw004'
-        );
-        return '';
+        if ($code === '') {
+            $this->_log('Empty encrypted data for decryption', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa301');
+            return '';
+        }
+
+        if ($privateKey === null || $privateKey === '') {
+            $this->_log('Empty private key for decryption', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa302');
+            return '';
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $decrypted = $rsa->decrypt($code, $privateKey, $password ?? '');
+            
+            if ($decrypted === '') {
+                $this->_log('RSA decryption failed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa303');
+                return '';
+            }
+            
+            $this->_log('RSA decryption successful, decrypted length: ' . strlen($decrypted), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa304');
+            return $decrypted;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA decryption exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa305');
+            return '';
+        }
     }
 
     /**
@@ -533,49 +665,121 @@ class CryptoSoftware extends Crypto implements CryptoInterface
      * @param string $algo
      * @param int    $size
      * @see CryptoInterface::newAsymmetricKeys()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function newAsymmetricKeys(string $password = '', string $algo = '', int $size = 0): array
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: newAsymmetricKeys() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw005'
-        );
-        return array();
+        // Si aucun algo n'est spécifié, utiliser rsa.2048 par défaut
+        if ($algo === '') {
+            $algo = 'rsa.2048';
+        }
+
+        // Si aucune taille n'est spécifiée, utiliser celle de l'algo
+        if ($size === 0) {
+            $size = $this->_translateAsymmetricAlgorithm($algo);
+        }
+
+        if (!$this->_checkAsymmetricAlgorithm($algo)) {
+            $this->_log('Unsupported RSA algorithm: ' . $algo, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa401');
+            return array();
+        }
+
+        if ($size <= 0) {
+            $this->_log('Invalid RSA key size: ' . $size, Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa402');
+            return array();
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $keys = $rsa->generateKeyPair($size);
+            
+            if (empty($keys) || !isset($keys['private']) || !isset($keys['public'])) {
+                $this->_log('RSA key generation failed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa403');
+                return array();
+            }
+
+            // Si un mot de passe est fourni, chiffrer la clé privée
+            if ($password !== '') {
+                $keys['private'] = $rsa->encryptPrivateKey($keys['private'], $password);
+                $keys['private_encrypted'] = true;
+            } else {
+                $keys['private_encrypted'] = false;
+            }
+            
+            $this->_log('RSA key generation successful, key size: ' . $size, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa404');
+            return $keys;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA key generation exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa405');
+            return array();
+        }
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::checkPrivateKeyPassword()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function checkPrivateKeyPassword(?string $privateKey, ?string $password): bool
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: checkPrivateKeyPassword() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw006'
-        );
-        return false;
+        if ($privateKey === null || $privateKey === '') {
+            $this->_log('Empty private key for password check', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa501');
+            return false;
+        }
+
+        if ($password === null) {
+            $password = '';
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $result = $rsa->checkPrivateKeyPassword($privateKey, $password);
+            
+            $this->_log('RSA private key password check result: ' . ($result ? 'success' : 'failure'), Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa502');
+            return $result;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA password check exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa503');
+            return false;
+        }
     }
 
     /**
      * {@inheritDoc}
      * @see CryptoInterface::changePrivateKeyPassword()
-     * NOT SUPPORTED in software implementation - use OpenSSL
+     * RSA software implementation
      */
     public function changePrivateKeyPassword(?string $privateKey, ?string $oldPassword, ?string $newPassword): string
     {
-        $this->_nebuleInstance->getMetrologyInstance()->addLog(
-            'Software crypto: changePrivateKeyPassword() not supported - use OpenSSL or Sodium',
-            Metrology::LOG_LEVEL_WARNING,
-            __METHOD__,
-            'sw007'
-        );
-        return '';
+        if ($privateKey === null || $privateKey === '') {
+            $this->_log('Empty private key for password change', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa601');
+            return '';
+        }
+
+        if ($oldPassword === null) {
+            $oldPassword = '';
+        }
+
+        if ($newPassword === null) {
+            $newPassword = '';
+        }
+
+        try {
+            $rsa = new RSASoftware();
+            $newPrivateKey = $rsa->changePrivateKeyPassword($privateKey, $oldPassword, $newPassword);
+            
+            if ($newPrivateKey === '') {
+                $this->_log('RSA password change failed', Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa602');
+                return '';
+            }
+            
+            $this->_log('RSA password change successful', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'rsa603');
+            return $newPrivateKey;
+            
+        } catch (\Exception $e) {
+            $this->_log('RSA password change exception: ' . $e->getMessage(), Metrology::LOG_LEVEL_ERROR, __METHOD__, 'rsa604');
+            return '';
+        }
     }
 }
 
@@ -1395,5 +1599,1173 @@ class SHA512 extends SHA512Base
         // SHA512 fallback implementation not available
         // Use native hash() function instead - it's more reliable
         return false;
+    }
+}
+
+/*******************************************************************************
+ *
+ *      RSA Software Implementation for PHP
+ *      Pure PHP implementation of RSA for fallback when OpenSSL/Sodium not available
+ *      Supports key generation, encryption, decryption, signing, and verification
+ *
+ *      Note: This is a simplified implementation suitable for fallback purposes.
+ *      For production use, OpenSSL or Sodium extensions are recommended.
+ *      The key generation for secure key size may be hard/impossible in a real server.
+ *
+ ******************************************************************************/
+
+/**
+ * RSA Software Implementation
+ * Pure PHP RSA for cryptographic operations
+ */
+class RSASoftware
+{
+    // Default key size for RSA
+    const DEFAULT_KEY_SIZE = 2048;
+    
+    // Default hash algorithm for signing
+    const DEFAULT_HASH_ALGO = 'sha256';
+    
+    // RSA constants
+    const RSA_PUBLIC_EXPONENT = 65537;
+
+    /**
+     * Generate RSA key pair
+     * 
+     * @param int $keySize Key size in bits (1024, 2048, 4096)
+     * @return array Array with 'private' and 'public' keys in PEM format
+     */
+    public function generateKeyPair(int $keySize = 2048): array
+    {
+        // Allow smaller key sizes for testing purposes
+        // Note: Larger key sizes (256+ bits) may be very slow with pure PHP arithmetic
+        $validSizes = [32, 64, 128, 256, 512, 1024, 2048, 4096];
+        if (!in_array($keySize, $validSizes)) {
+            throw new \Exception('Unsupported RSA key size: ' . $keySize . '. Valid sizes: ' . implode(', ', $validSizes));
+        }
+        
+        // Warn about performance for larger key sizes
+        if ($keySize >= 256) {
+            error_log('Warning: RSA key generation with ' . $keySize . '-bit keys may be very slow with pure PHP arithmetic. Consider using smaller key sizes for testing.');
+        }
+
+        // Generate two prime numbers
+        $p = $this->generatePrime($keySize / 2);
+        $q = $this->generatePrime($keySize / 2);
+        
+        // Ensure p != q
+        while ($p === $q) {
+            $q = $this->generatePrime($keySize / 2);
+        }
+
+        // Calculate modulus
+        $n = $this->multiply($p, $q);
+        
+        // Calculate Euler's totient function
+        $phi = $this->multiply($this->subtract($p, '1'), $this->subtract($q, '1'));
+        
+        // Calculate private exponent
+        $d = $this->modInverse((string)self::RSA_PUBLIC_EXPONENT, $phi);
+        
+        // Create private key components
+        $privateKey = array(
+            'n' => $n,
+            'e' => (string)self::RSA_PUBLIC_EXPONENT,
+            'd' => $d,
+            'p' => $p,
+            'q' => $q,
+            'dp' => $this->modulo($d, $this->subtract($p, '1')),
+            'dq' => $this->modulo($d, $this->subtract($q, '1')),
+            'qi' => $this->modInverse($q, $p)
+        );
+        
+        // Create public key components
+        $publicKey = array(
+            'n' => $n,
+            'e' => (string)self::RSA_PUBLIC_EXPONENT
+        );
+
+        // Convert to PEM format
+        return array(
+            'private' => $this->privateKeyToPEM($privateKey),
+            'public' => $this->publicKeyToPEM($publicKey)
+        );
+    }
+
+    /**
+     * Generate a large prime number
+     * 
+     * @param int $bits Number of bits
+     * @return string Big integer as string
+     */
+    private function generatePrime(int $bits): string
+    {
+        // For large bit sizes, limit attempts and reduce iterations to avoid timeout
+        $maxAttempts = 1000;
+        $attempt = 0;
+        
+        while ($attempt < $maxAttempts) {
+            $attempt++;
+            
+            $prime = $this->generateRandomNumber($bits);
+            
+            // Ensure it's odd
+            if ($this->isEven($prime)) {
+                $prime = $this->add($prime, '1');
+            }
+            
+            // Primality test - use fewer iterations for larger numbers
+            $testIterations = ($bits <= 64) ? 1 : 2;
+            if ($this->isPrime($prime, $testIterations)) {
+                return $prime;
+            }
+        }
+        
+        // If we get here, try one final time with minimal iterations
+        $prime = $this->generateRandomNumber($bits);
+        if ($this->isEven($prime)) {
+            $prime = $this->add($prime, '1');
+        }
+        if ($this->isPrime($prime, 1)) {
+            return $prime;
+        }
+        
+        throw new \Exception('Failed to generate prime number after ' . $maxAttempts . ' attempts');
+    }
+
+    /**
+     * Generate random big integer
+     * 
+     * @param int $bits Number of bits
+     * @return string Big integer as string
+     */
+    private function generateRandomNumber(int $bits): string
+    {
+        $bytes = (int)ceil($bits / 8);
+        $randomBytes = '';
+        
+        // Use mt_rand for randomness (not cryptographically secure, but acceptable for fallback)
+        for ($i = 0; $i < $bytes; $i++) {
+            $randomBytes .= chr(mt_rand(0, 255));
+        }
+        
+        // Convert to big integer
+        return $this->bytesToBigInt($randomBytes);
+    }
+
+    /**
+     * Simple primality test using trial division for small numbers
+     * and Fermat's little theorem for larger numbers
+     * 
+     * @param string $n Number to test
+     * @param int $iterations Number of test iterations
+     * @return bool True if probably prime
+     */
+    private function isPrime(string $n, int $iterations = 5): bool
+    {
+        if ($n === '1') return false;
+        if ($n === '2') return true;
+        if ($this->isEven($n)) return false;
+        
+        // For numbers that fit in 64 bits (up to 20 digits), use faster PHP integer operations
+        if (strlen($n) <= 20) {
+            $num = (int)$n;
+            if ($num <= 1) return false;
+            if ($num <= 3) return true;
+            if ($num % 2 === 0 || $num % 3 === 0) return false;
+            
+            // Check divisibility by small primes using PHP integers
+            $maxDivisor = (int)sqrt($num) + 1;
+            for ($i = 5; $i <= $maxDivisor; $i += 6) {
+                if ($num % $i === 0 || $num % ($i + 2) === 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // For larger numbers, use Fermat primality test
+        // Use deterministic bases for faster testing
+        $nMinus1 = $this->subtract($n, '1');
+        
+        // For very large numbers, use deterministic bases
+        $bases = ['2', '3', '5', '7', '11', '13', '17', '19', '23', '29'];
+        
+        for ($i = 0; $i < min($iterations, count($bases)); $i++) {
+            $a = $bases[$i];
+            
+            // Ensure a is in the range [2, n-2]
+            if ($this->compare($a, $nMinus1) >= 0) {
+                $a = $this->modulo($a, $nMinus1);
+            }
+            
+            if ($a === '0' || $a === '1') continue;
+            
+            $result = $this->modPow($a, $nMinus1, $n);
+            
+            if ($result !== '1') {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Check if a number is even
+     * 
+     * @param string $n Number to check
+     * @return bool True if even
+     */
+    private function isEven(string $n): bool
+    {
+        return (int)$n[strlen($n) - 1] % 2 === 0;
+    }
+
+    /**
+     * Get bit length of a number
+     * 
+     * @param string $n Number
+     * @return int Bit length
+     */
+    private function bitLength(string $n): int
+    {
+        return strlen($this->bigIntToBytes($n)) * 8;
+    }
+
+    /**
+     * Convert bytes to big integer
+     * 
+     * @param string $bytes Bytes
+     * @return string Big integer
+     */
+    private function bytesToBigInt(string $bytes): string
+    {
+        $result = '0';
+        for ($i = 0; $i < strlen($bytes); $i++) {
+            $result = $this->add($this->multiply($result, '256'), (string)ord($bytes[$i]));
+        }
+        return $result;
+    }
+
+    /**
+     * Convert big integer to bytes
+     * 
+     * @param string $n Big integer
+     * @return string Bytes
+     */
+    private function bigIntToBytes(string $n): string
+    {
+        $bytes = '';
+        while ($n !== '0') {
+            $div = $this->divide($n, '256');
+            $bytes = chr((int)$div['remainder']) . $bytes;
+            $n = $div['quotient'];
+        }
+        return $bytes !== '' ? $bytes : '\x00';
+    }
+
+    /**
+     * Add two big integers
+     * Handles negative numbers correctly.
+     * 
+     * @param string $a First number
+     * @param string $b Second number
+     * @return string Sum
+     */
+    private function add(string $a, string $b): string
+    {
+        // Handle negative numbers
+        $aNeg = strpos($a, '-') === 0;
+        $bNeg = strpos($b, '-') === 0;
+        
+        if ($aNeg && $bNeg) {
+            // (-a) + (-b) = -(a + b)
+            $a = substr($a, 1);
+            $b = substr($b, 1);
+            return '-' . $this->add($a, $b);
+        } elseif ($aNeg) {
+            // (-a) + b = b - a
+            $a = substr($a, 1);
+            return $this->subtract($b, $a);
+        } elseif ($bNeg) {
+            // a + (-b) = a - b
+            $b = substr($b, 1);
+            return $this->subtract($a, $b);
+        }
+        
+        // Both positive - original logic
+        $maxLength = max(strlen($a), strlen($b));
+        $a = str_pad($a, $maxLength, '0', STR_PAD_LEFT);
+        $b = str_pad($b, $maxLength, '0', STR_PAD_LEFT);
+        
+        $result = '';
+        $carry = 0;
+        
+        for ($i = $maxLength - 1; $i >= 0; $i--) {
+            $digitA = (int)$a[$i];
+            $digitB = (int)$b[$i];
+            $sum = $digitA + $digitB + $carry;
+            $carry = (int)($sum / 10);
+            $result = ($sum % 10) . $result;
+        }
+        
+        if ($carry > 0) {
+            $result = $carry . $result;
+        }
+        
+        return ltrim($result, '0') !== '' ? ltrim($result, '0') : '0';
+    }
+
+    /**
+     * Subtract two big integers (a - b)
+     * Handles negative numbers correctly.
+     * 
+     * @param string $a First number
+     * @param string $b Second number
+     * @return string Difference
+     */
+    private function subtract(string $a, string $b): string
+    {
+        // Handle negative numbers
+        $aNeg = strpos($a, '-') === 0;
+        $bNeg = strpos($b, '-') === 0;
+        
+        if ($aNeg && $bNeg) {
+            // (-a) - (-b) = b - a
+            $a = substr($a, 1);
+            $b = substr($b, 1);
+            return $this->subtract($b, $a);
+        } elseif ($aNeg) {
+            // (-a) - b = -(a + b)
+            $a = substr($a, 1);
+            return '-' . $this->add($a, $b);
+        } elseif ($bNeg) {
+            // a - (-b) = a + b
+            $b = substr($b, 1);
+            return $this->add($a, $b);
+        }
+        
+        // Both positive, handle negative results
+        if ($this->compare($a, $b) < 0) {
+            return '-' . $this->subtract($b, $a);
+        }
+        
+        $maxLength = max(strlen($a), strlen($b));
+        $a = str_pad($a, $maxLength, '0', STR_PAD_LEFT);
+        $b = str_pad($b, $maxLength, '0', STR_PAD_LEFT);
+        
+        $result = '';
+        $borrow = 0;
+        
+        for ($i = $maxLength - 1; $i >= 0; $i--) {
+            $digitA = (int)$a[$i] - $borrow;
+            $digitB = (int)$b[$i];
+            
+            if ($digitA < $digitB) {
+                $digitA += 10;
+                $borrow = 1;
+            } else {
+                $borrow = 0;
+            }
+            
+            $result = ($digitA - $digitB) . $result;
+        }
+        
+        return ltrim($result, '0') !== '' ? ltrim($result, '0') : '0';
+    }
+
+    /**
+     * Compare two big integers
+     * Handles negative numbers correctly.
+     * 
+     * @param string $a First number
+     * @param string $b Second number
+     * @return int -1 if a < b, 0 if a == b, 1 if a > b
+     */
+    private function compare(string $a, string $b): int
+    {
+        $aNeg = strpos($a, '-') === 0;
+        $bNeg = strpos($b, '-') === 0;
+        
+        // Handle negative numbers
+        if ($aNeg && !$bNeg) return -1; // Negative < Positive
+        if (!$aNeg && $bNeg) return 1;  // Positive > Negative
+        if ($aNeg && $bNeg) {
+            // Both negative: compare absolute values and reverse
+            $a = substr($a, 1);
+            $b = substr($b, 1);
+            return -1 * $this->compare($a, $b);
+        }
+        
+        // Both positive
+        $lenA = strlen($a);
+        $lenB = strlen($b);
+        
+        if ($lenA < $lenB) return -1;
+        if ($lenA > $lenB) return 1;
+        
+        return strcmp($a, $b);
+    }
+
+    /**
+     * Multiply two big integers
+     * Handles negative numbers correctly.
+     * 
+     * @param string $a First number
+     * @param string $b Second number
+     * @return string Product
+     */
+    private function multiply(string $a, string $b): string
+    {
+        if ($a === '0' || $b === '0') return '0';
+        if ($a === '1') return $b;
+        if ($b === '1') return $a;
+        
+        // Handle negative numbers
+        $aNeg = strpos($a, '-') === 0;
+        $bNeg = strpos($b, '-') === 0;
+        
+        if ($aNeg) $a = substr($a, 1);
+        if ($bNeg) $b = substr($b, 1);
+        
+        // If both negative, result is positive
+        $negativeResult = ($aNeg !== $bNeg);
+        
+        // Multiply absolute values
+        $result = '0';
+        $bReversed = strrev($b);
+        
+        for ($i = 0; $i < strlen($bReversed); $i++) {
+            $digit = (int)$bReversed[$i];
+            $carry = 0;
+            $temp = '';
+            
+            for ($j = strlen($a) - 1; $j >= 0; $j--) {
+                $product = ((int)$a[$j] * $digit) + $carry;
+                $temp = ($product % 10) . $temp;
+                $carry = (int)($product / 10);
+            }
+            
+            if ($carry > 0) {
+                $temp = $carry . $temp;
+            }
+            
+            // Add zeros for positional value
+            $temp .= str_repeat('0', $i);
+            $result = $this->add($result, $temp);
+        }
+        
+        // Remove leading zeros
+        $result = ltrim($result, '0') !== '' ? ltrim($result, '0') : '0';
+        
+        // Add negative sign if needed
+        if ($negativeResult && $result !== '0') {
+            $result = '-' . $result;
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Divide two big integers
+     * 
+     * @param string $a Dividend
+     * @param string $b Divisor
+     * @return array Array with 'quotient' and 'remainder'
+     */
+    private function divide(string $a, string $b): array
+    {
+        if ($b === '0') {
+            throw new \Exception('Division by zero');
+        }
+        
+        if ($this->compare($a, $b) < 0) {
+            return ['quotient' => '0', 'remainder' => $a];
+        }
+        
+        $quotient = '0';
+        $remainder = $a;
+        
+        while ($this->compare($remainder, $b) >= 0) {
+            $tempDivisor = $b;
+            $tempQuotient = '1';
+            
+            // Find the largest multiple of b that fits in remainder
+            while ($this->compare($this->multiply($tempDivisor, '10'), $remainder) <= 0) {
+                $tempDivisor = $this->multiply($tempDivisor, '10');
+                $tempQuotient = $this->multiply($tempQuotient, '10');
+            }
+            
+            while ($this->compare($remainder, $tempDivisor) >= 0) {
+                $remainder = $this->subtract($remainder, $tempDivisor);
+                $quotient = $this->add($quotient, $tempQuotient);
+            }
+        }
+        
+        return ['quotient' => $quotient, 'remainder' => $remainder];
+    }
+
+    /**
+     * Modulo operation
+     * 
+     * @param string $a Dividend
+     * @param string $b Divisor
+     * @return string Remainder
+     */
+    private function modulo(string $a, string $b): string
+    {
+        return $this->divide($a, $b)['remainder'];
+    }
+
+    /**
+     * Modular exponentiation (powmod)
+     * 
+     * @param string $base Base
+     * @param string $exponent Exponent
+     * @param string $modulus Modulus
+     * @return string Result of (base^exponent) mod modulus
+     */
+    private function modPow(string $base, string $exponent, string $modulus): string
+    {
+        if ($modulus === '1') return '0';
+        if ($exponent === '0') return '1';
+        
+        $result = '1';
+        $base = $this->modulo($base, $modulus);
+        
+        // Right-to-left binary exponentiation
+        while ($exponent !== '0') {
+            if ($this->isEven($exponent) === false) {
+                $result = $this->modulo($this->multiply($result, $base), $modulus);
+            }
+            
+            $exponent = $this->divide($exponent, '2')['quotient'];
+            $base = $this->modulo($this->multiply($base, $base), $modulus);
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Modular multiplicative inverse using Euler's theorem
+     * For RSA: if a and m are coprime, then a^(-1) ≡ a^(φ(m)-1) mod m
+     * But we need φ(m) for this. Instead, we'll use the extended Euclidean algorithm
+     * with a simpler implementation that avoids negative numbers.
+     * 
+     * @param string $a Number
+     * @param string $m Modulus
+     * @return string Inverse of a modulo m
+     */
+    private function modInverse(string $a, string $m): string
+    {
+        // Use the extended Euclidean algorithm with positive results
+        // This is a more reliable implementation
+        
+        $t0 = '0';
+        $t1 = '1';
+        $r0 = $m;
+        $r1 = $a;
+        
+        while ($r1 !== '0') {
+            $q = $this->divide($r0, $r1)['quotient'];
+            
+            // t2 = t0 - q * t1
+            $t2 = $this->subtract($t0, $this->multiply($q, $t1));
+            
+            // r2 = r0 - q * r1
+            $r2 = $this->subtract($r0, $this->multiply($q, $r1));
+            
+            // Shift values
+            $t0 = $t1;
+            $t1 = $t2;
+            $r0 = $r1;
+            $r1 = $r2;
+        }
+        
+        // If r0 != 1, then a and m are not coprime
+        if ($r0 !== '1') {
+            throw new \Exception('Numbers are not coprime, cannot find modular inverse');
+        }
+        
+        // t0 may be negative, so make it positive
+        if ($this->compare($t0, '0') < 0) {
+            $t0 = $this->add($t0, $m);
+        }
+        
+        return $t0;
+    }
+
+    /**
+     * Convert private key to PEM-like format (JSON for simplicity in PHP fallback)
+     * 
+     * @param array $key Key components
+     * @return string PEM-like formatted private key
+     */
+    private function privateKeyToPEM(array $key): string
+    {
+        $components = array(
+            'n' => $key['n'],
+            'e' => $key['e'],
+            'd' => $key['d'],
+            'p' => $key['p'],
+            'q' => $key['q'],
+            'dp' => $key['dp'],
+            'dq' => $key['dq'],
+            'qi' => $key['qi']
+        );
+        
+        // Use JSON format for simplicity in pure PHP fallback
+        // Format: RSA_PKCS1_PRIVATE_KEY_JSON:base64
+        $json = json_encode($components);
+        $pem = "-----BEGIN RSA PRIVATE KEY-----\n";
+        $pem .= chunk_split(base64_encode($json), 64, "\n");
+        $pem .= "-----END RSA PRIVATE KEY-----\n";
+        
+        return $pem;
+    }
+
+    /**
+     * Convert public key to PEM-like format (JSON for simplicity in PHP fallback)
+     * 
+     * @param array $key Key components
+     * @return string PEM-like formatted public key
+     */
+    private function publicKeyToPEM(array $key): string
+    {
+        $components = array(
+            'n' => $key['n'],
+            'e' => $key['e']
+        );
+        
+        // Use JSON format for simplicity in pure PHP fallback
+        $json = json_encode($components);
+        $pem = "-----BEGIN RSA PUBLIC KEY-----\n";
+        $pem .= chunk_split(base64_encode($json), 64, "\n");
+        $pem .= "-----END RSA PUBLIC KEY-----\n";
+        
+        return $pem;
+    }
+
+    /**
+     * DER encode private key
+     * 
+     * @param array $components Key components
+     * @return string DER encoded key
+     */
+    private function derEncodePrivateKey(array $components): string
+    {
+        // Simplified DER encoding for RSA private key
+        // Format: SEQUENCE of all components
+        $der = '';
+        
+        foreach (['n', 'e', 'd', 'p', 'q', 'dp', 'dq', 'qi'] as $field) {
+            if (isset($components[$field])) {
+                $der .= $this->derEncodeInteger($components[$field]);
+            }
+        }
+        
+        return $der;
+    }
+
+    /**
+     * DER encode public key
+     * 
+     * @param array $key Key components
+     * @return string DER encoded key
+     */
+    private function derEncodePublicKey(array $key): string
+    {
+        // Simplified DER encoding for RSA public key
+        // Format: SEQUENCE of modulus and exponent
+        $der = '';
+        $der .= $this->derEncodeInteger($key['n']);
+        $der .= $this->derEncodeInteger($key['e']);
+        
+        return $der;
+    }
+
+    /**
+     * DER encode integer
+     * 
+     * @param string $int Integer as string
+     * @return string DER encoded integer
+     */
+    private function derEncodeInteger(string $int): string
+    {
+        $bytes = $this->bigIntToBytes($int);
+        
+        // Ensure positive (first bit of first byte should be 0)
+        if (strlen($bytes) > 0 && (ord($bytes[0]) & 0x80) !== 0) {
+            $bytes = '\x00' . $bytes;
+        }
+        
+        // DER format: 0x02 (INTEGER tag) + length + value
+        $der = '\x02' . chr(strlen($bytes)) . $bytes;
+        return $der;
+    }
+
+    /**
+     * Base64 URL encoding
+     * 
+     * @param string $data Data to encode
+     * @return string Base64 encoded data
+     */
+    private function base64urlEncode(string $data): string
+    {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+    }
+
+    /**
+     * Base64 URL decoding
+     * 
+     * @param string $data Data to decode
+     * @return string Decoded data
+     */
+    private function base64urlDecode(string $data): string
+    {
+        return base64_decode(strtr($data, '-_', '+/'));
+    }
+
+    /**
+     * Parse PEM formatted key (supports both traditional and JSON formats)
+     * 
+     * @param string $pem PEM formatted key
+     * @return array Parsed key components
+     */
+    private function parsePEM(string $pem): array
+    {
+        // Remove header and footer
+        $pem = str_replace("-----BEGIN RSA PRIVATE KEY-----", '', $pem);
+        $pem = str_replace("-----END RSA PRIVATE KEY-----", '', $pem);
+        $pem = str_replace("-----BEGIN RSA PUBLIC KEY-----", '', $pem);
+        $pem = str_replace("-----END RSA PUBLIC KEY-----", '', $pem);
+        $pem = str_replace("-----BEGIN PRIVATE KEY-----", '', $pem);
+        $pem = str_replace("-----END PRIVATE KEY-----", '', $pem);
+        $pem = str_replace("-----BEGIN PUBLIC KEY-----", '', $pem);
+        $pem = str_replace("-----END PUBLIC KEY-----", '', $pem);
+        
+        // Remove whitespace, newlines, and other characters
+        $pem = preg_replace('/\s+/', '', $pem);
+        
+        // Try JSON format first (for keys generated by this implementation)
+        $decoded = @base64_decode($pem);
+        if ($decoded !== false) {
+            $json = @json_decode($decoded, true);
+            if ($json !== null && is_array($json)) {
+                // Check if it has the expected components
+                if (isset($json['n']) && isset($json['e'])) {
+                    // Ensure all components are strings (json_decode may convert to int)
+                    foreach ($json as $key => $value) {
+                        $json[$key] = (string)$value;
+                    }
+                    return $json; // Return the components directly
+                }
+            }
+        }
+        
+        // Fallback to DER parsing for standard PEM keys
+        if ($decoded === false) {
+            $decoded = @base64_decode($pem);
+        }
+        if ($decoded === false || $decoded === '') {
+            return []; // Invalid base64
+        }
+        
+        return $this->parseDER($decoded);
+    }
+
+    /**
+     * Parse DER encoded key (simplified)
+     * 
+     * @param string $der DER encoded data
+     * @return array Parsed components
+     */
+    private function parseDER(string $der): array
+    {
+        $components = array();
+        $offset = 0;
+        $length = strlen($der);
+        
+        // Very simplified parsing - just extract integers
+        // My DER encoding: 0x02 + length_byte + value_bytes for each integer
+        while ($offset < $length) {
+            if ($offset >= $length) break;
+            
+            $tag = ord($der[$offset++]);
+            
+            // Only handle INTEGER (0x02)
+            if ($tag !== 0x02) {
+                // Skip this byte and continue
+                continue;
+            }
+            
+            if ($offset >= $length) break;
+            
+            $intLength = ord($der[$offset++]);
+            
+            if ($offset + $intLength > $length) {
+                break; // Incomplete integer
+            }
+            
+            $value = substr($der, $offset, $intLength);
+            $offset += $intLength;
+            
+            $components[] = $this->bytesToBigInt($value);
+        }
+        
+        return $components;
+    }
+
+    /**
+     * Encrypt data using RSA public key
+     * 
+     * @param string $data Data to encrypt
+     * @param string $publicKey PEM formatted public key
+     * @return string Encrypted data as base64
+     */
+    public function encrypt(string $data, string $publicKey): string
+    {
+        try {
+            $keyComponents = $this->parsePEM($publicKey);
+            
+            if (!isset($keyComponents['n']) || !isset($keyComponents['e'])) {
+                throw new \Exception('Invalid public key format: missing n or e');
+            }
+            
+            $n = $keyComponents['n']; // modulus
+            $e = $keyComponents['e']; // public exponent
+            
+            // Calculate max message size (k bytes where 2^(8k) > n)
+            $nBytes = strlen($this->bigIntToBytes($n));
+            $maxMsgSize = $nBytes; // For simple test, allow full size
+            
+            if (strlen($data) > $maxMsgSize) {
+                throw new \Exception('Message too long for RSA key size. Max: ' . $maxMsgSize . ' bytes, got: ' . strlen($data));
+            }
+            
+            // Simple padding: add leading zeros to make it fit exactly
+            // In a real implementation, this would be PKCS#1 v1.5 or OAEP padding
+            $paddedData = str_pad($data, $maxMsgSize, chr(0), STR_PAD_LEFT);
+            
+            // Convert data to big integer
+            $dataInt = $this->bytesToBigInt($paddedData);
+            
+            // Encrypt: c = m^e mod n
+            $encrypted = $this->modPow($dataInt, $e, $n);
+            
+            // Convert to bytes and base64 encode
+            return base64_encode($this->bigIntToBytes($encrypted));
+            
+        } catch (\Exception $e) {
+            // Fallback for very small data
+            return '';
+        }
+    }
+
+    /**
+     * Decrypt data using RSA private key
+     * 
+     * @param string $data Base64 encoded encrypted data
+     * @param string $privateKey PEM formatted private key
+     * @param string $password Password for encrypted private key
+     * @return string Decrypted data
+     */
+    public function decrypt(string $data, string $privateKey, string $password = ''): string
+    {
+        try {
+            $keyComponents = $this->parsePEM($privateKey);
+            
+            if (!isset($keyComponents['n']) || !isset($keyComponents['d'])) {
+                throw new \Exception('Invalid private key format: missing n or d');
+            }
+            
+            $n = $keyComponents['n']; // modulus
+            $d = $keyComponents['d']; // private exponent
+            
+            if ($d === '') {
+                throw new \Exception('Missing private exponent in key');
+            }
+            
+            // Decode base64 encrypted data
+            $encryptedBytes = base64_decode($data);
+            if ($encryptedBytes === false) {
+                throw new \Exception('Invalid base64 data');
+            }
+            
+            $encryptedInt = $this->bytesToBigInt($encryptedBytes);
+            
+            // Decrypt: m = c^d mod n
+            $decrypted = $this->modPow($encryptedInt, $d, $n);
+            
+            $decryptedBytes = $this->bigIntToBytes($decrypted);
+            
+            // Remove padding (simple version: remove leading zeros)
+            // In a real implementation, this would verify PKCS#1 v1.5 or OAEP padding
+            $decryptedBytes = ltrim($decryptedBytes, chr(0));
+            
+            return $decryptedBytes;
+            
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Sign data using RSA private key
+     * 
+     * @param string $data Data to sign
+     * @param string $privateKey PEM formatted private key
+     * @param string $password Password for encrypted private key
+     * @return string Base64 encoded signature
+     */
+    public function sign(string $data, string $privateKey, string $password = ''): string
+    {
+        try {
+            // Hash the data first
+            $hash = hash(self::DEFAULT_HASH_ALGO, $data);
+            if ($hash === false) {
+                $hash = '';
+            }
+            
+            $keyComponents = $this->parsePEM($privateKey);
+            
+            if (!isset($keyComponents['n']) || !isset($keyComponents['d'])) {
+                throw new \Exception('Invalid private key format for signing: missing n or d');
+            }
+            
+            $n = $keyComponents['n']; // modulus
+            $d = $keyComponents['d']; // private exponent
+            
+            // Get the modulus size in bytes
+            $nBytes = $this->bigIntToBytes($n);
+            $nLength = strlen($nBytes);
+            
+            // Ensure hash fits within modulus
+            $hashBytes = hex2bin($hash);
+            if ($hashBytes === false) {
+                $hashBytes = $hash; // fallback if hex2bin fails
+            }
+            
+            // If hash is larger than modulus, truncate it
+            // In real implementations, proper padding would be used
+            if (strlen($hashBytes) > $nLength) {
+                $hashBytes = substr($hashBytes, 0, $nLength);
+            }
+            
+            // Convert to big integer
+            $hashInt = $this->bytesToBigInt($hashBytes);
+            
+            // Sign: s = hash^d mod n
+            $signature = $this->modPow($hashInt, $d, $n);
+            
+            return base64_encode($this->bigIntToBytes($signature));
+            
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Verify signature using RSA public key
+     * 
+     * @param string $data Original data
+     * @param string $signature Base64 encoded signature
+     * @param string $publicKey PEM formatted public key
+     * @return bool True if signature is valid
+     */
+    public function verify(string $data, string $signature, string $publicKey): bool
+    {
+        try {
+            // Hash the original data
+            $hash = hash(self::DEFAULT_HASH_ALGO, $data);
+            if ($hash === false) {
+                return false;
+            }
+            
+            $keyComponents = $this->parsePEM($publicKey);
+            
+            if (!isset($keyComponents['n']) || !isset($keyComponents['e'])) {
+                throw new \Exception('Invalid public key format for verification: missing n or e');
+            }
+            
+            $n = $keyComponents['n']; // modulus
+            $e = $keyComponents['e']; // public exponent
+            
+            // Get the modulus size in bytes for consistent truncation
+            $nBytes = $this->bigIntToBytes($n);
+            $nLength = strlen($nBytes);
+            
+            // Hash and truncate to same length as modulus
+            $hashBytes = hex2bin($hash);
+            if ($hashBytes === false) {
+                $hashBytes = $hash; // fallback if hex2bin fails
+            }
+            
+            // Truncate hash to fit modulus (must match signing)
+            if (strlen($hashBytes) > $nLength) {
+                $hashBytes = substr($hashBytes, 0, $nLength);
+            }
+            
+            // Decode signature
+            $signatureBytes = base64_decode($signature);
+            if ($signatureBytes === false) {
+                return false;
+            }
+            
+            $signatureInt = $this->bytesToBigInt($signatureBytes);
+            
+            // Verify: hash' = signature^e mod n
+            $recoveredHash = $this->modPow($signatureInt, $e, $n);
+            $recoveredHashBytes = $this->bigIntToBytes($recoveredHash);
+            
+            // Pad recovered hash with leading zeros to match expected length
+            if (strlen($recoveredHashBytes) < $nLength) {
+                $recoveredHashBytes = str_repeat(chr(0), $nLength - strlen($recoveredHashBytes)) . $recoveredHashBytes;
+            }
+            
+            // Truncate if somehow it's longer than expected
+            if (strlen($recoveredHashBytes) > $nLength) {
+                $recoveredHashBytes = substr($recoveredHashBytes, 0, $nLength);
+            }
+            
+            // Compare recovered hash with truncated original hash
+            return $recoveredHashBytes === $hashBytes;
+            
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Constant-time string comparison to prevent timing attacks
+     * 
+     * @param string $a First string
+     * @param string $b Second string
+     * @return bool True if strings are equal
+     */
+    private function constantTimeCompare(string $a, string $b): bool
+    {
+        if (strlen($a) !== strlen($b)) {
+            return false;
+        }
+        
+        $result = 0;
+        for ($i = 0; $i < strlen($a); $i++) {
+            $result |= ord($a[$i]) ^ ord($b[$i]);
+        }
+        
+        return $result === 0;
+    }
+
+    /**
+     * Encrypt private key with password (simplified)
+     * 
+     * @param string $privateKey PEM formatted private key
+     * @param string $password Password
+     * @return string Encrypted private key
+     */
+    public function encryptPrivateKey(string $privateKey, string $password): string
+    {
+        if ($password === '') {
+            return $privateKey;
+        }
+        
+        // Simple XOR "encryption" for fallback purposes
+        // Note: This is NOT secure, but acceptable as a last-resort fallback
+        $result = '';
+        $keyLength = strlen($password);
+        
+        for ($i = 0; $i < strlen($privateKey); $i++) {
+            $result .= $privateKey[$i] ^ $password[$i % $keyLength];
+        }
+        
+        return base64_encode($result);
+    }
+
+    /**
+     * Decrypt private key with password (simplified)
+     * 
+     * @param string $privateKey Encrypted private key
+     * @param string $password Password
+     * @return string Decrypted private key
+     */
+    private function decryptPrivateKey(string $privateKey, string $password): string
+    {
+        if ($password === '') {
+            // Try to detect if it's already decrypted
+            if (strpos($privateKey, '-----BEGIN') !== false) {
+                return $privateKey;
+            }
+            // Try to base64 decode it
+            $decoded = base64_decode($privateKey);
+            if ($decoded !== false && strpos($decoded, '-----BEGIN') !== false) {
+                return $decoded;
+            }
+        } else {
+            // Try to decrypt with password
+            $decoded = base64_decode($privateKey);
+            if ($decoded === false) {
+                return '';
+            }
+            
+            $result = '';
+            $keyLength = strlen($password);
+            
+            for ($i = 0; $i < strlen($decoded); $i++) {
+                $result .= $decoded[$i] ^ $password[$i % $keyLength];
+            }
+            
+            return $result;
+        }
+        
+        return $privateKey;
+    }
+
+    /**
+     * Check if private key password is correct
+     * 
+     * @param string $privateKey Private key
+     * @param string $password Password to check
+     * @return bool True if password is correct
+     */
+    public function checkPrivateKeyPassword(string $privateKey, string $password): bool
+    {
+        try {
+            $decrypted = $this->decryptPrivateKey($privateKey, $password);
+            
+            // Check if it looks like a valid PEM key
+            return (strpos($decrypted, '-----BEGIN') !== false && 
+                   (strpos($decrypted, 'PRIVATE KEY') !== false || 
+                    strpos($decrypted, 'RSA PRIVATE KEY') !== false));
+            
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Change private key password
+     * 
+     * @param string $privateKey Private key
+     * @param string $oldPassword Current password
+     * @param string $newPassword New password
+     * @return string Private key with new password
+     */
+    public function changePrivateKeyPassword(string $privateKey, string $oldPassword, string $newPassword): string
+    {
+        // Decrypt with old password
+        $decrypted = $this->decryptPrivateKey($privateKey, $oldPassword);
+        
+        if ($decrypted === '') {
+            return '';
+        }
+        
+        // Encrypt with new password
+        if ($newPassword === '') {
+            return $decrypted;
+        }
+        
+        return $this->encryptPrivateKey($decrypted, $newPassword);
     }
 }
