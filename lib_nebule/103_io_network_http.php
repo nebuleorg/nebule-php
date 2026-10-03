@@ -19,6 +19,11 @@ class ioNetworkHTTP extends io implements ioInterface {
     private int $_maxLink = 0;
     private int $_maxData = 0;
     private string $_defaultLocalisation = '';
+    
+    // NOUVEAU: Permet de configurer l'URL de base
+    public function setBaseUrl(string $url): void {
+        $this->_defaultLocalisation = rtrim($url, '/');
+    }
 
     protected function _initialisation(): void {
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');

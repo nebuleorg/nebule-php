@@ -27,6 +27,11 @@ class io extends Functions implements ioInterface {
     private array $_listModes = array();
     protected string $_filesTranscodeKey = '';
 
+    // NOUVEAU: Gestion des stockages multiples
+    private array $_storageInstances = [];
+    private array $_storageConfig = [];
+    private array $_storageInstancesByType = [];
+
     public function __sleep() {
         /** @noinspection PhpFieldImmediatelyRewrittenInspection */
         $this->_filesTranscodeKey = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
@@ -44,22 +49,28 @@ class io extends Functions implements ioInterface {
 
     protected function _initialisation(): void {
 //        $this->_metrologyInstance->addLog('track functions', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
-        $myClass = get_class($this);
-        $size = strlen($myClass);
-        $list = get_declared_classes();
-        foreach ($list as $class) {
-            if (substr($class, 0, $size) == $myClass && $class != $myClass) {
-                $this->_metrologyInstance->addLog('add class ' . $class, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'b8f416f7');
-                $instance = $this->_initSubInstance($class);
-                $filterString = $instance->getFilterString();
-                $url = $instance->getLocation();
-                $mode = $instance->getMode();
-                $this->_listLocalisations[$url] = $instance;
-                $this->_listFilterStrings[$instance::TYPE] = $filterString;
-                $this->_listModes[$instance::TYPE] = $mode;
-            }
+        // Charger la configuration des stockages
+        $this->_loadStorageConfiguration();
+        
+        // Initialiser chaque stockage configuré
+        foreach ($this->_storageConfig as $name => $config) {
+            $this->_storageInstances[$name] = $this->_createStorageInstance($name, $config);
+            $this->_storageInstancesByType[$config['type']][$name] = $this->_storageInstances[$name];
         }
-        $this->_defaultInstance = $this->_getDefaultSubInstance('ioLibrary');
+        
+        // Définir l'instance par défaut
+        if (isset($this->_storageInstances['default'])) {
+            $this->_defaultInstance = $this->_storageInstances['default'];
+        } else {
+            // Fallback : créer une instance disk par défaut
+            $this->_storageInstances['default'] = $this->_createStorageInstance('default', [
+                'type' => 'disk',
+                'linksFolder' => References::LINKS_FOLDER,
+                'objectsFolder' => References::OBJECTS_FOLDER,
+                'mode' => 'RW'
+            ]);
+            $this->_defaultInstance = $this->_storageInstances['default'];
+        }
     }
 
     /**
@@ -203,7 +214,14 @@ class io extends Functions implements ioInterface {
      * {@inheritDoc}
      * @see ioInterface::setObject()
      */
-    public function setObject(string $oid, string &$data, string $url = ''): bool { return $this->_getInstanceByURL($url)->setObject($oid, $data, $url); }
+    public function setObject(string $oid, string &$data, string $url = ''): bool {
+        // Écriture toujours sur un stockage RW
+        $storage = $this->_getReadWriteStorage();
+        if ($storage === null) {
+            return false;
+        }
+        return $storage->setObject($oid, $data, $url);
+    }
 
     /**
      * {@inheritDoc}
@@ -228,4 +246,182 @@ class io extends Functions implements ioInterface {
      * @see ioInterface::getList()
      */
     public function getList(string $url = ''): array { return $this->_getInstanceByURL($url)->getList($url); }
+
+
+
+    // =========================================================================
+    // NOUVELLES MÉTHODES POUR LA GESTION MULTI-STOCKAGE
+    // =========================================================================
+
+    /**
+     * Charge la configuration des stockages depuis l'option JSON ioStorage.
+     * Si l'option n'est pas définie ou invalide, utilise une configuration par défaut.
+     * 
+     * @return void
+     */
+    private function _loadStorageConfiguration(): void {
+        $storagesJson = $this->_configurationInstance->getOptionAsString('ioStorage');
+        
+        if (empty($storagesJson)) {
+            // Configuration par défaut avec stockage disk respectant /l et /o
+            $this->_storageConfig = [
+                'default' => [
+                    'type' => 'disk',
+                    'linksFolder' => References::LINKS_FOLDER,
+                    'objectsFolder' => References::OBJECTS_FOLDER,
+                    'mode' => 'RW'
+                ]
+            ];
+            return;
+        }
+        
+        $storages = json_decode($storagesJson, true);
+        if (!is_array($storages)) {
+            // En cas d'erreur de parsing, utiliser le défaut
+            $this->_storageConfig = [
+                'default' => [
+                    'type' => 'disk',
+                    'linksFolder' => References::LINKS_FOLDER,
+                    'objectsFolder' => References::OBJECTS_FOLDER,
+                    'mode' => 'RW'
+                ]
+            ];
+            return;
+        }
+        
+        // Vérifier et normaliser la configuration
+        foreach ($storages as $name => $config) {
+            // S'assurer que le type est défini
+            if (!isset($config['type'])) {
+                $config['type'] = 'disk';
+            }
+            
+            // Pour le stockage par défaut de type disk, forcer les chemins /l et /o
+            if ($name === 'default' && ($config['type'] === 'disk' || !isset($config['type']))) {
+                $config['type'] = 'disk';
+                $config['linksFolder'] = References::LINKS_FOLDER;
+                $config['objectsFolder'] = References::OBJECTS_FOLDER;
+                if (!isset($config['mode'])) {
+                    $config['mode'] = 'RW';
+                }
+            }
+            
+            // Définir le mode par défaut
+            if (!isset($config['mode'])) {
+                $config['mode'] = ($config['type'] === 'disk') ? 'RW' : 'RO';
+            }
+            
+            $storages[$name] = $config;
+        }
+        
+        // Si pas de stockage 'default', l'ajouter
+        if (!isset($storages['default'])) {
+            $storages['default'] = [
+                'type' => 'disk',
+                'linksFolder' => References::LINKS_FOLDER,
+                'objectsFolder' => References::OBJECTS_FOLDER,
+                'mode' => 'RW'
+            ];
+        }
+        
+        $this->_storageConfig = $storages;
+    }
+
+    /**
+     * Crée une instance de stockage avec sa configuration.
+     * 
+     * @param string $name Nom du stockage
+     * @param array $config Configuration du stockage
+     * @return ioInterface Instance configurée
+     */
+    private function _createStorageInstance(string $name, array $config): ioInterface {
+        $type = strtolower($config['type'] ?? 'disk');
+        $className = 'Nebule\\Library\\io' . ucfirst($type);
+        
+        if (!class_exists($className)) {
+            $this->_metrologyInstance->addLog(
+                'Storage type ' . $type . ' not found for storage ' . $name . ', falling back to disk',
+                Metrology::LOG_LEVEL_WARNING,
+                __METHOD__,
+                '00000000'
+            );
+            $className = 'Nebule\\Library\\ioDisk';
+            $type = 'disk';
+            $config['type'] = 'disk';
+        }
+        
+        $instance = new $className($this->_nebuleInstance);
+        $instance->setEnvironmentLibrary($this->_nebuleInstance);
+        
+        // Configurer l'instance avec les paramètres spécifiques
+        $this->_configureStorageInstance($instance, $config);
+        
+        $instance->initialisation();
+        return $instance;
+    }
+
+    /**
+     * Configure une instance de stockage avec ses paramètres spécifiques.
+     * 
+     * @param ioInterface $instance Instance à configurer
+     * @param array $config Configuration à appliquer
+     * @return void
+     */
+    private function _configureStorageInstance(ioInterface $instance, array $config): void {
+        if ($instance instanceof ioDisk) {
+            // Configuration spécifique pour ioDisk
+            if (isset($config['linksFolder'])) {
+                $instance->setLinksFolder($config['linksFolder']);
+            }
+            if (isset($config['objectsFolder'])) {
+                $instance->setObjectsFolder($config['objectsFolder']);
+            }
+        } elseif ($instance instanceof ioNetworkHTTP || $instance instanceof ioNetworkHTTPS) {
+            // Configuration spécifique pour les stockages réseau
+            if (isset($config['url'])) {
+                $instance->setBaseUrl($config['url']);
+            }
+        }
+    }
+
+    /**
+     * Retourne un stockage en mode RW pour les opérations d'écriture.
+     * Priorité : stockage par défaut si RW, sinon premier stockage RW trouvé.
+     * 
+     * @return ioInterface|null Instance RW ou null si aucun trouvé
+     */
+    private function _getReadWriteStorage(): ?ioInterface {
+        // D'abord essayer le stockage par défaut
+        if (isset($this->_storageInstances['default']) && 
+            $this->_storageInstances['default']->getMode() === 'RW') {
+            return $this->_storageInstances['default'];
+        }
+        
+        // Sinon chercher dans tous les stockages
+        foreach ($this->_storageInstances as $name => $storage) {
+            if ($storage->getMode() === 'RW') {
+                return $storage;
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Retourne la liste des instances de stockage.
+     * 
+     * @return array Liste des instances indexées par nom
+     */
+    public function getStorageInstances(): array {
+        return $this->_storageInstances;
+    }
+
+    /**
+     * Retourne la configuration des stockages.
+     * 
+     * @return array Configuration complète
+     */
+    public function getStorageConfiguration(): array {
+        return $this->_storageConfig;
+    }
 }

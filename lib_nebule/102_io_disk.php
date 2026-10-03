@@ -20,17 +20,67 @@ class ioDisk extends io implements ioInterface
     private int $_maxLink = 0;
     private int $_maxData = 0;
     private string $_mode = '';
+    
+    // NOUVEAU: Chemins configurables
+    private string $_linksFolder = '';
+    private string $_objectsFolder = '';
 
     protected function _initialisation(): void
     {
-        if (!file_exists(References::LINKS_FOLDER))
-            mkdir(References::LINKS_FOLDER);
-        if (!file_exists(References::OBJECTS_FOLDER))
-            mkdir(References::OBJECTS_FOLDER);
+        // Initialiser avec les chemins par défaut de References
+        if (empty($this->_linksFolder)) {
+            $this->_linksFolder = References::LINKS_FOLDER;
+        }
+        if (empty($this->_objectsFolder)) {
+            $this->_objectsFolder = References::OBJECTS_FOLDER;
+        }
+        
+        if (!file_exists($this->_linksFolder))
+            mkdir($this->_linksFolder);
+        if (!file_exists($this->_objectsFolder))
+            mkdir($this->_objectsFolder);
 
         $this->_maxLink = $this->_configurationInstance->getOptionAsInteger('ioReadMaxLinks');
         $this->_maxData = $this->_configurationInstance->getOptionAsInteger('ioReadMaxData');
         $this->_metrologyInstance->addLog('instancing class ioDisk', Metrology::LOG_LEVEL_NORMAL, __METHOD__, 'e4958dd2');
+    }
+
+    /**
+     * Set the folder for links storage.
+     * 
+     * @param string $folder Path to the links folder
+     * @return void
+     */
+    public function setLinksFolder(string $folder): void {
+        $this->_linksFolder = rtrim($folder, '/');
+    }
+
+    /**
+     * Set the folder for objects storage.
+     * 
+     * @param string $folder Path to the objects folder
+     * @return void
+     */
+    public function setObjectsFolder(string $folder): void {
+        $this->_objectsFolder = rtrim($folder, '/');
+    }
+
+    /**
+     * Get the folder for links storage.
+     * 
+     * @return string Path to the links folder
+     */
+    public function getLinksFolder(): string {
+        return $this->_linksFolder;
+    }
+
+    /**
+     * Get the folder for objects storage.
+     * 
+     * @return string Path to the objects folder
+     */
+    public function getObjectsFolder(): string {
+        return $this->_objectsFolder;
     }
 
     /**
@@ -84,8 +134,8 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkLinksDirectory()
      */
     public function checkLinksDirectory(string $url = ''): bool {
-        if (!file_exists(References::LINKS_FOLDER)
-            || !is_dir(References::LINKS_FOLDER)
+        if (!file_exists($this->_linksFolder)
+            || !is_dir($this->_linksFolder)
         )
             return false;
         return true;
@@ -96,8 +146,8 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkObjectsDirectory()
      */
     public function checkObjectsDirectory(string $url = ''): bool {
-        if (!file_exists(References::OBJECTS_FOLDER)
-            || !is_dir(References::OBJECTS_FOLDER)
+        if (!file_exists($this->_objectsFolder)
+            || !is_dir($this->_objectsFolder)
         )
             return false;
         return true;
@@ -108,7 +158,7 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkLinksRead()
      */
     public function checkLinksRead(string $url = ''): bool {
-        $file = References::LINKS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $file = $this->_linksFolder . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -123,7 +173,7 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkLinksWrite()
      */
     public function checkLinksWrite(string $url = ''): bool {
-        $file = References::LINKS_FOLDER . '/0';
+        $file = $this->_linksFolder . '/0';
         $resultDelete = false;
 
         if (file_exists($file))
@@ -147,7 +197,7 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkObjectsRead()
      */
     public function checkObjectsRead(string $url = ''): bool {
-        $file = References::OBJECTS_FOLDER . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
+        $file = $this->_objectsFolder . '/' . $this->_configurationInstance->getOptionAsString('puppetmaster');
 
         if (!file_exists($file))
             return false;
@@ -162,7 +212,7 @@ class ioDisk extends io implements ioInterface
      * @see ioInterface::checkObjectsWrite()
      */
     public function checkObjectsWrite(string $url = ''): bool {
-        $file = References::OBJECTS_FOLDER . '/0';
+        $file = $this->_objectsFolder . '/0';
         $resultDelete = false;
 
         // Check if the object is already present.
@@ -189,8 +239,8 @@ class ioDisk extends io implements ioInterface
      */
     public function checkLinkPresent(string $oid, string $url = ''): bool {
         if (!Node::checkNID($oid, false)
-            || !file_exists(References::LINKS_FOLDER . '/' . $oid)
-            || is_dir(References::LINKS_FOLDER . '/' . $oid)
+            || !file_exists($this->_linksFolder . '/' . $oid)
+            || is_dir($this->_linksFolder . '/' . $oid)
         )
             return false;
         return true;
@@ -202,8 +252,8 @@ class ioDisk extends io implements ioInterface
      */
     public function checkObjectPresent(string $oid, string $url = ''):bool {
         if (!Node::checkNID($oid, false)
-            || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
-            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
+            || !file_exists($this->_objectsFolder . '/' . $oid)
+            || is_dir($this->_objectsFolder . '/' . $oid)
         )
             return false;
         return true;
@@ -218,12 +268,12 @@ class ioDisk extends io implements ioInterface
         $linkList = array();
 
         if (!Node::checkNID($oid, false)
-            || !file_exists(References::LINKS_FOLDER . '/' . $oid)
-            || is_dir(References::LINKS_FOLDER . '/' . $oid)
+            || !file_exists($this->_linksFolder . '/' . $oid)
+            || is_dir($this->_linksFolder . '/' . $oid)
         )
             return array();
 
-        $file = file(References::LINKS_FOLDER . '/' . $oid);
+        $file = file($this->_linksFolder . '/' . $oid);
         foreach ($file as $link) {
             $linkList[$linkRead] = $link;
             // Vérifie que le nombre maximum de liens à lire n'est pas dépassé.
@@ -250,22 +300,22 @@ class ioDisk extends io implements ioInterface
 
         // Check the entity recipient of the hidden links.
         if (!Node::checkNID($entity, false)
-            || !file_exists(References::LINKS_FOLDER . '/' . $entity)
-            || is_dir(References::LINKS_FOLDER . '/' . $entity)
+            || !file_exists($this->_linksFolder . '/' . $entity)
+            || is_dir($this->_linksFolder . '/' . $entity)
         )
             return $linksList;
 
         // Check the signing entity of the hidden links.
         if (!is_string($signer)
             || $signer == ''
-            || !file_exists(References::LINKS_FOLDER . '/' . $signer)
-            || is_dir(References::LINKS_FOLDER . '/' . $signer)
+            || !file_exists($this->_linksFolder . '/' . $signer)
+            || is_dir($this->_linksFolder . '/' . $signer)
         )
             $signer = '0';
 
         if ($signer == '0') {
             // If no specific signer requested, read all link files attached to the recipient entity.
-            $fileList = glob(References::LINKS_FOLDER . '/' . $entity . '-*', GLOB_NOSORT);
+            $fileList = glob($this->_linksFolder . '/' . $entity . '-*', GLOB_NOSORT);
 
             // Check the validity of file names.
             /* TODO
@@ -274,8 +324,8 @@ class ioDisk extends io implements ioInterface
              * $files[] = $l;
              * }
              */
-        } elseif (file_exists(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
-            && !is_dir(References::LINKS_FOLDER . '/' . $entity . '-' . $signer)
+        } elseif (file_exists($this->_linksFolder . '/' . $entity . '-' . $signer)
+            && !is_dir($this->_linksFolder . '/' . $entity . '-' . $signer)
         ) {
             // If a specific signer is requested, only read the concerned link file.
             $fileList[0] = $entity . '-' . $signer;
@@ -286,7 +336,7 @@ class ioDisk extends io implements ioInterface
 
         // For each file listed, reads the links.
         foreach ($fileList as $filename) {
-            $file = file(References::LINKS_FOLDER . '/' . $filename);
+            $file = file($this->_linksFolder . '/' . $filename);
             foreach ($file as $link) {
                 // @todo verify with regex that the link is of type c ...
                 if (true)
@@ -307,19 +357,19 @@ class ioDisk extends io implements ioInterface
      */
     public function getObject(string $oid, int $maxsize = 0, string $url = ''): bool|string {
         if (!Node::checkNID($oid, false)
-            || !file_exists(References::OBJECTS_FOLDER . '/' . $oid)
-            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
+            || !file_exists($this->_objectsFolder . '/' . $oid)
+            || is_dir($this->_objectsFolder . '/' . $oid)
         )
             return false;
 
         if ($maxsize == 0)
             $maxsize = $this->_maxData;
 
-        $filesize = filesize(References::OBJECTS_FOLDER . '/' . $oid);
+        $filesize = filesize($this->_objectsFolder . '/' . $oid);
         if ($filesize > $maxsize)
             $filesize = $maxsize;
 
-        return file_get_contents(References::OBJECTS_FOLDER . '/' . $oid, false, null, 0, $filesize);
+        return file_get_contents($this->_objectsFolder . '/' . $oid, false, null, 0, $filesize);
     }
 
     /**
@@ -333,12 +383,12 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(References::LINKS_FOLDER . '/' . $oid)
+            || is_dir($this->_linksFolder . '/' . $oid)
         )
             return false;
 
-        if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
-            $l = file(References::LINKS_FOLDER . '/' . $oid);
+        if (file_exists($this->_linksFolder . '/' . $oid)) {
+            $l = file($this->_linksFolder . '/' . $oid);
             foreach ($l as $k) {
                 // Si déjà présent, on quitte.
                 if (trim($k) == trim($link))
@@ -346,7 +396,7 @@ class ioDisk extends io implements ioInterface
             }
         }
 
-        if (file_put_contents(References::LINKS_FOLDER . '/' . $oid, $link . "\n", FILE_APPEND) !== false)
+        if (file_put_contents($this->_linksFolder . '/' . $oid, $link . "\n", FILE_APPEND) !== false)
             return true;
 
         $this->_mode = 'RO';
@@ -365,9 +415,9 @@ class ioDisk extends io implements ioInterface
         )
             return false;
 
-        if (file_exists(References::OBJECTS_FOLDER . '/' . $oid))
+        if (file_exists($this->_objectsFolder . '/' . $oid))
             return true;
-        if (file_put_contents(References::OBJECTS_FOLDER . '/' . $oid, $data) !== false) {
+        if (file_put_contents($this->_objectsFolder . '/' . $oid, $data) !== false) {
             $this->_metrologyInstance->addLog('ok write oid=' . $oid, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'e2f2baa1');
             return true;
         }
@@ -385,17 +435,17 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
             || $this->getMode() != 'RW'
-            || is_dir(References::OBJECTS_FOLDER . '/' . $oid)
+            || is_dir($this->_objectsFolder . '/' . $oid)
         )
             return false;
 
-        if (!file_exists(References::OBJECTS_FOLDER . '/' . $oid))
+        if (!file_exists($this->_objectsFolder . '/' . $oid))
             return true;
 
         // Try to delete the object file.
-        unlink(References::OBJECTS_FOLDER . '/' . $oid);
+        unlink($this->_objectsFolder . '/' . $oid);
 
-        if (file_exists(References::OBJECTS_FOLDER . '/' . $oid)) {
+        if (file_exists($this->_objectsFolder . '/' . $oid)) {
             $this->_mode = 'RO';
             return false;
         }
@@ -413,12 +463,12 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(References::LINKS_FOLDER . '/' . $oid)
+            || is_dir($this->_linksFolder . '/' . $oid)
         )
             return false;
 
         // Prepare a temporary working file for links.
-        if (!file_exists(References::LINKS_FOLDER . '/' . $oid . '.rmlnk'))
+        if (!file_exists($this->_linksFolder . '/' . $oid . '.rmlnk'))
             return true;
 
         // TODO
@@ -435,17 +485,17 @@ class ioDisk extends io implements ioInterface
             || !$this->_configurationInstance->getOptionAsBoolean('permitWrite')
             || !$this->_configurationInstance->getOptionAsBoolean('permitWriteLink')
             || $this->getMode() != 'RW'
-            || is_dir(References::LINKS_FOLDER . '/' . $oid)
+            || is_dir($this->_linksFolder . '/' . $oid)
         )
             return false;
 
-        if (!file_exists(References::LINKS_FOLDER . '/' . $oid))
+        if (!file_exists($this->_linksFolder . '/' . $oid))
             return true;
 
         // Essaye de supprimer le fichier des liens de l'objet.
-        unlink(References::LINKS_FOLDER . '/' . $oid);
+        unlink($this->_linksFolder . '/' . $oid);
 
-        if (file_exists(References::LINKS_FOLDER . '/' . $oid)) {
+        if (file_exists($this->_linksFolder . '/' . $oid)) {
             $this->_mode = 'RO';
             return false;
         }
@@ -456,7 +506,7 @@ class ioDisk extends io implements ioInterface
      * {@inheritDoc}
      * @see ioInterface::getList()
      */
-    public function getList(string $url = ''): array { return array_diff(scandir(References::LINKS_FOLDER . '/'), array('.', '..')); }
+    public function getList(string $url = ''): array { return array_diff(scandir($this->_linksFolder . '/'), array('.', '..')); }
 
     /**
      * Returns a translated object identifier based on the translation key.

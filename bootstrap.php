@@ -5377,44 +5377,75 @@ function bootstrap_breakDisplay43LibraryIO(): void {
         echo get_class($ioInstance);
         echo "<br />\n";
 
+        // Afficher la configuration des stockages si disponible
+        if (method_exists($ioInstance, 'getStorageConfiguration')) {
+            $storageConfig = $ioInstance->getStorageConfiguration();
+            if (!empty($storageConfig)) {
+                bootstrap_echoLineTitle('i/o configuration');
+                echo '<pre>' . htmlspecialchars(json_encode($storageConfig, JSON_PRETTY_PRINT)) . '</pre>';
+                echo "<br />\n";
+            }
+        }
+
+        // Afficher les instances de stockage
+        if (method_exists($ioInstance, 'getStorageInstances')) {
+            $storageInstances = $ioInstance->getStorageInstances();
+            foreach ($storageInstances as $name => $storage) {
+                bootstrap_echoLineTitle('storage: ' . htmlspecialchars($name));
+                if (is_a($storage, 'Nebule\Library\io')) {
+                    echo get_class($storage) . ' (' . $storage->getMode() . ') ' . $storage->getLocation() . ', links ';
+                    if (!$storage->checkLinksDirectory())
+                        echo 'directory <span class="error">ERROR!</span>';
+                    else {
+                        if (!$storage->checkLinksRead())
+                            echo 'read <span class="error">ERROR!</span>';
+                        else {
+                            if ($storage->getMode() == 'RO')
+                                echo 'OK no write.';
+                            elseif ($storage->checkLinksWrite())
+                                echo 'OK';
+                            else
+                                echo 'write <span class="error">ERROR!</span>';
+                        }
+                    }
+                    echo ', objects ';
+                    if (!$storage->checkObjectsDirectory())
+                        echo 'directory <span class="error">ERROR!</span>';
+                    else {
+                        if (!$storage->checkObjectsRead())
+                            echo 'read <span class="error">ERROR!</span>';
+                        else {
+                            if ($storage->getMode() == 'RO')
+                                echo 'OK no write.';
+                            elseif ($storage->checkObjectsWrite())
+                                echo 'OK';
+                            else
+                                echo 'write <span class="error">ERROR!</span>';
+                        }
+                    }
+                    // Afficher les chemins spécifiques pour ioDisk
+                    if (is_a($storage, 'Nebule\Library\ioDisk')) {
+                        if (method_exists($storage, 'getLinksFolder')) {
+                            echo ', linksFolder=' . htmlspecialchars($storage->getLinksFolder());
+                        }
+                        if (method_exists($storage, 'getObjectsFolder')) {
+                            echo ', objectsFolder=' . htmlspecialchars($storage->getObjectsFolder());
+                        }
+                    }
+                } else
+                    echo get_class($storage) . ' error';
+                echo "<br />\n";
+            }
+        }
+        
+        // Afficher l'ancienne liste des modules pour compatibilité
         $list = $ioInstance->getModulesList();
-        foreach ($list as $class) {
-            $module = $ioInstance->getModuleByType($class);
-            bootstrap_echoLineTitle('i/o');
-            if (is_a($module, 'Nebule\Library\io')) {
-                echo get_class($module) . ' (' . $module->getMode() . ') ' . $module->getLocation() . ', links ';
-                if (!$module->checkLinksDirectory())
-                    echo 'directory <span class="error">ERROR!</span>';
-                else {
-                    if (!$module->checkLinksRead())
-                        echo 'read <span class="error">ERROR!</span>';
-                    else {
-                        if ($module->getMode() == 'RO')
-                            echo 'OK no write.';
-                        elseif ($module->checkLinksWrite())
-                            echo 'OK';
-                        else
-                            echo 'write <span class="error">ERROR!</span>';
-                    }
-                }
-                echo ', objects ';
-                if (!$module->checkObjectsDirectory())
-                    echo 'directory <span class="error">ERROR!</span>';
-                else {
-                    if (!$module->checkObjectsRead())
-                        echo 'read <span class="error">ERROR!</span>';
-                    else {
-                        if ($module->getMode() == 'RO')
-                            echo 'OK no write.';
-                        elseif ($module->checkObjectsWrite())
-                            echo 'OK';
-                        else
-                            echo 'write <span class="error">ERROR!</span>';
-                    }
-                }
-            } else
-                echo get_class($module) . ' error';
-            echo "<br />\n";
+        if (!empty($list)) {
+            bootstrap_echoLineTitle('legacy i/o modules');
+            foreach ($list as $class) {
+                $module = $ioInstance->getModuleByType($class);
+                echo get_class($module) . "<br />\n";
+            }
         }
     } else
         bootstrap_echoEndLineTest(false);

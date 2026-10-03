@@ -113,7 +113,11 @@ abstract class HelpApplications {
                 <li><a href="#oal">OAL / Librairie</a>
                     <ul>
                         <li><a href="#oald">OALD / Description</a></li>
-                        <li><a href="#oalc">OALC / Configuration</a></li>
+                        <li><a href="#oalc">OALC / Configuration</a>
+                            <ul>
+                                <li><a href="#oalcs">OALCS / Stockage</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#oala">OALA / Applications intégrées</a>
                             <ul>
                                 <li><a href="#oala0">OALA0 / Application 0</a></li>
@@ -1018,6 +1022,49 @@ tE=0.5937s
         <?php Displays::docDispTitle(4, 'oalc', 'Configuration'); ?>
         <p>La bibliothèque obéit aux mêmes options que le <i>bootstrap</i> et les applications. Voir
             <a href="#cco">CCO</a>.</p>
+
+        <?php Displays::docDispTitle(5, 'oalcs', 'Stockage'); ?>
+        <p>Système de stockage modulaire pour les objets et liens.</p>
+        <ul>
+            <li><strong>Multi-stockage</strong> :
+                <ul>
+                    <li>Plusieurs backends configurables (disk, http, https)</li>
+                    <li>Chaque stockage a un type, un mode (RO/RW) et des paramètres spécifiques</li>
+                    <li>Le stockage par défaut de type disk utilise systématiquement /l et /o pour l'accès web direct</li>
+                </ul>
+            </li>
+
+            <li><strong>Configuration</strong> :
+                <ul>
+                    <li>Option JSON : <code>ioStorage</code></li>
+                    <li>Format : <pre>{"default":{"type":"disk","linksFolder":"l","objectsFolder":"o","mode":"RW"},"backup":{"type":"disk","linksFolder":"/mnt/backup/l","objectsFolder":"/mnt/backup/o","mode":"RO"}}</pre></li>
+                    <li>Si non définie : stockage disk par défaut avec /l et /o en RW</li>
+                </ul>
+            </li>
+
+            <li><strong>Routage</strong> :
+                <ul>
+                    <li>Lecture : routage par URL, fallback sur default si échec</li>
+                    <li>Écriture : toujours vers un stockage RW (priorité à default)</li>
+                </ul>
+            </li>
+
+            <li><strong>Classes</strong> :
+                <ul>
+                    <li>io (101) : routeur principal</li>
+                    <li>ioDisk (102) : stockage local, chemins configurables via setLinksFolder/setObjectsFolder</li>
+                    <li>ioNetworkHTTP (103) : stockage HTTP, URL configurable via setBaseUrl</li>
+                    <li>ioNetworkHTTPS (104) : stockage HTTPS, URL configurable via setBaseUrl</li>
+                </ul>
+            </li>
+
+            <li><strong>Compatibilité</strong> :
+                <ul>
+                    <li>Rétrocompatible : comportement inchangé si ioStorage non défini</li>
+                    <li>Stockage default disk : chemins /l et /o forcés</li>
+                </ul>
+            </li>
+        </ul>
 
         <?php Displays::docDispTitle(4, 'oala', 'Applications intégrées'); ?>
         <p>La présence de la commande <i><?php echo LIB_ARG_SWITCH_APPLICATION; ?>=RID</i> sur l'URL permet de passer
