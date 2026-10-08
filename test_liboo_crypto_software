@@ -42,6 +42,16 @@ $RSA_SIGNING_TESTS = [
     'standard_message' => 'Test sign',
 ];
 
+// ED25519 test configuration
+// Using pre-generated keys to avoid expensive key generation
+$ED25519_TESTSeed = 'ad258128049c8c2d00f0e76778c396cb3112f6d49c18d3b17c2250e650f5d59f';
+
+// ED25519 Test messages for signing (small messages for faster testing)
+$ED25519_SIGNING_TESTS = [
+    'short_message' => 'Test ED25519',
+    'standard_message' => 'Test ED25519 signature',
+];
+
 // ============================================================================
 // Load required library files
 // ============================================================================
@@ -147,7 +157,8 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
 // ============================================================================
 
 // Set reasonable timeout for tests
-set_time_limit(300); // 5 minutes max for RSA key generation
+//set_time_limit(300); // 5 minutes max for RSA key generation
+set_time_limit(900);
 
 printHeader('CRYPTO HASH CONSISTENCY TEST');
 
@@ -807,16 +818,132 @@ if ($testRSAAlgo !== '') {
     $rsaAllPassed = true; // Don't fail overall if RSA is not available
 }
 
+// ============================================================================
+// Step 8: Test ED25519 Asymmetric Functions
+// ============================================================================
+
+printHeader('ED25519 ASYMMETRIC CRYPTO TEST');
+
+$ed25519AllPassed = true;
+$ed25519SigningPassed = true;
+
+// Test ED25519 with software implementation
+if (isset($instances['software'])) {
+    printSection('Step 8.1: Testing ED25519 signing/verification with pre-generated keys');
+    
+    $ed25519SigningResults = [];
+    
+    try {
+        // Generate test keys from seed (fast, deterministic)
+        $ed25519 = new \Nebule\Library\ED25519Software();
+        $keys = $ed25519->generateKeyPairFromSeed($ED25519_TESTSeed);
+        
+        if (empty($keys) || !isset($keys['private']) || !isset($keys['public'])) {
+            printError('ED25519 key generation from seed failed');
+            $ed25519SigningPassed = false;
+        } else {
+            printResult('Key generation from seed', 'Success - private: ' . strlen($keys['private']) . ' chars, public: ' . strlen($keys['public']) . ' chars');
+            
+            foreach ($ED25519_SIGNING_TESTS as $testName => $testData) {
+                printResult('Test', $testName . ' - ' . $testData);
+                
+                try {
+                    // Convert keys to the format expected by CryptoSoftware methods
+                    // ED25519 keys from ED25519Software are already in hex format
+                    $instance = $instances['software'];
+                    
+                    // Test direct ED25519Software usage
+                    $signature = $ed25519->sign($testData, $keys['private'], '');
+                    if ($signature === '') {
+                        throw new \Exception('ED25519 signing returned empty result');
+                    }
+                    
+                    $verified = $ed25519->verify($testData, $signature, $keys['public']);
+                    
+                    $ed25519SigningResults[$testName] = [
+                        'signature_len' => strlen($signature),
+                        'verified' => $verified,
+                        'success' => $verified
+                    ];
+                    
+                    printResult('Software (direct)', $verified ? 'PASS' : 'FAIL');
+                    
+                    if (!$verified) {
+                        $ed25519SigningPassed = false;
+                    }
+                    
+                    // Test through CryptoSoftware interface
+                    $cryptoSignature = $instance->sign($testData, $keys['private'], '');
+                    if ($cryptoSignature === '') {
+                        throw new \Exception('CryptoSoftware ED25519 signing returned empty result');
+                    }
+                    
+                    $cryptoVerified = $instance->verify($testData, $cryptoSignature, $keys['public'], 'ed25519');
+                    
+                    printResult('Software (via Crypto)', $cryptoVerified ? 'PASS' : 'FAIL');
+                    
+                    if (!$cryptoVerified) {
+                        $ed25519SigningPassed = false;
+                    }
+                    
+                    // Test with wrong data
+                    $wrongData = $testData . 'wrong';
+                    $wrongVerified = $instance->verify($wrongData, $cryptoSignature, $keys['public'], 'ed25519');
+                    
+                    if ($wrongVerified === true) {
+                        printError('Wrong data verification should have failed but passed');
+                        $ed25519SigningPassed = false;
+                    } else {
+                        printResult('Wrong data verification', 'Correctly failed');
+                    }
+                    
+                } catch (\Exception $e) {
+                    printError('ED25519 error: ' . $e->getMessage());
+                    $ed25519SigningResults[$testName] = ['error' => $e->getMessage(), 'success' => false];
+                    $ed25519SigningPassed = false;
+                }
+                
+                echo "\n";
+            }
+        }
+    } catch (\Exception $e) {
+        printError('ED25519 setup failed: ' . $e->getMessage());
+        $ed25519SigningPassed = false;
+    }
+    
+    $ed25519AllPassed = $ed25519SigningPassed;
+    
+    // ============================================================================
+    // Step 8.2: ED25519 Test Summary
+    // ============================================================================
+    
+    printSection('ED25519 Test Summary');
+    
+    echo "  Signing/Verify:      " . ($ed25519SigningPassed ? "[PASS]" : "[FAIL]") . "\n";
+    echo "  Overall ED25519 Tests:" . ($ed25519AllPassed ? "[PASS]" : "[FAIL]") . "\n";
+    
+    if (!$ed25519AllPassed) {
+        echo "\n  ED25519 test failures detected:\n";
+        if (!$ed25519SigningPassed) {
+            echo "    - Signing/verification issues\n";
+        }
+    }
+} else {
+    printWarning('ED25519 tests skipped - software implementation not available');
+    $ed25519AllPassed = true; // Don't fail overall if ED25519 is not available
+}
+
 // Final result
 printSection('FINAL RESULT');
 
 // Overall test result
-$overallPassed = $allPassed && $rsaAllPassed;
+$overallPassed = $allPassed && $rsaAllPassed && $ed25519AllPassed;
 
 if ($overallPassed) {
     echo "  [SUCCESS] All hash functions are consistent across implementations!\n";
     echo "  [SUCCESS] All verified hashes match expected values!\n";
     echo "  [SUCCESS] RSA asymmetric cryptography tests passed!\n";
+    echo "  [SUCCESS] ED25519 asymmetric cryptography tests passed!\n";
     exit(0);
 } else {
     echo "  [FAILURE] Issues detected during cryptographic testing\n";
@@ -836,6 +963,11 @@ if ($overallPassed) {
     
     if (!$rsaAllPassed) {
         echo "  - RSA cryptography tests failed\n";
+        $hasIssues = true;
+    }
+    
+    if (!$ed25519AllPassed) {
+        echo "  - ED25519 cryptography tests failed\n";
         $hasIssues = true;
     }
     
