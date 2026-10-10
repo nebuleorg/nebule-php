@@ -2076,6 +2076,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 font-weight: normal;
                 overflow: hidden;
                 white-space: nowrap;
+                margin: 0;
             }
 
             .objectMenuContentAction-title p {
@@ -2083,6 +2084,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 font-weight: bold;
                 overflow: hidden;
                 white-space: nowrap;
+                margin: 0;
             }
 
             .objectMenuContentAction-text p {
@@ -2090,6 +2092,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 font-weight: normal;
                 overflow: hidden;
                 white-space: nowrap;
+                margin: 0;
             }
 
             .objectMenuContentAction-close {

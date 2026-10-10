@@ -678,7 +678,7 @@ TNKnv+93j4ziq6zqt63rfHRBjVF3Xpm1vvgS/x8Gi7U2W4K9xSCkpz3OFEP7a9pcAkKR5nvkPAAAAAAC
         <div class="layoutAloneItem" id="actions">
             <div class="aloneItemContent" id="actionscontent">
                 <?php
-                $this->_actionInstance->getDisplayActions();
+                $this->_displayInstance->displayInlineLastAction();
                 ?>
 
             </div>

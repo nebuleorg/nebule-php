@@ -1145,7 +1145,7 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         } ?>">
             <p>
                 <?php
-                $this->_actionInstance->getDisplayActions();
+                $this->_displayInstance->displayInlineLastAction();
                 ?>
 
             </p>

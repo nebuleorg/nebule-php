@@ -308,7 +308,7 @@ class ModuleObjects extends Module {
     }
 
     /**
-     * Affichage en ligne comme élément inseré dans une page web.
+     * Affichage en ligne comme élément inserré dans une page web.
      *
      * @return void
      */

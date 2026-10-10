@@ -285,11 +285,6 @@ abstract class Actions extends Functions implements ActionsInterface {
         $this->_metrologyInstance->addLog('call modules actions end', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '27b77f2d');
     }
 
-    public function getDisplayActions(): void
-    {
-        $this->_displayInstance->displayInlineLastAction(); // FIXME
-    }
-
 
 
     // Common functions for subclasses
@@ -326,12 +321,12 @@ abstract class Actions extends Functions implements ActionsInterface {
             return false;
         $this->_metrologyInstance->addLog('delete property ' . $name, Metrology::LOG_LEVEL_AUDIT, __METHOD__, 'c92cb974');
         foreach ($inputLinks as $inputLink) {
-            $bloclink = new BlocLink($this->_nebuleInstance, 'new');
+            $blocLink = new BlocLink($this->_nebuleInstance, 'new');
             $nid1 = $instance->getID();
             $nid2 = $inputLink->getParsed()['bl/rl/nid2'];
             $nid3 = $inputLink->getParsed()['bl/rl/nid3'];
-            $bloclink->addLink('x>' . $nid1 . '>' . $nid2 . '>' . $nid3);
-            $bloclink->signWrite();
+            $blocLink->addLink('x>' . $nid1 . '>' . $nid2 . '>' . $nid3);
+            $blocLink->signWrite();
             $this->_metrologyInstance->addLog('add delete link ' . 'x>' . $nid1 . '>' . $nid2 . '>' . $nid3, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
         }
         return true;

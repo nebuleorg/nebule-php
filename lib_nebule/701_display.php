@@ -650,6 +650,8 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 width: 100%;
                 min-height: 480px;
                 min-width: 640px;
+                margin: 0;
+                padding: 0;
             }
 
             img, embed, canvas, video, audio, picture {
@@ -767,14 +769,35 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
                 bottom: 0;
                 width: 100%;
                 text-align: center;
-            }
-
-            .layout-footer {
-                height: 68px;
+                max-height: 68px;
+                height: auto;
                 background: #ababab;
                 border-top-style: solid;
                 border-top-color: #c8c8c8;
                 border-top-width: 1px;
+            }
+
+            .layout-footer p {
+                color: #ffffff;
+                font-size: 12px;
+                height: auto;
+                margin: 1px;
+                clear: both;
+            }
+
+            .footer-classification {
+                margin-top: -12px;
+                clear: both;
+            }
+
+            .footer-classification p {
+                font-size: 16px;
+                font-weight: bold;
+                border: 2px solid;
+                border-radius: 5px;
+                padding:1px;
+                margin: 1px;
+                display: inline-block;
             }
 
             .footer-center p {
@@ -1731,9 +1754,13 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             echo '<div class="layout-footer footerUnlock">' . "\n";
         else
             echo '<div class="layout-footer footer">' . "\n";
-        echo '<p>' . "\n";
-        $this->_actionInstance->getDisplayActions();
-        echo '</p>' . "\n";
+        $this->_displayClassifications();
+        $this->displayInlineLastAction();
+        echo '</div>' . "\n";
+    }
+
+    protected function _displayClassifications(): void { // TODO change for multiple classification messages
+        echo '<div class="footer-classification">' . "\n";
         $classification = $this->_configurationInstance->getOptionAsString('displayClassification');
         if ( $classification != '' ) {
             $fg = preg_replace('/[^0-9a-f]/', '', $this->_configurationInstance->getOptionAsString('displayClassificationFG'));
@@ -1742,7 +1769,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
             $bg = preg_replace('/[^0-9a-f]/', '', $this->_configurationInstance->getOptionAsString('displayClassificationBG'));
             if (strlen($bg) != 6)
                 $bg = 'ffffff';
-            $style = 'color: #' . $fg . '; background-color: #' . $bg . '; font-size: 16px; font-weight: bold; border: 2px solid; border-radius: 5px; padding:1px; margin: 1px; display: inline-block;';
+            $style = 'color: #' . $fg . '; background-color: #' . $bg . ';';
             echo '<p style="' . $style . '">' . $classification . "</p>\n";
         }
         echo '</div>' . "\n";
@@ -5356,6 +5383,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
 
     public function displayInlineLastAction(): void
     {
+        echo '<p>' . "\n";
         /*$array = $this->_metrologyInstance->getLastAction();
         if (sizeof($array) == 0)
             return;
@@ -5397,6 +5425,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
         }
         echo "\n";
         unset($array);*/
+        echo '</p>' . "\n";
     }
 
     public function displayInlineAllActions(): void
