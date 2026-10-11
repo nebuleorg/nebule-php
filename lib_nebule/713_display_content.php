@@ -127,10 +127,17 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     {
         ?>
 
-        <style type="text/css">
+        <style>
             /* CSS for DisplayContent(). */
             .objectContent {
-                margin-left: -3px;
+                font-size: 0.8rem;
+                border: 0;
+                padding: 3px 0 0 0;
+                margin: 0;
+                color: #000000;
+                overflow: auto;
+                clear: both;
+                max-width: 100%;
             }
 
             .objectContentObject {
@@ -172,6 +179,11 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
             .objectContentImage img {
                 height: auto;
                 max-width: 100%;
+            }
+
+            .objectContentShort {
+                width: 378px;
+                max-height: 378px;
             }
         </style>
         <?php

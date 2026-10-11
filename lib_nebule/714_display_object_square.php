@@ -27,7 +27,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
             $htLinkClose = '</a>';
         }
 
-        $divObjectOpen = '<div class="objectSquareContainer objectDisplay' . $this->_sizeCSS . ' objectSquareContainer' . $this->_sizeCSS . '">' . "\n";
+        $divObjectOpen = '<div class="objectSquareContainer objectSquareContainer' . $this->_sizeCSS . '">' . "\n";
         $divObjectClose = '</div>' . "\n";
         $objectContentFlag = '';
 
@@ -194,10 +194,10 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 align-items: center;
                 background-color: rgba(69 69 69 / 25%);
             }
-            .objectSquareContainerSmall { width: 8em; height: 8em; }
-            .objectSquareContainerMedium { width: 6em; height: 6em; }
-            .objectSquareContainerLarge { width: 5em; height: 5em; }
-            .objectSquareContainerFull { width: 4em; height: 4em; }
+            .objectSquareContainerSmall { font-size: 32px; width: 8em; height: 8em; }
+            .objectSquareContainerMedium { font-size: 64px; width: 6em; height: 6em; }
+            .objectSquareContainerLarge { font-size: 128px; width: 5em; height: 5em; }
+            .objectSquareContainerFull { font-size: 256px; width: 4em; height: 4em; }
             .objectSquareContent {
                 max-width: 100%;
                 max-height: 100%;
@@ -214,7 +214,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 overflow: hidden;
             }
             .objectSquareTitle {
-                position: absolute;
+                position: relative;
                 top: 5%;
                 left: 5%;
                 width: 88%;
@@ -231,7 +231,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
                 transition: opacity 0.3s ease;
             }
             .objectSquareFlags {
-                position: absolute;
+                position: relative;
                 bottom: 5%;
                 left: 5%;
                 width: 88%;

@@ -175,6 +175,7 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
         <style type="text/css">
             /* CSS for DisplayInformation(). */
             .layoutInformation { margin: 0; border: 0; background: none; display: inline-block; vertical-align: top; }
+
             .informationDisplayTiny { font-size: 16px; width: 12em; }
             .informationDisplaySmall { font-size: 32px; width: 8em; }
             .informationDisplayMedium { font-size: 64px; width: 6em; }
@@ -191,6 +192,12 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
             .informationDisplayLargeSquare { height: 5em; }
             .informationDisplayFullShort, .informationDisplayFullLong { min-height: 1em; }
             .informationDisplayFullSquare { height: 4em; }
+
+            .informationDisplay {}
+            .informationDisplay a:link{ text-decoration: none; }
+            .informationDisplay a:visited{ text-decoration: none; }
+            .informationDisplay a:hover{ text-decoration: underline; }
+            .informationDisplay a:active{ text-decoration: underline; }
 
             /* Colors */
             .informationDisplayMessage     { background: #333333; }

@@ -1782,37 +1782,6 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             @media screen and (min-width: 3840px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 3830px; } }
             @media screen and (min-width: 4096px) { .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong { width: 4086px; } }
 
-            .objectContent {
-                font-size: 0.8rem;
-                border: 0;
-                padding: 3px;
-                margin: 0;
-                color: #000000;
-                overflow: auto;
-                clear: both;
-                max-width: 95%;
-            }
-
-            .objectContentShort {
-                width: 378px;
-                max-height: 378px;
-            }
-
-            .objectContentText {
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-            }
-
-            .objectContentImage {
-                background: rgba(255, 255, 255, 0.12);
-                text-align: center;
-            }
-
-            .objectContentImage img {
-                height: auto;
-                max-width: 100%;
-            }
-
             .objectFlagOn {
                 background: #00ff20;
             }
