@@ -183,513 +183,528 @@ em+rom6wKFdFizkPY2qb/0/37a/uVxnfd5/wWNcHiC0uUMVAAAAABJRU5ErkJggg==';
         $background = $bgobj->getUpdateNID(true, false);
         ?>
 
-        <style>
-            html, body {
-                font-family: Sans-Serif, monospace, Arial, Helvetica;
-                font-stretch: condensed;
-                font-size: 0.9em;
-                text-align: left;
-                min-height: 100%;
-                width: 100%;
-            }
-
-            @media screen {
-                body {
-                    background: #f0f0f0 url("<?php echo 'o/'.$background; ?>") no-repeat;
-                    background-position: center center;
-                    background-size: cover;
-                    background-attachment: fixed;
-                    -webkit-background-size: cover;
-                    -moz-background-size: cover;
-                    -o-background-size: cover;
-                }
-            }
-
-            @media print {
-                body {
-                    background: #ffffff;
-                }
-            }
-
-            .logoFloatLeft {
-                float: left;
-                margin: 5px;
-                height: 64px;
-                width: 64px;
-            }
-
-            .floatLeft {
-                float: left;
-                margin-right: 5px;
-            }
-
-            .floatRight {
-                float: right;
-                margin-left: 5px;
-            }
-
-            .textAlignLeft {
-                text-align: left;
-            }
-
-            .textAlignRight {
-                text-align: right;
-            }
-
-            .textAlignCenter {
-                text-align: center;
-            }
-
-            .iconInlineDisplay {
-                height: 16px;
-                width: 16px;
-            }
-
-            .iconNormalDisplay {
-                height: 64px;
-                width: 64px;
-            }
-
-            .hideOnSmallMedia {
-                display: block;
-            }
-
-            .divHeaderH1, .divHeaderH2 {
-                overflow: hidden;
-            }
-
-            .layout-header {
-                height: 74px;
-                background: rgba(34, 34, 34, 0.8);
-                color: #ffffff;
-            }
-
-            .layout-header {
-                border-bottom-style: solid;
-                border-bottom-color: #222222;
-                border-bottom-width: 5px;
-            }
-
-            .layout-footer {
-                height: auto;
-                background: rgba(34, 34, 34, 0.8);
-                color: #ffffff;
-            }
-
-            .layout-footer {
-                border-top-style: solid;
-                border-top-color: #222222;
-                border-top-width: 5px;
-            }
-
-            .header-left {
-                margin: 5px 0 5px 5px;
-            }
-
-            .header-left2 {
-                margin: 5px;
-                height: 64px;
-                width: 207px;
-                float: left;
-            }
-
-            .header-left2 img {
-                margin-right: 5px;
-            }
-
-            .layout-header .layoutObject {
-                float: left;
-            }
-
-            .layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName {
-                overflow: visible;
-            }
-
-            .layout-header .layoutObject .objectTitle .objectTitleText {
-                background: none;
-                color: #ffffff;
-            }
-
-            .layout-header .layoutObject .objectTitle .objectTitleText a {
-                color: #ffffff;
-            }
-
-            .header-right {
-                margin: 5px;
-            }
-
-            .text a {
-                color: #000000;
-            }
-
-            /* Liserets de verrouillage. */
-            .headerUnlock {
-                border-bottom-color: #e0000e;
-            }
-
-            .footerUnlock {
-                border-top-color: #e0000e;
-            }
-
-            /* Le menu de gauche, contextuel et toujours visible même partiellement. */
-            .layout-menu-left {
-                display: inline;
-                min-width: 217px;
-                max-width: 217px;
-                min-height: 100px;
-                margin: 0;
-                margin-right: 10px;
-                margin-bottom: 20px;
-                margin-top: 120px;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .layout-menu-left {
-                    min-width: 74px;
-                    max-width: 74px;
-                    margin-right: 10px;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .layout-menu-left {
-                    min-width: 32px;
-                    max-width: 32px;
-                    margin-right: 5px;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .layout-menu-left {
-                    min-width: 32px;
-                    max-width: 32px;
-                    margin-right: 5px;
-                }
-            }
-
-            .menu-left {
-                width: 217px;
-                color: #000000;
-                background: rgba(255, 255, 255, 0.2);
-                background-origin: border-box;
-            }
-
-            .menu-left img {
-                height: 64px;
-                width: 64px;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left {
-                    width: 74px;;
-                }
-
-                .menu-left img {
-                    height: 64px;
-                    width: 64px;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left {
-                    width: 32px;
-                }
-
-                .menu-left img {
-                    height: 32px;
-                    width: 32px;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left {
-                    width: 32px;
-                }
-
-                .menu-left img {
-                    height: 32px;
-                    width: 32px;
-                }
-            }
-
-            .menu-left-module {
-                height: 64px;
-                width: 207px;
-                padding: 5px;
-                margin-bottom: 0;
-                background: rgba(0, 0, 0, 0.7);
-                background-origin: border-box;
-                color: #ffffff;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-module {
-                    height: 64px;
-                    width: 64px;
-                    padding: 5px;
-                    margin-bottom: 0;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-module {
-                    height: 32px;
-                    width: 32px;
-                    padding: 0;
-                    margin-bottom: 5px;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left-module {
-                    height: 32px;
-                    width: 32px;
-                    padding: 0;
-                    margin-bottom: 5px;
-                }
-            }
-
-            .menu-left-links {
-                width: 207px;
-                padding: 5px;
-                padding-bottom: 0;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-links {
-                    width: 64px;
-                    padding: 5px;
-                    padding-bottom: 0;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-links {
-                    width: 32px;
-                    padding: 0;
-                    padding-bottom: 0;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left-links {
-                    width: 32px;
-                    padding: 0;
-                    padding-bottom: 0;
-                }
-            }
-
-            .menu-left-interlinks {
-                height: 15px;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-interlinks {
-                    height: 10px;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-interlinks {
-                    height: 5px;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left-interlinks {
-                    height: 5px;
-                }
-            }
-
-            .menu-left-one {
-                clear: both;
-                padding-bottom: 5px;
-                width: 207px;
-                min-height: 64px;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-one {
-                    min-height: 64px;
-                    width: 64px;
-                    padding-bottom: 5px;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-one {
-                    min-height: 32px;
-                    width: 32px;
-                    padding-bottom: 0;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left-one {
-                    min-height: 32px;
-                    width: 32px;
-                    padding-bottom: 0;
-                }
-            }
-
-            .menu-left-icon {
-                float: left;
-                margin-right: 5px;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-icon {
-                    margin-right: 0;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-icon {
-                    margin-right: 0;
-                }
-            }
-
-            .menu-left-modname p {
-                font-size: 0.6em;
-                font-style: italic;
-            }
-
-            .menu-left-title p {
-                font-size: 1.1em;
-                font-weight: bold;
-            }
-
-            .menu-left-text p {
-                font-size: 0.8em;
-            }
-
-            @media screen and (max-width: 1020px) {
-                .menu-left-modname, .menu-left-title, .menu-left-text {
-                    display: none;
-                }
-
-                .menu-left-icon {
-                    margin-right: 0;
-                }
-            }
-
-            @media screen and (max-height: 500px) {
-                .menu-left-modname, .menu-left-title, .menu-left-text {
-                    display: none;
-                }
-
-                .menu-left-icon {
-                    margin-right: 0;
-                }
-            }
-
-            @media screen and (max-width: 575px) {
-                .menu-left-modname, .menu-left-title, .menu-left-text {
-                    display: none;
-                }
-
-                .menu-left-icon {
-                    margin-right: 0;
-                }
-            }
-
-            /* Correction affichage objets */
-            .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                width: 256px;
-            }
-
-            @media screen and (min-width: 320px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 256px;
-                }
-            }
-
-            @media screen and (min-width: 480px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 256px;
-                }
-            }
-
-            @media screen and (min-width: 600px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 343px;
-                }
-            }
-
-            @media screen and (min-width: 768px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 511px;
-                }
-            }
-
-            @media screen and (min-width: 1024px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 767px;
-                }
-            }
-
-            @media screen and (min-width: 1200px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 943px;
-                }
-            }
-
-            @media screen and (min-width: 1600px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1343px;
-                }
-            }
-
-            @media screen and (min-width: 1920px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1663px;
-                }
-            }
-
-            @media screen and (min-width: 2048px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 1791px;
-                }
-            }
-
-            @media screen and (min-width: 2400px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 2143px;
-                }
-            }
-
-            @media screen and (min-width: 3840px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 3583px;
-                }
-            }
-
-            @media screen and (min-width: 4096px) {
-                .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
-                    width: 3839px;
-                }
-            }
-
-            .objectsListContent {
-                background: rgba(255, 255, 255, 0.1);
-            }
-
-            .informationDisplayMessage {
-                background: rgba(0, 0, 0, 0.5);
-            }
-
-            .informationDisplayInfo {
-                background: rgba(255, 255, 255, 0.5);
-            }
-
-            .titleContentDiv {
-                background: rgba(255, 255, 255, 0.5);
-            }
-
-            .titleContent h1 {
-                color: #333333;
-            }
-        </style>
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on application.
+*
+* (c) <?= Application::APPLICATION_LICENCE ?> <?= Application::APPLICATION_AUTHOR ?> - <?php echo Application::APPLICATION_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+html, body {
+    font-family: Sans-Serif, monospace, Arial, Helvetica;
+    font-stretch: condensed;
+    font-size: 0.9em;
+    text-align: left;
+    min-height: 100%;
+    width: 100%;
+}
+
+@media screen {
+    body {
+        background: #f0f0f0 url("<?php echo 'o/'.$background; ?>") no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+    }
+}
+
+@media print {
+    body {
+        background: #ffffff;
+    }
+}
+
+.logoFloatLeft {
+    float: left;
+    margin: 5px;
+    height: 64px;
+    width: 64px;
+}
+
+.floatLeft {
+    float: left;
+    margin-right: 5px;
+}
+
+.floatRight {
+    float: right;
+    margin-left: 5px;
+}
+
+.textAlignLeft {
+    text-align: left;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+.iconInlineDisplay {
+    height: 16px;
+    width: 16px;
+}
+
+.iconNormalDisplay {
+    height: 64px;
+    width: 64px;
+}
+
+.hideOnSmallMedia {
+    display: block;
+}
+
+.divHeaderH1, .divHeaderH2 {
+    overflow: hidden;
+}
+
+.layout-header {
+    height: 74px;
+    background: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
+}
+
+.layout-header {
+    border-bottom-style: solid;
+    border-bottom-color: #222222;
+    border-bottom-width: 5px;
+}
+
+.layout-footer {
+    height: auto;
+    background: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
+}
+
+.layout-footer {
+    border-top-style: solid;
+    border-top-color: #222222;
+    border-top-width: 5px;
+}
+
+.header-left {
+    margin: 5px 0 5px 5px;
+}
+
+.header-left2 {
+    margin: 5px;
+    height: 64px;
+    width: 207px;
+    float: left;
+}
+
+.header-left2 img {
+    margin-right: 5px;
+}
+
+.layout-header .layoutObject {
+    float: left;
+}
+
+.layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName {
+    overflow: visible;
+}
+
+.layout-header .layoutObject .objectTitle .objectTitleText {
+    background: none;
+    color: #ffffff;
+}
+
+.layout-header .layoutObject .objectTitle .objectTitleText a {
+    color: #ffffff;
+}
+
+.header-right {
+    margin: 5px;
+}
+
+.text a {
+    color: #000000;
+}
+
+/* Liserets de verrouillage. */
+.headerUnlock {
+    border-bottom-color: #e0000e;
+}
+
+.footerUnlock {
+    border-top-color: #e0000e;
+}
+
+/* Le menu de gauche, contextuel et toujours visible même partiellement. */
+.layout-menu-left {
+    display: inline;
+    min-width: 217px;
+    max-width: 217px;
+    min-height: 100px;
+    margin: 0;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    margin-top: 120px;
+}
+
+@media screen and (max-width: 1020px) {
+    .layout-menu-left {
+        min-width: 74px;
+        max-width: 74px;
+        margin-right: 10px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .layout-menu-left {
+        min-width: 32px;
+        max-width: 32px;
+        margin-right: 5px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .layout-menu-left {
+        min-width: 32px;
+        max-width: 32px;
+        margin-right: 5px;
+    }
+}
+
+.menu-left {
+    width: 217px;
+    color: #000000;
+    background: rgba(255, 255, 255, 0.2);
+    background-origin: border-box;
+}
+
+.menu-left img {
+    height: 64px;
+    width: 64px;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left {
+        width: 74px;;
+    }
+
+    .menu-left img {
+        height: 64px;
+        width: 64px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left {
+        width: 32px;
+    }
+
+    .menu-left img {
+        height: 32px;
+        width: 32px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left {
+        width: 32px;
+    }
+
+    .menu-left img {
+        height: 32px;
+        width: 32px;
+    }
+}
+
+.menu-left-module {
+    height: 64px;
+    width: 207px;
+    padding: 5px;
+    margin-bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    background-origin: border-box;
+    color: #ffffff;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-module {
+        height: 64px;
+        width: 64px;
+        padding: 5px;
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-module {
+        height: 32px;
+        width: 32px;
+        padding: 0;
+        margin-bottom: 5px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left-module {
+        height: 32px;
+        width: 32px;
+        padding: 0;
+        margin-bottom: 5px;
+    }
+}
+
+.menu-left-links {
+    width: 207px;
+    padding: 5px;
+    padding-bottom: 0;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-links {
+        width: 64px;
+        padding: 5px;
+        padding-bottom: 0;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-links {
+        width: 32px;
+        padding: 0;
+        padding-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left-links {
+        width: 32px;
+        padding: 0;
+        padding-bottom: 0;
+    }
+}
+
+.menu-left-interlinks {
+    height: 15px;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-interlinks {
+        height: 10px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-interlinks {
+        height: 5px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left-interlinks {
+        height: 5px;
+    }
+}
+
+.menu-left-one {
+    clear: both;
+    padding-bottom: 5px;
+    width: 207px;
+    min-height: 64px;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-one {
+        min-height: 64px;
+        width: 64px;
+        padding-bottom: 5px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-one {
+        min-height: 32px;
+        width: 32px;
+        padding-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left-one {
+        min-height: 32px;
+        width: 32px;
+        padding-bottom: 0;
+    }
+}
+
+.menu-left-icon {
+    float: left;
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-icon {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-icon {
+        margin-right: 0;
+    }
+}
+
+.menu-left-modname p {
+    font-size: 0.6em;
+    font-style: italic;
+}
+
+.menu-left-title p {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.menu-left-text p {
+    font-size: 0.8em;
+}
+
+@media screen and (max-width: 1020px) {
+    .menu-left-modname, .menu-left-title, .menu-left-text {
+        display: none;
+    }
+
+    .menu-left-icon {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .menu-left-modname, .menu-left-title, .menu-left-text {
+        display: none;
+    }
+
+    .menu-left-icon {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .menu-left-modname, .menu-left-title, .menu-left-text {
+        display: none;
+    }
+
+    .menu-left-icon {
+        margin-right: 0;
+    }
+}
+
+/* Correction affichage objets */
+.objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+    width: 256px;
+}
+
+@media screen and (min-width: 320px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 256px;
+    }
+}
+
+@media screen and (min-width: 480px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 256px;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 343px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 511px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 767px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 943px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 1343px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 1663px;
+    }
+}
+
+@media screen and (min-width: 2048px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 1791px;
+    }
+}
+
+@media screen and (min-width: 2400px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 2143px;
+    }
+}
+
+@media screen and (min-width: 3840px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 3583px;
+    }
+}
+
+@media screen and (min-width: 4096px) {
+    .objectDisplayTinyLong, .objectDisplaySmallLong, .objectDisplayMediumLong, .objectDisplayLargeLong, .objectDisplayFullLong {
+        width: 3839px;
+    }
+}
+
+.objectsListContent {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.informationDisplayMessage {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.informationDisplayInfo {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.titleContentDiv {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.titleContent h1 {
+    color: #333333;
+}
+
         <?php
 
         // Ajout de la partie CSS du module en cours d'utilisation, si présent.

@@ -690,11 +690,10 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
             <?php
-            $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
+            echo '<style>';
             $this->commonCSS();
             $this->displayCSS();
-
-            $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000'); // Log
+            echo '</style>';
             $this->_displayScripts();
             ?>
 
@@ -753,293 +752,308 @@ Nfpq7EizdAdFUfYz0yz9LTvN7fKGAPhH0DmLH0x8vVVWLBYrxWLxVJTQjY+mGgAaABoAGgDOsv0NZwFC
         $backgroundOid = $backgroundInstance->getUpdateNID(true, false);
         ?>
 
-        <style>
-            html, body {
-                font-family: Sans-Serif, monospace, Arial, Helvetica;
-                font-stretch: condensed;
-                font-size: 0.9em;
-                text-align: left;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on application.
+*
+* (c) <?= Application::APPLICATION_LICENCE ?> <?= Application::APPLICATION_AUTHOR ?> - <?php echo Application::APPLICATION_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+html, body {
+    font-family: Sans-Serif, monospace, Arial, Helvetica;
+    font-stretch: condensed;
+    font-size: 0.9em;
+    text-align: left;
+}
 
-            @media screen {
-                body {
-                    background: #f0f0f0 url("<?php echo "o/$backgroundOid"; ?>") no-repeat;
-                    background-position: center center;
-                    background-size: cover;
-                    background-attachment: fixed;
-                    -webkit-background-size: cover;
-                    -moz-background-size: cover;
-                    -o-background-size: cover;
-                }
-            }
+@media screen {
+    body {
+        background: #f0f0f0 url("<?php echo "o/$backgroundOid"; ?>") no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+    }
+}
 
-            @media print {
-                body {
-                    background: #ffffff;
-                }
-            }
+@media print {
+    body {
+        background: #ffffff;
+    }
+}
 
-            .floatLeft {
-                float: left;
-                margin-right: 5px;
-            }
+.floatLeft {
+    float: left;
+    margin-right: 5px;
+}
 
-            .floatRight {
-                float: right;
-                margin-left: 5px;
-            }
+.floatRight {
+    float: right;
+    margin-left: 5px;
+}
 
-            .textAlignLeft {
-                text-align: left;
-            }
+.textAlignLeft {
+    text-align: left;
+}
 
-            .textAlignRight {
-                text-align: right;
-            }
+.textAlignRight {
+    text-align: right;
+}
 
-            .textAlignCenter {
-                text-align: center;
-            }
+.textAlignCenter {
+    text-align: center;
+}
 
-            .iconInlineDisplay {
-                height: 16px;
-                width: 16px;
-            }
+.iconInlineDisplay {
+    height: 16px;
+    width: 16px;
+}
 
-            .iconNormalDisplay {
-                height: 64px;
-                width: 64px;
-            }
+.iconNormalDisplay {
+    height: 64px;
+    width: 64px;
+}
 
-            .hideOnSmallMedia {
-                display: block;
-            }
+.hideOnSmallMedia {
+    display: block;
+}
 
-            .divHeaderH1, .divHeaderH2 {
-                overflow: hidden;
-            }
+.divHeaderH1, .divHeaderH2 {
+    overflow: hidden;
+}
 
-            .layout-header {
-                height: 74px;
-                background: rgba(34, 34, 34, 0.8);
-                color: #ffffff;
-            }
+.layout-header {
+    height: 74px;
+    background: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
+}
 
-            .layout-header {
-                border-bottom-style: solid;
-                border-bottom-color: #222222;
-                border-bottom-width: 5px;
-            }
+.layout-header {
+    border-bottom-style: solid;
+    border-bottom-color: #222222;
+    border-bottom-width: 5px;
+}
 
-            .layout-footer {
-                height: auto;
-                background: rgba(34, 34, 34, 0.8);
-                color: #ffffff;
-            }
+.layout-footer {
+    height: auto;
+    background: rgba(34, 34, 34, 0.8);
+    color: #ffffff;
+}
 
-            .layout-footer {
-                border-top-style: solid;
-                border-top-color: #222222;
-                border-top-width: 5px;
-            }
+.layout-footer {
+    border-top-style: solid;
+    border-top-color: #222222;
+    border-top-width: 5px;
+}
 
-            .header-left {
-                margin: 5px 0 5px 5px;
-            }
+.header-left {
+    margin: 5px 0 5px 5px;
+}
 
-            .header-left2 {
-                margin: 5px;
-                height: 64px;
-                width: 207px;
-                float: left;
-            }
+.header-left2 {
+    margin: 5px;
+    height: 64px;
+    width: 207px;
+    float: left;
+}
 
-            .header-left2 img {
-                margin-right: 5px;
-            }
+.header-left2 img {
+    margin-right: 5px;
+}
 
-            .layout-header .layoutObject {
-                float: left;
-            }
+.layout-header .layoutObject {
+    float: left;
+}
 
-            .layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName {
-                overflow: visible;
-            }
+.layout-header .layoutObject .objectTitle .objectTitleText .objectTitleMediumName {
+    overflow: visible;
+}
 
-            .layout-header .layoutObject .objectTitle .objectTitleText {
-                background: none;
-                color: #ffffff;
-            }
+.layout-header .layoutObject .objectTitle .objectTitleText {
+    background: none;
+    color: #ffffff;
+}
 
-            .layout-header .layoutObject .objectTitle .objectTitleText a {
-                color: #ffffff;
-            }
+.layout-header .layoutObject .objectTitle .objectTitleText a {
+    color: #ffffff;
+}
 
-            .header-right {
-                margin: 5px;
-            }
+.header-right {
+    margin: 5px;
+}
 
-            .informationDisplayMessage {
-                background: rgba(0, 0, 0, 0.5);
-            }
+.informationDisplayMessage {
+    background: rgba(0, 0, 0, 0.5);
+}
 
-            .informationDisplayInfo {
-                background: rgba(255, 255, 255, 0.5);
-            }
+.informationDisplayInfo {
+    background: rgba(255, 255, 255, 0.5);
+}
 
-            .titleContentDiv {
-                background: rgba(255, 255, 255, 0.5);
-            }
+.titleContentDiv {
+    background: rgba(255, 255, 255, 0.5);
+}
 
-            .titleContent h1 {
-                color: #333333;
-            }
+.titleContent h1 {
+    color: #333333;
+}
 
-            /* Liserets de verrouillage. */
-            .headerUnlock {
-                border-bottom-color: #e0000e;
-            }
+/* Liserets de verrouillage. */
+.headerUnlock {
+    border-bottom-color: #e0000e;
+}
 
-            .footerUnlock {
-                border-top-color: #e0000e;
-            }
+.footerUnlock {
+    border-top-color: #e0000e;
+}
 
-            /* Les menus */
-            .menuListContentActionDiv a:link, .menuListContentActionDiv a:visited {
-                font-weight: normal;
-                text-decoration: none;
-            }
+/* Les menus */
+.menuListContentActionDiv a:link, .menuListContentActionDiv a:visited {
+    font-weight: normal;
+    text-decoration: none;
+}
 
-            .menuListContentActionDiv a:hover, .menuListContentActionDiv a:active {
-                font-weight: bold;
-                text-decoration: none;
-            }
+.menuListContentActionDiv a:hover, .menuListContentActionDiv a:active {
+    font-weight: bold;
+    text-decoration: none;
+}
 
-            .menuListContentAction {
-                background: rgba(255, 255, 255, 0.5);
-                height: 64px;
-                margin-bottom: 5px;
-                margin-right: 5px;
-                text-align: left;
-                color: #000000;
-            }
+.menuListContentAction {
+    background: rgba(255, 255, 255, 0.5);
+    height: 64px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    text-align: left;
+    color: #000000;
+}
 
 
-            /* Les rubriques */
-            #lang {
-            }
+/* Les rubriques */
+#lang {
+}
 
-            #recovery {
-            }
+#recovery {
+}
 
-            #help {
-            }
+#help {
+}
 
-            /* Spécifique à la partie authentification */
-            /*.klictyModuleEntityAuthCheckOK { min-height:32px; background:rgba(0,224,14,0.5); margin:0; padding:5px; clear:both; text-align:center; }
-			.klictyModuleEntityAuthCheckOK img { width:32px; height:32px; }
-			.klictyModuleEntityAuthCheckWarn { min-height:32px; background:rgba(224,224,0,1); margin:0; padding:5px; clear:both; text-align:center; }
-			.klictyModuleEntityAuthCheckWarn img { width:32px; height:32px; }
-			.klictyModuleEntityAuthCheckError { min-height:32px; background:rgba(224,14,0,1); margin:0; padding:5px; clear:both; text-align:center; }
-			.klictyModuleEntityAuthCheckError img { width:32px; height:32px; }
-			#klictyModuleEntityAuthUnlock { background:rgba(255,224,14,0.6); color:#b00000; }
-			#klictyModuleEntityAuthUnlock input { background:#ffffff; color:#b00000; }
-			#klictyModuleEntityAuthLock   { background:rgba(255,224,14,0.6); }
-			#klictyModuleEntityAuthLock p	{ color:#b00000; text-align:center; }
-			.klictyInput { margin-top:2px; margin-bottom:2px; }*/
+/* Spécifique à la partie authentification */
+/*.klictyModuleEntityAuthCheckOK { min-height:32px; background:rgba(0,224,14,0.5); margin:0; padding:5px; clear:both; text-align:center; }
+.klictyModuleEntityAuthCheckOK img { width:32px; height:32px; }
+.klictyModuleEntityAuthCheckWarn { min-height:32px; background:rgba(224,224,0,1); margin:0; padding:5px; clear:both; text-align:center; }
+.klictyModuleEntityAuthCheckWarn img { width:32px; height:32px; }
+.klictyModuleEntityAuthCheckError { min-height:32px; background:rgba(224,14,0,1); margin:0; padding:5px; clear:both; text-align:center; }
+.klictyModuleEntityAuthCheckError img { width:32px; height:32px; }
+#klictyModuleEntityAuthUnlock { background:rgba(255,224,14,0.6); color:#b00000; }
+#klictyModuleEntityAuthUnlock input { background:#ffffff; color:#b00000; }
+#klictyModuleEntityAuthLock   { background:rgba(255,224,14,0.6); }
+#klictyModuleEntityAuthLock p	{ color:#b00000; text-align:center; }
+.klictyInput { margin-top:2px; margin-bottom:2px; }*/
 
-            /* Spécifique à la première page */
-            #welcome {
-                padding-top: 140px;
-                padding-bottom: 140px;
-                background: none;
-                font-size: 2em;
-            }
+/* Spécifique à la première page */
+#welcome {
+    padding-top: 140px;
+    padding-bottom: 140px;
+    background: none;
+    font-size: 2em;
+}
 
-            #iconsWelcome {
-                padding: 20px;
-                clear: both;
-                font-size: 1.2em;
-                background: rgba(255, 255, 255, 0.25);
-                background-origin: border-box;
-                text-align: center;
-                font-weight: bold;
-                color: #000000;
-                min-height: 80px;
-            }
+#iconsWelcome {
+    padding: 20px;
+    clear: both;
+    font-size: 1.2em;
+    background: rgba(255, 255, 255, 0.25);
+    background-origin: border-box;
+    text-align: center;
+    font-weight: bold;
+    color: #000000;
+    min-height: 80px;
+}
 
-            #iconWelcome1 {
-                position: absolute;
-                left: 33%;
-                width: 120px;
-                margin-left: -60px;
-            }
+#iconWelcome1 {
+    position: absolute;
+    left: 33%;
+    width: 120px;
+    margin-left: -60px;
+}
 
-            #iconWelcome2 {
-                position: absolute;
-                right: 50%;
-                width: 120px;
-                margin-right: -60px;
-            }
+#iconWelcome2 {
+    position: absolute;
+    right: 50%;
+    width: 120px;
+    margin-right: -60px;
+}
 
-            #iconWelcome3 {
-                position: absolute;
-                right: 33%;
-                width: 120px;
-                margin-right: -60px;
-            }
+#iconWelcome3 {
+    position: absolute;
+    right: 33%;
+    width: 120px;
+    margin-right: -60px;
+}
 
-            #welcomeFooter {
-                padding: 20px;
-                margin-top: 120px;
-            }
+#welcomeFooter {
+    padding: 20px;
+    margin-top: 120px;
+}
 
-            #welcomeFooter p {
-                padding: 20px;
-                text-align: center;
-                color: #000000;
-            }
+#welcomeFooter p {
+    padding: 20px;
+    text-align: center;
+    color: #000000;
+}
 
-            #welcomeFooter a {
-                font-weight: bold;
-                text-decoration: none;
-            }
+#welcomeFooter a {
+    font-weight: bold;
+    text-decoration: none;
+}
 
-            #welcomeFooter a:link, #welcomeFooter a:visited {
-                color: #545454;
-            }
+#welcomeFooter a:link, #welcomeFooter a:visited {
+    color: #545454;
+}
 
-            #welcomeFooter a:hover, #welcomeFooter a:active {
-                color: #ababab;
-            }
+#welcomeFooter a:hover, #welcomeFooter a:active {
+    color: #ababab;
+}
 
-            @media screen and (max-height: 500px) {
-                #welcomeFooter {
-                    padding: 5px;
-                    margin-top: 0;
-                }
+@media screen and (max-height: 500px) {
+    #welcomeFooter {
+        padding: 5px;
+        margin-top: 0;
+    }
 
-                #welcomeFooter p {
-                    padding: 0;
-                }
-            }
+    #welcomeFooter p {
+        padding: 0;
+    }
+}
 
-            /* Pour les bulles d'aide. */
-            .infobulle {
-                position: absolute;
-                visibility: hidden;
-                padding: 5px;
-                color: #ffffff;
-                background: rgba(0, 0, 0, 0.6);
-                width: 700px;
-                text-align: justify;
-            }
+/* Pour les bulles d'aide. */
+.infobulle {
+    position: absolute;
+    visibility: hidden;
+    padding: 5px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.6);
+    width: 700px;
+    text-align: justify;
+}
 
-            /* Connexion */
-            #klictyModuleEntityConnect {
-                text-align: center;
-            }
-        </style>
+/* Connexion */
+#klictyModuleEntityConnect {
+    text-align: center;
+}
+
         <?php
     }
 

@@ -172,74 +172,88 @@ class DisplayInformation extends DisplayItemIconMessageSizeable implements Displ
     {
         ?>
 
-        <style type="text/css">
-            /* CSS for DisplayInformation(). */
-            .layoutInformation { margin: 0; border: 0; background: none; display: inline-block; vertical-align: top; }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.layoutInformation { margin: 0; border: 0; background: none; display: inline-block; vertical-align: top; }
 
-            .informationDisplayTiny { font-size: 16px; width: 12em; }
-            .informationDisplaySmall { font-size: 32px; width: 8em; }
-            .informationDisplayMedium { font-size: 64px; width: 6em; }
-            .informationDisplayLarge { font-size: 128px; width: 5em; }
-            .informationDisplayFull { font-size: 256px; width: 4em; }
+.informationDisplayTiny { font-size: 16px; width: 12em; }
+.informationDisplaySmall { font-size: 32px; width: 8em; }
+.informationDisplayMedium { font-size: 64px; width: 6em; }
+.informationDisplayLarge { font-size: 128px; width: 5em; }
+.informationDisplayFull { font-size: 256px; width: 4em; }
 
-            .informationDisplayTinyShort, .informationDisplayTinyLong { min-height: 1em; }
-            .informationDisplayTinySquare { height: 12em; }
-            .informationDisplaySmallShort, .informationDisplaySmallLong { min-height: 1em; }
-            .informationDisplaySmallSquare { height: 8em; }
-            .informationDisplayMediumShort, .informationDisplayMediumLong { min-height: 1em; }
-            .informationDisplayMediumSquare { height: 6em; }
-            .informationDisplayLargeShort, .informationDisplayLargeLong { min-height: 1em; }
-            .informationDisplayLargeSquare { height: 5em; }
-            .informationDisplayFullShort, .informationDisplayFullLong { min-height: 1em; }
-            .informationDisplayFullSquare { height: 4em; }
+.informationDisplayTinyShort, .informationDisplayTinyLong { min-height: 1em; }
+.informationDisplayTinySquare { height: 12em; }
+.informationDisplaySmallShort, .informationDisplaySmallLong { min-height: 1em; }
+.informationDisplaySmallSquare { height: 8em; }
+.informationDisplayMediumShort, .informationDisplayMediumLong { min-height: 1em; }
+.informationDisplayMediumSquare { height: 6em; }
+.informationDisplayLargeShort, .informationDisplayLargeLong { min-height: 1em; }
+.informationDisplayLargeSquare { height: 5em; }
+.informationDisplayFullShort, .informationDisplayFullLong { min-height: 1em; }
+.informationDisplayFullSquare { height: 4em; }
 
-            .informationDisplay {}
-            .informationDisplay a:link{ text-decoration: none; }
-            .informationDisplay a:visited{ text-decoration: none; }
-            .informationDisplay a:hover{ text-decoration: underline; }
-            .informationDisplay a:active{ text-decoration: underline; }
+.informationDisplay {}
+.informationDisplay a:link{ text-decoration: none; }
+.informationDisplay a:visited{ text-decoration: none; }
+.informationDisplay a:hover{ text-decoration: underline; }
+.informationDisplay a:active{ text-decoration: underline; }
 
-            /* Colors */
-            .informationDisplayMessage     { background: #333333; }
-            .informationDisplayOk          { background: #103020; }
-            .informationDisplayWarn        { background: #ffe080; }
-            .informationDisplayError       { background: #ffa0a0; }
-            .informationDisplayInformation { background: #ababab; }
-            .informationDisplayGo          { background: #abbcab; }
-            .informationDisplayBack        { background: #abbccd; }
+/* Colors */
+.informationDisplayMessage     { background: #333333; }
+.informationDisplayOk          { background: #103020; }
+.informationDisplayWarn        { background: #ffe080; }
+.informationDisplayError       { background: #ffa0a0; }
+.informationDisplayInformation { background: #ababab; }
+.informationDisplayGo          { background: #abbcab; }
+.informationDisplayBack        { background: #abbccd; }
 
-            .informationTitleIcons img { background: none; }
-            .informationTitleText { background: none; height: auto; }
+.informationTitleIcons img { background: none; }
+.informationTitleText { background: none; height: auto; }
 
-            /*.informationDisplayTiny {}
-            .informationDisplaySmall { min-height: 32px; font-size: 32px; border: 0; }
-            .informationDisplayMedium { min-height: 64px; font-size: 64px; border: 0; }
-            .informationDisplayLarge { min-height: 128px; font-size: 128px; border: 0; }
-            .informationDisplayFull { min-height: 256px; font-size: 256px; border: 0; }*/
+/*.informationDisplayTiny {}
+.informationDisplaySmall { min-height: 32px; font-size: 32px; border: 0; }
+.informationDisplayMedium { min-height: 64px; font-size: 64px; border: 0; }
+.informationDisplayLarge { min-height: 128px; font-size: 128px; border: 0; }
+.informationDisplayFull { min-height: 256px; font-size: 256px; border: 0; }*/
 
-            .informationTitleTinyText  { min-height: 16px; background: none; }
-            .informationTitleSmallText  { min-height: 30px; text-align: left; padding: 1px 0 1px 1px; color: #000000; }
-            .informationTitleMediumText { min-height: 58px; text-align: left; padding: 3px 0 3px 3px; color: #000000; }
-            .informationTitleLargeText  { min-height: 122px; text-align: left; padding: 3px 0 3px 3px; color: #000000; }
-            .informationTitleFullText   { min-height: 246px; text-align: left; padding: 5px 0 5px 5px; color: #000000; }
+.informationTitleTinyText  { min-height: 16px; background: none; }
+.informationTitleSmallText  { min-height: 30px; text-align: left; padding: 1px 0 1px 1px; color: #000000; }
+.informationTitleMediumText { min-height: 58px; text-align: left; padding: 3px 0 3px 3px; color: #000000; }
+.informationTitleLargeText  { min-height: 122px; text-align: left; padding: 3px 0 3px 3px; color: #000000; }
+.informationTitleFullText   { min-height: 246px; text-align: left; padding: 5px 0 5px 5px; color: #000000; }
 
-            .informationTitleName { font-weight: normal; overflow: hidden; height: auto; }
-            .informationTitleNameMessage, .informationTitleRefsMessage { color: #ffffff; }
-            .informationTitleNameOk, .informationTitleRefsOk { color: #ffffff; }
-            .informationTitleNameWarn, .informationTitleRefsWarn { color: #ff8000; }
-            .informationTitleNameGo, .informationTitleRefsGo { color: #ffffff; }
-            .informationTitleNameBack, .informationTitleRefsBack { color: #ffffff; }
-            .informationTitleNameError, .informationTitleRefsError { color: #ff0000; }
-            .informationTitleNameInformation, .informationTitleRefsInformation { color: #000000; }
-            .informationTitleNameWarn { font-weight: bold; }
-            .informationTitleNameError { font-weight: bold; }
+.informationTitleName { font-weight: normal; overflow: hidden; height: auto; }
+.informationTitleNameMessage, .informationTitleRefsMessage { color: #ffffff; }
+.informationTitleNameOk, .informationTitleRefsOk { color: #ffffff; }
+.informationTitleNameWarn, .informationTitleRefsWarn { color: #ff8000; }
+.informationTitleNameGo, .informationTitleRefsGo { color: #ffffff; }
+.informationTitleNameBack, .informationTitleRefsBack { color: #ffffff; }
+.informationTitleNameError, .informationTitleRefsError { color: #ff0000; }
+.informationTitleNameInformation, .informationTitleRefsInformation { color: #000000; }
+.informationTitleNameWarn { font-weight: bold; }
+.informationTitleNameError { font-weight: bold; }
 
-            .informationTitleTinyName { height: 1rem; line-height: 1rem; font-size: 1rem; }
-            .informationTitleSmallName { line-height: 14px; overflow: hidden; white-space: normal; font-size: 1rem; }
-            .informationTitleMediumName { line-height: 22px; overflow: hidden; white-space: normal; font-size: 1.2rem; }
-            .informationTitleLargeName { line-height: 30px; overflow: hidden; white-space: normal; font-size: 1.5rem; }
-            .informationTitleFullName { line-height: 62px; overflow: hidden; white-space: normal; font-size: 2rem; }
-        </style>
+.informationTitleTinyName { height: 1rem; line-height: 1rem; font-size: 1rem; }
+.informationTitleSmallName { line-height: 14px; overflow: hidden; white-space: normal; font-size: 1rem; }
+.informationTitleMediumName { line-height: 22px; overflow: hidden; white-space: normal; font-size: 1.2rem; }
+.informationTitleLargeName { line-height: 30px; overflow: hidden; white-space: normal; font-size: 1.5rem; }
+.informationTitleFullName { line-height: 62px; overflow: hidden; white-space: normal; font-size: 2rem; }
+
         <?php
     }
 }

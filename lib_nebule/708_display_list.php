@@ -227,12 +227,26 @@ class DisplayList extends DisplayItem implements DisplayInterface {
     public static function displayCSS(): void {
         ?>
 
-        <style>
-            /* CSS de la fonction DisplayList(). */
-            .layoutList { background: rgb(69 69 69 / 15%); }
-            .listContent { padding: <?php echo Displays::DEFAULT_DISPLAY_GAP_COLUMN; ?>px; display: grid; }
-            /* .listItemContent { padding: 0; margin: 0; } */
-        </style>
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.layoutList { background: rgb(69 69 69 / 15%); }
+.listContent { padding: <?php echo Displays::DEFAULT_DISPLAY_GAP_COLUMN; ?>px; display: grid; }
+/* .listItemContent { padding: 0; margin: 0; } */
+
         <?php
     }
 }

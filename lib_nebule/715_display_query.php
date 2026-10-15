@@ -207,153 +207,167 @@ class DisplayQuery extends DisplayInformation implements DisplayInterface {
     {
         ?>
 
-        <style type="text/css">
-            /* CSS for DisplayQuery(). */
-            .queryTitleIcons img {
-                background: none;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.queryTitleIcons img {
+    background: none;
+}
 
-            .queryDisplay {
-                height: auto;
-            }
+.queryDisplay {
+    height: auto;
+}
 
-            .queryDisplayPassword {
-                background: rgba(255, 224, 64, 0.666);
-            }
+.queryDisplayPassword {
+    background: rgba(255, 224, 64, 0.666);
+}
 
-            .queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile, .queryDisplayTextarea {
-                background: rgba(171, 171, 171, 0.5);
-            }
+.queryDisplayQuery, .queryDisplaySelect, .queryDisplayBoolean, .queryDisplayText, .queryDisplayFile, .queryDisplayTextarea {
+    background: rgba(171, 171, 171, 0.5);
+}
 
-            .queryTitleText {
-                background: none;
-                height: auto;
-            }
+.queryTitleText {
+    background: none;
+    height: auto;
+}
 
-            .queryDisplayTiny {
-            }
+.queryDisplayTiny {
+}
 
-            .queryDisplaySmall {
-                min-height: 32px;
-                font-size: 32px;
-                border: 0;
-            }
+.queryDisplaySmall {
+    min-height: 32px;
+    font-size: 32px;
+    border: 0;
+}
 
-            .queryDisplayMedium {
-                min-height: 64px;
-                font-size: 64px;
-                border: 0;
-            }
+.queryDisplayMedium {
+    min-height: 64px;
+    font-size: 64px;
+    border: 0;
+}
 
-            .queryDisplayLarge {
-                min-height: 128px;
-                font-size: 128px;
-                border: 0;
-            }
+.queryDisplayLarge {
+    min-height: 128px;
+    font-size: 128px;
+    border: 0;
+}
 
-            .queryDisplayFull {
-                min-height: 256px;
-                font-size: 256px;
-                border: 0;
-            }
+.queryDisplayFull {
+    min-height: 256px;
+    font-size: 256px;
+    border: 0;
+}
 
-            .queryTitleTinyText {
-                min-height: 16px;
-                background: none;
-            }
+.queryTitleTinyText {
+    min-height: 16px;
+    background: none;
+}
 
-            .queryTitleSmallText {
-                min-height: 30px;
-                text-align: left;
-                padding: 1px 0 1px 1px;
-                color: #000000;
-            }
+.queryTitleSmallText {
+    min-height: 30px;
+    text-align: left;
+    padding: 1px 0 1px 1px;
+    color: #000000;
+}
 
-            .queryTitleMediumText {
-                min-height: 58px;
-                text-align: left;
-                padding: 3px 0 3px 3px;
-                color: #000000;
-            }
+.queryTitleMediumText {
+    min-height: 58px;
+    text-align: left;
+    padding: 3px 0 3px 3px;
+    color: #000000;
+}
 
-            .queryTitleLargeText {
-                min-height: 122px;
-                text-align: left;
-                padding: 3px 0 3px 3px;
-                color: #000000;
-            }
+.queryTitleLargeText {
+    min-height: 122px;
+    text-align: left;
+    padding: 3px 0 3px 3px;
+    color: #000000;
+}
 
-            .queryTitleFullText {
-                min-height: 246px;
-                text-align: left;
-                padding: 5px 0 5px 5px;
-                color: #000000;
-            }
+.queryTitleFullText {
+    min-height: 246px;
+    text-align: left;
+    padding: 5px 0 5px 5px;
+    color: #000000;
+}
 
-            .queryTitleName {
-                font-weight: normal;
-                overflow: hidden;
-                height: auto;
-            }
+.queryTitleName {
+    font-weight: normal;
+    overflow: hidden;
+    height: auto;
+}
 
-            .queryTitleNamePassword {
-                color: #ff8000;
-                font-weight: bold;
-            }
+.queryTitleNamePassword {
+    color: #ff8000;
+    font-weight: bold;
+}
 
-            .queryTitleNameQuery {
-                color: #000000;
-                font-weight: bold;
-            }
+.queryTitleNameQuery {
+    color: #000000;
+    font-weight: bold;
+}
 
-            .queryTitleTinyName {
-                height: 1rem;
-                line-height: 1rem;
-                font-size: 1rem;
-            }
+.queryTitleTinyName {
+    height: 1rem;
+    line-height: 1rem;
+    font-size: 1rem;
+}
 
-            .queryTitleSmallName {
-                line-height: 14px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1rem;
-            }
+.queryTitleSmallName {
+    line-height: 14px;
+    overflow: hidden;
+    white-space: normal;
+    font-size: 1rem;
+}
 
-            .queryTitleMediumName {
-                line-height: 22px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1.2rem;
-            }
+.queryTitleMediumName {
+    line-height: 22px;
+    overflow: hidden;
+    white-space: normal;
+    font-size: 1.2rem;
+}
 
-            .queryTitleLargeName {
-                line-height: 30px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 1.5rem;
-            }
+.queryTitleLargeName {
+    line-height: 30px;
+    overflow: hidden;
+    white-space: normal;
+    font-size: 1.5rem;
+}
 
-            .queryTitleFullName {
-                line-height: 62px;
-                overflow: hidden;
-                white-space: normal;
-                font-size: 2rem;
-            }
+.queryTitleFullName {
+    line-height: 62px;
+    overflow: hidden;
+    white-space: normal;
+    font-size: 2rem;
+}
 
-            .queryTitleName input {
-                margin: 10px 5px 0 0;
-            }
-            .queryTitleName input[type=text], input[type=email] {
-                width: 260px;
-            }
-            .queryTitleName input[type=password] {
-                width: 258px;
-            }
-            .queryTitleName input[type=submit] {
-                width: 27px;
-                font-weight: bold;
-            }
-        </style>
+.queryTitleName input {
+    margin: 10px 5px 0 0;
+}
+.queryTitleName input[type=text], input[type=email] {
+    width: 260px;
+}
+.queryTitleName input[type=password] {
+    width: 258px;
+}
+.queryTitleName input[type=submit] {
+    width: 27px;
+    font-weight: bold;
+}
+
         <?php
     }
 }

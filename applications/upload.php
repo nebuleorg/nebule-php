@@ -95,7 +95,7 @@ class Display extends Displays
         ?>
         <!DOCTYPE html>
         <html lang="">
-        <head>
+        <style>
             <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
             <title><?php echo Application::APPLICATION_NAME; ?></title>
             <link rel="icon" type="image/png" href="favicon.png"/>
@@ -103,14 +103,19 @@ class Display extends Displays
             <meta name="description" content="<?php echo Application::APPLICATION_NAME; ?>"/>
             <meta name="author" content="<?php echo Application::APPLICATION_AUTHOR . ' - ' . Application::APPLICATION_WEBSITE; ?>"/>
             <meta name="licence" content="<?php echo Application::APPLICATION_LICENCE; ?>"/>
+            <style>
             <?php
             $this->_metrologyInstance->addLog('Display css', Metrology::LOG_LEVEL_DEBUG, __METHOD__, '7fcf1976');
             $this->commonCSS();
             $this->displayCSS();
+            ?>
 
+            </style>
+            <?php
             $this->_metrologyInstance->addLog('Display vbs', Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'ecbd188e');
             $this->_displayScripts();
             ?>
+
         </head>
         <body>
         <div class="layout-header">
@@ -265,39 +270,54 @@ class Display extends Displays
     {
         ?>
 
-        <style>
-            .layout-content {
-                max-width: 86%;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on application.
+*
+* (c) <?= Application::APPLICATION_LICENCE ?> <?= Application::APPLICATION_AUTHOR ?> - <?php echo Application::APPLICATION_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.layout-content {
+    max-width: 86%;
+}
 
-            .layout-content > div {
-                min-width: 400px;
-                margin-bottom: 20px;
-                text-align: left;
-                color: #ababab;
-                white-space: normal;
-            }
+.layout-content > div {
+    min-width: 400px;
+    margin-bottom: 20px;
+    text-align: left;
+    color: #ababab;
+    white-space: normal;
+}
 
-            .header-left img {
-                margin: 2px;
-            }
+.header-left img {
+    margin: 2px;
+}
 
-            h1 {
-                font-family: monospace;
-                font-size: 1.4em;
-                font-weight: normal;
-                color: #ababab;
-            }
+h1 {
+    font-family: monospace;
+    font-size: 1.4em;
+    font-weight: normal;
+    color: #ababab;
+}
 
-            .newlink {
-                width: 100%;
-            }
+.newlink {
+    width: 100%;
+}
 
-            .result img {
-                height: 16px;
-                width: 16px;
-            }
-        </style>
+.result img {
+    height: 16px;
+    width: 16px;
+}
+
         <?php
     }
 

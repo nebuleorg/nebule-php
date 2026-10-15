@@ -127,65 +127,79 @@ class DisplayContent extends DisplayItemIconMessageSizeable implements DisplayIn
     {
         ?>
 
-        <style>
-            /* CSS for DisplayContent(). */
-            .objectContent {
-                font-size: 0.8rem;
-                border: 0;
-                padding: 3px 0 0 0;
-                margin: 0;
-                color: #000000;
-                overflow: auto;
-                clear: both;
-                max-width: 100%;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.objectContent {
+    font-size: 0.8rem;
+    border: 0;
+    padding: 3px 0 0 0;
+    margin: 0;
+    color: #000000;
+    overflow: auto;
+    clear: both;
+    max-width: 100%;
+}
 
-            .objectContentObject {
-            }
+.objectContentObject {
+}
 
-            .objectContentEntity {
-            }
+.objectContentEntity {
+}
 
-            .objectContentGroup {
-            }
+.objectContentGroup {
+}
 
-            .objectContentConversation {
-            }
+.objectContentConversation {
+}
 
-            .objectContentText {
-                font-size: 0.8rem;
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-                color: #000000;
-                font-family: sans-serif;
-            }
+.objectContentText {
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.666);
+    text-align: left;
+    color: #000000;
+    font-family: sans-serif;
+}
 
-            .objectContentCode {
-                font-size: 0.8rem;
-                background: rgba(255, 255, 255, 0.666);
-                text-align: left;
-                color: #000000;
-                font-family: monospace;
-            }
+.objectContentCode {
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.666);
+    text-align: left;
+    color: #000000;
+    font-family: monospace;
+}
 
-            .objectContentAudio {
-            }
+.objectContentAudio {
+}
 
-            .objectContentImage {
-                background: rgba(255, 255, 255, 0.12);
-                text-align: center;
-            }
+.objectContentImage {
+    background: rgba(255, 255, 255, 0.12);
+    text-align: center;
+}
 
-            .objectContentImage img {
-                height: auto;
-                max-width: 100%;
-            }
+.objectContentImage img {
+    height: auto;
+    max-width: 100%;
+}
 
-            .objectContentShort {
-                width: 378px;
-                max-height: 378px;
-            }
-        </style>
+.objectContentShort {
+    width: 378px;
+    max-height: 378px;
+}
+
         <?php
     }
 }

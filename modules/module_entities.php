@@ -561,191 +561,205 @@ class ModuleEntities extends Module {
     public function getCSS(): void {
         ?>
 
-        <style>
-            /* Création d'entité */
-            input {
-                background: rgba(255, 255, 255, 0.5);
-                color: #000000;
-                margin: 0;
-                margin-top: 5px;
-                border: 0;
-                box-shadow: initial;
-                padding: 5px;
-                background-origin: border-box;
-                text-align: left;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on module for application.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+input {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000000;
+    margin: 0;
+    margin-top: 5px;
+    border: 0;
+    box-shadow: initial;
+    padding: 5px;
+    background-origin: border-box;
+    text-align: left;
+}
 
-            .moduleEntitiesCreate {
-                margin-bottom: 60px;
-                clear: both;
-            }
+.moduleEntitiesCreate {
+    margin-bottom: 60px;
+    clear: both;
+}
 
-            .moduleEntitiesCreateHeader p {
-                font-weight: bold;
-                margin: 0;
-                padding: 0;
-            }
+.moduleEntitiesCreateHeader p {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
 
-            .moduleEntitiesCreateProperty {
-                clear: both;
-            }
+.moduleEntitiesCreateProperty {
+    clear: both;
+}
 
-            .moduleEntitiesCreatePropertyName {
-                float: left;
-                width: 25%;
-                text-align: right;
-                padding-top: 10px;
-            }
+.moduleEntitiesCreatePropertyName {
+    float: left;
+    width: 25%;
+    text-align: right;
+    padding-top: 10px;
+}
 
-            .moduleEntitiesCreatePropertyEntry {
-                margin-top: 2px;
-                margin-bottom: 2px;
-                float: right;
-                width: 70%;
-            }
+.moduleEntitiesCreatePropertyEntry {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    float: right;
+    width: 70%;
+}
 
-            .moduleEntitiesCreateSubmit {
-                clear: both;
-            }
+.moduleEntitiesCreateSubmit {
+    clear: both;
+}
 
-            .moduleEntitiesCreateSubmitEntry {
-                width: 100%;
-                text-align: center;
-            }
+.moduleEntitiesCreateSubmitEntry {
+    width: 100%;
+    text-align: center;
+}
 
-            #moduleEntitiesCreatePropertyEntryNom {
-                background: #ffffff;
-            }
+#moduleEntitiesCreatePropertyEntryNom {
+    background: #ffffff;
+}
 
-            #moduleEntitiesCreatePropertyNamePWD1 {
-                font-weight: bold;
-                text-align: left;
-            }
+#moduleEntitiesCreatePropertyNamePWD1 {
+    font-weight: bold;
+    text-align: left;
+}
 
-            #moduleEntitiesCreatePropertyEntryPWD1 {
-                background: #ffffff;
-            }
+#moduleEntitiesCreatePropertyEntryPWD1 {
+    background: #ffffff;
+}
 
-            #moduleEntitiesCreatePropertyEntryPWD2 {
-                background: #ffffff;
-            }
+#moduleEntitiesCreatePropertyEntryPWD2 {
+    background: #ffffff;
+}
 
-            /* Les logs et acts */
-            .moduleEntitiesActionText {
-                padding: 20px;
-                padding-left: 74px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-                clear: both;
-            }
+/* Les logs et acts */
+.moduleEntitiesActionText {
+    padding: 20px;
+    padding-left: 74px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+    clear: both;
+}
 
-            .moduleEntitiesActionTextList1 {
-                padding: 10px;
-                padding-left: 74px;
-                min-height: 64px;
-                background: rgba(230, 230, 230, 0.5);
-                background-origin: border-box;
-                color: #000000;
-                clear: both;
-            }
+.moduleEntitiesActionTextList1 {
+    padding: 10px;
+    padding-left: 74px;
+    min-height: 64px;
+    background: rgba(230, 230, 230, 0.5);
+    background-origin: border-box;
+    color: #000000;
+    clear: both;
+}
 
-            .moduleEntitiesActionTextList2 {
-                padding: 10px;
-                padding-left: 74px;
-                min-height: 64px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-                clear: both;
-            }
+.moduleEntitiesActionTextList2 {
+    padding: 10px;
+    padding-left: 74px;
+    min-height: 64px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+    clear: both;
+}
 
-            .moduleEntitiesActionDivIcon {
-                float: left;
-                margin-right: 5px;
-            }
+.moduleEntitiesActionDivIcon {
+    float: left;
+    margin-right: 5px;
+}
 
-            .moduleEntitiesActionDate {
-                float: right;
-                margin-left: 5px;
-                font-family: monospace;
-            }
+.moduleEntitiesActionDate {
+    float: right;
+    margin-left: 5px;
+    font-family: monospace;
+}
 
-            .moduleEntitiesActionTitle {
-                font-weight: bold;
-                font-size: 1.2em;
-            }
+.moduleEntitiesActionTitle {
+    font-weight: bold;
+    font-size: 1.2em;
+}
 
-            .moduleEntitiesActionType {
-                font-style: italic;
-                font-size: 0.8em;
-                margin-bottom: 10px;
-            }
+.moduleEntitiesActionType {
+    font-style: italic;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
 
-            .moduleEntitiesActionFromTo {
-            }
+.moduleEntitiesActionFromTo {
+}
 
-            /* Les propriétés */
-            .moduleEntitiesDescList1 {
-                padding: 5px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-                clear: both;
-            }
+/* Les propriétés */
+.moduleEntitiesDescList1 {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+    clear: both;
+}
 
-            .moduleEntitiesDescList2 {
-                padding: 5px;
-                background: rgba(230, 230, 230, 0.5);
-                background-origin: border-box;
-                color: #000000;
-                clear: both;
-            }
+.moduleEntitiesDescList2 {
+    padding: 5px;
+    background: rgba(230, 230, 230, 0.5);
+    background-origin: border-box;
+    color: #000000;
+    clear: both;
+}
 
-            .moduleEntitiesDescError {
-                padding: 5px;
-                background: rgba(0, 0, 0, 0.3);
-                background-origin: border-box;
-                clear: both;
-            }
+.moduleEntitiesDescError {
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    background-origin: border-box;
+    clear: both;
+}
 
-            .moduleEntitiesDescError .moduleEntitiesDescAttrib {
-                font-style: italic;
-                color: #202020;
-            }
+.moduleEntitiesDescError .moduleEntitiesDescAttrib {
+    font-style: italic;
+    color: #202020;
+}
 
-            .moduleEntitiesDescIcon {
-                float: left;
-                margin-right: 5px;
-            }
+.moduleEntitiesDescIcon {
+    float: left;
+    margin-right: 5px;
+}
 
-            .moduleEntitiesDescContent {
-                min-width: 300px;
-            }
+.moduleEntitiesDescContent {
+    min-width: 300px;
+}
 
-            .moduleEntitiesDescDate, .moduleEntitiesDescSigner {
-                float: right;
-                margin-left: 10px;
-            }
+.moduleEntitiesDescDate, .moduleEntitiesDescSigner {
+    float: right;
+    margin-left: 10px;
+}
 
-            .moduleEntitiesDescValue {
-                font-weight: bold;
-            }
+.moduleEntitiesDescValue {
+    font-weight: bold;
+}
 
-            .moduleEntitiesDescEmotion {
-                font-weight: bold;
-            }
+.moduleEntitiesDescEmotion {
+    font-weight: bold;
+}
 
-            .moduleEntitiesDescEmotion img {
-                height: 16px;
-                width: 16px;
-            }
+.moduleEntitiesDescEmotion img {
+    height: 16px;
+    width: 16px;
+}
 
-            /* Connexion */
-            #moduleEntitiesConnect {
-                text-align: center;
-            }
-        </style>
+/* Connexion */
+#moduleEntitiesConnect {
+    text-align: center;
+}
+
         <?php
     }
 

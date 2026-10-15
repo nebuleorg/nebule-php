@@ -139,31 +139,45 @@ class DisplayIconApplication extends DisplayItem implements DisplayInterface
     {
         ?>
 
-        <style type="text/css">
-            /* CSS for DisplayIconApplication(). */
-            .objectTitleIconsApp {
-                height: 1em;
-                width: 1em;
-                float: left;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.objectTitleIconsApp {
+    height: 1em;
+    width: 1em;
+    float: left;
+}
 
-            .objectTitleIconsApp div {
-                overflow: hidden;
-                font-size: 12px;
-                text-align: left;
-                font-weight: normal;
-                margin: 3px;
-                color: #ffffff;
-            }
+.objectTitleIconsApp div {
+    overflow: hidden;
+    font-size: 12px;
+    text-align: left;
+    font-weight: normal;
+    margin: 3px;
+    color: #ffffff;
+}
 
-            .objectTitleIconsAppShortname {
-                font-size: 18px;
-            }
+.objectTitleIconsAppShortname {
+    font-size: 18px;
+}
 
-            .objectTitleIconsAppTitle {
-                font-size: 11px;
-            }
-        </style>
+.objectTitleIconsAppTitle {
+    font-size: 11px;
+}
+
         <?php
     }
 }

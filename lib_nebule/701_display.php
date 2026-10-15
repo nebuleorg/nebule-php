@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
+use JetBrains\PhpStorm\NoReturn;
 use Nebule\Application\Klicty\Translate;
 use Nebule\Application\Sylabe\Application;
 use Nebule\Application\Sylabe\Display;
@@ -591,858 +592,874 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     public function commonCSS(): void {
         ?>
 
-        <style>
-            /* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
-            * {
-                margin: 0;
-                padding: 0;
-            }
-
-            html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-            a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
-            small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
-            fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
-            article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup,
-            menu, nav, output, ruby, section, summary, time, mark, audio, video {
-                border: 0;
-                font-size: 100%;
-                font: inherit;
-                vertical-align: baseline;
-            }
-
-            article, aside, details, figure, figcaption, footer, header, hgroup, menu, nav, section {
-                display: block;
-            }
-
-            body {
-                line-height: 1;
-            }
-
-            ol, ul {
-                list-style: none;
-            }
-
-            blockquote, q {
-                quotes: none;
-            }
-
-            blockquote:before, blockquote:after, q:before, q:after {
-                content: '';
-                content: none;
-            }
-
-            table {
-                border-collapse: collapse;
-                border-spacing: 0;
-            }
-
-            /* Balises communes. */
-            html {
-                height: 100%;
-                width: 100%;
-            }
-
-            body {
-                color: #ababab;
-                font-family: monospace;
-                background: #454545;
-                height: 100%;
-                width: 100%;
-                min-height: 480px;
-                min-width: 640px;
-                margin: 0;
-                padding: 0;
-            }
-
-            img, embed, canvas, video, audio, picture {
-                max-width: 100%;
-                height: auto;
-            }
-
-            img {
-                border: 0;
-                vertical-align: middle;
-            }
-
-            a:link, a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #ababab;
-            }
-
-            a:hover, a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            input {
-                background: #ffffff;
-                color: #000000;
-                margin: 0;
-                margin-top: 5px;
-                border: 0;
-                box-shadow: none;
-                padding: 5px;
-                background-origin: border-box;
-            }
-
-            input[type=submit] {
-                font-weight: bold;
-            }
-
-            input[type=password], input[type=text], input[type=email] {
-                /*padding: 6px;*/
-            }
-
-            /* Le bloc d'entête */
-            .layout-header {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            .layout-header {
-                height: 68px;
-                background: #ababab;
-                border-bottom-style: solid;
-                border-bottom-color: #c8c8c8;
-                border-bottom-width: 1px;
-            }
-
-            .header-left {
-                height: 64px;
-                float: left;
-            }
-
-            .header-left img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .header-left-menu {
-                height: 64px;
-                width: 64px;
-                float: left;
-            }
-
-            .header-left-menu img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .header-left-ent {
-                height: 64px;
-                margin-left: 5px;
-                float: right;
-            }
-
-            .header-right {
-                height: 64px;
-                width: 64px;
-                margin: 2px;
-                float: right;
-            }
-
-            .header-right img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .header-center {
-                height: 100%;
-                display: inline-flex;
-            }
-
-            .header-center p {
-                margin: auto 3px 3px 3px;
-                overflow: hidden;
-                white-space: nowrap;
-                color: #454545;
-                text-align: center;
-            }
-
-            /* Le bloc de bas de page */
-            .layout-footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                text-align: center;
-                max-height: 68px;
-                height: auto;
-                background: #ababab;
-                border-top-style: solid;
-                border-top-color: #c8c8c8;
-                border-top-width: 1px;
-            }
-
-            .layout-footer p {
-                color: #ffffff;
-                font-size: 12px;
-                height: auto;
-                margin: 1px;
-                clear: both;
-            }
-
-            .footer-classification {
-                margin-top: -12px;
-                clear: both;
-            }
-
-            .footer-classification p {
-                font-size: 16px;
-                font-weight: bold;
-                border: 2px solid;
-                border-radius: 5px;
-                padding:1px;
-                margin: 1px;
-                display: inline-block;
-            }
-
-            .footer-center p {
-                margin: 3px;
-                overflow: hidden;
-                white-space: nowrap;
-                color: #454545;
-                text-align: center;
-            }
-
-            .footer-center a:link, .footer-center a:visited {
-                font-weight: normal;
-                text-decoration: none;
-                color: #454545;
-            }
-
-            .footer-center a:hover, .footer-center a:active {
-                font-weight: normal;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            /* Le menu des applications, caché par défaut. */
-            .layout-menu-applications {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.33);
-                display: none;
-                z-index: 100;
-            }
-
-            .menu-applications {
-                position: fixed;
-                top: 79px;
-                left: 0;
-                padding: 3px;
-                padding-bottom: 2px;
-                padding-right: 2px;
-                width: 100%;
-                color: #ffffff;
-                background: rgba(0, 0, 0, 0.66);
-            }
-
-            .menu-applications img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .menu-applications a:link, .menu-applications a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #ffffff;
-            }
-
-            .menu-applications a:hover, .menu-applications a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            .menu-applications-logo {
-                margin: 5px;
-            }
-
-            .menu-applications-logo img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .menu-applications-one {
-                margin: 2px;
-                margin-bottom: 3px;
-                margin-right: 3px;
-                padding: 5px;
-                float: left;
-                background: rgba(0, 0, 0, 0.7);
-                width: 186px;
-                min-height: 64px;
-            }
-
-            .menu-applications-icon {
-                float: left;
-                margin-right: 5px;
-            }
-
-            .menu-applications-title p {
-                font-size: 1.1em;
-                font-weight: bold;
-            }
-
-            .menu-applications-text p {
-                font-size: 0.8em;
-            }
-
-            .menu-applications-sign {
-                position: fixed;
-                bottom: 10px;
-                right: 7px;
-                text-align: right;
-                color: #ffffff;
-            }
-
-            .menu-applications-sign img {
-                height: 32px;
-                width: 32px;
-            }
-
-            .menu-applications-sign a:link, .menu-applications-sign a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #ffffff;
-            }
-
-            .menu-applications-sign a:hover, .menu-applications-sign a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            /* Le corps de la page qui contient le contenu. Permet le centrage vertical universel */
-            .layout-main {
-                width: 100%;
-                height: 100%;
-                display: flex;
-            }
-
-            /* Le centre de la page avec le contenu utile. Centrage vertical */
-            .layout-content {
-                margin: auto;
-                padding: 84px 0 84px 0;
-            }
-
-            /* Les affichages de parties seules comme un message */
-            .layoutAloneItem {
-                width: 100%;
-            }
-
-            .aloneItemContent {
-                margin: auto;
-                text-align: center;
-                font-size: 0;
-                min-height: 34px;
-                padding: 0 5px 5px 0;
-                background: none;
-            }
-
-            .aloneTextItemContent {
-                margin: auto;
-                text-align: justify;
-                font-size: 1rem;
-                min-height: 34px;
-                padding: 5px;
-                background: rgba(255, 255, 255, 0.5);
-                color: #000000;
-            }
-
-            .aloneTextItemContent a {
-                color: #000000;
-            }
-
-            .content {
-                margin: 0;
-                text-align: left;
-            }
-
-            .error {
-                background: #ffa0a0;
-                background-origin: border-box;
-                font-family: monospace;
-                font-size: 1.2em;
-                color: #ff0000;
-                text-align: left;
-            }
-
-            .error p {
-                padding: 5px;
-            }
-
-            .error img {
-                height: 32px;
-                width: 32px;
-            }
-
-            .error a:link, .error a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #ef0000;
-            }
-
-            .error a:hover, .error a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            .warning {
-                background: #ffe080;
-                background-origin: border-box;
-                font-family: monospace;
-                font-size: 1.2em;
-                color: #ff8000;
-                text-align: left;
-            }
-
-            .warning p {
-                padding: 5px;
-            }
-
-            .warning img {
-                height: 32px;
-                width: 32px;
-            }
-
-            .warning a:link, .warning a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #ef7000;
-            }
-
-            .warning a:hover, .warning a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffffff;
-            }
-
-            .message {
-                background: #103020;
-                background-origin: border-box;
-                font-family: monospace;
-                font-size: 1.2em;
-                color: #ffffff;
-                text-align: left;
-            }
-
-            .message p {
-                padding: 5px;
-            }
-
-            .message img {
-                height: 32px;
-                width: 32px;
-            }
-
-            .information {
-                background: rgba(0, 0, 0, 0.6);
-                background-origin: border-box;
-                text-align: left;
-            }
-
-            .information p {
-                padding: 5px;
-                color: #ffffff;
-            }
-
-            .information img {
-                height: 32px;
-                width: 32px;
-            }
-
-            .textTitle {
-                background: rgba(255, 255, 255, 0.6);
-                background-origin: border-box;
-                text-align: center;
-                color: #000000;
-                clear: both;
-                padding: 5px;
-                min-height: 65px;
-            }
-
-            .textTitle img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .textTitle h1 {
-                font-size: 1.5em;
-                color: #000000;
-                font-weight: bold;
-                text-align: center;
-                padding: 8px;
-                background: rgba(255, 255, 255, 0);
-            }
-
-            .textTitle2 {
-                background: rgba(255, 255, 255, 0.4);
-                background-origin: border-box;
-                text-align: center;
-                color: #000000;
-                clear: both;
-                padding: 5px;
-                min-height: 65px;
-            }
-
-            .textTitle2 img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .textTitle2 h2 {
-                font-size: 1.4em;
-                color: #000000;
-                font-weight: bold;
-                text-align: center;
-                padding: 5px;
-                background: rgba(255, 255, 255, 0);
-                font-family: monospace;
-            }
-
-            .text {
-                padding: 10px;
-                padding-top: 20px;
-                padding-bottom: 40px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-            }
-
-            .text p {
-                margin-bottom: 20px;
-                clear: both;
-                text-align: justify;
-            }
-
-            .textSmall {
-                padding: 5px;
-                padding-bottom: 15px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-            }
-
-            .textSmall p {
-                margin: 0;
-                clear: both;
-                text-align: justify;
-            }
-
-            .textnobg {
-                padding: 10px;
-                padding-top: 20px;
-                padding-bottom: 40px;
-                color: #000000;
-                clear: both;
-            }
-
-            .textnobg p {
-                margin-bottom: 20px;
-                text-align: justify;
-            }
-
-            .textcontentfull {
-                padding: 5px;
-                padding-top: 20px;
-                padding-bottom: 40px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-            }
-
-            .textcontentfull pre {
-                background: rgba(255, 255, 255, 0.7);
-                background-origin: border-box;
-                margin: 0;
-                padding: 5px;
-                clear: both;
-            }
-
-            .textcontentfull img, .textcontentfull video, .textcontentfull audio, .textcontentfull picture {
-                max-width: 100%;
-                height: auto;
-                margin: 0;
-                padding: 0;
-                clear: both;
-            }
-
-            .textcontenthalf {
-                padding: 5px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                color: #000000;
-            }
-
-            .textcontenthalf pre {
-                background: rgba(255, 255, 255, 0.7);
-                background-origin: border-box;
-                margin: 0;
-                padding: 5px;
-                clear: both;
-            }
-
-            .textcontenthalf img, .textcontenthalf video, .textcontenthalf audio, .textcontenthalf picture {
-                max-width: 50%;
-                height: auto;
-                margin: 0;
-                padding: 0;
-                clear: both;
-            }
-
-            .textcenter {
-                padding: 20px;
-                padding-bottom: 40px;
-                background: rgba(255, 255, 255, 0.5);
-                background-origin: border-box;
-                text-align: center;
-                color: #000000;
-            }
-
-            .textcenter p {
-                margin-bottom: 20px;
-                clear: both;
-            }
-
-            .sequence {
-                height: 110px;
-                clear: both;
-            }
-
-            .bootstrapErrorDiv {
-                margin: 0px;
-                padding: 5px;
-                background: #454545;
-            }
-
-            .bootstrapErrorDiv p {
-                color: #ababab;
-            }
-
-            /* Le pied de page pour le traitement des actions, avant l'affichage du centre de la page. */
-            .flowaction {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                margin: 0px;
-                background: rgba(34, 34, 34, 0.8);
-            }
-
-            .flowaction p {
-                color: #ffffff;
-            }
-
-            /* Les insersions en ligne. */
-            .inlinecontent {
-                width: 100%;
-            }
-
-            .inlinecontentwait {
-                width: 206px;
-                text-align: center;
-                margin: 5px;
-                padding: 5px;
-                min-height: 24px;
-                background: rgba(0, 0, 0, 0.5);
-                color: #ffffff;
-            }
-
-            .inlinecontentnext {
-                width: 206px;
-                text-align: center;
-                margin: 5px;
-                padding: 5px;
-                min-height: 24px;
-                background: rgba(0, 0, 0, 0.5);
-                color: #ffffff;
-            }
-
-            /* Les images */
-            .iconegrossepuce {
-                height: 64px;
-                width: 64px;
-            }
-
-            .iconemoyenpuce {
-                height: 32px;
-                width: 32px;
-            }
-
-            .iconepuce {
-                height: 16px;
-                width: 16px;
-            }
-
-            .iconInlineDisplay {
-                height: 16px;
-                width: 16px;
-            }
-
-            /* L'insertion de boutons de fonctionnalités liées aux modules, dans le corps de la page. */
-            .textAction {
-                padding: 3px;
-                min-height: 34px;
-                background: rgba(255, 255, 255, 0.12);
-                color: #000000;
-            }
-
-            .textAction a:link, .textAction a:visited {
-                font-weight: bold;
-                text-decoration: none;
-                color: #000000;
-            }
-
-            .textAction a:hover, .textAction a:active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #000000;
-            }
-
-            .oneAction {
-                margin: 2px;
-                padding: 5px;
-                float: left;
-                background: rgba(255, 255, 255, 0.7);
-                width: 206px;
-                min-height: 64px;
-            }
-
-            .oneActionItem {
-                margin: 2px;
-                padding: 5px;
-                float: left;
-                background: rgba(255, 255, 255, 0.4);
-                width: 350px;
-                min-height: 64px;
-            }
-
-            .oneActionItem-top {
-                min-height: 64px;
-            }
-
-            .oneAction-icon {
-                float: left;
-                margin-right: 5px;
-            }
-
-            .oneAction-icon img {
-                height: 64px;
-                width: 64px;
-            }
-
-            .oneAction-modname p {
-                font-size: 0.6em;
-                font-style: italic;
-            }
-
-            .oneAction-entityname p {
-                font-size: 0.8em;
-                margin-bottom: 5px;
-            }
-
-            .oneAction-title p {
-                font-size: 1.1em;
-                font-weight: bold;
-            }
-
-            .oneAction-text p {
-                font-size: 0.8em;
-            }
-
-            .oneAction-actions {
-                clear: both;
-            }
-
-            .oneAction-actions p {
-                background: rgba(255, 255, 255, 0.33);
-                margin-top: 5px;
-            }
-
-            .oneAction-ok {
-                clear: both;
-            }
-
-            .oneAction-ok p {
-                background: #80ff80;
-                margin-top: 5px;
-            }
-
-            .oneAction-warn {
-                clear: both;
-            }
-
-            .oneAction-warn p {
-                background: #ffe080;
-                margin-top: 5px;
-            }
-
-            .oneAction-error {
-                clear: both;
-            }
-
-            .oneAction-error p {
-                background: #ffa0a0;
-                margin-top: 5px;
-            }
-
-            .oneAction-close {
-                height: 1px;
-                clear: both;
-            }
-
-            #oneAction-bg-warn {
-                background: #ffe080;
-            }
-
-            .inlineemotions {
-                padding: 5px;
-                background: rgba(255, 255, 255, 0.3);
-                background-origin: border-box;
-                text-align: center;
-                font-size: 0.8em;
-                color: #000000;
-            }
-
-            .inlineemotions img {
-                height: 24px;
-                width: 24px;
-                margin-left: 5px;
-            }
-
-            /* Pour les bulles d'aide. */
-            .infobulle {
-                position: absolute;
-                left: 0;
-                visibility: hidden;
-                padding: 5px;
-                color: #ffffff;
-                background: rgba(0, 0, 0, 0.8);
-                width: 50%;
-                text-align: justify;
-            }
-
-            /* Les champs forçés. */
-            .forcedinput {
-                background: #ffffff;
-                color: #808080;
-                margin: 0;
-                border: 0;
-                box-shadow: none;
-                padding: 2px;
-                padding-left: 5px;
-                padding-right: 5px;
-                font-size: 1rem;
-            }
-        </style>
+/* CSS reset. http://meyerweb.com/eric/tools/css/reset/ v2.0 20110126. Public domain */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+article, aside, details, figure, figcaption, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Balises communes. */
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    color: #ababab;
+    font-family: monospace;
+    background: #454545;
+    height: 100%;
+    width: 100%;
+    min-height: 480px;
+    min-width: 640px;
+    margin: 0;
+    padding: 0;
+}
+
+img, embed, canvas, video, audio, picture {
+    max-width: 100%;
+    height: auto;
+}
+
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+a:link, a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ababab;
+}
+
+a:hover, a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+input {
+    background: #ffffff;
+    color: #000000;
+    margin: 0;
+    margin-top: 5px;
+    border: 0;
+    box-shadow: none;
+    padding: 5px;
+    background-origin: border-box;
+}
+
+input[type=submit] {
+    font-weight: bold;
+}
+
+input[type=password], input[type=text], input[type=email] {
+    /*padding: 6px;*/
+}
+
+
+
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.layout-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.layout-header {
+    height: 68px;
+    background: #ababab;
+    border-bottom-style: solid;
+    border-bottom-color: #c8c8c8;
+    border-bottom-width: 1px;
+}
+
+.header-left {
+    height: 64px;
+    float: left;
+}
+
+.header-left img {
+    height: 64px;
+    width: 64px;
+}
+
+.header-left-menu {
+    height: 64px;
+    width: 64px;
+    float: left;
+}
+
+.header-left-menu img {
+    height: 64px;
+    width: 64px;
+}
+
+.header-left-ent {
+    height: 64px;
+    margin-left: 5px;
+    float: right;
+}
+
+.header-right {
+    height: 64px;
+    width: 64px;
+    margin: 2px;
+    float: right;
+}
+
+.header-right img {
+    height: 64px;
+    width: 64px;
+}
+
+.header-center {
+    height: 100%;
+    display: inline-flex;
+}
+
+.header-center p {
+    margin: auto 3px 3px 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #454545;
+    text-align: center;
+}
+
+/* Le bloc de bas de page */
+.layout-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    max-height: 68px;
+    height: auto;
+    background: #ababab;
+    border-top-style: solid;
+    border-top-color: #c8c8c8;
+    border-top-width: 1px;
+}
+
+.layout-footer p {
+    color: #ffffff;
+    font-size: 12px;
+    height: auto;
+    margin: 1px;
+    clear: both;
+}
+
+.footer-classification {
+    margin-top: -12px;
+    clear: both;
+}
+
+.footer-classification p {
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid;
+    border-radius: 5px;
+    padding:1px;
+    margin: 1px;
+    display: inline-block;
+}
+
+.footer-center p {
+    margin: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #454545;
+    text-align: center;
+}
+
+.footer-center a:link, .footer-center a:visited {
+    font-weight: normal;
+    text-decoration: none;
+    color: #454545;
+}
+
+.footer-center a:hover, .footer-center a:active {
+    font-weight: normal;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+/* Le menu des applications, caché par défaut. */
+.layout-menu-applications {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.33);
+    display: none;
+    z-index: 100;
+}
+
+.menu-applications {
+    position: fixed;
+    top: 79px;
+    left: 0;
+    padding: 3px;
+    padding-bottom: 2px;
+    padding-right: 2px;
+    width: 100%;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.66);
+}
+
+.menu-applications img {
+    height: 64px;
+    width: 64px;
+}
+
+.menu-applications a:link, .menu-applications a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menu-applications a:hover, .menu-applications a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.menu-applications-logo {
+    margin: 5px;
+}
+
+.menu-applications-logo img {
+    height: 64px;
+    width: 64px;
+}
+
+.menu-applications-one {
+    margin: 2px;
+    margin-bottom: 3px;
+    margin-right: 3px;
+    padding: 5px;
+    float: left;
+    background: rgba(0, 0, 0, 0.7);
+    width: 186px;
+    min-height: 64px;
+}
+
+.menu-applications-icon {
+    float: left;
+    margin-right: 5px;
+}
+
+.menu-applications-title p {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.menu-applications-text p {
+    font-size: 0.8em;
+}
+
+.menu-applications-sign {
+    position: fixed;
+    bottom: 10px;
+    right: 7px;
+    text-align: right;
+    color: #ffffff;
+}
+
+.menu-applications-sign img {
+    height: 32px;
+    width: 32px;
+}
+
+.menu-applications-sign a:link, .menu-applications-sign a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menu-applications-sign a:hover, .menu-applications-sign a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+/* Le corps de la page qui contient le contenu. Permet le centrage vertical universel */
+.layout-main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+/* Le centre de la page avec le contenu utile. Centrage vertical */
+.layout-content {
+    margin: auto;
+    padding: 84px 0 84px 0;
+}
+
+/* Les affichages de parties seules comme un message */
+.layoutAloneItem {
+    width: 100%;
+}
+
+.aloneItemContent {
+    margin: auto;
+    text-align: center;
+    font-size: 0;
+    min-height: 34px;
+    padding: 0 5px 5px 0;
+    background: none;
+}
+
+.aloneTextItemContent {
+    margin: auto;
+    text-align: justify;
+    font-size: 1rem;
+    min-height: 34px;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #000000;
+}
+
+.aloneTextItemContent a {
+    color: #000000;
+}
+
+.content {
+    margin: 0;
+    text-align: left;
+}
+
+.error {
+    background: #ffa0a0;
+    background-origin: border-box;
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #ff0000;
+    text-align: left;
+}
+
+.error p {
+    padding: 5px;
+}
+
+.error img {
+    height: 32px;
+    width: 32px;
+}
+
+.error a:link, .error a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ef0000;
+}
+
+.error a:hover, .error a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.warning {
+    background: #ffe080;
+    background-origin: border-box;
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #ff8000;
+    text-align: left;
+}
+
+.warning p {
+    padding: 5px;
+}
+
+.warning img {
+    height: 32px;
+    width: 32px;
+}
+
+.warning a:link, .warning a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ef7000;
+}
+
+.warning a:hover, .warning a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.message {
+    background: #103020;
+    background-origin: border-box;
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #ffffff;
+    text-align: left;
+}
+
+.message p {
+    padding: 5px;
+}
+
+.message img {
+    height: 32px;
+    width: 32px;
+}
+
+.information {
+    background: rgba(0, 0, 0, 0.6);
+    background-origin: border-box;
+    text-align: left;
+}
+
+.information p {
+    padding: 5px;
+    color: #ffffff;
+}
+
+.information img {
+    height: 32px;
+    width: 32px;
+}
+
+.textTitle {
+    background: rgba(255, 255, 255, 0.6);
+    background-origin: border-box;
+    text-align: center;
+    color: #000000;
+    clear: both;
+    padding: 5px;
+    min-height: 65px;
+}
+
+.textTitle img {
+    height: 64px;
+    width: 64px;
+}
+
+.textTitle h1 {
+    font-size: 1.5em;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0);
+}
+
+.textTitle2 {
+    background: rgba(255, 255, 255, 0.4);
+    background-origin: border-box;
+    text-align: center;
+    color: #000000;
+    clear: both;
+    padding: 5px;
+    min-height: 65px;
+}
+
+.textTitle2 img {
+    height: 64px;
+    width: 64px;
+}
+
+.textTitle2 h2 {
+    font-size: 1.4em;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0);
+    font-family: monospace;
+}
+
+.text {
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+}
+
+.text p {
+    margin-bottom: 20px;
+    clear: both;
+    text-align: justify;
+}
+
+.textSmall {
+    padding: 5px;
+    padding-bottom: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+}
+
+.textSmall p {
+    margin: 0;
+    clear: both;
+    text-align: justify;
+}
+
+.textnobg {
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    color: #000000;
+    clear: both;
+}
+
+.textnobg p {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.textcontentfull {
+    padding: 5px;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+}
+
+.textcontentfull pre {
+    background: rgba(255, 255, 255, 0.7);
+    background-origin: border-box;
+    margin: 0;
+    padding: 5px;
+    clear: both;
+}
+
+.textcontentfull img, .textcontentfull video, .textcontentfull audio, .textcontentfull picture {
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+.textcontenthalf {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    color: #000000;
+}
+
+.textcontenthalf pre {
+    background: rgba(255, 255, 255, 0.7);
+    background-origin: border-box;
+    margin: 0;
+    padding: 5px;
+    clear: both;
+}
+
+.textcontenthalf img, .textcontenthalf video, .textcontenthalf audio, .textcontenthalf picture {
+    max-width: 50%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+.textcenter {
+    padding: 20px;
+    padding-bottom: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    background-origin: border-box;
+    text-align: center;
+    color: #000000;
+}
+
+.textcenter p {
+    margin-bottom: 20px;
+    clear: both;
+}
+
+.sequence {
+    height: 110px;
+    clear: both;
+}
+
+.bootstrapErrorDiv {
+    margin: 0px;
+    padding: 5px;
+    background: #454545;
+}
+
+.bootstrapErrorDiv p {
+    color: #ababab;
+}
+
+/* Le pied de page pour le traitement des actions, avant l'affichage du centre de la page. */
+.flowaction {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    margin: 0px;
+    background: rgba(34, 34, 34, 0.8);
+}
+
+.flowaction p {
+    color: #ffffff;
+}
+
+/* Les insersions en ligne. */
+.inlinecontent {
+    width: 100%;
+}
+
+.inlinecontentwait {
+    width: 206px;
+    text-align: center;
+    margin: 5px;
+    padding: 5px;
+    min-height: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+.inlinecontentnext {
+    width: 206px;
+    text-align: center;
+    margin: 5px;
+    padding: 5px;
+    min-height: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+/* Les images */
+.iconegrossepuce {
+    height: 64px;
+    width: 64px;
+}
+
+.iconemoyenpuce {
+    height: 32px;
+    width: 32px;
+}
+
+.iconepuce {
+    height: 16px;
+    width: 16px;
+}
+
+.iconInlineDisplay {
+    height: 16px;
+    width: 16px;
+}
+
+/* L'insertion de boutons de fonctionnalités liées aux modules, dans le corps de la page. */
+.textAction {
+    padding: 3px;
+    min-height: 34px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #000000;
+}
+
+.textAction a:link, .textAction a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #000000;
+}
+
+.textAction a:hover, .textAction a:active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #000000;
+}
+
+.oneAction {
+    margin: 2px;
+    padding: 5px;
+    float: left;
+    background: rgba(255, 255, 255, 0.7);
+    width: 206px;
+    min-height: 64px;
+}
+
+.oneActionItem {
+    margin: 2px;
+    padding: 5px;
+    float: left;
+    background: rgba(255, 255, 255, 0.4);
+    width: 350px;
+    min-height: 64px;
+}
+
+.oneActionItem-top {
+    min-height: 64px;
+}
+
+.oneAction-icon {
+    float: left;
+    margin-right: 5px;
+}
+
+.oneAction-icon img {
+    height: 64px;
+    width: 64px;
+}
+
+.oneAction-modname p {
+    font-size: 0.6em;
+    font-style: italic;
+}
+
+.oneAction-entityname p {
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+
+.oneAction-title p {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.oneAction-text p {
+    font-size: 0.8em;
+}
+
+.oneAction-actions {
+    clear: both;
+}
+
+.oneAction-actions p {
+    background: rgba(255, 255, 255, 0.33);
+    margin-top: 5px;
+}
+
+.oneAction-ok {
+    clear: both;
+}
+
+.oneAction-ok p {
+    background: #80ff80;
+    margin-top: 5px;
+}
+
+.oneAction-warn {
+    clear: both;
+}
+
+.oneAction-warn p {
+    background: #ffe080;
+    margin-top: 5px;
+}
+
+.oneAction-error {
+    clear: both;
+}
+
+.oneAction-error p {
+    background: #ffa0a0;
+    margin-top: 5px;
+}
+
+.oneAction-close {
+    height: 1px;
+    clear: both;
+}
+
+#oneAction-bg-warn {
+    background: #ffe080;
+}
+
+.inlineemotions {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    background-origin: border-box;
+    text-align: center;
+    font-size: 0.8em;
+    color: #000000;
+}
+
+.inlineemotions img {
+    height: 24px;
+    width: 24px;
+    margin-left: 5px;
+}
+
+/* Pour les bulles d'aide. */
+.infobulle {
+    position: absolute;
+    left: 0;
+    visibility: hidden;
+    padding: 5px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.8);
+    width: 50%;
+    text-align: justify;
+}
+
+/* Les champs forçés. */
+.forcedinput {
+    background: #ffffff;
+    color: #808080;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 1rem;
+}
+
         <?php
         DisplayTitle::displayCSS();
         DisplayInformation::displayCSS();
@@ -1728,6 +1745,7 @@ PBlq09gLALSv711epojubK2YBxD3ioVOUF7z/cjo9g1Wc8wJ4bZhdSlfB++/ylGoAn4svKZUrjBjX6Bf
     /**
      * Display CSS only.
      * Handles different CSS types: lib (library), app (application-specific).
+     * @return void
      */
     protected function _displayCSS(): void {
         $cssType = $this->getFilterInput(self::COMMAND_CSS, FILTER_FLAG_ENCODE_LOW);

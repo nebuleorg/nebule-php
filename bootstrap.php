@@ -12,7 +12,7 @@ use Nebule\Library\References;
 const BOOTSTRAP_NAME = 'bootstrap';
 const BOOTSTRAP_SURNAME = 'nebule/bootstrap';
 const BOOTSTRAP_AUTHOR = 'Project nebule';
-const BOOTSTRAP_VERSION = '020261003';
+const BOOTSTRAP_VERSION = '020261015';
 const BOOTSTRAP_LICENCE = 'GNU GPL v3 2010-2026';
 const BOOTSTRAP_WEBSITE = 'www.nebule.org';
 const BOOTSTRAP_CODING = 'application/x-httpd-php';
@@ -4840,7 +4840,22 @@ log_add('track functions', 'debug', __FUNCTION__, '1111c0de');
             color: #ffffff;
         }
 
-        /* Le corps de la page qui contient le contenu. Permet le centrage vertical universel */
+        /*
+        * CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+        *
+        * (c) <?= BOOTSTRAP_LICENCE ?> <?= BOOTSTRAP_AUTHOR ?> - <?php echo BOOTSTRAP_WEBSITE . "\n"; ?>
+        *
+        * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+        *   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+        *   later version.
+        *
+        * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+        *   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+        *   details.
+        *
+        * You should have received a copy of the GNU General Public License along with this program.
+        *   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+        */
         .layout-main {
             width: 100%;
             height: 100%;

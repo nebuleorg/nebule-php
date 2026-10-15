@@ -57,53 +57,67 @@ class DisplayWikiSimple {
     static public function displayCSS(): void {
         ?>
 
-        <style type="text/css">
-            /* CSS for DisplaySimpleWiki(). */
-            .simpleWiki {
-                background: rgba(255, 255, 255, 0.666);
-                padding: 5px 10px 20px;
-                font-family: sans-serif;
-                color: #000000;
-                overflow: scroll;
-                text-align: justify;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.simpleWiki {
+    background: rgba(255, 255, 255, 0.666);
+    padding: 5px 10px 20px;
+    font-family: sans-serif;
+    color: #000000;
+    overflow: scroll;
+    text-align: justify;
+}
 
-            .simpleWiki h1 {
-                font-size: 2rem;
-            }
+.simpleWiki h1 {
+    font-size: 2rem;
+}
 
-            .simpleWiki h2 {
-                font-size: 1.8rem;
-            }
+.simpleWiki h2 {
+    font-size: 1.8rem;
+}
 
-            .simpleWiki h3 {
-                font-size: 1.6rem;
-            }
+.simpleWiki h3 {
+    font-size: 1.6rem;
+}
 
-            .simpleWiki h4 {
-                font-size: 1.4rem;
-            }
+.simpleWiki h4 {
+    font-size: 1.4rem;
+}
 
-            .simpleWiki h5 {
-                font-size: 1.2rem;
-            }
+.simpleWiki h5 {
+    font-size: 1.2rem;
+}
 
-            .simpleWiki strong {
-                font-weight: bold;
-            }
+.simpleWiki strong {
+    font-weight: bold;
+}
 
-            .simpleWiki em {
-            }
+.simpleWiki em {
+}
 
-            .simpleWiki code {
-            }
+.simpleWiki code {
+}
 
-            .simpleWiki li {
-            }
+.simpleWiki li {
+}
 
-            .simpleWiki ul{
-            }
-        </style>
+.simpleWiki ul{
+}
+
         <?php
     }
 }

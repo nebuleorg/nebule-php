@@ -110,55 +110,69 @@ class DisplayTitle extends DisplayItemIconable implements DisplayInterface
     {
         ?>
 
-        <style type="text/css">
-            /* CSS for DisplayTitle(). */
-            .layoutTitle {
-                margin-bottom: 10px;
-                margin-top: 32px;
-                width: 100%;
-                height: 32px;
-                text-align: center;
-            }
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.layoutTitle {
+    margin-bottom: 10px;
+    margin-top: 32px;
+    width: 100%;
+    height: 32px;
+    text-align: center;
+}
 
-            .titleContent {
-                margin: auto;
-                text-align: center;
-            }
+.titleContent {
+    margin: auto;
+    text-align: center;
+}
 
-            .titleContentDiv {
-                display: inline-block;
-                background: #333333;
-                height: 32px;
-                width: 384px;
-            }
+.titleContentDiv {
+    display: inline-block;
+    background: #333333;
+    height: 32px;
+    width: 384px;
+}
 
-            .titleContentEntity {
-                display: inline-block;
-            }
+.titleContentEntity {
+    display: inline-block;
+}
 
-            .titleContentEntity .layoutObject {
-                margin: -11px 0 0 0;
-            }
+.titleContentEntity .layoutObject {
+    margin: -11px 0 0 0;
+}
 
-            .titleContentIcon {
-                float: left;
-            }
+.titleContentIcon {
+    float: left;
+}
 
-            .titleContentIcon img {
-                height: 32px;
-                width: 32px;
-                margin-right: 5px;
-            }
+.titleContentIcon img {
+    height: 32px;
+    width: 32px;
+    margin-right: 5px;
+}
 
-            .titleContent h1 {
-                font-size: 1.2rem;
-                font-weight: bold;
-                color: #ababab;
-                overflow: hidden;
-                white-space: nowrap;
-                margin-top: 5px;
-            }
-        </style>
+.titleContent h1 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ababab;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 5px;
+}
+
         <?php
     }
 }

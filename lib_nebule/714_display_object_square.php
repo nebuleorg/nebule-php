@@ -184,77 +184,91 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
     public static function displayCSS(): void {
         ?>
 
-        <style>
-            /* CSS for DisplayObjectSquare(). */
-            .objectSquareContainer {
-                position: relative;
-                overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: rgba(69 69 69 / 25%);
-            }
-            .objectSquareContainerSmall { font-size: 32px; width: 8em; height: 8em; }
-            .objectSquareContainerMedium { font-size: 64px; width: 6em; height: 6em; }
-            .objectSquareContainerLarge { font-size: 128px; width: 5em; height: 5em; }
-            .objectSquareContainerFull { font-size: 256px; width: 4em; height: 4em; }
-            .objectSquareContent {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-                text-align: center;
-                line-height: normal;
-            }
-            .objectSquareContent p {
-                width: 90%;
-                text-align: center;
-                font-size: 14px;
-                font-weight: normal;
-                color: #fff;
-                overflow: hidden;
-            }
-            .objectSquareTitle {
-                position: relative;
-                top: 5%;
-                left: 5%;
-                width: 88%;
-                background-color: rgba(69 69 69 / 50%);
-                color: #fff;
-                padding: 1%;
-                text-align: left;
-                font-size: 14px;
-                font-weight: normal;
-                text-wrap: nowrap;
-                white-space: nowrap;
-                overflow: hidden;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .objectSquareFlags {
-                position: relative;
-                bottom: 5%;
-                left: 5%;
-                width: 88%;
-                background-color: rgba(69 69 69 / 50%);
-                color: #fff;
-                padding: 1%;
-                text-align: left;
-                font-size: 14px;
-                font-weight: normal;
-                text-wrap: nowrap;
-                white-space: nowrap;
-                overflow: hidden;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .objectSquareFlags img {
-                height: 16px;
-                width: 16px;
-                vertical-align: baseline;
-            }
-            .objectSquareContainer:hover .objectSquareTitle,
-            .objectSquareContainer:hover .objectSquareFlags { opacity: 1; }
-        </style>
+/*
+* CSS from <?= basename(str_replace('\\', '/', __CLASS__)) ?>::<?= __FUNCTION__ ?>() on nebule library.
+*
+* (c) <?= \Nebule\Library\nebule::NEBULE_LICENCE ?> <?= \Nebule\Library\nebule::NEBULE_AUTHOR ?> - <?php echo \Nebule\Library\nebule::NEBULE_WEBSITE . "\n"; ?>
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+*   License as published by the Free Software Foundation, either version 3 of the License or (at your option) any
+*   later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+*   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+*   details.
+*
+* You should have received a copy of the GNU General Public License along with this program.
+*   See at the end of the code file. If not, see https://www.gnu.org/licenses/.
+*/
+.objectSquareContainer {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(69 69 69 / 25%);
+}
+.objectSquareContainerSmall { font-size: 32px; width: 8em; height: 8em; }
+.objectSquareContainerMedium { font-size: 64px; width: 6em; height: 6em; }
+.objectSquareContainerLarge { font-size: 128px; width: 5em; height: 5em; }
+.objectSquareContainerFull { font-size: 256px; width: 4em; height: 4em; }
+.objectSquareContent {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    text-align: center;
+    line-height: normal;
+}
+.objectSquareContent p {
+    width: 90%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: normal;
+    color: #fff;
+    overflow: hidden;
+}
+.objectSquareTitle {
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 88%;
+    background-color: rgba(69 69 69 / 50%);
+    color: #fff;
+    padding: 1%;
+    text-align: left;
+    font-size: 14px;
+    font-weight: normal;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.objectSquareFlags {
+    position: relative;
+    bottom: 5%;
+    left: 5%;
+    width: 88%;
+    background-color: rgba(69 69 69 / 50%);
+    color: #fff;
+    padding: 1%;
+    text-align: left;
+    font-size: 14px;
+    font-weight: normal;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.objectSquareFlags img {
+    height: 16px;
+    width: 16px;
+    vertical-align: baseline;
+}
+.objectSquareContainer:hover .objectSquareTitle,
+.objectSquareContainer:hover .objectSquareFlags { opacity: 1; }
+
         <?php
     }
 }
