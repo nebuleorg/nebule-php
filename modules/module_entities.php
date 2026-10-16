@@ -389,85 +389,127 @@ class ModuleEntities extends Module {
                     // Promote as master of security.
                     if ($this->_authoritiesInstance->getIsSecurityMasterEID($nid)) {
                         $req = 'x';
-                        $hookArray[0]['name'] = '::UnsetSecurityMaster';
-                        $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[0]['desc'] = '::UnsetSecurityMaster';
+                        $hookArray[] = array(
+                                'name' => '::UnsetSecurityMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::UnsetSecurityMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $nid . '>' . References::RID_SECURITY_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     } else {
                         $req = 'l';
-                        $hookArray[0]['name'] = '::SetSecurityMaster';
-                        $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[0]['desc'] = '::SetSecurityMaster';
+                        $hookArray[] = array(
+                                'name' => '::SetSecurityMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::SetSecurityMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $nid . '>' . References::RID_SECURITY_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     }
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_SECURITY_AUTHORITY . '>' . $nid . '>' . References::RID_SECURITY_AUTHORITY
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     // Promote as master of code.
                     if ($this->_authoritiesInstance->getIsCodeMasterEID($nid)) {
                         $req = 'x';
-                        $hookArray[1]['name'] = '::UnsetCodeMaster';
-                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[1]['desc'] = '::UnsetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::UnsetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::UnsetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_CODE_AUTHORITY . '>' . $nid . '>' . References::RID_CODE_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     } else {
                         $req = 'l';
-                        $hookArray[1]['name'] = '::SetCodeMaster';
-                        $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[1]['desc'] = '::SetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::SetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::SetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_CODE_AUTHORITY . '>' . $nid . '>' . References::RID_CODE_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     }
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_CODE_AUTHORITY . '>' . $nid . '>' . References::RID_CODE_AUTHORITY
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     // Promote as master of the directory.
                     if ($this->_authoritiesInstance->getIsDirectoryMasterEID($nid)) {
                         $req = 'x';
-                        $hookArray[2]['name'] = '::UnsetCodeMaster';
-                        $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[2]['desc'] = '::UnsetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::UnsetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::UnsetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_DIRECTORY_AUTHORITY . '>' . $nid . '>' . References::RID_DIRECTORY_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     } else {
                         $req = 'l';
-                        $hookArray[2]['name'] = '::SetCodeMaster';
-                        $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[2]['desc'] = '::SetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::SetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::SetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_DIRECTORY_AUTHORITY . '>' . $nid . '>' . References::RID_DIRECTORY_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     }
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_DIRECTORY_AUTHORITY . '>' . $nid . '>' . References::RID_DIRECTORY_AUTHORITY
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     // Promote as master of time.
                     if ($this->_authoritiesInstance->getIsTimeMasterEID($nid)) {
                         $req = 'x';
-                        $hookArray[3]['name'] = '::UnsetCodeMaster';
-                        $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[3]['desc'] = '::UnsetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::UnsetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::UnsetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_TIME_AUTHORITY . '>' . $nid . '>' . References::RID_TIME_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     } else {
                         $req = 'l';
-                        $hookArray[3]['name'] = '::SetCodeMaster';
-                        $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[2];
-                        $hookArray[3]['desc'] = '::SetCodeMaster';
+                        $hookArray[] = array(
+                                'name' => '::SetCodeMaster',
+                                'icon' => $this::MODULE_REGISTERED_ICONS[2],
+                                'desc' => '::SetCodeMaster',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
+                                        . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                        . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_TIME_AUTHORITY . '>' . $nid . '>' . References::RID_TIME_AUTHORITY
+                                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                        );
                     }
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_displayInstance->getCurrentDisplayView()
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=' . $req . '>' . References::RID_TIME_AUTHORITY . '>' . $nid . '>' . References::RID_TIME_AUTHORITY
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                 } else {
-                    $hookArray[0]['name'] = '::SynchronizeEntity';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[6];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
-                            . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                            . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    $hookArray[] = array(
+                            'name' => '::SynchronizeEntity',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[6],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                    . '&' . \Nebule\Library\ActionsEntities::SYNCHRONIZE
+                                    . '&' . References::COMMAND_SELECT_ENTITY . '=' . $nid
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
                 }
                 break;
         }

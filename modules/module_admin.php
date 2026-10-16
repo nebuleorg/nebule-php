@@ -70,39 +70,47 @@ class ModuleAdmin extends Module
             case 'selfMenu':
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
                     // Voir les options.
-                    $hookArray[0]['name'] = '::display:AppOptions';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::display:AppOptions',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[1]) {
                     // Voir les options.
-                    $hookArray[1]['name'] = '::display:NebOptions';
-                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::display:NebOptions',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[2]) {
                     // Voir les admins.
-                    $hookArray[2]['name'] = '::display:seeAdmins';
-                    $hookArray[2]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                    $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::display:seeAdmins',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[3]) {
                     // Voir les entités de recouvrement.
-                    $hookArray[3]['name'] = '::display:seeRecovery';
-                    $hookArray[3]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                    $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::display:seeRecovery',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
         }

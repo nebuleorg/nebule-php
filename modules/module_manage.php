@@ -93,12 +93,14 @@ class ModuleManage extends Module
             case 'selfMenuManage':
                 // Affichage des applications.
                 if ($this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView() != $this::MODULE_REGISTERED_VIEWS[0]) {
-                    $hookArray[0]['name'] = '::AppTitle1';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[0]['desc'] = '::AppDesc1';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::AppTitle1',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                            'desc' => '::AppDesc1',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[0]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
 
                 // Synchronisation des applications.
@@ -113,16 +115,18 @@ class ModuleManage extends Module
                         || $this->_unlocked
                     )
                 ) {
-                    $hookArray[0]['name'] = '::syncModules';
-                    $hookArray[0]['icon'] = $this::MODULE_REGISTERED_ICONS[0];
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
-                        . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=0'
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    $hookArray[] = array(
+                            'name' => '::syncModules',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[0],
+                            'desc' => '',
+                            'link' => '/?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
+                                    . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
+                                    . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=0'
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
                 }
 
                 // Ajout d'un module.
@@ -133,12 +137,14 @@ class ModuleManage extends Module
                     && $this->_configurationInstance->getOptionAsBoolean('permitWriteObject')
                     && $this->_unlocked
                 ) {
-                    $hookArray[1]['name'] = '::create:createModule';
-                    $hookArray[1]['icon'] = $this::MODULE_REGISTERED_ICONS[1];
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::create:createModule',
+                            'icon' => $this::MODULE_REGISTERED_ICONS[1],
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[2]
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
 
                 // Synchronisation du module.
@@ -154,16 +160,18 @@ class ModuleManage extends Module
                         || $this->_unlocked
                     )
                 ) {
-                    $hookArray[2]['name'] = '::syncModule';
-                    $hookArray[2]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
-                    $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
-                        . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
-                        . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
+                    $hookArray[] = array(
+                            'name' => '::syncModule',
+                            'icon' => Displays::DEFAULT_ICON_SYNOBJ,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayMode()
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this->_applicationInstance->getDisplayInstance()->getCurrentDisplayView()
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
+                                    . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
+                                    . '&' . \Nebule\Library\ActionsApplications::SYNCHRONIZE . '=' . $nid
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID()
+                                    . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand(),
+                    );
                 }
 
                 // Modification du code du module.
@@ -173,14 +181,16 @@ class ModuleManage extends Module
                     && isset($listModulesRID[$this->getExtractCommandDisplayModule()])
                     && $this->_unlocked
                 ) {
-                    $hookArray[3]['name'] = '::changeCode';
-                    $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LU;
-                    $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
-                        . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::changeCode',
+                            'icon' => Displays::DEFAULT_ICON_LU,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                                    . '&' . References::COMMAND_SELECT_OBJECT . '=' . $nid
+                                    . '&' . self::DEFAULT_COMMAND_ACTION_DISPLAY_MODULE . '=' . $this->getExtractCommandDisplayModule()
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
         }

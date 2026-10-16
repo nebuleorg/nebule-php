@@ -345,89 +345,105 @@ class ModuleNeblog extends Module
 
             case 'selfMenuBlogs':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))) {
-                    $hookArray[1]['name'] = '::blog:mod';
-                    $hookArray[1]['icon'] = Displays::DEFAULT_ICON_HELP;
-                    $hookArray[1]['desc'] = '';
-                    $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
-                    $hookArray[2]['name'] = '::blog:del';
-                    $hookArray[2]['icon'] = Displays::DEFAULT_ICON_LD;
-                    $hookArray[2]['desc'] = '';
-                    $hookArray[2]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::blog:mod',
+                            'icon' => Displays::DEFAULT_ICON_HELP,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[3]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
+                    $hookArray[] = array(
+                            'name' => '::blog:del',
+                            'icon' => Displays::DEFAULT_ICON_LD,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[4]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
-                        $hookArray[3]['name'] = '::blog:sync';
-                        $hookArray[3]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
-                        $hookArray[3]['desc'] = '';
-                        $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
-                            . '&' . self::COMMAND_ACTION_SYNC_BLOG
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                        $hookArray[] = array(
+                                'name' => '::blog:sync',
+                                'icon' => Displays::DEFAULT_ICON_SYNOBJ,
+                                'desc' => '',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $nid
+                                        . '&' . self::COMMAND_ACTION_SYNC_BLOG
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
                     }
                 }
                 break;
             case 'selfMenuBlog':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'unlocked'))
                     && $blogNID != '0') {
-                    $hookArray[0]['name'] = '::post:new';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_ADDOBJ;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::post:new',
+                            'icon' => Displays::DEFAULT_ICON_ADDOBJ,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[10]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                     if ($this->_configurationInstance->checkBooleanOptions(array('permitSynchronizeLink', 'permitSynchronizeObject'))) {
-                        $hookArray[1]['name'] = '::blog:sync';
-                        $hookArray[1]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
-                        $hookArray[1]['desc'] = '';
-                        $hookArray[1]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
-                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                            . '&' . self::COMMAND_ACTION_SYNC_BLOG
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                        $hookArray[] = array(
+                                'name' => '::blog:sync',
+                                'icon' => Displays::DEFAULT_ICON_SYNOBJ,
+                                'desc' => '',
+                                'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[1]
+                                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                                        . '&' . self::COMMAND_ACTION_SYNC_BLOG
+                                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                        );
                     }
                 }
                 if ($blogNID != '0') {
-                    $hookArray[3]['name'] = '::page:list';
-                    $hookArray[3]['icon'] = Displays::DEFAULT_ICON_LSTOBJ;
-                    $hookArray[3]['desc'] = '';
-                    $hookArray[3]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                            . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
-                            . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                            . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::page:list',
+                            'icon' => Displays::DEFAULT_ICON_LSTOBJ,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[14]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
             case 'selfMenuPost':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked'))
                     && $blogNID != '0' && $this->_instanceCurrentBlogPost !== null) {
-                    $hookArray[0]['name'] = '::post:sync';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                        . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
-                        . '&' . self::COMMAND_ACTION_SYNC_POST
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::post:sync',
+                            'icon' => Displays::DEFAULT_ICON_SYNOBJ,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[9]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                                    . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPost->getID()
+                                    . '&' . self::COMMAND_ACTION_SYNC_POST
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
             case 'selfMenuPage':
                 if ($this->_configurationInstance->checkBooleanOptions(array('permitWrite', 'permitWriteLink', 'permitWriteObject', 'permitSynchronizeLink', 'permitSynchronizeObject', 'unlocked'))
                     && $blogNID != '0' && $this->_instanceCurrentBlogPage !== null) {
-                    $hookArray[0]['name'] = '::page:sync';
-                    $hookArray[0]['icon'] = Displays::DEFAULT_ICON_SYNOBJ;
-                    $hookArray[0]['desc'] = '';
-                    $hookArray[0]['link'] = '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
-                        . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
-                        . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
-                        . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPage->getID()
-                        . '&' . self::COMMAND_ACTION_SYNC_PAGE
-                        . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID();
+                    $hookArray[] = array(
+                            'name' => '::page:sync',
+                            'icon' => Displays::DEFAULT_ICON_SYNOBJ,
+                            'desc' => '',
+                            'link' => '?' . Displays::COMMAND_DISPLAY_MODE . '=' . $this::MODULE_COMMAND_NAME
+                                    . '&' . Displays::COMMAND_DISPLAY_VIEW . '=' . $this::MODULE_REGISTERED_VIEWS[13]
+                                    . '&' . self::COMMAND_SELECT_BLOG . '=' . $blogNID
+                                    . '&' . self::COMMAND_SELECT_POST . '=' . $this->_instanceCurrentBlogPage->getID()
+                                    . '&' . self::COMMAND_ACTION_SYNC_PAGE
+                                    . '&' . References::COMMAND_SWITCH_APPLICATION . '=' . $this->_routerInstance->getApplicationIID(),
+                    );
                 }
                 break;
         }
