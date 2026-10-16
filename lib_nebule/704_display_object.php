@@ -817,7 +817,7 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
             $titleContent .= $divTitleTextOpen;
             $titleContent .= $divTitleRefsOpen . $titleRefsContent . $divTitleRefsClose;
             $titleContent .= $divTitleNameOpen . $titleLinkOpenName . $titleNameContent . $titleLinkCloseName . $divTitleNameClose;
-            $titleContent .= $divTitleIdOpen . $titleIdContent . $divTitleIdClose;
+            //$titleContent .= $divTitleIdOpen . $titleIdContent . $divTitleIdClose;
             $titleContent .= $divTitleFlagsOpen . $titleFlagsContent;
             $titleContent .= $divTitleStatusOpen . $titleStatusContent . $divTitleStatusClose;
             $titleContent .= $divTitleFlagsClose;
