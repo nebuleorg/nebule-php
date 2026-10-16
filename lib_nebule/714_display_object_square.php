@@ -228,7 +228,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
     overflow: hidden;
 }
 .objectSquareTitle {
-    position: relative;
+    position: absolute;
     top: 5%;
     left: 5%;
     width: 88%;
@@ -245,7 +245,7 @@ class DisplayObjectSquare extends DisplayObject implements DisplayInterface {
     transition: opacity 0.3s ease;
 }
 .objectSquareFlags {
-    position: relative;
+    position: absolute;
     bottom: 5%;
     left: 5%;
     width: 88%;
