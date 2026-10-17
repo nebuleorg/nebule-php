@@ -1091,20 +1091,20 @@ class DisplayObject extends DisplayItemIconMessageSizeable implements DisplayInt
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationOID();
 
             // Préparation du lien.
-            $source = $object->getID();
-            $target = $this->getNidFromData($emotion);
-            $meta = $this->_entitiesInstance->getGhostEntityEID();
+            $nid1 = $object->getID();
+            $nid2 = $this->getNidFromData($emotion);
+            $nid3 = $this->_entitiesInstance->getGhostEntityEID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
-                $action = 'x';
+                $req = 'x';
                 $rid = $this->_cacheInstance->newNodeByType($listEmotions1[$emotion]);
             } else {
-                $action = 'f';
+                $req = 'f';
                 $rid = $this->_cacheInstance->newNodeByType($listEmotions0[$emotion]);
             }
-            $link = $action . '_' . $source . '_' . $target . '_' . $meta;
-            $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
+            $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
+            $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
             $icon = $this->_displayInstance->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
             // Si connecté, l'icône est active.
