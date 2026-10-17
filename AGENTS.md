@@ -121,6 +121,177 @@ nebule-php/
 
 ---
 
+## 🔗 Structure des liens et leur stockage
+
+### Architecture des blocs et registres de liens
+
+Le système nebule utilise une **structure hiérarchisée en trois niveaux** pour organiser les liens entre objets :
+
+#### 1. Bloc de liens (BH_BL_BS)
+
+Un **bloc de liens** est une chaîne de caractères signée qui agrège un ou plusieurs **registres de liens**. 
+Format général : `BH_BL_BS`
+
+**Composants séparés par underscore "_"** :
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                      BLOC DE LIENS (BlocLink)                         │
+├─────────────────┬─────────────────┬─────────────────────────────────┤
+│      BH          │       BL         │            BS                    │
+│  (Header)        │    (Links)       │        (Signatures)               │
+│  RF/RV           │  RC/RL1/RL2/...  │      RS1/RS2/...                  │
+└─────────────────┴─────────────────┴─────────────────────────────────┘
+```
+
+**BH - Bloc Header (En-tête)** :
+- Format : `RF/RV`
+- **RF** (Registre de Forme) : `APP:TYP`
+  - `APP` = "nebule" (application)
+  - `TYP` = "link" (type)
+- **RV** (Registre de Version) : `VER:SUB`
+  - `VER` = Version majeure (ex: "2")
+  - `SUB` = Version mineure (ex: "0")
+- Exemple : `nebule:link/2:0`
+
+**BL - Bloc Links (Conteneur de liens)** :
+- Format : `RC/RL1/RL2/RL3/...`
+- **RC** (Registre de Chronologie) : `MOD>CHR`
+  - `MOD` = Mode (actuellement toujours "0")
+  - `CHR` = Timestamp numérique commençant par 0 (ex: "020211018195523")
+- **RL** (Registre de Lien) : Voir section suivante
+
+**BS - Bloc Signature** :
+- Format : `RS1/RS2/RS3/...`
+- **RS** (Registre de Signature) : `EID>SIG`
+  - `EID` = Identifiant de l'entité signataire (hash hexadécimal)
+  - `SIG` = Signature cryptographique (hexadécimal)
+- Plusieurs signatures possibles (jusqu'à `linkMaxRS`)
+
+#### 2. Registre de lien (RL)
+
+Un **registre de lien** représente une relation entre nœuds. Format : `REQ>NID1>NID2>NID3>...`
+
+**Composants séparés par ">"** :
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   REGISTRE DE LIEN (LinkRegister)                   │
+├──────────┬──────────────┬──────────────┬──────────────┬─────────┤
+│   REQ    │     NID1      │     NID2      │     NID3      │   ...   │
+│ (Action) │ (Source)      │ (Cible)       │ (Meta)        │         │
+└──────────┴──────────────┴──────────────┴──────────────┴─────────┘
+```
+
+**REQ - Type de requête/action** (1 caractère) :
+
+| Code | Nom | Description | NID requis | Méta requis |
+|------|-----|-------------|------------|-------------|
+| `l` | Link | Relation orientée entre deux objets | 2 | Optionnel |
+| `f` | Fork | Relation de dérivation/parenté | 2-3 | Optionnel |
+| `u` | Update | Mise à jour d'un objet par un autre | 2 | Non |
+| `d` | Delete | Marque un objet comme à supprimer | 1 | Non (doit être 0) |
+| `e` | Equivalent | Définit des objets interchangeables | 2+ | Non |
+| `c` | Concealed | Lien dissimulé/chiffré pour anonymisation | 1+ | Oui (clé chiffrée) |
+| `k` | Encrypted | Désigne la version chiffrée d'un objet | 2 | Non |
+| `s` | Subdivision | Fragment d'un objet | 2+ | Oui (intervalle x-y) |
+| `x` | Delete Link | Suppression d'un lien existant | 2-3 | Non |
+
+**NID - Identifiant de nœud** :
+- Hash hexadécimal (ex: sha256)
+- Taille variable (64 à 8192 caractères)
+- Au moins 1 NID requis, jusqu'à `linkMaxUIDbyRL` (défaut: 4)
+- Pour les liens de type `d` (delete), NID2 et NID3 doivent être "0"
+
+#### 3. Exemples concrets
+
+```php
+// Lien simple entre deux objets
+l>abc123...def456...>ghi789...
+
+// Lien avec méta (contexte)
+f>abc123...>def456...>ghi789...  // Dérivé avec contexte
+
+// Suppression d'objet
+d>abc123...>0>0
+
+// Lien dissimulé (chiffré)
+c>destinataireEID>lien_chiffré_en_hex>clé_chiffrée_en_hex
+
+// Subdivision d'objet (fragment)
+s>sourceOID>fragmentOID>0-1024  // Bytes 0 à 1024
+```
+
+---
+
+### Stockage physique dans le dossier `l/`
+
+Les blocs de liens sont persistés dans le système de fichiers sous le dossier **`pub/l/`** 
+(défini par `References::LINKS_FOLDER = 'l'`).
+
+#### Organisation des fichiers :
+
+```
+nebule-php/
+└── pub/
+    └── l/                          # Dossier des liens
+        ├── abc123...def456         # Fichier pour le nœud abc123...def456
+        │   ├── BH1_BL1_BS1          # Ligne 1 : Bloc de liens 1
+        │   └── BH2_BL2_BS2          # Ligne 2 : Bloc de liens 2
+        │
+        ├── def456...ghi789         # Fichier pour le nœud def456...ghi789
+        │   └── BH3_BL3_BS3
+        │
+        ├── f                       # Fichier historique global
+        │   ├── BH_historique1_BS1
+        │   └── BH_historique2_BS2
+        │
+        └── entityEID-signerEID      # Fichier de liens dissimulés
+            └── BH_obfuscated_BS
+```
+
+#### Règles de stockage :
+
+1. **Un fichier par NID source** : Chaque nœud qui est source d'un lien a son propre fichier
+2. **Un bloc par ligne** : Chaque ligne d'un fichier contient un **bloc de liens complet** (BH_BL_BS)
+3. **Multiple écriture** : Un bloc de liens est écrit dans **tous les fichiers** des NID qu'il référence
+4. **Fichier historique** : `pub/l/f` contient tous les blocs de liens créés
+5. **Liens dissimulés** : Stockés dans des fichiers au format `{EID}-{SIGNER}`
+
+#### Fonctions de gestion (ioInterface) :
+
+| Fonction | Description | Fichier |
+|----------|-------------|--------|
+| `setBlockLink($oid, $link)` | Écrit un bloc de liens dans le fichier du nœud | `102_io_disk.php` |
+| `getBlockLinks($oid)` | Lit tous les blocs de liens d'un nœud | `102_io_disk.php` |
+| `getObfuscatedLinks($entity, $signer)` | Lit les liens dissimulés | `102_io_disk.php` |
+
+---
+
+### Limites techniques
+
+| Constante | Valeur | Description |
+|-----------|--------|-------------|
+| `BlocLink::LINK_MAX_BL_SIZE` | 16384 | Taille max du bloc BL (octets) |
+| `BlocLink::LINK_MAX_BS_SIZE` | 16384 | Taille max du bloc BS (octets) |
+| `BlocLink::LINK_MAX_RL_SIZE` | 4096 | Taille max d'un registre RL (octets) |
+| `linkMaxRL` | Configurable | Nombre max de registres par bloc |
+| `linkMaxUIDbyRL` | Configurable | Nombre max de NID par registre (défaut: 4) |
+| `linkMaxRS` | Configurable | Nombre max de signatures par bloc |
+
+---
+
+### Classes impliquées
+
+| Classe | Fichier | Rôle |
+|--------|--------|------|
+| `BlocLink` | `501_bloclink.php` | Gestion d'un bloc de liens complet |
+| `LinkRegister` | `502_link_register.php` | Gestion d'un registre de lien individuel |
+| `blocLinkInterface` | `500_link_interface.php` | Interface pour les blocs de liens |
+| `linkInterface` | `500_link_interface.php` | Interface pour les registres de liens |
+
+---
+
 ## 🔧 Règles de développement
 
 ### 1. Fonctions de logging
@@ -419,6 +590,51 @@ nebule:link/2:0_0>020260714/l>LIB_RID_CODE_BRANCH>NID_CODE_BRANCH>LIB_RID_CODE_B
    ```
 5. **Tester** via le navigateur ou l'interface CLI
 6. **Valider** que tous les liens sont correctement signés
+
+---
+
+## 🎯 Particularités du projet
+
+### Nommage
+- **nebule et les applications s'écrivent en minuscules** : y compris la première lettre (ex: `nebule`, `sylabe`, `messae`, pas `Nebule` ou `Sylabe`)
+- **Fichiers** : Les noms de fichiers de la librairie orientée objet suivent la numérotation par série (ex: `101_io.php`, `102_io_disk.php`)
+
+### Documentation
+- **Structure hiérarchique** : La documentation utilise un système de sections imbriquées avec des codes du type OALCS où :
+  - **OA** = Objet / Application
+  - **L** = Library (Librairie)
+  - **C** = Configuration
+  - **S** = Stockage
+  - Chaque sous-section est numérotée (ex: OALCS, OALD, OALC, etc.)
+- **Niveaux** : Les titres utilisent `Displays::docDispTitle(niveau, code, titre)` avec des niveaux allant de 1 à 5
+- **Format** : Préférer les listes aux tableaux pour la documentation technique
+
+### Gestion des options
+- **Option JSON unique** : Pour les configurations complexes (comme les stockages), utiliser une seule option JSON plutôt que des options multiples
+- **Noms d'options fixes** : Le système de configuration ne gère pas les options avec noms variables (ex: `ioStorage_{name}_* ` n'est pas supporté)
+- **Valeurs par défaut** : Toujours fournir des valeurs par défaut pour les nouvelles options
+
+### Accès web direct
+- **Convention obligée** : Le stockage par défaut de type `disk` **doit** utiliser les chemins `/l` et `/o` pour permettre l'accès direct HTTP aux objets et liens
+- **Implications** : Ces répertoires doivent être accessibles directement par le serveur web sans passer par le code PHP
+- **Stockages supplémentaires** : Les autres stockages de type disk peuvent utiliser des chemins personnalisés, mais le stockage `default` est toujours forcé à `/l` et `/o`
+
+### Workflow de validation
+- **Processus** : L'utilisateur effectue lui-même les commits **uniquement après** :
+  1. Mise à jour complète de la documentation
+  2. Vérification que le code fonctionne correctement dans l'environnement de test
+  3. Validation des modifications apportées
+- **Important** : Ne jamais committer sans validation préalable de l'utilisateur
+
+### Apprentissage et progression
+- **Objectif pédagogique** : Le projet nebule est aussi un outil d'apprentissage et de progression dans divers domaines, notamment la programmation
+- **Compréhension requise** : L'utilisateur **a besoin de comprendre** les modifications apportées avant de les valider
+- **Explications nécessaires** : Toujours expliquer :
+  - La raison des modifications
+  - L'impact sur le code existant
+  - Les bénéfices attendus
+  - Les éventuels risques ou limitations
+- **Pédagogie** : Proposer des solutions qui permettent à l'utilisateur de progresser dans sa maîtrise du code et des concepts
 
 ---
 
