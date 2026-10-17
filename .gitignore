@@ -1,6 +1,6 @@
-/test_instance/
-/test_instance/*
-/o/
+test_instance/
+test_instance/*
+o/
+l/
 stdioMcpServer
 AGENTS.md
-test_instance/
