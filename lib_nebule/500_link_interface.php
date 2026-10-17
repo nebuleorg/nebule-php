@@ -32,7 +32,8 @@ namespace Nebule\Library;
  * BL : RC/RL1/RL2/...
  *   - RC (Registre de Chronologie) : MOD>CHR
  *     * MOD : Mode, actuellement toujours "0"
- *     * CHR : Timestamp au format numériques commençant par 0 (ex: "020211018195523")
+ *     * CHR : Valeur numérique correspondant au résultat de la commande
+ *            shell date "+0%Y%m%d%H%M%S" (ex: "020261017143052")
  *   - RL (Registre de Lien) : REQ>NID1>NID2>NID3>...
  *     * REQ : Type de requête/action (1 caractère) :
  *       - l : Lien entre objets (link)
