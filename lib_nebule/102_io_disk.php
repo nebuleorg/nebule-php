@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Nebule\Library;
-use Nebule\Library\nebule;
 
 /**
  * The class ioDisk.
@@ -526,32 +525,34 @@ class ioDisk extends io implements ioInterface
      * Checking the links file we need to use.
      * If the link is type c, the file has the form "hash-hash".
      * Otherwise it has the form "hash".
-     * TODO to review !
      *
      * @param string $oid
      * @param string $link
      * @return boolean
      */
     private function _checkFileLink(string &$oid, string &$link): bool {
-        $j = 1;
-        $action = '';
-        $e = strtok(trim($link), '_');
+        $req = '';
 
-        while ($e !== false) {
-            if ($j == 4)
-                $action = trim($e);
-            if ($j < 8)
-                $e = strtok('_');
-            else
-                return false;
-            $j++;
-        }
+        // Extrait le REQ du premier registre de lien du bloc de liens : BH_BL_BS.
+        strtok(trim($link), '_'); // BH
+        $bl = strtok('_');        // BL
+        if ($bl === false)
+            return false;
 
-        if ($action == 'c') {
+        // BL = RC/RL1/RL2...
+        strtok($bl, '/');         // RC
+        $rl1 = strtok('/');
+        if ($rl1 === false)
+            return false;
+
+        // RL1 = REQ>NID1>NID2>NID3...
+        $req = strtok($rl1, '>');
+
+        if ($req == 'c') {
             $hashentsign = '';
             $hashentdest = '';
             $j = 1;
-            $e = strtok(trim($link), '-');
+            $e = strtok($oid, '-');
             while ($e !== false) {
                 if ($j == 1)
                     $hashentsign = trim($e);

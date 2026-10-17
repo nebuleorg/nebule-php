@@ -477,14 +477,12 @@ foreach ( \Nebule\Library\Configuration::OPTIONS_LIST as $option ) {
         <p>Les options définis par les liens ne sont pas prises en compte par la bibliothèque nebule en PHP procédurale du bootstrap.</p>
         <p>L'option se définit en créant un lien :</p>
         <ul>
-            <li>Signature du lien</li>
-            <li>Identifiant du signataire</li>
-            <li>Horodatage</li>
-            <li>action : <code>l</code></li>
-            <li>source : ID entité visée</li>
-            <li>cible : hash(valeur de l'option)</li>
-            <li>méta : hash(‘nebule/option/’ + nom de l'option)</li>
+            <li>req : <code>l</code></li>
+            <li>nid1 : ID entité visée</li>
+            <li>nid2 : hash(valeur de l'option)</li>
+            <li>nid3 : hash(‘nebule/option/’ + nom de l'option)</li>
         </ul>
+        <p>La signature, le signataire et la chronologie du lien sont portés par le bloc de liens conteneur.</p>
         <p>Liste des options non modifiables via des liens :</p>
         <ul>
             <?php

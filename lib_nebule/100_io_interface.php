@@ -185,7 +185,7 @@ interface ioInterface
 
     /**
      * Lit les liens dissimulés de l'entité dite destinataire. Retourne un tableau des liens lus, même vide.
-     * Attend en entrée une chaine avec l'ID de l'entité et si besoin une chaine avec l'ID du signataire source.
+     * Attend en entrée une chaine avec l'ID de l'entité et si besoin une chaine avec l'ID du signataire émetteur.
      * Si le signataire n'est pas précisé, il doit être positionné à 0.
      * Dans ce cas la recherche se fera sur tous les signataires qui ont générés des liens dissimulés pour l'entité destinataire.
      *

@@ -1588,15 +1588,15 @@ html, body {
         $list = array();
         $DisplayedList = array();
         $id = $this->_entitiesInstance->getGhostEntityEID();
-        $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
-        $instance = $this->_cacheInstance->newNodeByType($meta);
+        $nid3 = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
+        $instance = $this->_cacheInstance->newNodeByType($nid3);
 
         // Si c'est l'entité du serveur, affiche tous les objets.
         if ($id == $this->_configurationInstance->getOptionUntyped('defaultEntity')) {
-            $list = $instance->getLinksOnFields('', '', 'l', '', '', $meta);
+            $list = $instance->getLinksOnFields('', '', 'l', '', '', $nid3);
         } // Sinon affiche les objets de l'entité.
         else {
-            $list = $instance->getLinksOnFields($id, '', 'l', '', '', $meta);
+            $list = $instance->getLinksOnFields($id, '', 'l', '', '', $nid3);
         }
 
         // Fait un pré-tri.
@@ -1672,31 +1672,31 @@ html, body {
                     $signer = $item->getParsed()['bs/rs1/eid'];
                     if ($signer != $id) {
                         // Recherche du lien de chiffrement des objets.
-                        $source = $item->getParsed()['bl/rl/nid1'];
-                        $instance = $this->_cacheInstance->newNodeByType($source);
+                        $nid1 = $item->getParsed()['bl/rl/nid1'];
+                        $instance = $this->_cacheInstance->newNodeByType($nid1);
                         $list2 = $instance->getLinksOnFields(
                             '',
                             '',
                             'k',
                             '',
                             '',
-                            $source
+                            $nid1
                         );
 
                         // Extrait l'objet protégé.
                         if (sizeof($list2) != 0) {
-                            $source = $list2[0]->getParsed()['bl/rl/nid1'];
-                            $instance = $this->_cacheInstance->newNodeByType($source);
+                            $nid1 = $list2[0]->getParsed()['bl/rl/nid1'];
+                            $instance = $this->_cacheInstance->newNodeByType($nid1);
                             $lifetimeExpired = $this->_applicationInstance->getObjectLifetimeExpired($instance);
                             $haveLifetime = $this->_applicationInstance->getObjectHaveLifetime($instance);
                             // Si l'objet n'est pas expiré.
                             if (!$lifetimeExpired
                                 && $haveLifetime
-                                && $DisplayedList[$source] !== true
+                                && $DisplayedList[$nid1] !== true
                             ) {
                                 // Valide l'objet partagé.
-                                $listS[$source] = $signer;
-                                $list[] = $source;
+                                $listS[$nid1] = $signer;
+                                $list[] = $nid1;
                             }
                         }
                     }
@@ -2214,9 +2214,9 @@ html, body {
                     // Renouveler le bail de durée de vie.
                     $link = $object->getPropertyLink(Application::APPLICATION_EXPIRATION_DATE, 'all');
                     if (is_a($link, 'Link')) { // FIXME la classe
-                        $source = $link->getParsed()['bl/rl/nid1'];
-                        $target = $link->getParsed()['bl/rl/nid2'];
-                        $meta = $link->getParsed()['bl/rl/nid3'];
+                        $nid1 = $link->getParsed()['bl/rl/nid1'];
+                        $nid2 = $link->getParsed()['bl/rl/nid2'];
+                        $nid3 = $link->getParsed()['bl/rl/nid3'];
                         unset($link);
                         $actionList[3]['name'] = '::RenewLiveTimeFile';
                         $actionList[3]['icon'] = self::DEFAULT_ICON_SYNLNK;
@@ -2224,7 +2224,7 @@ html, body {
                         $actionList[3]['link'] = '?'
                             . self::COMMAND_DISPLAY_VIEW . '=' . References::COMMAND_SELECT_OBJECT
                             . '&' . References::COMMAND_SELECT_OBJECT . '=' . $this->_applicationInstance->getCurrentObjectID()
-                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=l_' . $source . '_' . $target . '_' . $meta
+                            . '&' . \Nebule\Library\ActionsLinks::SIGN1 . '=l>' . $nid1 . '>' . $nid2 . '>' . $nid3
                             . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenCommand();
                     }
                 }
@@ -4484,8 +4484,7 @@ class Action extends Actions
             }
             $this->_actionUploadFileID = $id;
 
-            // Définition de la date et le signataire.
-            $date = date(DATE_ATOM);
+            // Définition du signataire.
             $signer = $this->_entitiesInstance->getGhostEntityInstance();
 
             // Création du type mime.
@@ -4494,11 +4493,11 @@ class Action extends Actions
                 $textID = $this->createTextAsObject($this->_actionUploadFileType);
                 if ($textID !== false) {
                     // Crée le lien.
-                    $action = 'l';
-                    $source = $id;
-                    $target = $textID;
-                    $meta = $this->getNidFromData('nebule/objet/type');
-                    $this->_createLink($signer, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $req = 'l';
+                    $nid1 = $id;
+                    $nid2 = $textID;
+                    $nid3 = $this->getNidFromData('nebule/objet/type');
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4508,11 +4507,11 @@ class Action extends Actions
                 $textID = $this->createTextAsObject($this->_actionUploadFileName);
                 if ($textID !== false) {
                     // Crée le lien.
-                    $action = 'l';
-                    $source = $id;
-                    $target = $textID;
-                    $meta = $this->getNidFromData('nebule/objet/nom');
-                    $this->_createLink($signer, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $req = 'l';
+                    $nid1 = $id;
+                    $nid2 = $textID;
+                    $nid3 = $this->getNidFromData('nebule/objet/nom');
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4522,11 +4521,11 @@ class Action extends Actions
                 $textID = $this->createTextAsObject($this->_actionUploadFileExtension);
                 if ($textID !== false) {
                     // Crée le lien.
-                    $action = 'l';
-                    $source = $id;
-                    $target = $textID;
-                    $meta = $this->getNidFromData('nebule/objet/suffix');
-                    $this->_createLink($signer, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                    $req = 'l';
+                    $nid1 = $id;
+                    $nid2 = $textID;
+                    $nid3 = $this->getNidFromData('nebule/objet/suffix');
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $this->_actionUploadFileObfuscateLinks);
                 }
             }
 
@@ -4537,11 +4536,11 @@ class Action extends Actions
                 $textID = $this->createTextAsObject($this->_actionUploadFileLifeTime);
                 if ($textID !== false) {
                     // Crée le lien.
-                    $action = 'l';
-                    $source = $id;
-                    $target = $textID;
-                    $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
-                    $this->_createLink($signer, $action, $source, $target, $meta, false);
+                    $req = 'l';
+                    $nid1 = $id;
+                    $nid2 = $textID;
+                    $nid3 = $this->getNidFromData(Application::APPLICATION_EXPIRATION_DATE);
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, false);
                 }
             }
             // Crée l'objet du nombre de vues.
@@ -4551,22 +4550,22 @@ class Action extends Actions
                 $textID = $this->createTextAsObject($text);
                 if ($textID !== false) {
                     // Crée le lien.
-                    $action = 'l';
-                    $source = $id;
-                    $target = $textID;
-                    $meta = $this->getNidFromData(Application::APPLICATION_EXPIRATION_COUNT);
-                    $this->_createLink($signer, $action, $source, $target, $meta, false);
+                    $req = 'l';
+                    $nid1 = $id;
+                    $nid2 = $textID;
+                    $nid3 = $this->getNidFromData(Application::APPLICATION_EXPIRATION_COUNT);
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, false);
                 }
             }
 
             // Si mise à jour de l'objet en cours.
             if ($this->_actionUploadFileUpdate) {
                 // Crée le lien.
-                $action = 'u';
-                $source = $this->_applicationInstance->getCurrentObjectID();
-                $target = $id;
-                $meta = '0';
-                $this->_createLink($signer, $action, $source, $target, $meta, $this->_actionUploadFileObfuscateLinks);
+                $req = 'u';
+                $nid1 = $this->_applicationInstance->getCurrentObjectID();
+                $nid2 = $id;
+                $nid3 = '0';
+                $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $this->_actionUploadFileObfuscateLinks);
             }
 
             // Affichage des actions.

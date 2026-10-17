@@ -281,7 +281,7 @@ class LinkRegister extends Functions implements linkInterface {
      *
      * @return boolean
      * TODO
-     * Le lien à dissimuler est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du champs source.
+     * Le lien à dissimuler est concaténé avec un bourrage (padding) d'espace de taille aléatoire compris entre 3 et 5 fois la taille du registre de lien.
      */
     public function setObfuscate(): bool {
 //        $this->_metrologyInstance->addLog('convert link to obfuscated', Metrology::LOG_LEVEL_FUNCTION, __METHOD__, '1111c0de');
@@ -347,10 +347,10 @@ abstract class HelpLinkRegister {
                 <li><a href="#le">LE / Entête</a></li>
                 <li><a href="#lr">LR / Registre</a>
                     <ul>
-                        <li><a href="#lrsi">LRSI / Le champ <code>Signature</code></a></li>
-                        <li><a href="#lrusi">LRHSI / Le champ <code>HashSignataire</code></a></li>
-                        <li><a href="#lrt">LRT / Le champ <code>TimeStamp</code></a></li>
-                        <li><a href="#lra">LRA / Le champ <code>Action</code></a>
+                        <li><a href="#lrsi">LRSI / La signature du lien</a></li>
+                        <li><a href="#lrusi">LRHSI / Le signataire du lien</a></li>
+                        <li><a href="#lrt">LRT / La chronologie du lien</a></li>
+                        <li><a href="#lra">LRA / Le champ <code>REQ</code></a>
                             <ul>
                                 <li><a href="#lral">LRAL / Action <code>l</code> – Lien entre objets</a></li>
                                 <li><a href="#lraf">LRAF / Action <code>f</code> – Dérivé d’objet</a></li>
@@ -363,9 +363,9 @@ abstract class HelpLinkRegister {
                                 <li><a href="#lrax">LRAX / Action <code>x</code> – Suppression de lien</a></li>
                             </ul>
                         </li>
-                        <li><a href="#lrhs">LRHS / Le champ <code>HashSource</code></a></li>
-                        <li><a href="#lrhc">LRHC / Le champ <code>HashCible</code></a></li>
-                        <li><a href="#lrhm">LRHM / Le champ <code>HashMeta</code></a></li>
+                        <li><a href="#lrhs">LRHS / Le champ <code>NID1</code></a></li>
+                        <li><a href="#lrhc">LRHC / Le champ <code>NID2</code></a></li>
+                        <li><a href="#lrhm">LRHM / Le champ <code>NID3</code></a></li>
                     </ul>
                 </li>
                 <li><a href="#l1">L1 / Lien simple</a></li>
@@ -464,69 +464,72 @@ abstract class HelpLinkRegister {
         <p>Il doit être transmis avec les liens, en premier.</p>
 
         <?php Displays::docDispTitle(2, 'lr', 'Registre'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien décrit la syntaxe du lien :</p>
-        <p style="text-align:center">
-            <code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
-        <p>Ce registre a un nombre de champs fixe. Chaque champ a une place fixe dans le lien. Les champs ont une
-            taille variable. Le séparateur de champs est l’underscore «&nbsp;_&nbsp;». Les champs ne peuvent contenir ni
-            l’underscore «&nbsp;_&nbsp;» ni l’espace &nbsp;» &nbsp;» ni le retour chariot «&nbsp;\n&nbsp;».</p>
-        <p>Tout lien qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien dont la
-            <code>Signature</code> est invalide est à considérer comme invalide et à supprimer. La vérification peut
-            être réalisée en réassemblant les champs après nettoyage.</p>
+        <p>Le registre de lien décrit la syntaxe du lien :</p>
+        <p style="text-align:center"><code>REQ>NID1>NID2>NID3</code></p>
+        <p>Ce registre a un nombre de champs variable, limité par l’option <i>linkMaxUIDbyRL</i>. Le premier champ est
+            la requête d’action REQ, les champs suivants sont les identifiants de nœuds NID dans l’ordre d’usage.
+            Chaque champ a une place définie dans le registre et une taille variable. Le séparateur de champs est le
+            caractère supérieur «&nbsp;&gt;&nbsp;». Les champs ne peuvent contenir ni le caractère
+            «&nbsp;&gt;&nbsp;», ni l’underscore «&nbsp;_&nbsp;», ni la barre oblique «&nbsp;/&nbsp;», ni l’espace,
+            ni le retour chariot.</p>
+        <p>Le registre de lien ne porte ni sa signature, ni son signataire, ni sa chronologie. Ces éléments sont portés
+            par le bloc de liens conteneur (cf <a href="#b">B</a>) : le signataire et la signature dans le bloc de
+            signature BS, la chronologie dans le registre de chronologie RC du bloc de liens BL.</p>
+        <p>Tout registre qui ne respecte pas cette syntaxe est à considérer comme invalide et à supprimer. Tout lien
+            dont aucune signature du bloc de liens conteneur n’est valide est à considérer comme invalide et à
+            supprimer.</p>
 
-        <?php Displays::docDispTitle(4, 'lrsi', 'Le champ <code>Signature</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>Signature</code> est représenté en deux parties séparées par un point «&nbsp;.&nbsp;» . La
-            première partie contient la valeur de la signature. La deuxième partie contient le nom court de la fonction
-            de prise d’empreinte utilisée.</p>
-        <p>La signature est calculée sur l’empreinte du lien réalisée avec la fonction de prise d’empreinte désignée
-            dans la deuxième partie. L’empreinte du lien est calculée sur tout le lien sauf le champs
-            <code>signature</code>, c'est-à-dire sur «&nbsp;<code>_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code>&nbsp;»
-            avec le premier underscore inclus.</p>
+
+        <?php Displays::docDispTitle(4, 'lrsi', 'La signature du lien'); ?>
+        <p>Le registre de lien ne contient pas de champ signature. La protection du lien est portée par le bloc de
+            liens conteneur, dans son bloc de signature BS (cf <a href="#b">B</a>).</p>
+        <p>Chaque registre de signature RS du bloc BS contient l’identifiant de l’entité signataire EID et la
+            signature SIG calculée sur le contenu du bloc BH_BL.</p>
         <p>La signature ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;»
-            et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule. La fonction de prise d’empreinte est notée en
-            caractères alphanumériques en minuscule.</p>
+            et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <?php Displays::docDispTitle(5, 'lrusi', 'Le champ <code>HashSignataire</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>HashSignataire</code> désigne l’objet de l’entité qui génère le lien et le signe.</p>
-        <p>Il ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;»
-            à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <?php Displays::docDispTitle(3, 'lrt', 'Le champ <code>TimeStamp</code>'); ?>
-        <p>Le champ <code>TimeStamp</code> est une marque de temps qui donne un ordre temporel aux liens. Ce champs peut
-            être une date et une heure au format <a class="external text" title="http://fr.wikipedia.org/wiki/ISO_8601"
-                                                    href="http://fr.wikipedia.org/wiki/ISO_8601"
-                                                    rel="nofollow">ISO8601</a> ou simplement un compteur incrémental.
-        </p>
+        <?php Displays::docDispTitle(5, 'lrusi', 'Le signataire du lien'); ?>
+        <p>Le registre de lien ne contient pas de champ signataire. L’entité qui génère le lien et le signe est
+            désignée dans chaque registre de signature RS du bloc BS du bloc de liens conteneur (cf <a href="#b">B</a>),
+            par son identifiant EID.</p>
+        <p>L’identifiant EID ne contient que des caractères hexadécimaux, c'est-à-dire de «&nbsp;0&nbsp;» à
+            «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <?php Displays::docDispTitle(3, 'lra', 'Le champ <code>Action</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>Action</code> détermine la façon dont le lien doit être utilisé.</p>
-        <p>Quand on parle du type d’un lien, on fait référence à son champ <code>Action</code>.</p>
+
+        <?php Displays::docDispTitle(3, 'lrt', 'La chronologie du lien'); ?>
+        <p>Le registre de lien ne contient pas de marque de temps. La chronologie est portée par le bloc de liens
+            conteneur, dans son registre de chronologie RC (cf <a href="#b">B</a>). Le champ CHR du registre RC est
+            une valeur numérique correspondant au résultat de la commande <code>date "+0%Y%m%d%H%M%S"</code>, qui
+            donne un ordre temporel aux liens.</p>
+
+
+        <?php Displays::docDispTitle(3, 'lra', 'Le champ <code>REQ</code>'); ?>
+        <p>Le champ <code>REQ</code> détermine la façon dont le lien doit être utilisé.</p>
+        <p>Quand on parle du type d’un lien, on fait référence à son champ <code>REQ</code>.</p>
         <p>L’interprétation de ce champ est limité au premier caractère. Des caractères alpha-numériques supplémentaires
             sont autorisés, mais ignorés.</p>
-        <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à <i>nebule
-                v1.2</i> (et <i>nebule v1.1</i>).</p>
-        <p>Le vocabulaire ne reconnaît que les 8 caractères <code>l</code>, <code>f</code>, <code>u</code>,
-            <code>d</code>, <code>e</code>, <code>x</code>, <code>k</code> et <code>s</code>, en minuscule.</p>
+        <p>Cette interprétation est basée sur un vocabulaire particulier. Ce vocabulaire est spécifique à
+            <i>nebule v2.0</i>.</p>
+        <p>Le vocabulaire ne reconnaît que les 9 caractères <code>l</code>, <code>f</code>, <code>u</code>,
+            <code>d</code>, <code>e</code>, <code>c</code>, <code>x</code>, <code>k</code> et <code>s</code>, en
+            minuscule.</p>
+
 
         <?php Displays::docDispTitle(4, 'lral', 'Action <code>l</code> – Lien entre objets'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Met en place une relation entre deux objets. Cette relation a un sens de mise en place et peut être pondérée
-            par un objet méta.</p>
-        <p>Les liens de type <code>l</code> ne devraient avoir ni <code>HashMeta</code> nul ni <code>HashCible</code>
+            par un objet de caractérisation.</p>
+        <p>Les liens de type <code>l</code> ne devraient avoir ni <code>NID2</code> nul ni <code>NID3</code>
             nul.</p>
         <p><code>l</code> comme <i>link</i>.</p>
         <p>Lors de la lecture de multiples liens <code>l</code>, on ne retient qu'un seul lien. On retient le dernier
             lien en date après filtrage social, éventuellement le dernier en date de l'entité signataire avec le plus
             fort score social.</p>
 
+
         <?php Displays::docDispTitle(4, 'lraf', 'Action <code>f</code> – Dérivé d’objet'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le nouvel objet est considéré comme enfant ou parent suivant le sens du lien.</p>
-        <p>Le champs <code>ObjetMeta</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
+        <p>Le champ <code>NID3</code> doit être vu comme le contexte du lien. Par exemple, deux objets contenants
             du texte peuvent être reliés simplement sans contexte, c'est-à-dire reliés de façon simplement hiérarchique.
             Ces deux mêmes textes peuvent être plutôt (ou en plus) reliés avec un contexte comme celui d’une discussion
             dans un blog. Dans ce deuxième cas, la relation entre les deux textes n’a pas de sens en dehors de cette
@@ -536,21 +539,21 @@ abstract class HelpLinkRegister {
         <p>Lors de la lecture de multiples liens <code>f</code>, on retient une liste de liens. On peut ne retenir que
             les liens ayant un minimum de score social de leurs entités signataires.</p>
 
+
         <?php Displays::docDispTitle(4, 'lrau', 'Action <code>u</code> – Mise à jour d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Mise à jour d’un objet dérivé qui remplace l’objet parent.</p>
         <p><code>u</code> comme <i>update</i>.</p>
 
         <?php Displays::docDispTitle(4, 'lrad', 'Action <code>d</code> – Suppression d’objet'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>L’objet est marqué comme à supprimer d’un ou de tous ses emplacements de stockage.</p>
         <p><code>d</code> comme <i>delete</i>.</p>
-        <p>Le champs <code>HashCible</code> <span style="text-decoration: underline;">peut</span> être nuls, c'est-à-dire égal à <code>0</code>.
-            Si non nul, ce champs doit contenir une entité destinataire de <i>l’ordre</i> de
-            suppression. C’est utilisé pour demander à une entité relaie de supprimer un objet spécifique. Cela peut
+        <p>Le champ <code>NID2</code> <span style="text-decoration: underline;">peut</span> être nul, c'est-à-dire égal à <code>0</code>.
+            Si non nul, ce champ doit contenir une entité destinataire de <i>l’ordre</i> de
+            suppression. C’est utilisé pour demander à une entité relais de supprimer un objet spécifique. Cela peut
             être utilisé pour demander à une entité en règle générale de bien vouloir supprimer l’objet, ce qui n’est
             pas forcément exécuté.</p>
-        <p>Le champs <code>HashMeta</code> <span style="text-decoration: underline;">doit</span> être nuls, c'est-à-dire
+        <p>Le champ <code>NID3</code> <span style="text-decoration: underline;">doit</span> être nul, c'est-à-dire
             égal à <code>0</code>.</p>
         <p>Un lien de suppression sur un objet ne veut pas forcément dire qu’il a été supprimé. Même localement, l’objet
             est peut-être encore présent. Si le lien de suppression vient d’une autre entité, on ne va sûrement pas par
@@ -560,31 +563,34 @@ abstract class HelpLinkRegister {
             si il est encore utilisé par une autre entité, c'est-à-dire si une entité a un lien qui le concerne et n’a
             pas de lien de suppression.</p>
 
+
         <?php Displays::docDispTitle(4, 'lrae', 'Action <code>e</code> – Équivalence d’objets'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Définit des objets jugés équivalents, et donc interchangeables par exemple pour une traduction.</p>
 
         <?php Displays::docDispTitle(4, 'lrac', 'Action <code>c</code> – Chiffrement de lien'); ?>
-        <p>Ce lien de dissimulation contient un lien dissimulé sans signature. Il permet d’offusquer des liens entre
-            objets et donc d’anonymiser certaines actions de l’entité (cf. <a href="#ckl">CKL</a>).</p>
-        <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. À part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
-        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet, mais le lien chiffré et encodé en
-            hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
-            intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
-        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet, mais la clé de chiffrement du lien,
+        <p>Ce lien de dissimulation contient un registre de lien dissimulé sans signature. Il permet d’offusquer des
+            liens entre objets et donc d’anonymiser certaines actions de l’entité (cf. <a href="#ckl">CKL</a>).</p>
+        <p>Le champ <code>NID1</code> fait référence à l’entité destinataire du lien, celle qui peut le
+            déchiffrer. À part l’entité signataire portée par le bloc de liens conteneur, c’est le seul champ qui fait
+            référence à un objet.</p>
+        <p>Le champ <code>NID2</code> ne contient pas la référence d’un objet, mais le registre de lien chiffré et
+            encodé en hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a
+            pas grand intérêt en lui-même, c’est le lien déchiffré qui en a.</p>
+        <p>Le champ <code>NID3</code> ne contient pas la référence d’un objet, mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entité destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
+            hexadécimal. Chaque entité destinataire d'un lien dissimulé doit disposer d'un lien de dissimulation
             qui lui est propre.</p>
         <p>Lors du traitement des liens, si une entité est déverrouillée, les liens offusqués pour cette entité doivent
             être déchiffrés et utilisés en remplacement des liens offusqués originels. Les liens offusqués doivent être
             vérifiés avant déchiffrement. Les liens déchiffrés doivent être vérifiés avant exploitation.</p>
-        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émeteurs et
+        <p>Les liens de dissimulations posent un problème pour être efficacement utilisés par les entités émetteurs et
             destinataires. Pour résoudre ce problème sans risquer de révéler les identifiants des objets utilisés dans
             un lien dissimulé, les liens de dissimulation sont attachés à des objets virtuels translatés depuis les
             identifiants des objets originaux (cf <a href="#ld">LD</a>).</p>
         <p>L'option <code>permitObfuscatedLink</code> permet de désactiver la dissimulation (offuscation) des liens des
             objets. Dans ce cas le lien de type <code>c</code> est rejeté comme invalide avec le code erreur 43.</p>
+
 
         <?php Displays::docDispTitle(4, 'lrak', 'Action <code>k</code> – Chiffrement d’objet'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -594,8 +600,8 @@ abstract class HelpLinkRegister {
 
         <?php Displays::docDispTitle(4, 'lras', 'Action <code>s</code> – Subdivision d’objet'); ?>
         <p>Désigne un fragment de l’objet.</p>
-        <p>Ce champ nécessite un objet méta qui précise intervalle de contenu de l’objet d’origine. Le contenu de
-            l’objet méta doit être de la forme <code>x-y</code> avec :</p>
+        <p>Ce champ nécessite un champ <code>NID3</code> qui précise l’intervalle de contenu de l’objet d’origine.
+            Le contenu de l’objet NID3 doit être de la forme <code>x-y</code> avec :</p>
         <ul>
             <li><code>x</code> et <code>y</code> exprimé en octet sans zéro et sans unité ;</li>
             <li><code>x</code> strictement supérieur à zéro ;</li>
@@ -606,56 +612,62 @@ abstract class HelpLinkRegister {
             <li>sans espace, tabulation ou retour chariot.</li>
         </ul>
 
+
         <?php Displays::docDispTitle(4, 'lrax', 'Action <code>x</code> – Suppression de lien'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Supprime un ou plusieurs liens précédemment mis en place.</p>
         <p>Les liens concernés par la suppression sont les liens antérieurs de type <code>l</code>, <code>f</code>,
-            <code>u</code>, <code>d</code>, <code>e</code>, <code>k</code> et <code>s</code>. Ils sont repérés par les 3
-            derniers champs, c’est à dire sur <code>HashSource_HashCible_HashMeta</code>. Les champs nuls sont
+            <code>u</code>, <code>d</code>, <code>e</code>, <code>k</code> et <code>s</code>. Ils sont repérés par les
+            champs NID, c’est à dire sur <code>NID1>NID2>NID3</code>. Les champs nuls sont
             strictement pris en compte.</p>
-        <p>Le champ <code>TimeStamp</code> permet de déterminer l’antériorité du lien et donc de déterminer sa
-            suppression ou pas.</p>
+        <p>La chronologie portée par le bloc de liens conteneur permet de déterminer l’antériorité du lien et donc de
+            déterminer sa suppression ou pas.</p>
         <p>C’est la seule action sur les liens et non sur les objets.</p>
 
-        <?php Displays::docDispTitle(4, 'lrhs', 'Le champ <code>HashSource</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>HashSource</code> désigne l’objet source du lien.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
 
-        <?php Displays::docDispTitle(4, 'lrhc', 'Le champ <code>HashCible</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>HashCible</code> désigne l’objet destination du lien.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+        <?php Displays::docDispTitle(4, 'lrhs', 'Le champ <code>NID1</code>'); ?>
+        <p>Le champ <code>NID1</code> est le premier identifiant de nœud du registre. Il désigne l’objet de départ de
+            la relation.</p>
+        <p>Le champ <code>NID1</code> contient un identifiant de nœud, généralement l’empreinte hexadécimale d’un
+            objet, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en
+            minuscule.</p>
 
-        <?php Displays::docDispTitle(4, 'lrhm', 'Le champ <code>HashMeta</code>'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le champ <code>HashMeta</code> désigne l’objet contenant une caractérisation du lien entre l’objet source et
-            l’objet destination.</p>
-        <p>Le champ <code>signataire</code> ne contient que des caractères hexadécimaux, c’est à dire de «&nbsp;0&nbsp;»
-            à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en minuscule.</p>
-        <p>Il peut être nuls, c’est à dire représentés par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+
+        <?php Displays::docDispTitle(4, 'lrhc', 'Le champ <code>NID2</code>'); ?>
+        <p>Le champ <code>NID2</code> est le second identifiant de nœud du registre. Il désigne l’objet d’arrivée de
+            la relation.</p>
+        <p>Le champ <code>NID2</code> contient un identifiant de nœud, généralement l’empreinte hexadécimale d’un
+            objet, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en
+            minuscule.</p>
+        <p>Il peut être nul, c’est à dire représenté par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+
+
+        <?php Displays::docDispTitle(4, 'lrhm', 'Le champ <code>NID3</code>'); ?>
+        <p>Le champ <code>NID3</code> est le troisième identifiant de nœud du registre. Il désigne l’objet contenant
+            une caractérisation du lien entre l’objet NID1 et l’objet NID2.</p>
+        <p>Le champ <code>NID3</code> contient un identifiant de nœud, généralement l’empreinte hexadécimale d’un
+            objet, c’est à dire de «&nbsp;0&nbsp;» à «&nbsp;9&nbsp;» et de «&nbsp;a&nbsp;» à «&nbsp;f&nbsp;» en
+            minuscule.</p>
+        <p>Il peut être nul, c’est à dire représenté par la valeur «&nbsp;0&nbsp;» sur un seul caractère.</p>
+
 
         <?php Displays::docDispTitle(2, 'l1', 'Lien simple'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien simple a ses champs <code>HashCible</code> et <code>HashMeta</code> égaux à «&nbsp;0&nbsp;».
+        <p>Le registre du lien simple a ses champs <code>NID2</code> et <code>NID3</code> égaux à «&nbsp;0&nbsp;».
         </p>
         <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_0_0</code></p>
+        <p class="pcenter"><code>REQ>NID1>0>0</code></p>
+
 
         <?php Displays::docDispTitle(2, 'l2', 'Lien double'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
-        <p>Le registre du lien double a son champ <code>HashMeta</code> égal à «&nbsp;0&nbsp;».</p>
+        <p>Le registre du lien double a son champ <code>NID3</code> égal à «&nbsp;0&nbsp;».</p>
         <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_0</code></p>
+        <p class="pcenter"><code>REQ>NID1>NID2>0</code></p>
+
 
         <?php Displays::docDispTitle(2, 'l3', 'Lien triple'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien triple est complètement utilisé.</p>
         <p>Il ressemble à :</p>
-        <p class="pcenter"><code>Signature_HashSignataire_TimeStamp_Action_HashSource_HashCible_HashMeta</code></p>
+        <p class="pcenter"><code>REQ>NID1>NID2>NID3</code></p>
+
 
         <?php Displays::docDispTitle(2, 'ls', 'Stockage'); ?>
         <p style="color: red; font-weight: bold">A revoir...</p>
@@ -677,35 +689,32 @@ abstract class HelpLinkRegister {
             actions de l’entité (cf <a href="#ckl">CKL</a>).</p>
 
         <?php Displays::docDispTitle(5, 'lsdrp', 'Registre public'); ?>
-        <p style="color: red; font-weight: bold">A revoir...</p>
         <p>Le registre du lien de dissimulation, public par nature, est conforme au registre des autres liens (cf <a
                     href="#lr">LR</a>). Si ce lien ne respectait pas cette structure il serait automatiquement ignoré ou
             rejeté. Son stockage et sa transmission ont cependant quelques particularités.</p>
-        <p>Les champs <code>Signature</code> (cf <a href="#lrsi">LRSI</a>) et <code>HashSignataire</code> (cf <a
-                    href="#lrhsi">LRHSI</a>) du registre sont conformes aux autres liens. Ils assurent la protection du
-            lien. Le champs signataire fait office d'émeteur du lien dissimulé.</p>
-        <p>Le champs <code>TimeStamp</code> (cf <a href="#lrt">LRT</a>) du registre est conformes aux autres liens. Il a
-            cependant une valeur non significative et sourtout pas liée au <code>TimeStamp</code> du lien dissimulé.</p>
-        <p>Le champs <code>Action</code> (cf <a href="#lrt">LRT</a>) du registre est de type <code>c</code> (cf <a
+        <p>La protection du lien de dissimulation est portée par le bloc de liens conteneur (cf <a href="#lrsi">LRSI</a>
+            et <a href="#lrusi">LRHSI</a>) : la signature et l’entité signataire font office d’émetteur du lien
+            dissimulé.</p>
+        <p>La chronologie portée par le bloc de liens conteneur (cf <a href="#lrt">LRT</a>) a une valeur non
+            significative et surtout pas liée à la chronologie du lien dissimulé.</p>
+        <p>Le champ <code>REQ</code> (cf <a href="#lra">LRA</a>) du registre est de type <code>c</code> (cf <a
                     href="#lra">LRA</a> et <a href="#lrac">LRAC</a>).</p>
-        <p>Le champs <code>HashSource</code> fait référence à l’entité destinataire du lien, celle qui peut le
-            déchiffrer. A part le champs de l’entité signataire, c’est le seul champs qui fait référence à un objet.</p>
-        <p>Le champs <code>HashCible</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
+        <p>Le champ <code>NID1</code> fait référence à l’entité destinataire du lien, celle qui peut le
+            déchiffrer. A part l’entité signataire portée par le bloc, c’est le seul champ qui fait référence à un
+            objet.</p>
+        <p>Le champ <code>NID2</code> ne contient pas la référence d’un objet mais le lien chiffré et encodé en
             hexadécimal. Le chiffrement est de type symétrique avec la clé de session. Le lien offusqué n’a pas grand
             intérêt en lui même, c’est le lien déchiffré qui en a.</p>
-        <p>Le champs <code>HashMeta</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
+        <p>Le champ <code>NID3</code> ne contient pas la référence d’un objet mais la clé de chiffrement du lien,
             dite clé de session. Cette clé est chiffrée (asymétrique) pour l’entité destinataire et encodée en
-            hexadécimal. Chaque entités destinataires d'un lien de dissimulé doit disposer d'un lien de dissimulation
+            hexadécimal. Chaque entité destinataire d'un lien dissimulé doit disposer d'un lien de dissimulation
             qui lui est propre.</p>
         <p>Le registre du lien de dissimulation :</p>
         <ul>
-            <li>Signature du lien</li>
-            <li>Identifiant du signataire</li>
-            <li>Horodatage non significatif</li>
-            <li>action : <code>c</code></li>
-            <li>source : hash(destinataire)</li>
-            <li>cible : Lien dissimulé chiffré</li>
-            <li>méta : clé de déchiffrement du lien, chiffrée pour le destinataire</li>
+            <li>req : <code>c</code></li>
+            <li>nid1 : hash(destinataire)</li>
+            <li>nid2 : lien dissimulé chiffré</li>
+            <li>nid3 : clé de déchiffrement du lien, chiffrée pour le destinataire</li>
         </ul>
 
         <?php Displays::docDispTitle(5, 'lsdrd', 'Registre dissimulé'); ?>
@@ -713,27 +722,26 @@ abstract class HelpLinkRegister {
         <p>Le registre du lien dissimulé est la partie utile du lien qui est protégée dans le lien de dissimulation.</p>
         <p>L'extraction du lien dissimulé se fait depuis le lien de dissimulation :</p>
         <ol>
-            <li>L'entité destinataire vérifie que son identifiant est bien celui présenté par le champs
-                <code>HashSource</code>.
+            <li>L'entité destinataire vérifie que son identifiant est bien celui présenté par le champ
+                <code>NID1</code>.
             </li>
-            <li>Le champs <code>HashMeta</code> est déchiffré (asymétrique) avec la clé privée de l'entité destinataire
+            <li>Le champ <code>NID3</code> est déchiffré (asymétrique) avec la clé privée de l'entité destinataire
                 pour obtenir la clé de session.
             </li>
-            <li>Le champs <code>HashCible</code> est déchiffré (symétrique) avec la clé de session pour obtenir le lien
-                dissimulé.
+            <li>Le champ <code>NID2</code> est déchiffré (symétrique) avec la clé de session pour obtenir le registre
+                de lien dissimulé.
             </li>
-            <li>Le lien dissimulé obtenu ne contient pas les champs <code>Signature</code> et
-                <code>HashSignataire</code> mais on peut garder ceux du lien de dissimulation 'pour affichage'.
+            <li>Le registre de lien dissimulé obtenu ne porte ni signature ni signataire ni chronologie, mais on peut
+                garder ceux du lien de dissimulation 'pour affichage'.
             </li>
         </ol>
         <p>A faire...</p>
         <p>Le registre du lien dissimulé :</p>
         <ul>
-            <li>Horodatage significatif</li>
-            <li>action : tout sauf <code>c</code></li>
-            <li>source : hash(objet source)</li>
-            <li>cible : hash(objet cible)</li>
-            <li>méta : hash(objet méta)</li>
+            <li>req : tout sauf <code>c</code></li>
+            <li>nid1 : hash(objet NID1)</li>
+            <li>nid2 : hash(objet NID2)</li>
+            <li>nid3 : hash(objet NID3)</li>
         </ul>
 
         <?php Displays::docDispTitle(4, 'lsda', 'Attaque sur la dissimulation'); ?>

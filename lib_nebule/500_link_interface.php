@@ -63,24 +63,25 @@ namespace Nebule\Library;
  * Le nombre maximum de NID par registre est défini par l'option linkMaxUIDbyRL (défaut: 4).
  *
  * Exemples :
+ * - Lien entre objets (l) : l>NID1>NID2>NID3
  * - Lien simple (l) : l>NID1>NID2>0
- * - Lien avec méta (l) : l>NID1>NID2>NID_meta
- * - Dérivé (f) : f>NID_source>NID_dérivé>NID_contexte
- * - Suppression (d) : d>NID_à_supprimer>0>0
- * - Lien dissimulé (c) : c>NID_destinataire>lien_chiffré>clé_chiffrée
+ * - Dérivé avec contexte (f) : f>NID1>NID2>NID3
+ * - Suppression d'objet (d) : d>NID1>0>0
+ * - Lien dissimulé (c) : c>NID1>NID2>NID3
+ *   avec NID1 = entité destinataire, NID2 = registre chiffré, NID3 = clé de session chiffrée
  *
  *
  * Stockage dans le dossier l/ :
  * -----------------------------
  * Les blocs de liens sont stockés dans le système de fichiers sous le dossier "l/" (défini par
- * References::LINKS_FOLDER = 'l'). Chaque fichier correspond à un nœud source et contient
+ * References::LINKS_FOLDER = 'l'). Chaque fichier correspond à un nœud référencé et contient
  * les blocs de liens où ce nœud apparaît.
  *
  * Organisation :
  * - Dossier principal : pub/l/
- * - Un fichier par NID source : pub/l/{NID}
+ * - Un fichier par NID référencé : pub/l/{NID}
  *   * Chaque ligne du fichier est un bloc de liens complet (format BH_BL_BS)
- *   * Plusieurs blocs peuvent exister pour un même nœud source
+ *   * Plusieurs blocs peuvent exister pour un même nœud
  * - Fichier historique : pub/l/f
  *   * Contient l'historique de tous les blocs de liens créés
  * - Fichiers de liens dissimulés : pub/l/{EID}-{SIGNER}
@@ -91,22 +92,23 @@ namespace Nebule\Library;
  * dans ces fichiers. Un bloc de liens est écrit pour chaque nœud référencé dans le bloc.
  *
  * Exemple de stockage :
- *   pub/l/abc123... (fichier contenant les liens où abc123 est source)
- *   pub/l/def456... (fichier contenant les liens où def456 est source ou cible)
+ *   pub/l/abc123... (fichier contenant les blocs de liens où abc123 est référencé)
+ *   pub/l/def456... (fichier contenant les blocs de liens où def456 est référencé)
  *   pub/l/f          (fichier historique)
  *   pub/l/entity123-signer456 (fichier de liens dissimulés)
  *
  *
  * Sémantique des types de liens :
  * --------------------------------
- * - l (link) : Relation orientée entre deux objets, éventuellement pondérée par un méta
+ * - l (link) : Relation orientée entre deux objets, éventuellement pondérée par un objet de
+ *             caractérisation (NID3)
  * - f (fork) : Relation de dérivation/parenté entre objets
  * - u (update) : Mise à jour d'un objet par un autre
  * - d (delete) : Marque un objet comme à supprimer
  * - e (equivalent) : Définit des objets interchangeables (ex: traductions)
  * - c (concealed) : Lien dissimulé/chiffré pour anonymisation
  * - k (encrypted) : Désigne la version chiffrée d'un objet
- * - s (subdivision) : Fragment d'un objet (avec méta contenant l'intervalle x-y)
+ * - s (subdivision) : Fragment d'un objet (avec NID3 contenant l'intervalle x-y)
  * - x (delete link) : Suppression d'un lien existant
  *
  * Les limites de taille sont définies par :

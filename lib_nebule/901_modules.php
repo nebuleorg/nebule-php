@@ -381,20 +381,17 @@ abstract class Module extends Functions implements ModuleInterface {
      * Créer un lien.
      *
      * @param string  $signer
-     * @param string  $date
-     * @param string  $action
-     * @param string  $source
-     * @param string  $target
-     * @param string  $meta
+     * @param string  $req
+     * @param string  $nid1
+     * @param string  $nid2
+     * @param string  $nid3
      * @param boolean $obfuscate
      * @return void
      */
-    protected function _createLink_DEPRECATED(string $signer, string $date, string $action, string $source, string $target, string $meta, bool $obfuscate = false): void {
-        /*$link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+    protected function _createLink_DEPRECATED(string $signer, string $req, string $nid1, string $nid2, string $nid3, bool $obfuscate = false): void {
+        /*$newLink = new BlocLink($this->_nebuleInstance, 'new');
+        $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3, $obfuscate);
         $newLink->sign($signer);
-        if ($obfuscate)
-            $link->obfuscate();
         $newLink->write();*/
     }
 

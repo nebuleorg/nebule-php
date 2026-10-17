@@ -380,27 +380,26 @@ class ModuleManage extends Module
             $instance->setType(References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES);
 
             // Crée le lien de hash.
-            $date = date(DATE_ATOM);
             $signer = $this->_entitiesInstance->getGhostEntityEID();
-            $action = 'l';
-            $source = $this->_actionAddModuleRID;
-            $target = $this->getNidFromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_HASH);
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+            $req = 'l';
+            $nid1 = $this->_actionAddModuleRID;
+            $nid2 = $this->getNidFromData($this->_configurationInstance->getOptionAsString('cryptoHashAlgorithm'));
+            $nid3 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_HASH);
+            $this->_createLink_DEPRECATED($signer, $req, $nid1, $nid2, $nid3, false);
 
             // Crée l'objet du nom.
             $instance->setName($this->_actionAddModuleName);
 
             // Crée le lien de référence.
-            $action = 'f';
-            $source = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
-            $target = $this->_actionAddModuleRID;
-            $meta = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+            $req = 'f';
+            $nid1 = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
+            $nid2 = $this->_actionAddModuleRID;
+            $nid3 = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
+            $this->_createLink_DEPRECATED($signer, $req, $nid1, $nid2, $nid3, false);
 
             // Crée le lien d'activation dans l'application.
-            $source = $bootstrapApplicationIID;
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+            $nid1 = $bootstrapApplicationIID;
+            $this->_createLink_DEPRECATED($signer, $req, $nid1, $nid2, $nid3, false);
         }
     }
 
@@ -417,13 +416,12 @@ class ModuleManage extends Module
             $this->_nebuleInstance->getMetrologyInstance()->addLog('Action add code ' . $this->_actionAddModuleID . ' to module ' . $this->_actionAddModuleRID, Metrology::LOG_LEVEL_NORMAL, __METHOD__, '128f5522');
 
             // Crée le lien du code pour l'application.
-            $date = date(DATE_ATOM);
             $signer = $this->_entitiesInstance->getGhostEntityEID();
-            $action = 'f';
-            $source = $this->_actionAddModuleRID;
-            $target = $this->_actionAddModuleID;
-            $meta = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
-            $this->_createLink_DEPRECATED($signer, $date, $action, $source, $target, $meta, false);
+            $req = 'f';
+            $nid1 = $this->_actionAddModuleRID;
+            $nid2 = $this->_actionAddModuleID;
+            $nid3 = References::REFERENCE_NEBULE_OBJET_INTERFACE_APP_MODULES;
+            $this->_createLink_DEPRECATED($signer, $req, $nid1, $nid2, $nid3, false);
 
             // Flush le cache de l'objet du module pour que les changements soient pris en compte tout de suite.
             $this->_cacheInstance->unsetObjectOnCache($this->_actionAddModuleRID); // @todo ne marche pas...

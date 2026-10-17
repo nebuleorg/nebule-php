@@ -1263,9 +1263,9 @@ input {
                 <div class="moduleEntitiesActionTextList<?php echo $bg; ?>">
                     <?php
                     // Extrait l'action.
-                    $action = $link->getParsed()['bl/rl/req'];
+                    $req = $link->getParsed()['bl/rl/req'];
 
-                    if ($action == 'c') {
+                    if ($req == 'c') {
                         // Extrait nom et ID pour affichage.
                         $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
@@ -1291,7 +1291,7 @@ input {
                         </div>
                         <?php
                         unset($signer, $date, $object, $objectInstance);
-                    } elseif ($action == 'k') {
+                    } elseif ($req == 'k') {
                         // Extrait nom et ID pour affichage.
                         $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
@@ -1317,7 +1317,7 @@ input {
                         </div>
                         <?php
                         unset($signer, $date, $object, $objectInstance);
-                    } elseif ($action == 'f') {
+                    } elseif ($req == 'f') {
                         // Extrait nom et ID pour affichage.
                         $signer = $link->getParsed()['bs/rs1/eid'];
                         $date = $link->getDate();
@@ -1351,7 +1351,7 @@ input {
                         <?php
                         unset($signer, $date, $object, $objectInstance);
                     }
-                    unset($action);
+                    unset($req);
 
                     // Permutation de l'indice de fond.
                     $bg = 3 - $bg;
@@ -1425,7 +1425,7 @@ input {
             // Pour chaque lien.
             foreach ($links as $link) {
                 // Extrait nom et ID pour affichage.
-                $source = $link->getParsed()['bl/rl/nid1'];
+                $nid1 = $link->getParsed()['bl/rl/nid1'];
                 $date = $link->getDate();
                 $object = $link->getParsed()['bl/rl/nid2'];
                 $objectInstance = $this->_cacheInstance->newNodeByType($object);
@@ -1449,13 +1449,13 @@ input {
                         </p>
                         <p class="moduleEntitiesActionFromTo">
                             <?php echo $this->_translateInstance->getTranslate('::To'); ?>
-                            &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($source); ?><br/>
+                            &nbsp;<?php $this->_displayInstance->displayInlineObjectColorIconName($nid1); ?><br/>
                         </p>
                     </div>
                 </div>
                 <?php
 
-                unset($source, $date, $object, $objectInstance);
+                unset($nid1, $date, $object, $objectInstance);
 
                 // Permutation de l'indice de fond.
                 $bg = 3 - $bg;

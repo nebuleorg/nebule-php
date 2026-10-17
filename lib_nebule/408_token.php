@@ -311,18 +311,17 @@ class Token extends TokenPool implements nodeInterface
 
         // Prépare la génération des liens.
         $signer = $this->_entitiesInstance->getGhostEntityEID();
-        $date = date(DATE_ATOM);
-        $source = $this->_id;
         $argObf = $obfuscated;
 
         // Le lien de type.
-        $action = 'l';
-        $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
-        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+        $req = 'l';
+        $nid1 = $this->_id;
+        $nid2 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+        $nid3 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->_createLink($signer, $req, $nid1, $nid2, $nid3, false);
 
         // Crée les liens associés au sac de jetons.
-        $action = 'l';
+        $req = 'l';
 
         // Pour chaque propriété, si présente et a un méta, écrit le lien.
         foreach ($this->_propertiesList['token'] as $name => $property) {
@@ -340,27 +339,27 @@ class Token extends TokenPool implements nodeInterface
                     }
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 } elseif ($property['type'] == 'number') {
                     $value = (string)$param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 } elseif ($property['type'] == 'hexadecimal') {
                     $value = $param[$name];
-                    $target = $value;
+                    $nid2 = $value;
                 } else {
                     $value = $param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 }
 
                 if ($value != null) {
                     $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                    $meta = $this->getNidFromData($property['key']);
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
-                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                    $nid3 = $this->getNidFromData($property['key']);
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $argObf);
+                    $this->_metrologyInstance->addLog('Generate token SID:' . $sid . ' link=' . $nid2 . '_' . $nid3, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
         }

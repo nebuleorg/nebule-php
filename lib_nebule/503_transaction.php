@@ -16,11 +16,11 @@ use DateTime;
  *
  * Attend à la création :
  * - l'instance nebule utilisé ;
- * - un texte contenant le lien ;
- * - un texte contenant la version du lien.
+ * - un texte contenant le registre de lien (RL) ;
+ * - l'instance du bloc de liens conteneur.
  *
- * Le nombre de champs du lien doit être de 7 exactement.
- * Le champs signature peut être vide ou à 0 si c'est pour un nouveau lien à signer.
+ * Le registre de lien est au format REQ>NID1>NID2>NID3. Le signataire et la chronologie
+ * sont portés par le bloc de liens conteneur (BL et BS). Voir blocLinkInterface.
  * La signature doit être explicitement demandée par l'appelle de sign() après la création du lien.
  *
  * Un lien peut être valide si sa structure est correcte, et peut être signé si la signature est valide.
@@ -116,7 +116,7 @@ class Transaction extends LinkRegister implements linkInterface
     {
         // Si transaction en mode LNS.
         $hashLNS = $this->_cryptoInstance->hash(References::REFERENCE_NEBULE_OBJET_MONNAIE_TRANSACTION);
-        if ($this->_hashMeta == $hashLNS) {
+        if ($this->_nid3 == $hashLNS) {
             $this->_extractModeLNS_disabled();
         } else {
             $this->_isTransaction = false;
@@ -125,16 +125,14 @@ class Transaction extends LinkRegister implements linkInterface
 
     /**
      * Extrait une transaction en mode LNS.
-     * Une transaction en mode LNS est marquée par un lien :
-     * - hashsign : signataire et entité source disposant du jeton.
-     * - date : date de la prise en compte de la transaction.
-     * - action : type f.
-     * - hashsource : ID du jeton.
-     * - hashtarget : ID du destinataire.
-     * - hashmeta : hash de 'nebule/objet/monnaie/transaction', marque que c'est une transaction.
-     * Elle est repérée par rapport au champs méta.
-     * Il faut vérifier que la source est un jeton et en extraire la monnaie affairante.
-     * Il faut vérifier que la destination est une entité ou un dérivé.
+     * Une transaction en mode LNS est marquée par un registre de lien :
+     * - req : type f.
+     * - nid1 : ID du jeton.
+     * - nid2 : ID du destinataire.
+     * - nid3 : hash de 'nebule/objet/monnaie/transaction', marque que c'est une transaction.
+     * Elle est repérée par rapport au champs NID3.
+     * Il faut vérifier que le NID1 est un jeton et en extraire la monnaie affairante.
+     * Il faut vérifier que le NID2 est une entité ou un dérivé.
      *
      * @return void
      */
@@ -144,8 +142,8 @@ class Transaction extends LinkRegister implements linkInterface
         /*    $this->_transactionsMode = 'LNS';
 
             // Vérifie si l'objet source est un jeton.
-            $instanceSource = $this->_nebuleInstance->newToken($this->_hashSource);
-            $instanceTarget = $this->_nebuleInstance->newWallet($this->_hashTarget);
+            $instanceSource = $this->_nebuleInstance->newToken($this->_nid1);
+            $instanceTarget = $this->_nebuleInstance->newWallet($this->_nid2);
             if ($instanceSource->getID() != '0'
                 && $instanceSource->getIsToken('all') // @todo modifier le filtre social.
                 && $instanceSource->getID() != '0'
@@ -162,9 +160,9 @@ class Transaction extends LinkRegister implements linkInterface
                 ) {
                     $this->_transactionsArray[0]['CID'] = $CID;
                     $this->_transactionsArray[0]['D'] = $this->_date;
-                    $this->_transactionsArray[0]['S'] = $this->_hashSigner;
-                    $this->_transactionsArray[0]['T'] = $this->_hashTarget;
-                    $this->_transactionsArray[0]['TID'] = $this->_hashSource;
+                    $this->_transactionsArray[0]['S'] = $this->getSignersEID()[0];
+                    $this->_transactionsArray[0]['T'] = $this->_nid2;
+                    $this->_transactionsArray[0]['TID'] = $this->_nid1;
                     $this->_transactionsArray[0]['R'] = '1';
                     $this->_transactionsArray[0]['TRS'] = 'LNS';
                     $this->_isTransaction = true;

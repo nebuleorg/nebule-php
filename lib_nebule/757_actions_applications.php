@@ -56,9 +56,9 @@ class ActionsApplications extends Actions implements ActionsInterface {
         // Synchronisation des liens (l'objet est forcément présent).
         $this->_actionSynchronizeApplicationInstance->syncLinks();
 
-        // Liste des liens l pour l'entité en source.
+        // Liste des liens l pour l'entité en NID1.
         $links = $this->_actionSynchronizeApplicationInstance->getLinksOnFields('', '', 'l', $this->_actionSynchronizeApplicationInstance->getID(), '', '');
-        // Synchronise l'objet cible.
+        // Synchronise l'objet NID2.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid2']);
@@ -67,9 +67,9 @@ class ActionsApplications extends Actions implements ActionsInterface {
             // Synchronise l'objet.
             $object->syncObject();
         }
-        // Liste des liens l pour l'entité en cible.
+        // Liste des liens l pour l'entité en NID2.
         $links = $this->_actionSynchronizeApplicationInstance->getLinksOnFields('', '', 'l', '', $this->_actionSynchronizeApplicationInstance->getID(), '');
-        // Synchronise l'objet source.
+        // Synchronise l'objet NID1.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNodeByType($link->getParsed()['bl/rl/nid1']);

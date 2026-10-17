@@ -126,13 +126,11 @@ class ActionsLinks extends Actions implements ActionsInterface {
             $link->write();
             $this->_metrologyInstance->addLog('action upload link - signed link ' . $link->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
         } elseif ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-            $link = $this->_cacheInstance->newBlockLink(
-                '0_'
-                . $this->_entitiesInstance->getCurrentEntityID() . '_'
-                . $link->getDate() . '_'
-                . $link->getParsed()['bl/rl/req'] . '_'
-                . $link->getParsed()['bl/rl/nid1'] . '_'
-                . $link->getParsed()['bl/rl/nid2'] . '_'
+            $link = $this->_cacheInstance->newBlockLink('new');
+            $link->addLink(
+                $link->getParsed()['bl/rl/req'] . '>'
+                . $link->getParsed()['bl/rl/nid1'] . '>'
+                . $link->getParsed()['bl/rl/nid2'] . '>'
                 . $link->getParsed()['bl/rl/nid3']
             );
             $link->signWrite();
@@ -418,13 +416,11 @@ class ActionsLinks extends Actions implements ActionsInterface {
                         $nbLinks++;
                         $this->_metrologyInstance->addLog('action upload file links - signed link ' . $instance->getRaw(), Metrology::LOG_LEVEL_NORMAL, __METHOD__, '00000000');
                     } elseif ($this->_entitiesInstance->getConnectedEntityIsUnlocked()) {
-                        /*$instance = $this->_cacheInstance->newBlockLink( FIXME
-                            '0_'
-                            . $this->_entitiesInstance->getCurrentEntityID() . '_'
-                            . $instance->getDate() . '_'
-                            . $instance->getParsed()['bl/rl/req'] . '_'
-                            . $instance->getParsed()['bl/rl/nid1'] . '_'
-                            . $instance->getParsed()['bl/rl/nid2'] . '_'
+                        /*$instance = $this->_cacheInstance->newBlockLink('new'); FIXME
+                        $instance->addLink(
+                            $instance->getParsed()['bl/rl/req'] . '>'
+                            . $instance->getParsed()['bl/rl/nid1'] . '>'
+                            . $instance->getParsed()['bl/rl/nid2'] . '>'
                             . $instance->getParsed()['bl/rl/nid3']
                         );
                         $instance->signWrite();*/

@@ -619,15 +619,14 @@ class Currency extends Node implements nodeInterface
 
         // Prépare la génération des liens.
         $signer = $this->_entitiesInstance->getGhostEntityEID();
-        $date = date(DATE_ATOM);
-        $source = $this->_id;
         $argObf = $obfuscated;
 
         // Le lien de type.
-        $action = 'l';
-        $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE);
-        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
-        $this->_createLink($signer, $date, $action, $source, $target, $meta, false);
+        $req = 'l';
+        $nid1 = $this->_id;
+        $nid2 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE);
+        $nid3 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $this->_createLink($signer, $req, $nid1, $nid2, $nid3, false);
 
         // Le lien de nommage si le nom est présent.
         if (isset($param['NAM'])
@@ -638,7 +637,7 @@ class Currency extends Node implements nodeInterface
         }
 
         // Crée les liens associés à la monnaie.
-        //$action	= 'l';
+        //$req\t= 'l';
 
         // Pour chaque propriété, si présente et a un méta, écrit le lien.
         foreach ($this->_propertiesList['currency'] as $name => $property) {
@@ -654,27 +653,27 @@ class Currency extends Node implements nodeInterface
                     }
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 } elseif ($property['type'] == 'number') {
                     $value = (string)$param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 } elseif ($property['type'] == 'hexadecimal') {
                     $value = $param[$name];
-                    $target = $value;
+                    $nid2 = $value;
                 } else {
                     $value = $param[$name];
                     $object = new Node($this->_nebuleInstance, '0', $value, false, false);
                     $object->setType(References::REFERENCE_OBJECT_TEXT);
-                    $target = $object->getID();
+                    $nid2 = $object->getID();
                 }
 
                 if ($value != null) {
                     $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' add ' . $property['key'] . ':' . $value, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
-                    $meta = $this->getNidFromData($property['key']);
-                    $this->_createLink($signer, $date, $action, $source, $target, $meta, $argObf);
-                    $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' link=' . $target . '_' . $meta, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
+                    $nid3 = $this->getNidFromData($property['key']);
+                    $this->_createLink($signer, $req, $nid1, $nid2, $nid3, $argObf);
+                    $this->_metrologyInstance->addLog('Generate currency SID:' . $sid . ' link=' . $nid2 . '_' . $nid3, Metrology::LOG_LEVEL_DEBUG, __METHOD__, '00000000');
                 }
             }
         }
@@ -741,11 +740,11 @@ class Currency extends Node implements nodeInterface
 
         // Prépare la recherche des monnaies.
         $referenceType = $this->getNidFromData($type);
-        $meta = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
+        $nid3 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_TYPE);
         if ($type == 'CID') {
-            $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
+            $nid2 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_SAC);
         } elseif ($type == 'PID') {
-            $target = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
+            $nid2 = $this->getNidFromData(References::REFERENCE_NEBULE_OBJET_MONNAIE_JETON);
         } else {
             return $list;
         }
@@ -768,8 +767,8 @@ class Currency extends Node implements nodeInterface
                 '',
                 'l',
                 $link->getParsed()['bl/rl/nid1'],
-                $target,
-                $meta
+                $nid2,
+                $nid3
             );
 
             if (sizeof($links2) != 0) {
@@ -1359,29 +1358,23 @@ class Currency extends Node implements nodeInterface
     /**
      * Crée un lien.
      *
-     * @param      $signer
-     * @param      $date
-     * @param      $action
-     * @param      $source
-     * @param      $target
-     * @param      $meta
-     * @param bool $obfuscate
+     * @param string $signer
+     * @param string $req
+     * @param string $nid1
+     * @param string $nid2
+     * @param string $nid3
+     * @param bool   $obfuscate
      * @return boolean
      */
-    protected function _createLink($signer, $date, $action, $source, $target, $meta, bool $obfuscate = false): bool
+    protected function _createLink(string $signer, string $req, string $nid1, string $nid2, string $nid3, bool $obfuscate = false): bool
     {
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new BlocLink($this->_nebuleInstance, $link);
+        $newLink = new BlocLink($this->_nebuleInstance, 'new');
+        if (!$newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3, $obfuscate))
+            return false;
 
         // Signe le lien.
         $instance = $this->_cacheInstance->newNodeByType($signer, Cache::TYPE_ENTITY);
         $newLink->sign($instance);
-
-        // Si besoin, obfuscation du lien.
-        if ($obfuscate
-            && $this->_configurationInstance->getOptionAsBoolean('permitObfuscatedLink')
-        )
-            $newLink->setObfuscate();
 
         // Ecrit le lien.
 // TODO        return $newLink->write();

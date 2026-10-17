@@ -709,9 +709,9 @@ abstract class HelpGroup {
             entités destinataires qui pourront les consulter.</p>
         <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_PROTEGE; ?></code>
             est dédié à la gestion des groupes
-            protégés. Un groupe est considéré protégé quand on a l’objet réservé en champs méta, l’entité en cours en
-            champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le champ
-            cible, on utilise une autre entité, cela revient à partager aussi les objets protégés créés pour ce groupe.
+            protégés. Un groupe est considéré protégé quand on a l’objet réservé en champ NID3, l’entité en cours en
+            champ NID2 et l’ID du groupe en champ NID1. Si au lieu d’utiliser l’entité en cours pour le champ
+            NID2, on utilise une autre entité, cela revient à partager aussi les objets protégés créés pour ce groupe.
             Cela ne repartage pas la protection des objets déjà protégés.</p>
         <p>Dans un groupe marqué protégé, tous les nouveaux membres ajoutés au groupe ont leur contenu protégé. Ce n’est
             valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>
@@ -734,9 +734,9 @@ abstract class HelpGroup {
             les entités destinataires qui pourront les voir.</p>
         <p>Dans nebule, l’objet réservé <code><?php echo References::REFERENCE_NEBULE_OBJET_GROUPE_DISSIMULE; ?></code>
             est dédié à la gestion des groupes
-            dissimulés. Un groupe est considéré comme dissimulé quand on a l’objet réservé en champs méta, l’entité en
-            cours en champs cible et l’ID du groupe en champs source. Si au lieu d’utiliser l’entité en cours pour le
-            champ cible, on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce
+            dissimulés. Un groupe est considéré comme dissimulé quand on a l’objet réservé en champ NID3, l’entité en
+            cours en champ NID2 et l’ID du groupe en champ NID1. Si au lieu d’utiliser l’entité en cours pour le
+            champ NID2, on utilise une autre entité, cela revient à partager aussi les objets dissimulés créés pour ce
             groupe. Cela ne repartage pas la dissimulation des objets déjà dissimulés.</p>
         <p>Dans un groupe marqué dissimulé, tous les nouveaux membres ajoutés au groupe sont dissimulés. Ce n’est
             valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>

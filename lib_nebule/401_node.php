@@ -1342,7 +1342,7 @@ class Node extends Functions implements nodeInterface {
 
             // Recherche la clé utilisée pour l'entité en cours.
             foreach ($listT as $linkSym) {
-                // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
+                // Si lien de chiffrement et l'objet NID1 est l'objet en cours non protégé.
                 if ($linkSym->getParsed()['bl/rl/req'] == 'k'
                     && $linkSym->getParsed()['bl/rl/nid2'] == $this->_idProtected
                 ) {
@@ -1353,17 +1353,17 @@ class Node extends Functions implements nodeInterface {
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
                         // Si lien de chiffrement.
-                        $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
+                        $nid2A = $linkAsym->getParsed()['bl/rl/nid2'];
                         if ($linkAsym->getParsed()['bl/rl/req'] == 'k'
                             && $linkAsym->getParsed()['bl/rl/nid2'] != $this->_idProtected
-                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
+                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($nid2A)
                         ) {
                             $result = true;
                             $this->_idUnprotected = $linkSym->getParsed()['bl/rl/nid1'];
                             $this->_metrology->addLog('Object protected - id unprotected = ' . $this->_idUnprotected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'bf78846c');
                             $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
                             if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
-                                $this->_idProtectedKey = $targetA;
+                                $this->_idProtectedKey = $nid2A;
                                 break 2;
                             }
                         }
@@ -1378,11 +1378,11 @@ class Node extends Functions implements nodeInterface {
 
             // Recherche la clé utilisée pour l'entité en cours.
             foreach ($listS as $linkSym) {
-                $targetS = $linkSym->getParsed()['bl/rl/nid2'];
-                // Si lien de chiffrement et l'objet source est l'objet en cours non protégé.
+                $nid2S = $linkSym->getParsed()['bl/rl/nid2'];
+                // Si lien de chiffrement et l'objet NID1 est l'objet en cours non protégé.
                 if ($linkSym->getParsed()['bl/rl/req'] == 'k'
                     && $linkSym->getParsed()['bl/rl/nid1'] == $this->_idUnprotected
-                    && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetS)
+                    && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($nid2S)
                 ) {
                     // Lit l'objet de clé de chiffrement symétrique et ses liens.
                     $instanceSym = $this->_cacheInstance->newNode($linkSym->getParsed()['bl/rl/nid3']);
@@ -1390,19 +1390,19 @@ class Node extends Functions implements nodeInterface {
                     $this->getLinks($linksAsym, array(), $socialClass, false);
                     unset($instanceSym);
                     foreach ($linksAsym as $linkAsym) {
-                        $targetA = $linkAsym->getParsed()['bl/rl/nid2'];
+                        $nid2A = $linkAsym->getParsed()['bl/rl/nid2'];
                         // Si lien de chiffrement.
                         if ($linkAsym->getParsed()['bl/rl/req'] == 'k'
                             && $linkAsym->getParsed()['bl/rl/nid1'] != $this->_idUnprotected
                             && $linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()
-                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($targetA)
+                            && $this->_nebuleInstance->getIoInstance()->checkObjectPresent($nid2A)
                         ) {
                             $result = true;
-                            $this->_idProtected = $targetS;
+                            $this->_idProtected = $nid2S;
                             $this->_metrology->addLog('Object protected - id protected = ' . $this->_idProtected, Metrology::LOG_LEVEL_DEBUG, __METHOD__, 'cd9c4b1b');
                             $this->_idUnprotectedKey = $linkAsym->getParsed()['bl/rl/nid1'];
                             if ($linkAsym->getParsed()['bl/rl/nid3'] == $this->_nebuleInstance->getCurrentEntity()) {
-                                $this->_idProtectedKey = $targetA;
+                                $this->_idProtectedKey = $nid2A;
                                 break 2;
                             }
                         }
@@ -1473,7 +1473,7 @@ class Node extends Functions implements nodeInterface {
         // Vérifie que l'écriture d'objets et de liens est permise.
         if ($this->_configuration->checkBooleanOptions(array('unlocked','permitWrite','permitWriteObject','permitWriteLink'))) {
             // Génération de la clé de chiffrement.
-            // Doit être au maximum de la taille de la clé de l'entité cible (exprimé en bits) moins 11 octets.
+            // Doit être au maximum de la taille de la clé de l'entité destinataire (exprimé en bits) moins 11 octets.
             // CF : http://php.net/manual/fr/function.openssl-public-encrypt.php
             // TODO à faire pour le cas général.
             $keySize = self::CRYPTO_SESSION_KEY_SIZE; // En octets.
@@ -1550,17 +1550,17 @@ class Node extends Functions implements nodeInterface {
             $signer = $this->_nebuleInstance->getCurrentEntity();
 
             // Crée le lien de type d'empreinte de la clé.
-            $target = $this->_nebuleInstance->getFromDataNID($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
-            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/hash');
-            $this->writeLink('l>' . $keyID . '>' . $target . '>' . $meta);
+            $nid2 = $this->_nebuleInstance->getFromDataNID($this->_configuration->getOptionAsString('cryptoHashAlgorithm'));
+            $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/hash');
+            $this->writeLink('l>' . $keyID . '>' . $nid2 . '>' . $nid3);
 
             // Création du type mime des données chiffrées.
             $text = 'application/x-encrypted/' . $this->_configuration->getOptionAsString('cryptoSymmetricAlgorithm');
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
-                $this->writeLink('l>' . $codeID . '>' . $textID . '>' . $meta, $obfuscated);
+                $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
+                $this->writeLink('l>' . $codeID . '>' . $textID . '>' . $nid3, $obfuscated);
             }
 
             // Création du type mime de la clé chiffrée.
@@ -1568,8 +1568,8 @@ class Node extends Functions implements nodeInterface {
             $textID = $this->_nebuleInstance->createTextAsObject($text);
             if ($textID != '') {
                 // Crée le lien de type d'empreinte.
-                $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
-                $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
+                $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
+                $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $nid3, $obfuscated);
             }
 
             // Création du lien de chiffrement symétrique.
@@ -1649,8 +1649,8 @@ class Node extends Functions implements nodeInterface {
                         $textID = $this->_nebuleInstance->createTextAsObject($text);
                         if ($textID != '') {
                             // Crée le lien de type d'empreinte.
-                            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
-                            $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $meta, $obfuscated);
+                            $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
+                            $this->writeLink('l>' . $codeKeyID . '>' . $textID . '>' . $nid3, $obfuscated);
                         }
 
                         // Création du lien de chiffrement asymétrique.
@@ -1792,12 +1792,12 @@ class Node extends Functions implements nodeInterface {
         $textID = $this->_nebuleInstance->createTextAsObject($text);
         if ($textID != '') {
             // Crée le lien de type d'empreinte.
-            $action = 'l';
-            $source = $codeKeyID;
-            $target = $textID;
-            $meta = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
-            $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-            $newLink = new BlocLink($this->_nebuleInstance, $link);
+            $req = 'l';
+            $nid1 = $codeKeyID;
+            $nid2 = $textID;
+            $nid3 = $this->_nebuleInstance->getFromDataNID('nebule/objet/type');
+            $newLink = new BlocLink($this->_nebuleInstance, 'new');
+            $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
             // Signe le lien.
             $newLink->sign();
             // Ecrit le lien.
@@ -1805,12 +1805,12 @@ class Node extends Functions implements nodeInterface {
         }
 
         // Création du lien de chiffrement asymétrique.
-        $action = 'k';
-        $source = $this->_idUnprotectedKey;
-        $target = $codeKeyID;
-        $meta = $entity->getID();
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $req = 'k';
+        $nid1 = $this->_idUnprotectedKey;
+        $nid2 = $codeKeyID;
+        $nid3 = $entity->getID();
+        $newLink = new BlocLink($this->_nebuleInstance, 'new');
+        $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
         // Signe le lien.
         $newLink->sign();
         // Ecrit le lien.
@@ -1883,12 +1883,12 @@ class Node extends Functions implements nodeInterface {
                 // Création du lien d'annulation de chiffrement asymétrique.
                 $signer = $this->_nebuleInstance->getCurrentEntity();
                 $date = date(DATE_ATOM);
-                $action = 'x';
-                $source = $idKey;
-                $target = $idProtectedKey;
-                $meta = $entity->getID();
-                $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-                $newLink = new Link($this->_nebuleInstance, $link);
+                $req = 'x';
+                $nid1 = $idKey;
+                $nid2 = $idProtectedKey;
+                $nid3 = $entity->getID();
+                $newLink = new BlocLink($this->_nebuleInstance, 'new');
+                $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
                 // Signe le lien.
                 $newLink->sign();
                 // Ecrit le lien.
@@ -2103,12 +2103,12 @@ class Node extends Functions implements nodeInterface {
         // Création du lien.
         $signer = $this->_nebuleInstance->getCurrentEntity();
         $date = date(DATE_ATOM);
-        $action = 'f';
-        $source = $this->_id;
-        $target = $this->_nebuleInstance->getFromDataNID($emotion);
-        $meta = $context;
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $req = 'f';
+        $nid1 = $this->_id;
+        $nid2 = $this->_nebuleInstance->getFromDataNID($emotion);
+        $nid3 = $context;
+        $newLink = new BlocLink($this->_nebuleInstance, 'new');
+        $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
         $newLink->sign();
         if ($obfuscate)
             $newLink->setObfuscate();
@@ -2164,12 +2164,12 @@ class Node extends Functions implements nodeInterface {
         // Création du lien.
         $signer = $this->_nebuleInstance->getCurrentEntity();
         $date = date(DATE_ATOM);
-        $action = 'x';
-        $source = $this->_id;
-        $target = $this->_nebuleInstance->getFromDataNID($emotion);
-        $meta = $entity;
-        $link = '0_' . $signer . '_' . $date . '_' . $action . '_' . $source . '_' . $target . '_' . $meta;
-        $newLink = new Link($this->_nebuleInstance, $link);
+        $req = 'x';
+        $nid1 = $this->_id;
+        $nid2 = $this->_nebuleInstance->getFromDataNID($emotion);
+        $nid3 = $entity;
+        $newLink = new BlocLink($this->_nebuleInstance, 'new');
+        $newLink->addLink($req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3);
         $newLink->sign();
         if ($obfuscate)
             $newLink->setObfuscate();

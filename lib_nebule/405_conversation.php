@@ -165,9 +165,9 @@ abstract class HelpConversation {
             les entités contributrices de la conversation. Ainsi, on marque la conversation comme fermée et on filtre sur
             les membres uniquement ajoutés par des entités définies.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/conversation/fermee</code> est dédié à la gestion des
-            conversations fermées. Une conversation est considéré fermée quand on a l’objet réservé en champs méta,
-            l’entité en cours en champs cible et l’ID de la conversation en champs source. Si au lieu d’utiliser
-            l’entité en cours pour le champ cible on utilise une autre entité, cela revient à prendre aussi en compte
+            conversations fermées. Une conversation est considéré fermée quand on a l’objet réservé en champ NID3,
+            l’entité en cours en champ NID2 et l’ID de la conversation en champ NID1. Si au lieu d’utiliser
+            l’entité en cours pour le champ NID2 on utilise une autre entité, cela revient à prendre aussi en compte
             ses liens dans la conversation fermée. Dans ce cas c’est une entité contributrice.</p>
         <p>C’est uniquement un affichage de la conversation que l’on a et non la suppression de membres de la
             conversation.</p>
@@ -189,9 +189,9 @@ abstract class HelpConversation {
             possible de limiter la visibilité du contenu des membres utilisés dans une conversation en restreignant
             artificiellement les entités destinataires qui pourront les consulter.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/conversation/protegee</code> est dédié à la gestion des
-            conversations protégées. Une conversation est considéré protégée quand on a l’objet réservé en champs méta,
-            l’entité en cours en champs cible et l’ID de la conversation en champs source. Si au lieu d’utiliser
-            l’entité en cours pour le champs cible on utilise une autre entité, cela revient à partager aussi les objets
+            conversations protégées. Une conversation est considéré protégée quand on a l’objet réservé en champ NID3,
+            l’entité en cours en champ NID2 et l’ID de la conversation en champ NID1. Si au lieu d’utiliser
+            l’entité en cours pour le champ NID2 on utilise une autre entité, cela revient à partager aussi les objets
             protégées créés pour cette conversation. Cela ne repartage pas la protection des objets déjà protégés.</p>
         <p>Dans une conversation marqué protégée, tous les nouveaux membres ajoutés à la conversation ont leur contenu
             protégé. Ce n’est valable que pour l’entité en cours et éventuellement celles qui lui font confiance.</p>
@@ -211,9 +211,9 @@ abstract class HelpConversation {
             possible de limiter la visibilité de l’appartenance des membres utilisés dans une conversation en
             restreignant artificiellement les entités destinataires qui pourront les voir.</p>
         <p>Dans nebule, l’objet réservé <code>nebule/objet/conversation/dissimulee</code> est dédié à la gestion des
-            conversations dissimulées. Une conversation est considéré dissimulée quand on a l’objet réservé en champs
-            méta, l’entité en cours en champs cible et l’ID de la conversation en champs source. Si au lieu d’utiliser
-            l’entité en cours pour le champs cible on utilise une autre entité, cela revient à partager aussi les objets
+            conversations dissimulées. Une conversation est considéré dissimulée quand on a l’objet réservé en champ
+            NID3, l’entité en cours en champ NID2 et l’ID de la conversation en champ NID1. Si au lieu d’utiliser
+            l’entité en cours pour le champ NID2 on utilise une autre entité, cela revient à partager aussi les objets
             dissimulées créés pour cette conversation. Cela ne repartage pas la dissimulation des objets déjà
             dissimulés.</p>
         <p>Dans une conversation marqué dissimulée, tous les nouveaux membres ajoutés à la conversation sont dissimulés.

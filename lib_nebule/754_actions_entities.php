@@ -100,9 +100,9 @@ class ActionsEntities extends Actions implements ActionsInterface {
         // Synchronisation des liens (l'objet est forcément présent).
         $this->_actionSynchronizeEntityInstance->syncLinks();
 
-        // Liste des liens l pour l'entité en source.
+        // Liste des liens l pour l'entité en NID1.
         $links = $this->_actionSynchronizeEntityInstance->getLinksOnFields('', '', 'l', $this->_actionSynchronizeEntityInstance->getID(), '', '');
-        // Synchronise l'objet cible.
+        // Synchronise l'objet NID2.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
@@ -111,9 +111,9 @@ class ActionsEntities extends Actions implements ActionsInterface {
             // Synchronise l'objet.
             $object->syncObject();
         }
-        // Liste des liens l pour l'entité en cible.
+        // Liste des liens l pour l'entité en NID2.
         $links = $this->_actionSynchronizeEntityInstance->getLinksOnFields('', '', 'l', '', $this->_actionSynchronizeEntityInstance->getID(), '');
-        // Synchronise l'objet source.
+        // Synchronise l'objet NID1.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);
@@ -221,9 +221,9 @@ class ActionsEntities extends Actions implements ActionsInterface {
         // Synchronisation des liens.
         $this->_actionSynchronizeNewEntityInstance->syncLinks();
 
-        // Liste des liens l pour l'entité en source.
+        // Liste des liens l pour l'entité en NID1.
         $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', $hash, '', '');
-        // Synchronise l'objet cible.
+        // Synchronise l'objet NID2.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid2']);
@@ -232,9 +232,9 @@ class ActionsEntities extends Actions implements ActionsInterface {
             // Synchronise l'objet.
             $object->syncObject();
         }
-        // Liste des liens l pour l'entité en cible.
+        // Liste des liens l pour l'entité en NID2.
         $links = $this->_actionSynchronizeNewEntityInstance->getLinksOnFields('', '', 'l', '', $hash, '');
-        // Synchronise l'objet source.
+        // Synchronise l'objet NID1.
         $object = null;
         foreach ($links as $link) {
             $object = $this->_cacheInstance->newNode($link->getParsed()['bl/rl/nid1']);

@@ -505,7 +505,7 @@ class ModuleObjects extends Module {
                 // Si l'affichage est permis.
                 if ($okDisplay) {
                     // Extraction des attributs.
-                    $action = $link->getParsed()['bl/rl/req'];
+                    $req = $link->getParsed()['bl/rl/req'];
                     $showAttrib = false;
                     $showEmotion = false;
                     $hashAttrib = $link->getParsed()['bl/rl/nid3'];
@@ -517,7 +517,7 @@ class ModuleObjects extends Module {
                     $emotion = '';
 
                     // Si action type l.
-                    if ($action == 'l') {
+                    if ($req == 'l') {
                         // Extrait le nom.
                         if ($hashAttrib != '0'
                             && $hashAttrib != ''
@@ -545,7 +545,7 @@ class ModuleObjects extends Module {
                     }
 
                     // Si action de type f, vérifie si l'attribut est dans la liste des émotions à afficher.
-                    if ($action == 'f'
+                    if ($req == 'f'
                         && $hashValue != '0'
                     ) {
                         foreach ($emotionsList as $item => $emotionItem) {
@@ -631,7 +631,7 @@ class ModuleObjects extends Module {
                             </div>
                         </div>
                         <?php
-                    } elseif ($action == 'l') {
+                    } elseif ($req == 'l') {
                         // Affiche une erreur si la propriété n'est pas lisible.
                         ?>
 

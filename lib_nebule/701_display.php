@@ -3527,19 +3527,19 @@ input[type=password], input[type=text], input[type=email] {
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationOID();
 
             // Préparation du lien.
-            $source = $object->getID();
-            $target = $this->getNidFromData($emotion);
-            $meta = $this->_entitiesInstance->getGhostEntityEID();
+            $nid1 = $object->getID();
+            $nid2 = $this->getNidFromData($emotion);
+            $nid3 = $this->_entitiesInstance->getGhostEntityEID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
-                $action = 'x';
+                $req = 'x';
                 $rid = $this->_cacheInstance->newNodeByType($listEmotions1[$emotion]);
             } else {
-                $action = 'f';
+                $req = 'f';
                 $rid = $this->_cacheInstance->newNodeByType($listEmotions0[$emotion]);
             }
-            $link = $action . '_' . $source . '_' . $target . '_' . $meta;
+            $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
             $httpLink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
             $icon = $this->convertReferenceImage($rid, $emotion, 'iconInlineDisplay');
 
@@ -4866,10 +4866,10 @@ input[type=password], input[type=text], input[type=email] {
         $contantDisplayValid = '';
         $contantDisplaySigner = '';
         $contantDisplayDate = '';
-        $contantDisplayAction = '';
-        $contantDisplaySource = '';
-        $contantDisplayTarget = '';
-        $contantDisplayMeta = '';
+        $contantDisplayReq = '';
+        $contantDisplayNid1 = '';
+        $contantDisplayNid2 = '';
+        $contantDisplayNid3 = '';
 
         if ($instance->getValid()
         ) {
@@ -4920,24 +4920,24 @@ input[type=password], input[type=text], input[type=email] {
                     $icon = self::REFERENCE_ICON_LINK_LX;
                     break;
             }
-            $contantDisplayAction .= '<img title="Action ' . $instance->getParsed()['bl/rl/req'] . '" ';
-            $contantDisplayAction .= 'alt="[' . $instance->getParsed()['bl/rl/req'] . ']" ';
-            $contantDisplayAction .= 'src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType($icon))->getID() . '" />';
+            $contantDisplayReq .= '<img title="Action ' . $instance->getParsed()['bl/rl/req'] . '" ';
+            $contantDisplayReq .= 'alt="[' . $instance->getParsed()['bl/rl/req'] . ']" ';
+            $contantDisplayReq .= 'src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType($icon))->getID() . '" />';
 
             $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid1']);
-            $contantDisplaySource .= '<img title="' . $object->getFullName();
-            $contantDisplaySource .= '" style="background:#' . $object->getPrimaryColor();
-            $contantDisplaySource .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
+            $contantDisplayNid1 .= '<img title="' . $object->getFullName();
+            $contantDisplayNid1 .= '" style="background:#' . $object->getPrimaryColor();
+            $contantDisplayNid1 .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
             $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid2']);
-            $contantDisplayTarget .= '<img title="' . $object->getFullName();
-            $contantDisplayTarget .= '" style="background:#' . $object->getPrimaryColor();
-            $contantDisplayTarget .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
+            $contantDisplayNid2 .= '<img title="' . $object->getFullName();
+            $contantDisplayNid2 .= '" style="background:#' . $object->getPrimaryColor();
+            $contantDisplayNid2 .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
 
             $object = $this->_cacheInstance->newNodeByType($instance->getParsed()['bl/rl/nid3']);
-            $contantDisplayMeta .= '<img title="' . $object->getFullName();
-            $contantDisplayMeta .= '" style="background:#' . $object->getPrimaryColor();
-            $contantDisplayMeta .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
+            $contantDisplayNid3 .= '<img title="' . $object->getFullName();
+            $contantDisplayNid3 .= '" style="background:#' . $object->getPrimaryColor();
+            $contantDisplayNid3 .= ';" alt="[]" src="o/' . self::DEFAULT_ICON_ALPHA_COLOR . '" />';
         } else {
             $contantDisplayIcon .= '<img title="ERROR" ';
             $contantDisplayIcon .= 'alt="[E]" src="o/' . $this->getImageByReference($this->_cacheInstance->newNodeByType(self::REFERENCE_ICON_LINK_LL))->getID() . '" ';
@@ -4954,10 +4954,10 @@ input[type=password], input[type=text], input[type=email] {
         $result .= $contantDisplayValid;
         $result .= $contantDisplaySigner;
         $result .= $contantDisplayDate;
-        $result .= $contantDisplayAction;
-        $result .= $contantDisplaySource;
-        $result .= $contantDisplayTarget;
-        $result .= $contantDisplayMeta . "\n";
+        $result .= $contantDisplayReq;
+        $result .= $contantDisplayNid1;
+        $result .= $contantDisplayNid2;
+        $result .= $contantDisplayNid3 . "\n";
         $result .= $divLinkClose;
         $result .= $divDisplayClose;
 
@@ -5571,23 +5571,23 @@ input[type=password], input[type=text], input[type=email] {
                 . '&' . References::COMMAND_SELECT_CONVERSATION . '=' . $this->_nebuleInstance->getCurrentConversationOID();
 
             // Préparation du lien.
-            $source = $object->getID();
-            $target = $this->getNidFromData($emotion);
-            $meta = $this->_entitiesInstance->getGhostEntityEID();
+            $nid1 = $object->getID();
+            $nid2 = $this->getNidFromData($emotion);
+            $nid3 = $this->_entitiesInstance->getGhostEntityEID();
 
             // Détermine si l'émotion a été marqué par l'entité en cours.
             if ($object->getMarkEmotion($emotion, 'myself')) {
                 // Création du lien.
-                $action = 'x';
-                $link = $action . '_' . $source . '_' . $target . '_' . $meta;
+                $req = 'x';
+                $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
                 $htlink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
                 $icon = $this->convertReferenceImage($listEmotions1[$emotion], $emotion, 'iconInlineDisplay');
             } else {
                 // Création du lien.
-                $action = 'f';
-                $link = $action . '_' . $source . '_' . $target . '_' . $meta;
+                $req = 'f';
+                $link = $req . '>' . $nid1 . '>' . $nid2 . '>' . $nid3;
                 $htlink .= '&' . ActionsLinks::SIGN1 . '=' . $link . $this->_nebuleInstance->getTokenizeInstance()->getActionTokenValue();
 
                 // Préparation de l'icône de l'émotion.
