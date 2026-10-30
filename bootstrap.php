@@ -352,7 +352,7 @@ EPZhSJezzbXTKQ5zUAn42h187tMbPuMffL9oJQn75jaAPjv1mDDshHE5erTwizkX
 Lup9Ce6ZhGpUJuxU3Zd/9vnUQ6ocMCJYHoTDjYnXaZfL89r18KEs1AA+Q5RJJimz
 OgmryhTHKQICkcdVFjhP6rgZE3of9qnKHTpP0SHAThdU2C2aIxRHxuaueWXAb/iH
 KNZFiRQIf1OHoIH7FkIYvNkCAwEAAQ==
------END PUBLIC KEY-----' . "\n",
+-----END PUBLIC KEY-----',
     '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzyIY5n7WfDQ1pwOMjAVo
 2lum3wC8K49bsT4wbw9JV89gp2z6RfvKtduwP7lo0QdusoIYi3OsTCQcadkbsWLw
@@ -361,7 +361,7 @@ qze0pBnAuxsZksxJrqmQoILa95NW3usBUf6Yv/Y/A+kFXNgvZWUvWxJtzuUuz8a8
 Tv3U6LExWs0mIV5+hJUVSTwhzS8FtbWjzFl3CPJ4mVgWGeoOKiZm5leuzYezZ/s7
 Y9S8hijRYSa/VcOatLvcWEQudzkpEFxLR+JpOXRhwpsEyQBiQoCgaCBeQz471jKq
 8QIDAQAB
------END PUBLIC KEY-----' . "\n",
+-----END PUBLIC KEY-----',
     '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4mq5QMvAsvSbYljC3CWV
 IAzALzPgBmrzW3KfarDxLoADEaP+LhaDIphn3/Ad3Ubo+jIjB+GdKL+c0276qWoT
@@ -370,13 +370,13 @@ FsPlwCxfJ6qLUTRg+iLgctUe77K92dCfM13m5DLZO/5bd9Pzh4QZghfSlk33Dsni
 JK1mjXYaQCa+SjHHtUL0wWxPNMpVhw/dfsbO960EAGvh/fOEOAL5upwkbby4BkrR
 qU6yfqEI/rB8KhVQI+juvOHiZ5XI/XYtJ2x29eIR49aC4T9D1TcA0QSOUwuC0BF9
 gwIDAQAB
------END PUBLIC KEY-----' . "\n",
+-----END PUBLIC KEY-----',
     '-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+JHMHSWlRsAOhrtD6ko4RPlJ4
 5qNiRE7HVJs+8UlHx/SzkPSR+3MAFWUeaaAdVpx0+CSPSO+kv5aq4RoskFg7ycm8
 5UxycWpsEVyX2LJErwZy9HTJwod9CHn9a1L9j7PBu5HuiTt7dNPdi9CBjJqaG/Af
 Inj6lo30ZskFHHgsEQIDAQAB
------END PUBLIC KEY-----' . "\n",
+-----END PUBLIC KEY-----',
     '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkaDOi1ymiuNMHUDNUMKb
 +fDCmqAVnEdEsryl1shovJiV8+CoIClM9hjJkJSNvY3nZNCf0InaPCo1NJ1zeE+c
@@ -385,7 +385,7 @@ phc56MYZgkVqdoCjNx8RoC64zuBUO7IEoeTUMtx+UW53I/EjS7zyhPYDo/KaHnCo
 h/Q7buOL0xLRYtkLdoTlkYc+4B+lRvXdc41o7Km8DIrtFsjLcrDb0Tnh8IwX7Hef
 qycYIJV5lNhkKVylzaG2F2Ye/kHwIzYTr/XQPXyM8BljcjkFVE9Mu2NKd8UciAE2
 DQIDAQAB
------END PUBLIC KEY-----' . "\n",
+-----END PUBLIC KEY-----',
 );
 const LIB_FIRST_LINKS = array(
     'nebule:link/2:0_0>020261030154441/l>f1091995974eafb5a4668d348eec0b3c34c84754d04aed48e8577fc34f29b0f4.sha2.256>970bdb5df1e795929c71503d578b1b6bed601bb65ed7b8e4ae77dd85125d7864.sha2.256>5312dedbae053266a3556f44aba2292f24cdf1c3213aa5b4934005dd582aefa0.sha2.256_f1091995974eafb5a4668d348eec0b3c34c84754d04aed48e8577fc34f29b0f4.sha2.256>402d2bee2894cd14b346fc1572603b14c3a4c2846d4d23ef94d60e05d14c69be724c9e168198caeb3d16c380135c5b049cc34b0d089016032b28fa4d4957b39296b34e5b183c5cf5025b4040e84b71cb25f3e95153900b1998ce2811058c4afbbf78b45004a53f10566d5cd1b96cff05073b3b1c4ec7dae676966c0617a7ae694f9e533511e856f2b41be2c971aaa938db104b6d6628c6821db93d1d51ec776d2070a6833fc7e59ac70e1eebe7f56d6bf27b4a99adf440ddd9d28c7cb31125d062b2593f17b20dcf0193349d9c81ce1ee1f1e9a4e3fcbdd8e2a1c66256b8fe1e358b6c044d8692b259de4681ae2b4eb747660787807ed72e0851229b023af62f953a71ae0ce73ea35583aea2fb02e8345dbf72730db5bfbc851ddb47e9a846272043105e7eb286b4b50cece8d405d192bd33e6333b8062a14af7ac015577e5a5cccff66136312161dba7ee723dae123965b1591c3094068af64fb981c2efe21607e0e087d345a346f8644bc159bf3fc62c678e42f664bb9150dad5aa0ab4892a8fe8383f11012e32d056b545e10f2e73a41593d45e1357aea2d3ce53390ef639ca86028bc80627e44e57253b3102b49380800e1ed10fd2b9948e18a7ed4f0d64c867e66db28191873f9b6479b61b4e3dd9217727d0ddbb392d9cc7db5561f7bcf0dd6ee44531fefbc9f00ade10a595cb2b57c22bde0528e1f353b7027f87b57b.sha2.512',
@@ -2637,8 +2637,10 @@ function blk_checkBS(string &$bh, string &$bl, string &$bs): bool {
     if (strtok('/') !== false) return false;
 
     // Check content RS 1 NID 1 : hash.algo.size
-    //if (!lnk_checkRS($rs, $bh, $bl)) log_add('check link BS/RS failed '.$bs, 'error', __FUNCTION__, '0690f5ac');
-    if (!blk_checkRS($rs, $bh, $bl)) return false;
+    if (!blk_checkRS($rs, $bh, $bl)) {
+        log_add('check link BS/RS failed '.$bs, 'error', __FUNCTION__, '0690f5ac');
+        return false;
+    }
 
     return true;
 }
@@ -2666,10 +2668,14 @@ function blk_checkRS(string &$rs, string &$bh, string &$bl): bool {
 
     // --- --- --- --- --- --- --- --- ---
     // Check content RS 1 NID 1 : hash.algo.size
-    //if (!nod_checkNID($nid, false)) log_add('check link bs/rs1/eid failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
-    if (!nod_checkNID($nid, false)) return false;
-    //if (!lnk_checkSIG($bh, $bl, $sig, $nid)) log_add('check link BS/RS1/SIG failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
-    if (!blk_checkSIG($bh, $bl, $sig, $nid)) return false;
+    if (!nod_checkNID($nid, false)) {
+        log_add('check link bs/rs1/eid failed '.$rs, 'error', __FUNCTION__, '6e1150f9');
+        return false;
+    }
+    if (!blk_checkSIG($bh, $bl, $sig, $nid)) {
+        log_add('check link BS/RS1/SIG failed '.$rs, 'error', __FUNCTION__, 'e99ec81f');
+        return false;
+    }
 
     return true;
 }
@@ -2757,12 +2763,18 @@ function blk_verify(string $block): bool {
     if (strtok('_') !== false) return false;
 
     // Check BH, BL and BS.
-    //if (!lnk_checkBH($bh)) log_add('check link BH failed '.$link, 'error', __FUNCTION__, '80cbba4b');
-    if (!blk_checkBH($bh)) return false;
-    //if (!lnk_checkBL($bl)) log_add('check link BL failed '.$link, 'error', __FUNCTION__, 'c5d22fda');
-    if (!blk_checkBL($bl)) return false;
-    //if (!lnk_checkBS($bh, $bl, $bs)) log_add('check link BS failed '.$link, 'error', __FUNCTION__, '2828e6ae');
-    if (!blk_checkBS($bh, $bl, $bs)) return false;
+    if (!blk_checkBH($bh)) {
+        log_add('check link BH failed '.$bh, 'error', __FUNCTION__, '80cbba4b');
+        return false;
+    }
+    if (!blk_checkBL($bl)) {
+        log_add('check link BL failed '.$bl, 'error', __FUNCTION__, 'c5d22fda');
+        return false;
+    }
+    if (!blk_checkBS($bh, $bl, $bs)) {
+        log_add('check link BS failed '.$bs, 'error', __FUNCTION__, '2828e6ae');
+        return false;
+    }
 
     return true;
 }
