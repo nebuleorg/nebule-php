@@ -426,7 +426,7 @@ class Configuration extends Functions
     );
 
     const OPTIONS_DEFAULT_VALUE = array(
-        'puppetmaster' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
+        'puppetmaster' => 'f1091995974eafb5a4668d348eec0b3c34c84754d04aed48e8577fc34f29b0f4.sha2.256',
         'hostURL' => 'localhost',
         'permitWrite' => 'true',
         'permitWriteObject' => 'true',
@@ -508,7 +508,7 @@ class Configuration extends Functions
         'permitSessionBuffer' => 'true',
         'permitBufferIO' => 'true',
         'sessionBufferSize' => '1000',
-        'defaultEntity' => '88848d09edc416e443ce1491753c75d75d7d8790c1253becf9a2191ac369f4ea.sha2.256',
+        'defaultEntity' => 'f1091995974eafb5a4668d348eec0b3c34c84754d04aed48e8577fc34f29b0f4.sha2.256',
         'defaultApplication' => '1',
         'permitApplication1' => 'true',
         'permitApplication2' => 'true',
